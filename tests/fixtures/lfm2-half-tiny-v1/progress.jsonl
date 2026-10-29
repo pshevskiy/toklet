@@ -1,0 +1,16 @@
+{"case": "single", "profile": "main", "started": true, "offset": 0}
+{"case": "single", "profile": "main", "complete": true, "groups": 63}
+{"case": "single", "profile": "wide", "started": true, "offset": 0}
+{"case": "single", "profile": "wide", "complete": true, "groups": 63}
+{"case": "short", "profile": "main", "started": true, "offset": 78400}
+{"case": "short", "profile": "main", "complete": true, "groups": 63}
+{"case": "short", "profile": "wide", "started": true, "offset": 78400}
+{"case": "short", "profile": "wide", "complete": true, "groups": 63}
+{"case": "context12", "profile": "main", "started": true, "offset": 313984}
+{"case": "context12", "profile": "main", "complete": true, "groups": 63}
+{"case": "context12", "profile": "wide", "started": true, "offset": 313984}
+{"case": "context12", "profile": "wide", "complete": true, "groups": 63}
+{"case": "future_changed12", "profile": "main", "started": true, "offset": 1263232}
+{"case": "future_changed12", "profile": "main", "complete": true, "groups": 63}
+{"case": "future_changed12", "profile": "wide", "started": true, "offset": 1263232}
+{"case": "future_changed12", "profile": "wide", "complete": true, "groups": 63}

@@ -1,0 +1,229 @@
+{
+  "format": "toklet-lfm2-half-reference-result-v1",
+  "date": "2026-10-29",
+  "status": "independent_tiny_half_graph_source_qualified",
+  "source_only": true,
+  "device_execution": false,
+  "geometry": {
+    "capacity": 12,
+    "epsilon": 1e-05,
+    "head_dim": 64,
+    "hidden": 256,
+    "intermediate": 256,
+    "kv_heads": 2,
+    "layer_kinds": [
+      "conv3",
+      "attention",
+      "conv3"
+    ],
+    "q_heads": 4,
+    "theta": 1000000.0,
+    "vocabulary": 64
+  },
+  "original_ownership": {
+    "physical_tensors": 65,
+    "logical_owners": 29,
+    "affine_parents": 18,
+    "direct_norms": 9,
+    "conv3_tensors": 2,
+    "tied_table": 1,
+    "payload_start": 6670,
+    "payload_bytes": 753408,
+    "unaligned_u32_payload": true
+  },
+  "profile": {
+    "affine": "Exact integer-dyadic original FP32 weights times stored Half; direct RNE to destination, both profiles",
+    "attention": "D3 serial Reference FP32 stores/ordered FP64 WIDE; all query/head/column cells",
+    "conv": "Qualified D2 explicit FP32 tap order/ordered FP64 WIDE with raw Half u history",
+    "exact_integer_common_factor": "A matrix-wide power of two is factored exactly from the2^-149 weight grid; no information is lost",
+    "pointwise": "Separate Half stores for Bx, Conv, Cz, SiLU, gating and residual",
+    "rms": "Qualified D1 direct-gain epsilon1e-5 MAIN/diagnostic WIDE",
+    "rotary": "MAIN FP32 exponent/pow/angle/trig and explicit products; WIDE Decimal80/120 stable frequencies then FP64 angle/trig"
+  },
+  "policy": {
+    "atol_floor": 0.0001,
+    "envelope_factor": 2,
+    "fatal_reference": "main",
+    "granularity": "case \u00d7 stage",
+    "masked_probability_word": 0,
+    "numeric_zero_equality": true,
+    "rtol": 0.001,
+    "wide": "diagnostic_only"
+  },
+  "counts": {
+    "binary_bytes": 2212480,
+    "cases": 4,
+    "descriptors": 504,
+    "elements_per_profile": 548944,
+    "f32_elements_per_profile": 4176,
+    "groups_per_case": 63,
+    "groups_per_profile": 252,
+    "half_elements_per_profile": 544768,
+    "native_scheduled_tokens": 133,
+    "native_schedules": 15
+  },
+  "independent_audit_counts": {
+    "original_affine_reconstructed_F32_words": 1327104,
+    "main_f16le_elements": 544768,
+    "wide_f16le_elements": 544768,
+    "fixed_stage_gates": 252,
+    "main_f32le_elements": 4176,
+    "wide_f32le_elements": 4176,
+    "operator_reconstructed_values": 1097888,
+    "operator_reconstructed_groups": 504,
+    "exact_affine_dot_products": 290304,
+    "exact_affine_scalar_products": 74317824,
+    "observed_chunk_history_boundaries": 220,
+    "active_KV_snapshot_values": 83456,
+    "inactive_KV_snapshot_positive_zero_values": 88576,
+    "masked_probability_positive_zeros": 1080,
+    "causal_other_stage_values": 429440,
+    "causal_probability_values": 1056,
+    "causal_visible_score_values": 528,
+    "exact_round_component_witnesses": 9,
+    "rotary_component_words": 896
+  },
+  "all_saved_store_bits_exact": true,
+  "all_252_stage_gates_recomputed": true,
+  "validation": {
+    "portable_controls": 12,
+    "owned_cpu_jobs": 3,
+    "four_file_exact_replay": true,
+    "all_groups_closed": true,
+    "endpoint_errors": [],
+    "per_job_deadline_seconds": 600,
+    "per_job_worker_limit_bytes": 536870912,
+    "per_stream_log_limit_bytes": 1048576,
+    "source_worker_maxrss_bytes": [
+      154189824,
+      172605440,
+      171458560
+    ],
+    "rust_engine_modified": false,
+    "unchanged_rust_source_manifest_inputs_verified": 303
+  },
+  "failed_first_export": {
+    "controls_passed": 12,
+    "graph_arrays_written": false,
+    "issue": "Diagnostic cancellation witness assumed builtin float sum meant ordered FP64 addition; Python3.12.8 returned1.",
+    "correction": "Explicit ordered FP64 loop records0, alongside exact dyadic1; existing affine control checks this. Twelve controls unchanged.",
+    "graph_math_policy_cases_and_bounds_changed": false,
+    "evidence_preserved": true
+  },
+  "target_state_policy": "Compare observed pre/post chunk histories and active committed KV prefixes; inactive source+0 is not native tail clearing",
+  "limits": [
+    "No native graph, transaction, real-model, quality, app, mobile or performance qualification.",
+    "FP32/FP64 exp/sin/cos use platform libm as the declared mathematical source profile, not an independent certified transcendental implementation or native intrinsic bit emulation. Decimal120/160 base10 power agrees with saved Decimal80/120 frequencies but is a stability cross-check, not a rounding proof.",
+    "Source inactive KV+0 is a source snapshot convention, not a target physical-tail clearing requirement. Target histories are compared only at actual observed chunk boundaries; no fabricated intermediate state.",
+    "Raw future scores are fully reconstructed but exempt from causal-invariance equality; visible score columns and earlier probability/stage rows remain exactly causal.",
+    "Worker maxRSS and sparse direct observations bound these CPU jobs; they do not establish native model fit or latency."
+  ],
+  "evidence": {
+    "protocol": {
+      "path": "tests/fixtures/lfm2-half-tiny-v1/protocol.json",
+      "bytes": 46142,
+      "sha256": "068322ec60f6e0e78f4ce89c8a80b01a38f1f6da2fc5369101e3eae78bace927"
+    },
+    "protocol_review": {
+      "path": "artifacts/new-goal-b4d4b-half-graph-independent-review-v1/protocol-review.json",
+      "bytes": 7357,
+      "sha256": "83e4ca2266ccc041c56c34d9c1d1aa81f6279cb71724e577da230e0c81b87031"
+    },
+    "initial_source_proposal": {
+      "path": "artifacts/new-goal-b4d4b-half-graph-reference-proposal-v1/manifest.json",
+      "bytes": 3107,
+      "sha256": "1870445e3a8dc3ec9dc8993bf710d0b442e157d6c995fbadcf78205a3908a58a"
+    },
+    "initial_source_review": {
+      "path": "artifacts/new-goal-b4d4b-half-graph-independent-review-v1/prospective-review.json",
+      "bytes": 6268,
+      "sha256": "c455173c740ad10ca063fb72d0e781646bce77246b90ff1d0a58fdae6b571d2f"
+    },
+    "failed_source_jobs": {
+      "path": "artifacts/new-goal-b4d4b-half-graph-source-checks-v1/checks.json",
+      "bytes": 8332,
+      "sha256": "8b781e4c15b1deb770e7d1fb46e7ac3ee413b07775d92bf518d3ed342464ee92"
+    },
+    "control_correction_advice": {
+      "path": "artifacts/new-goal-b4d4b-cancellation-control-advice-v1/advice.json",
+      "bytes": 3086,
+      "sha256": "9887fbc05103b32f9f636147aec2517163f76b5d57f9613f3ddd0ea1cda33be2"
+    },
+    "control_failure_analysis": {
+      "path": "artifacts/new-goal-b4d4b-half-graph-reference-proposal-v2/failure-analysis.json",
+      "bytes": 1204,
+      "sha256": "b53be1e54947a43fa8ef788e97344b37c7731cfebec624412477743bf66d6daf"
+    },
+    "source_successor": {
+      "path": "artifacts/new-goal-b4d4b-half-graph-reference-proposal-v2/manifest.json",
+      "bytes": 4021,
+      "sha256": "fa81e04d60aff1d8ddafc457d73cda60f75ae60126c344b92c448f7cbea06273"
+    },
+    "source_successor_review": {
+      "path": "artifacts/new-goal-b4d4b-half-graph-independent-review-v1/prospective-source-v2-review.json",
+      "bytes": 9836,
+      "sha256": "bbb6801856b4e35fa9d483a451898dcb3a8da7d0e4e9396b3ab03f037a407f14"
+    },
+    "source_jobs": {
+      "path": "artifacts/new-goal-b4d4b-half-graph-source-checks-v2/checks.json",
+      "bytes": 9895,
+      "sha256": "35ecb78e8d5a6d6f1f39a0730a094c49cb4d14ad568988528c7ea47da45f7dea"
+    },
+    "saved_source_review": {
+      "path": "artifacts/new-goal-b4d4b-half-graph-independent-review-v1/saved-source-review.json",
+      "bytes": 14029,
+      "sha256": "c812a2d6672ff7dc9d206fee3ca57b97e3413b74c75043fc200febf2f26f4003"
+    },
+    "fixture_manifest": {
+      "path": "tests/fixtures/lfm2-half-tiny-v1/manifest.json",
+      "bytes": 235595,
+      "sha256": "271c4f243a99615a8cb90339781bacd6fbff73f793f389bc735f4031630f47e3"
+    },
+    "fixture_components": {
+      "path": "tests/fixtures/lfm2-half-tiny-v1/components.json",
+      "bytes": 28596,
+      "sha256": "7372d0d8b822f20861c9e879156234629db328bdf4d361eebadf0742046c87a6"
+    },
+    "original_artifact": {
+      "path": "tests/fixtures/lfm2-scalar-v1/model.safetensors",
+      "bytes": 760078,
+      "sha256": "5965adf8a9663fed07fd2b293e717d72f907ddae931649e3189d161d58257487"
+    },
+    "original_configuration": {
+      "path": "tests/fixtures/lfm2-scalar-v1/config.json",
+      "bytes": 499,
+      "sha256": "d99adc70a5df647c9356ba284a219843a4b31a3b0646fc7d63d5780097db9853"
+    },
+    "unchanged_rust_checks": {
+      "path": "artifacts/new-goal-b4d4a-product-cold-checks-v1/checks.json",
+      "bytes": 881767,
+      "sha256": "9edab2b96248b7c062f238536ab1124e5442ad492db263b95d36ce1cf5a49833"
+    },
+    "repository_checks": {
+      "path": "artifacts/new-goal-b4d4b-half-graph-rust-checks-v1/checks.json",
+      "bytes": 883211,
+      "sha256": "fd3b8c6c17f5d07e883cb21972e6b21548ffe83d2bea4017fce8e27a4d4d78f9"
+    }
+  },
+  "native_graph_qualified": false,
+  "real_model_qualified": false,
+  "performance_qualified": false,
+  "repository_checks": {
+    "commands": 6,
+    "fmt": true,
+    "strict_all_targets_clippy_default_and_metal": true,
+    "default": {
+      "passed": 450,
+      "failed": 0,
+      "ignored": 20
+    },
+    "metal": {
+      "passed": 541,
+      "failed": 0,
+      "ignored": 179
+    },
+    "release_opt_level": 3,
+    "release_debug_assertions": false,
+    "gpu_executed": false
+  }
+}

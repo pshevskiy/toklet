@@ -253,6 +253,22 @@ encodes. The leaf stays test-only until the mixed graph owns it.
 
 B4d4b's separately approved protocol/source now targets the same original tiny
 container with exact integer-dyadic affine sums and direct Half/FP32 rounding.
-The twelve authored source controls and bounded export/replay remain before
-source qualification; neither scalar outputs nor native outcomes set its center.
-Then B4d4c composes the concrete mixed-state publication boundary.
+Its twelve controls, bounded export/replay and independent saved-array audit
+now pass as recorded below; neither scalar outputs nor native outcomes set its
+center. B4d4c next composes the concrete mixed-state publication boundary.
+
+## B4d4b independent Half source result
+
+The [independent Half tiny reference](lfm2-half-reference.md) is qualified before
+native graph outcomes:12 controls, exact four-file export/replay and Astra's
+complete504-descriptor/1,097,888-value reconstruction pass. All252 stage gates,
+original packed weights, raw-u histories, KV snapshots, masks and components are
+verified. The first export's diagnostic builtin-sum assumption is corrected in
+a reviewed successor without changing any graph math or gate; failed evidence
+remains. The original container is shared, with no scalar golden-output import.
+
+B4d4c will own the existing blocks in one concrete resident Model/Session. Its
+approved design uses the KV Set's command/status for complete candidate history
+stamping/validation, then KV copy and infallible history/logit/token publication.
+Uncertain copies poison every family. No native graph qualification follows
+until actual source/state/allocator/recovery checks pass.

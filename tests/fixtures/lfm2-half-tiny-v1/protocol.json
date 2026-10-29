@@ -1,0 +1,2306 @@
+{
+  "artifact": {
+    "bytes": 760078,
+    "path": "/Users/coloner/work/rust/toklet/tests/fixtures/lfm2-scalar-v1/model.safetensors",
+    "sha256": "5965adf8a9663fed07fd2b293e717d72f907ddae931649e3189d161d58257487"
+  },
+  "cases": [
+    {
+      "name": "single",
+      "offset": 0,
+      "partitions": [
+        [
+          1
+        ]
+      ],
+      "stages": {
+        "embedding_lookup": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "final_norm": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.0.b": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.0.bcx_projection": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            1,
+            768
+          ]
+        },
+        "layers.0.c": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.0.convolution": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.0.down_projection": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.0.ffn_gated": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.0.ffn_norm": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.0.gate_projection": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.0.gate_silu": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.0.gated_conv": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.0.history_after": {
+          "dtype": "f16le",
+          "elements": 512,
+          "shape": [
+            1,
+            2,
+            256
+          ]
+        },
+        "layers.0.history_before": {
+          "dtype": "f16le",
+          "elements": 512,
+          "shape": [
+            1,
+            2,
+            256
+          ]
+        },
+        "layers.0.operator_norm": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.0.operator_projection": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.0.operator_residual": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.0.output": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.0.u": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.0.up_projection": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.0.x": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.1.attention_context": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.1.attention_probabilities": {
+          "dtype": "f32le",
+          "elements": 4,
+          "shape": [
+            4,
+            1,
+            1
+          ]
+        },
+        "layers.1.attention_scores": {
+          "dtype": "f32le",
+          "elements": 4,
+          "shape": [
+            4,
+            1,
+            1
+          ]
+        },
+        "layers.1.down_projection": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.1.ffn_gated": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.1.ffn_norm": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.1.gate_projection": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.1.gate_silu": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.1.k_norm": {
+          "dtype": "f16le",
+          "elements": 128,
+          "shape": [
+            1,
+            2,
+            64
+          ]
+        },
+        "layers.1.k_projection": {
+          "dtype": "f16le",
+          "elements": 128,
+          "shape": [
+            1,
+            2,
+            64
+          ]
+        },
+        "layers.1.k_rotary": {
+          "dtype": "f16le",
+          "elements": 128,
+          "shape": [
+            1,
+            2,
+            64
+          ]
+        },
+        "layers.1.kv_keys_after": {
+          "dtype": "f16le",
+          "elements": 1536,
+          "shape": [
+            1,
+            2,
+            12,
+            64
+          ]
+        },
+        "layers.1.kv_values_after": {
+          "dtype": "f16le",
+          "elements": 1536,
+          "shape": [
+            1,
+            2,
+            12,
+            64
+          ]
+        },
+        "layers.1.operator_norm": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.1.operator_projection": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.1.operator_residual": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.1.output": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.1.q_norm": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            4,
+            64
+          ]
+        },
+        "layers.1.q_projection": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            4,
+            64
+          ]
+        },
+        "layers.1.q_rotary": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            4,
+            64
+          ]
+        },
+        "layers.1.up_projection": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.1.v_projection": {
+          "dtype": "f16le",
+          "elements": 128,
+          "shape": [
+            1,
+            2,
+            64
+          ]
+        },
+        "layers.2.b": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.2.bcx_projection": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            1,
+            768
+          ]
+        },
+        "layers.2.c": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.2.convolution": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.2.down_projection": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.2.ffn_gated": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.2.ffn_norm": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.2.gate_projection": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.2.gate_silu": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.2.gated_conv": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.2.history_after": {
+          "dtype": "f16le",
+          "elements": 512,
+          "shape": [
+            1,
+            2,
+            256
+          ]
+        },
+        "layers.2.history_before": {
+          "dtype": "f16le",
+          "elements": 512,
+          "shape": [
+            1,
+            2,
+            256
+          ]
+        },
+        "layers.2.operator_norm": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.2.operator_projection": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.2.operator_residual": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.2.output": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.2.u": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.2.up_projection": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "layers.2.x": {
+          "dtype": "f16le",
+          "elements": 256,
+          "shape": [
+            1,
+            256
+          ]
+        },
+        "logits": {
+          "dtype": "f32le",
+          "elements": 64,
+          "shape": [
+            1,
+            64
+          ]
+        }
+      },
+      "tokens": [
+        1
+      ]
+    },
+    {
+      "name": "short",
+      "offset": 0,
+      "partitions": [
+        [
+          3
+        ],
+        [
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          2
+        ],
+        [
+          2,
+          1
+        ]
+      ],
+      "stages": {
+        "embedding_lookup": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "final_norm": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.0.b": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.0.bcx_projection": {
+          "dtype": "f16le",
+          "elements": 2304,
+          "shape": [
+            3,
+            768
+          ]
+        },
+        "layers.0.c": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.0.convolution": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.0.down_projection": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.0.ffn_gated": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.0.ffn_norm": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.0.gate_projection": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.0.gate_silu": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.0.gated_conv": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.0.history_after": {
+          "dtype": "f16le",
+          "elements": 1536,
+          "shape": [
+            3,
+            2,
+            256
+          ]
+        },
+        "layers.0.history_before": {
+          "dtype": "f16le",
+          "elements": 1536,
+          "shape": [
+            3,
+            2,
+            256
+          ]
+        },
+        "layers.0.operator_norm": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.0.operator_projection": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.0.operator_residual": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.0.output": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.0.u": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.0.up_projection": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.0.x": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.1.attention_context": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.1.attention_probabilities": {
+          "dtype": "f32le",
+          "elements": 36,
+          "shape": [
+            4,
+            3,
+            3
+          ]
+        },
+        "layers.1.attention_scores": {
+          "dtype": "f32le",
+          "elements": 36,
+          "shape": [
+            4,
+            3,
+            3
+          ]
+        },
+        "layers.1.down_projection": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.1.ffn_gated": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.1.ffn_norm": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.1.gate_projection": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.1.gate_silu": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.1.k_norm": {
+          "dtype": "f16le",
+          "elements": 384,
+          "shape": [
+            3,
+            2,
+            64
+          ]
+        },
+        "layers.1.k_projection": {
+          "dtype": "f16le",
+          "elements": 384,
+          "shape": [
+            3,
+            2,
+            64
+          ]
+        },
+        "layers.1.k_rotary": {
+          "dtype": "f16le",
+          "elements": 384,
+          "shape": [
+            3,
+            2,
+            64
+          ]
+        },
+        "layers.1.kv_keys_after": {
+          "dtype": "f16le",
+          "elements": 4608,
+          "shape": [
+            3,
+            2,
+            12,
+            64
+          ]
+        },
+        "layers.1.kv_values_after": {
+          "dtype": "f16le",
+          "elements": 4608,
+          "shape": [
+            3,
+            2,
+            12,
+            64
+          ]
+        },
+        "layers.1.operator_norm": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.1.operator_projection": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.1.operator_residual": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.1.output": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.1.q_norm": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            4,
+            64
+          ]
+        },
+        "layers.1.q_projection": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            4,
+            64
+          ]
+        },
+        "layers.1.q_rotary": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            4,
+            64
+          ]
+        },
+        "layers.1.up_projection": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.1.v_projection": {
+          "dtype": "f16le",
+          "elements": 384,
+          "shape": [
+            3,
+            2,
+            64
+          ]
+        },
+        "layers.2.b": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.2.bcx_projection": {
+          "dtype": "f16le",
+          "elements": 2304,
+          "shape": [
+            3,
+            768
+          ]
+        },
+        "layers.2.c": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.2.convolution": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.2.down_projection": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.2.ffn_gated": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.2.ffn_norm": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.2.gate_projection": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.2.gate_silu": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.2.gated_conv": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.2.history_after": {
+          "dtype": "f16le",
+          "elements": 1536,
+          "shape": [
+            3,
+            2,
+            256
+          ]
+        },
+        "layers.2.history_before": {
+          "dtype": "f16le",
+          "elements": 1536,
+          "shape": [
+            3,
+            2,
+            256
+          ]
+        },
+        "layers.2.operator_norm": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.2.operator_projection": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.2.operator_residual": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.2.output": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.2.u": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.2.up_projection": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "layers.2.x": {
+          "dtype": "f16le",
+          "elements": 768,
+          "shape": [
+            3,
+            256
+          ]
+        },
+        "logits": {
+          "dtype": "f32le",
+          "elements": 192,
+          "shape": [
+            3,
+            64
+          ]
+        }
+      },
+      "tokens": [
+        1,
+        7,
+        13
+      ]
+    },
+    {
+      "name": "context12",
+      "offset": 0,
+      "partitions": [
+        [
+          12
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          3,
+          3
+        ],
+        [
+          7,
+          5
+        ],
+        [
+          1,
+          2,
+          3,
+          6
+        ]
+      ],
+      "stages": {
+        "embedding_lookup": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "final_norm": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.b": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.bcx_projection": {
+          "dtype": "f16le",
+          "elements": 9216,
+          "shape": [
+            12,
+            768
+          ]
+        },
+        "layers.0.c": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.convolution": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.down_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.ffn_gated": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.ffn_norm": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.gate_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.gate_silu": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.gated_conv": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.history_after": {
+          "dtype": "f16le",
+          "elements": 6144,
+          "shape": [
+            12,
+            2,
+            256
+          ]
+        },
+        "layers.0.history_before": {
+          "dtype": "f16le",
+          "elements": 6144,
+          "shape": [
+            12,
+            2,
+            256
+          ]
+        },
+        "layers.0.operator_norm": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.operator_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.operator_residual": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.output": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.u": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.up_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.x": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.attention_context": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.attention_probabilities": {
+          "dtype": "f32le",
+          "elements": 576,
+          "shape": [
+            4,
+            12,
+            12
+          ]
+        },
+        "layers.1.attention_scores": {
+          "dtype": "f32le",
+          "elements": 576,
+          "shape": [
+            4,
+            12,
+            12
+          ]
+        },
+        "layers.1.down_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.ffn_gated": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.ffn_norm": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.gate_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.gate_silu": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.k_norm": {
+          "dtype": "f16le",
+          "elements": 1536,
+          "shape": [
+            12,
+            2,
+            64
+          ]
+        },
+        "layers.1.k_projection": {
+          "dtype": "f16le",
+          "elements": 1536,
+          "shape": [
+            12,
+            2,
+            64
+          ]
+        },
+        "layers.1.k_rotary": {
+          "dtype": "f16le",
+          "elements": 1536,
+          "shape": [
+            12,
+            2,
+            64
+          ]
+        },
+        "layers.1.kv_keys_after": {
+          "dtype": "f16le",
+          "elements": 18432,
+          "shape": [
+            12,
+            2,
+            12,
+            64
+          ]
+        },
+        "layers.1.kv_values_after": {
+          "dtype": "f16le",
+          "elements": 18432,
+          "shape": [
+            12,
+            2,
+            12,
+            64
+          ]
+        },
+        "layers.1.operator_norm": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.operator_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.operator_residual": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.output": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.q_norm": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            4,
+            64
+          ]
+        },
+        "layers.1.q_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            4,
+            64
+          ]
+        },
+        "layers.1.q_rotary": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            4,
+            64
+          ]
+        },
+        "layers.1.up_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.v_projection": {
+          "dtype": "f16le",
+          "elements": 1536,
+          "shape": [
+            12,
+            2,
+            64
+          ]
+        },
+        "layers.2.b": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.bcx_projection": {
+          "dtype": "f16le",
+          "elements": 9216,
+          "shape": [
+            12,
+            768
+          ]
+        },
+        "layers.2.c": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.convolution": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.down_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.ffn_gated": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.ffn_norm": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.gate_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.gate_silu": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.gated_conv": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.history_after": {
+          "dtype": "f16le",
+          "elements": 6144,
+          "shape": [
+            12,
+            2,
+            256
+          ]
+        },
+        "layers.2.history_before": {
+          "dtype": "f16le",
+          "elements": 6144,
+          "shape": [
+            12,
+            2,
+            256
+          ]
+        },
+        "layers.2.operator_norm": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.operator_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.operator_residual": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.output": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.u": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.up_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.x": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "logits": {
+          "dtype": "f32le",
+          "elements": 768,
+          "shape": [
+            12,
+            64
+          ]
+        }
+      },
+      "tokens": [
+        1,
+        7,
+        13,
+        3,
+        9,
+        5,
+        11,
+        2,
+        17,
+        4,
+        6,
+        10
+      ]
+    },
+    {
+      "name": "future_changed12",
+      "offset": 0,
+      "partitions": [
+        [
+          12
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          3,
+          3,
+          3,
+          3
+        ],
+        [
+          7,
+          5
+        ],
+        [
+          1,
+          2,
+          3,
+          6
+        ]
+      ],
+      "stages": {
+        "embedding_lookup": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "final_norm": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.b": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.bcx_projection": {
+          "dtype": "f16le",
+          "elements": 9216,
+          "shape": [
+            12,
+            768
+          ]
+        },
+        "layers.0.c": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.convolution": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.down_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.ffn_gated": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.ffn_norm": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.gate_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.gate_silu": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.gated_conv": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.history_after": {
+          "dtype": "f16le",
+          "elements": 6144,
+          "shape": [
+            12,
+            2,
+            256
+          ]
+        },
+        "layers.0.history_before": {
+          "dtype": "f16le",
+          "elements": 6144,
+          "shape": [
+            12,
+            2,
+            256
+          ]
+        },
+        "layers.0.operator_norm": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.operator_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.operator_residual": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.output": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.u": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.up_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.0.x": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.attention_context": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.attention_probabilities": {
+          "dtype": "f32le",
+          "elements": 576,
+          "shape": [
+            4,
+            12,
+            12
+          ]
+        },
+        "layers.1.attention_scores": {
+          "dtype": "f32le",
+          "elements": 576,
+          "shape": [
+            4,
+            12,
+            12
+          ]
+        },
+        "layers.1.down_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.ffn_gated": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.ffn_norm": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.gate_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.gate_silu": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.k_norm": {
+          "dtype": "f16le",
+          "elements": 1536,
+          "shape": [
+            12,
+            2,
+            64
+          ]
+        },
+        "layers.1.k_projection": {
+          "dtype": "f16le",
+          "elements": 1536,
+          "shape": [
+            12,
+            2,
+            64
+          ]
+        },
+        "layers.1.k_rotary": {
+          "dtype": "f16le",
+          "elements": 1536,
+          "shape": [
+            12,
+            2,
+            64
+          ]
+        },
+        "layers.1.kv_keys_after": {
+          "dtype": "f16le",
+          "elements": 18432,
+          "shape": [
+            12,
+            2,
+            12,
+            64
+          ]
+        },
+        "layers.1.kv_values_after": {
+          "dtype": "f16le",
+          "elements": 18432,
+          "shape": [
+            12,
+            2,
+            12,
+            64
+          ]
+        },
+        "layers.1.operator_norm": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.operator_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.operator_residual": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.output": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.q_norm": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            4,
+            64
+          ]
+        },
+        "layers.1.q_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            4,
+            64
+          ]
+        },
+        "layers.1.q_rotary": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            4,
+            64
+          ]
+        },
+        "layers.1.up_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.1.v_projection": {
+          "dtype": "f16le",
+          "elements": 1536,
+          "shape": [
+            12,
+            2,
+            64
+          ]
+        },
+        "layers.2.b": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.bcx_projection": {
+          "dtype": "f16le",
+          "elements": 9216,
+          "shape": [
+            12,
+            768
+          ]
+        },
+        "layers.2.c": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.convolution": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.down_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.ffn_gated": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.ffn_norm": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.gate_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.gate_silu": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.gated_conv": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.history_after": {
+          "dtype": "f16le",
+          "elements": 6144,
+          "shape": [
+            12,
+            2,
+            256
+          ]
+        },
+        "layers.2.history_before": {
+          "dtype": "f16le",
+          "elements": 6144,
+          "shape": [
+            12,
+            2,
+            256
+          ]
+        },
+        "layers.2.operator_norm": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.operator_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.operator_residual": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.output": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.u": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.up_projection": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "layers.2.x": {
+          "dtype": "f16le",
+          "elements": 3072,
+          "shape": [
+            12,
+            256
+          ]
+        },
+        "logits": {
+          "dtype": "f32le",
+          "elements": 768,
+          "shape": [
+            12,
+            64
+          ]
+        }
+      },
+      "tokens": [
+        1,
+        7,
+        13,
+        3,
+        9,
+        5,
+        11,
+        2,
+        17,
+        4,
+        6,
+        19
+      ]
+    }
+  ],
+  "configuration": {
+    "bytes": 499,
+    "path": "/Users/coloner/work/rust/toklet/tests/fixtures/lfm2-scalar-v1/config.json",
+    "sha256": "d99adc70a5df647c9356ba284a219843a4b31a3b0646fc7d63d5780097db9853"
+  },
+  "counts": {
+    "binary_bytes": 2212480,
+    "cases": 4,
+    "descriptors": 504,
+    "elements_per_profile": 548944,
+    "f32_elements_per_profile": 4176,
+    "groups_per_case": 63,
+    "groups_per_profile": 252,
+    "half_elements_per_profile": 544768,
+    "native_scheduled_tokens": 133,
+    "native_schedules": 15
+  },
+  "execution": {
+    "gpu": false,
+    "source": false,
+    "target": false
+  },
+  "format": "toklet-lfm2-native-half-tiny-protocol-v1",
+  "geometry": {
+    "capacity": 12,
+    "epsilon": 1e-05,
+    "head_dim": 64,
+    "hidden": 256,
+    "intermediate": 256,
+    "kv_heads": 2,
+    "layer_kinds": [
+      "conv3",
+      "attention",
+      "conv3"
+    ],
+    "q_heads": 4,
+    "theta": 1000000.0,
+    "vocabulary": 64
+  },
+  "limits": {
+    "arrays_bytes": 4194304,
+    "components_bytes": 262144,
+    "export_seconds": 600,
+    "log_bytes": 1048576,
+    "manifest_bytes": 2097152,
+    "process_bytes": 536870912,
+    "replay_seconds": 600
+  },
+  "policy": {
+    "atol_floor": 0.0001,
+    "envelope_factor": 2,
+    "fatal_reference": "main",
+    "granularity": "case \u00d7 stage",
+    "masked_probability_word": 0,
+    "numeric_zero_equality": true,
+    "rtol": 0.001,
+    "wide": "diagnostic_only"
+  },
+  "scalar_manifest_use": "names/shapes/tokens/original artifact identities only; no scalar numeric expectations",
+  "status": "prospective_protocol_only"
+}

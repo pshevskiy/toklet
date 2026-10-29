@@ -7630,3 +7630,31 @@ reset phases and10 allocation-free Rust encodes. No graph or performance claim.
 The next independent Half graph source uses the original packed container and
 uniform exact-dyadic projections; analytic witnesses prove each Bx/Conv/Cz store
 matters before any source export or target outcome.
+
+The exact18-file product task is committed as`451e2cf` after final Astra review.
+The independently reviewed Half graph source passes twelve controls, but its
+first export stops before components/graph arrays: a diagnostic witness assumed
+Python builtin float sum was naive ordered FP64; this interpreter returns the
+more accurate1 instead of0. Both Astra advisers support replacing only that
+counterexample with explicit ordered FP64 additions, recording0 alongside the
+exact integer result1 and strengthening the existing control. Failed v1 source,
+logs and closed-worker receipt are preserved. Graph math, cases and gates stay
+fixed; the unexecuted successor awaits review before a bounded retry.
+
+[Independent tiny Half graph source](lfm2-half-reference.md) now qualifies after
+the separately reviewed witness-only correction. Twelve controls and exact
+four-file replay pass. Astra reconstructs all504 descriptors/1,097,888 saved
+values bit-exactly,252 gates,1,327,104 original affine weights and290,304 exact
+dot results/74,317,824 scalar products. Both history families, active/inactive
+KV snapshots,1,080 masked zeros, causal visible prefixes, separate-store/direct
+rounding and RoPE components pass. The failed first run stays preserved; source
+projection math and gates never change. The new six-file reference is ready for
+the resident graph; source workers stay below173MB and imply no native model fit.
+Rust engine bytes are unchanged from the passing450/541 checks. The concrete
+mixed-state design/ledger is independently approved and implementation is private.
+
+All six repository checks also pass for the source task: formatting, strict
+default/Metal all-target Clippy,450default/541Metal tests and optimized test
+compilation. The original Rust engine bytes remain unchanged. Active plan text
+is reconciled around the completed leaves/reference and remaining resident
+graph, rather than leaving earlier next-step statements contradictory.

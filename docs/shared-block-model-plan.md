@@ -183,15 +183,12 @@ campaign merely because a family name differs. Full-window Qwen3, old streaming
 prototypes and iPhone work remain preserved but are not this queue's prerequisite.
 
 B4 now has qualified reusable [Half RMS](lfm2-half-rms.md),
-[raw Conv3](causal-conv3-half.md) and [multi-KV attention/cache](staged-gqa-half.md)
-blocks for the selected Mac cases. The resident mixed graph, real LFM2 model and
-B5 app/context/adoption gates remain open. Next use strided products for both
-BCx convolution gates, then compose the existing blocks with one mixed-state
-publication boundary; leaf tests do not imply whole-model support.
-
-The [strided Half product](strided-half-product.md) is now separately qualified
-for both shared-BCx uses. The independent tiny Half graph source and concrete
-mixed-state transaction remain the next two B4 tasks.
+[raw Conv3](causal-conv3-half.md), [multi-KV attention/cache](staged-gqa-half.md)
+and [strided Half product](strided-half-product.md) blocks for the selected Mac
+cases, plus the fully audited [Half tiny reference](lfm2-half-reference.md).
+Next compose these in the concrete resident mixed graph with one checked
+publication boundary. Real LFM2 model and B5 app/context/adoption gates remain
+open; leaf qualification and a source fixture do not imply whole-model support.
 
 ## Research references
 

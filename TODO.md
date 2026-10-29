@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B4d4b — independent tiny Half mixed-graph source**.
+Next implementation task: **B4d4c — concrete resident tiny mixed graph and publication/recovery**.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -231,8 +231,8 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
   - [ ] B4d4: resident tiny mixed graph, whole-step status/publication/recovery.
     - [x] B4d4a: [strided B*x/C*z products](docs/strided-half-product.md);
       independent source, borrowed native wrapper and Mac release checks pass.
-    - [ ] B4d4b: independent tiny Half mixed-graph source with accurate
-      original-FP32 affine rounding and complete state/stage fixtures.
+    - [x] B4d4b: [independent tiny Half mixed-graph source](docs/lfm2-half-reference.md)
+      with accurate original-FP32 affine rounding and complete state/stage fixtures.
     - [ ] B4d4c: concrete resident graph and all-owner publication/recovery.
 - [ ] B4e: acquire and qualify the fitting representative on Mac; numerical,
   text/session and actual process-memory checks before any support claim.
@@ -475,3 +475,6 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | D4a product source controls/replay pass | Reviewed source and bounded owner pass eight controls plus exact four-file export/replay: five cases/17arrays/738,248B. Explicit same-parent readonly views, offsets/guards, signed/subnormal/RNE/overflow and invalid-zero-counterpart controls remain fixed. | Astra saved-array audit pending before fixture/native qualification; no graph or performance claim. |
 | 2026-10-29 | D4a strided-product source qualified | Astra's independent integer-dyadic/RNE audit exactly reconstructs67,072 words in each profile,234,980 physical input words,67,240 physical output words,96partition boundaries and all store/invalid controls. Exact six-file fixture promoted. | tests/fixtures/strided-half-product-v1; native wrapper/release checks remain. B4d4 is split into product, independent Half tiny source and concrete resident graph to track actual remaining work. |
 | 2026-10-29 | B4d4a standalone strided product qualified | Reviewed four-file native leaf, full450/541 checks and both optimized GPU jobs pass. Astra independently reconstructs347,384 finite outputs exactly, including342,784 MAIN/WIDE comparisons,133raw/128submissions, guards/readonly parents,96boundaries and10zeroencodes. | [Product report](docs/strided-half-product.md); no existing shader changes. Exact staged review/commit follows, then approved independent Half graph source. No model transaction or performance claim. |
+| 2026-10-29 | B4d4a reviewed commit / Half graph source starts | Exact18-file Astra approval and all checks pass; strided product committed as`451e2cf`. Separately reviewed two-file Half graph source uses the original container and uniform direct exact-dyadic projection stores. | Twelve source controls pass; first export stops before graph arrays because a diagnostic counterexample assumed builtin float sum meant naive ordered FP64. Failed v1 remains; Astra recommends explicit ordered additions without changing graph math/gates. |
+| 2026-10-29 | B4d4b independent Half graph source qualified | Reviewed witness-only successor passes12 controls/exact4-file replay. Astra independently reconstructs504 descriptors/1,097,888 values bit-exactly,252gates,original65tensors,74,317,824 scalar products and all state/mask/causal/component checks. Six-file fixture promoted; failedv1 retained. | [Half reference report](docs/lfm2-half-reference.md). Native mixed graph remains pending. Concrete design/physical ledger receives independent Astra approval; implementation is private until code review/checks. |
+| 2026-10-29 | D4b full repository checks pass | All six repository commands pass: formatting, strict default/Metal all-target Clippy,450default/541Metal tests and optimized test compilation. Source controls/replay/full audit remain passed; original Rust engine bytes are unchanged. | Exact source/fixture/report staged review and commit next. The private D4c Model/Session implementation remains separate and unqualified. |
