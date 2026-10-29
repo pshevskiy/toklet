@@ -1,0 +1,403 @@
+{
+  "format": "toklet-staged-gqa-half-result-v1",
+  "date": "2026-10-29",
+  "status": "selected_standalone_mac_gqa_and_per_head_cache_qualified",
+  "device": "Apple M1 Pro",
+  "scope": "Borrowed serial Reference attention and transactional per-head KV mechanics; no resident LFM model",
+  "profile": {
+    "new_heads": [
+      [
+        4,
+        2,
+        64
+      ],
+      [
+        16,
+        8,
+        64
+      ]
+    ],
+    "legacy_heads": [
+      [
+        4,
+        1,
+        32
+      ],
+      [
+        4,
+        1,
+        256
+      ]
+    ],
+    "query_context_layout": "[32,Q,D]",
+    "score_probability_layout": "[Q,32,capacity]",
+    "old_kv_layout": "[KV,retained,D]",
+    "new_kv_layout": "[KV,32,D]",
+    "query_to_kv": "head/(Q/KV)",
+    "expanded_kv_heads": false,
+    "whole_model_publication": false,
+    "implemented_capacity_admission_range": [
+      1,
+      544
+    ],
+    "active_token_admission_range": [
+      1,
+      32
+    ]
+  },
+  "policy": {
+    "atol_floor": 0.0001,
+    "envelope_factor": 2,
+    "fatal_reference": "main",
+    "rtol": 0.001,
+    "changed_after_target": false
+  },
+  "source": {
+    "cases": 11,
+    "controls": 8,
+    "arrays": 143,
+    "binary_bytes": 22405366,
+    "physical_state_half_words": 8358427,
+    "context_values_per_profile": 84736,
+    "score_values_per_profile": 334348,
+    "probability_values_per_profile": 334348,
+    "masked_positive_zero_values_both_profiles": 36232,
+    "three_file_exact_replay": true
+  },
+  "native": {
+    "submissions": 98,
+    "raw_records": 119,
+    "source_main_values": 753432,
+    "partition_main_values": 1154176,
+    "recovery_main_values": 70752,
+    "all_main_values": 1978360,
+    "main_failures": 0,
+    "wide_diagnostic_values": 1978360,
+    "wide_exceedances": 0,
+    "metrics": {
+      "source/main": {
+        "values": 753432,
+        "failures": 0,
+        "max_error": 9.5367431640625e-07,
+        "max_fraction": 0.00942679434316925
+      },
+      "source/wide": {
+        "values": 753432,
+        "failures": 0,
+        "max_error": 6.103515625e-05,
+        "max_fraction": 0.3083564600678384
+      },
+      "partition/main": {
+        "values": 1154176,
+        "failures": 0,
+        "max_error": 9.5367431640625e-07,
+        "max_fraction": 0.00942679434316925
+      },
+      "partition/wide": {
+        "values": 1154176,
+        "failures": 0,
+        "max_error": 1.9073486328125e-06,
+        "max_fraction": 0.01869620167966676
+      },
+      "recovery/main": {
+        "values": 70752,
+        "failures": 0,
+        "max_error": 1.862645149230957e-09,
+        "max_fraction": 1.4430797149788262e-05
+      },
+      "recovery/wide": {
+        "values": 70752,
+        "failures": 0,
+        "max_error": 1.9073486328125e-06,
+        "max_fraction": 0.018588466228474553
+      }
+    },
+    "counts": {
+      "zero_release_measurements": 53,
+      "physical_output_words_authenticated": 35489088,
+      "inactive_output_words_authenticated": 33478568,
+      "attention_records": 64,
+      "masked_positive_zero": 21780,
+      "masked_source": 18116,
+      "masked_partition": 3136,
+      "masked_recovery": 528,
+      "cache_hashed_words_authenticated": 25517580,
+      "cache_records": 55,
+      "cache_full_words_compared": 5883622,
+      "source_cache_after_words": 3916954
+    },
+    "real_512_to_513_same_set": true,
+    "deep_partitions": [
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        2,
+        3,
+        7,
+        19
+      ]
+    ],
+    "all_queries_heads_features_keys_compared": true,
+    "cache_state_controls": {
+      "six_owners": 6,
+      "kv_heads_per_owner": 8,
+      "capacity": 64,
+      "late_numerical_rejections": 4,
+      "unsubmitted_metadata_rejections": 5,
+      "actual_first_owner_head0_k_copy": true,
+      "forced_protocol_failure_not_hardware_error": true,
+      "poison_blocks_reuse": true,
+      "reset_zero_logical_prefix_retains_dirty_tail": true,
+      "successful_replay_chunks": [
+        1,
+        2
+      ],
+      "all_inactive_stage_gaps_authenticated": true
+    }
+  },
+  "legacy": {
+    "attention_source_and_recovery_main_values": 377464,
+    "cache_raw_states": 67,
+    "cache_physical_words_compared": 6210796,
+    "tiny_gemma_values": 428832,
+    "tiny_gemma_stages": 2400,
+    "tiny_gemma_main_max_fraction": 0.4126969242717473,
+    "existing_arithmetic_fixtures_and_gates_unchanged": true
+  },
+  "release_zero_rust_allocation_boundaries": {
+    "new": 53,
+    "legacy_attention": 8,
+    "legacy_cache": 27,
+    "legacy_tiny": 12,
+    "total": 100
+  },
+  "buffer_accounting": {
+    "real_geometry_standalone_attention_operand_bytes": 3539116,
+    "six_eight_head_cache_buffer_bytes_at_544": 7078256,
+    "compiler_pipeline_metadata_and_diagnostic_owners_separate": true,
+    "borrowed_view_owners_not_double_counted": true,
+    "current_abi_metadata_residual_bytes": 9984,
+    "previous_abi_metadata_residual_bytes": 9976,
+    "abi_difference_bytes": 8,
+    "abi_residual_independently_measured": false
+  },
+  "cold_checks": {
+    "commands": 6,
+    "fmt": true,
+    "strict_all_targets_clippy_default_and_metal": true,
+    "default": {
+      "passed": 450,
+      "ignored": 20
+    },
+    "metal": {
+      "passed": 539,
+      "ignored": 177
+    },
+    "release_opt_level": 3,
+    "release_debug_assertions": false
+  },
+  "gpu_owners": [
+    {
+      "name": "new",
+      "jobs": 4,
+      "all_groups_closed": true,
+      "endpoint_errors": [],
+      "per_stream_log_cap_bytes": 16777216,
+      "raw_log_bytes": 39103956,
+      "deadline_seconds": 300,
+      "total_cleanup_seconds": 30,
+      "usage_samples": [
+        37,
+        5,
+        4,
+        3
+      ],
+      "maximum_sparse_observed_rss_bytes": 66043904,
+      "complete_process_peak_or_model_fit_established": false,
+      "global_fsize_limit_used": false
+    },
+    {
+      "name": "legacy",
+      "jobs": 7,
+      "all_groups_closed": true,
+      "endpoint_errors": [],
+      "per_stream_log_cap_bytes": 67108864,
+      "raw_log_bytes": 96364008,
+      "deadline_seconds": 300,
+      "total_cleanup_seconds": 30,
+      "usage_samples": [
+        5,
+        2,
+        7,
+        2,
+        1,
+        18,
+        4
+      ],
+      "maximum_sparse_observed_rss_bytes": 142360576,
+      "complete_process_peak_or_model_fit_established": false,
+      "global_fsize_limit_used": false
+    }
+  ],
+  "binary": {
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b0-checks-v1/target/release/deps/toklet-148bdb7c5191ba43",
+    "profile": {
+      "opt_level": "3",
+      "debuginfo": 0,
+      "debug_assertions": false,
+      "overflow_checks": false,
+      "test": true
+    },
+    "bytes": 110720592,
+    "sha256": "9a0509c1154d5707a9f51f3b78705cedd07f4e7518ec3215782d2c7e936e6214"
+  },
+  "retained_binary": {
+    "executed_path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b0-checks-v1/target/release/deps/toklet-148bdb7c5191ba43",
+    "retained_copy": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4d3-gqa-gpu-v1/retained-release-test-binary",
+      "bytes": 110720592,
+      "sha256": "9a0509c1154d5707a9f51f3b78705cedd07f4e7518ec3215782d2c7e936e6214"
+    },
+    "bytes_identical_after_success": true,
+    "actual_execution_from_retained_path": false,
+    "new_jobs": 4,
+    "legacy_jobs": 7
+  },
+  "reader_correction": {
+    "issue": "First independent reader attempt incorrectly treated Set identities as globally unique across separate libtest processes.",
+    "correction": "Reset address-identity registry at the start of the distinct six-owner process; preserve all within-process address/identity checks.",
+    "target_or_gate_change": false
+  },
+  "limits": [
+    "Selected standalone GQA Q4/KV2/D64 and Q16/KV8/D64 cases, with qualified per-head cache mechanics and unchanged legacy regressions. This does not qualify a resident LFM2 mixed graph, real checkpoint, application, phone, arbitrary shapes/contexts, or performance.",
+    "All active source/partition/recovery cells are gated against frozen MAIN; WIDE remains diagnostic. Invalid-phase numerical output bits are not treated as expected mathematical values; input immutability, full output padding hashes and sticky status still checked.",
+    "Six-owner failure workload uses capacity64; single-owner source cases include capacity544 and actual same-Set512\u2192513. No full six-owner544 graph is inferred.",
+    "Synchronous rejection predicates and in-flight mapping prohibition are reviewed passing frozen test-code controls; raw captures prove retained physical and terminal/unsubmitted states, not separately serialized every Error enum.",
+    "Actual partial GPU copies followed by injected protocol failure exercise poisoning and reset/replay; no real hardware error or rollback is claimed.",
+    "Recorded process resident/physical/lifetime counters are sparse observations, including one-sample jobs, not complete peaks or model memory fit. Rust allocation counters exclude driver/other-thread/capture work.",
+    "Legacy log cap was prospectively64MiB for unchanged raw logs. No log pruning, global file-size limit, source tolerance, shader arithmetic, or target gate change occurred."
+  ],
+  "evidence": {
+    "source_proposal": {
+      "path": "artifacts/new-goal-b4d3-gqa-reference-proposal-v1/manifest.json",
+      "bytes": 4183,
+      "sha256": "06d0e84a90f453f461b5e93eedc09467bd84c1bdb29cc76f39cdfdcb5b4762c0"
+    },
+    "source_protocol": {
+      "path": "tests/fixtures/staged-gqa-half-v1/protocol.json",
+      "bytes": 10556,
+      "sha256": "55a1f4227dfed70a08df601044778a51d7f80d5e742ad6976f469050f5784455"
+    },
+    "source_review": {
+      "path": "artifacts/new-goal-b4d3-gqa-independent-review-v1/prospective-review.json",
+      "bytes": 5141,
+      "sha256": "49cae18f7938673d33d7ce394eae9ed8a1721d569d5ca9d005dbee63da215b95"
+    },
+    "source_jobs": {
+      "path": "artifacts/new-goal-b4d3-gqa-source-checks-v1/checks.json",
+      "bytes": 8448,
+      "sha256": "8f04e8ae4da1c1c058e78badabff1200dc1a7747ed3bc640a13c5ddf523d31f5"
+    },
+    "saved_source_review": {
+      "path": "artifacts/new-goal-b4d3-gqa-independent-review-v1/saved-source-review.json",
+      "bytes": 7336,
+      "sha256": "f944d89642d23a221fb3615c253afe8cd069a5b54f8bcc34b9072f2ed9d45044"
+    },
+    "native_proposal": {
+      "path": "artifacts/new-goal-b4d3-gqa-native-proposal-v2/manifest.json",
+      "bytes": 11829,
+      "sha256": "1a64e8234d0b9cf0a9bbe100784cdf03a6846de5ebc483c44b2c76b5f4fcafef"
+    },
+    "native_review": {
+      "path": "artifacts/new-goal-b4d3-gqa-independent-review-v1/prospective-native-review.json",
+      "bytes": 8948,
+      "sha256": "067e83447834df93ba311861a9f8de400e9bacb1f6bde44b2d7815d315e7142b"
+    },
+    "cold_checks": {
+      "path": "artifacts/new-goal-b4d3-gqa-cold-checks-v1/checks.json",
+      "bytes": 879438,
+      "sha256": "c898a49df2510d2a1d2e890183d04e233e77016b88c881a32455c8a28c9dd748"
+    },
+    "new_gpu_package": {
+      "path": "artifacts/new-goal-b4d3-gqa-gpu-v1/package.json",
+      "bytes": 1469283,
+      "sha256": "75ac00c4f118fd33e719aa73b58538d8e825f08ecdcebc211097b657f9fb9b38"
+    },
+    "new_gpu_approval": {
+      "path": "artifacts/new-goal-b4d3-gqa-gpu-v1/prospective-review.json",
+      "bytes": 3694,
+      "sha256": "4f33428898ba5900011b4f2cb16ae2f47be76fb9d07ebf2caa9a8f4dc5ed69f4"
+    },
+    "new_gpu_run": {
+      "path": "artifacts/new-goal-b4d3-gqa-gpu-v1/gpu.json",
+      "bytes": 1285981,
+      "sha256": "6d2b1c5a91f96dcac6c61b80d15ebb9de888880cf6591926b143ca03b737717a"
+    },
+    "legacy_gpu_package": {
+      "path": "artifacts/new-goal-b4d3-gqa-legacy-gpu-v1/package.json",
+      "bytes": 1469689,
+      "sha256": "4c63a044e2927eb89343494abbdc34ea7fa3b7303a670677cb841749930f0363"
+    },
+    "legacy_gpu_approval": {
+      "path": "artifacts/new-goal-b4d3-gqa-legacy-gpu-v1/prospective-review.json",
+      "bytes": 4238,
+      "sha256": "9f57700c99c15fa29a25972aba5922c31cab29dc89820daa5557925ba75bed8a"
+    },
+    "legacy_gpu_run": {
+      "path": "artifacts/new-goal-b4d3-gqa-legacy-gpu-v1/gpu.json",
+      "bytes": 1290054,
+      "sha256": "46b947356276a5c1019f7198767e613ba04f1d2c77e6077035d180f3d175d820"
+    },
+    "raw_qualification": {
+      "path": "artifacts/new-goal-b4d3-gqa-independent-review-v1/postrun-evidence-review.json",
+      "bytes": 20999,
+      "sha256": "efb7a80d79b1e0b23d0012f0737c4fabe714b31d351069772ff2f0dc8efd4579"
+    },
+    "retained_binary_record": {
+      "path": "artifacts/new-goal-b4d3-gqa-gpu-v1/retained-binary.json",
+      "bytes": 501,
+      "sha256": "cbcdceb6468d35b8f0d2ac4803da2e5d129e0c81de995d09cc68924935752a08"
+    },
+    "fixture_manifest": {
+      "path": "tests/fixtures/staged-gqa-half-v1/manifest.json",
+      "bytes": 118172,
+      "sha256": "f1fc055f5949fa068c86e2519046a398a7e490d8ec362cca18d464d60e7a2d7e"
+    }
+  },
+  "whole_graph_qualified": false,
+  "real_model_qualified": false,
+  "performance_qualified": false
+}

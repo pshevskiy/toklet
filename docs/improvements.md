@@ -7560,3 +7560,40 @@ nine invalid/sticky/reset sites and24zero-Rust-allocation encodes. Full cold
 checks pass450default/536Metal tests. A controller-only missing constant is caught
 before launch and fixed without changing numerical source, gates or binary.
 This is a universal raw leaf; model transaction, GQA and real inference remain.
+
+Raw Conv3 is committed as `782fd0b` after exact18-file Astra approval. The next
+all-query GQA source fixes11cases/143arrays, full deep query coverage and explicit
+per-head physical fill/validation/copy intervals before native extension. Source
+workers use the reviewed pipe supervision pattern with600s/1GiB bounds.
+
+The all-query GQA source passes eight controls and exact three-file replay.
+Astra independently reconstructs143arrays/22,405,366bytes,8,358,427physicalwords,
+all MAIN/WIDE context/score/probability cells and36,232masked positive zeros.
+Fixed32-row head strides, per-head copy/validation intervals and512→513 chains
+are checked. No nativeReady/cache/model admission follows from seeded fixtures.
+
+Astra reviews the nine-file native GQA/cache successor; malformed-metadata
+controls now retain terminal evidence before asserting rejection. All six parent
+checks pass450default/539Metal tests, strict Clippy/formatting and an optimized
+release freeze. The new four GPU jobs retain16MiB per-stream limits; seven legacy
+jobs use a separately reviewed64MiB owner because existing complete captures
+include47.6MB Gemma and27.7MB cache logs. This prospective split preserves raw
+coverage and all numerical gates. Native hardware qualification remains pending.
+
+All eleven frozen release GPU jobs pass on Apple M1 Pro: four new GQA/cache and
+seven legacy attention/cache/tiny-Gemma controls. Both owners retain complete
+logs, close all child groups and report no endpoint error. The exact110,720,592B
+executable is retained with its executed-path distinction for later rebuilds.
+New tests report1,978,360 MAIN comparisons and53 zero Rust allocation boundaries;
+independent saved-raw qualification remains required before declaring closure.
+
+[Multi-KV GQA/cache](staged-gqa-half.md) now passes independent saved-raw
+qualification. Astra gates1,978,360 new MAIN values, verifies all119 raw records,
+98 submissions, per-head physical storage and the same-Set512→513 chain, plus
+six-owner rejection/partial-copy poison/reset/replay. Seven legacy jobs preserve
+377,464 attention values,67 cache states and428,832 tiny-Gemma values; all100
+observed release allocation boundaries are zero. Actual cache metadata grows
+eight bytes in the current ABI, explicitly separated from physical buffers.
+The reviewer's process-local identity correction is preserved without target or
+gate changes. Next is reusable strided B*x/C*z, then the resident mixed graph;
+no real LFM2/app/context/performance/mobile support is inferred.

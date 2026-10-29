@@ -226,3 +226,18 @@ bytes, including all32 deep queries at Q16/KV8/D64. Preserve fixed32-row head
 strides and qualify each head's active fill/validation/copy intervals. A small
 sampling draft is superseded planning with no outcomes. The existing Reference
 arithmetic/legacy behavior remains the target, not a new attention algorithm.
+
+## B4d3 multi-KV attention/cache result
+
+The [borrowed GQA/cache blocks](staged-gqa-half.md) now pass full source and
+Mac release qualification at the selected Q4/KV2/D64 and Q16/KV8/D64 cases.
+Astra checks1,978,360 MAIN values, all physical per-head state and the actual
+same-Set512→513 chain, plus seven legacy jobs. Six-owner failure/replay uses
+capacity64; single-owner source cases include544. This does not admit a model.
+
+B4d4 first adds the small strided Half product needed for B*x and C*z views into
+one physical BCx parent. Existing cache-layout, packed projection, rotary and
+activation blocks are reused. Then freeze an independent Half tiny-graph source
+before concrete resident mixed-state publication/recovery. The scalar graph's
+outputs alone are not a Half reference. Avoid a generic graph VM or new fused
+model-specific kernels for these concrete uses.

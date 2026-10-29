@@ -398,11 +398,13 @@ impl Model {
             validate_buffer_bytes((c.head_dim + GUARD) * 4, maximum)?;
             validate_buffer_bytes(zero, maximum)?;
             let mut configs = [cache::OwnerConfig {
+                kv_heads: 1,
                 dim: 32,
                 window: None,
             }; MAX_LAYERS];
             for (out, &spec) in configs.iter_mut().zip(&specs) {
                 *out = cache::OwnerConfig {
+                    kv_heads: 1,
                     dim: c.head_dim,
                     window: window(spec, local_window),
                 };

@@ -47,10 +47,12 @@ fn hash(v: &[u16]) -> String {
 #[test]
 fn bounded_plans_bytes_and_copy_ranges() {
     let local = OwnerConfig {
+        kv_heads: 1,
         dim: 256,
         window: Some(512),
     };
     let full = OwnerConfig {
+        kv_heads: 1,
         dim: 256,
         window: None,
     };
@@ -74,6 +76,7 @@ fn bounded_plans_bytes_and_copy_ranges() {
         (
             12,
             vec![OwnerConfig {
+                kv_heads: 1,
                 dim: 64,
                 window: None,
             }],
@@ -81,6 +84,7 @@ fn bounded_plans_bytes_and_copy_ranges() {
         (
             12,
             vec![OwnerConfig {
+                kv_heads: 1,
                 dim: 32,
                 window: Some(0),
             }],
@@ -88,6 +92,7 @@ fn bounded_plans_bytes_and_copy_ranges() {
         (
             12,
             vec![OwnerConfig {
+                kv_heads: 1,
                 dim: 32,
                 window: Some(13),
             }],
@@ -98,7 +103,15 @@ fn bounded_plans_bytes_and_copy_ranges() {
     for capacity in [1, 12, 544] {
         for dim in [32, 256] {
             for window in [None, Some(1), Some(capacity)] {
-                let p = Plan::new(capacity, &[OwnerConfig { dim, window }]).unwrap();
+                let p = Plan::new(
+                    capacity,
+                    &[OwnerConfig {
+                        kv_heads: 1,
+                        dim,
+                        window,
+                    }],
+                )
+                .unwrap();
                 assert_eq!(
                     p.session_bytes().unwrap(),
                     p.buffer_bytes + size_of::<Set<'_>>() + TRANSACTION_METADATA_BYTES
@@ -457,10 +470,12 @@ fn gpu_source_copies_chain_and_owner_bounds() {
             12,
             &[
                 OwnerConfig {
+                    kv_heads: 1,
                     dim: 32,
                     window: Some(4),
                 },
                 OwnerConfig {
+                    kv_heads: 1,
                     dim: 32,
                     window: None,
                 },
@@ -471,10 +486,12 @@ fn gpu_source_copies_chain_and_owner_bounds() {
             544,
             &[
                 OwnerConfig {
+                    kv_heads: 1,
                     dim: 256,
                     window: Some(512),
                 },
                 OwnerConfig {
+                    kv_heads: 1,
                     dim: 256,
                     window: None,
                 },
@@ -490,6 +507,7 @@ fn gpu_source_copies_chain_and_owner_bounds() {
                 Plan::new(
                     12,
                     &[OwnerConfig {
+                        kv_heads: 1,
                         dim: 32,
                         window: None
                     }]
@@ -535,6 +553,7 @@ fn gpu_source_copies_chain_and_owner_bounds() {
                 1,
                 &vec![
                     OwnerConfig {
+                        kv_heads: 1,
                         dim: 32,
                         window: Some(1)
                     };
@@ -572,10 +591,12 @@ fn gpu_half_words_omission_and_readiness() {
             12,
             &[
                 OwnerConfig {
+                    kv_heads: 1,
                     dim: 32,
                     window: Some(4),
                 },
                 OwnerConfig {
+                    kv_heads: 1,
                     dim: 32,
                     window: None,
                 },
@@ -814,10 +835,12 @@ fn gpu_partial_copy_poison_reset_replay() {
             12,
             &[
                 OwnerConfig {
+                    kv_heads: 1,
                     dim: 32,
                     window: Some(4),
                 },
                 OwnerConfig {
+                    kv_heads: 1,
                     dim: 32,
                     window: None,
                 },

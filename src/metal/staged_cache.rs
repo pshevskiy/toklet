@@ -38,6 +38,7 @@ static NEXT_SET: AtomicU64 = AtomicU64::new(1);
 
 #[derive(Clone, Copy, Debug)]
 pub(super) struct OwnerConfig {
+    pub kv_heads: usize,
     pub dim: usize,
     pub window: Option<usize>,
 }
@@ -50,6 +51,7 @@ struct OwnerPlan {
 }
 const EMPTY_OWNER: OwnerPlan = OwnerPlan {
     config: OwnerConfig {
+        kv_heads: 0,
         dim: 0,
         window: None,
     },
@@ -57,6 +59,28 @@ const EMPTY_OWNER: OwnerPlan = OwnerPlan {
     old_len: 0,
     staged_len: 0,
 };
+/// Per-head active staged bytes. Fixed CHUNK head stride never becomes tokens.
+fn active_range(p: OwnerPlan, head: usize, tokens: usize) -> Result<(usize, usize)> {
+    if head >= p.config.kv_heads || tokens == 0 || tokens > CHUNK {
+        return Err(Error::Options("cache active head/count"));
+    }
+    let offset = head
+        .checked_mul(CHUNK)
+        .and_then(|n| n.checked_mul(p.config.dim))
+        .and_then(|n| n.checked_mul(2))
+        .ok_or(Error::Options("cache active offset overflow"))?;
+    let bytes = tokens
+        .checked_mul(p.config.dim)
+        .and_then(|n| n.checked_mul(2))
+        .ok_or(Error::Options("cache active bytes overflow"))?;
+    if offset
+        .checked_add(bytes)
+        .is_none_or(|end| end > (p.staged_len - GUARD) * 2)
+    {
+        return Err(Error::Options("cache active head extent"));
+    }
+    Ok((offset, bytes))
+}
 pub(super) struct Plan {
     capacity: usize,
     count: usize,
@@ -75,13 +99,13 @@ impl Plan {
             buffer_bytes: (1 + GUARD) * 4,
         };
         for (slot, &config) in plan.owners.iter_mut().zip(configs) {
-            if ![32, 256].contains(&config.dim)
+            if ![(1, 32), (1, 256), (2, 64), (8, 64)].contains(&(config.kv_heads, config.dim))
                 || config.window.is_some_and(|w| w == 0 || w > capacity)
             {
                 return Err(Error::Options("cache owner shape"));
             }
             let layout = KvOwner {
-                heads: 1,
+                heads: config.kv_heads,
                 head_dim: config.dim,
                 storage: KvStorage::F16,
                 retention: config
@@ -92,8 +116,10 @@ impl Plan {
             }
             .at_capacity(capacity)
             .map_err(|_| Error::Options("cache owner bytes"))?;
-            let staged_len = CHUNK
-                .checked_mul(config.dim)
+            let staged_len = config
+                .kv_heads
+                .checked_mul(CHUNK)
+                .and_then(|n| n.checked_mul(config.dim))
                 .and_then(|n| n.checked_add(GUARD))
                 .ok_or(Error::Options("cache stage overflow"))?;
             plan.buffer_bytes = plan
@@ -385,6 +411,11 @@ impl<'a> Set<'a> {
             .epoch
             .checked_add(1)
             .ok_or(Error::Options("cache epoch exhaustion"))?;
+        for p in &self.operation.plan.owners[..self.operation.plan.count] {
+            for head in 0..p.config.kv_heads {
+                active_range(*p, head, tokens)?;
+            }
+        }
         let raw = gpu.command()?;
         let e = raw
             .blitCommandEncoder()
@@ -394,19 +425,20 @@ impl<'a> Set<'a> {
             .enumerate()
         {
             let owner = self.owners[i].as_ref().unwrap();
-            let bytes = tokens * p.config.dim * 2;
-            // Checked active tight ranges, multiples of four; private
-            // same-device initialized buffers, no in-flight work in Idle. The
-            // command retains resources; later producers follow this encoder.
-            for b in [&owner.new_k, &owner.new_v] {
-                e.fillBuffer_range_value(
-                    &b.raw,
-                    NSRange {
-                        location: 0,
-                        length: bytes,
-                    },
-                    0x7e,
-                );
+            // Every head's tight active slice is disjoint, checked before the
+            // encoder; inactive CHUNK-token gaps and guards stay untouched.
+            for head in 0..p.config.kv_heads {
+                let (offset, bytes) = active_range(*p, head, tokens)?;
+                for b in [&owner.new_k, &owner.new_v] {
+                    e.fillBuffer_range_value(
+                        &b.raw,
+                        NSRange {
+                            location: offset,
+                            length: bytes,
+                        },
+                        0x7e,
+                    );
+                }
             }
         }
         e.endEncoding();
@@ -465,6 +497,9 @@ impl<'a> Set<'a> {
         // Bounds before encoder creation: all source owners must be validated,
         // even when their attention was never encoded.
         for p in &self.operation.plan.owners[..self.operation.plan.count] {
+            for head in 0..p.config.kv_heads {
+                active_range(*p, head, self.tokens)?;
+            }
             let count = self.tokens * p.config.dim;
             count
                 .div_ceil(self.operation.width)
@@ -482,26 +517,29 @@ impl<'a> Set<'a> {
         {
             let owner = self.owners[i].as_ref().unwrap();
             let count = (self.tokens * p.config.dim) as u32;
-            // SAFETY: disjoint initialized same-device operands, checked active
-            // count excludes padding/guards; copied scalar and retained buffers.
-            unsafe {
-                e.setBuffer_offset_atIndex(Some(&owner.new_k.raw), 0, 0);
-                e.setBuffer_offset_atIndex(Some(&owner.new_v.raw), 0, 1);
-                e.setBytes_length_atIndex(NonNull::from(&count).cast(), size_of::<u32>(), 2);
-                e.setBuffer_offset_atIndex(Some(&self.status.raw), 0, 3);
+            for head in 0..p.config.kv_heads {
+                let (offset, _) = active_range(*p, head, self.tokens)?;
+                // SAFETY: disjoint initialized same-device operands, checked active
+                // count excludes padding/guards; copied scalar and retained buffers.
+                unsafe {
+                    e.setBuffer_offset_atIndex(Some(&owner.new_k.raw), offset, 0);
+                    e.setBuffer_offset_atIndex(Some(&owner.new_v.raw), offset, 1);
+                    e.setBytes_length_atIndex(NonNull::from(&count).cast(), size_of::<u32>(), 2);
+                    e.setBuffer_offset_atIndex(Some(&self.status.raw), 0, 3);
+                }
+                e.dispatchThreadgroups_threadsPerThreadgroup(
+                    MTLSize {
+                        width: (count as usize).div_ceil(self.operation.width),
+                        height: 1,
+                        depth: 1,
+                    },
+                    MTLSize {
+                        width: self.operation.width,
+                        height: 1,
+                        depth: 1,
+                    },
+                );
             }
-            e.dispatchThreadgroups_threadsPerThreadgroup(
-                MTLSize {
-                    width: (count as usize).div_ceil(self.operation.width),
-                    height: 1,
-                    depth: 1,
-                },
-                MTLSize {
-                    width: self.operation.width,
-                    height: 1,
-                    depth: 1,
-                },
-            );
         }
         e.endEncoding();
         raw.commit();
@@ -559,6 +597,25 @@ impl<'a> Set<'a> {
                 if src > self.tokens * p.config.dim * 2 || dst > p.retained * p.config.dim * 2 {
                     return Err(Error::Options("cache copy range"));
                 }
+                for head in 0..p.config.kv_heads {
+                    let source_end = head
+                        .checked_mul(CHUNK)
+                        .and_then(|n| n.checked_mul(p.config.dim))
+                        .and_then(|n| n.checked_mul(2))
+                        .and_then(|n| n.checked_add(src))
+                        .ok_or(Error::Options("cache head source overflow"))?;
+                    let target_end = head
+                        .checked_mul(p.retained)
+                        .and_then(|n| n.checked_mul(p.config.dim))
+                        .and_then(|n| n.checked_mul(2))
+                        .and_then(|n| n.checked_add(dst))
+                        .ok_or(Error::Options("cache head destination overflow"))?;
+                    if source_end > (p.staged_len - GUARD) * 2
+                        || target_end > (p.old_len - GUARD) * 2
+                    {
+                        return Err(Error::Options("cache head copy range"));
+                    }
+                }
             }
         }
         let raw = gpu.command()?;
@@ -571,27 +628,29 @@ impl<'a> Set<'a> {
             .enumerate()
         {
             let owner = self.owners[i].as_ref().unwrap();
-            for (src, dst) in [(&owner.new_k, &owner.old_k), (&owner.new_v, &owner.old_v)] {
-                for run in runs[i] {
-                    if run.rows == 0 {
-                        continue;
-                    }
-                    // SAFETY: full set and every range prevalidated before this
-                    // command; tight rows have four-byte-aligned offsets/sizes.
-                    // Owners are fresh non-Clone allocations and commands retain
-                    // them. No CPU access until completion. Old views are sealed.
-                    unsafe {
-                        e.copyFromBuffer_sourceOffset_toBuffer_destinationOffset_size(
-                            &src.raw,
-                            run.source_row * p.config.dim * 2,
-                            &dst.raw,
-                            run.slot * p.config.dim * 2,
-                            run.rows * p.config.dim * 2,
-                        );
-                    }
-                    copied += 1;
-                    if mode.stop_after(copied) {
-                        break 'owners;
+            for head in 0..p.config.kv_heads {
+                for (src, dst) in [(&owner.new_k, &owner.old_k), (&owner.new_v, &owner.old_v)] {
+                    for run in runs[i] {
+                        if run.rows == 0 {
+                            continue;
+                        }
+                        // SAFETY: full set and every range prevalidated before this
+                        // command; tight rows have four-byte-aligned offsets/sizes.
+                        // Owners are fresh non-Clone allocations and commands retain
+                        // them. No CPU access until completion. Old views are sealed.
+                        unsafe {
+                            e.copyFromBuffer_sourceOffset_toBuffer_destinationOffset_size(
+                                &src.raw,
+                                (head * CHUNK + run.source_row) * p.config.dim * 2,
+                                &dst.raw,
+                                (head * p.retained + run.slot) * p.config.dim * 2,
+                                run.rows * p.config.dim * 2,
+                            );
+                        }
+                        copied += 1;
+                        if mode.stop_after(copied) {
+                            break 'owners;
+                        }
                     }
                 }
             }
@@ -739,3 +798,6 @@ impl Set<'_> {
         )
     }
 }
+
+#[cfg(test)]
+mod gqa_tests;

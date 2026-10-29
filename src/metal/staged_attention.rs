@@ -22,6 +22,8 @@ pub(super) const PIPELINE_ALLOWANCE: usize = 64 * 1024 * 1024;
 #[derive(Clone, Copy, Debug)]
 pub(super) struct Plan {
     capacity: usize,
+    query_heads: usize,
+    kv_heads: usize,
     dim: usize,
     retained: usize,
     committed: usize,
@@ -39,9 +41,47 @@ impl Plan {
         committed: usize,
         tokens: usize,
     ) -> Result<Self> {
+        Self::with_heads(capacity, HEADS, 1, dim, window, committed, tokens)
+    }
+    /// Bounded new head geometries; legacy callers retain the old constructor.
+    #[cfg(test)]
+    pub(super) fn new_gqa(
+        capacity: usize,
+        query_heads: usize,
+        kv_heads: usize,
+        window: Option<usize>,
+        committed: usize,
+        tokens: usize,
+    ) -> Result<Self> {
+        if ![(4, 2), (16, 8)].contains(&(query_heads, kv_heads)) {
+            return Err(Error::Options("staged attention GQA profile"));
+        }
+        Self::with_heads(
+            capacity,
+            query_heads,
+            kv_heads,
+            64,
+            window,
+            committed,
+            tokens,
+        )
+    }
+    fn with_heads(
+        capacity: usize,
+        query_heads: usize,
+        kv_heads: usize,
+        dim: usize,
+        window: Option<usize>,
+        committed: usize,
+        tokens: usize,
+    ) -> Result<Self> {
         if capacity == 0
             || capacity > 544
-            || ![32, 256].contains(&dim)
+            || ![(4, 1, 32), (4, 1, 256), (4, 2, 64), (16, 8, 64)].contains(&(
+                query_heads,
+                kv_heads,
+                dim,
+            ))
             || window.is_some_and(|w| w == 0 || w > capacity)
             || tokens == 0
             || tokens > CHUNK
@@ -57,6 +97,8 @@ impl Plan {
         let old = window_rows::old_spans(retained, committed, window);
         let plan = Self {
             capacity,
+            query_heads,
+            kv_heads,
             dim,
             retained,
             committed,
@@ -70,16 +112,16 @@ impl Plan {
         Ok(plan)
     }
     pub(super) fn q_len(self) -> usize {
-        CHUNK * HEADS * self.dim + GUARD
+        CHUNK * self.query_heads * self.dim + GUARD
     }
     pub(super) fn old_len(self) -> usize {
-        self.retained * self.dim + GUARD
+        self.kv_heads * self.retained * self.dim + GUARD
     }
     pub(super) fn staged_len(self) -> usize {
-        CHUNK * self.dim + GUARD
+        self.kv_heads * CHUNK * self.dim + GUARD
     }
     pub(super) fn score_len(self) -> usize {
-        HEADS * CHUNK * self.capacity + GUARD
+        self.query_heads * CHUNK * self.capacity + GUARD
     }
     pub(super) fn context_len(self) -> usize {
         self.q_len()
@@ -88,10 +130,10 @@ impl Plan {
         1 + GUARD
     }
     /// All guarded physical operands; immutable weights/GPU framework/compiler and
-    /// caller/diagnostic owners are separate. KV1 is never expanded to Q4.
+    /// caller/diagnostic owners are separate. KV heads are never expanded to query heads.
     pub(super) fn operand_bytes(self) -> Result<usize> {
         let old = KvOwner {
-            heads: 1,
+            heads: self.kv_heads,
             head_dim: self.dim,
             storage: KvStorage::F16,
             retention: self
@@ -224,7 +266,7 @@ impl Operation {
         }
         // Shape bounds make every Q/K/V/score address and rounded lane UInt32.
         // Rows/strides are derived once from the shared host row descriptors.
-        let count = plan.tokens * HEADS;
+        let count = plan.tokens * plan.query_heads;
         let groups = count.div_ceil(self.width);
         if groups
             .checked_mul(self.width)
@@ -256,6 +298,9 @@ impl Operation {
             plan.old[1].rows as u32,
             plan.window.unwrap_or(0) as u32,
             CHUNK as u32,
+            plan.query_heads as u32,
+            plan.kv_heads as u32,
+            plan.retained as u32,
         ];
         // SAFETY: fixed private ABI; initialized, same-device, pairwise disjoint
         // allocations with checked lengths/index domain and Half/FP32 alignment.
@@ -266,7 +311,7 @@ impl Operation {
             for (index, buffer) in buffers[..8].iter().enumerate() {
                 encoder.setBuffer_offset_atIndex(Some(*buffer), 0, index);
             }
-            encoder.setBytes_length_atIndex(NonNull::from(&args).cast(), size_of::<[u32; 11]>(), 8);
+            encoder.setBytes_length_atIndex(NonNull::from(&args).cast(), size_of::<[u32; 14]>(), 8);
             encoder.setBuffer_offset_atIndex(Some(&io.status.raw), 0, 9);
         }
         encoder.dispatchThreadgroups_threadsPerThreadgroup(
@@ -302,3 +347,6 @@ pub(super) struct Invocation<'a> {
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+mod gqa_tests;

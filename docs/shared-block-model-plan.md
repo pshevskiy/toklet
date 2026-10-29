@@ -182,6 +182,13 @@ runs. Reuse checks for unchanged mechanisms; do not repeat the old full-context
 campaign merely because a family name differs. Full-window Qwen3, old streaming
 prototypes and iPhone work remain preserved but are not this queue's prerequisite.
 
+B4 now has qualified reusable [Half RMS](lfm2-half-rms.md),
+[raw Conv3](causal-conv3-half.md) and [multi-KV attention/cache](staged-gqa-half.md)
+blocks for the selected Mac cases. The resident mixed graph, real LFM2 model and
+B5 app/context/adoption gates remain open. Next use strided products for both
+BCx convolution gates, then compose the existing blocks with one mixed-state
+publication boundary; leaf tests do not imply whole-model support.
+
 ## Research references
 
 Astra inspected these primary implementations for design patterns. This plan

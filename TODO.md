@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B4d3 — multi-KV staged attention/cache source and native extension**.
+Next implementation task: **B4d4a — strided Half products, then the resident tiny mixed graph**.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -226,7 +226,8 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
   - [x] B4d2: [borrowed three-tap Half convolution](docs/causal-conv3-half.md)
     with immutable old history and exact separate candidates; full source/GPU checks.
     Model-wide transaction publication remains B4d4.
-  - [ ] B4d3: actual multi-KV staged attention/cache views and accounting.
+  - [x] B4d3: [multi-KV staged attention/cache](docs/staged-gqa-half.md) views,
+    checked physical accounting and all-query/source/state/legacy Mac qualification.
   - [ ] B4d4: resident tiny mixed graph, whole-step status/publication/recovery.
 - [ ] B4e: acquire and qualify the fitting representative on Mac; numerical,
   text/session and actual process-memory checks before any support claim.
@@ -460,3 +461,8 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B4d1 reviewed native RMS commit / D2 starts | Exact17-file Astra review passes; standalone native RMS task committed as`7ef4cab`. Next raw conv3 source fixes original BF16 coefficients, explicit FP32 tap order/Half store and exact two-row raw-u candidates. | Peer catches the T1 dispatch requirement: each channel writes both candidate rows. No convolution implementation or hardware outcome yet. |
 | 2026-10-29 | B4d2 independent raw Conv3 source qualified | Eight portable controls and exact four-file export/replay pass. Astra reconstructs46,571 MAIN/WIDE outputs,7,238 exact candidate words,10,857 original BF16 coefficients and233 boundaries across35 schedules. | Frozen fixture at tests/fixtures/causal-conv3-half-v1; native operator/consumer and GPU/status/ownership qualification remain pending. |
 | 2026-10-29 | B4d2 raw native Conv3 qualified | Source8controls/35schedules and full450/536 cold checks pass. Astra independently reconstructs312,670 exact valid outputs across274commands/286captures, all233chunk boundaries, candidate bits, guards/status and24zero-allocation encodes. | [Conv3 report](docs/causal-conv3-half.md); exact staged review/commit, then all-query multi-KV source. Unrun missing-log-cap draft retained; no numerical changes or model transaction claim. |
+| 2026-10-29 | B4d2 reviewed commit / D3 source starts | Exact18-file Astra review passes; raw native Conv3 task committed as`782fd0b`. D3 applies the prospectively reviewed full-query source, with600s/1GiB source-worker bounds and fixed head-major32-row staging. | Eleven cases/143arrays include512→513 and all32 deep queries; no native GQA change or outcome yet. |
+| 2026-10-29 | D3 complete all-query source qualified | Eightcontrols/two3-fileexports pass600s/1GiBworkers. Astra reconstructs all143arrays/22,405,366B,8,358,427physicalwords and bothfullqueryprofiles, all36,232masked+0 and per-head copy/validation intervals. | Frozenfixture tests/fixtures/staged-gqa-half-v1; native GQA/cache and legacy regression qualification remain pending. |
+| 2026-10-29 | D3 reviewed native extension and full cold checks | Astra approves the nine-file successor after terminal raw capture is moved before metadata rejection assertions. All six parent jobs pass: formatting, strict default/Metal all-target Clippy,450default/539Metal tests and optimized release freeze. | Separate new4-job16MiB and legacy7-job64MiB packages retain complete known legacy logs; no pruning. Mac GPU qualification remains pending. |
+| 2026-10-29 | D3 all eleven release GPU jobs pass | Four new all-query GQA/cache and seven existing attention/cache/tiny-Gemma jobs pass with closed groups and unchanged binary/source/gates. New raw logs total39,103,956B; full legacy logs96,364,008B. Exact tested executable is retained before future Cargo rebuilds. | Independent saved-raw numerical/physical-state qualification and exact staged review remain before task closure/commit. |
+| 2026-10-29 | B4d3 standalone GQA/cache qualified | Astra independently gates1,978,360 new MAIN values,119 raw records/98 submissions, complete per-head physical/cache/recovery state and seven legacy jobs. All100 observed release allocation boundaries are zero. | [GQA/cache report](docs/staged-gqa-half.md); source/target/gates unchanged. Six-owner fault workload is64, single-owner cases reach544; resident mixed graph and real model remain open. |
