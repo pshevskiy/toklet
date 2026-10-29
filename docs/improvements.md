@@ -7510,3 +7510,32 @@ SHA,334 contiguous tensor ranges and all nine published files pass. Exclusive
 publication, bounded transfer and closed cleanup are checked; no numerical or
 tokenizer execution occurs. This removes acquisition work from the later real
 source/native journey without changing engine/app admission.
+
+The original artifact record is committed as `a9a53bf`. The next RMS source
+passes six portable controls and exact four-file replay; Astra independently
+reconstructs75,008 MAIN and75,008 WIDE words from direct BF16 gains and checks
+the exact epsilon/subnormal and gain-underflow witnesses. The host encodes its
+admitted epsilon bits explicitly; native GPU qualification is still pending.
+
+D1's full cold checks pass450 default/534 Metal-feature tests plus strict Clippy,
+formatting and release freeze. Before hardware launch, Astra catches and closes
+consumed-JSON identity and raw-log bounds in the controller; earlier unrun drafts
+are retained. Five fixed release GPU checks now run under the unchanged source
+gates, including all legacy Gemma RMS controls. No native result is claimed yet.
+
+The first D1 GPU attempt stops with SIGXFSZ before numerical output under the
+controller's global file-size cap. Logs were116B/0B; the exact incidental write
+is unknown. Both Astra investigations preserve the failure and recommend a
+transport-only successor: strict per-stream bounded pipes, same binary/source/
+gates and deadlines. Four real owned CPU pipe controls pass; native qualification
+still awaits the reviewed hardware retry.
+
+[B4d1 native direct-gain RMS](lfm2-half-rms.md) is qualified on Apple M1 Pro.
+The host retains exact admitted epsilon bits while shader arithmetic and old
+Gemma admission stay unchanged. Astra independently rescores150,016 normal+640
+recovery LFM outputs and all legacy108,544 normal+192 recovery+64 subnormal
+words exactly; guards, immutable inputs, status/recovery and26 total release
+zero-allocation encodes pass. Six cold/build jobs pass450 default/534 Metal
+checks. The failed global-file-cap wrapper is retained and corrected through
+reviewed pipe-only transport with identical numerical binary/data/gates. Sparse
+memory samples establish no peak or model fit. Next is the raw convolution leaf.

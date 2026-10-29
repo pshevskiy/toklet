@@ -1,0 +1,545 @@
+{
+  "cases": [
+    {
+      "arrays": {
+        "gamma": {
+          "bytes": 128,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 148,
+          "sha256": "38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca",
+          "shape": [
+            64
+          ]
+        },
+        "input": {
+          "bytes": 148,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 0,
+          "sha256": "25ce1bdd18b7feb4eb82fa5f4356f2f29609533b6b7db03fb810f96d37c2ddde",
+          "shape": [
+            74
+          ]
+        },
+        "main": {
+          "bytes": 128,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 560,
+          "sha256": "38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca",
+          "shape": [
+            1,
+            64
+          ]
+        },
+        "scales": {
+          "bytes": 284,
+          "dtype": "u32le",
+          "file": "arrays.bin",
+          "offset": 276,
+          "sha256": "fcb7fc2b87c2c9230b99f16ba283f72fc5cf72753cc1310176252f0a0ed74d8f",
+          "shape": [
+            71
+          ]
+        },
+        "wide": {
+          "bytes": 128,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 688,
+          "sha256": "38723a2e5e8a17aa7950dc008209944e898f69a7bd10a23c839d341e935fd5ca",
+          "shape": [
+            1,
+            64
+          ]
+        }
+      },
+      "envelope": 0.0,
+      "exact": [
+        {
+          "column": 0,
+          "expected_word": 0,
+          "row": 0,
+          "wrong_unit_offset_word": 15360
+        }
+      ],
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "input_stride": 67,
+      "name": "direct_zero_gain",
+      "output_elements": 76,
+      "output_stride": 69,
+      "rows": 1,
+      "width": 64
+    },
+    {
+      "arrays": {
+        "gamma": {
+          "bytes": 128,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 964,
+          "sha256": "d66c24ad0f67a9f356f650d33a9fdf3f5b88ad3fea8fcbe0c963524866d41857",
+          "shape": [
+            64
+          ]
+        },
+        "input": {
+          "bytes": 148,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 816,
+          "sha256": "4252809481e2b8a10fbb2422c594c88f26169a0a9478e78e95ce7a7b3f595872",
+          "shape": [
+            74
+          ]
+        },
+        "main": {
+          "bytes": 128,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 1376,
+          "sha256": "39b7d126a1d8354c283f65278adbd1f315a5cf4e2459e6a534df035c48b986ad",
+          "shape": [
+            1,
+            64
+          ]
+        },
+        "scales": {
+          "bytes": 284,
+          "dtype": "u32le",
+          "file": "arrays.bin",
+          "offset": 1092,
+          "sha256": "f0102b0908bddce1b4f0fa06f95158e37879caf13ecb40376c5c0767c4400271",
+          "shape": [
+            71
+          ]
+        },
+        "wide": {
+          "bytes": 128,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 1504,
+          "sha256": "39b7d126a1d8354c283f65278adbd1f315a5cf4e2459e6a534df035c48b986ad",
+          "shape": [
+            1,
+            64
+          ]
+        }
+      },
+      "envelope": 0.0,
+      "exact": [
+        {
+          "column": 0,
+          "expected_word": 4,
+          "row": 0,
+          "wrong_half_scale_word": 0
+        }
+      ],
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "input_stride": 67,
+      "name": "coefficient_underflow",
+      "output_elements": 76,
+      "output_stride": 69,
+      "rows": 1,
+      "width": 64
+    },
+    {
+      "arrays": {
+        "gamma": {
+          "bytes": 128,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 1914,
+          "sha256": "e72710531b01d91ee76a2457cdc9c6c89a197db47da8ebd4ae672e13ddd668cd",
+          "shape": [
+            64
+          ]
+        },
+        "input": {
+          "bytes": 282,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 1632,
+          "sha256": "02e7e21d6368073c146ea9ed12ef9e0efdb049b52a6f9d32cfda7dc947de62c9",
+          "shape": [
+            141
+          ]
+        },
+        "main": {
+          "bytes": 256,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 2326,
+          "sha256": "66d6c0eb56611512430414b717d69809fcbd5201eb6732f1907c829ec2a9df38",
+          "shape": [
+            2,
+            64
+          ]
+        },
+        "scales": {
+          "bytes": 284,
+          "dtype": "u32le",
+          "file": "arrays.bin",
+          "offset": 2042,
+          "sha256": "f58b70bb57c5f4fc4a91c2aff8f3f380c5d480e4637fafe2210e500bb6eb86ea",
+          "shape": [
+            71
+          ]
+        },
+        "wide": {
+          "bytes": 256,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 2582,
+          "sha256": "66d6c0eb56611512430414b717d69809fcbd5201eb6732f1907c829ec2a9df38",
+          "shape": [
+            2,
+            64
+          ]
+        }
+      },
+      "envelope": 0.0,
+      "exact": [
+        {
+          "column": 0,
+          "expected_word": 316,
+          "row": 0
+        },
+        {
+          "column": 0,
+          "expected_word": 33084,
+          "row": 1
+        }
+      ],
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "input_stride": 67,
+      "name": "epsilon_subnormal",
+      "output_elements": 145,
+      "output_stride": 69,
+      "rows": 2,
+      "width": 64
+    },
+    {
+      "arrays": {
+        "gamma": {
+          "bytes": 128,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 71460,
+          "sha256": "a451b74fb4d1382cb3dd47dc2366e317543a7dcf0c96589307e6f6ddc5cc06e4",
+          "shape": [
+            64
+          ]
+        },
+        "input": {
+          "bytes": 68622,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 2838,
+          "sha256": "89efae6b19aeaa3bf8c98cfb1d3cd3e67335aae700314aa3b1fc495e28352bd5",
+          "shape": [
+            34311
+          ]
+        },
+        "main": {
+          "bytes": 65536,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 71872,
+          "sha256": "e7810ed066ca9c57b51033ac9704a3516bb8bd1e9d92b5509e60a1ce7f5b91a2",
+          "shape": [
+            512,
+            64
+          ]
+        },
+        "scales": {
+          "bytes": 284,
+          "dtype": "u32le",
+          "file": "arrays.bin",
+          "offset": 71588,
+          "sha256": "5ddd7f33fc962a9396380e74915e93c9980836249a8a9b285b2e2eeb01d22bbd",
+          "shape": [
+            71
+          ]
+        },
+        "wide": {
+          "bytes": 65536,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 137408,
+          "sha256": "e7810ed066ca9c57b51033ac9704a3516bb8bd1e9d92b5509e60a1ce7f5b91a2",
+          "shape": [
+            512,
+            64
+          ]
+        }
+      },
+      "envelope": 0.0,
+      "exact": [],
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "input_stride": 67,
+      "name": "heads64",
+      "output_elements": 35335,
+      "output_stride": 69,
+      "rows": 512,
+      "width": 64
+    },
+    {
+      "arrays": {
+        "gamma": {
+          "bytes": 512,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 219534,
+          "sha256": "a826277a0308ef8eaeccadd45dc943defb0500436dc8fbe60d7dcef8a8689617",
+          "shape": [
+            256
+          ]
+        },
+        "input": {
+          "bytes": 16590,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 202944,
+          "sha256": "80f3971a8043dd6141f2504a4199c203567c809e1149436832db5c15f6adef55",
+          "shape": [
+            8295
+          ]
+        },
+        "main": {
+          "bytes": 16384,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 221098,
+          "sha256": "4cbd817f3ec095bf652c2db5559e2a2e8ad0b3f05cfbe8fba81eb1e6f3bf7e8e",
+          "shape": [
+            32,
+            256
+          ]
+        },
+        "scales": {
+          "bytes": 1052,
+          "dtype": "u32le",
+          "file": "arrays.bin",
+          "offset": 220046,
+          "sha256": "7b5af7cec31b8d85b8971c949c5127c27c57f8ca8096ee355e5f99bf7d7392b2",
+          "shape": [
+            263
+          ]
+        },
+        "wide": {
+          "bytes": 16384,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 237482,
+          "sha256": "4cbd817f3ec095bf652c2db5559e2a2e8ad0b3f05cfbe8fba81eb1e6f3bf7e8e",
+          "shape": [
+            32,
+            256
+          ]
+        }
+      },
+      "envelope": 0.0,
+      "exact": [],
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "input_stride": 259,
+      "name": "hidden256",
+      "output_elements": 8359,
+      "output_stride": 261,
+      "rows": 32,
+      "width": 256
+    },
+    {
+      "arrays": {
+        "gamma": {
+          "bytes": 2048,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 319608,
+          "sha256": "f74ab4b10db0bde61c4faf99ef65b80c57e5a3ad5c2d84679c99785e3af1c2ec",
+          "shape": [
+            1024
+          ]
+        },
+        "input": {
+          "bytes": 65742,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 253866,
+          "sha256": "3b0b78e880be71922530c3440e3d4e66dc7f5fed6048bf49c93f3d682488f094",
+          "shape": [
+            32871
+          ]
+        },
+        "main": {
+          "bytes": 65536,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 325780,
+          "sha256": "fb8b6ae147227fdcfa4390b10fed3480e203d14ec7ea3db6d3502bb6c7ae8151",
+          "shape": [
+            32,
+            1024
+          ]
+        },
+        "scales": {
+          "bytes": 4124,
+          "dtype": "u32le",
+          "file": "arrays.bin",
+          "offset": 321656,
+          "sha256": "855a09287fc3feb776bd3ae1e7adc17c9f1fb01025e4af4e40858aa1c8befdf3",
+          "shape": [
+            1031
+          ]
+        },
+        "wide": {
+          "bytes": 65536,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 391316,
+          "sha256": "fb8b6ae147227fdcfa4390b10fed3480e203d14ec7ea3db6d3502bb6c7ae8151",
+          "shape": [
+            32,
+            1024
+          ]
+        }
+      },
+      "envelope": 0.0,
+      "exact": [],
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "input_stride": 1027,
+      "name": "hidden1024",
+      "output_elements": 32935,
+      "output_stride": 1029,
+      "rows": 32,
+      "width": 1024
+    },
+    {
+      "arrays": {
+        "gamma": {
+          "bytes": 2048,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 458920,
+          "sha256": "f74ab4b10db0bde61c4faf99ef65b80c57e5a3ad5c2d84679c99785e3af1c2ec",
+          "shape": [
+            1024
+          ]
+        },
+        "input": {
+          "bytes": 2068,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 456852,
+          "sha256": "70048d1e6e287ed53c1e3669cc54fca7a6b72064a10120503692a9d0e3e80dc4",
+          "shape": [
+            1034
+          ]
+        },
+        "main": {
+          "bytes": 2048,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 465092,
+          "sha256": "413cc93a7e6350a0a5d53bcc502ad0f64e6d75979b215602d04c3b0f4d912ab3",
+          "shape": [
+            1,
+            1024
+          ]
+        },
+        "scales": {
+          "bytes": 4124,
+          "dtype": "u32le",
+          "file": "arrays.bin",
+          "offset": 460968,
+          "sha256": "855a09287fc3feb776bd3ae1e7adc17c9f1fb01025e4af4e40858aa1c8befdf3",
+          "shape": [
+            1031
+          ]
+        },
+        "wide": {
+          "bytes": 2048,
+          "dtype": "u16le",
+          "file": "arrays.bin",
+          "offset": 467140,
+          "sha256": "413cc93a7e6350a0a5d53bcc502ad0f64e6d75979b215602d04c3b0f4d912ab3",
+          "shape": [
+            1,
+            1024
+          ]
+        }
+      },
+      "envelope": 0.0,
+      "exact": [],
+      "gate": {
+        "atol": 0.0001,
+        "rtol": 0.001
+      },
+      "input_stride": 1027,
+      "name": "large1024",
+      "output_elements": 1036,
+      "output_stride": 1029,
+      "rows": 1,
+      "width": 1024
+    }
+  ],
+  "coefficient_guard_word": 1511456817,
+  "epsilon_bits": 925353388,
+  "files": {
+    "arrays.bin": {
+      "bytes": 469188,
+      "sha256": "e53c318660f86bc0913afeb0ce2f0ea107f519671d44718625d50b6c44d3db21"
+    },
+    "errors.json": {
+      "bytes": 10135,
+      "sha256": "26349649cdbc5c7a320ea44e9f85bd7f4a7fc6bdd54309ed3ca04f477a8b09c9"
+    }
+  },
+  "finite_output_values": 75008,
+  "format": "toklet-lfm2-half-rms-v1",
+  "guard": 7,
+  "helper": {
+    "bytes": 10205,
+    "path": "/Users/coloner/work/rust/toklet/tools/reference/gemma3_half_rms.py",
+    "sha256": "9368ba31ee169c0d527e6462df60f0ebcaacc09ac33bab98d4c5929f795a4ca7"
+  },
+  "input_padding_word": 32341,
+  "output_canary_word": 23063,
+  "policy": {
+    "atol_floor": 0.0001,
+    "envelope_factor": 2,
+    "fatal_reference": "main",
+    "rtol": 0.001
+  },
+  "producer": {
+    "bytes": 10669,
+    "sha256": "a7f7c7c384784a8b7f3ec6c83daf6250c22545b9b3386bba7268172b7d1d02b1"
+  },
+  "protocol_sha256": "f2518543fc49139d4d982bcad3f0aad5bf4a41b99267aca75cf0cacea1cb3476",
+  "runtime": {
+    "executable": "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3.12",
+    "python": "3.12.8 (v3.12.8:2dc476bcb91, Dec  3 2024, 14:43:19) [Clang 13.0.0 (clang-1300.0.29.30)]"
+  },
+  "scope": "Isolated direct-gain LFM NativeHalf RMS, EPS1e-5; main-only fixed per-array gate plus exact witnesses; no whole graph, upstream intermediate-cast parity or quality qualification",
+  "source_reference_executed": true,
+  "target_gpu_executed": false
+}

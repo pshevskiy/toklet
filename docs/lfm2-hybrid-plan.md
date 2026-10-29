@@ -112,9 +112,9 @@ direct-gain operation. It does not claim MLX trajectory identity: pinned MLX
 casts the normalized value to its output dtype before multiplying the weight.
 Original-unquantized adoption quality remains a separate mandatory check.
 
-Existing native RMS admits only epsilon1e-6 and widths32/64/256/640. Before LFM2
-execution, qualify epsilon1e-5 at **both head64 and hidden1024**, not just add a
-host-bound exception. Likewise, Gemma's Q4/KV1/D32-or256 staged attention is not
+At B4a freeze, native RMS admitted only epsilon1e-6 and widths32/64/256/640.
+B4d1 now qualifies epsilon1e-5 at **head64, tiny hidden256 and real hidden1024**,
+including the required512-head-row shape; this is more than a host-bound exception. Likewise, Gemma's Q4/KV1/D32-or256 staged attention is not
 LFM2's Q16/KV8/D64 full GQA. Deliberately qualify generic dense GQA reuse or a
 bounded second-consumer extension; a family rename does not grant support.
 Other native operator/store contracts and tiny fixtures must be frozen before
@@ -200,3 +200,16 @@ with complete model LFS SHA, all metadata identities and334 tensor extents. This
 finite transfer overlaps leaf preparation only; no model/tokenizer execution,
 128000-context admission or app qualification follows. Real source and native
 journeys remain B4e2/B4e3 after resident mechanism qualification.
+
+## B4d1 native RMS result
+
+The [direct-gain Half RMS leaf](lfm2-half-rms.md) passes selected Mac release
+qualification, all source/exact witnesses and unchanged legacy Gemma checks.
+Its1e-5 profile covers head64 up to512 rows and hidden256/1024 up to32 rows;
+Plan encodes the actual admitted epsilon bits. This grants no model admission.
+
+B4d2 next implements only raw three-tap convolution over already stored Halfu,
+immutable old[2,H] and a separate candidate[2,H]. Preserve separate FP32 products
+and oldest-to-current sums before a Half output store. B*x/C*z and model-wide
+publication are later concrete composition work; do not prematurely fuse these
+into a new model-specific kernel. Multi-KV staging remains B4d3.

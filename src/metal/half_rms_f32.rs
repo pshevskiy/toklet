@@ -14,6 +14,7 @@ use std::{mem::size_of, ptr::NonNull};
 pub(super) const GUARD: usize = 7;
 pub(super) const PIPELINE_ALLOWANCE: usize = 64 * 1024 * 1024;
 const EPSILON: f32 = 1e-6;
+const LFM_EPSILON: f32 = 1e-5;
 
 #[derive(Clone, Copy, Debug)]
 pub(super) struct Plan {
@@ -23,6 +24,7 @@ pub(super) struct Plan {
     output_stride: usize,
     input_len: usize,
     output_len: usize,
+    epsilon_bits: u32,
 }
 impl Plan {
     pub(super) fn new(
@@ -32,13 +34,14 @@ impl Plan {
         output_stride: usize,
         epsilon: f32,
     ) -> Result<Self> {
-        if rows == 0
-            || rows > 128
-            || ![32, 64, 256, 640].contains(&width)
-            || input_stride < width
-            || output_stride < width
-            || epsilon.to_bits() != EPSILON.to_bits()
-        {
+        // Keep the historical Gemma admission exactly unchanged. LFM gains
+        // are prepared separately by its model; this operation never adds one.
+        let gemma = epsilon.to_bits() == EPSILON.to_bits()
+            && rows <= 128
+            && [32, 64, 256, 640].contains(&width);
+        let lfm = epsilon.to_bits() == LFM_EPSILON.to_bits()
+            && ((width == 64 && rows <= 512) || ([256, 1024].contains(&width) && rows <= 32));
+        if rows == 0 || !(gemma || lfm) || input_stride < width || output_stride < width {
             return Err(Error::Options("Half FP32-scale RMS shape/epsilon profile"));
         }
         let extent = |stride: usize| {
@@ -57,6 +60,7 @@ impl Plan {
             output_stride,
             input_len,
             output_len,
+            epsilon_bits: epsilon.to_bits(),
         })
     }
     pub(super) fn input_len(self) -> usize {
@@ -201,7 +205,7 @@ impl Operation {
             plan.width as u32,
             plan.input_stride as u32,
             plan.output_stride as u32,
-            EPSILON.to_bits(),
+            plan.epsilon_bits,
         ];
         // SAFETY: private fixed ABI; same-device initialized allocations are
         // pairwise disjoint and every UInt32 offset/extent/rounded lane checked.
@@ -243,3 +247,9 @@ pub(super) struct Invocation<'a> {
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+mod lfm_profile_tests;
+
+#[cfg(test)]
+mod lfm_gpu_tests;

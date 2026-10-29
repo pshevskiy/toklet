@@ -1,0 +1,14 @@
+{"case": "direct_zero_gain", "started": true}
+{"case": "direct_zero_gain", "complete": true, "arrays_end": 816}
+{"case": "coefficient_underflow", "started": true}
+{"case": "coefficient_underflow", "complete": true, "arrays_end": 1632}
+{"case": "epsilon_subnormal", "started": true}
+{"case": "epsilon_subnormal", "complete": true, "arrays_end": 2838}
+{"case": "heads64", "started": true}
+{"case": "heads64", "complete": true, "arrays_end": 202944}
+{"case": "hidden256", "started": true}
+{"case": "hidden256", "complete": true, "arrays_end": 253866}
+{"case": "hidden1024", "started": true}
+{"case": "hidden1024", "complete": true, "arrays_end": 456852}
+{"case": "large1024", "started": true}
+{"case": "large1024", "complete": true, "arrays_end": 469188}

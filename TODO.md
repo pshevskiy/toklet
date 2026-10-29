@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B4d1 — direct-gain Half RMS qualification; independent artifact acquisition**.
+Next implementation task: **B4d2 — resident causal three-tap convolution and raw history**.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -221,6 +221,11 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
     [Scalar hybrid](docs/lfm2-scalar-hybrid.md); frozen source/state, rollback,
     partitions, warmed allocations and full450/531 default/Metal checks pass.
 - [ ] B4d: resident block/composition, allocation/ownership and recovery checks.
+  - [x] B4d1: [direct-gain Half RMS](docs/lfm2-half-rms.md) at epsilon1e-5,
+    head64 up to512 rows and hidden256/1024; source/release Mac/legacy checks pass.
+  - [ ] B4d2: borrowed three-tap Half convolution and transactional raw history.
+  - [ ] B4d3: actual multi-KV staged attention/cache views and accounting.
+  - [ ] B4d4: resident tiny mixed graph, whole-step status/publication/recovery.
 - [ ] B4e: acquire and qualify the fitting representative on Mac; numerical,
   text/session and actual process-memory checks before any support claim.
   - [x] B4e1: authenticate complete original weights and all eight cached metadata
@@ -446,3 +451,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B4c2 scalar hybrid checks pass | All57 mathematical stages plus actual prefix-state observations pass unchanged gates across43 chunks/1,651,856 comparisons. Compound publication/reset, rollback, exact final partition state and zero warmed allocations pass; full450 default/531 Metal-feature checks pass. | [Report](docs/lfm2-scalar-hybrid.md); Astra verifies code/private evidence and independent504,656 unique compared source entries; final staged review/commit next. No native/real-model admission. |
 | 2026-10-29 | B4c2 reviewed commit / B4d1 starts | Exact13-file Astra approval and all full checks pass; tiny scalar hybrid committed as`cb24079`. B4c closes only the synthetic CPU source/state/publication scope. | Next qualifies direct-gain Half RMS at epsilon1e-5/useful actual shapes; separately prepared bounded LFM2 acquisition grants no execution support. |
 | 2026-10-29 | B4e1 independent artifact acquisition | Reviewed bounded controller downloads one exact199,527,820-byte model, reuses eight authenticated cached files and atomically publishes9files/204,378,119 bytes. Astra independently checks full LFS/hash/header/index and clean closed curl group. | [Artifact report](docs/lfm2-artifact-acquisition.md); bytes only. B4d1 source qualification proceeds independently; no model/tokenizer/GPU or app admission. |
+| 2026-10-29 | B4e1 reviewed artifact commit / D1 source pass | Exact5-file Astra publication review passes; original artifact record committed as`a9a53bf`. D1 six controls and two four-file exports pass; Astra exactly reconstructs all75,008 outputs in each RMS profile, direct gains and epsilon/underflow witnesses. | Native RMS consumer/cold checks/release GPU qualification remain before D1 closure; model bytes alone grant no execution support. |
+| 2026-10-29 | B4d1 cold/release pass and GPU launch | All6 cold/build jobs pass450 default/534 Metal-feature tests, strict Clippy/formatting and optimized release freeze. Astra reviews v3 launch with consumed-byte JSON identity, bounded logs and exact frozen binary; seven reader controls pass. Five literal GPU jobs start. | Earlier unrun owner drafts/AST failure retained. Same numerical source, fixtures and gates; GPU raw-data qualification still pending. |
+| 2026-10-29 | D1 first GPU wrapper failure / pipe correction | First v3 job exitsSIGXFSZ before raw RMS/gate output;116B stdout/0stderr and closed group retained. Both Astra agents identify process-wide file-cap scope; exact incidental write remains unknown. V4 caps only two pipes with unchanged binary/data/gates, and four actual CPU transport controls pass. | V3 failure preserved; v4 hardware launch awaits reviewed current package. No numerical outcome or tolerance change. |
+| 2026-10-29 | B4d1 standalone Mac RMS qualified | All5 reviewed release jobs pass; Astra exactly rescores150,016 normal+640 recovery LFM values,108,544 legacy normal+192 recovery+64 subnormal words, guards/status and26 zero-allocation encodes. Cold450/534 and source gates unchanged. | [RMS report](docs/lfm2-half-rms.md); exact staged review/commit, then borrowed convolution. Sparse observations are not process peaks; real model/GQA/app remain open. |

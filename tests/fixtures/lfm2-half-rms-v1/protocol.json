@@ -1,0 +1,87 @@
+{
+  "admission": {
+    "epsilon1e-5": {
+      "width1024_max_rows": 32,
+      "width256_max_rows": 32,
+      "width64_max_rows": 512
+    },
+    "old_epsilon1e-6": "unchanged widths32/64/256/640 rows<=128"
+  },
+  "cases": [
+    [
+      "direct_zero_gain",
+      1,
+      64,
+      "zero_gain"
+    ],
+    [
+      "coefficient_underflow",
+      1,
+      64,
+      "coefficient"
+    ],
+    [
+      "epsilon_subnormal",
+      2,
+      64,
+      "subnormal"
+    ],
+    [
+      "heads64",
+      512,
+      64,
+      "dyadic"
+    ],
+    [
+      "hidden256",
+      32,
+      256,
+      "dyadic"
+    ],
+    [
+      "hidden1024",
+      32,
+      1024,
+      "dyadic"
+    ],
+    [
+      "large1024",
+      1,
+      1024,
+      "large"
+    ]
+  ],
+  "epsilon_bits": 925353388,
+  "exact_controls": [
+    "direct gamma zero returns positive zero, no unit offset",
+    "BF16 gain2^-25 must not prematurely narrow to Half0: firstword4",
+    "epsilon1e-5 gives +/-0x013c for +/-Half minsub, old1e-6 gives +/-0x03e8"
+  ],
+  "format": "toklet-lfm2-half-rms-protocol-v1",
+  "gate": {
+    "atol_floor": 0.0001,
+    "envelope_factor": 2,
+    "fatal_reference": "main",
+    "granularity": "per exact case array",
+    "rtol": 0.001,
+    "wide": "diagnostic only"
+  },
+  "invalid_output_bits": "retained but not acceptance oracle; status/guard/sticky/recovery required",
+  "output_values_per_profile": 75008,
+  "physical": {
+    "coefficient_guard": "0x5a170031",
+    "guard": 7,
+    "input_padding": "0x7e55 quietNaN, inactive must not be consumed",
+    "input_stride": "width+3",
+    "output_canary": "0x5a17",
+    "output_stride": "width+5"
+  },
+  "precision": {
+    "gain": "direct, no plus-one; no intermediate normalized Half store",
+    "main": "Half inputs; serial FP32 Neumaier squared sum; FP32 mean+epsilon/sqrt/inverse; individually rounded input*inverse then exact widened direct BF16 gain product; one Half store",
+    "wide": "same Half inputs and widened direct BF16 gains; FP64 fsum/sqrt/inverse/products; one Half store"
+  },
+  "scope": "isolated NativeHalf RMS, direct BF16 gain widened once; no LFM graph/runtime trajectory or quality claim",
+  "source_export_executed": false,
+  "target_gpu_executed": false
+}
