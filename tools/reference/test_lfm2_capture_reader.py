@@ -564,5 +564,81 @@ class EventAndDispatchControls(unittest.TestCase):
         words.view('<f2')[1,2*64+3]+=8
         check(1)
 
+    def test_31_source_values_flat_head_major_prefix_and_rejections(self):
+        def source(name, values, shape=None, dtype='f32'):
+            raw=values.astype('<f4').tobytes()
+            class Bytes:
+                def read(self,offset,count):
+                    self_outer.assertEqual((offset,count),(0,len(raw)))
+                    return raw
+            self_outer=self
+            s=c.Source.__new__(c.Source);s.input=Bytes()
+            descriptor=dict(dtype=dtype,shape=list(values.shape) if shape is None else shape,
+                            gate={'atol':1e-4,'rtol':.001})
+            for profile in ('main','wide'):
+                descriptor[profile]=dict(offset=0,bytes=len(raw),sha256=b.digest(raw))
+            s.groups={name:descriptor}
+            return s
+        for case,n in c.SOURCE_CASE_TOKENS.items():
+            for member in ('attention_scores','attention_probabilities'):
+                name=f'cases.{case}.row_0.layers.2.{member}'
+                values=np.array([1000*h+t for h in range(16) for t in range(n)],dtype='<f4')
+                values[0]=np.float32(-0.)
+                s=source(name,values)
+                for profile in ('main','wide'):
+                    for end in sorted({1,n,min(3,n)}):
+                        actual=s.values(name,profile,end)
+                        expected=np.array([[[1000*h+t for t in range(end)]]for h in range(16)],dtype='<f4')
+                        expected[0,0,0]=np.float32(-0.)
+                        self.assertTrue(np.array_equal(actual.view('<u4'),expected.view('<u4')))
+                    self.assertEqual(s.values(name,profile).shape,(16*n,))
+                    for bad in (0,-1,n+1,True,1.0):
+                        with self.assertRaises(ValueError):s.values(name,profile,bad)
+                s.groups[name]['main']['sha256']='0'*64
+                with self.assertRaises(ValueError):s.values(name,'main',1)
+        name='cases.plain_ids8.row_0.layers.2.attention_scores'
+        for values,shape in ((np.zeros(128,dtype='<f4'),[16,1,8]),
+                             (np.zeros(112,dtype='<f4'),[112])):
+            with self.assertRaises(ValueError):source(name,values,shape).values(name,'main',3)
+        bad='cases.plain_ids8.row_0.layers.2.attention_context'
+        with self.assertRaises(ValueError):source(bad,np.zeros(128,dtype='<f4')).values(bad,'main',3)
+
+    def test_32_dispatch_real_source_flat_attention_prefix_and_corruption(self):
+        from unittest.mock import patch
+        score=c.Stage('layers.2.attention_scores',16,'coupled')
+        prob=c.Stage('layers.2.attention_probabilities',16,'probabilities',(score.name,))
+        scores=np.array([100*h+(50+t if t>=2 else 0)for h in range(16)for t in range(8)],dtype='<f4')
+        probabilities=np.array([.5 if t<2 else 0 for h in range(16)for t in range(8)],dtype='<f4')
+        raw=scores.tobytes()+probabilities.tobytes()
+        class Bytes:
+            def read(self,offset,count):return raw[offset:offset+count]
+        source=c.Source.__new__(c.Source);source.input=Bytes();source.groups={}
+        for index,stage in enumerate((score,prob)):
+            block=raw[index*512:(index+1)*512]
+            descriptor=dict(dtype='f32',shape=[128],gate={'atol':1e-4,'rtol':.001})
+            for profile in ('main','wide'):
+                descriptor[profile]=dict(offset=index*512,bytes=512,sha256=b.digest(block))
+            source.groups[f'cases.plain_ids8.row_1.{stage.name}']=descriptor
+        actual=[scores.reshape(16,1,8)[...,:3].copy(),probabilities.reshape(16,1,8)[...,:3].copy()]
+        def run():
+            d=c.Dispatcher(None,source)
+            with patch.object(c,'STAGES',(score,prob)),patch.dict(c.SLOTS,{score.name:0}):
+                d.selected('plain_ids8',1,1024,1,3,lambda slot:actual[slot],None,None)
+            return d
+        d=run()
+        self.assertEqual((d.main.groups,d.main.values,d.main.failures),(2,96,0))
+        self.assertEqual((d.wide.groups,d.wide.values,d.wide.failures),(2,96,0))
+        self.assertEqual((d.coupled.groups,d.coupled.values,d.coupled.failures),(1,48,0))
+        self.assertEqual((d.local.groups,d.local.values,d.local.failures),(1,48,0))
+        actual[0][0,0,2]+=1  # Masked score is still a strict coupled coordinate.
+        d=run();self.assertEqual(d.coupled.failures,1)
+        actual[0][0,0,2]-=1
+        actual[1][0,0,0]=.75
+        d=run();self.assertEqual(d.local.failures,1)
+        self.assertEqual(d.local_semantic_failures,1)
+        actual[1][0,0,0]=.5
+        actual[1][0,0,2]=.25  # Masked probabilities remain exact positive zero.
+        with self.assertRaisesRegex(ValueError,'masked probability'):run()
+
 if __name__ == '__main__':
     unittest.main()

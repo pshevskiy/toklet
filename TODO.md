@@ -3,11 +3,13 @@
 Last updated: **30 October 2026**. Active milestone: **M8**.
 Next implementation task: **B4e3c3 — complete independent saved-capture verification**.
 The real Mac GPU capture has completed 104 attempts/367 rows; independent
-collection framing passes. The first saved reader failed on source KV axis
-mapping before selected numerical checks. Its reviewed correction now passes 30
-controls and all six repository checks (default 457/Metal 564). Astra's saved audit
-passes; correction commit and complete saved-capture replay are next. Numerical
-qualification remains pending; failed and unexecuted attempts stay recorded.
+collection framing passes. The reviewed source-KV coordinate correction passes
+30 controls and all six repository checks and is committed as `b99fbaa`.
+The saved-reader retry passes 43 local groups before rejecting flattened
+reference attention scores. Its reviewed correction now passes all 32 controls,
+six repository checks and Astra's saved audit. The narrow commit and complete
+saved-capture replay are next. Numerical qualification remains pending; failed
+and unexecuted attempts stay recorded.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -546,3 +548,6 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | First native capture / reader layout correction | Real GPU capture passes104 attempts/367rows,14672 arrays/154629840B,335 model-owner before/after records and completed process closure. Independent collection audit passes. The first saved-reader stops at source KV diagnostic axis mismatch after30 diagnostic groups and before any selected numerical gate. | Capture is not numerical qualification. Preserve failed reader and all raw data; reviewed narrow fix uses original head-major[8,N,64] source slices and adds nonuniform/nonzero-start regression control. Current30-control/full-check retry begins; no GPU rerun, data/gate/criteria change. |
 | 2026-10-30 | Nonuniform reader control fixture correction | The30-control run has29 passes and one error: the new test supplied zero tolerances, outside the frozen permitted coefficient policy. Production reader rejects that malformed stub correctly. | Preserve failed controls/PID closure. Reviewed V3 changes only the test dictionary to existing1e-4/.001; injected8-unit error still exceeds its0.2911 bound. No production gate/data/kernel change; fresh controls and bound-source checks follow. |
 | 2026-10-30 | Reader correction checks and audit pass | Correct source KV head/token mapping and its nonuniform regression control pass all 30 controls in 0.301s, all six repository checks, and independent Astra saved audit. Both failed attempts remain preserved. | Commit the narrow correction, then replay the unchanged native capture through the separately reviewed current reader. Numerical qualification remains pending. |
+| 2026-10-30 | Reader correction committed / attention layout investigation | Correction committed as `b99fbaa`. The saved-reader retry closes cleanly after passing 43 local groups/74,752 values and 54 source-state groups per profile; it stops at flattened reference attention-score admission before strict coupled checks. | Preserve the failed receipt and unchanged GPU capture. Astra investigates all remaining reader layout contracts; no numerical gate failure or qualification claim. |
+| 2026-10-30 | Flat-attention reader correction applied | Astra independently approves restoring the source's flat head-major attention arrays before native-prefix slicing, with exact case lengths and two additional controls. Metadata-only audit covers all 3,102 source groups, 293 routes and 14,672 native layouts; no other concrete layout mismatch is found. | Guarded two-file application complete; 32-control and six-check validation next. Complete numerical/state/codec replay remains required. |
+| 2026-10-30 | Flat-attention correction checks pass | All 32 isolated controls pass in 0.319s and all six repository checks pass with unchanged default 457/Metal 564 counts. Source/numerical/producer code and gates remain fixed. | Independent saved audit passes; narrow task commit and complete saved-capture replay next. |

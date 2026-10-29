@@ -4,8 +4,9 @@ The five-module reader connects strict byte/control admission, all293 arithmetic
 routes, literal workload transitions, physical-state validation and the final
 CLI. Its original V1 passed 29 synthetic controls and code review. The first
 actual saved-capture read then stopped on a diagnostic KV-layout mismatch before
-any selected mathematical comparison. The narrow correction now passes 30
-controls; a complete saved-reader replay and outer qualification remain pending.
+any selected mathematical comparison. The KV-axis correction passed 30 controls. Its saved-reader retry then stopped
+on a flat attention-source layout mismatch. The V4 correction passes 32 controls and six current repository checks. Complete saved-reader conformance
+and outer qualification remain pending.
 
 Original file/header/tensor identities, source arrays/literal gates, actual
 executable/control/owner and all native outputs are authenticated. Records have
@@ -87,6 +88,33 @@ not real-reader memory results. Astra independently authenticates the current
 code/runtime/output pins and all seven closed groups.
 [Correction evidence](../benchmarks/results/2026-10-30-lfm2-native-reader-layout-correction-v1.json)
 preserves both failures and the new passing controls. The same native capture
-will be replayed only through a separately reviewed owner with explicit
+was subsequently replayed through a separately reviewed owner with explicit
 original-native-to-current-reader identity supersession; no GPU rerun or
 qualification claim is part of this correction.
+
+The next saved-reader attempt reached 43 local groups / 74,752 values without a
+local failure, then stopped before any strict coupled group with `source absolute
+key subset`. Its 54 source-state diagnostic groups / 63,488 values per profile
+also had no gate failures. These partial observations do not qualify the complete
+read. Frozen selected attention scores and probabilities are flat head-major
+rows of length 16×N; the reader had required a rank-three source array.
+
+V4 restores [16, 1, N] using the fixed case lengths 1, 8, 11 and 64 before slicing
+the last axis to the actual materialized key prefix. It preserves raw masked
+score observations and exact masked-probability rules. Two new synthetic controls
+exercise both profiles, distinct head/key values, partial and full prefixes,
+invalid shapes/ranges/hashes, and the actual dispatcher with strict-score and
+local-probability corruptions. The previous 30 test bodies remain unchanged.
+
+V4 passes 32 controls in 0.319s and all six repository checks (default 457 /
+Metal 564, with 20 / 183 ignored; suites overlap). Six direct synthetic-worker
+samples observe maximum RSS 90,243,072 bytes; OS maximum RSS is 98,074,624 bytes.
+These are synthetic-worker observations, not real-reader peaks. Astra verifies
+6,891 identities, the runtime origins and all seven closed process groups.
+[Attention-layout correction evidence](../benchmarks/results/2026-10-30-lfm2-native-reader-attention-layout-correction-v1.json)
+retains both failed saved reads and the earlier malformed synthetic gate. Native
+bytes, binary, source centers, literal gates and all fatal policies remain fixed.
+The next saved read requires an independently reviewed owner with exactly three
+original-native-to-current-consumer replacements (main, contract and test); all
+other native authority remains strict. No GPU rerun or full qualification is
+part of this reader code correction.

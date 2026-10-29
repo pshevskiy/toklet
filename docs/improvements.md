@@ -8050,3 +8050,23 @@ fixture remain recorded. The latter was corrected to the existing required
 coefficients; production gates and source values are unchanged. This correction
 qualifies the verifier code only. Complete replay of the unchanged native
 capture and independent numerical qualification follow separately.
+
+The correction is committed as `b99fbaa`. Its real saved-reader retry passes
+43 local groups/74,752 values and 54 source-state groups per profile, then
+rejects a second reference layout assumption: attention score/probability
+arrays are stored flat. The failed report and clean process closure are
+retained. Astra is checking the remaining layout contracts before another
+narrow correction; the capture and numerical criteria remain unchanged.
+
+The next reviewed correction restores the reference exporter's explicit
+head-major flat attention layout before prefix slicing. Exact case lengths,
+F32 dtype, descriptor rank/length and integer key bounds remain mandatory.
+Two added controls check all four case lengths, signed-zero preservation,
+nonuniform head/key indexing, malformed inputs, strict masked-score failure,
+visible probability corruption and masked probability rejection. A metadata
+layout audit covers all 3,102 source groups and 14,672 native arrays. The
+correction changes the reader and its controls only; full validation is pending.
+
+All 32 controls now pass in 0.319s, with 98,074,624 bytes OS maximum RSS;
+all six repository checks pass. The unchanged real capture still awaits a
+complete verifier pass and independent outer qualification.

@@ -29,6 +29,7 @@ GATES_SHA = '7b1879ee54fd5a421d0b5f17f2d9192d291742bdc078ef2f5e90885eb293fbdf'
 PROTOCOL_SHA = op.PROTOCOL_SHA256
 HALF_PAD, WORD_PAD = 0x7e55, 0x5a170031
 MAX_NUMERIC = 62 * 1024**2
+SOURCE_CASE_TOKENS = {'bos': 1, 'plain_ids8': 8, 'future_tail11': 11, 'journey64': 64}
 
 
 def require(condition, message):
@@ -364,8 +365,18 @@ class Source:
         require(hashlib.sha256(raw).hexdigest() == r['sha256'], 'source range hash')
         value = np.frombuffer(raw, dtype='<f2' if d['dtype'] == 'f16' else '<f4').reshape(d['shape'])
         if keys is not None:
-            require(value.ndim == 3 and 0 < keys <= value.shape[-1], 'source absolute key subset')
-            value = value[..., :keys]
+            # The source exporter saves value[:, row, :].reshape(-1): heads
+            # precede absolute keys. Restore that layout before prefix slicing.
+            parts = name.split('.')
+            require(len(parts) == 6 and parts[0] == 'cases' and
+                    parts[1] in SOURCE_CASE_TOKENS and parts[2].startswith('row_') and
+                    parts[3] == 'layers' and parts[5] in
+                    ('attention_scores', 'attention_probabilities'), 'source key-sliced stage')
+            total_keys = SOURCE_CASE_TOKENS[parts[1]]
+            require(d['dtype'] == 'f32' and d['shape'] == [16 * total_keys],
+                    'source flat head-major attention layout')
+            integer(keys, 1, total_keys, 'source absolute key subset')
+            value = value.reshape(16, 1, total_keys)[..., :keys]
         result = value.astype(F)
         require(np.isfinite(result).all(), 'source finite')
         return result

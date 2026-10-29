@@ -1,0 +1,240 @@
+{
+  "correction": {
+    "case_lengths": {
+      "bos": 1,
+      "future_tail11": 11,
+      "journey64": 64,
+      "plain_ids8": 8
+    },
+    "new_controls": [
+      31,
+      32
+    ],
+    "observed_native_shape": "[16, 1, materialized_keys]",
+    "order": "Restore full source per-head stride before slicing absolute key prefix.",
+    "prior_30_test_asts_unchanged": true,
+    "restored_shape": "[16, 1, case_tokens]",
+    "stored_source_shape": "[16 * case_tokens]"
+  },
+  "date": "2026-10-30",
+  "eligibility": false,
+  "evidence": [
+    {
+      "bytes": 8660,
+      "path": "artifacts/new-goal-b4e3-native-reader-proposal-v4/manifest.json",
+      "sha256": "76e270c7f4bb65ceeb4524fc37e9512aa9428b190f9a616997c3c806a8f0017a"
+    },
+    {
+      "bytes": 8674,
+      "path": "artifacts/new-goal-b4e3-native-reader-independent-review-v1/prospective-v4-review.json",
+      "sha256": "debab19fa10728879b0ebfc140dd551696c5ea4591ff864ab8b79fc204d05442"
+    },
+    {
+      "bytes": 7144,
+      "path": "artifacts/new-goal-b4e3-native-reader-proposal-v4/metadata-layout-audit.json",
+      "sha256": "446e1140c9bb7430fdca4809f200942e043e63853628664020b45fec2c7fcfcd"
+    },
+    {
+      "bytes": 1522382,
+      "path": "artifacts/new-goal-b4e3-native-reader-owner-proposal-v3/checks.json",
+      "sha256": "fee06971370e70dae1e46aefe65295f364780f8ea20bd560526048aa802b35b6"
+    },
+    {
+      "bytes": 8114,
+      "path": "artifacts/new-goal-b4e3-native-reader-owner-proposal-v3/read-v1/check.json",
+      "sha256": "c79c0642834b79cc142182b8a1ea0e7e05154fa27fc390536d4f4001ffc507e7"
+    },
+    {
+      "bytes": 6948,
+      "path": "benchmarks/results/2026-10-30-lfm2-native-reader-layout-correction-v1.json",
+      "sha256": "854bd6bbfc74ef113c69624d181ca991f67eec0d709e7c0549d11a5d97e958a5"
+    },
+    {
+      "bytes": 739959,
+      "path": "artifacts/new-goal-b4e3-native-reader-controls-owner-v4/controls-v1/checks.json",
+      "sha256": "2fdfcea4192afb46199a6a4fe58f29e667d5152c66930eb40814ae523f7edb70"
+    },
+    {
+      "bytes": 889110,
+      "path": "artifacts/new-goal-b4e3-native-reader-cold-checks-v4/checks.json",
+      "sha256": "bc8839a5e7effc5ddc3bd70a91c1661e7d993da65092d170176895aaa5d8a021"
+    },
+    {
+      "bytes": 6663,
+      "path": "artifacts/new-goal-b4e3-native-reader-owner-independent-review-v1/saved-controls-v4-review.json",
+      "sha256": "9aa5356ca6c516e6f992b41a3f56f4cdb6ab470c44fa719746a51d3f5bb10db5"
+    }
+  ],
+  "format": "toklet-lfm2-reader-attention-layout-correction-result-v1",
+  "history": {
+    "first_failed_reader_and_malformed_control_preserved": true,
+    "original_29_and_corrected_30_controls_preserved": true,
+    "previous_correction": {
+      "bytes": 6948,
+      "path": "benchmarks/results/2026-10-30-lfm2-native-reader-layout-correction-v1.json",
+      "sha256": "854bd6bbfc74ef113c69624d181ca991f67eec0d709e7c0549d11a5d97e958a5"
+    },
+    "second_failed_reader": {
+      "eligibility": false,
+      "endpoint_errors": [],
+      "error": "ValueError: source absolute key subset",
+      "owner": {
+        "bytes": 1522382,
+        "path": "artifacts/new-goal-b4e3-native-reader-owner-proposal-v3/checks.json",
+        "sha256": "fee06971370e70dae1e46aefe65295f364780f8ea20bd560526048aa802b35b6"
+      },
+      "partial_numerical": {
+        "actual_input": {
+          "failures": 0,
+          "first_failure": null,
+          "groups": 43,
+          "maximum_error": 0.0,
+          "maximum_fraction": 0.0,
+          "values": 74752
+        },
+        "strict_coupled": {
+          "failures": 0,
+          "first_failure": null,
+          "groups": 0,
+          "maximum_error": 0.0,
+          "maximum_fraction": 0.0,
+          "values": 0
+        },
+        "trajectory_main_diagnostic": {
+          "failures": 0,
+          "first_failure": null,
+          "groups": 43,
+          "maximum_error": 0.0,
+          "maximum_fraction": 0.0,
+          "values": 74752
+        },
+        "trajectory_wide_diagnostic": {
+          "failures": 0,
+          "first_failure": null,
+          "groups": 43,
+          "maximum_error": 0.001953125,
+          "maximum_fraction": 0.3209242618741977,
+          "values": 74752
+        }
+      },
+      "passed": false,
+      "report": {
+        "bytes": 8114,
+        "path": "artifacts/new-goal-b4e3-native-reader-owner-proposal-v3/read-v1/check.json",
+        "sha256": "c79c0642834b79cc142182b8a1ea0e7e05154fa27fc390536d4f4001ffc507e7"
+      },
+      "source_state_diagnostic": {
+        "fatal": false,
+        "history_scope": "actual before/after chunk old banks only; no invented per-token snapshots",
+        "main": {
+          "failures": 0,
+          "first_failure": null,
+          "groups": 54,
+          "maximum_error": 0.0,
+          "maximum_fraction": 0.0,
+          "values": 63488
+        },
+        "source_identities": 42,
+        "wide": {
+          "failures": 0,
+          "first_failure": null,
+          "groups": 54,
+          "maximum_error": 0.00390625,
+          "maximum_fraction": 0.37243947858473,
+          "values": 63488
+        }
+      }
+    }
+  },
+  "independent_saved_audit": {
+    "bytes": 6663,
+    "path": "artifacts/new-goal-b4e3-native-reader-owner-independent-review-v1/saved-controls-v4-review.json",
+    "sha256": "9aa5356ca6c516e6f992b41a3f56f4cdb6ab470c44fa719746a51d3f5bb10db5"
+  },
+  "numerical_qualification": false,
+  "preserved": {
+    "binary": true,
+    "fatal_coupled_groups": 303,
+    "fatal_local_groups": 6440,
+    "literal_gates": true,
+    "native_capture": true,
+    "sideband_identities": 168,
+    "source_centers": true,
+    "source_state_diagnostic_groups_each_profile": 4212,
+    "source_state_diagnostic_values_each_profile": 21657600,
+    "workload": true
+  },
+  "remaining": [
+    "Separate current-reader package approval and unchanged capture replay; full conformance/quality/app/phone/performance claims remain outside this correction."
+  ],
+  "scope": "Narrow authenticated flat attention-source coordinate view correction. No numerical kernel/source/gate/native capture changes. No completed saved-reader qualification.",
+  "source_files": [
+    {
+      "bytes": 53848,
+      "path": "tools/reference/check_lfm2_capture.py",
+      "sha256": "60e01460380101ff6778137096172167d7ec21e0234d67b98c0e8e2bf24a105e"
+    },
+    {
+      "bytes": 22757,
+      "path": "tools/reference/lfm2_capture_bytes.py",
+      "sha256": "f1b7d87f378079f6b9c37ff332d5541979cc1c32e95ef11b8005ef2053663064"
+    },
+    {
+      "bytes": 26095,
+      "path": "tools/reference/lfm2_capture_contract.py",
+      "sha256": "d89d1b6ad5199e1fbde4cf6f5ec26dc8aecaee263c28609f501c99c38c84abc4"
+    },
+    {
+      "bytes": 8448,
+      "path": "tools/reference/lfm2_capture_workload.py",
+      "sha256": "09df2bae68b6db686dcd5a093b1da709ec7bc30065d7888a2a657985359bf2fd"
+    },
+    {
+      "bytes": 35724,
+      "path": "tools/reference/test_lfm2_capture_reader.py",
+      "sha256": "bea3666d836e74934ae078878ef5a91fd4afb260bc990d49321434ed24b7aa21"
+    }
+  ],
+  "status": "reader_attention_layout_correction_checked_saved_replay_pending",
+  "unchanged_source_identity": {
+    "gates": "7b1879ee54fd5a421d0b5f17f2d9192d291742bdc078ef2f5e90885eb293fbdf",
+    "protocol": "49005e6e0342adc1e05177063623d149c2319b1966b52d0174ea00d46e6ce59f",
+    "source_arrays": "9db9e7cd82a1a15ef60f75b2cd91b04f20d30553bb64cb55be72d2c201d0837a",
+    "source_manifest": "2654f475aedb37024b66f6c9a9988369d8ea8138a34e078505adf6fe16635133"
+  },
+  "verification": {
+    "authenticated_union": 6891,
+    "closed_groups": 7,
+    "counts_overlap": true,
+    "default_ignored": 20,
+    "default_passed": 457,
+    "endpoint_errors": [],
+    "independent_saved_audit": true,
+    "metal_ignored": 183,
+    "metal_passed": 564,
+    "observed_maxima": {
+      "lifetime_max_phys_footprint": 59638504,
+      "phys_footprint": 52806376,
+      "resident_size": 90243072
+    },
+    "observed_samples": 6,
+    "os_maxrss_bytes": 98074624,
+    "runtime_origin_records": [
+      {
+        "label": "after_numpy_import",
+        "modules": 164,
+        "non_system_native_images": 15,
+        "system_shared_cache_paths": 347
+      },
+      {
+        "label": "endpoint",
+        "modules": 306,
+        "non_system_native_images": 35,
+        "system_shared_cache_paths": 347
+      }
+    ],
+    "seconds": 0.319,
+    "six_cold_checks": true,
+    "synthetic_controls": 32
+  }
+}
