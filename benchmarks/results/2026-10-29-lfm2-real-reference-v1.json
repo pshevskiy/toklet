@@ -1,0 +1,389 @@
+{
+  "format": "toklet-lfm2-real-reference-result-v1",
+  "date": "2026-10-29",
+  "base_revision": "c1e740e",
+  "task": "M8 B4e2c: bounded independent real numerical source",
+  "status": "source_only_qualified_by_export_replay_independent_saved_audit",
+  "artifact": {
+    "data_offset": 36748,
+    "header_bytes": 36740,
+    "header_sha256": "7c5e241d377d693fac694426ed10fb79df470864a9ec31d0ca82f3044171506d",
+    "logical_owner_count": 148,
+    "mapped_whole_file_bytes": 199527820,
+    "model_bytes": 199527820,
+    "model_sha256": "558353ad098c1230a8e2ea508cd34ef311a1b97a2bc4f47498f4df8229dc5c0f",
+    "physical_tensor_count": 334,
+    "repository": "mlx-community/LFM2-350M-4bit",
+    "revision": "18dc72abf3b2337f9123cfd6eeeb58dfa7947066"
+  },
+  "source_files": [
+    {
+      "path": "tools/reference/lfm2_real_half.py",
+      "bytes": 38784,
+      "sha256": "bae222cda8e28b1f1ddb5928119b600ac35b614eaf61b93ff04489dce54b89f4"
+    },
+    {
+      "path": "tools/reference/test_lfm2_real_half.py",
+      "bytes": 9912,
+      "sha256": "93f14e3e379dbe8becf1360820328f67f8d9a46313853bcb69df6d87af1e175a"
+    }
+  ],
+  "fixed_workload": {
+    "layer_count": 16,
+    "convolution_layers": 10,
+    "attention_layers": 6,
+    "source_case_lengths": [
+      1,
+      8,
+      11,
+      64
+    ],
+    "selected_rows": 10,
+    "stages_per_row": 293,
+    "teacher_histories": 4,
+    "maximum_head_rows_per_forward": 4,
+    "actual_maximum_trajectory": 64,
+    "capacity512_qualified": false,
+    "declared_positions": 128000
+  },
+  "capture": {
+    "groups_per_profile": 3102,
+    "mathematical_groups_per_profile": 2930,
+    "teacher_groups_per_profile": 4,
+    "sideband_groups_per_profile": 168,
+    "physical_descriptors": 6204,
+    "finite_stored_values": 22072064,
+    "bytes": 48049152,
+    "full_four_file_replay_identical": true
+  },
+  "projection_coverage": {
+    "main": {
+      "blocked_outputs": 0,
+      "calls": 18048,
+      "certified_blocks": 0,
+      "fp64": 28151808,
+      "int64": 0,
+      "max_stripe_fp32_bytes": 2359296,
+      "outputs": 28151808,
+      "scalar_blocks": 0,
+      "zero": 0
+    },
+    "wide": {
+      "blocked_outputs": 0,
+      "calls": 18048,
+      "certified_blocks": 0,
+      "fp64": 28151808,
+      "int64": 0,
+      "max_stripe_fp32_bytes": 2359296,
+      "outputs": 28151808,
+      "scalar_blocks": 0,
+      "zero": 0
+    }
+  },
+  "saved_invariants": {
+    "causal_groups": 1172,
+    "causal_values": 2365440,
+    "masked_positive_zero_values": 28032,
+    "sideband_prefix_groups": 84,
+    "source_history_words": 6881280,
+    "teacher_prefix_values": 131072
+  },
+  "independent_audit": {
+    "counts": {
+      "bcx_view_words": 614400,
+      "causal_sideband_words": 917504,
+      "causal_words": 2365440,
+      "context_words": 122880,
+      "conv_words": 204800,
+      "descriptors": 6204,
+      "embedding_words": 20480,
+      "exact_projection_calls": 1860,
+      "exact_projection_coordinates": 3720,
+      "finite_stored_values": 22072064,
+      "gate_groups": 3102,
+      "probability_words": 58752,
+      "product_words": 1884160,
+      "raw_history_words": 6881280,
+      "residual_words": 655360,
+      "rms_words": 860160,
+      "rotary_words": 184320,
+      "score_words": 58752,
+      "selected_kv_sideband_words": 122880,
+      "selected_u_sideband_words": 204800,
+      "silu_words": 1474560,
+      "teacher_identical_prefix_words": 131072
+    },
+    "elapsed_seconds": 17.367930084001273,
+    "os_maxrss_bytes": 59981824,
+    "method": "All saved descriptor/gate/state checks and selected local nonprojection formulas; independent exact first/last projection coordinates for every captured invocation; not a second full forward",
+    "limitations": [
+      "No producer/NumPy/leaf/engine imports and no second full forward; all local reconstructions use saved operands.",
+      "Exact projection audit uses predeclared output coordinates0 andlast for every captured affine invocation; full remaining projection values rely on qualified exact-helper controls, authenticated implementation/inputs and complete finite/gate checks.",
+      "All selected-row local nonprojection operation coordinates are reconstructed. Nonselected raw-u/Krot/V producer rows have full saved-byte, finite, state and causal coverage, but their producing projections/BCx products are not independently recomputed. Teacher1..3 have no saved internal operands: full descriptor/finite/gates/replay coverage, but only teacher0 identical-prefix head is independently cross-checked.",
+      "Scalar RMS/Conv implement the declared qualified leaf formulas independently; elementary functions use platform math and Decimal same-method frequency stability, not an independent correctly-rounded transcendental oracle.",
+      "Source-only64-token trajectory; native conformance/model/app/context/quality/performance qualification remains pending."
+    ]
+  },
+  "commands": [
+    {
+      "name": "controls",
+      "exit_code": 0,
+      "error": null,
+      "cleanup_errors": [],
+      "live_samples": 8,
+      "observed_maxima": {
+        "resident_size": 77234176,
+        "phys_footprint": 53396200,
+        "lifetime_max_phys_footprint": 53396200
+      },
+      "os_maxrss_bytes": 82165760,
+      "log_bytes": {
+        "stdout": 1245,
+        "stderr": 106537
+      },
+      "runtime_origins": [
+        {
+          "label": "after_numpy_import",
+          "modules": 164,
+          "non_system_native_images": 15
+        },
+        {
+          "label": "endpoint",
+          "modules": 261,
+          "non_system_native_images": 34
+        }
+      ]
+    },
+    {
+      "name": "export",
+      "exit_code": 0,
+      "error": null,
+      "cleanup_errors": [],
+      "live_samples": 6372,
+      "observed_maxima": {
+        "resident_size": 464846848,
+        "phys_footprint": 62129064,
+        "lifetime_max_phys_footprint": 65520552
+      },
+      "os_maxrss_bytes": 464846848,
+      "log_bytes": {
+        "stdout": 1245,
+        "stderr": 96151
+      },
+      "runtime_origins": [
+        {
+          "label": "after_numpy_import",
+          "modules": 164,
+          "non_system_native_images": 15
+        },
+        {
+          "label": "endpoint",
+          "modules": 190,
+          "non_system_native_images": 21
+        }
+      ]
+    },
+    {
+      "name": "replay",
+      "exit_code": 0,
+      "error": null,
+      "cleanup_errors": [],
+      "live_samples": 6555,
+      "observed_maxima": {
+        "resident_size": 469549056,
+        "phys_footprint": 62784400,
+        "lifetime_max_phys_footprint": 67781520
+      },
+      "os_maxrss_bytes": 469549056,
+      "log_bytes": {
+        "stdout": 1245,
+        "stderr": 96151
+      },
+      "runtime_origins": [
+        {
+          "label": "after_numpy_import",
+          "modules": 164,
+          "non_system_native_images": 15
+        },
+        {
+          "label": "endpoint",
+          "modules": 190,
+          "non_system_native_images": 21
+        }
+      ]
+    }
+  ],
+  "planned_ownership": {
+    "exact_affine_included_reserve": 33554432,
+    "head_row_maximum": 4,
+    "label": "accounted reserve, not measured process peak; runtime owner records actual observations",
+    "numeric_reserve": 134217728,
+    "original_mapping": 199527820,
+    "persistent_expanded_model": false,
+    "process_cap": 6442450944
+  },
+  "owned_limits": {
+    "source_export_and_replay_seconds_each": 900,
+    "source_observed_bytes": 6442450944,
+    "synthetic_seconds": 600,
+    "synthetic_observed_bytes": 536870912,
+    "arrays_cap": 134217728,
+    "metadata_and_log_caps": 16777216,
+    "cleanup_seconds": 30,
+    "reader_seconds": 300,
+    "reader_observed_bytes": 1073741824,
+    "total_owned_groups_closed": 10
+  },
+  "runtime": {
+    "python": "3.12.8",
+    "numpy": "2.3.2",
+    "hardware": "Apple M1 Pro",
+    "system": "macOS26.6.2",
+    "runtime_files": 2785,
+    "source_package_dependency_runtime_identities": 2817,
+    "all_current_postrun_binding_output_identities": 6912,
+    "backend_assumption": "Ordinary full-binary64 operations; NumPy reports Apple Accelerate, library version unknown; system shared-cache paths observed, not content-hashed"
+  },
+  "repository_checks": {
+    "format": true,
+    "strict_default_and_metal_all_targets_clippy": true,
+    "default": {
+      "passed": 450,
+      "ignored": 20
+    },
+    "metal": {
+      "passed": 545,
+      "ignored": 181
+    },
+    "counts_overlap": true,
+    "release_metal_library_test_build": true
+  },
+  "published_metadata": [
+    {
+      "path": "tests/fixtures/lfm2-real-source-v1/protocol.json",
+      "bytes": 186511,
+      "sha256": "49005e6e0342adc1e05177063623d149c2319b1966b52d0174ea00d46e6ce59f"
+    },
+    {
+      "path": "tests/fixtures/lfm2-real-source-v1/components.json",
+      "bytes": 1148,
+      "sha256": "5be88b7f009b5d21f7699012b4b97d7fa1f460fd2c530b60bb3d2dea6bf48fc7"
+    },
+    {
+      "path": "tests/fixtures/lfm2-real-source-v1/gates.json",
+      "bytes": 1046647,
+      "sha256": "7b1879ee54fd5a421d0b5f17f2d9192d291742bdc078ef2f5e90885eb293fbdf"
+    }
+  ],
+  "limitations": [
+    "Source-only original packed artifact and selected native arithmetic, not historical converter/official MLX intermediate-cast trajectory",
+    "Actual affine outputs use certified FP64; int64/block/scalar fallbacks independently covered by synthetic helper controls, not observed on this workload",
+    "Remaining projection coordinates rely on qualified exact helper and complete authenticated data/finite/gate/replay checks",
+    "Nonselected raw-u/Krot/V producer formulas and teacher1..3 internal trajectory not independently recomputed; full state/finite/causal/gate/replay coverage retained",
+    "Decimal80/120 rotary is same-method stability, not certified transcendental rounding",
+    "Source process measurements are not native model/app/phone fit or generation performance",
+    "Native loader/session/conformance/text/memory, app/context, full adoption quality and phone remain pending"
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-proposal-v1/manifest.json",
+      "bytes": 9974,
+      "sha256": "dc26145fde86be943edd16a480be396563a34f9821c807529a0821d47361783a"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-proposal-v1/run.py",
+      "bytes": 14773,
+      "sha256": "15413821d4865df25186c1910f58b5f3063c31a7862e53fc253a965f44aa19f4"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-proposal-v1/runtime.json",
+      "bytes": 603060,
+      "sha256": "6e24de9e80e2956fd5ce9a571115cbad6e13984b2c32907957715b5b7e970223"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-independent-review-v1/prospective-review.json",
+      "bytes": 8044,
+      "sha256": "2e36e5233dc6f2c8b18b998726603fc2695bab6fbadc82e23b27b30799ddd157"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-proposal-v1/source-checks-v1/checks.json",
+      "bytes": 966661,
+      "sha256": "a9126e9b92c40eb226416cceeb79314f9eba636ab266af68f97c19c1e80d3a77"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-saved-reader-v2/manifest.json",
+      "bytes": 4243,
+      "sha256": "d44290ef74070c7cf47e7c7d7397e9ea4b8707b5838f9e3366ae1cde20ff5bda"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-saved-reader-v2/approval.json",
+      "bytes": 1451,
+      "sha256": "218f431e3021576b9957efa9b15ff826186476a28707801b22b0b985182da2e8"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-saved-reader-v1/root-structural-review.json",
+      "bytes": 1322,
+      "sha256": "83b780de8357fa3d3319d9c0d267732a99a05009d42b16bd84ac716fdc849546"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-saved-reader-v2/owned-v1/checks.json",
+      "bytes": 406941,
+      "sha256": "16acea110f10a27aa945fa5bd152fe2c76a97c3a4864d4f26a988498090b2f2f"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-saved-reader-v2/review.json",
+      "bytes": 5746,
+      "sha256": "383c62c75f0ab445aaf95ee46f155fc82b9d79bcdd91df3558734632ff806f13"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-independent-review-v1/saved-source-review.json",
+      "bytes": 11406,
+      "sha256": "976d8fdd2f4cdf1faedf3ae84e956273d61adbabd2ad0a385d3fc13b70edebf0"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-cold-checks-v1/checks.json",
+      "bytes": 885655,
+      "sha256": "2379d83dcd3038ae1150e927c1c83a2291bfe4c6b4eced1fa20d17cddd9b4ae3"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-proposal-v1/source-checks-v1/export/arrays.bin",
+      "bytes": 48049152,
+      "sha256": "9db9e7cd82a1a15ef60f75b2cd91b04f20d30553bb64cb55be72d2c201d0837a"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-proposal-v1/source-checks-v1/export/manifest.json",
+      "bytes": 2247239,
+      "sha256": "2654f475aedb37024b66f6c9a9988369d8ea8138a34e078505adf6fe16635133"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-proposal-v1/source-checks-v1/export/components.json",
+      "bytes": 1148,
+      "sha256": "5be88b7f009b5d21f7699012b4b97d7fa1f460fd2c530b60bb3d2dea6bf48fc7"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-proposal-v1/source-checks-v1/export/progress.jsonl",
+      "bytes": 1163653,
+      "sha256": "7e6f0e06de593e43fa7b5024106550a92a6dd742bc2f1739563a2412015191b5"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-proposal-v1/source-checks-v1/replay/arrays.bin",
+      "bytes": 48049152,
+      "sha256": "9db9e7cd82a1a15ef60f75b2cd91b04f20d30553bb64cb55be72d2c201d0837a"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-proposal-v1/source-checks-v1/replay/manifest.json",
+      "bytes": 2247239,
+      "sha256": "2654f475aedb37024b66f6c9a9988369d8ea8138a34e078505adf6fe16635133"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-proposal-v1/source-checks-v1/replay/components.json",
+      "bytes": 1148,
+      "sha256": "5be88b7f009b5d21f7699012b4b97d7fa1f460fd2c530b60bb3d2dea6bf48fc7"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-reference-proposal-v1/source-checks-v1/replay/progress.jsonl",
+      "bytes": 1163653,
+      "sha256": "7e6f0e06de593e43fa7b5024106550a92a6dd742bc2f1739563a2412015191b5"
+    }
+  ]
+}

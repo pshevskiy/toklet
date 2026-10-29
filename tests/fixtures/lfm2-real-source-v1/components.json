@@ -1,0 +1,47 @@
+{
+  "affine_counters": {
+    "main": {
+      "blocked_outputs": 0,
+      "calls": 18048,
+      "certified_blocks": 0,
+      "fp64": 28151808,
+      "int64": 0,
+      "max_stripe_fp32_bytes": 2359296,
+      "outputs": 28151808,
+      "scalar_blocks": 0,
+      "zero": 0
+    },
+    "wide": {
+      "blocked_outputs": 0,
+      "calls": 18048,
+      "certified_blocks": 0,
+      "fp64": 28151808,
+      "int64": 0,
+      "max_stripe_fp32_bytes": 2359296,
+      "outputs": 28151808,
+      "scalar_blocks": 0,
+      "zero": 0
+    }
+  },
+  "bcx_conv_cz_words": [
+    15362,
+    15618,
+    15619
+  ],
+  "direct_gain_norm_first_words": {
+    "main": 16,
+    "wide": 16
+  },
+  "frequency_claim": "Decimal80/120 same-method binary64 stability, not certified transcendental rounding",
+  "one_key_gqa_heads": 16,
+  "one_key_kv_owners": 8,
+  "projection_contract": "qualified lfm2_exact_affine; no uncertified FP64 rounding",
+  "saved_invariants": {
+    "causal_groups": 1172,
+    "causal_values": 2365440,
+    "masked_positive_zero_values": 28032,
+    "sideband_prefix_groups": 84,
+    "source_history_words": 6881280,
+    "teacher_prefix_values": 131072
+  }
+}

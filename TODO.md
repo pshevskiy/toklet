@@ -1,7 +1,8 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B4e2c — complete bounded real LFM2 source export and audit**.
+Next implementation task: **B4e3a — original payload store and direct-weight preparation**.
+The bounded real source is qualified; native real-model execution remains pending.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -239,7 +240,7 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
   text/session and actual process-memory checks before any support claim.
   - [x] B4e1: authenticate complete original weights and all eight cached metadata
     files; [acquisition](docs/lfm2-artifact-acquisition.md). No decoder admission.
-  - [ ] B4e2: freeze bounded independent real source/text/reference protocol.
+  - [x] B4e2: freeze bounded independent real source/text/reference protocol.
     - [x] Review the prospective real-model protocol with Astra before collecting
       numerical outcomes: 64-token source journey, fixed teacher histories,
       complete native operands and unchanged adoption-quality requirements.
@@ -249,9 +250,16 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
     - [x] B4e2b: [codec-only text fixtures](docs/lfm2-text-reference.md) pass
       eight controls, ten fixed cases,539 raw records and exact export/replay;
       Astra reconstructs saved decodes independently. No model/app execution.
-    - [ ] B4e2c: export/replay the complete bounded real reference; independently
-      audit saved arrays, accounting and frozen comparison coefficients.
+    - [x] B4e2c: [bounded real reference](docs/lfm2-real-reference.md) passes
+      13 controls, all repository checks, exact four-file export/replay and
+      independent saved-input audit; literal gates are frozen before native outcomes.
   - [ ] B4e3: pass bounded native real-model/session/text/memory qualification.
+    - [ ] B4e3a: original payload store and checked direct-weight preparation,
+      preserving tied ownership, finite reconstruction and explicit source overlap.
+    - [ ] B4e3b: extend the concrete resident composition to the selected real
+      16-layer geometry with complete planning, state, recovery and tiny regressions.
+    - [ ] B4e3c: freeze/implement the actual-input checker and complete native
+      capture inventory, then pass the bounded real/session/text/memory experiment.
 - [ ] Qualify a fitting real representative and obtain Astra review before a
   family support claim. Add further admissions only as explicitly scoped tasks.
 
@@ -497,3 +505,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B4e2 protocol approved / exact-affine implementation starts | Astra independently verifies all24 pins,334 tensor extents, literal mapped IDs and source/native inventories; prospective review `e080d8c6b07dc18eec3bf699baa9a1542a188b6e2ca06df14db8bc872af95c52` passes for implementation. | B4e2 split into exact-affine controls, codec-only fixtures and full reference export/audit. Private helper implementation starts; real model and tokenizer/template execution remain pending their reviewed code/controllers. |
 | 2026-10-29 | B4e2a exact-affine reference qualified |13 Fraction-oracle controls and all6repository jobs pass:450default/545Metal tests, strict formatting/Clippy and release test build. Astra verifies saved bytes, actual NumPy/Accelerate origins, live exact2files and all7closed groups; OSmaxRSS67,846,144B. | [Reference report](docs/lfm2-exact-affine-reference.md); no numerical engine/old fixture/gate changes. Owner v1/v2 were unexecuted; v3 adds bounded admission checks only. Codec source/owner structure reviewed; actual codec fixture and real source remain pending. |
 | 2026-10-29 | B4e2a commit / B4e2b codec qualification | Exact7-file helper review committed as`dbe855b`. Codec's8controls/export/replay and6repository jobs pass; all10cases/539records replay exactly. Astra independently reconstructs29decoded strings/382ID occurrences and verifies9closed groups/runtime/bounds. | [Text report](docs/lfm2-text-reference.md); exact BOS1/stop7/nonstop2,505special rejections/2ordinary entries and unmapped-head errors. This freezes text reference only; complete real numerical source and native/app/device work remain. |
+| 2026-10-29 | B4e2b commit / B4e2c real source collection starts | Exact11-file codec review committed as`c1e740e`. Astra approves full16-layer reference,13synthetic controls, all2,817 pins and fixed6204-descriptor/48,049,152-byte output before execution. Exact2source files applied; all6repository checks pass. | Bounded controls/export/replay now running with600/900/900s and512MiB/6GiB/6GiB limits. Independent saved-input reader is prepared separately; source outcomes, native runtime and model fit remain unqualified. |
+| 2026-10-29 | B4e2c real source qualified | All13 controls,6repository checks and two real source jobs pass with exact four-file replay. Astra verifies all6204descriptors/22,072,064finite values/3102gates, independent selected local formulas/3720exact projection coordinates,6912current identities and10closed groups. | [Source report](docs/lfm2-real-reference.md); peak source RSS469,549,056B. Literal gates frozen before native data; remaining projection/uncaptured-trajectory limitations explicit. B4e3 split into original store, real resident composition and bounded checker/experiment; private store task starts. |

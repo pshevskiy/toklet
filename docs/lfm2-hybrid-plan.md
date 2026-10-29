@@ -298,3 +298,12 @@ reconstructs all saved decode comparisons. These are reference prerequisites,
 not real decoder or app admission. B4e2c next exports the complete bounded
 numerical source under the approved64-token protocol;512 constructor/admission
 and the128000 declaration stay distinct.
+
+B4e2c's [complete bounded source](lfm2-real-reference.md) now passes13 controls,
+all repository checks, exact four-file real export/replay and independent
+saved-input reconstruction. All6204 descriptors/22,072,064 finite values and3102
+literal gates are verified. The 48,049,152-byte raw capture is retained and pinned;
+public protocol/components/gates are frozen before native outcomes. This closes
+the source prerequisite only. B4e3 next adds the strict original payload store,
+extends the existing resident composition to16 layers, then implements/reviews
+the actual-input checker and bounded native/session/text/memory experiment.

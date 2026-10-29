@@ -7764,3 +7764,49 @@ checking, not a second BPE implementation or Transformers equivalence. No model,
 GPU, Rust codec/app profile, Chat or phone execution is claimed. The complete
 real numerical reference remains B4e2c, followed by native/session/memory B4e3;
 all existing numerical gates and adoption-quality obligations remain.
+
+The exact11-file codec task is committed as`c1e740e`. B4e2c's complete16-layer
+reference has passed prospective Astra review of code, arithmetic, ownership,
+all2,817 inputs and the frozen48,049,152-byte capture. The exact two new source
+files are applied and all six repository checks pass. Its bounded synthetic/
+export/replay collection is now running; this records progress only, not a
+qualified real numerical outcome. A separate independent saved-input reader
+will audit the results before source adoption or native engine work.
+
+### M8 B4e2c — Bounded real LFM2 source qualification,29 October2026
+
+The [full reference](lfm2-real-reference.md) now executes all16 layers from the
+authenticated original container using streamed exact affine rows and qualified
+operator stores. Four fixed source histories, ten selected rows/all293 stages,
+four teacher distributions and complete producer/history sidebands produce6204
+descriptors/48,049,152 bytes. Both exports replay all four files exactly;13
+synthetic controls and all six repository checks pass(default450/Metal545 with
+20/181 ignored, overlapping suites). MAIN/WIDE centers and their literal gates
+are fixed before any native LFM2 target outcome.
+
+A separately authored standard-library reader checks all22,072,064 finite values,
+3102gates and exact state/mask/causal/teacher-prefix invariants. It independently
+reconstructs every selected local nonprojection coordinate and3720first/last
+projection coordinates across1860calls using exact integer accumulation and
+binary-search rounding. It imports neither producer nor its helpers and runs
+no second full graph. Remaining projection coordinates, nonselected producer
+formulas and teacher1–3internal trajectories retain explicit limitations. Astra
+reauthenticates6912current identities and all ten closed groups.
+
+Both arithmetic profiles observe28,151,808 certified binary64 affine outputs,
+18048stripe calls and no int64/block/scalar fallback; those fallbacks remain
+qualified by independent synthetic controls, not claimed as observed here.
+Maximum source-worker OSRSS is469,549,056 bytes under6GiB. The reader takes17.37s
+and59,981,824-byte OSRSS. These are bounded reference/resource measurements, not
+native generation speed, whole-app fit or phone qualification. Apple Accelerate
+full-binary64 behavior remains the explicit backend premise; wider rotary is
+same-method Decimal stability, not certified transcendental rounding.
+
+The [published protocol/components/gate contract](../tests/fixtures/lfm2-real-source-v1/README.md)
+preserves byte-identical protocol/components and all3102 literal source gates
+with complete source-array/manifest pins. The48MB raw capture stays in retained
+owned evidence. B4e2 closes only source/text reference work. B4e3 now separates
+original payload preparation, concrete16-layer resident composition and the
+bounded native checker/experiment. No native/app admission or original quality
+gate is changed; [exact evidence](../benchmarks/results/2026-10-29-lfm2-real-reference-v1.json)
+records all observations and remaining limitations.

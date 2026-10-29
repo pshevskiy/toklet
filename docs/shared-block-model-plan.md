@@ -149,8 +149,9 @@ B4c's [independent tiny scalar hybrid](lfm2-scalar-hybrid.md) and B4d's
 Mac source, state, recovery and allocation checks. The shared RMS, convolution,
 multi-KV staging and strided-product mechanisms are qualified in their recorded
 scopes. B4e2's [streamed exact-affine controls](lfm2-exact-affine-reference.md)
-and [separate codec fixtures](lfm2-text-reference.md) now pass; the complete
-bounded real numerical reference export/audit remains next. Real checkpoint admission
+and [separate codec fixtures](lfm2-text-reference.md) now pass. The complete
+[bounded real numerical reference](lfm2-real-reference.md) also passes exact
+export/replay and independent saved-input audit. Real checkpoint admission
 still requires B4e3; app controls and adoption quality remain B5/M8 work.
 
 | Task | Concrete delivery | Required checks |

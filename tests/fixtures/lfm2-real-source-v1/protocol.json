@@ -1,0 +1,7611 @@
+{
+  "artifact": {
+    "model_bytes": 199527820,
+    "model_sha256": "558353ad098c1230a8e2ea508cd34ef311a1b97a2bc4f47498f4df8229dc5c0f",
+    "repository": "mlx-community/LFM2-350M-4bit",
+    "revision": "18dc72abf3b2337f9123cfd6eeeb58dfa7947066"
+  },
+  "cases": [
+    {
+      "name": "bos",
+      "native_partitions": [
+        [
+          1
+        ]
+      ],
+      "selected_rows": [
+        0
+      ],
+      "source_math_bytes_per_profile": 1311488,
+      "source_math_values_per_profile": 590016,
+      "stages": [
+        {
+          "dtype": "f16",
+          "name": "embedding_lookup",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.2.attention_scores",
+          "route": "coupled",
+          "width": 16
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.2.attention_probabilities",
+          "route": "actual_input",
+          "width": 16
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.5.attention_scores",
+          "route": "coupled",
+          "width": 16
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.5.attention_probabilities",
+          "route": "actual_input",
+          "width": 16
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.8.attention_scores",
+          "route": "coupled",
+          "width": 16
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.8.attention_probabilities",
+          "route": "actual_input",
+          "width": 16
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.10.attention_scores",
+          "route": "coupled",
+          "width": 16
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.10.attention_probabilities",
+          "route": "actual_input",
+          "width": 16
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.12.attention_scores",
+          "route": "coupled",
+          "width": 16
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.12.attention_probabilities",
+          "route": "actual_input",
+          "width": 16
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.14.attention_scores",
+          "route": "coupled",
+          "width": 16
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.14.attention_probabilities",
+          "route": "actual_input",
+          "width": 16
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "final_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f32",
+          "name": "logits",
+          "route": "coupled",
+          "width": 65536
+        }
+      ],
+      "tokens": [
+        1
+      ]
+    },
+    {
+      "name": "plain_ids8",
+      "native_partitions": [
+        [
+          8
+        ],
+        [
+          3,
+          5
+        ]
+      ],
+      "selected_rows": [
+        0,
+        7
+      ],
+      "source_math_bytes_per_profile": 2633728,
+      "source_math_values_per_profile": 1182720,
+      "stages": [
+        {
+          "dtype": "f16",
+          "name": "embedding_lookup",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.2.attention_scores",
+          "route": "coupled",
+          "width": 128
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.2.attention_probabilities",
+          "route": "actual_input",
+          "width": 128
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.5.attention_scores",
+          "route": "coupled",
+          "width": 128
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.5.attention_probabilities",
+          "route": "actual_input",
+          "width": 128
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.8.attention_scores",
+          "route": "coupled",
+          "width": 128
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.8.attention_probabilities",
+          "route": "actual_input",
+          "width": 128
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.10.attention_scores",
+          "route": "coupled",
+          "width": 128
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.10.attention_probabilities",
+          "route": "actual_input",
+          "width": 128
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.12.attention_scores",
+          "route": "coupled",
+          "width": 128
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.12.attention_probabilities",
+          "route": "actual_input",
+          "width": 128
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.14.attention_scores",
+          "route": "coupled",
+          "width": 128
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.14.attention_probabilities",
+          "route": "actual_input",
+          "width": 128
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "final_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f32",
+          "name": "logits",
+          "route": "coupled",
+          "width": 65536
+        }
+      ],
+      "tokens": [
+        1,
+        1024,
+        2048,
+        4096,
+        8192,
+        16384,
+        32768,
+        501
+      ]
+    },
+    {
+      "name": "future_tail11",
+      "native_partitions": [
+        [
+          11
+        ],
+        [
+          3,
+          5,
+          3
+        ]
+      ],
+      "selected_rows": [
+        0,
+        7,
+        10
+      ],
+      "source_math_bytes_per_profile": 3957504,
+      "source_math_values_per_profile": 1775808,
+      "stages": [
+        {
+          "dtype": "f16",
+          "name": "embedding_lookup",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.2.attention_scores",
+          "route": "coupled",
+          "width": 176
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.2.attention_probabilities",
+          "route": "actual_input",
+          "width": 176
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.5.attention_scores",
+          "route": "coupled",
+          "width": 176
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.5.attention_probabilities",
+          "route": "actual_input",
+          "width": 176
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.8.attention_scores",
+          "route": "coupled",
+          "width": 176
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.8.attention_probabilities",
+          "route": "actual_input",
+          "width": 176
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.10.attention_scores",
+          "route": "coupled",
+          "width": 176
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.10.attention_probabilities",
+          "route": "actual_input",
+          "width": 176
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.12.attention_scores",
+          "route": "coupled",
+          "width": 176
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.12.attention_probabilities",
+          "route": "actual_input",
+          "width": 176
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.14.attention_scores",
+          "route": "coupled",
+          "width": 176
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.14.attention_probabilities",
+          "route": "actual_input",
+          "width": 176
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "final_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f32",
+          "name": "logits",
+          "route": "coupled",
+          "width": 65536
+        }
+      ],
+      "tokens": [
+        1,
+        1024,
+        2048,
+        4096,
+        8192,
+        16384,
+        32768,
+        501,
+        502,
+        503,
+        504
+      ]
+    },
+    {
+      "name": "journey64",
+      "native_partitions": [
+        [
+          32,
+          32
+        ],
+        [
+          31,
+          1,
+          1,
+          31
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      ],
+      "selected_rows": [
+        0,
+        31,
+        32,
+        63
+      ],
+      "source_math_bytes_per_profile": 5439488,
+      "source_math_values_per_profile": 2408448,
+      "stages": [
+        {
+          "dtype": "f16",
+          "name": "embedding_lookup",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.0.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.1.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.2.attention_scores",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.2.attention_probabilities",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.2.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.3.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.4.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.5.attention_scores",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.5.attention_probabilities",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.5.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.6.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.7.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.8.attention_scores",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.8.attention_probabilities",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.8.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.9.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.10.attention_scores",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.10.attention_probabilities",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.10.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.11.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.12.attention_scores",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.12.attention_probabilities",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.12.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.13.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.q_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.k_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.v_projection",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.q_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.k_norm",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.q_rotary",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.k_rotary",
+          "route": "actual_input",
+          "width": 512
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.14.attention_scores",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f32",
+          "name": "layers.14.attention_probabilities",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.attention_context",
+          "route": "coupled",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.14.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.operator_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.bcx_projection",
+          "route": "actual_input",
+          "width": 3072
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.b",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.c",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.x",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.u",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.convolution",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.gated_conv",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.operator_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.operator_residual",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.ffn_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.gate_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.up_projection",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.gate_silu",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.ffn_gated",
+          "route": "actual_input",
+          "width": 4608
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.down_projection",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "layers.15.output",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f16",
+          "name": "final_norm",
+          "route": "actual_input",
+          "width": 1024
+        },
+        {
+          "dtype": "f32",
+          "name": "logits",
+          "route": "coupled",
+          "width": 65536
+        }
+      ],
+      "tokens": [
+        1,
+        538,
+        1535,
+        2532,
+        3529,
+        4526,
+        5523,
+        6520,
+        7517,
+        8514,
+        9511,
+        10508,
+        11505,
+        12502,
+        13499,
+        14496,
+        15493,
+        16490,
+        17487,
+        18484,
+        19481,
+        20478,
+        21475,
+        22472,
+        23469,
+        24466,
+        25463,
+        26460,
+        27457,
+        28454,
+        29451,
+        30448,
+        31445,
+        32442,
+        33439,
+        34436,
+        35433,
+        36430,
+        37427,
+        38424,
+        39421,
+        40418,
+        41415,
+        42412,
+        43409,
+        44406,
+        45403,
+        46400,
+        47397,
+        48394,
+        49391,
+        50388,
+        51385,
+        52382,
+        53379,
+        54376,
+        55373,
+        56370,
+        57367,
+        58364,
+        59361,
+        60358,
+        61355,
+        62352
+      ]
+    }
+  ],
+  "counts": {
+    "actual_input_math_groups_per_profile": 2800,
+    "actual_input_math_values_per_profile": 5210816,
+    "array_descriptors_both_profiles": 6204,
+    "arrays_bytes_both_profiles": 48049152,
+    "coupled_math_teacher_groups_per_profile": 134,
+    "coupled_math_teacher_values_per_profile": 1008320,
+    "math_bytes_per_profile": 13342208,
+    "math_values_per_profile": 5956992,
+    "native_actual_input_groups": 6440,
+    "native_actual_input_values": 11971552,
+    "native_chunks": 78,
+    "native_coupled_math_teacher_groups": 303,
+    "native_coupled_math_teacher_values": 1965024,
+    "native_kv_producer_half_words": 1419264,
+    "native_logit_row_hashes": 231,
+    "native_prepost_history_bank_half_words": 6389760,
+    "native_schedule_token_rows": 231,
+    "native_schedules": 8,
+    "native_selected_math_bytes": 30580480,
+    "native_selected_math_groups": 6739,
+    "native_selected_math_values": 13674432,
+    "native_u_producer_half_words": 2365440,
+    "sideband_bytes_per_profile": 9633792,
+    "sideband_values_per_profile": 4816896,
+    "source_case_token_rows": 84,
+    "source_groups_per_profile": 3102,
+    "source_mathematical_stage_groups": 2930,
+    "teacher_bytes_per_profile": 1048576,
+    "teacher_groups": 4,
+    "teacher_recompute_token_rows": 38,
+    "teacher_values_per_profile": 262144
+  },
+  "execution_authorized": false,
+  "format": "toklet-lfm2-real-protocol-proposal-v1",
+  "free_generation": {
+    "agreement": "observation, no exact source argmax gate",
+    "head_argmax": "all65536 numeric slots; stable lowestID tie",
+    "maximum_sampled_tokens": 4,
+    "pending_last_sample_not_committed": true,
+    "prompt_tokens": [
+      1,
+      1024,
+      2048,
+      4096,
+      8192,
+      16384,
+      32768,
+      501
+    ],
+    "stop_ids": [
+      7
+    ],
+    "unmapped_token": "explicit codec failure beforedecode, no masking/remapping"
+  },
+  "gate": {
+    "atol_floor": 0.0001,
+    "freeze_per_exact_case_row_stage_before_target": true,
+    "main_only": true,
+    "main_wide_envelope_factor": 2,
+    "rtol": 0.001,
+    "wide": "diagnostic only"
+  },
+  "geometry": {
+    "admitted_capacity": 512,
+    "attention_layers": [
+      2,
+      5,
+      8,
+      10,
+      12,
+      14
+    ],
+    "chunk_capacity": 32,
+    "convolution_layers": [
+      0,
+      1,
+      3,
+      4,
+      6,
+      7,
+      9,
+      11,
+      13,
+      15
+    ],
+    "declared_positions": 128000,
+    "epsilon": 1e-05,
+    "head_dim": 64,
+    "hidden": 1024,
+    "intermediate": 4608,
+    "kv_heads": 8,
+    "layers": 16,
+    "query_heads": 16,
+    "source_trajectory_max": 64,
+    "theta": 1000000,
+    "vocabulary": 65536
+  },
+  "limits": {
+    "array_file_bytes": 134217728,
+    "cleanup_kill_seconds": 15,
+    "cleanup_term_seconds": 15,
+    "log_bytes_per_stream": 16777216,
+    "metadata_file_bytes": 16777216,
+    "numeric_temporary_bytes": 134217728,
+    "process_bytes": 6442450944,
+    "source_framework_runtime_reserved_bytes": 1073741824,
+    "source_jobs": 2,
+    "source_output_disk_bytes": 402653184,
+    "source_seconds_each": 900,
+    "tokenizer_runtime_reserved_bytes": 268435456
+  },
+  "memory_numeric_equations": {
+    "additional_guards_metadata_scratch_framework": "derivecheckedactualmodel/sessionledger beforeimplementationapproval; these equations are partial numericowners, not total processpeak",
+    "history_two_banks_half_bytes": 81920,
+    "kv_old_half_bytes": 6291456,
+    "kv_staging_half_bytes": 393216,
+    "physical_source_payload_bytes": 199491072,
+    "two_full_chunk_logit_banks_f32_bytes": 16777216
+  },
+  "native_capture": {
+    "all_logits": "stream every native numeric row hash; retain selected full distributions; no growing full-vocabulary history owner",
+    "extra_run_records": "teacher/free/state/fault record schema and exact raw cap must be enumerated before runner implementation approval; no execution from this protocol alone",
+    "history": "both physical guarded banks before and after every successful chunk; candidate role tracked explicitly",
+    "kv": "all active Krot/V producer rows for every attention owner/chunk",
+    "physical_kv": "whole physical buffer hash per owner/bank at every boundary; reconstruct from actual initial canaries plus retained native writes; selected active-prefix raw readback; no invented inactive observations",
+    "selected_math": "all293stagevalues at each selected absolute query per schedule; scores/probs actual materialized key columns0..chunk_end only",
+    "u": "all active u rows for every convolution owner/chunk, copied before scratch reuse"
+  },
+  "policy": {
+    "actual_input_fatal": "every other selected mathematical stage, exhaustive universal stage dispatch; unknown/missinginput hardfail",
+    "basis": "prospective native-conformance split from outset; tiny fatal all-stage policy unchanged",
+    "coupled_drift": "all selected source-trajectory comparisons retained and reported including failures; never relabel diagnostic failures zero",
+    "coupled_fatal": [
+      "attention_scores",
+      "attention_context",
+      "logits",
+      "teacher_logits"
+    ],
+    "full_original_quality": "unquantized10000-token/100-case adoption quality remains mandatoryB5/M8; no sameartifact waiver",
+    "local_numeric_guard": "same exact case/row/stage coefficient dictionary applied to independent actual-input center, in addition to semantic requirements",
+    "semantic_rules": {
+      "conv": "exact three separate F32products, oldest-current s01/s012, finite everyintermediate, oneHalfstore; actual u triple/coefficients",
+      "history_kv": "exact publication from capturednative producers; source state trajectories diagnostic separately",
+      "lookup_views_product_residual": "exact declared original-F32 lookup toHalf; BCx slices exact; F32 multiply/add thenHalfRNE; ordinary residual no clamp",
+      "projection_half": "one/two faithfully bracketing finiteHalfwords ofexact mathematical originalF32dot; singleton ifrepresentable, AND local numericguard",
+      "rms": "exact ascending FP32 Neumaier/directBF16gain/epsilon1e-5/singleHalfstore",
+      "silu_rotary_probability": "published providerULP propagated from exact intrinsicarguments, exact remainingF32stores; localnumericguard alsofatal; unresolveddomain/FTZ/intervalboundary hardfails"
+    }
+  },
+  "runtime_certificate_coverage": "unknown beforeactualsource; no permitted skipped or approximate fallback",
+  "sidebands": {
+    "history_before_after": {
+      "arrays_per_profile": 80,
+      "dtype": "f16",
+      "values_per_profile": 3440640
+    },
+    "kv_producers": {
+      "arrays_per_profile": 48,
+      "dtype": "f16",
+      "values_per_profile": 516096
+    },
+    "u_producers": {
+      "arrays_per_profile": 40,
+      "dtype": "f16",
+      "values_per_profile": 860160
+    }
+  },
+  "status": "unreviewed-protocol-only-no-execution",
+  "teacher": [
+    {
+      "dtype": "f32",
+      "name": "teacher.prefix_0.logits",
+      "shape": [
+        65536
+      ],
+      "tokens": [
+        1,
+        1024,
+        2048,
+        4096,
+        8192,
+        16384,
+        32768,
+        501
+      ]
+    },
+    {
+      "dtype": "f32",
+      "name": "teacher.prefix_1.logits",
+      "shape": [
+        65536
+      ],
+      "tokens": [
+        1,
+        1024,
+        2048,
+        4096,
+        8192,
+        16384,
+        32768,
+        501,
+        502
+      ]
+    },
+    {
+      "dtype": "f32",
+      "name": "teacher.prefix_2.logits",
+      "shape": [
+        65536
+      ],
+      "tokens": [
+        1,
+        1024,
+        2048,
+        4096,
+        8192,
+        16384,
+        32768,
+        501,
+        502,
+        503
+      ]
+    },
+    {
+      "dtype": "f32",
+      "name": "teacher.prefix_3.logits",
+      "shape": [
+        65536
+      ],
+      "tokens": [
+        1,
+        1024,
+        2048,
+        4096,
+        8192,
+        16384,
+        32768,
+        501,
+        502,
+        503,
+        504
+      ]
+    }
+  ],
+  "text": {
+    "bos_id": 1,
+    "cases": [
+      {
+        "messages": [
+          {
+            "content": "",
+            "role": "user"
+          }
+        ],
+        "name": "empty_user"
+      },
+      {
+        "messages": [
+          {
+            "content": "Say hello.",
+            "role": "user"
+          }
+        ],
+        "name": "plain_user"
+      },
+      {
+        "messages": [
+          {
+            "content": "Be concise.",
+            "role": "system"
+          },
+          {
+            "content": "What is 2 + 2?",
+            "role": "user"
+          }
+        ],
+        "name": "system_user"
+      },
+      {
+        "messages": [
+          {
+            "content": "Name a color.",
+            "role": "user"
+          },
+          {
+            "content": "Blue.",
+            "role": "assistant"
+          },
+          {
+            "content": "Name another.",
+            "role": "user"
+          }
+        ],
+        "name": "assistant_history"
+      },
+      {
+        "messages": [
+          {
+            "content": "Caf\u00e9 \u2014 \u6771\u4eac\nLine two.",
+            "role": "user"
+          }
+        ],
+        "name": "unicode_user"
+      }
+    ],
+    "expected_rendered_token_ids": "independently freeze by reviewed codec-only execution before numericaltarget; absent here, neverfabricated",
+    "generation_prompt_flags": [
+      false,
+      true
+    ],
+    "mapped_id_interval": [
+      0,
+      64400
+    ],
+    "not_automatic_stop": [
+      2
+    ],
+    "serialized_decode_cleanup": false,
+    "serialized_decode_skip_special_tokens": false,
+    "stop_union": [
+      7
+    ],
+    "template_encode_add_special_tokens": false,
+    "unmapped_id_interval": [
+      64400,
+      65536
+    ]
+  }
+}
