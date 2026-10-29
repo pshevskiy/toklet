@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B4e2 — bounded real LFM2 source/text reference protocol and experiment**.
+Next implementation task: **B4e2b — codec-only fixtures; B4e2c real source prepared privately**.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -240,6 +240,16 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
   - [x] B4e1: authenticate complete original weights and all eight cached metadata
     files; [acquisition](docs/lfm2-artifact-acquisition.md). No decoder admission.
   - [ ] B4e2: freeze bounded independent real source/text/reference protocol.
+    - [x] Review the prospective real-model protocol with Astra before collecting
+      numerical outcomes: 64-token source journey, fixed teacher histories,
+      complete native operands and unchanged adoption-quality requirements.
+    - [x] B4e2a: [streamed exact-affine reference](docs/lfm2-exact-affine-reference.md)
+      passes13 independent synthetic controls, checked certificates/bounded ownership,
+      full default/Metal checks and Astra's saved-result audit. No real forward.
+    - [ ] B4e2b: freeze codec-only manual/template/tokenizer fixtures and strict
+      BOS, stop and unmapped-token errors without executing a model.
+    - [ ] B4e2c: export/replay the complete bounded real reference; independently
+      audit saved arrays, accounting and frozen comparison coefficients.
   - [ ] B4e3: pass bounded native real-model/session/text/memory qualification.
 - [ ] Qualify a fitting real representative and obtain Astra review before a
   family support claim. Add further admissions only as explicitly scoped tasks.
@@ -482,3 +492,6 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B4d4b reviewed source commit / resident graph starts | Exact14-file Astra approval and all checks pass; independent Half reference committed as`e577eb9`. The qualified source remains fixed before native graph outcomes. | Private D4c core uses the approved concrete Model/Session design and all-owner ledger. No new shader, generic graph VM, live graph code or target qualification yet. |
 | 2026-10-29 | D4c first native collection / mutation witness corrected | Reviewed8-file graph and full450/545 checks pass. First GPU numerical job passes; Astra independently gates1,923,728 math+199,936 boundary values with no MAIN/WIDE exceedance. Recovery stops at FirstCopy mutation assertion because all128 destination words already equal staged K from earlier replay. Actual commands complete and poison/replay error is correct. | Failed binary/logs/closed receipt retained. Reviewed test-only successor uses fresh FirstCopy Session and exact copied-range proof, retaining every assertion and unchanged graph/source/gates/counts. Full check/recollection pending; seven legacy and12allocation checks not yet reached. |
 | 2026-10-29 | B4d4c resident tiny graph qualified | All6successor repository checks and9release GPU jobs pass. Astra gates1,923,728math+199,936boundary values, all57snapshots/9faults/exact128word partial-copy poison/reset/replay,12ordinary allocation-free forwards and7legacyjobs;93observed zero boundaries total. | [Resident graph report](docs/lfm2-resident-tiny.md); failedv1 remains failed, correction test-only. Status address is unlogged(contents/guards/bytes verified), sparse usage is not peak/fit, real model/app/device/performance remain open. |
+| 2026-10-29 | B4d4c reviewed commit / real reference protocol starts | Exact14-file Astra publication review passes; resident tiny graph committed as`2f594eb`. B4d is complete for its selected Mac tiny scope. Coefficient-only real-artifact research authenticates93matrices and derives exact-dot certificate/fallback strategy without model execution. | B4e2 protocol is being fixed before any real outputs: short64-token trajectory/32→33, literal teacher histories, complete native operands for Conv/KV checks, strict coupled score/context/final/teacher and universal actual-input checks.512admission and128k declaration stay separate; original adoption quality remains open. |
+| 2026-10-29 | B4e2 protocol approved / exact-affine implementation starts | Astra independently verifies all24 pins,334 tensor extents, literal mapped IDs and source/native inventories; prospective review `e080d8c6b07dc18eec3bf699baa9a1542a188b6e2ca06df14db8bc872af95c52` passes for implementation. | B4e2 split into exact-affine controls, codec-only fixtures and full reference export/audit. Private helper implementation starts; real model and tokenizer/template execution remain pending their reviewed code/controllers. |
+| 2026-10-29 | B4e2a exact-affine reference qualified |13 Fraction-oracle controls and all6repository jobs pass:450default/545Metal tests, strict formatting/Clippy and release test build. Astra verifies saved bytes, actual NumPy/Accelerate origins, live exact2files and all7closed groups; OSmaxRSS67,846,144B. | [Reference report](docs/lfm2-exact-affine-reference.md); no numerical engine/old fixture/gate changes. Owner v1/v2 were unexecuted; v3 adds bounded admission checks only. Codec source/owner structure reviewed; actual codec fixture and real source remain pending. |

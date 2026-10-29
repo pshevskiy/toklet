@@ -7689,3 +7689,50 @@ v1 stays rejected and retained, with only test setup/proof changed. Status bytes
 guards are checked without a logged address; sparse usage is not a process peak.
 B4d closes only the tiny Mac scope. Real LFM2 source/text/native/memory, B5 app/
 context/adoption, quality, performance and separate phone qualification remain.
+
+The exact14-file resident graph task is committed as`2f594eb` after final Astra
+approval. B4e2 next fixes a bounded real LFM2 reference before any model output.
+Astra's authenticated coefficient-only scan covers all93 affine matrices and
+derives conservative exact-FP64/checked-int64 bounds with exact fallback; runtime
+activation certificate coverage is still unknown. The proposed64-token source
+trajectory and fixed teacher/native-operand inventories are being reviewed with
+strict coupled score/context/head/teacher gates and all-stage actual-input checks.
+This does not change the tiny profile, imply512-token trajectory evidence or
+waive original-unquantized adoption quality.
+
+Astra has approved the prospective B4e2 protocol for implementation after an
+independent check of all24 pins,334 contiguous tensor extents, literal token IDs
+and source/native capture counts. TODO.md now separates the streamed exact-affine
+helper, codec-only fixture and full reference experiment so each code task can
+be checked, reviewed and committed separately. The helper begins with synthetic
+controls for all certificate/fallback paths and direct destination rounding;
+real source and text execution still await their concrete reviewed code and
+bounded controllers. Protocol approval is not a numerical result.
+
+### M8 B4e2a — Streamed exact-affine source operation,29 October2026
+
+The [independent affine reference](lfm2-exact-affine-reference.md) now streams
+original Q4/BF16 row stripes and rounds exact stored-Half/original-FP32 dots
+directly to Half or FP32. Checked pre-arithmetic certificates select exact
+binary64, int64 or fixed64-element exact subtotals; only uncertifiable bounded
+blocks use per-element Python integers. All branches retain the same numerical
+center, canonical exact zero, signed underflow and overflow rejection. No full
+expanded model or integer object per model weight is retained.
+
+Thirteen independent Fraction/finite-word controls pass, including complete
+projection double-rounding witnesses, cancellation, certificate limits/stale
+bounds, extreme finite weights multiplied by zero, all fallback paths,
+unaligned original metadata, stream ownership and row/token partitions. All six
+repository checks pass:450default/545Metal tests(overlap),20/181 ignored,
+formatting, both strict Clippy configurations and release test compilation.
+Astra's saved audit verifies runtime pins/actual NumPy and Accelerate origins,
+all seven closed groups and source bytes. Synthetic OSmaxRSS is67,846,144B;
+the32MiB numerical reserve and512MiB process ceiling are separate quantities.
+
+The two earlier owner versions were never executed. Version3 adds actual
+runtime-origin, nonblocking-open and interpreter/customization checks; helper
+and test bytes remain identical. Rust/Metal kernels, existing numerical
+fixtures, source gates and adoption-quality obligations are unchanged. This
+closes the helper task only; codec-only fixtures, real reference/native model,
+app/context controls and device qualification remain. Evidence and exact pins
+are in the [result record](../benchmarks/results/2026-10-29-lfm2-exact-affine-reference-v1.json).

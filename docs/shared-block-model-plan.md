@@ -144,10 +144,13 @@ checking/review. All18,537,288 selected values retain fatal coverage. Earlier
 ordinary app/Chat, declared full window and iPhone stay separate B5/M8 work.
 B4a's strict LFM2 cold plan and B4b's standalone scalar history are complete.
 See the [cold report](lfm2-cold-plan.md) and [history report](short-conv3-history.md).
-B4c's [independent tiny scalar hybrid](lfm2-scalar-hybrid.md) now passes. Next is
-B4d's resident leaf/composition qualification: [direct-gain Half RMS](lfm2-half-rms.md)
-and [raw Conv3](causal-conv3-half.md) now pass; multi-KV staging remains next. Real runtime
-admission stays pending through B4d–e.
+B4c's [independent tiny scalar hybrid](lfm2-scalar-hybrid.md) and B4d's
+[resident tiny mixed graph](lfm2-resident-tiny.md) now pass their selected
+Mac source, state, recovery and allocation checks. The shared RMS, convolution,
+multi-KV staging and strided-product mechanisms are qualified in their recorded
+scopes. B4e2 now prepares the bounded real LFM2 reference, beginning with streamed
+exact-affine controls and separate codec fixtures. Real checkpoint admission
+still requires B4e3; app controls and adoption quality remain B5/M8 work.
 
 | Task | Concrete delivery | Required checks |
 | --- | --- | --- |

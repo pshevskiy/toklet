@@ -1,0 +1,180 @@
+{
+  "format": "toklet-lfm2-exact-affine-reference-result-v1",
+  "date": "2026-10-29",
+  "base_revision": "2f594ebe1b7e805123ccbfe44245fecb7ae4565a",
+  "task": "M8 B4e2a: independent streamed exact-affine reference",
+  "scope": "Synthetic CPU qualification only; no real-model source or native/app admission",
+  "status": "synthetic_and_repository_checks_passed_independent_saved_audit_passed",
+  "source_files": [
+    {
+      "path": "tools/reference/lfm2_exact_affine.py",
+      "bytes": 16151,
+      "sha256": "3824b03454ab10437191c5e1c48707a2dfea998a8dd41b555c82b47837a437de"
+    },
+    {
+      "path": "tools/reference/test_lfm2_exact_affine.py",
+      "bytes": 11649,
+      "sha256": "04042f19b04f9c939cd4d95fb169588c06f6b0fe06ae363ae6af68a46547cefc"
+    }
+  ],
+  "geometry_bounds": {
+    "stripe_rows": 128,
+    "input_columns": 4608,
+    "token_rows": 64,
+    "columns_multiple": 64
+  },
+  "numerical_policy": {
+    "original": "FP32(FP32(Q4*BF16_scale)+BF16_bias), finite intermediates",
+    "input": "finite stored Half",
+    "center": "exact dyadic dot, direct Half/FP32 RNE",
+    "exact_zero": "positive zero",
+    "nonzero_negative_underflow": "signed negative zero",
+    "overflow": "reject",
+    "certificates": [
+      "absolute integer product sum <=2^53: exact binary64",
+      "absolute integer product sum <=2^63-1: checked int64",
+      "fixed64 exact block subtotal combination; bounded per-element exact fallback when necessary"
+    ]
+  },
+  "verification": {
+    "synthetic_controls": 13,
+    "synthetic_passed": true,
+    "cargo_fmt": true,
+    "strict_default_all_targets_clippy": true,
+    "strict_metal_all_targets_clippy": true,
+    "default_tests": {
+      "passed": 450,
+      "ignored": 20
+    },
+    "metal_tests": {
+      "passed": 545,
+      "ignored": 181
+    },
+    "suite_counts_overlap": true,
+    "release_metal_library_test_build": true
+  },
+  "memory": {
+    "explicit_numeric_owner_reserve": 33554432,
+    "synthetic_process_observed_cap": 536870912,
+    "synthetic_os_maxrss_bytes": 67846144,
+    "direct_samples": 5,
+    "observed_maxima": {
+      "resident_size": 61407232,
+      "phys_footprint": 45613800,
+      "lifetime_max_phys_footprint": 45875944
+    },
+    "sparse_samples_are_not_process_peak": true,
+    "model_fit_qualified": false
+  },
+  "runtime": {
+    "python": "3.12.8",
+    "numpy": "2.3.2",
+    "hardware": "Apple M1 Pro",
+    "system": "macOS26.6.2",
+    "pinned_files": 2785,
+    "actual_origin_snapshots": [
+      {
+        "label": "after_numpy_import",
+        "modules": 164,
+        "non_system_native_images": 15
+      },
+      {
+        "label": "endpoint",
+        "modules": 203,
+        "non_system_native_images": 21
+      }
+    ],
+    "backend_assumption": "Pinned backend executes ordinary full-binary64 operations; NumPy reports Apple Accelerate, library version unknown. System shared-cache image paths are observed rather than content-hashed."
+  },
+  "owned_execution": {
+    "jobs": 1,
+    "seconds_per_job": 600,
+    "log_cap_each": 1048576,
+    "raw_bytes": {
+      "stdout": 1245,
+      "stderr": 97633
+    },
+    "exit_code": 0,
+    "cleanup_errors": [],
+    "closed_group": true
+  },
+  "superseded_unexecuted_owner_versions": [
+    "v1: before actual runtime-origin checking",
+    "v2: before nonblocking opens/interpreter/customization guards"
+  ],
+  "unchanged": [
+    "qualified tiny/scalar source fixtures",
+    "all Rust/Metal numerical code",
+    "comparison gates and original adoption-quality requirements"
+  ],
+  "not_executed": [
+    "real model payload/forward",
+    "real reference export",
+    "tokenizer/template",
+    "GPU",
+    "phone",
+    "performance benchmark"
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b4e2-exact-affine-proposal-v3/manifest.json",
+      "bytes": 6733,
+      "sha256": "6d3ebd7761a1ec098c990bab9c5b2a9413e7e6fe26f7e3622a927963581e4381"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-exact-affine-proposal-v3/run.py",
+      "bytes": 11343,
+      "sha256": "a927dd886f75a7932be8a7376d470a84138e61360b3f74245c30fa5a9b2fdca3"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-exact-affine-proposal-v3/runtime.json",
+      "bytes": 603060,
+      "sha256": "6e24de9e80e2956fd5ce9a571115cbad6e13984b2c32907957715b5b7e970223"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-exact-affine-proposal-v3/runtime_probe.py",
+      "bytes": 3049,
+      "sha256": "43210f73ab5a7b377bda6a551a2c8339cc3d4a2b814bef01845ca2323bb5e23b"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-exact-affine-proposal-v3/controls-v1/checks.json",
+      "bytes": 718643,
+      "sha256": "7bac353bec6829c414242e7398ba959d8beaed39ec4abcaf8f4466526b5e54b8"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-exact-affine-proposal-v3/controls-v1/synthetic.stdout",
+      "bytes": 1245,
+      "sha256": "5bc387049e1ea56f73e7483db4ebc28fe3ba5e71a8515153d86bc5404337d304"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-exact-affine-proposal-v3/controls-v1/synthetic.stderr",
+      "bytes": 97633,
+      "sha256": "d3914570f48dfe1209b8623b5b526999bbe66b55948e461682a7ba4e24a4d0f6"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-exact-affine-independent-review-v1/prospective-review.json",
+      "bytes": 6800,
+      "sha256": "e468e13539b36a4acc13e1c20a4e810f79d0eccc23c3007af7fa46ea544bfc60"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-exact-affine-cold-checks-v1/checks.json",
+      "bytes": 884256,
+      "sha256": "91eec956c49459df02b353bcdf11d4846d180ddcf327249d40bb04a11aa8daa4"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-real-protocol-independent-review-v1/prospective-review.json",
+      "bytes": 7995,
+      "sha256": "e080d8c6b07dc18eec3bf699baa9a1542a188b6e2ca06df14db8bc872af95c52"
+    },
+    {
+      "path": "artifacts/new-goal-b4e2-exact-affine-independent-review-v1/saved-controls-review.json",
+      "bytes": 8356,
+      "sha256": "339cfb205e2aaeddc12a3eab5fce7a1b23aed191f9be2030c4626fc5866a3860"
+    }
+  ],
+  "independent_saved_audit": {
+    "path": "artifacts/new-goal-b4e2-exact-affine-independent-review-v1/saved-controls-review.json",
+    "bytes": 8356,
+    "sha256": "339cfb205e2aaeddc12a3eab5fce7a1b23aed191f9be2030c4626fc5866a3860"
+  }
+}
