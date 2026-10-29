@@ -40,8 +40,8 @@ pub struct LayerPlan {
     pub intermediate: usize,
 }
 
-pub use super::gemma_metadata::{Dtype, PhysicalTensor, Shape, Storage, TensorPlan};
-use super::gemma_metadata::{descriptor, expected_physical, same_semantics};
+pub use super::tensor_metadata::{Dtype, PhysicalTensor, Shape, Storage, TensorPlan};
+use super::tensor_metadata::{descriptor, expected_physical, same_semantics};
 
 pub struct E2bPlan {
     layers: [LayerPlan; LAYERS],

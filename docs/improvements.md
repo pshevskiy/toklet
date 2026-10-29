@@ -7424,3 +7424,29 @@ endpoints. The [bounded release decision](gemma3-real-native.md) closes B3's eng
 contract and retains every historical rejection and original quality/app/device
 gap. The source-identical diagnostic runner receives its own reviewed commit;
 B4a's LFM2 cold plan is next. No production Chat or throughput claim is added.
+
+The bounded B3 runner task is committed as `aed0a56`. B4a research now resolves
+the declared current MLX-LM/MLX0.32.3 strict load, direct gains and depthwise
+orientation without inventing the historical converter version. Astra chooses
+single-store native FP32-scale RMS with direct BF16 gains, explicitly distinct
+from MLX's intermediate output-dtype cast. Independent review flags the required
+later epsilon1e-5 qualification at both64/1024 and actual16:8/D64 GQA checks.
+The [profile](lfm2-hybrid-plan.md) freezes that choice before numerical fixtures;
+the current implementation task is a cold metadata/layer/owner plan only.
+
+The reviewed LFM2 cold adapter is applied with93 affine,45 direct-norm and10
+explicit depthwise owners,30 borrowed fused-row spans and separate6-KV/10-history
+recipes. Private checks pass; broader parent checks catch an older Metal-feature
+compatibility control that predates structural Llama admission. Astra verifies
+the history and approves a test-only correction to a truly unsupported base0.5,
+plus a metadata-only12345 acceptance control that keeps qualification false.
+The failed receipt is preserved and complete checks rerun; no production
+geometry, numerical limit or runtime eligibility changes to make the test pass.
+
+The [LFM2 cold plan](lfm2-cold-plan.md) now passes all five complete parent
+checks: formatting, strict default/Metal all-target Clippy, 438 default and 519
+Metal-feature tests. The metadata adapter preserves original physical ownership,
+separate six-KV/ten-history geometry and explicit absent implemented/qualified
+context. The reviewed compatibility repair changes tests only. Failed evidence
+is retained. B4b will reuse the existing scalar causal convolution before adding
+transactional history; no LFM2 inference or memory-fit claim follows here.

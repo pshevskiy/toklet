@@ -1,0 +1,34 @@
+{
+  "format": "toklet-lfm2-350m-cold-metadata-v1",
+  "repository": "mlx-community/LFM2-350M-4bit",
+  "revision": "18dc72abf3b2337f9123cfd6eeeb58dfa7947066",
+  "files": {
+    "config.json": {
+      "bytes": 1253,
+      "sha256": "95e6906d77ac647e8bf93c2d2bbd2f37eb9bf3fac8732a563653236ad81072af"
+    },
+    "index.json": {
+      "bytes": 23413,
+      "sha256": "9921c33945951c541dfb7de7a11c6ff3b0bb8fb58009be615f851a7de89bcc38"
+    },
+    "header.json": {
+      "bytes": 36740,
+      "sha256": "7c5e241d377d693fac694426ed10fb79df470864a9ec31d0ca82f3044171506d"
+    }
+  },
+  "advertised_container_bytes": 199527820,
+  "advertised_lfs_sha256": "558353ad098c1230a8e2ea508cd34ef311a1b97a2bc4f47498f4df8229dc5c0f",
+  "payload_bytes": 199491072,
+  "payload_downloaded": false,
+  "payload_integrity_verified": false,
+  "numerical_execution_qualified": false,
+  "text_qualified": false,
+  "research_manifest": {
+    "bytes": 12217,
+    "sha256": "36755a8a530a317631b2c4d8366078ac56166aef1cf5561f9008416fef204e1d"
+  },
+  "independent_research_review": {
+    "bytes": 9323,
+    "sha256": "07ef42c0eafd26ac6b9d8bd58a0d3d59cd82134375b0cf1a66d10191e850bb9a"
+  }
+}

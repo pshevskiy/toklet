@@ -1,4 +1,4 @@
-//! Concrete cold metadata shared by the Gemma3 and Gemma4 inspectors.
+//! Concrete cold tensor metadata shared by the Gemma and LFM2 inspectors.
 //! No tensor payload, numerical dispatch or execution eligibility is introduced.
 use super::affine::Layout;
 use crate::weights::Error;
@@ -75,7 +75,7 @@ pub(super) fn same_semantics(actual: &Value, expected: &Value) -> bool {
     }
 }
 
-// Both family factories construct only validated Q4/group64/BF16 plans.
+// These family factories construct only validated Q4/group64/BF16 plans.
 // This mapper is deliberately crate-private and is not a general affine schema.
 pub(super) fn expected_physical(
     logical: &[TensorPlan],

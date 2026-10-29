@@ -88,6 +88,49 @@ implementation. Historical converter identity may remain unknown; it does not
 require recreating that converter to qualify the explicitly declared profile.
 Resolve this interpretation before exporting a real numerical reference.
 
+### B4a resolved loader and native RMS profile
+
+Astra authenticates the complete MLX-LM loader/sanitizer/quantization/strict
+parameter replacement path at the revision above. Its actual dependency requires
+MLX≥0.32.3 on Darwin; choose the compatible source pairing MLXv0.32.3 commit
+`64ea011cb65f14d9ce2737e60db9a4ae91ed7441`. This is a pinned semantic source
+pairing, not an installed or executed runtime claim. Strict loading replaces
+the stored norm arrays directly. The LFM2 sanitizer only conditionally reorients
+convolution axes; it performs no norm fold or unit offset. The selected already
+oriented `[1024,3,1]` tensors are unchanged. Independent Transformers source
+corroborates direct gain and the causal B/C/x mechanism.
+
+The prospective **native RMS** choice is explicit: Half input → FP32 Neumaier
+squares/reduction/inverse with epsilonFP32(1e-5) → multiply by the exact FP32
+widening of the stored BF16 gain → Half store. There is no plus-one gain
+preparation. Reuse the existing single-store FP32-scale operation; preserve
+Gemma's separate unit-offset preparation and arithmetic unchanged. This avoids a
+second normalization kernel/rounding variant and retains the mathematical
+direct-gain operation. It does not claim MLX trajectory identity: pinned MLX
+casts the normalized value to its output dtype before multiplying the weight.
+Original-unquantized adoption quality remains a separate mandatory check.
+
+Existing native RMS admits only epsilon1e-6 and widths32/64/256/640. Before LFM2
+execution, qualify epsilon1e-5 at **both head64 and hidden1024**, not just add a
+host-bound exception. Likewise, Gemma's Q4/KV1/D32-or256 staged attention is not
+LFM2's Q16/KV8/D64 full GQA. Deliberately qualify generic dense GQA reuse or a
+bounded second-consumer extension; a family rename does not grant support.
+Other native operator/store contracts and tiny fixtures must be frozen before
+their numerical runs. LFM2 ordinary residuals inherit no Gemma clipping.
+
+The first code task remains metadata only: strict config/header/index inspection,
+93 affine/45 direct-norm/10 depthwise owners,30 borrowed B/C/x views and16
+concrete layer recipes with **six KV** and **ten history** owner IDs. It reports
+declared128000 and no implemented/qualified capacity. No payload, kernel/session
+construction, text execution or backend eligibility follows from that plan.
+
+Immutable adviser package SHA256:
+`36755a8a530a317631b2c4d8366078ac56166aef1cf5561f9008416fef204e1d`;
+independent source/profile/design review SHA256:
+`07ef42c0eafd26ac6b9d8bd58a0d3d59cd82134375b0cf1a66d10191e850bb9a`.
+The review includes the epsilon qualification addendum; the original package
+remains unchanged. Both live under `artifacts/new-goal-b4a-loader-profile-*`.
+
 The tokenizer maps64,400 IDs while the head has65,536 rows; unmapped IDs must
 have explicit behavior. BOS1 is present in both template and tokenizer
 postprocessing, so prevent duplication. The declared stop union is7; token2
@@ -104,3 +147,11 @@ Metadata audit SHA256:
 `bc1cba0789d34e5a73dead22f24c9dcd0532d4c0fe5c4973cb3b312a6861a4cc`;
 inspected MLX-LM model source SHA256:
 `558dcbec61442b1f7216c0122d08d44083ea71d1510be23f4f934e62b0f71376`.
+
+## B4a implementation result
+
+The [cold adapter](lfm2-cold-plan.md) is implemented with the exact inventory above,
+strict invalid metadata controls and checked hypothetical state equations. Full
+default/Metal checks pass; numerical, payload and backend admissions remain
+absent. B4b starts by reusing the already implemented scalar causal-depthwise
+step, then validating the concrete transactional history integration.

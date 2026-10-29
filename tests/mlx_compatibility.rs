@@ -383,17 +383,44 @@ fn rejected_geometry_matches_actual_loader_without_creating_a_gpu() {
         let folder = Temporary::copy(name);
         let mut config: Value =
             serde_json::from_slice(&fs::read(folder.0.join("config.json")).unwrap()).unwrap();
-        config["rope_theta"] = json!(12345);
+        // Llama's structural path admits arbitrary supported positive bases.
+        // Its explicit theta>=1 boundary rejects before creating a device.
+        config["rope_theta"] = json!(0.5);
         folder.config(config);
         let report = compatibility::inspect(&folder.0, Backend::Metal, options());
         assert_eq!(report.reason, Reason::UnsupportedGeometry);
         let error = match toklet::metal::Model::load_mlx(&folder.0, options()) {
-            Ok(_) => panic!("Unqualified geometry must reject before GPU creation"),
+            Ok(_) => panic!("Unsupported geometry must reject before GPU creation"),
             Err(error) => error,
         };
         assert!(matches!(error, toklet::metal::Error::Unsupported(_)));
         assert_eq!(report.message, error.to_string());
     }
+}
+
+#[test]
+fn llama_structural_theta_is_metadata_compatible_without_qualification() {
+    let folder = Temporary::copy("mlx-llama-v1/tied");
+    let mut config: Value =
+        serde_json::from_slice(&fs::read(folder.0.join("config.json")).unwrap()).unwrap();
+    config["rope_theta"] = json!(12345.0);
+    folder.config(config);
+    // Inspection remains metadata-only even when Metal is compiled in.
+    let report = compatibility::inspect(&folder.0, Backend::Metal, options());
+    assert_eq!(report.status, Status::CompatibleUntested);
+    assert_eq!(
+        report.reason,
+        if report.backend_available_in_build {
+            Reason::MetadataAccepted
+        } else {
+            Reason::BackendUnavailable
+        }
+    );
+    assert_eq!(report.load_admission, LoadAdmission::DevicePlanningRequired);
+    assert!(report.tensor_metadata_validated && report.payload_validation_required);
+    assert!(report.runtime_device_checks_required && report.session_admission_required);
+    assert!(report.resources.unwrap().metal_runtime_planning_required);
+    assert!(!report.text_profile_checked && !report.qualification_evaluated);
 }
 
 #[test]

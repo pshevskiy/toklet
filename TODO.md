@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B4a — strict LFM2 cold metadata adapter and mixed layer/owner plan**.
+Next implementation task: **B4b — scalar convolution reuse and transactional two-row history**.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -207,8 +207,9 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
 - [x] Split into strict adapter/source plan, scalar history, tiny hybrid graph,
   resident block/composition and bounded real qualification; preserve unknown
   historical converter identity and separate text/adoption-quality requirements.
-- [ ] B4a: authenticate the declared same-artifact loader/norm profile and strict
+- [x] B4a: authenticate the declared same-artifact loader/norm profile and strict
   config/header plan before a real source reference; verify payload separately.
+  [Cold plan report](docs/lfm2-cold-plan.md); full default/Metal checks pass, no runtime admission.
 - [ ] B4b: independent scalar short-convolution and transactional state controls.
 - [ ] B4c: independent complete tiny mixed attention/convolution graph.
 - [ ] B4d: resident block/composition, allocation/ownership and recovery checks.
@@ -420,3 +421,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B3d checker committed / fresh native launch | Exact nine-file staged Astra review passes; checker task committed as`3cfd38a`. Astra then verifies final fresh placement, all23,573 identity-union entries and13 closed prior groups, approving one900s/6GiB native capture with unchanged binary/workload. | Fresh capture starts under policy`ae7a457`; structural completion and independent fresh numerical checking are still pending. |
 | 2026-10-29 | B3d fresh native and complete checker pass | Fresh native completes187 forwards/2,351 tokens in73.03s, lifetime physical815,334,720 bytes; full raw141,258,016 bytes match history exactly. Astra verifies15,003 events/6,496 records and688 observations. Separate fresh reader completes261.07s/2,445 samples with zero fatal failures across18,537,288 values, eligibility true after endpoints, original84/98 rejected diagnostics preserved. | Fresh owner`fed52da1fbfc16947b8c4dc5f2c0fc7d9f0c2aa08f2f6c67a7a2e365ea8dba5a`; checker owner`e3bf7eb8b0442f39ee023cd97381901158040623e5d5eee724b542c9be47ba7e`. Final independent bounded-scope decision and runner commit next. |
 | 2026-10-29 | B3 selected Mac native closure | Astra independently replays all13,185,444 fatal coupled gates, authenticates5,351,844 reviewed local results, complete raw/mask/weight/resource coverage and closed endpoints, approving selected Mac544 native conformance. Both historical rejections and all original quality/app/phone/full-window limits remain explicit. | [Release report](docs/gemma3-real-native.md); qualification`96e0cdd820ad4a86d7f0f4d3950d334196b2ecb7994e2f375fedd6726a06966e`. Exact runner/report staged review+commit, then B4a cold adapter; no extra model campaign. |
+| 2026-10-29 | B3 committed / B4a source profile resolved | Exact seven-file Astra review passes; bounded native task committed as`aed0a56`, with only pre-existing apple/.DS_Store outside commits. Independent B4a source review resolves current MLX-LM/MLX0.32.3 direct gain and convolution orientation, preserving unknown historical converter. Native RMS single-store choice is explicit; epsilon1e-5/head64+hidden1024 and GQA16:8/D64 remain future qualification. | [B4 profile](docs/lfm2-hybrid-plan.md); private cold-adapter implementation starts, no payload/model/GPU or backend admission. |
+| 2026-10-29 | B4a cold adapter applied / broader check catches stale control | Astra approves exact cold plan,12 source/fixture actions and unchanged shared helper bodies. Private six-command checks pass; parent formatting/strict default+Metal Clippy and437 full default tests pass. Full Metal run exposes an older integration test still rejecting theta12345 for Llama despite B1 structural admission. | Failed owner v1 retained; independent history/source diagnosis confirms no production regression or changed qualification gate. |
+| 2026-10-29 | B4a compatibility control correction | Astra reviews a test-only mini-patch: true unsupported theta0.5 still rejects all four families before GPU creation; separate Llama12345 metadata-only control asserts CompatibleUntested, planning still required and no text/quality qualification. Production code/limits remain unchanged. | Reviewed correction applied; fresh five-command full default/Metal retry v2 running. Cold adapter is not committed/qualified yet. |
+| 2026-10-29 | B4a full checks pass | All five parent commands pass: formatting, strict default/Metal all-target Clippy,438 default and519 Metal-feature tests. Test-only structural-Llama regression repair is independently reviewed; failed predecessor retained. | [Cold plan](docs/lfm2-cold-plan.md); Astra verifies all3,985 bindings and closed jobs; exact staged review precedes commit. B4b reuses the existing scalar primitive rather than adding a duplicate. |

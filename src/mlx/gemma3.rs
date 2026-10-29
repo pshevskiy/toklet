@@ -4,8 +4,8 @@
 //! The separate payload module authenticates original bytes and prepares explicit
 //! raw-gamma inputs for a bounded concrete graph; it does not grant Chat admission.
 use super::affine::{Layout, MetadataDtype};
-pub use super::gemma_metadata::{Dtype, PhysicalTensor, Shape, Storage, TensorPlan};
-use super::gemma_metadata::{descriptor, expected_physical, same_semantics};
+pub use super::tensor_metadata::{Dtype, PhysicalTensor, Shape, Storage, TensorPlan};
+use super::tensor_metadata::{descriptor, expected_physical, same_semantics};
 use crate::{model::shared_kv::KvKind, weights::Error};
 use serde_json::{Value, json};
 use std::collections::BTreeMap;

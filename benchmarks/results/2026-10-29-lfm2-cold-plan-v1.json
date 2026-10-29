@@ -1,0 +1,114 @@
+{
+  "format": "toklet-lfm2-cold-plan-result-v1",
+  "date": "2026-10-29",
+  "status": "cold_metadata_checks_and_astra_review_passed",
+  "repository": "mlx-community/LFM2-350M-4bit",
+  "revision": "18dc72abf3b2337f9123cfd6eeeb58dfa7947066",
+  "scope": "Pinned metadata and mixed layer/physical owner plan only",
+  "inventory": {
+    "layers": 16,
+    "attention_layers": 6,
+    "convolution_layers": 10,
+    "affine_matrices": 93,
+    "direct_norms": 45,
+    "depthwise_coefficients": 10,
+    "logical_owners": 148,
+    "physical_descriptors": 334,
+    "borrowed_bcx_views": 30,
+    "hidden": 1024,
+    "intermediate": 4608,
+    "query_heads": 16,
+    "kv_heads": 8,
+    "head_dim": 64
+  },
+  "context": {
+    "declared": 128000,
+    "implemented": null,
+    "qualified": null
+  },
+  "hypothetical_half_state_at_capacity512": {
+    "attention_kv_bytes": 6291456,
+    "convolution_committed_bytes": 40960,
+    "convolution_candidate_bytes": 40960,
+    "total_payload_bytes": 6373376,
+    "budget_admission": false,
+    "excludes": [
+      "guards",
+      "staging",
+      "scratch",
+      "weights",
+      "tokenizer",
+      "framework"
+    ]
+  },
+  "checks": {
+    "fmt": true,
+    "strict_default_all_targets_clippy": true,
+    "strict_metal_all_targets_clippy": true,
+    "default": {
+      "passed": 438,
+      "ignored": 20
+    },
+    "metal_feature": {
+      "passed": 519,
+      "ignored": 169
+    },
+    "ordinary_cpu_tests_download_independent": true,
+    "lfm2_payload_or_numerical_execution": false,
+    "explicit_gpu_execution": false
+  },
+  "compatibility_test_repair": {
+    "production_logic_changed": false,
+    "unsupported_theta": 0.5,
+    "llama_metadata_positive_theta": 12345,
+    "runtime_qualification_granted": false,
+    "failed_first_attempt_preserved": true
+  },
+  "payload_downloaded": false,
+  "backend_eligible": false,
+  "text_qualified": false,
+  "evidence": {
+    "proposal": {
+      "path": "artifacts/new-goal-b4a-cold-proposal-v1/manifest.json",
+      "bytes": 8469,
+      "sha256": "3a4fbad5cc589c0afc8e2a50d4e5da55132ab05a1463f752a227ac97030e39bf"
+    },
+    "code_review": {
+      "path": "artifacts/new-goal-b4a-cold-independent-review-v1/prospective-review.json",
+      "bytes": 14057,
+      "sha256": "625a5b4704840a3393684a9470487aa0da86396119e4f20b97ca677b9a408b57"
+    },
+    "test_repair_review": {
+      "path": "artifacts/new-goal-b4a-compatibility-regression-independent-review-v1/prospective-review.json",
+      "bytes": 3155,
+      "sha256": "83adcc1d317115253a84b613f6aee62711bd79e78a399df0ed977cdccbf61194"
+    },
+    "parent_checks": {
+      "path": "artifacts/new-goal-b4a-cold-checks-v2/checks.json",
+      "bytes": 869345,
+      "sha256": "aa5ccca6d1a6d7e28e62b05d3d9bd25cebe929528992a8bdffa24f90c43b1cc8"
+    },
+    "failed_first_checks": {
+      "path": "artifacts/new-goal-b4a-cold-checks-v1/checks.json",
+      "bytes": 869018,
+      "sha256": "e70e05e75bd60218edfeee3ffbe0dafabf0d82418221a3b61c8e806b9da45dc8"
+    },
+    "metadata_fixture": {
+      "path": "tests/fixtures/lfm2-350m-metadata-v1/manifest.json",
+      "bytes": 1150,
+      "sha256": "a1f8b9ce6c9203953aee299d4aaed3767a89107ccdbf5d5d130923d08c3ce172"
+    },
+    "completed_check_review": {
+      "path": "artifacts/new-goal-b4a-cold-completed-review-v1/review.json",
+      "bytes": 6396,
+      "sha256": "05dd4fc0db88c6a1a0f4b2da2a3e75cc43b9e2b3ac743e26a034ebf797724c33"
+    }
+  },
+  "remaining": [
+    "Scalar convolution and transactional state integration",
+    "Tiny hybrid graph and numerical fixtures",
+    "Resident RMS epsilon1e-5 at head64/hidden1024 and GQA16:8/D64 qualification",
+    "Full artifact verification and bounded real-model qualification",
+    "Context/app/text and original adoption quality"
+  ]
+}
