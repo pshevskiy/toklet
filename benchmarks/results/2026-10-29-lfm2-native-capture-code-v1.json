@@ -1,0 +1,199 @@
+{
+  "format": "toklet-lfm2-native-capture-code-result-v1",
+  "date": "2026-10-29",
+  "base_revision": "a776029",
+  "task": "M8 B4e3c2b capture implementation and cold controls",
+  "status": "capture_code_and_controls_checked_actual_execution_pending",
+  "source_files": [
+    {
+      "path": "src/metal/lfm2.rs",
+      "bytes": 33515,
+      "sha256": "22d79451fa2d15f3606d2ce8c0d8e4f78f975e2af19cdba7ef07d18b47309be8"
+    },
+    {
+      "path": "src/metal/lfm2/real_gpu_tests.rs",
+      "bytes": 13825,
+      "sha256": "d416cc2e75b429fad614fca4996103fc4c8c043d6b10c1d67b6fbaf3debea2de"
+    },
+    {
+      "path": "src/metal/lfm2/real_gpu_tests/observe.rs",
+      "bytes": 14880,
+      "sha256": "5fd2c967f01dd15487f3b0120af6509f717ebe53e2e4131986596162307c5f72"
+    },
+    {
+      "path": "src/metal/lfm2/real_gpu_tests/resources.rs",
+      "bytes": 13265,
+      "sha256": "da7a0087333696d439e6a91a77c9e46ae7f9e4f58151ffecc057d6fbe4368fbd"
+    },
+    {
+      "path": "src/metal/lfm2/real_gpu_tests/workload.rs",
+      "bytes": 21219,
+      "sha256": "fd53832841bb3a1a672a15dd00ae231a2361a9eee6f96d23c0ded6a07e91010c"
+    }
+  ],
+  "verification": {
+    "format": true,
+    "strict_default_and_metal_all_targets_clippy": true,
+    "default_tests": {
+      "passed": 457,
+      "ignored": 20
+    },
+    "metal_tests": {
+      "passed": 564,
+      "ignored": 183
+    },
+    "counts_overlap": true,
+    "new_cpu_controls_under_metal": 4,
+    "release_metal_library_test_build": true
+  },
+  "execution_scope": {
+    "real_model_or_gpu_executed": false,
+    "source_graph_executed": false,
+    "codec_executed": false,
+    "production_numerical_changes": false,
+    "ordinary_factory_or_app_admission": false,
+    "reader_or_numerical_qualification": false
+  },
+  "retained_actual_build": {
+    "profile": {
+      "opt_level": "3",
+      "debuginfo": 0,
+      "debug_assertions": false,
+      "overflow_checks": false,
+      "test": true
+    },
+    "source": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b0-checks-v1/target/release/deps/toklet-148bdb7c5191ba43",
+      "bytes": 116847040,
+      "sha256": "056f4ce0ac8bcb638ccb702b159ab98fd0689357b429540df2a535ce5d32a7fa"
+    },
+    "retained": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3c2b-native-capture-cold-checks-v2/retained-release-test-binary",
+      "bytes": 116847040,
+      "sha256": "056f4ce0ac8bcb638ccb702b159ab98fd0689357b429540df2a535ce5d32a7fa"
+    },
+    "executed": false,
+    "note": "Retained actual release-test build proof only; no real GPU capture executed or authorized."
+  },
+  "planned_capture": {
+    "primary_schedules": 8,
+    "primary_chunks": 78,
+    "primary_rows": 231,
+    "primary_selected_groups": 6739,
+    "teacher_forwards": 4,
+    "teacher_rows": 11,
+    "maximum_free_repeats": 2,
+    "maximum_free_samples_each": 4,
+    "maximum_attempts": 104,
+    "maximum_attempted_rows": 367,
+    "maximum_successful_sessions_sequential": 8,
+    "simultaneous_models": 1,
+    "simultaneous_sessions": 1,
+    "history_initial_reset_stacks": 18,
+    "ordinary_rows": 64,
+    "ordinary_forward_allocation_boundaries": 2,
+    "model_buffers_before_after": 335,
+    "capacity": 512,
+    "qualified_real_trajectory_by_this_task": 0
+  },
+  "planned_output": {
+    "raw_inventory_upper_bytes": 155483328,
+    "maximum_arrays": 14672,
+    "raw_cap_bytes": 268435456,
+    "journal_cap_bytes": 16777216,
+    "boundary_class_events_max": 140,
+    "boundary_record_bytes_max": 40000,
+    "array_record_bytes_max": 384,
+    "other_record_bytes_max": 512,
+    "other_records_max": 2000,
+    "guard_reserve_bytes": 1048576,
+    "initial_reset_history_temporary_bytes": 82200,
+    "observed": false
+  },
+  "planned_memory": {
+    "process_limit_bytes": 6442450944,
+    "external_allowance_bytes": 536870912,
+    "capture_numeric_reserve_bytes": 67108864,
+    "original_payload_dropped_before_session": true,
+    "expanded_fp32_model": false,
+    "observed": false
+  },
+  "revision_history": [
+    "V1 held unexecuted: pre-admission rejection must clear inspection authority around a potential unexpected submitted command",
+    "V2 applied; fmt/default Clippy pass, Metal compiler rejects an unparenthesized indexed expression in json!, before tests/release/GPU",
+    "V3 changes only parentheses; all six cold checks and four controls pass"
+  ],
+  "limitations": [
+    "Compiled capture infrastructure only; actual Model construction, GPU capture/reader/state/text/memory and numerical qualification remain pending",
+    "Static counts and resource/output bounds are prospective, not real observations",
+    "Ordinary mode has no per-layer producer claim; unretained scratch hashes do not establish full-value reconstruction",
+    "All original-unquantized quality, app/phone/context integration and performance obligations remain separate"
+  ],
+  "independent_saved_audit": {
+    "path": "artifacts/new-goal-b4e3c2b-native-capture-independent-review-v1/saved-cold-review.json",
+    "bytes": 6998,
+    "sha256": "38dbcb8d4f57b8d153c74071a3b630e8915940de87416272e0335f53c264ba7a"
+  },
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b4e3c2b-native-capture-proposal-v1/manifest.json",
+      "bytes": 11639,
+      "sha256": "65cf8bd155769a334d9e4a9187adf5a35583f093ad684b57b93664db3efd8bfc"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2b-native-capture-proposal-v2/manifest.json",
+      "bytes": 11874,
+      "sha256": "f79ca4a01e00512eeb078ebb6108a364052cc2f87d8c2620110e5190289d7cc5"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2b-native-capture-proposal-v3/manifest.json",
+      "bytes": 13407,
+      "sha256": "3256992895c633e4550efa948b39c98853fb47d976b172d30661bc99a3bade1f"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2b-native-capture-proposal-v3/SCHEMA.md",
+      "bytes": 15535,
+      "sha256": "53a06593fafc075c282f39a5ee7df64bbc719f656b80cd163e2a02df12ac7aa5"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2b-native-capture-independent-review-v1/v1-hold.json",
+      "bytes": 808,
+      "sha256": "b345718468f6c7f3362aef513cf61cd6acdfc7bf61605df6a8d173eeaf241594"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2b-native-capture-independent-review-v1/prospective-v2-review.json",
+      "bytes": 5540,
+      "sha256": "cfdf800afad55040b4483ac96598bf883fcafead796c6909dcbe13008917a85d"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2b-native-capture-independent-review-v1/prospective-v3-review.json",
+      "bytes": 5793,
+      "sha256": "697c65e42c9cbe1ae7b04d3481d75a72817f7fc6b90f06d3e4d3ce23cffbaca8"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2b-native-capture-cold-checks-v1/checks.json",
+      "bytes": 885878,
+      "sha256": "08d718eec623fabc439d28cf211af72328307aace7c762e1f64cb1b754f4500c"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2b-native-capture-cold-checks-v2/checks.json",
+      "bytes": 888255,
+      "sha256": "ae188dc332edfd53e1daa286beb6a28af10e0c8c4c33d927f3902369b04785d9"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2b-native-capture-cold-checks-v2/retained-binary.json",
+      "bytes": 774,
+      "sha256": "2505c282a35dc4c81c2b64030c9f25c5f5f1eac7a10f5676cdf5349b42091151"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2b-native-capture-independent-review-v1/saved-cold-review.json",
+      "bytes": 6998,
+      "sha256": "38dbcb8d4f57b8d153c74071a3b630e8915940de87416272e0335f53c264ba7a"
+    },
+    {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3-native-capture-advice-v3/manifest.json",
+      "bytes": 897,
+      "sha256": "ecf0ca26c478045d4354dd74f47baddb9d54b4821fa9a3231a7e36c981b9b547"
+    }
+  ]
+}

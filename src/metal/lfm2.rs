@@ -36,6 +36,8 @@ mod gpu_tests;
 #[cfg(test)]
 mod real_capture;
 #[cfg(test)]
+mod real_gpu_tests;
+#[cfg(test)]
 mod tests;
 #[cfg(test)]
 const H: usize = 256;

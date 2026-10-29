@@ -7955,3 +7955,37 @@ is corrected using the pinned dependency's Completed=4; initial reader retained,
 no engine/data/gate change. [Exact evidence](../benchmarks/results/2026-10-29-lfm2-capture-io-v1.json)
 authenticates5988 bindings and seven closed current groups. The complete real
 capture workload, exhaustive reader and bounded native experiment remain open.
+
+The exact nine-file capture-I/O task is committed as`a776029`.
+
+### M8 C2b — Concrete real capture implementation, 29 October 2026
+
+The [preregistered workload runner](lfm2-real-capture.md) is implemented as
+concrete resource/observation/workload test modules, with one immutable Model
+and sequential Sessions. It records actual stored operands/state/guards before
+assertions and keeps numerical/codec decisions in the independent reader.
+Original payload ownership drops after upload; metadata remains in original
+packed form, with direct BF16 gains/taps handled separately. No production
+numerical, shader, ordinary factory or app body changes.
+
+The bounded protocol covers all6739 selected primary stage groups, full u/Krot/V,
+physical history/KV state, teacher/free/fault/replay/ordinary paths and exact/
+one-byte-under budgets. Maximum104 attempts/367 rows,14,672 arrays and
+155,483,328 raw bytes are prospective inventory bounds, not measured results.
+Initial/reset history and guard records are explicitly counted; no missing
+observations are fabricated or truncated to fit. The independent reader retains
+source-state diagnostics separately from fatal semantic/coupled checks.
+
+Four cold controls and six repository checks pass(default457/Metal564,
+20/183 ignored, overlapping suites). Astra verifies4076 input bindings,12
+outputs and the retained actual optimized test binary. Its116,847,040 bytes
+are build evidence only; the real model is not executed. The first proposal is
+held unexecuted for an inspection-authority edge case, and the first cold
+attempt's json! syntax failure stays failed. Reviewed successors change only
+safety bookkeeping and syntax, with unchanged source/gates/workload. All six
+current and three historical check groups close cleanly.
+
+[Exact evidence](../benchmarks/results/2026-10-29-lfm2-native-capture-code-v1.json)
+keeps the full reader/control task, fresh real GPU/reader experiment and app/
+phone/full-quality/performance qualification open. Code compilation is not
+relabeled numerical eligibility or actual measured real-model fit.
