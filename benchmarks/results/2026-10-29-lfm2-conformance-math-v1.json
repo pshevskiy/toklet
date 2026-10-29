@@ -1,0 +1,257 @@
+{
+  "format": "toklet-lfm2-conformance-math-result-v1",
+  "date": "2026-10-29",
+  "base_revision": "e734d81",
+  "task": "M8 B4e3c1: bounded independent actual-input operator contracts",
+  "status": "synthetic_operators_and_repository_regressions_pass_native_reader_pending",
+  "source_files": [
+    {
+      "path": "tools/reference/lfm2_conformance_math.py",
+      "bytes": 15908,
+      "sha256": "7ebc66a171d5d5fd51793f043a06ebbbbd5cc3c47dd494828334640ad69d34ed"
+    },
+    {
+      "path": "tools/reference/test_lfm2_conformance_math.py",
+      "bytes": 17626,
+      "sha256": "a2904c3ad52c440f576728fe5a246a4215e321981bef846faae95f5eb278f2d1"
+    }
+  ],
+  "scope": {
+    "actual_input_operators_only": true,
+    "full_reader": false,
+    "checkpoint_or_capture_arrays_read": false,
+    "source_graph_executed": false,
+    "native_model_executed": false,
+    "codec_executed": false,
+    "gpu_executed": false,
+    "gemma_helper_changes": false,
+    "source_or_gate_changes": false
+  },
+  "verification": {
+    "format": true,
+    "strict_default_and_metal_all_targets_clippy": true,
+    "release_metal_library_test_build": true,
+    "commands": 6,
+    "counts_overlap": true,
+    "default": {
+      "harnesses": 57,
+      "ignored": 20,
+      "passed": 457
+    },
+    "metal": {
+      "harnesses": 57,
+      "ignored": 181,
+      "passed": 556
+    },
+    "synthetic": {
+      "endpoint_errors": [],
+      "errors": null,
+      "exit_code": 0,
+      "passed": 14,
+      "seconds_from_unittest": 0.597,
+      "test_methods": [
+        "test_direct_rms_epsilon_gain_and_neumaier",
+        "test_sqrt_and_stored_operand_types_fail_closed",
+        "test_basic_stores_signed_zero_subnormal_and_no_clamp",
+        "test_original_gather_and_bcx_views",
+        "test_conv_actual_predecessors_all_boundary_modes_and_suffix",
+        "test_conv_one_store_and_finite_intermediate_domain",
+        "test_faithful_projection_singleton_midpoint_and_third_neighbor",
+        "test_projection_cancellation_double_rounding_zero_and_finite_edge",
+        "test_projection_real_column_boundary_and_wrong_shapes",
+        "test_provider_literal_ulp_grid_domain_and_no_ftz",
+        "test_silu_exact_words_reachable_members_and_corruption",
+        "test_rotary_fixed_domain_high_feature_and_joint_membership",
+        "test_q16_probabilities_onekey_mask_and_serial_mass",
+        "test_semantic_and_old_local_gate_both_required"
+      ]
+    },
+    "owned_groups_closed": 7
+  },
+  "planned_bounds": {
+    "affine_rows": 128,
+    "affine_columns": 4608,
+    "selected_actual_input_rows": 4,
+    "positions": [
+      0,
+      63
+    ],
+    "query_heads": 16,
+    "kv_heads": 8,
+    "head_dim": 64,
+    "numerical_reserve_bytes": 50331648,
+    "python_metadata_reserve_bytes": 67108864,
+    "full_future_reader_numeric_reserve_bytes": 65011712,
+    "reserves_are_not_measured_suballocations": true
+  },
+  "prospective_reader_obligations": {
+    "stage_count": 293,
+    "coupled_groups": 303,
+    "coupled_values": 1965024,
+    "local_groups": 6440,
+    "local_values": 11971552,
+    "observed_by_this_task": false
+  },
+  "provider_ulp": {
+    "exp": 4,
+    "pow": 16,
+    "sin": 4,
+    "cos": 4
+  },
+  "arithmetic_premises": [
+    "Finite typed stored Half operands/original finite FP32 stripes; separate FP32 RNE basic operations, no contraction/reassociation and one declared Half store.",
+    "Direct BF16 gains/no+1; FP32 Neumaier/certifiedsqrt/epsilon1e-5; exact actual-u Conv predecessor and finite intermediate semantics.",
+    "Exact-affine target-independent direct RNE center; faithful finite bracket with singleton/sign-correct zero/maxfinite checks.",
+    "Provider intervals use unchanged qualified Apple exp4/pow16/sin4/cos4 true-result ULP and directed Decimal/trig primitives; unsupported domain or inconclusive boundary fails closed.",
+    "SiLU/RoPE stored-word membership includes joint coordinate compatibility and both legal trig zero representations; basic/RMS/Conv numeric-zero exception remains separate.",
+    "Softmax is conservative per-value exp/mass interval propagation, not proof of a jointly realizable hidden exponential vector.",
+    "Semantic requirement AND authenticated literal local coefficient guard; new module itself does not authenticate the group/source artifact.",
+    "Qualified exact-affine binary64 certificate routes assume ordinary full binary64 arithmetic in the recorded NumPy/Accelerate backend; this task does not independently certify all backend inputs."
+  ],
+  "memory": {
+    "OS_process_maxrss_bytes": 100007936,
+    "direct_samples": 10,
+    "limit_bytes": 536870912,
+    "metadata_and_numerical_reserves_are_planned_not_measured_suballocations": true,
+    "observed_maxima": {
+      "lifetime_max_phys_footprint": 59343496,
+      "phys_footprint": 48300680,
+      "resident_size": 100007936
+    },
+    "sparse_samples_not_complete_peak": true
+  },
+  "commands": [
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-I",
+        "-B",
+        "-X",
+        "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3c1-conformance-controls-v1/controls-v1/fresh-bytecode",
+        "-c",
+        "import sys,runpy,resource,json;sys.path.insert(0,'/Users/coloner/work/rust/toklet/tools/reference');sys.path.insert(0,'/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3c1-conformance-controls-v1');sys.argv=['/Users/coloner/work/rust/toklet/tools/reference/test_lfm2_conformance_math.py']\ntry:\n import numpy as np\n import runtime_probe\n assert np.__version__==\"2.3.2\"\n assert sys.prefix=='/Users/coloner/work/rust/toklet/.venv'\n runtime_probe.capture('/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3c1-conformance-controls-v1/controls-v1/worker-bindings.json',\"after_numpy_import\")\n print(json.dumps(dict(numpy_build=np.show_config(mode=\"dicts\"))),flush=True)\n runpy.run_path('/Users/coloner/work/rust/toklet/tools/reference/test_lfm2_conformance_math.py',run_name=\"__main__\")\nfinally:\n if \"runtime_probe\" in sys.modules: runtime_probe.capture('/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3c1-conformance-controls-v1/controls-v1/worker-bindings.json',\"endpoint\")\n print(json.dumps(dict(source_maxrss_bytes=resource.getrusage(resource.RUSAGE_SELF).ru_maxrss)),file=sys.stderr)"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "live_samples": 10,
+      "observed_maxima": {
+        "resident_size": 100007936,
+        "phys_footprint": 48300680,
+        "lifetime_max_phys_footprint": 59343496
+      },
+      "retained_log_bytes": {
+        "stdout": 1245,
+        "stderr": 111482
+      },
+      "final_maxrss_bytes": 100007936
+    }
+  ],
+  "runtime": {
+    "numpy": "2.3.2",
+    "backend": "Apple Accelerate",
+    "runtime_inventory_files": 2785,
+    "control_input_bindings": 2798,
+    "verified_current_identity_union_files": 6877,
+    "loaded_module_counts": [
+      164,
+      304
+    ],
+    "non_system_native_image_counts": [
+      15,
+      34
+    ],
+    "prefix": "/Users/coloner/work/rust/toklet/.venv",
+    "base_prefix": "/Library/Frameworks/Python.framework/Versions/3.12",
+    "system_shared_cache_images_observed_not_hashed": true
+  },
+  "limitations": [
+    "Only14 synthetic controls and repository regressions executed. No checkpoint/target saved arrays, graph/source export, model, tokenizer/codec, network or GPU executed by this task.",
+    "Controls exercise announced analytic/corruption and zero edge cases; do not imply exhaustive input-domain proof or measured real-model runtime.",
+    "Full293-stage reader/capture inventory/state/text/ownership validation and fresh native experiment remain pending.",
+    "V1/V2 were preserved unexecuted prospective revisions; both signed-zero corrections predate any synthetic or native outcome.",
+    "Reviewer read only saved bytes/static source and did not rerun tests or import numerical producers."
+  ],
+  "independent_saved_audit": {
+    "path": "artifacts/new-goal-b4e3c-conformance-math-independent-review-v1/saved-controls-review.json",
+    "bytes": 9270,
+    "sha256": "fca7018cbe557050b9ea82775f62e1c3033dce3003cb60b1300247db814756e2"
+  },
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b4e3c-conformance-math-proposal-v1/manifest.json",
+      "bytes": 8938,
+      "sha256": "e1606047e5ab3420e2a268d90811d31cb0affa55a14bbba9818ecc8c51492423"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c-conformance-math-proposal-v2/manifest.json",
+      "bytes": 9158,
+      "sha256": "2c4a9f1e52b45a4baaf30e0f11846313c68832f75a1dec74d390ad60d1ce96eb"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c-conformance-math-proposal-v3/manifest.json",
+      "bytes": 9378,
+      "sha256": "167eb913c75d629e4b520ea486750da6eda966ad7c6fcdf91558f0d525c71128"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c-conformance-math-proposal-v3/bounds.json",
+      "bytes": 596,
+      "sha256": "5651d95946ab330cbc3692fcf390a2a24f05f14f90ad57e57d7372cc93d318c6"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c-conformance-math-proposal-v3/stage-table.json",
+      "bytes": 125208,
+      "sha256": "928e2b01aefdcb4ca125f6d54d4675a90830ff85f72ab941b825ba616e40c6d5"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c-conformance-math-independent-review-v1/prospective-review.json",
+      "bytes": 8712,
+      "sha256": "284ef3ba10b4e0b1d7659e0dcefeaf78a7a6ad6e65205f74b6a7e02cd9ee7be1"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c1-conformance-controls-v1/package.json",
+      "bytes": 894543,
+      "sha256": "07aae0d3e8d3948cd71eaf71119906d2033f1a5143f195a245f9608b3dbd2f17"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c1-conformance-controls-v1/prospective-review.json",
+      "bytes": 3327,
+      "sha256": "a64c318b07f3fc3f2484f0d41bd99ebaee633581959b9f4b388407d4e65cfe36"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c1-conformance-controls-v1/run.py",
+      "bytes": 9928,
+      "sha256": "c7dea6f0ad4be8f8a3e32e56723eb1d0552a6a7ea380e67e7bd04c8d93753b4c"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c1-conformance-controls-v1/controls-v1/checks.json",
+      "bytes": 737135,
+      "sha256": "82de9daff2258591bcfe631f6b9870443484279b7adb160582701530943a04f9"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c1-conformance-cold-checks-v1/checks.json",
+      "bytes": 887194,
+      "sha256": "26fda82f4251ce390d65f046e8a6a2b11a60f9eb080e548b14867919bb5c3955"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c-conformance-math-independent-review-v1/saved-controls-review.json",
+      "bytes": 9270,
+      "sha256": "fca7018cbe557050b9ea82775f62e1c3033dce3003cb60b1300247db814756e2"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c1-conformance-controls-v1/controls-v1/controls.stdout",
+      "bytes": 1245,
+      "sha256": "5bc387049e1ea56f73e7483db4ebc28fe3ba5e71a8515153d86bc5404337d304"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c1-conformance-controls-v1/controls-v1/controls.stderr",
+      "bytes": 111482,
+      "sha256": "d4eee8dce1757b33f7f29abd5f63822c563b5001b487563f0e6af0fc29400693"
+    }
+  ],
+  "revision_history": [
+    "V1 float membership did not preserve SiLU/RoPE signed-zero words; held before execution",
+    "V2 word membership exposed missing zero representation in shared nextafter enumeration; held before execution",
+    "V3 uses LFM-only complete trig zero enumeration and word-based joint membership, without changing shared Gemma or provider widths"
+  ]
+}

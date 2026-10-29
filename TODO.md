@@ -1,12 +1,12 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B4e3c1 — independent actual-input conformance operators**,
-then the frozen native capture/checker and real-model experiment.
-The bounded real source, original payload and resident composition are checked;
-native real-model execution remains pending. All six cold checks and both Tiny
-GPU regressions pass with Astra's independent saved audit. Failed lint and
-no-device attempts remain recorded.
+Next implementation task: **B4e3c2 — borrowed-buffer native capture and strict reader**,
+then the bounded real-model experiment.
+The bounded real source, original payload, resident composition and independent
+operator controls are checked. All14 new synthetic controls and six current
+repository checks pass with Astra saved audit. Native real-model execution
+remains pending; failed and unexecuted prior attempts stay recorded.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -266,6 +266,11 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
       allocation gates; six cold checks, two GPU jobs and Astra saved audit pass.
     - [ ] B4e3c: freeze/implement the actual-input checker and complete native
       capture inventory, then pass the bounded real/session/text/memory experiment.
+      - [x] B4e3c1: [independent actual-input operators](docs/lfm2-native-conformance.md)
+        pass14 synthetic controls, six repository checks and Astra saved audit.
+      - [ ] B4e3c2: bounded borrowed-buffer visitors/native capture and strict reader.
+      - [ ] B4e3c3: reviewed real-model GPU capture, independent conformance/state/
+        text/memory checks and retained raw evidence.
 - [ ] Qualify a fitting real representative and obtain Astra review before a
   family support claim. Add further admissions only as explicitly scoped tasks.
 
@@ -518,3 +523,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B4e3a commit / B4e3b cold retry | Exact nine-file loader review committed as`a85f143`. Astra approves five-file cold geometry/vector-state composition with unchanged shader/cache/math/gates. Cold V1 fails Metal Clippy on discarded enumerate index; no tests/GPU reached. | Failed receipt retained. Reviewed V2 uses direct iteration and equivalent test-only fault targeting; formatting/both Clippy/default tests now pass. Remaining Metal/release/two tiny GPU regressions stay pending; no real GPU authorization. |
 | 2026-10-29 | B4e3b GPU environment retry | All six cold V2 checks pass(default457/Metal556). Astra authenticates5984 bindings,1871 runtime files and retained release executable. The first exact Tiny test exits before model construction: no Metal device in ordinary sandbox; the second job is not run. | Preserved failed V2 receipt, clean group endpoints. V3 changes only owned output paths/environment access, with identical executable/controller/source/gates; escalated Metal retry awaits Astra package review. No numerical failure or real execution claim. |
 | 2026-10-29 | B4e3b composition qualified | Six cold checks and both exact Tiny GPU tests pass. Astra independently rescored2,123,664 mathematical/boundary values,144 states,57 snapshots, actual history/KV writes, guards, immutable owners,9 faults/18 replay chunks and12 zero allocations with unchanged MAIN gates. | [Composition report](docs/lfm2-real-composition.md); current Rust metadata+168B, numeric owners unchanged. Both failed attempts preserved. Selected real sizing is cold-only; proceed B4e3c1 independent operator checker, then capture/native real experiment. |
+| 2026-10-29 | B4e3b commit / B4e3c1 operator review | Composition committed as`e734d81`. Astra approves two new operator/control files after resolving faithful-projection zero words and signed-zero provider/joint rotary membership before execution. V1/V2 remain unexecuted; Gemma helpers, source coefficients and provider widths are unchanged. | Current V3 has14 authored synthetic controls. Standard6-check owner now runs; isolated600s/512MiB/1MiB control package awaits actual Astra approval. Complete reader/capture/native qualification remains separate, with frozen104-attempt/367-row upper inventory. |
+| 2026-10-29 | B4e3c1 operator contracts qualified | All14 isolated controls pass in0.597s with100,007,936B OSmaxRSS; default457/Metal556 and all six checks pass. Astra authenticates6877 input/output identities, actual runtime origins and all seven closed groups; no checkpoint/source graph/native/codec/GPU execution. | [Operator report](docs/lfm2-native-conformance.md); signed-zero corrections precede outcomes and source/gates/Gemma remain unchanged. Next: narrow terminal borrowed visitors, bounded binary+JSON capture and exhaustive real-data reader; then the real experiment. |

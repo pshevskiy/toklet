@@ -7893,3 +7893,37 @@ legacy cache/Gemma checks retain their earlier evidence and were not rerun.
 [Exact evidence](../benchmarks/results/2026-10-29-lfm2-real-composition-v1.json)
 keeps real native/app/phone/quality/performance work open; next is B4e3c1's
 actual-input operator checker and then complete native capture/experiment.
+
+The exact nine-file resident composition is committed as`e734d81`. The next
+operator task resolves signed-zero projection/intrinsic membership before any
+execution; the two held proposals stay unexecuted. Shared Gemma contracts and
+all source gates/provider widths remain unchanged.
+
+### M8 B4e3c1 — Independent actual-input operators, 29 October 2026
+
+The [bounded conformance operators](lfm2-native-conformance.md) consume observed
+native operands rather than restarting a coupled source trajectory. They check
+direct RMS, exact original affine faithful brackets, raw-u convolution/history,
+Half stores, discrete stable SiLU, joint ordinary RoPE and Q16 probability
+bounds. Every local semantic result still requires the same frozen literal
+numeric guard; strict score/context/head/teacher gates remain separate.
+
+Fourteen synthetic controls and all six repository checks pass: default457/
+Metal556,20/181 ignored and overlapping suites. Astra independently authenticates
+6877 current identities, actual NumPy2.3.2/Accelerate module/image origins and
+all seven closed process groups. Controls take0.597s and100,007,936-byte OSmaxRSS
+under512MiB. The planned48MiB numerical/64MiB metadata reserves are not measured
+suballocations or whole-reader/model fit. Probability semantics remain a
+conservative per-value enclosure; affine full-binary64 and published provider
+domain premises are explicit.
+
+Review catches zero-word membership and missing trigonometric zero enumeration
+before tests: the LFM-only enumerator preserves both legal signed-zero words
+while requiring a common rotary candidate for both outputs. Exact projection
+zero is canonical+0; raw history/KV/masks retain their stronger word rules.
+[Exact evidence](../benchmarks/results/2026-10-29-lfm2-conformance-math-v1.json)
+records held unexecuted proposals and actual checks. This closes operators only;
+the complete293-stage native reader, captured state/text/resource checks and
+fresh real-model experiment remain open. Borrowed test-only visitors and streamed
+binary/JSON observations are the next implementation task, avoiding large
+transient serde/snapshot copies without changing numerical hot code.
