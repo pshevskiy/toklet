@@ -223,6 +223,10 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
 - [ ] B4d: resident block/composition, allocation/ownership and recovery checks.
 - [ ] B4e: acquire and qualify the fitting representative on Mac; numerical,
   text/session and actual process-memory checks before any support claim.
+  - [x] B4e1: authenticate complete original weights and all eight cached metadata
+    files; [acquisition](docs/lfm2-artifact-acquisition.md). No decoder admission.
+  - [ ] B4e2: freeze bounded independent real source/text/reference protocol.
+  - [ ] B4e3: pass bounded native real-model/session/text/memory qualification.
 - [ ] Qualify a fitting real representative and obtain Astra review before a
   family support claim. Add further admissions only as explicitly scoped tasks.
 
@@ -440,3 +444,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B4c1 reviewed source commit | Exact15-file Astra staged review passes; source fixture committed as`97d8b4d`. All252 groups and source/state invariants are frozen before Rust target outcomes. | B4c2 privately implements the shared scalar graph and compound KV/history/token/logit validation/publication boundary. |
 | 2026-10-29 | B4c2 private compile correction | First compile catches four Rust test literal spellings and one nested error conversion in sizing after formatting passes. Failed attempt is retained; mechanical corrections enter attempt2 before any numerical target run. | No reference, gate or numerical operator changed; private checks and Astra review remain pending. |
 | 2026-10-29 | B4c2 scalar hybrid checks pass | All57 mathematical stages plus actual prefix-state observations pass unchanged gates across43 chunks/1,651,856 comparisons. Compound publication/reset, rollback, exact final partition state and zero warmed allocations pass; full450 default/531 Metal-feature checks pass. | [Report](docs/lfm2-scalar-hybrid.md); Astra verifies code/private evidence and independent504,656 unique compared source entries; final staged review/commit next. No native/real-model admission. |
+| 2026-10-29 | B4c2 reviewed commit / B4d1 starts | Exact13-file Astra approval and all full checks pass; tiny scalar hybrid committed as`cb24079`. B4c closes only the synthetic CPU source/state/publication scope. | Next qualifies direct-gain Half RMS at epsilon1e-5/useful actual shapes; separately prepared bounded LFM2 acquisition grants no execution support. |
+| 2026-10-29 | B4e1 independent artifact acquisition | Reviewed bounded controller downloads one exact199,527,820-byte model, reuses eight authenticated cached files and atomically publishes9files/204,378,119 bytes. Astra independently checks full LFS/hash/header/index and clean closed curl group. | [Artifact report](docs/lfm2-artifact-acquisition.md); bytes only. B4d1 source qualification proceeds independently; no model/tokenizer/GPU or app admission. |

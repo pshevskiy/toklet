@@ -1,0 +1,119 @@
+{
+  "format": "toklet-lfm2-artifact-acquisition-result-v1",
+  "date": "2026-10-29",
+  "status": "original_artifact_acquired_and_independently_verified",
+  "repository": "mlx-community/LFM2-350M-4bit",
+  "revision": "18dc72abf3b2337f9123cfd6eeeb58dfa7947066",
+  "local_directory": "models/LFM2-350M-4bit-18dc72a",
+  "files": {
+    "README.md": {
+      "bytes": 918,
+      "sha256": "b1bcafac4d85aaa219131042a3cb124ddca1ee45c29e99929c20eb4f4fdb1b3e"
+    },
+    "chat_template.jinja": {
+      "bytes": 209,
+      "sha256": "a805e50fed68938a076b07e2e602639611b50b1ced0e50f11eb92f1ba25be4dc"
+    },
+    "config.json": {
+      "bytes": 1253,
+      "sha256": "95e6906d77ac647e8bf93c2d2bbd2f37eb9bf3fac8732a563653236ad81072af"
+    },
+    "generation_config.json": {
+      "bytes": 137,
+      "sha256": "0f678f07a00ae4bdeb2b2bd5f37988a4b33a87686d9103fefe08de7a46522373"
+    },
+    "model.safetensors": {
+      "bytes": 199527820,
+      "sha256": "558353ad098c1230a8e2ea508cd34ef311a1b97a2bc4f47498f4df8229dc5c0f"
+    },
+    "model.safetensors.index.json": {
+      "bytes": 23413,
+      "sha256": "9921c33945951c541dfb7de7a11c6ff3b0bb8fb58009be615f851a7de89bcc38"
+    },
+    "special_tokens_map.json": {
+      "bytes": 434,
+      "sha256": "742aefe2b7dec496e8caffdba03a75d0c1a9925d53bd3f3e0d388c96b591b6f4"
+    },
+    "tokenizer.json": {
+      "bytes": 4732426,
+      "sha256": "98cff83b4f6d7e9d8929bebc62b07e92cf1b3f99c80d16bafe8b84a75448f40b"
+    },
+    "tokenizer_config.json": {
+      "bytes": 91509,
+      "sha256": "36f511115e9d8952cbc9d15d9a20dfa7ce7d1444940e5c1dc42a762020c99bf5"
+    }
+  },
+  "bundle_bytes": 204378119,
+  "network_weight_bytes": 199527820,
+  "cached_metadata_files": 8,
+  "downloaded_weight_files": 1,
+  "header": {
+    "bytes": 36740,
+    "sha256": "7c5e241d377d693fac694426ed10fb79df470864a9ec31d0ca82f3044171506d",
+    "data_start": 36748,
+    "physical_tensors": 334,
+    "payload_bytes": 199491072,
+    "affine_owners": 93,
+    "direct_bf16_norm_owners": 45,
+    "depthwise3_owners": 10
+  },
+  "transport": {
+    "http_status": 200,
+    "model_lfs_sha256_verified": true,
+    "cached_git_blobs_verified": true,
+    "partial_and_final_same_inode": true,
+    "exclusive_atomic_directory_publication": true,
+    "owned_curl_pid": 14575,
+    "owned_group_closed": true,
+    "payload_and_log_bound_bytes": 209715200,
+    "outer_deadline_seconds": 300,
+    "cleanup_bound_seconds": 30,
+    "endpoint_errors": []
+  },
+  "model_executed": false,
+  "tokenizer_executed": false,
+  "gpu_executed": false,
+  "numerical_qualification": false,
+  "text_qualification": false,
+  "app_admission_changed": false,
+  "cargo_rerun_required": false,
+  "evidence": {
+    "preflight": {
+      "path": "artifacts/new-goal-b4e1-acquisition-advice-v1/manifest.json",
+      "bytes": 3983,
+      "sha256": "8c0eec689198f7af1be6190ba095513c9df32766c9b4222a67086cf8b5cec205"
+    },
+    "proposal": {
+      "path": "artifacts/new-goal-b4e1-acquisition-proposal-v1/manifest.json",
+      "bytes": 808005,
+      "sha256": "9be7c31238d070c6446482a3f07edb0426cc3127aa7717f764c21db661d98b23"
+    },
+    "controller": {
+      "path": "artifacts/new-goal-b4e1-acquisition-proposal-v1/download.py",
+      "bytes": 16365,
+      "sha256": "b3ff5a1cd883139e1d725165d713ca330f52ed787c926f91ae0807161fc974f7"
+    },
+    "prospective_approval": {
+      "path": "artifacts/new-goal-b4e1-acquisition-proposal-v1/prospective-review.json",
+      "bytes": 401853,
+      "sha256": "a4c6c605b993f2247822e62de64506aab656878cbd605d456c27e5de76372539"
+    },
+    "acquisition": {
+      "path": "artifacts/new-goal-b4e1-acquisition-proposal-v1/acquisition.json",
+      "bytes": 411757,
+      "sha256": "d209bd8a0c55f83b048726b2f17a9896e215e492586bc32c17253f1205f61587"
+    },
+    "independent_completed_review": {
+      "path": "artifacts/new-goal-b4e1-acquisition-independent-review-v1/completed-review.json",
+      "bytes": 4038,
+      "sha256": "643e095f5f5a3dbc7e80d9949d1c3bc86ea8ac00e3e78a76a6a684b4f6589f28"
+    }
+  },
+  "limitations": [
+    "Original artifact bytes only; no numerical model, tokenizer or template execution",
+    "Historical MLX-LM0.26.0 converter remains unknown; declared current loader profile is separate",
+    "Declared128000 context is not an implemented or qualified window",
+    "Resident native leaves/composition and bounded real-model qualification remain",
+    "Production search/download/chat admission and full adoption/device quality remain"
+  ]
+}

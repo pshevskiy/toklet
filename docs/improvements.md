@@ -7497,3 +7497,16 @@ with44,288 inactive source-zero slots explicitly excluded. Exact partition,
 rollback/retry and warmed zero-allocation controls pass. Full checks pass450
 default/531 Metal-feature tests and strict Clippy/formatting. Astra verifies
 code and private evidence; scalar tiny scope does not qualify native/real models.
+
+B4c2 is committed as `cb24079` after exact13-file Astra approval. Next is the
+existing Half RMS operation's explicit epsilon1e-5/direct-gain qualification,
+followed by causal convolution and true multi-KV staged attention. Artifact-only
+acquisition can proceed independently after its own reviewed bounded controller.
+
+[B4e1 original LFM2 artifact](lfm2-artifact-acquisition.md) is acquired and
+independently verified: one199,527,820-byte public weight download plus eight
+Git-blob-authenticated cached metadata files,204,378,119 bytes total. Full LFS
+SHA,334 contiguous tensor ranges and all nine published files pass. Exclusive
+publication, bounded transfer and closed cleanup are checked; no numerical or
+tokenizer execution occurs. This removes acquisition work from the later real
+source/native journey without changing engine/app admission.

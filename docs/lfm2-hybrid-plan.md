@@ -4,7 +4,8 @@
 not an executable-model admission. Astra's cached primary-source research
 identifies [mlx-community/LFM2-350M-4bit](https://huggingface.co/mlx-community/LFM2-350M-4bit/tree/18dc72abf3b2337f9123cfd6eeeb58dfa7947066)
 revision `18dc72abf3b2337f9123cfd6eeeb58dfa7947066` as a practical representative
-for recurrent/hybrid state. No tensor payload has been downloaded or executed.
+for recurrent/hybrid state. The [complete original artifact](lfm2-artifact-acquisition.md)
+is now verified locally; real numerical execution remains pending.
 
 ## Why this mechanism
 
@@ -22,7 +23,8 @@ The authenticated header inventory has93 Q4/group64/BF16 affine matrices,
 stored tensor, not a qualified mathematical gamma interpretation. The advertised
 weight file is199,527,820 bytes, payload199,491,072 bytes, LFS SHA256
 `558353ad098c1230a8e2ea508cd34ef311a1b97a2bc4f47498f4df8229dc5c0f`.
-It still needs full-file verification.
+Full-file and complete bundle verification now pass in B4e1; numerical
+execution remains separate.
 
 The source planning ledger is4,519,922,060 bytes and native cold ledger
 3,552,479,116 bytes, each below the existing6GiB ceiling. These include explicit
@@ -118,7 +120,7 @@ bounded second-consumer extension; a family rename does not grant support.
 Other native operator/store contracts and tiny fixtures must be frozen before
 their numerical runs. LFM2 ordinary residuals inherit no Gemma clipping.
 
-The first code task remains metadata only: strict config/header/index inspection,
+B4a remains a metadata-only code task: strict config/header/index inspection,
 93 affine/45 direct-norm/10 depthwise owners,30 borrowed B/C/x views and16
 concrete layer recipes with **six KV** and **ten history** owner IDs. It reports
 declared128000 and no implemented/qualified capacity. No payload, kernel/session
@@ -190,3 +192,11 @@ Then qualify a borrowed three-tap Half operation and true multi-KV staged GQA
 (tiny4:2/D64 and real16:8/D64) before resident composition. Existing dense GQA
 kernels alone do not provide old+staged transactional views. Independent finite
 artifact acquisition may overlap this work; it does not qualify any decoder.
+
+## B4e1 acquisition result
+
+The [nine-file original bundle](lfm2-artifact-acquisition.md) is verified locally
+with complete model LFS SHA, all metadata identities and334 tensor extents. This
+finite transfer overlaps leaf preparation only; no model/tokenizer execution,
+128000-context admission or app qualification follows. Real source and native
+journeys remain B4e2/B4e3 after resident mechanism qualification.
