@@ -1,18 +1,13 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B4e3c3 — complete independent saved-capture verification**.
-The real Mac GPU capture has completed 104 attempts/367 rows; independent
-collection framing passes. The reviewed source-KV coordinate correction passes
-30 controls and all six repository checks and is committed as `b99fbaa`.
-The reviewed layout corrections are committed as `b99fbaa` and `69c94ff`.
-The full arithmetic replay passes all 6,440 local and 303 strict groups, plus
-all 4,212 source-state diagnostic groups per profile. It then stops at a
-verifier fault-status assumption: nonfinite-head status is bit 4, not Boolean 1.
-The reviewed status correction now passes 33 controls, all six repository
-checks and Astra's saved audit. A separate diagnostic completes all remaining
-recovery/codec paths with qualification explicitly false. Commit the correction
-and complete the full saved reader next; all failed attempts stay recorded.
+Next implementation task: **B5a — expose the existing capacity report through the native API**.
+B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
+capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
+ordinary checks and independent Astra approval. The retained MAIN/WIDE
+trajectory diagnostics have 3/8 failing coordinates. The original quality,
+ordinary app integration, full declared window, phone and performance scopes
+remain open. See [the bounded report](docs/lfm2-real-native.md).
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -246,7 +241,7 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
       with accurate original-FP32 affine rounding and complete state/stage fixtures.
     - [x] B4d4c: [concrete resident graph](docs/lfm2-resident-tiny.md) and
       all-owner publication/recovery; complete selected Mac source/state/legacy checks.
-- [ ] B4e: acquire and qualify the fitting representative on Mac; numerical,
+- [x] B4e: acquire and qualify the fitting representative on Mac; numerical,
   text/session and actual process-memory checks before any support claim.
   - [x] B4e1: authenticate complete original weights and all eight cached metadata
     files; [acquisition](docs/lfm2-artifact-acquisition.md). No decoder admission.
@@ -263,14 +258,14 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
     - [x] B4e2c: [bounded real reference](docs/lfm2-real-reference.md) passes
       13 controls, all repository checks, exact four-file export/replay and
       independent saved-input audit; literal gates are frozen before native outcomes.
-  - [ ] B4e3: pass bounded native real-model/session/text/memory qualification.
+  - [x] B4e3: pass bounded native real-model/session/text/memory qualification.
     - [x] B4e3a: [original payload store](docs/lfm2-original-loader.md) and
       direct-weight preparation pass seven controls, full checks, bounded actual
       file probe and Astra saved audit; no backend/model/session admission.
     - [x] B4e3b: [selected real resident composition](docs/lfm2-real-composition.md)
       with complete cold planning and unchanged Tiny state/recovery/numerical/
       allocation gates; six cold checks, two GPU jobs and Astra saved audit pass.
-    - [ ] B4e3c: freeze/implement the actual-input checker and complete native
+    - [x] B4e3c: freeze/implement the actual-input checker and complete native
       capture inventory, then pass the bounded real/session/text/memory experiment.
       - [x] B4e3c1: [independent actual-input operators](docs/lfm2-native-conformance.md)
         pass14 synthetic controls, six repository checks and Astra saved audit.
@@ -284,15 +279,24 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
             four controls, full checks and retained release build pass Astra audit;
             actual execution/eligibility remains a separate gate.
           - [x] [C2b reader code](docs/lfm2-native-reader.md): full dispatch/state/
-            text/owner checks pass29 controls, full repository checks and Astra
-            audit; actual dataset and outer qualification remain pending.
-      - [ ] B4e3c3: reviewed real-model GPU capture, independent conformance/state/
-        text/memory checks and retained raw evidence.
-- [ ] Qualify a fitting real representative and obtain Astra review before a
+            text/owner checks pass 33 controls, full repository checks and Astra
+            audit; complete saved-data qualification is recorded below.
+      - [x] B4e3c3: reviewed real-model GPU capture, independent conformance/state/
+        text/memory checks and retained raw evidence. [Bounded result](docs/lfm2-real-native.md).
+- [x] Qualify a fitting real representative and obtain Astra review before a
   family support claim. Add further admissions only as explicitly scoped tasks.
+
+B4 closes the selected pinned Mac engine-adapter scope. Declared 128,000,
+allocated 512 and actual positions 0–63 remain distinct. Original-unquantized
+quality, ordinary factory/app discovery/load/Chat, iPhone and performance remain
+separate requirements below. Further model admissions require their own scope.
 
 ### B5 — Context/KV controls and Hugging Face integration
 
+- [ ] B5a: add the native-policy capacity-report C API over the existing pure
+  solver; preserve the old report/schema, current factory admission and separate
+  source/resident loading fit. Astra reviewed the private proposal; application,
+  Rust checks, Mac planning checks and C/Swift smoke are next.
 - [ ] Report declared context, implemented backend range, budget/device fit,
   validation scope and app/text limits separately for each model.
 - [ ] Include actual weights, KV owners, scratch, loading peaks and application
@@ -558,3 +562,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | Independent saved-array audit passes | Separate stdlib-only binary decoding replays all 303 strict groups/1,965,024 values with zero failures and all 6,743 trajectory groups/13,936,576 values per profile. It independently reproduces exactly 3 MAIN and 8 WIDE failing groups/coordinates and maxima from the failed V4 read. | This confirms complete coupled numerical evidence only. State/codec/ordinary completion and full bounded qualification remain open; audit retains qualification false. |
 | 2026-10-30 | Recovery/codec diagnostic passes; status correction applied | Reviewed diagnostic completes all 104 attempts/367 rows, full physical recovery/reset/replay, ordinary calls, budgets, immutable owners and codec checks. It explicitly stubs numerical dispatch and retains passed/eligibility/qualification false. V5's exact status-bit map and boundary regression are then applied; six repository checks pass. | Validate all 33 controls and independent saved evidence, commit the narrow verifier correction, then rerun the complete unchanged numerical/state reader. |
 | 2026-10-30 | Status correction checked and independently audited | All 33 controls pass in 0.302s, all six repository checks pass (default 457/Metal 564), and Astra verifies current bindings, runtime and seven closed groups. Independent diagnostic audit preserves all 104 attempts/367 rows with explicit numerical stub/qualification false; root audit independently preserves all strict math and 3/8 trajectory diagnostics. | Narrow correction task is ready for exact staged review and commit. Complete full-reader replay and final bounded qualification remain next. |
+| 2026-10-30 | Status correction committed / final combined replay starts | Exact six-file Astra staged review passes; status correction committed as `74ab2f8`. Full V5 saved reader starts under unchanged 900s/6GiB limits and original capture authority, after independent 33-control and state/codec audits. | Await complete combined numerical/state/codec/endpoints and independent final qualification review. No GPU or source-model rerun. |
+| 2026-10-30 | B4 selected Mac qualification complete | Full unstubbed reader passes all 6,440 local groups/11,971,552 values, 303 strict groups/1,965,024 values, full state/codec/ordinary/budget coverage and clean endpoints. Astra verifies original inputs/raw extents/runtime and independently approves selected Mac64/C512 conformance; MAIN3/WIDE8 diagnostics remain rejected. | [Report](docs/lfm2-real-native.md). B5 native-policy capacity API is the next concrete task; original quality, ordinary app/phone/full-window/performance work remain open. |

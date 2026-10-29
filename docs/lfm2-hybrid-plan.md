@@ -1,11 +1,14 @@
 # B4 candidate: a shared short-convolution state block
 
-29 October2026. This is the next mechanism after B3's bounded Gemma3 checks,
-not an executable-model admission. Astra's cached primary-source research
-identifies [mlx-community/LFM2-350M-4bit](https://huggingface.co/mlx-community/LFM2-350M-4bit/tree/18dc72abf3b2337f9123cfd6eeeb58dfa7947066)
+Original plan: 29 October 2026. On 30 October, the pinned representative
+completes [selected Mac native conformance](lfm2-real-native.md): 64 trajectory
+positions, capacity 512, complete numerical/state/codec checks and independent
+Astra approval. Ordinary app integration, original quality, phone, full declared
+context and performance remain open. The prerequisite progress below retains
+its historical scope. Astra's cached primary-source research identifies [mlx-community/LFM2-350M-4bit](https://huggingface.co/mlx-community/LFM2-350M-4bit/tree/18dc72abf3b2337f9123cfd6eeeb58dfa7947066)
 revision `18dc72abf3b2337f9123cfd6eeeb58dfa7947066` as a practical representative
 for recurrent/hybrid state. The [complete original artifact](lfm2-artifact-acquisition.md)
-is now verified locally; real numerical execution remains pending.
+is verified locally and its bounded real native result is qualified.
 
 ## Why this mechanism
 
@@ -316,3 +319,10 @@ and data preparation only; existing tiny constructors, metadata capacity claims
 and ordinary factories remain unchanged. Next extend the resident composition,
 preserving tiny arithmetic/state tests and freezing the real checker/capture
 protocol before a real GPU run.
+
+B4e3's [complete bounded native result](lfm2-real-native.md) closes the selected
+Mac adapter: all 6,440 local and 303 strict groups pass, while three MAIN/eight
+WIDE diagnostic failures remain retained. Full recovery/codec/ordinary/budget
+checks and actual memory observations pass independent Astra audit. Continue
+B5 capacity controls and ordinary app integration; no broader family/export,
+full-window, original-quality, phone or performance qualification is implied.

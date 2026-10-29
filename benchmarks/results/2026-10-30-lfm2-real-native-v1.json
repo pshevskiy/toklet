@@ -1,0 +1,621 @@
+{
+  "format": "toklet-lfm2-bounded-native-mac-result-v1",
+  "date": "2026-10-30",
+  "revision": "74ab2f8",
+  "status": "selected_bounded_mac_native_conformance_qualified",
+  "qualification_decision": "qualify_selected_lfm2_bounded_mac_native_conformance",
+  "qualification_scope": {
+    "model_revision": "18dc72abf3b2337f9123cfd6eeeb58dfa7947066",
+    "host": "Apple M1 Pro MacBookPro18,3 macOS26.6.2",
+    "allocated_capacity": 512,
+    "actual_trajectory_positions": [
+      0,
+      63
+    ],
+    "original_unquantized_adoption_quality": false,
+    "app": false,
+    "phone": false,
+    "performance": false,
+    "full_declared_window": false,
+    "arbitrary_inputs_or_exports": false
+  },
+  "reader_self_qualification": false,
+  "outer_bounded_qualification": true,
+  "hardware": {
+    "model": "MacBookPro18,3",
+    "soc": "Apple M1 Pro",
+    "memory_bytes": 17179869184,
+    "macos": "26.6.2",
+    "gpu_registry_id": 4294969767
+  },
+  "model": {
+    "repository": "mlx-community/LFM2-350M-4bit",
+    "revision": "18dc72abf3b2337f9123cfd6eeeb58dfa7947066",
+    "packing": "MLX affine Q4 group64 BF16 metadata",
+    "layers": 16,
+    "attention_layers": [
+      2,
+      5,
+      8,
+      10,
+      12,
+      14
+    ],
+    "convolution_layers": 10,
+    "hidden": 1024,
+    "intermediate": 4608,
+    "query_heads": 16,
+    "kv_heads": 8,
+    "head_dim": 64,
+    "head_vocabulary": 65536,
+    "mapped_vocabulary": 64400,
+    "declared_context": 128000
+  },
+  "build": {
+    "features": [
+      "metal"
+    ],
+    "profile": "release library test",
+    "opt_level": "3",
+    "debug_assertions": false,
+    "native_executable": {
+      "bytes": 116847040,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3-real-native-gpu-owner-proposal-v2/retained-release-test-binary",
+      "sha256": "056f4ce0ac8bcb638ccb702b159ab98fd0689357b429540df2a535ce5d32a7fa"
+    }
+  },
+  "inputs": {
+    "binary": {
+      "bytes": 116847040,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3-real-native-gpu-owner-proposal-v2/retained-release-test-binary",
+      "sha256": "056f4ce0ac8bcb638ccb702b159ab98fd0689357b429540df2a535ce5d32a7fa"
+    },
+    "capture_control": {
+      "bytes": 2254,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3-real-native-gpu-owner-proposal-v2/control.json",
+      "sha256": "d9e8c8ec14ed9dcb6d799fc4a0d5d7631ff96bf33ec009158d09ea04224c8bbb"
+    },
+    "capture_receipt": {
+      "bytes": 1507691,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3-real-native-gpu-owner-proposal-v2/run.json",
+      "sha256": "4427240f6b98531f217c3eef8a58c0ba040e2d5e7b70eb57b34ff417c7b2f441"
+    },
+    "codec_fixture": {
+      "bytes": 23078,
+      "path": "/Users/coloner/work/rust/toklet/tests/fixtures/lfm2-text-v1/fixture.json",
+      "sha256": "c0d521d4cf09507e667e68a36ccfd8698be5dd30b72adcf5befb5b18c7cd283a"
+    },
+    "gates": {
+      "bytes": 1046647,
+      "path": "/Users/coloner/work/rust/toklet/tests/fixtures/lfm2-real-source-v1/gates.json",
+      "sha256": "7b1879ee54fd5a421d0b5f17f2d9192d291742bdc078ef2f5e90885eb293fbdf"
+    },
+    "journal": {
+      "bytes": 7560300,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3-real-native-gpu-owner-proposal-v2/native/journal.jsonl",
+      "sha256": "b1adb2c03a6bf73446a2df67df0790630c94a2b368decaf6e28536e9fcd8b146"
+    },
+    "model": {
+      "bytes": 199527820,
+      "path": "/Users/coloner/work/rust/toklet/models/LFM2-350M-4bit-18dc72a/model.safetensors",
+      "sha256": "558353ad098c1230a8e2ea508cd34ef311a1b97a2bc4f47498f4df8229dc5c0f"
+    },
+    "owner_manifest": {
+      "bytes": 1695311,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3-real-native-gpu-owner-proposal-v2/package.json",
+      "sha256": "1af9053edb43e7215abd63da3becfbf374c118c2220c4bbf2087741a42fcbb76"
+    },
+    "protocol": {
+      "bytes": 186511,
+      "path": "/Users/coloner/work/rust/toklet/tests/fixtures/lfm2-real-source-v1/protocol.json",
+      "sha256": "49005e6e0342adc1e05177063623d149c2319b1966b52d0174ea00d46e6ce59f"
+    },
+    "raw": {
+      "bytes": 154629840,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3-real-native-gpu-owner-proposal-v2/native/capture.bin",
+      "sha256": "b0a5c2c5e54f0e3947b6d7ba02a568f1baefc36c541d009f01f3622afd65492c"
+    },
+    "source_arrays": {
+      "bytes": 48049152,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e2-real-reference-proposal-v1/source-checks-v1/export/arrays.bin",
+      "sha256": "9db9e7cd82a1a15ef60f75b2cd91b04f20d30553bb64cb55be72d2c201d0837a"
+    },
+    "source_manifest": {
+      "bytes": 2247239,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e2-real-reference-proposal-v1/source-checks-v1/export/manifest.json",
+      "sha256": "2654f475aedb37024b66f6c9a9988369d8ea8138a34e078505adf6fe16635133"
+    },
+    "stderr": {
+      "bytes": 0,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3-real-native-gpu-owner-proposal-v2/native_capture.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "stdout": {
+      "bytes": 505,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3-real-native-gpu-owner-proposal-v2/native_capture.stdout",
+      "sha256": "c41fb6e3b959a7656e05d14f3f1fbd7d238aefcf57e7393388d7b44d426cc6b9"
+    },
+    "tokenizer": {
+      "bytes": 4732426,
+      "path": "/Users/coloner/work/rust/toklet/models/LFM2-350M-4bit-18dc72a/tokenizer.json",
+      "sha256": "98cff83b4f6d7e9d8929bebc62b07e92cf1b3f99c80d16bafe8b84a75448f40b"
+    }
+  },
+  "numerical": {
+    "actual_input": {
+      "failures": 0,
+      "first_failure": null,
+      "groups": 6440,
+      "maximum_error": 0.0009765625,
+      "maximum_fraction": 0.546268982847154,
+      "values": 11971552
+    },
+    "fatal_numerical_passed": true,
+    "local_numeric_failures": 0,
+    "local_semantic_failures": 0,
+    "projection_certificates": {
+      "equal_center_certificates": 5134331,
+      "exact_bracket_checks": 5,
+      "stripes": 40112
+    },
+    "strict_coupled": {
+      "failures": 0,
+      "first_failure": null,
+      "groups": 303,
+      "maximum_error": 0.03635406494140625,
+      "maximum_fraction": 0.9458106153332592,
+      "values": 1965024
+    },
+    "trajectory_main_diagnostic": {
+      "failures": 3,
+      "first_failure": {
+        "actual_word": 3155542016,
+        "center_word": 3155877888,
+        "gate": {
+          "atol": 0.0001678466796875,
+          "rtol": 0.001
+        },
+        "index": 1009,
+        "name": "cases.journey64.row_32.layers.9.down_projection"
+      },
+      "groups": 6743,
+      "maximum_error": 0.04296875,
+      "maximum_fraction": 1.764275571238005,
+      "values": 13936576
+    },
+    "trajectory_wide_diagnostic": {
+      "failures": 8,
+      "first_failure": {
+        "actual_word": 3155509248,
+        "center_word": 3155099648,
+        "gate": {
+          "atol": 0.0003376007080078125,
+          "rtol": 0.001
+        },
+        "index": 346,
+        "name": "cases.future_tail11.row_10.layers.12.operator_projection"
+      },
+      "groups": 6743,
+      "maximum_error": 0.05299806594848633,
+      "maximum_fraction": 1.3345387231477894,
+      "values": 13936576
+    }
+  },
+  "capture": {
+    "attempted_rows": 367,
+    "attempts": 104,
+    "free": [
+      {
+        "codec_failure": null,
+        "committed": [
+          1,
+          1024,
+          2048,
+          4096,
+          8192,
+          16384,
+          32768,
+          501,
+          561,
+          30219,
+          1127
+        ],
+        "numeric_distribution_hashes": [
+          "732b13fdd4eace0f630fbb779725f2cbea4d939215cd6b16d4862de6f312bf81",
+          "ccd4d100c7d62bdd7802cd7565f82bae0beaa2d6845d68079b140016c1d21f90",
+          "78d675309d19c6998bc7f52380b23a3ab4ff3a81fce7ef1f7e8801f10d23ee67",
+          "8af3811cb71a46cdca3580d71411f5d012363721279fa40335d0f006564964fc"
+        ],
+        "pending": 9319,
+        "sampled": [
+          561,
+          30219,
+          1127,
+          9319
+        ],
+        "stopped": false
+      },
+      {
+        "codec_failure": null,
+        "committed": [
+          1,
+          1024,
+          2048,
+          4096,
+          8192,
+          16384,
+          32768,
+          501,
+          561,
+          30219,
+          1127
+        ],
+        "numeric_distribution_hashes": [
+          "732b13fdd4eace0f630fbb779725f2cbea4d939215cd6b16d4862de6f312bf81",
+          "ccd4d100c7d62bdd7802cd7565f82bae0beaa2d6845d68079b140016c1d21f90",
+          "78d675309d19c6998bc7f52380b23a3ab4ff3a81fce7ef1f7e8801f10d23ee67",
+          "8af3811cb71a46cdca3580d71411f5d012363721279fa40335d0f006564964fc"
+        ],
+        "pending": 9319,
+        "sampled": [
+          561,
+          30219,
+          1127,
+          9319
+        ],
+        "stopped": false
+      }
+    ],
+    "guard_bytes": 719376,
+    "guard_records": 126,
+    "history_stacks": 18,
+    "model_original_owners": 335,
+    "physical_prefixes": 72,
+    "primary_chunks": 78,
+    "primary_rows": 231,
+    "producer_rows": 303,
+    "row_hashes": 299,
+    "same_native_prefixes": 77,
+    "scope": {
+      "allocated_capacity": 512,
+      "app": false,
+      "model_hashes": "all335 before/after; boundary references immutable table",
+      "ordinary": "two last-row heads and published state equality; no ordinary diagnostic producer reconstruction",
+      "original_unquantized_quality": false,
+      "performance": false,
+      "phone": false,
+      "real_trajectory_positions": [
+        0,
+        63
+      ],
+      "row_hashes": "all published rows; full raw heads only selected/teacher/free/ordinary records",
+      "snapshot_hashes": "actual complete hashes/guards with selected logical readback; unselected snapshot words not saved"
+    },
+    "selected_groups": 6739,
+    "session_memory": {
+      "1": {
+        "admitted": 973679662,
+        "cache": 6695024,
+        "cold_peak": 1070494930,
+        "convolution_coefficients": 123160,
+        "convolution_history": 82200,
+        "diagnostic_gpu": 54530796,
+        "diagnostic_readback_reserved": 88080384,
+        "direct_norms": 139500,
+        "external_resident": 536870912,
+        "logits": 16777272,
+        "metadata": 41944,
+        "packed_weights": 199360512,
+        "scratch": 3735804,
+        "shared_framework_allowance": 67108864,
+        "tokens": 2204,
+        "zero_bias": 131086
+      },
+      "2": {
+        "admitted": 973679662,
+        "cache": 6695024,
+        "cold_peak": 1070494930,
+        "convolution_coefficients": 123160,
+        "convolution_history": 82200,
+        "diagnostic_gpu": 54530796,
+        "diagnostic_readback_reserved": 88080384,
+        "direct_norms": 139500,
+        "external_resident": 536870912,
+        "logits": 16777272,
+        "metadata": 41944,
+        "packed_weights": 199360512,
+        "scratch": 3735804,
+        "shared_framework_allowance": 67108864,
+        "tokens": 2204,
+        "zero_bias": 131086
+      },
+      "3": {
+        "admitted": 973679662,
+        "cache": 6695024,
+        "cold_peak": 1070494930,
+        "convolution_coefficients": 123160,
+        "convolution_history": 82200,
+        "diagnostic_gpu": 54530796,
+        "diagnostic_readback_reserved": 88080384,
+        "direct_norms": 139500,
+        "external_resident": 536870912,
+        "logits": 16777272,
+        "metadata": 41944,
+        "packed_weights": 199360512,
+        "scratch": 3735804,
+        "shared_framework_allowance": 67108864,
+        "tokens": 2204,
+        "zero_bias": 131086
+      },
+      "4": {
+        "admitted": 973679662,
+        "cache": 6695024,
+        "cold_peak": 1070494930,
+        "convolution_coefficients": 123160,
+        "convolution_history": 82200,
+        "diagnostic_gpu": 54530796,
+        "diagnostic_readback_reserved": 88080384,
+        "direct_norms": 139500,
+        "external_resident": 536870912,
+        "logits": 16777272,
+        "metadata": 41944,
+        "packed_weights": 199360512,
+        "scratch": 3735804,
+        "shared_framework_allowance": 67108864,
+        "tokens": 2204,
+        "zero_bias": 131086
+      },
+      "5": {
+        "admitted": 814794458,
+        "cache": 6695024,
+        "cold_peak": 1070494930,
+        "convolution_coefficients": 123160,
+        "convolution_history": 82200,
+        "diagnostic_gpu": 0,
+        "diagnostic_readback_reserved": 0,
+        "direct_norms": 139500,
+        "external_resident": 536870912,
+        "logits": 524344,
+        "metadata": 20848,
+        "packed_weights": 199360512,
+        "scratch": 3735804,
+        "shared_framework_allowance": 67108864,
+        "tokens": 2204,
+        "zero_bias": 131086
+      }
+    },
+    "source_state_trajectory_diagnostic": {
+      "fatal": false,
+      "history_scope": "actual before/after chunk old banks only; no invented per-token snapshots",
+      "main": {
+        "failures": 0,
+        "first_failure": null,
+        "groups": 4212,
+        "maximum_error": 0.0166015625,
+        "maximum_fraction": 0.4634943056413878,
+        "values": 21657600
+      },
+      "source_identities": 168,
+      "wide": {
+        "failures": 0,
+        "first_failure": null,
+        "groups": 4212,
+        "maximum_error": 0.01953125,
+        "maximum_fraction": 0.6252735571812668,
+        "values": 21657600
+      }
+    },
+    "zero_allocation_calls": 2
+  },
+  "codec": {
+    "bos": 1,
+    "chat_quality_qualified": false,
+    "cleanup": false,
+    "fixture_cases": 10,
+    "mapped_ids": [
+      0,
+      64399
+    ],
+    "repeats": [
+      {
+        "pending": 9319,
+        "raw_prompt_and_sampled_decode": "<|startoftext|>201 dans}) cycle civ Gregory\n\n\n\n\n\n\n\n\n\nTitre et description",
+        "raw_sampled_decode": "Titre et description",
+        "sampled_ids": [
+          561,
+          30219,
+          1127,
+          9319
+        ],
+        "stop_before_feed": false
+      },
+      {
+        "pending": 9319,
+        "raw_prompt_and_sampled_decode": "<|startoftext|>201 dans}) cycle civ Gregory\n\n\n\n\n\n\n\n\n\nTitre et description",
+        "raw_sampled_decode": "Titre et description",
+        "sampled_ids": [
+          561,
+          30219,
+          1127,
+          9319
+        ],
+        "stop_before_feed": false
+      }
+    ],
+    "skip_special_tokens": false,
+    "stop_ids": [
+      7
+    ],
+    "unmapped_ids": [
+      64400,
+      65535
+    ],
+    "version": "0.22.2"
+  },
+  "memory_scope": {
+    "metadata_runtime_separate": true,
+    "native_readonly_map_cap": 155483328,
+    "original_model_bytes": 199527820,
+    "original_model_mapped": false,
+    "source_array_bytes": 48049152,
+    "source_arrays_mapped": false
+  },
+  "premises": [
+    "ordinary correctly rounded IEEE binary64 backend for exact-affine certificates",
+    "pinned Metal precise published intrinsic bounds, selected RNE stores",
+    "softmax result is a conservative per-value correlated-mass enclosure, not one hidden-vector proof"
+  ],
+  "native_process": {
+    "direct_observed_maxima": {
+      "lifetime_max_phys_footprint": 562005048,
+      "phys_footprint": 562005048,
+      "resident_size": 533544960
+    },
+    "samples": 431,
+    "scope": "sparse direct process observations; not complete system/framework peaks"
+  },
+  "reader_process": {
+    "pid": 94363,
+    "exit_code": 0,
+    "process_group_closed": true,
+    "samples": 4394,
+    "observed_maxima": {
+      "resident_size": 472580096,
+      "phys_footprint": 139527152,
+      "lifetime_max_phys_footprint": 157549648
+    },
+    "os_maxrss_bytes": 472580096,
+    "elapsed_seconds": null,
+    "elapsed_scope": "Not retained by owner; not inferred from samples or timestamps.",
+    "deadline_seconds": 900,
+    "limit_bytes": 6442450944,
+    "logs_and_report_cap_bytes": 16777216
+  },
+  "verification": {
+    "default_tests": 457,
+    "default_ignored": 20,
+    "metal_tests": 564,
+    "metal_ignored": 183,
+    "counts_overlap": true,
+    "synthetic_reader_controls": 33,
+    "format_strict_default_metal_clippy_and_release_build_passed": true
+  },
+  "consumer_supersessions": {
+    "/Users/coloner/work/rust/toklet/tools/reference/check_lfm2_capture.py": {
+      "current_reader_pin": {
+        "bytes": 54074,
+        "sha256": "faf8e4181df87f7aad2c598f00180e782af4f3fc85466ec400af9453fc9cd45c"
+      },
+      "executed_native_consumer_pin": {
+        "bytes": 53840,
+        "sha256": "ce509e17b31cab8f966253171a2915956a03be2d057a4c2392e21bf9f7769cc4"
+      }
+    },
+    "/Users/coloner/work/rust/toklet/tools/reference/lfm2_capture_contract.py": {
+      "current_reader_pin": {
+        "bytes": 26095,
+        "sha256": "d89d1b6ad5199e1fbde4cf6f5ec26dc8aecaee263c28609f501c99c38c84abc4"
+      },
+      "executed_native_consumer_pin": {
+        "bytes": 25319,
+        "sha256": "4bfdd123c5e2388e39febd3b476a97d712de05dcbb0469aa4437c5afc7512278"
+      }
+    },
+    "/Users/coloner/work/rust/toklet/tools/reference/test_lfm2_capture_reader.py": {
+      "current_reader_pin": {
+        "bytes": 38974,
+        "sha256": "d80f5c9e48b8bb2eb564a7f9df52905233dcc05c46b9cff60f33bd46d279e746"
+      },
+      "executed_native_consumer_pin": {
+        "bytes": 28184,
+        "sha256": "d1567dea54c3d531227eb442afc2a433317153c2b4457c62a9e0a70e464c97ad"
+      }
+    }
+  },
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-owner-independent-review-v1/saved-native-v5-final-review.json",
+      "bytes": 21075,
+      "sha256": "b97df456a93f088e9cafd6a0a0a92181c7070b3014651dda0d76595ce6264b2a"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-owner-proposal-v5/checks.json",
+      "bytes": 1660275,
+      "sha256": "e0f7b281a5d9ff8e938bff76176d2c0028cd3e54ac73903848eed38e18d6a8dd"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-owner-proposal-v5/read-v1/check.json",
+      "bytes": 13839,
+      "sha256": "a6d2045bd3a64d0be3a23542b7f19363abe0b60cab3fb484f196f0164fc57b6d"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-owner-proposal-v5/package.json",
+      "bytes": 1813915,
+      "sha256": "9ebeab1a3fd6ebeeb08503cefeb2b9cefa60765b2db63866a8ccb03ac017611d"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-owner-proposal-v5/reader-control.json",
+      "bytes": 3815,
+      "sha256": "4e5c4f3f3489245ddb2da9020b17f58dfa8b4e65efa848884518dfe6e72c8337"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-owner-proposal-v5/prospective-review.json",
+      "bytes": 4398,
+      "sha256": "b35e252bcb596968b7fc10416dc4c8dd23de8ad6a868286504a17793d7768eb3"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-real-native-gpu-owner-proposal-v2/run.json",
+      "bytes": 1507691,
+      "sha256": "4427240f6b98531f217c3eef8a58c0ba040e2d5e7b70eb57b34ff417c7b2f441"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-real-native-gpu-owner-independent-review-v1/saved-collection-review.json",
+      "bytes": 5808,
+      "sha256": "1247a88876391d34408b43c269767566a090758008da650bfe33440c08f91b90"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-controls-owner-v5/controls-v1/checks.json",
+      "bytes": 740667,
+      "sha256": "7a13eb0328f95af3801a876408b3f40bbad539f8bc3cc582d935a074c8459493"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-cold-checks-v5/checks.json",
+      "bytes": 889110,
+      "sha256": "868bc4e2c2e14438106f3161b20ce99bb256c7c9c3686010ea57eea242cccc68"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-owner-independent-review-v1/saved-controls-v5-review.json",
+      "bytes": 6856,
+      "sha256": "c3b2c366f4de1b7d42950731051383a16eaf3a10d21fd0ed35387c98d4c94968"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-root-coupled-audit-v2/audit.json",
+      "bytes": 2833,
+      "sha256": "d474e6470f3011a1f2f24b6b37d2f409113dba940838e644be67fc99e51a2b07"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-root-coupled-audit-independent-review-v1/saved-v2-review.json",
+      "bytes": 5097,
+      "sha256": "8d56688cede4aaa50bedbc8f793d643951fb2fe421034dce439dd7529223512a"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-reader-state-diagnostic-v1/attempt-v1/run.json",
+      "bytes": 140919,
+      "sha256": "f1ca2f4d7c8486f73ac15be109fe28e7e8e0693eb2ac7a0082d8de44f9dd1551"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-reader-state-diagnostic-v1/saved-state-codec-review.json",
+      "bytes": 7197,
+      "sha256": "ebe9173a834be43dc69febdd5cd7d9807bcb643ed1efaf9357f988733914079d"
+    }
+  ],
+  "limitations": [
+    "Qualification is this pinned Mac64-position trajectory with512allocated capacity, not the128000declared window or arbitrary inputs/exports.",
+    "Retain3MAIN and8WIDE diagnostic failing coordinates/groups; actual-input semantics plus strict coupled gates are the prospective fatal policy.",
+    "Source-state trajectory checks are diagnostic; ordinary-mode per-layer producers are absent.",
+    "Exact-affine full-binary64 backend and conservative per-value softmax premises remain explicit; projection counters are aggregate, not separately retained fallback certificates.",
+    "Raw sampled repeats do not stop within four samples; stop handling is fixture/control evidence, not an observed native stop event.",
+    "No original-unquantized adoption quality, ordinary app discovery/load/Chat, iPhone14Pro, whole-app peak or generation-performance qualification.",
+    "Sparse native/process observations and ledger allowances are distinct; no inference of unrecorded elapsed time."
+  ]
+}

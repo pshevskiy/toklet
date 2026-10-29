@@ -194,8 +194,12 @@ B4 now has qualified reusable [Half RMS](lfm2-half-rms.md),
 and [strided Half product](strided-half-product.md) blocks for the selected Mac
 cases, plus the fully audited [Half tiny reference](lfm2-half-reference.md) and
 [resident mixed graph](lfm2-resident-tiny.md) with one checked publication boundary.
-Next freeze and qualify the fitting real LFM2 model before B5 app/context/adoption
-gates. Tiny numerical/state qualification does not imply real-model support.
+The pinned [real LFM2 Mac result](lfm2-real-native.md) now passes complete
+64-position native conformance with capacity 512 and independent Astra approval.
+The 3/8 MAIN/WIDE trajectory diagnostic failures remain recorded; original
+quality, ordinary app/phone/full-window and performance work stay open. Continue
+B5 with the existing capacity solver exposed through the native-policy C API,
+then settings/application/Hugging Face and adoption gates.
 
 ## Research references
 

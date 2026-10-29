@@ -8107,3 +8107,36 @@ Astra authenticates the current runtime/bindings and seven closed groups, plus
 the saved nonqualifying state/codec diagnostic and its two explicitly historical
 source bindings. The narrow code task is checked; one complete full numerical
 and state reader replay remains necessary before bounded qualification.
+
+The exact six-file correction is committed as `74ab2f8`. The final combined
+reader runs against the unchanged real capture under the same bounded owner;
+complete eligibility and independent outer qualification remain pending.
+
+
+### M8 B4 — Bounded real LFM2 Mac conformance complete, 30 October 2026
+
+The [pinned LFM2 native report](lfm2-real-native.md) closes the selected Mac
+engine-adapter scope after the complete unstubbed numerical/state/codec reader
+and independent Astra qualification. All 6,440 actual-input groups / 11,971,552
+values and 303 strict coupled groups / 1,965,024 values pass with zero fatal
+failures. All 168 source-state identities, complete guard/owner/recovery and
+ordinary-mode checks pass. Three MAIN and eight WIDE diagnostic coordinates
+remain rejected under their original gates; the independent stdlib audit
+reproduces those results.
+
+The native experiment covers 104 attempts / 367 rows, including late failures,
+exact 128-word partial-copy poisoning/reset/replay, two raw greedy repeats and
+two ordinary calls with zero observed Rust allocations. All 335 model allocation hashes/sizes match
+before/after. Native sparse observations reach 533,544,960 bytes resident and
+562,005,048 bytes physical/lifetime footprint. The full reader records OS
+maximum RSS 472,580,096 bytes and clean process closure; elapsed wall time was
+not retained. Ledger reservations, process observations and whole-app peaks
+remain distinct. This is a correctness/memory result, without throughput claims.
+
+[Astra's final evidence](../benchmarks/results/2026-10-30-lfm2-real-native-v1.json)
+retains all original inputs, the three explicit reader supersessions, every
+failed attempt and nonqualifying diagnostic. The actual scope is 64 positions
+with capacity 512, distinct from the declared 128,000. Original-unquantized
+quality, ordinary app discovery/load/Chat, context/KV controls, iPhone 14 Pro and
+performance adoption stay open. B5 begins with the existing numerical capacity
+solver exposed through the native-policy C API; no new planner is required.

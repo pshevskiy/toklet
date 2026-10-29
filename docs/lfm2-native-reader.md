@@ -8,8 +8,12 @@ any selected mathematical comparison. The KV-axis correction passed 30 controls.
 on a flat attention-source layout mismatch. The V4 saved-reader attempt completed every mathematical comparison with zero
 fatal local or strict coupled failures, then failed the Head fault-status check.
 V5 corrects that status-bit expectation and passes 33 controls plus six repository
-checks. Complete saved-reader conformance and
-outer qualification remain pending.
+checks. Its complete unstubbed saved read now passes every fatal numerical,
+state, codec and endpoint check, with independent Astra approval of the
+[selected Mac64/C512 scope](lfm2-real-native.md). The historical iterations below
+remain recorded; three MAIN/eight WIDE diagnostic coordinates still fail their
+original trajectory gates. App, phone, full-window, original-quality and
+performance qualification remain separate.
 
 Original file/header/tensor identities, source arrays/literal gates, actual
 executable/control/owner and all native outputs are authenticated. Records have
@@ -157,3 +161,12 @@ synthetic-worker samples observe maximum RSS 63,275,008 bytes; OS maximum RSS
 is 70,385,664 bytes. These are synthetic-worker observations, not full-reader
 peaks. The state/codec diagnostic is independently audited as a separate,
 nonqualifying run; neither result relaxes the final complete-reader requirement.
+
+The final full V5 run completes all 104 attempts / 367 rows, with 6,440 local
+and 303 strict groups passing, no semantic/numeric failures, all 168 state
+identities, complete raw codecs and ordinary/fault/budget checks. It has no
+numerical-dispatch stub. Astra's [final bounded result](../benchmarks/results/2026-10-30-lfm2-real-native-v1.json)
+records the outer decision, unchanged input authority, process closure, actual
+resource observations and every retained limitation. The reader's own raw
+numerical-qualification flag remains false; the independent outer decision is
+scoped to the selected Mac experiment.

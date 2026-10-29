@@ -23,6 +23,14 @@ replaces neither the original adoption-quality gates nor B5/app/phone work.
 Review/commit the policy before checker implementation and fresh collection;
 then continue B4 and B5 in the existing breadth-first order.
 
+**30 October 2026 progress:** B1–B4 have completed their recorded selected Mac
+engine-adapter scopes. The [bounded LFM2 result](docs/lfm2-real-native.md) passes
+64-position native conformance with capacity 512 and independent Astra approval;
+its 3/8 trajectory diagnostic failures remain retained. Continue B5 context/KV
+controls and ordinary app/Hugging Face integration, then the unchanged M8
+adoption-quality requirements. Full-window, phone, app and performance claims
+are not granted by these bounded adapter results.
+
 **Next milestone: M9, measured performance improvements.** Follow the
 [M9 delivery and architecture contract](docs/next-performance-milestone.md),
 derived from the user's [Toklet next performance improvement plan](https://chatgpt.com/space/page_18e155f0450c8191a76010b2b26832a5).
