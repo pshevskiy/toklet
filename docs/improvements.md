@@ -7230,3 +7230,29 @@ The correction qualifies as a separate task; see the
 [evidence](../benchmarks/results/2026-10-29-gemma3-half-residual-v1.json).
 The real original-byte loader and corrected numerical reference remain distinct
 follow-on work. Their uncommitted preparation is not a real-model support claim.
+
+The clipped-Half correction is committed as `8528b5b` after exact staged Astra
+review. The corrected real source exports and replays identically:3,232 stage
+groups/13,473,568 values per profile, preserving the old valid prefix exactly.
+Source-only OS RSS peaks remain below2.81GB; all source groups close. Independent
+saved-source review is pending before its separate reference-code commit.
+
+The next storage/upload controller stops before launching a child because its
+approval retained an older inventory path. That preflight failure is preserved;
+a metadata-only successor corrects the placement without changing test code,
+numerical operations or gates. No model/GPU work occurred in that rejection.
+
+The corrected storage/upload controller passes both actual release checks. A
+separate original-range reader reconstructs every packed component and all109
+effective norm hashes, then verifies491 unique resident buffers before/after
+CPU-store drop. The reader initially assumes different capacity-control inputs;
+its preserved successor uses the actual literal Rust inputs. No target code,
+output or gate changes follow. This proves original storage/upload ownership,
+not numerical inference.
+
+Astra independently verifies the complete saved real reference, including
+original109 norm conversions,368,640 residual-store words/40 saturations,
+589,824 gating-store words and10,240 embedding-scale words. All fixed gates,
+finite arrays, exact replay and historical-prefix checks pass. The frozen
+[real reference](gemma3-real-reference.md) closes B3d2 in its source-only scope;
+actual native comparison and application/adoption quality remain open.

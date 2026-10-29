@@ -162,8 +162,9 @@ iPhone, full declared context and adoption quality remain B5/M8 work.
 - [x] B3d1: acquire/authenticate original selected payload and tokenizer files,
   source identity and complete layout; no numerical/text admission.
   [Report](docs/gemma3-artifact-acquisition.md).
-- [ ] B3d2: freeze independent selected real Half arithmetic/text/source protocol
+- [x] B3d2: freeze independent selected real Half arithmetic/text/source protocol
   and selected544-position probes within the Mac process budget.
+  [Report](docs/gemma3-real-reference.md); exact export/replay and independent saved-source audit pass.
 - [ ] B3d3: checked original-byte real loader/native runner, source comparisons,
   two-partition window journey and bounded text/resource/state controls.
 - [x] B3d3 prerequisite: qualify the source-supported FP16 clamped residual at
@@ -341,4 +342,11 @@ completed or prerequisites for the active breadth-first queue.
 
 | 2026-10-29 | B3d clipped Half GPU regression | Four literal release GPU jobs pass:20,962 exact primitive values, sticky invalid/status/legacy/store-boundary controls,428,832 unchanged tiny graph comparisons, cache recovery and11,520 rotary comparisons. Eight primitive encodes and twelve complete forward calls report zero Rust allocations in release. | Raw evidence retained; Astra saved-output review and separate correction commit next. Real source-v2/native real inference remain open. |
 
-| 2026-10-29 | B3d clipped correction independent qualification | Astra independently verifies every20,962 primitive word, store/invalid/guard/status controls and all428,832 tiny graph values/2,400 snapshots,170 physical states, cache recovery, release allocations and rotary gates. | [Report](docs/gemma3-half-residual.md); correction-only staged review/commit. Corrected real source export/replay runs separately; no real native model yet. |
+| 2026-10-29 | B3d clipped correction independent qualification | Astra independently verifies every20,962 primitive word, store/invalid/guard/status controls and all428,832 tiny graph values/2,400 snapshots,170 physical states, cache recovery, release allocations and rotary gates. | [Report](docs/gemma3-half-residual.md); `8528b5b`; correction committed. Corrected real source export/replay runs separately; no real native model yet. |
+
+| 2026-10-29 | B3d corrected real reference succeeds | Both finite CPU jobs pass3,232 stage groups/13,473,568 values per profile; output replay is exact and both669,568-byte/398-descriptor historical prefixes remain exact. OS RSS peaks2,806,284,288 /2,735,538,176 bytes below6GiB; all owned groups close. | Source-v2 receipt retained; independent saved-source review and reference task commit next. |
+| 2026-10-29 | B3d loader controller placement preflight | Parent approval retained the v1 inventory path after copying the controller to v2; runtime_inventory identity guard rejects before any child/model/GPU job. Failed receipt preserved. v3 keeps controller/test bytes exact and corrects only approval placement metadata. | Astra review of metadata successor, then storage/upload collection; no numerical change or failed model execution. |
+
+| 2026-10-29 | B3d original storage/upload collection succeeds | Corrected placement v3 launches two literal release jobs; actual original storage and491 resident buffers pass before/after CPU-store drop. Root independently reconstructs all236 source logical records per job,127 matrices and55,936 effective norm words from original file ranges. | Reader-only capacity assumptions corrected in preserved v2 reader; no target/gate changes. Real inference remains pending; separate loader task publication next. |
+
+| 2026-10-29 | B3d2 independently frozen real source | Astra authenticates all3,232 groups/6,464 finite arrays and unchanged gates, exact replay/prefixes, original109 norms,368,640 residual stores/40 saturations,589,824 gating stores and10,240 embedding-scale words. | [Report](docs/gemma3-real-reference.md); reference-only final review/commit, then loader/native journey. |

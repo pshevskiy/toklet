@@ -1,0 +1,137 @@
+{
+  "format": "toklet-gemma3-real-reference-v1",
+  "date": "2026-10-29",
+  "base_revision": "f6015b4121d8f150b019a877cdae7ec3ae498632",
+  "passed": true,
+  "scope": "Independent CPU original-artifact clipped-Half reference/export/replay and plain token histories; no native model execution",
+  "artifact": {
+    "repository": "mlx-community/gemma-3-270m-it-4bit",
+    "revision": "ff1143e3a10547c9f2129e94ca37059b096b23f4",
+    "container_bytes": 150939130,
+    "container_sha256": "bf8b442cff5dd7c9ac6b5695310d5b66a4d0a4c3780f5c774fb90cd0c352bd9d"
+  },
+  "profile": "NativeHalf_clipped_residual_numpy23_blas_v2",
+  "cases": 3,
+  "selected_absolute_rows": [
+    [
+      0,
+      5
+    ],
+    [
+      0,
+      10
+    ],
+    [
+      511,
+      512,
+      513,
+      543
+    ]
+  ],
+  "stage_identities": 400,
+  "graph_groups": 3200,
+  "teacher_groups": 32,
+  "stored_arrays": 6464,
+  "values_per_profile": 13473568,
+  "arrays_bytes": 97110272,
+  "exact_export_replay": true,
+  "historical_failed_run_preserved": true,
+  "historical_prefix": {
+    "bytes": 669568,
+    "descriptors": 398,
+    "exact_in_each_successor": true
+  },
+  "checks": {
+    "portable_controls": 12,
+    "owned_source_groups": 2,
+    "closed": true,
+    "finite_saved_arrays": true,
+    "unchanged_main_only_gates": true,
+    "masked_probability_zeros_both_profiles": 19752
+  },
+  "independent_reconstruction": {
+    "original_norm_vectors": 109,
+    "effective_fp32_norm_words": 55936,
+    "residual_store_words": 368640,
+    "saturated_residual_words": 40,
+    "gating_store_words": 589824,
+    "embedding_scale_words": 10240,
+    "teacher_histories_diagnostic": 32
+  },
+  "source_resources": {
+    "prospective_admission_bytes": 4931096570,
+    "observed_limit_bytes": 6442450944,
+    "worker_seconds": [
+      49.03439841698855,
+      46.53880125004798
+    ],
+    "direct_samples": [
+      462,
+      439
+    ],
+    "os_peak_rss_bytes": [
+      2806284288,
+      2735538176
+    ],
+    "engine_performance_claim": false
+  },
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b3d-reference-controls-v2/checks.json",
+      "bytes": 5376597,
+      "sha256": "5da7d5205869f90f9c50a7a659c987be1cca43bac49cca052f4495c2bf5d22ea"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-reference-proposal-v3/manifest.json",
+      "bytes": 12948,
+      "sha256": "319c46d4e2d7475cbc71a6d26837b53efbb930bba06279a4fef96e6df246ea80"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-reference-proposal-v3/protocol.json",
+      "bytes": 7514,
+      "sha256": "8a28910d0452a36dcd8c0157a1f240a7ee49f9a23fab694dccb51181dff625a8"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-reference-proposal-v1/numerical-inputs.json",
+      "bytes": 10857,
+      "sha256": "30c67871d9de7086d32e8c250416ba2134a4c65c8f54173f6cd17401aebba4ac"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-reference-independent-review-v1/prospective-review-v2.json",
+      "bytes": 19144,
+      "sha256": "7a47c433d94227f7653f87d9b60240503023ef9aabb0a466f7bf239e4238a835"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-source-v2/prospective-review.json",
+      "bytes": 5988,
+      "sha256": "37f19aa0db3016dde29c1634203c7e74371c991e6c9b55e55811af564b74824f"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-source-v2/source.json",
+      "bytes": 5393362,
+      "sha256": "cdbf1a2e78a267e674cf43ee88b5edbf34bd81006148fd09232176039f074825"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-source-v2/reference/manifest.json",
+      "bytes": 2531015,
+      "sha256": "60617b26647d2d4a6c96c41ac8675d978cfdec6dc251545ae308e52dd01c9033"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-source-v2/reference/arrays.bin",
+      "bytes": 97110272,
+      "sha256": "3385fff63c4260e8ceede9a03c9397d5bd5f4e48f10992c9651b0e519c595b81"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-reference-independent-review-v1/saved-source-v2-review.json",
+      "bytes": 6425,
+      "sha256": "b3a2e791079a1e034dc259c704c97f8eead0f2c97393e28c27c54f1424dba616"
+    }
+  ],
+  "final_publication_review": "artifacts/new-goal-b3d-reference-publication-v1/final-review.json",
+  "remaining": [
+    "real native source/window/text/resource comparisons",
+    "application/phone and original-unquantized adoption quality"
+  ],
+  "worktree_identity": "Exact source/target files pinned by execution receipts; residual correction was not yet committed when the source job started",
+  "residual_correction_commit": "8528b5b"
+}
