@@ -176,3 +176,17 @@ The selected tiny geometry remains separate from real16-layer and native Half
 admission. B4c2 compares actual pre-/post-chunk committed state at its real
 boundaries; tokenwise execution covers every source prefix. Inactive source KV
 zeros do not impose tail clearing on reset.
+
+## B4c2 scalar composition result
+
+The [tiny scalar graph](lfm2-scalar-hybrid.md) passes independent stage/state,
+partition, failure/retry, compound publication/reset and warmed allocation checks.
+All full default/Metal checks pass. Only this synthetic CPU profile closes B4c.
+
+B4d starts with the existing FP32-scale Half RMS operation: prospective direct
+gains/epsilon1e-5 at head64, tiny hidden256 and real hidden1024, including up to
+512 rows (real16-query-head ×32-token chunks). Preserve Gemma epsilon1e-6 cases.
+Then qualify a borrowed three-tap Half operation and true multi-KV staged GQA
+(tiny4:2/D64 and real16:8/D64) before resident composition. Existing dense GQA
+kernels alone do not provide old+staged transactional views. Independent finite
+artifact acquisition may overlap this work; it does not qualify any decoder.

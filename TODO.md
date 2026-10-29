@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B4c2 — tiny scalar hybrid graph and compound state publication**.
+Next implementation task: **B4d1 — direct-gain Half RMS qualification; independent artifact acquisition**.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -213,11 +213,13 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
 - [x] B4b: independent scalar short-convolution and transactional state controls.
   [History report](docs/short-conv3-history.md); unchanged scalar leaf, six state
   controls, zero warmed Rust allocations and full default/Metal checks pass.
-- [ ] B4c: independent complete tiny mixed attention/convolution graph.
+- [x] B4c: independent complete tiny mixed attention/convolution graph.
   - [x] B4c1: freeze independent original-packed tiny scalar reference and state fixtures.
     [Reference report](docs/lfm2-scalar-reference.md); eight controls, exact
     export/replay and independent complete saved-array/state audit pass.
-  - [ ] B4c2: compose shared blocks with whole-step KV/history/token publication.
+  - [x] B4c2: compose shared blocks with whole-step KV/history/token publication.
+    [Scalar hybrid](docs/lfm2-scalar-hybrid.md); frozen source/state, rollback,
+    partitions, warmed allocations and full450/531 default/Metal checks pass.
 - [ ] B4d: resident block/composition, allocation/ownership and recovery checks.
 - [ ] B4e: acquire and qualify the fitting representative on Mac; numerical,
   text/session and actual process-memory checks before any support claim.
@@ -435,3 +437,6 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B4b scalar history checks pass | Reused convolution unchanged; six state tests and separate warmed allocation test pass. All five full parent checks pass:445 default/526 Metal-feature tests, strict all-target Clippy and formatting. Astra verifies code, original fixtures and all private evidence with no blocker. | [History report](docs/short-conv3-history.md); exact staged review and task commit, then independent tiny hybrid reference. |
 | 2026-10-29 | B4b reviewed commit / B4c1 starts | Exact10-file Astra approval and all parent checks pass; standalone scalar history committed as`9c18a4f`. Next freezes a three-layer independent packed hybrid source and complete physical-state fixtures before Rust graph work. | Geometry H256/I256/Q4/KV2/D64/V64/C12; original BF16 direct gains, no initial embedding norm, no SiLU in convolution, no Half or real-model claim. |
 | 2026-10-29 | B4c1 source fixture approved | Eight portable controls and two finite source-only exports pass; all6 files match exactly. Astra independently verifies252 groups/548,944 finite values, original packed ranges, complete history/KV states and causal prefixes. | [Reference](docs/lfm2-scalar-reference.md); source-only exact staged review/commit, then Rust scalar hybrid compound publication. No target/GPU/real-model qualification. |
+| 2026-10-29 | B4c1 reviewed source commit | Exact15-file Astra staged review passes; source fixture committed as`97d8b4d`. All252 groups and source/state invariants are frozen before Rust target outcomes. | B4c2 privately implements the shared scalar graph and compound KV/history/token/logit validation/publication boundary. |
+| 2026-10-29 | B4c2 private compile correction | First compile catches four Rust test literal spellings and one nested error conversion in sizing after formatting passes. Failed attempt is retained; mechanical corrections enter attempt2 before any numerical target run. | No reference, gate or numerical operator changed; private checks and Astra review remain pending. |
+| 2026-10-29 | B4c2 scalar hybrid checks pass | All57 mathematical stages plus actual prefix-state observations pass unchanged gates across43 chunks/1,651,856 comparisons. Compound publication/reset, rollback, exact final partition state and zero warmed allocations pass; full450 default/531 Metal-feature checks pass. | [Report](docs/lfm2-scalar-hybrid.md); Astra verifies code/private evidence and independent504,656 unique compared source entries; final staged review/commit next. No native/real-model admission. |

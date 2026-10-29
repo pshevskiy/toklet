@@ -1,0 +1,115 @@
+{
+  "format": "toklet-lfm2-scalar-hybrid-result-v1",
+  "date": "2026-10-29",
+  "status": "tiny_scalar_graph_and_full_checks_passed",
+  "scope": "Selected synthetic three-layer CPU scalar primitive only",
+  "geometry": {
+    "hidden": 256,
+    "intermediate": 256,
+    "vocab": 64,
+    "query_heads": 4,
+    "kv_heads": 2,
+    "head_dim": 64,
+    "capacity": 12,
+    "layers": [
+      "conv3",
+      "attention",
+      "conv3"
+    ],
+    "kv_owners": 1,
+    "history_owners": 2
+  },
+  "source_gate": {
+    "atol": 1e-05,
+    "rtol": 0.0001,
+    "changed": false
+  },
+  "source_comparisons": {
+    "repeated_values": 1651856,
+    "actual_observations": 2709,
+    "chunks": 43,
+    "unique_math_groups": 228,
+    "unique_math_values": 405584,
+    "unique_active_state_values": 99072,
+    "unique_total_compared": 504656,
+    "inactive_source_kv_zero_values_explicitly_excluded": 44288,
+    "max_absolute_error": 2.384185791015625e-07,
+    "max_error_gate_fraction": 0.0016447079515116412,
+    "passing_target_arrays_retained_for_external_rescore": false
+  },
+  "correctness": {
+    "publication_prevalidates_kv_and_history_and_tokens_and_logits": true,
+    "reset_prevalidates_all_families": true,
+    "public_state_exact_after_failure": true,
+    "final_partition_kv_history_valid_logits_exact": true,
+    "actual_chunk_state_boundaries_only": true,
+    "zero_warmed_rust_allocations": true,
+    "arbitrary_prefix_rewind": false,
+    "pending_sampled_token_integration": false
+  },
+  "memory_scope": "Persistent numerical ownership; conservative per-field borrowed packed extents, actual Vec capacities and staging/scratch. Caller containers/conversion/diagnostic/framework resources separate; no process-fit claim.",
+  "checks": {
+    "fmt": true,
+    "strict_default_and_metal_all_targets_clippy": true,
+    "default": {
+      "passed": 450,
+      "ignored": 20
+    },
+    "metal_feature": {
+      "passed": 531,
+      "ignored": 169
+    },
+    "new_unit_tests": 5,
+    "existing_history_controls": 6,
+    "existing_kv_controls": 8,
+    "owned_jobs_closed": true,
+    "compile_only_failure_preserved": true
+  },
+  "tiny_scalar_target_executed": true,
+  "gpu_executed": false,
+  "real_model_executed": false,
+  "text_qualified": false,
+  "performance_qualified": false,
+  "evidence": {
+    "proposal": {
+      "path": "artifacts/new-goal-b4c2-scalar-proposal-v1/manifest.json",
+      "bytes": 8629,
+      "sha256": "0214539865df5b100e44fea9067d7e0dd9833e0bb4117428049a5c0a703bd275"
+    },
+    "private_checks": {
+      "path": "artifacts/new-goal-b4c2-scalar-proposal-v1/checks-attempt-03/checks.json",
+      "bytes": 2775852,
+      "sha256": "291866701bca8e92ee7d0f7a2255bc106a246b9277fb80175f188aa267468de8"
+    },
+    "private_summary": {
+      "path": "artifacts/new-goal-b4c2-scalar-proposal-v1/checks-summary.json",
+      "bytes": 3155,
+      "sha256": "b77a792bb38e272dbeae175841b1a3b90e9298e41901ac3aa6cad7fc3f07f5ff"
+    },
+    "independent_code_private_verification": {
+      "path": "artifacts/new-goal-b4c2-scalar-independent-review-v1/private-verification.json",
+      "bytes": 4469,
+      "sha256": "18b4b1ddaa78ff874be35b22983a428e74401d28c7f0f50372cf657204c9556f"
+    },
+    "parent_checks": {
+      "path": "artifacts/new-goal-b4c2-graph-checks-v1/checks.json",
+      "bytes": 871922,
+      "sha256": "d36d2d99ddf0b37cd16a3338995191954d1fa3b13e6498bfe68c989ce884f7a8"
+    },
+    "source_manifest": {
+      "path": "tests/fixtures/lfm2-scalar-v1/manifest.json",
+      "bytes": 82561,
+      "sha256": "876b55cd158ccc98b71b63fcd3b4c03d06e979fdada58dbca64921e2fe8d736b"
+    },
+    "source_independent_review": {
+      "path": "artifacts/new-goal-b4c1-reference-independent-review-v1/saved-source-review.json",
+      "bytes": 3367,
+      "sha256": "69e737c0c9a16903dd5e6c4a9f0664dae3ca58f48082acd3501b4e3239056a62"
+    }
+  },
+  "remaining": [
+    "Native Half RMS/conv/GQA leaves and resident composition",
+    "Verified real representative and bounded Mac source/native qualification",
+    "Context/app/text/adoption quality and device evidence"
+  ]
+}

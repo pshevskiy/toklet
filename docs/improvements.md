@@ -7479,3 +7479,21 @@ portable controls and byte-identical six-file export/replay. Astra audits every
 BF16 gains, actual head64/two-KV GQA, unactivated three-tap histories and declared
 mixed FP64/FP32 stores before target outcomes. Rust graph, complete compound
 publication and native/device qualification remain separate tasks.
+
+The independent scalar source task is committed as `97d8b4d` after exact15-file
+Astra approval. B4c2 now implements the tiny Rust graph against those immutable
+fixtures, preserving the fixed scalar gate and distinct target state checks.
+
+B4c2's first private compile stops on Rust literal spelling and a sizing-error
+conversion before numerical tests. The failed receipt is retained; the corrected
+attempt preserves source expectations, gates and numerical operators.
+
+[B4c2 tiny scalar hybrid](lfm2-scalar-hybrid.md) composes the shared projection,
+norm, rotary, full GQA, convolution and MLP leaves without new numerical kernels.
+One validation/publication boundary protects KV, convolution, tokens and logits;
+reset prevalidates both state families. The fixed source gate passes1,651,856
+comparisons; unique coverage is405,584 math plus99,072 active state values,
+with44,288 inactive source-zero slots explicitly excluded. Exact partition,
+rollback/retry and warmed zero-allocation controls pass. Full checks pass450
+default/531 Metal-feature tests and strict Clippy/formatting. Astra verifies
+code and private evidence; scalar tiny scope does not qualify native/real models.

@@ -266,11 +266,36 @@ impl WindowKvCache {
         })
     }
 
+    /// The concrete hybrid boundary validates every state family before copies.
+    pub(super) fn validate_step(
+        &self,
+        frame: &PreparedKv<'_>,
+        offset: usize,
+        tokens: usize,
+        generation: u64,
+    ) -> Result<(), Error> {
+        if self.offset != offset || self.generation != generation || frame.tokens != tokens {
+            return Err(Error::InvalidConfig("mixed KV/session step"));
+        }
+        self.validate(frame)
+    }
+    pub(super) fn validate_reset(&self) -> Result<(), Error> {
+        self.generation
+            .checked_add(1)
+            .ok_or(Error::InvalidConfig("KV reset generation exhausted"))?;
+        Ok(())
+    }
+    /// Call only immediately after all participating reset validations succeed.
+    pub(super) fn reset_validated(&mut self) {
+        self.offset = 0;
+        self.generation += 1;
+    }
+
     pub fn commit(&mut self, frame: &PreparedKv<'_>) -> Result<(), Error> {
         commit_batch(std::slice::from_mut(self), std::slice::from_ref(frame))
     }
 
-    fn commit_validated(&mut self, frame: &PreparedKv<'_>) {
+    pub(super) fn commit_validated(&mut self, frame: &PreparedKv<'_>) {
         // All owners were validated before any writes. Each backend applies
         // the same row descriptors to its own head strides and scalar storage.
         let runs = window_rows::copy_runs(
@@ -316,14 +341,10 @@ pub fn commit_batch(caches: &mut [WindowKvCache], frames: &[PreparedKv<'_>]) -> 
 /// Existing borrowed proposals become stale, even if their old offset was zero.
 pub fn reset_batch(caches: &mut [WindowKvCache]) -> Result<(), Error> {
     for cache in caches.iter() {
-        cache
-            .generation
-            .checked_add(1)
-            .ok_or(Error::InvalidConfig("KV reset generation exhausted"))?;
+        cache.validate_reset()?;
     }
     for cache in caches {
-        cache.offset = 0;
-        cache.generation += 1;
+        cache.reset_validated();
     }
     Ok(())
 }

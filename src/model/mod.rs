@@ -12,6 +12,7 @@ mod cache;
 pub mod gemma3;
 pub mod gemma_packed;
 pub mod gemma_reference;
+pub mod lfm2;
 pub(crate) mod packed_operations;
 mod position;
 pub mod shared_kv;

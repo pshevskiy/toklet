@@ -80,6 +80,11 @@ impl History {
     pub fn generation(&self) -> u64 {
         self.generation
     }
+    #[cfg(test)]
+    pub(super) fn set_generation_for_test(&mut self, generation: u64) {
+        self.generation = generation;
+    }
+
     pub fn committed(&self) -> &[f32] {
         &self.committed
     }
@@ -204,6 +209,37 @@ impl History {
         )?;
         Ok(())
     }
+    pub(super) fn validate_step(
+        &self,
+        frame: &Prepared<'_>,
+        offset: usize,
+        tokens: usize,
+        generation: u64,
+    ) -> Result<(), Error> {
+        if self.offset != offset || self.generation != generation || frame.tokens != tokens {
+            return Err(Error::InvalidConfig("mixed convolution/session step"));
+        }
+        self.validate(frame)
+    }
+    /// Call only after all participating owner/session validations, without any
+    /// intervening mutation. The concrete hybrid boundary owns that sequence.
+    pub(super) fn commit_validated(&mut self, frame: &Prepared<'_>) {
+        self.committed.copy_from_slice(frame.candidate);
+        self.offset += frame.tokens;
+        self.generation += 1;
+    }
+    pub(super) fn validate_reset(&self) -> Result<(), Error> {
+        self.generation.checked_add(1).ok_or(Error::InvalidConfig(
+            "convolution reset generation exhausted",
+        ))?;
+        Ok(())
+    }
+    pub(super) fn reset_validated(&mut self) {
+        self.committed.fill(0.0);
+        self.offset = 0;
+        self.generation += 1;
+    }
+
     pub fn commit(&mut self, frame: &Prepared<'_>) -> Result<(), Error> {
         commit_batch(std::slice::from_mut(self), std::slice::from_ref(frame))
     }
@@ -234,9 +270,7 @@ pub fn commit_batch(histories: &mut [History], frames: &[Prepared<'_>]) -> Resul
         history.validate(frame)?;
     }
     for (history, frame) in histories.iter_mut().zip(frames) {
-        history.committed.copy_from_slice(frame.candidate);
-        history.offset += frame.tokens;
-        history.generation += 1;
+        history.commit_validated(frame);
     }
     Ok(())
 }
@@ -253,9 +287,7 @@ pub fn reset_batch(histories: &mut [History]) -> Result<(), Error> {
             ))?;
     }
     for history in histories {
-        history.committed.fill(0.0);
-        history.offset = 0;
-        history.generation += 1;
+        history.reset_validated();
     }
     Ok(())
 }

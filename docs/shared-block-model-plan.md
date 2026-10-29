@@ -144,8 +144,9 @@ checking/review. All18,537,288 selected values retain fatal coverage. Earlier
 ordinary app/Chat, declared full window and iPhone stay separate B5/M8 work.
 B4a's strict LFM2 cold plan and B4b's standalone scalar history are complete.
 See the [cold report](lfm2-cold-plan.md) and [history report](short-conv3-history.md).
-Next is B4c's independent tiny hybrid reference and composition; real runtime
-admission remains pending through B4c–e.
+B4c's [independent tiny scalar hybrid](lfm2-scalar-hybrid.md) now passes. Next is
+B4d's resident leaf/composition qualification; real runtime admission remains
+pending through B4d–e.
 
 | Task | Concrete delivery | Required checks |
 | --- | --- | --- |
