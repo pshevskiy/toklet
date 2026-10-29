@@ -29,6 +29,8 @@ pub use snapshots::SnapshotInfo;
 #[cfg(test)]
 mod gpu_tests;
 #[cfg(test)]
+mod residual_tests;
+#[cfg(test)]
 mod tests;
 #[cfg(test)]
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -912,7 +914,7 @@ impl<'m> Session<'m> {
             self.capture(command, base + 12, &s.next.raw)?;
             m.gpu.encode(
                 command,
-                Kernel::Residual,
+                Kernel::ResidualClamp,
                 &[&s.next.raw, &s.hidden.raw],
                 &[(n * h) as u32],
                 n * h,
@@ -970,7 +972,7 @@ impl<'m> Session<'m> {
             self.capture(command, base + 20, &s.hidden.raw)?;
             m.gpu.encode(
                 command,
-                Kernel::Residual,
+                Kernel::ResidualClamp,
                 &[&s.hidden.raw, &s.next.raw],
                 &[(n * h) as u32],
                 n * h,

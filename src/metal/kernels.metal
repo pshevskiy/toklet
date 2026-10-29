@@ -208,6 +208,21 @@ kernel void residual(device half* x[[buffer(0)]],device const half* delta[[buffe
     checked_half(x,i,float(x[i])+float(delta[i]),status);
 }
 
+// Explicit FP16 adaptation used by Gemma3 in MLX-LM0.26.3: widen, add,
+// saturate to finite Half range, then store. Invalid inputs must not be hidden
+// by saturation. Independent lanes update only x[i]; delta is read-only.
+kernel void residual_half_clamped(device half* x[[buffer(0)]],device const half* delta[[buffer(1)]],constant uint& n[[buffer(2)]],device atomic_uint* status[[buffer(3)]],uint i[[thread_position_in_grid]]) {
+    if(i>=n)return;
+    ushort a=as_type<ushort>(x[i]),b=as_type<ushort>(delta[i]);
+    if((a&0x7c00u)==0x7c00u || (b&0x7c00u)==0x7c00u) {
+        atomic_fetch_or_explicit(status,1u,memory_order_relaxed);
+        return;
+    }
+    float sum=float(x[i])+float(delta[i]);
+    float bounded=sum>65504.0f?65504.0f:(sum< -65504.0f? -65504.0f:sum);
+    checked_half(x,i,bounded,status);
+}
+
 kernel void silu(device const half* x[[buffer(0)]],device half* out[[buffer(1)]],constant uint& n[[buffer(2)]],device atomic_uint* status[[buffer(3)]],uint i[[thread_position_in_grid]]) {
     if(i>=n)return;
     float v=float(x[i]),e=exp(-abs(v));

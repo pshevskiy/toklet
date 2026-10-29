@@ -7178,3 +7178,55 @@ are byte/layout/provenance results, without model, tokenizer, text, app, iPhone
 or performance execution. See [report](gemma3-artifact-acquisition.md) and
 [evidence](../benchmarks/results/2026-10-29-gemma3-artifact-acquisition-v1.json).
 Next freeze real source IDs/profiles and then qualify native window execution.
+
+The next real-source protocol captures all400 stage identities at eight selected
+case/absolute rows, using a declared NumPy FP32 BLAS NativeHalf reference and
+FP64 diagnostic profile. Only selected full-head distributions are retained.
+Tokenizer-only discovery is replayed with a fresh cache prefix before freezing
+IDs; no numerical model has run. The loader proposal retains one original byte
+payload with small BF16 gamma conversion, explicit requested capacity1..544 and
+separate declared32768/window512 metadata. For capacities below512, physical
+retention narrows to capacity without changing any admitted attention position.
+
+The original-byte loader passes all eight cold commands on its first checked
+run:431 default tests,327 Metal-library tests and26 overlapping targeted
+Gemma3/Gemma4 controls in debug/release, plus strict checks and release freeze.
+All ten real-reference portable controls also pass. Review corrects an assumption
+about score visibility: the existing kernel stores raw dot scores for materialized
+keys, including masked ones; probabilities alone are zero. The unchanged source
+contract compares only materialized native columns and retains actual masked-zero
+probability assertions. No source/target/gate change follows from that correction.
+
+The first actual source graph exposed a required Half adaptation: BOS layer8
+adds64864+14520=79384 and the strict Half store rejects it. Partial398 groups/
+669568 bytes and the clean failed source receipt are preserved. Independent
+Astra primary/saved-byte analysis confirms MLX-LM0.26.3 clips both FP16 residual
+additions to±65504 after FP32 addition; ordinary BF16/FP32 semantics differ.
+The authenticated gamma708/effective709 stays unchanged. A separately named
+clipped profile and Gemma3-only operation are prepared with unchanged other
+finite checks/gates; generic residual behavior remains. One native author hit
+service capacity twice, so the parent drafts implementation for Astra review.
+
+The corrected source passes twelve portable controls. The native change passes
+formatting, strict Metal Clippy, library regressions and a fresh release binary
+freeze. Astra independently confirms the original residual shader and existing
+kernel indices remain intact; only Gemma3 selects the new clipped operation.
+Actual GPU primitive and tiny graph checks precede the new source export. The
+failed unclipped export remains separate evidence; no real-model qualification
+is claimed from these build and portable results.
+
+All four explicit release GPU jobs pass. The clipped primitive preserves exact
+Half words across20,962 active values, rejects five invalid inputs, preserves
+guards/sticky status, observes a real same-command store boundary and retains
+the legacy residual overflow result. Eight warmed primitive encodes and twelve
+complete tiny forwards allocate zero Rust objects in their stated scopes. The
+complete tiny graph and rotary gates remain unchanged and pass. Independent
+saved-output review precedes publication; real-model qualification stays open.
+
+Astra independently rescored all primitive words and the complete tiny graph
+regression, including170 physical states and all guard/store/error controls.
+The correction qualifies as a separate task; see the
+[report](gemma3-half-residual.md) and
+[evidence](../benchmarks/results/2026-10-29-gemma3-half-residual-v1.json).
+The real original-byte loader and corrected numerical reference remain distinct
+follow-on work. Their uncommitted preparation is not a real-model support claim.

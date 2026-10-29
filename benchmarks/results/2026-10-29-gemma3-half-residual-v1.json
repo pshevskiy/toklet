@@ -1,0 +1,131 @@
+{
+  "format": "toklet-gemma3-half-residual-v1",
+  "date": "2026-10-29",
+  "base_revision": "f6015b4121d8f150b019a877cdae7ec3ae498632",
+  "passed": true,
+  "scope": "Explicit finite clipped-Half residual and complete tiny resident Gemma3 regression on release Mac; no real model qualification",
+  "hardware": {
+    "machine": "MacBookPro18,3",
+    "chip": "Apple M1 Pro",
+    "memory_bytes": 17179869184
+  },
+  "arithmetic": {
+    "inputs": "finite Half",
+    "addition": "FP32",
+    "clip": [
+      -65504,
+      65504
+    ],
+    "store": "Half, ordinary rounding",
+    "invalid_inputs": "sticky error, no store at invalid site",
+    "generic_residual_changed": false,
+    "gemma3_sites": 2,
+    "source_profile_change_explicit": true,
+    "other_gates_changed": false
+  },
+  "primitive": {
+    "active_bulk_values": 20962,
+    "literal_cases": 16,
+    "invalid_sites": 5,
+    "same_command_boundary_values": 64,
+    "guards_and_read_only_inputs_exact": true,
+    "legacy_overflow_preserved": true,
+    "release_encode_allocations": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "allocation_scope": "Rust encode only; command created outside measurement; driver excluded"
+  },
+  "tiny_regression": {
+    "main_values": 428832,
+    "stage_snapshots": 2400,
+    "schedules": 16,
+    "main_failures": 0,
+    "main_max_error_gate_fraction": 0.4126969242717473,
+    "physical_snapshots": 170,
+    "guard_words": 59196,
+    "successful_commits": 122,
+    "release_forward_allocations": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "forward_allocation_scope": "Rust full forward including command creation/completion; driver excluded",
+    "rotary_values": 11520,
+    "rotary_main_max_error_gate_fraction": 0.8065817067268914,
+    "rotary_math_max_error_gate_fraction": 0.8402245695219449
+  },
+  "checks": {
+    "formatting": true,
+    "metal_strict_clippy": true,
+    "metal_library_passed": 327,
+    "targeted_debug_passed": 7,
+    "targeted_release_passed": 7,
+    "gpu_jobs": 4,
+    "closed_owned_groups": true
+  },
+  "memory": "18/19/4/1 direct PID samples for four jobs; not continuous peaks or performance qualification",
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b3d-residual-clamp-cold-checks-v1/checks.json",
+      "bytes": 868290,
+      "sha256": "3ff1fd8d67f9bdf6f7f5ed4d167ed08e47e9a55a2e800f1224ca355518adcd0b"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-residual-clamp-independent-review-v1/prospective-review.json",
+      "bytes": 12615,
+      "sha256": "3b1a26e0606030cab3bb30ec6b6d76e61122efe44a216bdebf1000bff740fbf8"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-residual-clamp-gpu-v1/prospective-review.json",
+      "bytes": 406587,
+      "sha256": "e04fcb4a33452ebceffb497051ae1bb3536c288a3dbd3865b791d9a6845b2bbb"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-residual-clamp-gpu-v1/gpu.json",
+      "bytes": 1286182,
+      "sha256": "54c654e6ac17d377124f6cbe397469c71060df16b583dccf7f4b9c7fda1280b7"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-residual-clamp-independent-review-v1/primitive-saved-word-review.json",
+      "bytes": 1611,
+      "sha256": "d78680e426fc079b64f23b7a1f39b3f06ca1e09eda19d4aa4b1bdd879b83da5a"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-residual-clamp-independent-review-v1/tiny-postrun-evidence-review.json",
+      "bytes": 1277001,
+      "sha256": "7fa3ddec48f1a297158d3bd4d1b779fa4a658cab2bdf5c893d930305a62277ae"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-source-v1/source.json",
+      "bytes": 5383176,
+      "sha256": "bc76c037132405eb88cabb6cc3d0d1a1fc9d69b90aa64d29cd7250c37810bebc"
+    },
+    {
+      "path": "artifacts/new-goal-b3d-overflow-investigation-v1/saved-residual-review.json",
+      "bytes": 35445,
+      "sha256": "22c39a13f2abe3f13d706f918e3e3d3d11dae4017d5ea7ac4931705ca0a844e1"
+    }
+  ],
+  "final_publication_review": "artifacts/new-goal-b3d-residual-clamp-publication-v1/final-review.json",
+  "remaining": [
+    "corrected real source export and exact replay",
+    "actual real native window/text/resource comparison",
+    "app/full quality/iPhone qualification"
+  ]
+}
