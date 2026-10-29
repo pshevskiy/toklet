@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B3d3b — implement the reviewed universal actual-input checker, then collect a fresh bounded Gemma3 Mac comparison**.
+Next implementation task: **B3d3b — collect and check a fresh bounded Gemma3 Mac comparison**.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -181,8 +181,9 @@ iPhone, full declared context and adoption quality remain B5/M8 work.
   independent checks; strict final/teacher outputs pass. Astra reviews the proof.
 - [x] Review/commit the [universal native conformance policy](docs/gemma3-native-conformance.md)
   before checker implementation; preserve both historical failed screens.
-- [ ] Implement/review the generic actual-input checker, analytic corruption
+- [x] Implement/review the generic actual-input checker, analytic corruption
   controls and bounded resources; no coordinate whitelist or unsupported skip.
+  [Checked diagnostic](docs/gemma3-conformance-checker.md); fresh qualification pending.
 - [ ] Complete posthoc diagnostics, then a separately frozen fresh capture,
   independent full checking and Astra review before closing B3d3b.
 - [x] B3d3 prerequisite: qualify the source-supported FP16 clamped residual at
@@ -407,3 +408,6 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B3d prospective semantic policy | Astra approves universal coverage design:624 coupled groups/13,185,444 values plus5,808 own-input groups/5,351,844 values. Faithful exact-dot Half brackets, exact basic/RMS stores and independently propagated provider contracts supplement unchanged local coefficients; unsupported proof is fatal. | [Policy](docs/gemma3-native-conformance.md), plan correction and doc checks/review before commit; checker implementation follows. Full adoption quality/app/phone remain open. |
 | 2026-10-29 | B3d policy committed | Exact five-document Astra review,1,003 existing local-link checks and staged whitespace/content checks pass; prospective policy committed as`ae7a457`. Both rejected screens and every original selected value remain recorded. | Generic checker/corruption implementation is now authorized under that frozen policy; no new target run or engine change. |
 | 2026-10-29 | B4 concrete mechanism selected | Astra verifies cached LFM2-350M metadata/current primary source:6 attention plus10 short-convolution layers, actual FF4608 and two-row per-channel state. B4a–e now separate strict source/adapter, scalar state, tiny hybrid, resident composition and bounded real qualification. Estimated fit is not measured; historical converter identity is unknown. | [Plan](docs/lfm2-hybrid-plan.md); documentation review/commit. B3 remains active; no LFM2 payload or model execution. |
+| 2026-10-29 | B3d generic conformance checker applied | After policy`ae7a457`, Astra approves exact five-file generic checker proposal. All five private synthetic attempts pass; final16 operator plus12 checker controls pass again from live files under23,224 authenticated bindings. All237 Rust/Metal/Cargo files still match the passing native cold checks. | Code review`513ff607da5d7e408f9e5afd9f60f26c76a5d5213e3a9eba790e5db071e579a2`; controls`86fb5c32961f119dd2946dfa34ecdbd9523d8c1e728e6504c27bf841831542b7`. Complete saved-byte diagnostic next, then separately frozen fresh capture; no qualification yet. |
+| 2026-10-29 | B3d complete historical conformance diagnostic | All624 strict coupled groups/13,185,444 values and5,808 actual-input groups/5,351,844 values pass fatal checks;8 projection cases use exact fallback. Every18,537,288 original trajectory value is still reported, retaining84 MAIN/98 WIDE rejections. Single252.36s process closes cleanly, lifetime physical368,150,712 bytes and observed RSS743,981,056 bytes below6GiB. | Diagnostic owner`bd35a1db769d596a3d55cdf4cab87380fb43dd4e97a1f2d6f7a9be5095221057`; eligibility/qualification remain false. Astra saved-result and fresh-controller review next. |
+| 2026-10-29 | B3d checker code task complete | Astra independently audits all6,496 raw records,508 original ranges,9,132 masked+0 words,2,378 memory observations and closed group, preserving84/98 diagnostics. Sixteen operator/twelve reader controls and unchanged source checks pass. | [Report](docs/gemma3-conformance-checker.md); exact staged review and separate checker commit. Eight fallback branches are aggregate reports, not independently replayed retained certificates. Fresh native runner task stays open. |

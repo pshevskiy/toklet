@@ -7375,3 +7375,31 @@ This improves the implementable roadmap; no LFM2 tensor payload, inference,
 physical-fit result or architecture support is claimed. Historical converter
 identity stays unknown; an explicitly authenticated current same-artifact loader
 profile can be qualified independently. B3 remains the active implementation.
+
+LFM2 selection/planning is committed as `a4f6f4c`. The active Gemma3 checker now
+implements the reviewed universal actual-input policy in two small independent
+math/dispatch helpers and a narrow saved-byte reader integration. Sixteen
+operator and twelve reader controls pass from the working tree after all five
+private development attempts passed. Cases include exact cancellation/RMS/Half
+boundaries, discrete intrinsic-set holes, a shared rotary pair, complete400-stage
+inventory, masks, provenance and endpoint eligibility. The old coupled aggregate
+remains separate and unchanged. Astra approves the exact five-file code; all237
+Rust/Metal/Cargo source files still match passing cold checks. Saved-data replay
+and fresh target qualification remain separate pending steps.
+
+The complete historical saved-byte diagnostic passes every new fatal route:
+13,185,444 strict coupled attention/output values and5,351,844 actual-input values,
+with eight exact projection fallbacks and no local semantic/numeric failures.
+All18,537,288 original coupled comparisons are retained:84 MAIN/98 WIDE failures
+remain rejected. The bounded reader finishes in252.36s with a368,150,712-byte
+lifetime physical counter and743,981,056-byte observed RSS maximum, closes its
+owned group and passes every endpoint check. This is diagnostic evidence only;
+fresh collection and independent final review remain mandatory for qualification.
+
+Astra independently authenticates all6,496 raw records,508 original weight ranges,
+9,132 masked positive zeros and2,378 process observations, with the owned group
+absent. The [checker code task](gemma3-conformance-checker.md) closes separately
+from the still-open fresh native runner/qualification task. The eight projection
+fallback branches are reported aggregates, not individually retained independent
+certificates. Both historical rejections and all adoption/app/device limitations
+remain explicit in the tracked result.

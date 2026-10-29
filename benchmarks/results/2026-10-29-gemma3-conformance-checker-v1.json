@@ -1,0 +1,88 @@
+{
+  "format": "toklet-gemma3-conformance-checker-result-v1",
+  "date": "2026-10-29",
+  "status": "checker_code_and_historical_diagnostic_passed_fresh_native_pending",
+  "policy_commit": "ae7a457",
+  "policy": {
+    "path": "docs/gemma3-native-conformance.md",
+    "bytes": 10208,
+    "sha256": "415d493f1aac05c2cc387867e89001e0a7dc9e2f41c2b96d5e27af3b01111ba8"
+  },
+  "engine_arithmetic_changed": false,
+  "reference_or_limits_changed": false,
+  "numerical_qualification": false,
+  "fresh_native_qualification_pending": true,
+  "portable_tests": {
+    "operator": 16,
+    "reader": 12
+  },
+  "coverage": {
+    "coupled_groups": 624,
+    "coupled_values": 13185444,
+    "coupled_failures": 0,
+    "own_input_groups": 5808,
+    "own_input_values": 5351844,
+    "semantic_failures": 0,
+    "local_numeric_failures": 0,
+    "all_original_values": 18537288
+  },
+  "historical_trajectory": {
+    "main_failures": 84,
+    "wide_exceedances": 98,
+    "old_screen_passed": false,
+    "old92_rejection_preserved": true
+  },
+  "reader_observations": {
+    "seconds": 252.3556474582292,
+    "samples": 2378,
+    "maximum_observed_rss_bytes": 743981056,
+    "lifetime_physical_counter_bytes": 368150712,
+    "process_bound_bytes": 6442450944,
+    "owned_group_closed": true
+  },
+  "independent_audit": {
+    "raw_records": 6496,
+    "original_weight_ranges": 508,
+    "masked_positive_zero_words": 9132,
+    "exact_projection_fallback_count_reported": 8,
+    "individual_fallback_certificates_retained": false
+  },
+  "evidence": {
+    "proposal": {
+      "path": "artifacts/new-goal-b3d-conformance-proposal-v1/manifest.json",
+      "bytes": 7830,
+      "sha256": "8c46602013e00d5e5c68b2e517a4c765df5ebbc1ee8c40e875bc7832d3f9f565"
+    },
+    "code_review": {
+      "path": "artifacts/new-goal-b3d-conformance-independent-review-v1/prospective-review.json",
+      "bytes": 10852,
+      "sha256": "513ff607da5d7e408f9e5afd9f60f26c76a5d5213e3a9eba790e5db071e579a2"
+    },
+    "portable_controls": {
+      "path": "artifacts/new-goal-b3d-native-conformance-controls-v1/checks.json",
+      "bytes": 5372909,
+      "sha256": "86fb5c32961f119dd2946dfa34ecdbd9523d8c1e728e6504c27bf841831542b7"
+    },
+    "historical_diagnostic_owner": {
+      "path": "artifacts/new-goal-b3d-native-conformance-posthoc-v1/checks.json",
+      "bytes": 5390250,
+      "sha256": "bd35a1db769d596a3d55cdf4cab87380fb43dd4e97a1f2d6f7a9be5095221057"
+    },
+    "historical_diagnostic": {
+      "path": "artifacts/new-goal-b3d-native-conformance-posthoc-v1/check.json",
+      "bytes": 108800,
+      "sha256": "d60e50231e2072f200903e85bec97e60a4aaf50c3a9dfc7b8c6c0e779cc71d93"
+    },
+    "independent_completed_review": {
+      "path": "artifacts/new-goal-b3d-native-conformance-posthoc-independent-review-v1/completed-review.json",
+      "bytes": 6517,
+      "sha256": "68920fc99a031f1d0838380b3b81728a7747a7de78afa1b6d70af4c0a18dec3b"
+    }
+  },
+  "limitations": [
+    "Retrospective diagnostic is never qualification eligible",
+    "Fresh bounded native capture and independent final review remain",
+    "Original unquantized10000-target/100-task quality remains open",
+    "No app/full-window/iPhone/performance claim"
+  ]
+}
