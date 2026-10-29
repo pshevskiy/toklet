@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5c1 — typed Swift limits and capacity consumers**.
+Next implementation task: **B5c2 — isolated worker previews and stale-result handling**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -304,9 +304,9 @@ separate requirements below. Further model admissions require their own scope.
 - [ ] B5c: validate typed Swift limits/capacity reports and sequence their
   requests on the dedicated worker, with explicit request identity and stale
   result handling before wiring user settings.
-  - [ ] B5c1: typed limits/capacity validation and synchronous inspect wrappers;
-    preserve the old resource decoder, add malformed/boundary/request controls
-    and actual producer checks. Private proposal is under Astra review.
+  - [x] B5c1: [typed Swift limits/capacity consumers](docs/swift-planning-consumers.md)
+    preserve the old decoder and pass 75 new rejection controls, default/Metal
+    producer checks and unchanged decoder/worker regressions with Astra audit.
   - [ ] B5c2: dedicated-worker preview sequencing and explicit request/artifact
     selection identity, stale results and safe teardown before user controls.
 - [ ] Report declared context, implemented backend range, budget/device fit,
@@ -580,3 +580,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | B5a native capacity API checked | Alias-preserving Swift retry passes with explicit 13+1 successful-job provenance, preserving the failed original. All five exact Mac planning/C/Swift jobs pass and Astra independently audits current source/products/29 exports/closed groups. Default457/Metal564 tests pass (20/184 ignored). | [API report](docs/native-capacity-report.md); exact staged task review and commit next. B5b centralizes the actual ordinary factory context caps and adds metadata-only range facts before Swift/UI work. |
 | 2026-10-30 | B5a committed / B5b metadata limits applied | Capacity API committed as `0027ad6` after exact ten-file Astra review. The next seven-file shared ordinary factory/context-limit snapshot passes independent code review and guarded application. Existing caps/diagnostic routes are preserved; Phi3's existing sliding-window bound is reported explicitly. | Fresh default/Metal/C ABI/planning checks next. Swift decoding/worker integration is separate B5c; no app range/settings claim from the new metadata API. |
 | 2026-10-30 | B5b limits API checked | Four new integration tests and one native ABI control pass with all14freshcoldjobs/default462/Metal569 tests (20/184 ignored). Five exactMacplanning/newC/oldSwift jobs pass, all30exports match, and Astra audits unchanged admission/currentsource/products/runtime/closure. | [Limits report](docs/native-context-limits.md); exact staged task review/commit next. B5c1 typed Swift consumers are prepared privately; worker/UI/settings remain open. |
+| 2026-10-30 | B5b committed / B5c1 typed consumers applied | Shared limits API committed as `c900d2a` after exact twelve-file Astra review. Five-file Swift limits/capacity consumers and controls pass independent static review and guarded application; old resource decoder guard is preserved under its original arguments. | Separate owned Swift synthetic/actual-producer and unchanged decoder/worker regressions next. No request-worker, UI, settings, source identity or cross-profile authorization is introduced. |
+| 2026-10-30 | B5c1 typed consumers checked | Nine build/CPU jobs and two Mac jobs pass; new Swift6 consumers reject75malformed/boundary controls, actual default/Metal producer checks pass, and oldSwift5regressions preserve25wire controls plus3Metalcleanup cases/source revalidation. Exact333engine/header inputs justify inheritedRust checks/Metalarchive. | [Consumer report](docs/swift-planning-consumers.md); exact staged review/taskcommit next, then separate preview command/request-selection identity in B5c2. No worker/UI/source-identity qualification yet. |

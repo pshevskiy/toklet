@@ -1,0 +1,186 @@
+{
+  "format": "toklet-swift-planning-consumers-result-v1",
+  "date": "2026-10-30",
+  "base_revision": "c900d2a",
+  "status": "typed_swift_limits_capacity_consumers_checked",
+  "source_files": [
+    {
+      "path": "apple/Harness/NativeCapacityPlan.swift",
+      "bytes": 8480,
+      "sha256": "a07fa4a5ae839b5f389f4f2c86a0116b0bac3676f11a11b046fda8bf5a402519"
+    },
+    {
+      "path": "apple/Harness/NativeContextLimits.swift",
+      "bytes": 6818,
+      "sha256": "b25b5bb43e88f7431d56f40632cfe2ca341431ed430347feb6e85eb9dcb6883a"
+    },
+    {
+      "path": "apple/Harness/NativeResourcePlan.swift",
+      "bytes": 7876,
+      "sha256": "8d439582bacd7315d58fd9adbac456556e639f5c560b7407f9f2d749343e5732"
+    },
+    {
+      "path": "apple/tests/swift/PlanningTypesMain.swift",
+      "bytes": 16342,
+      "sha256": "788ac912fb93259850966cc35203086660113220a83913e9a9f32463ac2855c4"
+    },
+    {
+      "path": "apple/tests/swift/PlanningTypesSmokeMain.swift",
+      "bytes": 4781,
+      "sha256": "7dc98330c3201db23a71516db01792cd25ad7d658202601f0b1336e7aad46422"
+    }
+  ],
+  "contracts": {
+    "old_resource_decode_and_inspector_preserved": true,
+    "new_limits_profile_states_and_enforced_bounds": true,
+    "capacity_explicit_request_and_point_witnesses": true,
+    "separate_loading_fit_flags": true,
+    "payload_identity_inferred": false,
+    "audited_capacity_authentication_inferred": false,
+    "worker_ui_project_integration": false
+  },
+  "verification": {
+    "cold_build_compile_cpu_jobs": 9,
+    "mac_jobs": 2,
+    "synthetic_rejected_controls": 75,
+    "actual_c_producer_default": true,
+    "actual_c_producer_metal": true,
+    "legacy_wire_mutations_each_mode": 25,
+    "legacy_queued_cleanup_cases_metal": 3,
+    "legacy_source_revalidation_after_plan": true,
+    "new_swift_language_version": 6,
+    "legacy_swift_language_version": 5,
+    "strict_concurrency_and_warnings_as_errors": true,
+    "unchanged_engine_header_inputs": 333,
+    "rust_checks_reused": true,
+    "inherited_default_tests": 462,
+    "inherited_metal_tests": 569,
+    "inherited_ignored": [
+      20,
+      184
+    ],
+    "default_library_built": true,
+    "metal_library_reused_by_identity": true
+  },
+  "products": {
+    "default_library": {
+      "bytes": 24454128,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c1-swift-planning-verification-owner-v1/retained/default_library.a",
+      "sha256": "7d6003e581dbb5e24678ff34c572b7566c6b7685d78af1a1699dbbfacf688e1a"
+    },
+    "legacy-default": {
+      "bytes": 10857248,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c1-swift-planning-verification-owner-v1/retained/legacy-default",
+      "sha256": "b1f1a9f8f01bd49254a8abf6695fb9a30b8590cee4f6a9fe8213f28e7bc6fb34"
+    },
+    "legacy-metal": {
+      "bytes": 12345424,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c1-swift-planning-verification-owner-v1/retained/legacy-metal",
+      "sha256": "044a01fcc6fda779dab00b5364d3a1a548e5c7ef6f8c37ed7da8c7f7fee178e2"
+    },
+    "metal_library": {
+      "bytes": 26962624,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c1-swift-planning-verification-owner-v1/retained/metal_library.a",
+      "sha256": "7960620117b9e41966a99ea75a534b95d206485343c80aba040f419344ea358f"
+    },
+    "producer-default": {
+      "bytes": 10739248,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c1-swift-planning-verification-owner-v1/retained/producer-default",
+      "sha256": "429764610965e506c8bcc5b60ad3461f0497971d6df9ed3c8b8a8fe055fe7d2b"
+    },
+    "producer-metal": {
+      "bytes": 12227552,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c1-swift-planning-verification-owner-v1/retained/producer-metal",
+      "sha256": "2e9232035f56908b61568c295bf7ab6ad1464e9f540da1bc7a3fdefbffa60090"
+    },
+    "synthetic": {
+      "bytes": 10816920,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c1-swift-planning-verification-owner-v1/retained/synthetic",
+      "sha256": "cf153be07026284daf9a1a9bfdf38478e70420e88b86e0adf39ab20c4b43994c"
+    }
+  },
+  "hardware_commands": [
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c1-swift-planning-verification-owner-v1/retained/producer-metal",
+        "/Users/coloner/work/rust/toklet/tests/fixtures/mlx-qwen3-v1/tied",
+        "metal"
+      ],
+      "pid": 6265,
+      "exit_code": 0,
+      "process_group_closed": true,
+      "live_samples": 17,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 6111736,
+        "phys_footprint": 6111736,
+        "resident_size": 17924096
+      }
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c1-swift-planning-verification-owner-v1/retained/legacy-metal",
+        "/Users/coloner/work/rust/toklet",
+        "metal"
+      ],
+      "pid": 6285,
+      "exit_code": 0,
+      "process_group_closed": true,
+      "live_samples": 11,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 6603280,
+        "phys_footprint": 6603280,
+        "resident_size": 18399232
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b5c1-swift-planning-proposal-v1/manifest.json",
+      "bytes": 6050,
+      "sha256": "cce99c6579a9c126327a05baefb2b5a0f6ce8e15e2995d9c106ea47aae960c58"
+    },
+    {
+      "path": "artifacts/new-goal-b5c1-swift-planning-independent-review-v1/prospective-review.json",
+      "bytes": 5359,
+      "sha256": "0e86162f93b415443a21dcaa2e8397b4aa70d45e3206d370067b30223b2a680b"
+    },
+    {
+      "path": "artifacts/new-goal-b5c1-swift-planning-verification-owner-v1/inheritance.json",
+      "bytes": 61991,
+      "sha256": "eef4c04c37908a250655b7d6fc3e135ae2e5d0df9f0c1ec848a85eebdc5b4983"
+    },
+    {
+      "path": "artifacts/new-goal-b5c1-swift-planning-verification-owner-v1/cold-v1/checks.json",
+      "bytes": 1268715,
+      "sha256": "33b4c8e7a6321334c79906bf4d9c1bc2ef27a96a648a0940a15712d14162e31b"
+    },
+    {
+      "path": "artifacts/new-goal-b5c1-swift-planning-verification-owner-v1/package.json",
+      "bytes": 1442655,
+      "sha256": "e976976476cb0bd72ee0872bdf0ea4f3e02d1fe86c638f161e393082f1c6864d"
+    },
+    {
+      "path": "artifacts/new-goal-b5c1-swift-planning-verification-owner-v1/launch-review.json",
+      "bytes": 5154,
+      "sha256": "94211ad0719a7b833722947023668b63cdf72a09323693838c9b25a8ebf47a99"
+    },
+    {
+      "path": "artifacts/new-goal-b5c1-swift-planning-verification-owner-v1/hardware-v1/checks.json",
+      "bytes": 1253169,
+      "sha256": "ce222f1d4749b2f5240069fd2dcaf847624dbecad606d2038244d0c26f713ed6"
+    },
+    {
+      "path": "artifacts/new-goal-b5c1-swift-planning-verification-independent-review-v1/saved-review.json",
+      "bytes": 26197,
+      "sha256": "1cc8d3b3b8ceabbec56fae722d978c3d3081a7759e7d45de04dfe2af94f9e515"
+    }
+  ],
+  "limits": [
+    "Current wrappers are standalone consumers; worker/request/UI/settings/project integration remains separate.",
+    "Reports do not authorize load, authenticate payloads or bind separate profiles/source observations.",
+    "Resource ledger at requested upper differs from a lower selected point footprint.",
+    "Actual producer checks are compiled assertions; full payloads are not retained for another independent saved-byte decoder.",
+    "Legacy regression loads tiny owners only; no generation/real-model/enlarged-context/phone/whole-app/performance qualification.",
+    "Sparse process observations are not complete peaks."
+  ]
+}

@@ -8195,3 +8195,27 @@ verifies all actual products, source/runtime/aliases and closed groups.
 compiled assertion scope, without a real-model forward or new context/factory/
 phone qualification. Typed Swift consumers and request/worker/UI integration
 remain separate. This checked task is ready for its exact staged review/commit.
+
+The shared limits API is committed as `c900d2a`. B5c1's reviewed typed Swift
+limits/capacity consumers are applied with strict profile/state/bounds/request,
+ledger/fit and adjacent-witness validation. The existing resource decoder
+reuses an extracted guard with its old arguments and behavior unchanged.
+No directory-based payload identity, audited-profile authentication or load
+permission is inferred from matching reports. Standalone synthetic and actual
+producer/default/Metal checks plus the unchanged decoder/worker regression are
+pending; no worker, settings or UI integration has been applied.
+
+Typed planning consumers pass nine build/compile/CPU jobs and two Mac checks,
+including 75 new synthetic rejections, actual C producers in both build modes,
+and the unchanged old decoder/worker regression's 25 wire mutations per mode,
+three Metal cleanup paths and source revalidation. New code compiles under
+strict Swift 6; the old worker regression retains strict Swift 5. Exact 333-input
+engine/header identity proof reuses the checked Rust suites and Metal archive;
+only the default archive is rebuilt.
+
+Astra independently verifies all inputs, seven products, aliases/runtime, raw
+results and closed groups. [Consumer evidence](swift-planning-consumers.md)
+keeps compiled-assertion and standalone scope explicit. This task neither
+changes worker/UI/project membership nor infers payload identity or audited
+capacity authentication. B5c2 next separates preview results/identities from
+active model/session/chat and generation evidence.

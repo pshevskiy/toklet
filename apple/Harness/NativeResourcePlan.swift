@@ -50,27 +50,37 @@ struct NativeResourcePlan: Decodable, Sendable {
         guard !data.isEmpty, data.count <= Int(TOKLET_MAX_COMPATIBILITY_JSON_BYTES) else { throw failure("Invalid runtime report length") }
         let decoder = JSONDecoder(); decoder.keyDecodingStrategy = .convertFromSnakeCase
         let value = try decoder.decode(Self.self,from:data)
-        guard value.schemaVersion == 1, !value.deviceName.isEmpty, value.deviceName.utf8.count <= 512,
-              value.maximumBufferBytes > 0,
-              value.requestedLoadContext == capacity, value.requestedCapacity == capacity,
-              value.requestedChunkSize == chunk, value.requestedPositionOffset == 0,
-              value.requestedLoadBudgetBytes == budget, value.requestedSessionBudgetBytes == budget,
-              value.projection == "MlxAffine", value.normalization == "Compensated", value.readback == "FullLogits",
-              !value.numericalBuffersAllocated, value.payloadValidationRequired, !value.qualificationEvaluated,
-              value.sessionMemory.weightsBytes == value.residentWeightsBytes,
-              (value.sessionMemory.positionalBytes ?? 0) == (value.positionalResidentBytes ?? 0),
-              value.sessionMemory.sum == value.sessionMemory.admittedBytes,
-              value.residentWeightsBytes > 0, value.sourcePayloadBytes > 0,
-              value.sourceAdmittedLoadBytes >= value.sourcePayloadBytes,
-              let residentBytes = value.modelResidentBytes,
-              value.residentAdmittedLoadBytes >= residentBytes,
-              value.fitsSourceLoadBudget == (value.sourceAdmittedLoadBytes <= budget),
-              value.fitsResidentLoadBudget == (value.residentAdmittedLoadBytes <= budget),
-              value.fitsSessionBudget == (value.sessionMemory.admittedBytes <= budget),
-              value.fitsRequestedBudgets == (value.fitsSourceLoadBudget && value.fitsResidentLoadBudget && value.fitsSessionBudget) else {
-            throw failure("Runtime report does not match the request or accounting contract")
+        return try value.validated(context:capacity,capacity:capacity,chunk:chunk,offset:0,
+                                   loadBudget:budget,sessionBudget:budget,
+                                   normalization:"Compensated",readback:"FullLogits",expectedAttention:nil)
+    }
+    // Same accounting guard used by the old single-capacity decoder. Request
+    // domain validation belongs to each caller; the legacy decoder is unchanged.
+    func validated(context: UInt32, capacity: UInt32, chunk: UInt32, offset: UInt32,
+                   loadBudget: UInt64, sessionBudget: UInt64, normalization: String,
+                   readback: String, expectedAttention: Attention?) throws -> Self {
+        guard self.schemaVersion == 1, !self.deviceName.isEmpty, self.deviceName.utf8.count <= 512,
+              self.maximumBufferBytes > 0,
+              self.requestedLoadContext == context, self.requestedCapacity == capacity,
+              self.requestedChunkSize == chunk, self.requestedPositionOffset == offset,
+              self.requestedLoadBudgetBytes == loadBudget, self.requestedSessionBudgetBytes == sessionBudget,
+              self.projection == "MlxAffine", self.normalization == normalization, self.readback == readback,
+              expectedAttention == nil || self.attention == expectedAttention,
+              !self.numericalBuffersAllocated, self.payloadValidationRequired, !self.qualificationEvaluated,
+              self.sessionMemory.weightsBytes == self.residentWeightsBytes,
+              (self.sessionMemory.positionalBytes ?? 0) == (self.positionalResidentBytes ?? 0),
+              self.sessionMemory.sum == self.sessionMemory.admittedBytes,
+              self.residentWeightsBytes > 0, self.sourcePayloadBytes > 0,
+              self.sourceAdmittedLoadBytes >= self.sourcePayloadBytes,
+              let residentBytes = self.modelResidentBytes,
+              self.residentAdmittedLoadBytes >= residentBytes,
+              self.fitsSourceLoadBudget == (self.sourceAdmittedLoadBytes <= loadBudget),
+              self.fitsResidentLoadBudget == (self.residentAdmittedLoadBytes <= loadBudget),
+              self.fitsSessionBudget == (self.sessionMemory.admittedBytes <= sessionBudget),
+              self.fitsRequestedBudgets == (self.fitsSourceLoadBudget && self.fitsResidentLoadBudget && self.fitsSessionBudget) else {
+            throw Self.failure("Runtime report does not match the request or accounting contract")
         }
-        return value
+        return self
     }
     private static func failure(_ message: String, code: UInt32 = TOKLET_INVALID) -> NSError {
         NSError(domain:"TokletResourcePlan",code:Int(code),userInfo:[NSLocalizedDescriptionKey:message])

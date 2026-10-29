@@ -48,8 +48,8 @@ Callers select an enforced upper, then use the
 [native numerical capacity report](native-capacity-report.md), honor its separate
 loading/session fit results, and revalidate at load. This snapshot is historical;
 it reserves no memory and cannot authenticate a different profile or stale
-artifact. Typed Swift consumers and worker/request-identity handling follow as
-separate tasks. No app setting or factory admission changes in this task.
+artifact. [Typed Swift consumers](swift-planning-consumers.md) now validate both report
+contracts; worker/request-identity handling follows as a separate task. No app setting or factory admission changes in this task.
 
 Four new download-independent integration tests exercise the ordinary families,
 declaration/global/graph boundaries, Phi3 windows 7/511/512/2047, scalar-versus-
