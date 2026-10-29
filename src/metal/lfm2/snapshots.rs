@@ -388,3 +388,42 @@ mod cold_tests {
         assert_eq!(host - small_host, 12 * 16 * 32 * 511 * 4);
     }
 }
+
+#[cfg(test)]
+#[derive(Clone, Copy)]
+pub(super) struct CaptureSlot {
+    pub slot: usize,
+    pub layer: Option<usize>,
+    pub stage: &'static str,
+    pub width: usize,
+    pub half: bool,
+    pub scores: bool,
+    pub address: usize,
+    pub device: u64,
+}
+#[cfg(test)]
+impl Session<'_> {
+    // Raw terminal scratch is observable even when publication failed. The
+    // caller labels that attempt; this never changes diagnostic validity.
+    pub(super) fn visit_capture_slots(
+        &self,
+        mut visit: impl FnMut(CaptureSlot, &[u32]) -> Result<()>,
+    ) -> Result<()> {
+        self.cache.test_safe_read()?;
+        for (slot, s) in self.snapshots.iter().enumerate() {
+            let b = s.buffer.as_ref().unwrap();
+            let info = CaptureSlot {
+                slot,
+                layer: s.layer,
+                stage: s.stage,
+                width: s.width,
+                half: s.half,
+                scores: s.scores,
+                address: b.raw.contents().as_ptr() as usize,
+                device: b.raw.device().registryID(),
+            };
+            b.with_slice(|words| visit(info, words))?;
+        }
+        Ok(())
+    }
+}

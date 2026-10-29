@@ -1,0 +1,221 @@
+{
+  "format": "toklet-lfm2-capture-io-result-v1",
+  "date": "2026-10-29",
+  "base_revision": "333de0f",
+  "task": "M8 B4e3c2a: bounded test-only raw writer and terminal borrowed visitors",
+  "status": "cpu_writer_controls_and_tiny_gpu_visitor_parity_pass_real_runner_pending",
+  "source_files": [
+    {
+      "path": "src/metal/lfm2.rs",
+      "bytes": 33482,
+      "sha256": "1ef67e1e40be7ef88206bfdb7c6cd8ee166cbdcc9e352fba00a8bca77f1332e6"
+    },
+    {
+      "path": "src/metal/lfm2/real_capture.rs",
+      "bytes": 25620,
+      "sha256": "e2dc71b4f813fc29e23f0374bccecc55c3705508354a8015168d43dd62a86696"
+    },
+    {
+      "path": "src/metal/lfm2/snapshots.rs",
+      "bytes": 14364,
+      "sha256": "ec75d6ed4a69dd154729ee2e2140ee8dc88de3d513beb264fb63c84daf14f0c0"
+    },
+    {
+      "path": "src/metal/mlx.rs",
+      "bytes": 40964,
+      "sha256": "7d042b1c16a13b28055a27cbb3e771489da4b915d828779450107e0693a9d5a8"
+    },
+    {
+      "path": "src/metal/staged_cache.rs",
+      "bytes": 33879,
+      "sha256": "3b3277b814de0c26365dc01e2c268e33dc776525e1e190d1b2ea1430661d44d6"
+    }
+  ],
+  "production_numerical_changes": false,
+  "verification": {
+    "format": true,
+    "strict_default_and_metal_all_targets_clippy": true,
+    "default_tests": {
+      "passed": 457,
+      "ignored": 20
+    },
+    "metal_tests": {
+      "passed": 560,
+      "ignored": 182
+    },
+    "counts_overlap": true,
+    "new_cpu_writer_controls_under_metal": 4,
+    "release_metal_library_test_build": true,
+    "explicit_tiny_gpu_tests": 1
+  },
+  "writer": {
+    "raw_cap_bytes": 268435456,
+    "journal_cap_bytes": 16777216,
+    "io_block_bytes": 65536,
+    "header_record_cap_bytes": 262144,
+    "boundary_record_cap_bytes": 40000,
+    "array_record_cap_bytes": 384,
+    "other_record_cap_bytes": 512,
+    "array_count_cap": 15000,
+    "boundary_count_cap": 160,
+    "other_count_cap": 2000,
+    "prefix_and_complete_hash_scopes_separate": true,
+    "sticky_failure_and_partial_retention": true,
+    "original_little_endian_words": true
+  },
+  "gpu_scope": {
+    "tiny_forward_calls": 1,
+    "token_rows": 3,
+    "phase_commands": 2,
+    "extra_stamp_commands": 1,
+    "saved_packed_metadata_hashes_independently_reconstructed": 36,
+    "cache_snapshot_parity": "completed reviewed native assertions compare every word to old owned APIs; saved logs expose hashes and parity booleans, not full words",
+    "source_main_wide_comparison_rerun": false,
+    "real_artifact": false,
+    "model_quality_or_admission": false,
+    "performance": false,
+    "sampled_memory_is_complete_peak": false,
+    "phase_command_counts_from_reviewed_control_flow_not_device_instrumentation": true
+  },
+  "raw_records": 103,
+  "raw_record_counts": {
+    "forward": 1,
+    "cache": 4,
+    "status": 1,
+    "snapshot": 57,
+    "packed": 36,
+    "callback_errors": 1,
+    "pending_refusal": 1,
+    "completed_stamp": 1,
+    "summary": 1
+  },
+  "observed_unique_owners": 98,
+  "packed_metadata_representation": "Original raw BF16 scales/biases copied into u32 buffers with zero padding to4-byte length; not widened Float32 metadata",
+  "observed_device_id": 4294969767,
+  "independent_saved_audit": {
+    "path": "artifacts/new-goal-b4e3c2a-capture-io-independent-review-v1/saved-evidence-review.json",
+    "bytes": 10895,
+    "sha256": "cc5e3548f138635b131f93af5f3acae020988f6c02abde35b1884825b8add17d"
+  },
+  "closed_current_groups": 7,
+  "current_package_bindings": 5988,
+  "gpu_binary": {
+    "bytes": 116196416,
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3c2a-capture-io-gpu-proposal-v1/retained-release-test-binary",
+    "profile": {
+      "debug_assertions": false,
+      "debuginfo": 0,
+      "opt_level": "3",
+      "overflow_checks": false,
+      "test": true
+    },
+    "sha256": "5f19fcdec8a3caeb736874bd4815fab9d5378c4243e947aa1e08b5a20b048623"
+  },
+  "commands": [
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b4e3c2a-capture-io-gpu-proposal-v1/retained-release-test-binary",
+        "--exact",
+        "metal::lfm2::real_capture::tiny_terminal_borrowed_visitors_match_owned_observations",
+        "--ignored",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "live_samples": 21,
+      "observed_maxima": {
+        "resident_size": 17809408,
+        "phys_footprint": 6619736,
+        "lifetime_max_phys_footprint": 6619736
+      },
+      "retained_log_bytes": {
+        "stdout": 25779,
+        "stderr": 0
+      }
+    }
+  ],
+  "owned_limits": {
+    "seconds": 300,
+    "direct_process_sample_bytes": 6442450944,
+    "log_bytes_per_stream": 1048576,
+    "cleanup_seconds": 30,
+    "no_global_FSIZE": true
+  },
+  "reader_correction": "Initial saved-reader assumption expected enum Debug name Completed; pinned objc2-metal source defines Completed=4, emitted MTLCommandBufferStatus(4). Corrected only decoding; raw data/native code/gates unchanged and initial reader retained.",
+  "limitations": [
+    "Cache and snapshot parity relies on reviewed completed native whole-word equality assertions; saved hashes/booleans do not permit independent full-word reconstruction there",
+    "The36 packed metadata hashes are independently reconstructed from original fixture bytes; this is not an arithmetic forward/source comparison",
+    "Only one Tiny three-token forward plus stamp-only command; no real-model/native-capture/reader/app/phone/quality/performance qualification",
+    "Direct process samples are sparse and do not establish complete or aggregate process/driver peaks",
+    "Full real runner record-flow counts/coalesced initial-reset histories and strict independent reader remain separate prospective obligations"
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b4e3c2a-capture-io-proposal-v1/manifest.json",
+      "bytes": 7915,
+      "sha256": "d93f070ab003f24b20f8999c6b9f4febb41f4114b929327ca663ec89d6e1f19e"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2a-capture-io-independent-review-v1/prospective-review.json",
+      "bytes": 5449,
+      "sha256": "c8e3d4cb320bf19c8bb064e0009224befccd47be302bd6ec60708988f2b16bde"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2a-capture-io-independent-review-v1/prospective-owner-review.json",
+      "bytes": 3763,
+      "sha256": "0213bb8ae8cdd79ef2e20115472f1ce3272b4cb317db806a4c6032073015c6b8"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2a-capture-io-cold-checks-v1/checks.json",
+      "bytes": 887372,
+      "sha256": "2315cfadb10757050dedbd729bcc4702cd223718323dc949eac8f392217f230c"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2a-capture-io-gpu-proposal-v1/package.json",
+      "bytes": 1481856,
+      "sha256": "283d71a405378e54b5484041f7924895e7f9dea75a2b8e2a4985b057ac0d0917"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2a-capture-io-gpu-proposal-v1/protocol.json",
+      "bytes": 1461,
+      "sha256": "456c25af83e7d8f1f87c77cdcb5f3536fb5c59d0245bd276abf50f8391425cef"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2a-capture-io-gpu-proposal-v1/prospective-review.json",
+      "bytes": 2234,
+      "sha256": "f17ce450128600d469a68f62666e797456f73cd4209ad67331a4e86e42b5f749"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2a-capture-io-gpu-proposal-v1/run.py",
+      "bytes": 8290,
+      "sha256": "247856df0ae81052ca0102bd485c4528aa24bd1aeecfde35d5d1b53969024793"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2a-capture-io-gpu-proposal-v1/gpu.json",
+      "bytes": 1293578,
+      "sha256": "e8ac5a95b8cb92bfef47c7b64a3eb28065f5a818769ada953e958bed1a5bc2e0"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2a-capture-io-independent-review-v1/reader-corrections.json",
+      "bytes": 731,
+      "sha256": "bdceec3601980d2d9ae9fc4c470d96ed386983a41b108d2407b066f294bff6dd"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2a-capture-io-independent-review-v1/saved-evidence-review.json",
+      "bytes": 10895,
+      "sha256": "cc5e3548f138635b131f93af5f3acae020988f6c02abde35b1884825b8add17d"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2a-capture-io-gpu-proposal-v1/tiny_visitors.stdout",
+      "bytes": 25779,
+      "sha256": "6620c0f74274df22b27c1430e58357918516c148dd0ecfed06edc3d8fb3e78e0"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3c2a-capture-io-gpu-proposal-v1/tiny_visitors.stderr",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

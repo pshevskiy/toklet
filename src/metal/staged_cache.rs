@@ -878,3 +878,51 @@ impl Set<'_> {
 
 #[cfg(test)]
 mod gqa_tests;
+
+// Bounded real-capture observation. Existing owned tiny snapshots are unchanged.
+// All callbacks finish synchronously before the next command may be submitted.
+#[cfg(test)]
+impl Set<'_> {
+    pub(super) fn test_visit_buffers(
+        &self,
+        mut visit: impl FnMut(usize, usize, usize, u64, &[u16]) -> Result<()>,
+    ) -> Result<()> {
+        self.test_safe_read()?;
+        for (owner, value) in self.owners[..self.operation.plan.count].iter().enumerate() {
+            let owner_value = value.as_ref().unwrap();
+            for (role, b) in [
+                &owner_value.old_k,
+                &owner_value.old_v,
+                &owner_value.new_k,
+                &owner_value.new_v,
+            ]
+            .into_iter()
+            .enumerate()
+            {
+                b.with_slice(|words| {
+                    visit(
+                        owner,
+                        role,
+                        b.raw.contents().as_ptr() as usize,
+                        b.raw.device().registryID(),
+                        words,
+                    )
+                })?;
+            }
+        }
+        Ok(())
+    }
+    pub(super) fn test_capture_metadata(&self) -> Result<serde_json::Value> {
+        self.test_safe_read()?;
+        Ok(serde_json::json!({
+            "offset":self.offset,"generation":self.generation,"epoch":self.epoch,
+            "identity":self.identity,"poisoned":self.is_poisoned(),
+            "status":{"address":self.status.raw.contents().as_ptr() as usize,
+                "bytes":self.status.raw.length(),"device":self.status.raw.device().registryID(),
+                "words":self.status.with_slice(|v|v.to_vec())},
+            "command":self.command.as_ref().map(|c|serde_json::json!({
+                "status":format!("{:?}",c.status()),"error":c.error().map(|e|e.to_string()),
+                "terminal":terminal(c),"completed":completed(c)}))
+        }))
+    }
+}

@@ -1,12 +1,13 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B4e3c2 — borrowed-buffer native capture and strict reader**,
+Next implementation task: **B4e3c2b — complete native capture workload and strict reader**,
 then the bounded real-model experiment.
-The bounded real source, original payload, resident composition and independent
-operator controls are checked. All14 new synthetic controls and six current
-repository checks pass with Astra saved audit. Native real-model execution
-remains pending; failed and unexecuted prior attempts stay recorded.
+The bounded real source, original payload, resident composition, independent
+operators and capture I/O are checked. Current default457/Metal560 tests, four
+writer controls and the Tiny visitor GPU check pass with Astra saved audit.
+Native real-model execution remains pending; failed and unexecuted prior
+attempts stay recorded.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -269,6 +270,11 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
       - [x] B4e3c1: [independent actual-input operators](docs/lfm2-native-conformance.md)
         pass14 synthetic controls, six repository checks and Astra saved audit.
       - [ ] B4e3c2: bounded borrowed-buffer visitors/native capture and strict reader.
+        - [x] B4e3c2a: [capped evidence writer and terminal visitors](docs/lfm2-capture-io.md)
+          pass four CPU controls, six repository checks, one Tiny GPU parity/
+          pending-refusal check and Astra saved audit.
+        - [ ] B4e3c2b: complete pinned real capture workload and exhaustive reader,
+          with all actual operands/state and prospective record/file accounting.
       - [ ] B4e3c3: reviewed real-model GPU capture, independent conformance/state/
         text/memory checks and retained raw evidence.
 - [ ] Qualify a fitting real representative and obtain Astra review before a
@@ -525,3 +531,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B4e3b composition qualified | Six cold checks and both exact Tiny GPU tests pass. Astra independently rescored2,123,664 mathematical/boundary values,144 states,57 snapshots, actual history/KV writes, guards, immutable owners,9 faults/18 replay chunks and12 zero allocations with unchanged MAIN gates. | [Composition report](docs/lfm2-real-composition.md); current Rust metadata+168B, numeric owners unchanged. Both failed attempts preserved. Selected real sizing is cold-only; proceed B4e3c1 independent operator checker, then capture/native real experiment. |
 | 2026-10-29 | B4e3b commit / B4e3c1 operator review | Composition committed as`e734d81`. Astra approves two new operator/control files after resolving faithful-projection zero words and signed-zero provider/joint rotary membership before execution. V1/V2 remain unexecuted; Gemma helpers, source coefficients and provider widths are unchanged. | Current V3 has14 authored synthetic controls. Standard6-check owner now runs; isolated600s/512MiB/1MiB control package awaits actual Astra approval. Complete reader/capture/native qualification remains separate, with frozen104-attempt/367-row upper inventory. |
 | 2026-10-29 | B4e3c1 operator contracts qualified | All14 isolated controls pass in0.597s with100,007,936B OSmaxRSS; default457/Metal556 and all six checks pass. Astra authenticates6877 input/output identities, actual runtime origins and all seven closed groups; no checkpoint/source graph/native/codec/GPU execution. | [Operator report](docs/lfm2-native-conformance.md); signed-zero corrections precede outcomes and source/gates/Gemma remain unchanged. Next: narrow terminal borrowed visitors, bounded binary+JSON capture and exhaustive real-data reader; then the real experiment. |
+| 2026-10-29 | B4e3c1 commit / c2a observation path | Operator task committed as`333de0f`. Astra approves five-file test-only writer/borrowed visitor proposal; four portable controls and one ignored Tiny visitor parity/refusal test are authored. Full native runner/reader stay separate. | Formatting/default+Metal Clippy/default tests pass; remaining Metal/release/GPU checks are pending. Real capture schema accounts initial/reset histories and guard tails explicitly within unchanged256MiB raw/16MiB journal caps; no real model execution. |
+| 2026-10-29 | B4e3c2a capture I/O qualified | Four writer controls and all six checks pass(default457/Metal560,20/182 ignored). The explicit one-forward Tiny GPU check passes103 records,98 unique addresses, all36 independently reconstructed original packed-metadata hashes, callback errors and pending-command read refusal; seven current groups close cleanly. | [Capture-I/O report](docs/lfm2-capture-io.md). Saved-reader-only enum-format correction retained; native code/data/gates unchanged. No real/source-forward or performance claim; proceed full workload/reader under the frozen inventory. |

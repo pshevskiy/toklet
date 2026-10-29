@@ -1063,3 +1063,25 @@ impl Packed {
         })
     }
 }
+
+// Terminal/no-submission must be established by the owning test Session.
+// One physical metadata allocation is borrowed at a time; no model-sized clone.
+#[cfg(test)]
+impl Packed {
+    pub(super) fn test_visit_metadata(
+        &self,
+        mut visit: impl FnMut(usize, usize, u64, &[u32]) -> Result<()>,
+    ) -> Result<()> {
+        for (role, b) in [&self.scales, &self.biases].into_iter().enumerate() {
+            b.with_slice(|words| {
+                visit(
+                    role,
+                    b.raw.contents().as_ptr() as usize,
+                    b.raw.device().registryID(),
+                    words,
+                )
+            })?;
+        }
+        Ok(())
+    }
+}

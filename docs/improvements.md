@@ -7927,3 +7927,31 @@ the complete293-stage native reader, captured state/text/resource checks and
 fresh real-model experiment remain open. Borrowed test-only visitors and streamed
 binary/JSON observations are the next implementation task, avoiding large
 transient serde/snapshot copies without changing numerical hot code.
+
+The exact six-file actual-input operator task is committed as`333de0f`.
+
+### M8 B4e3c2a — Streamed evidence and terminal observation, 29 October 2026
+
+The [test-only observation path](lfm2-capture-io.md) adds capped append-only
+little-endian output and synchronous borrowed cache/snapshot/packed-metadata
+visitors. No production numerical/transaction/shader body changes. It avoids
+whole-buffer clones and large per-word JSON trees in the future real capture;
+source arithmetic, text and eligibility remain outside the writer.
+
+Four CPU writer controls and all six checks pass(default457/Metal560 with
+20/182 ignored, overlapping suites). The one Tiny GPU test passes103 saved
+records,98 unique observed owners, terminal refusal before callbacks and actual
+successful completion of the extra stamp command. Astra independently rebuilds
+all36 packed metadata hashes from original raw BF16 bytes plus alignment padding.
+Cache/snapshot parity is evidenced by reviewed completed whole-word assertions;
+the saved hashes/booleans do not support independent complete reconstruction.
+
+The writer rejects malformed counts/shapes, overflows, caps and iterator lengths,
+retains partial output and cannot later report success. Prefix/footer hashing
+has explicit noncircular scopes. The hardware log retains25,779 bytes;21 sparse
+samples observe17,809,408-byte RSS and6,619,736-byte lifetime footprint, without a
+complete-peak or real-model claim. A saved-reader enum Debug-format assumption
+is corrected using the pinned dependency's Completed=4; initial reader retained,
+no engine/data/gate change. [Exact evidence](../benchmarks/results/2026-10-29-lfm2-capture-io-v1.json)
+authenticates5988 bindings and seven closed current groups. The complete real
+capture workload, exhaustive reader and bounded native experiment remain open.
