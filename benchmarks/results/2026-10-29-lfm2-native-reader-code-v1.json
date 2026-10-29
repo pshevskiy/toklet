@@ -1,0 +1,221 @@
+{
+  "format": "toklet-lfm2-native-reader-code-result-v1",
+  "date": "2026-10-29",
+  "base_revision": "1c20180",
+  "task": "M8 C2b independent native capture reader and synthetic controls",
+  "status": "reader_code_and_controls_checked_actual_dataset_pending",
+  "source_files": [
+    {
+      "path": "tools/reference/check_lfm2_capture.py",
+      "bytes": 53840,
+      "sha256": "ce509e17b31cab8f966253171a2915956a03be2d057a4c2392e21bf9f7769cc4"
+    },
+    {
+      "path": "tools/reference/lfm2_capture_bytes.py",
+      "bytes": 22757,
+      "sha256": "f1b7d87f378079f6b9c37ff332d5541979cc1c32e95ef11b8005ef2053663064"
+    },
+    {
+      "path": "tools/reference/lfm2_capture_contract.py",
+      "bytes": 25319,
+      "sha256": "4bfdd123c5e2388e39febd3b476a97d712de05dcbb0469aa4437c5afc7512278"
+    },
+    {
+      "path": "tools/reference/lfm2_capture_workload.py",
+      "bytes": 8448,
+      "sha256": "09df2bae68b6db686dcd5a093b1da709ec7bc30065d7888a2a657985359bf2fd"
+    },
+    {
+      "path": "tools/reference/test_lfm2_capture_reader.py",
+      "bytes": 28184,
+      "sha256": "d1567dea54c3d531227eb442afc2a433317153c2b4457c62a9e0a70e464c97ad"
+    }
+  ],
+  "verification": {
+    "format": true,
+    "strict_default_and_metal_all_targets_clippy": true,
+    "default_tests": {
+      "passed": 457,
+      "ignored": 20
+    },
+    "metal_tests": {
+      "passed": 564,
+      "ignored": 183
+    },
+    "counts_overlap": true,
+    "release_metal_library_test_build": true,
+    "synthetic_controls": {
+      "exit_code": 0,
+      "limit_bytes": 536870912,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 67175096,
+        "phys_footprint": 54805176,
+        "resident_size": 96124928
+      },
+      "observed_samples": 8,
+      "os_maxrss_bytes": 97484800,
+      "passed": 29,
+      "seconds": 0.321
+    }
+  },
+  "runtime": {
+    "base_prefix": "/Library/Frameworks/Python.framework/Versions/3.12",
+    "origins": [
+      {
+        "label": "after_numpy_import",
+        "modules": 164,
+        "native_images": 15,
+        "system_shared_cache_images": 347
+      },
+      {
+        "label": "endpoint",
+        "modules": 306,
+        "native_images": 35,
+        "system_shared_cache_images": 347
+      }
+    ],
+    "prefix": "/Users/coloner/work/rust/toklet/.venv",
+    "python": "3.12.8 (v3.12.8:2dc476bcb91, Dec  3 2024, 14:43:19) [Clang 13.0.0 (clang-1300.0.29.30)]"
+  },
+  "current_union_files": 6893,
+  "closed_groups": [
+    {
+      "pid": 81877,
+      "pid_and_group_absent": true
+    },
+    {
+      "pid": 80720,
+      "pid_and_group_absent": true
+    },
+    {
+      "pid": 80732,
+      "pid_and_group_absent": true
+    },
+    {
+      "pid": 80749,
+      "pid_and_group_absent": true
+    },
+    {
+      "pid": 80751,
+      "pid_and_group_absent": true
+    },
+    {
+      "pid": 80986,
+      "pid_and_group_absent": true
+    },
+    {
+      "pid": 81284,
+      "pid_and_group_absent": true
+    }
+  ],
+  "prospective_comparisons": {
+    "selected_and_teacher_groups": 6743,
+    "selected_and_teacher_values": 13936576,
+    "strict_coupled_groups": 303,
+    "strict_coupled_values": 1965024,
+    "local_groups": 6440,
+    "local_values": 11971552,
+    "source_state_diagnostic_groups_each_profile": 4212,
+    "source_state_diagnostic_values_each_profile": 21657600,
+    "source_sideband_identities": 168,
+    "observed_by_this_task": false
+  },
+  "planned_resources": {
+    "numeric_reserved_bytes": 65011712,
+    "process_bytes": 6442450944,
+    "seconds": 900,
+    "observed_real_reader_peak": false,
+    "native_raw_mapping_counted_separately": true,
+    "source_and_original_model_held_as_streamed_files": true
+  },
+  "scope": {
+    "complete_structural_and_semantic_reader": true,
+    "actual_native_dataset_read": false,
+    "source_graph_executed": false,
+    "codec_executed": false,
+    "native_model_or_gpu_executed": false,
+    "app_or_phone_admission": false,
+    "quality_or_performance_qualification": false
+  },
+  "contract": {
+    "all293_routes_explicit": true,
+    "missing_or_unknown_operand_fails": true,
+    "semantic_and_frozen_local_numeric_guard": true,
+    "coupled_main_wide_drift_retained": true,
+    "all_source_state_drift_separate": true,
+    "gather_views_projection_intrinsic_word_rules": true,
+    "rms_basic_conv_numeric_zero_exception": true,
+    "physical_KV_history_reconstructed_from_actual_native_observations": true,
+    "ordinary_mode_no_producer_claim": true,
+    "eligibility_after_endpoints_only": true,
+    "independent_outer_qualification_required": true
+  },
+  "limitations": [
+    "Sparse process samples and OS maximum RSS are retained; no numerical suballocation or performance peak claim.",
+    "Standard CPU/Metal feature tests did not select ignored hardware or real-model suites.",
+    "System dyld shared-cache images are recorded names, not hashed ordinary files.",
+    "Free samples and raw codec traces retain terminal stop ID7 for observation; stop is checked before feed, and no production emission/Chat API is qualified."
+  ],
+  "independent_saved_audit": {
+    "path": "artifacts/new-goal-b4e3-native-reader-independent-review-v1/saved-controls-review.json",
+    "bytes": 4685,
+    "sha256": "75e0b620ae6402699b6f9d00dadfed6551cf280fd016fa6a3ae6dd810267ee79"
+  },
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-proposal-v1/manifest.json",
+      "bytes": 8299,
+      "sha256": "70ec196b2c0f3d20d4611abf92119e833d0d31c84ddb61893d8b83b806fa2c12"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-independent-review-v1/prospective-review.json",
+      "bytes": 15958,
+      "sha256": "ab1c20775eef07800a8acd35b5779d92fb2d3b90240687dded8d7e208f1c24d6"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-independent-review-v1/prospective-owner-review.json",
+      "bytes": 5156,
+      "sha256": "39f9066eca3937fc5a7710e0256e912a2e27cb9a4a86428ac91a26e10df9ef8d"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-controls-owner-v1/package.json",
+      "bytes": 897267,
+      "sha256": "3aa5d36d96f8ef6f212f1fa5be08a3df603c0312d0b2fe8c5f4fb1d8f061dcb8"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-controls-owner-v1/prospective-review.json",
+      "bytes": 2408,
+      "sha256": "91e206cd122c94dc94809f54cf223b82d2338a79f4ca0fab6e68400777786af1"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-controls-owner-v1/run.py",
+      "bytes": 9928,
+      "sha256": "ad112dc50416bfc1788acd3a08ff12699e33b2afbd7f882c96a7072b1eb038e4"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-controls-owner-v1/controls-v1/checks.json",
+      "bytes": 740399,
+      "sha256": "59738c27eb70071fba0468bdf8e849c9400d31fd6f19b0de62ebb3d51e5e0c9d"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-cold-checks-v1/checks.json",
+      "bytes": 889108,
+      "sha256": "1b589c7a6679a26b4eae375ec5874db1e7df38d89b46a0a8934daf11ff343123"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-independent-review-v1/saved-controls-review.json",
+      "bytes": 4685,
+      "sha256": "75e0b620ae6402699b6f9d00dadfed6551cf280fd016fa6a3ae6dd810267ee79"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-controls-owner-v1/controls-v1/controls.stdout",
+      "bytes": 1245,
+      "sha256": "5bc387049e1ea56f73e7483db4ebc28fe3ba5e71a8515153d86bc5404337d304"
+    },
+    {
+      "path": "artifacts/new-goal-b4e3-native-reader-controls-owner-v1/controls-v1/controls.stderr",
+      "bytes": 111906,
+      "sha256": "06f3350d66c07d41033b28e5a7fdaa008fdc1dbf340739d05debda0bd853e62b"
+    }
+  ]
+}

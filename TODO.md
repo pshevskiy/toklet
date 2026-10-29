@@ -1,10 +1,9 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B4e3c2b — complete native capture workload and strict reader**,
-then the bounded real-model experiment.
+Next implementation task: **B4e3c3 — freeze and execute the bounded real GPU/reader experiment**.
 The bounded real source, original payload, resident composition, independent
-operators and capture I/O are checked. Current default457/Metal560 tests, four
+operators and capture I/O are checked. Current default457/Metal564 tests, four
 writer controls and the Tiny visitor GPU check pass with Astra saved audit.
 Native real-model execution remains pending; failed and unexecuted prior
 attempts stay recorded.
@@ -269,17 +268,18 @@ It does not admit ordinary app/Chat or close original-unquantized10k/100 quality
       capture inventory, then pass the bounded real/session/text/memory experiment.
       - [x] B4e3c1: [independent actual-input operators](docs/lfm2-native-conformance.md)
         pass14 synthetic controls, six repository checks and Astra saved audit.
-      - [ ] B4e3c2: bounded borrowed-buffer visitors/native capture and strict reader.
+      - [x] B4e3c2: bounded borrowed-buffer visitors/native capture and strict reader.
         - [x] B4e3c2a: [capped evidence writer and terminal visitors](docs/lfm2-capture-io.md)
           pass four CPU controls, six repository checks, one Tiny GPU parity/
           pending-refusal check and Astra saved audit.
-        - [ ] B4e3c2b: complete pinned real capture workload and exhaustive reader,
+        - [x] B4e3c2b: complete pinned real capture workload and exhaustive reader,
           with all actual operands/state and prospective record/file accounting.
           - [x] [C2b capture code](docs/lfm2-real-capture.md): bounded workload,
             four controls, full checks and retained release build pass Astra audit;
             actual execution/eligibility remains a separate gate.
-          - [ ] C2b reader code: full dispatch/state/text/owner checks and negative
-            controls, with original source/state diagnostics retained.
+          - [x] [C2b reader code](docs/lfm2-native-reader.md): full dispatch/state/
+            text/owner checks pass29 controls, full repository checks and Astra
+            audit; actual dataset and outer qualification remain pending.
       - [ ] B4e3c3: reviewed real-model GPU capture, independent conformance/state/
         text/memory checks and retained raw evidence.
 - [ ] Qualify a fitting real representative and obtain Astra review before a
@@ -540,3 +540,4 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B4e3c2a capture I/O qualified | Four writer controls and all six checks pass(default457/Metal560,20/182 ignored). The explicit one-forward Tiny GPU check passes103 records,98 unique addresses, all36 independently reconstructed original packed-metadata hashes, callback errors and pending-command read refusal; seven current groups close cleanly. | [Capture-I/O report](docs/lfm2-capture-io.md). Saved-reader-only enum-format correction retained; native code/data/gates unchanged. No real/source-forward or performance claim; proceed full workload/reader under the frozen inventory. |
 | 2026-10-29 | C2a commit / C2b capture cold retry | Capture I/O committed as`a776029`. Astra approves full capture workload after a held unexecuted V1 safety-flag correction. Applied V2 passes fmt/default Clippy, then Metal compilation rejects one unparenthesized json! array-index expression; tests/release/GPU are not reached. | Failed receipt retained with closed groups/clean endpoints. Reviewed V3 changes only expression parentheses; full cold retry starts. Reader remains private and unexecuted with source/state/zero-word/corruption checks under independent review; no real GPU launch. |
 | 2026-10-29 | C2b capture code checked | Four cold controls and all six checks pass(default457/Metal564,20/183 ignored). Astra authenticates4076 bindings,12 outputs, exact source and retained116,847,040B release executable; no real execution. | [Capture code report](docs/lfm2-real-capture.md); six current/three historical groups closed, V1 hold and compiler failure preserved. Complete reader is separately frozen for29 controls/review; actual native owner/run and conformance remain pending. |
+| 2026-10-29 | C2b capture commit / reader checked | Capture code committed as`1c20180`. Complete five-module reader and29 controls pass in0.321s; all six checks pass(default457/Metal564). Astra verifies current runtime/pins and seven closed groups; no real native dataset, codec, model or GPU execution. | [Reader report](docs/lfm2-native-reader.md). Source-state diagnostics cover all168 identities prospectively; strict303/local6440 counts unchanged. Next: separately freeze base/control/bundle/actual executable, obtain launch review, run fresh capture and reader, then independent bounded qualification. |

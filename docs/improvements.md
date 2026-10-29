@@ -7989,3 +7989,32 @@ current and three historical check groups close cleanly.
 keeps the full reader/control task, fresh real GPU/reader experiment and app/
 phone/full-quality/performance qualification open. Code compilation is not
 relabeled numerical eligibility or actual measured real-model fit.
+
+The exact nine-file capture-runner task is committed as`1c20180`.
+
+### M8 C2b — Full independent native reader, 29 October 2026
+
+The [complete byte/contract/workload/CLI reader](lfm2-native-reader.md) implements
+all293 selected stages and exact actual-state/owner/control validation. It keeps
+303 strict coupled and6440 local semantic-plus-numeric groups fatal, while
+retaining source trajectory and all168 source-state identities as diagnostics.
+No source forward is executed and no missing native operand is manufactured.
+Original stored-word rules, causal masks, actual history/KV writes, failure/
+poison/reset/replay and separate ordinary-mode evidence stay explicit.
+
+Twenty-nine corruption, omission, endpoint, publication, format and arithmetic-
+dispatch controls pass in0.321s. All six repository checks pass(default457/
+Metal564,20/183 ignored and overlapping suites). Astra audits actual NumPy
+runtime origins, current input/output identity union and seven closed groups.
+OSmaxRSS97,484,800 bytes is a synthetic-worker result, not real-model fit.
+Raw codec traces and sampled/stop/pending behavior do not establish app emission
+or Chat. The original-unquantized quality gates remain open.
+
+Peer/root review resolves original Conv tensor-axis, guard-tail accounting,
+exact FirstCopy128-word mutation, ordinary diagnostic-row metadata, strict
+lookup/view signed zeros and bounded consumed-file hashing before execution.
+Source/projection gates and provider widths remain unchanged. Separate source-
+state drift reporting covers4212 groups/21,657,600 values per profile without
+fabricating within-chunk committed snapshots. [Exact evidence](../benchmarks/results/2026-10-29-lfm2-native-reader-code-v1.json)
+records code/control scope only; actual fresh native capture, full reader and
+independent outer qualification are the next gate.
