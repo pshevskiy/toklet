@@ -20,6 +20,22 @@ impl GeometryError {
 pub(crate) fn metal_source_geometry(
     source: &crate::mlx::qwen::Source,
 ) -> Result<(), GeometryError> {
+    metal_source_position_limits(source).map(|_| ())
+}
+
+/// Validated ordinary source policy, independent of runtime device/budget fit.
+pub(crate) struct NativePositionLimits {
+    pub graph_cap: Option<usize>,
+    pub declared_window: Option<usize>,
+    pub upper: usize,
+}
+
+/// Shares every source-level layout/frequency check with actual loading. Phi3's
+/// declared window already bounds its full-attention prefix in the source parser;
+/// it is not permission to implement a sliding cache or a larger position range.
+pub(crate) fn metal_source_position_limits(
+    source: &crate::mlx::qwen::Source,
+) -> Result<NativePositionLimits, GeometryError> {
     use crate::mlx::{dense::Architecture, qwen::Storage};
     if source.position_plan() != model::PositionPlan::Ordinary
         && source.architecture() != Architecture::Llama
@@ -29,6 +45,7 @@ pub(crate) fn metal_source_geometry(
         ));
     }
     metal_geometry(source.config(), source.architecture())?;
+    let cap = metal_geometry_context_cap(source.config(), source.architecture())?;
     if matches!(
         source.architecture(),
         Architecture::Llama | Architecture::Phi3
@@ -56,7 +73,26 @@ pub(crate) fn metal_source_geometry(
             }
         }
     }
-    Ok(())
+    let declared_window = if source.architecture() == Architecture::Phi3 {
+        source.declared_sliding_window()
+    } else {
+        None
+    };
+    let upper = source
+        .declared_positions()
+        .min(crate::weights::MAX_CONTEXT_LIMIT)
+        .min(cap.unwrap_or(usize::MAX))
+        .min(declared_window.unwrap_or(usize::MAX));
+    if upper == 0 || source.config().max_positions > upper {
+        return Err(GeometryError::Unsupported(
+            "native source context exceeds declared or implemented positions",
+        ));
+    }
+    Ok(NativePositionLimits {
+        graph_cap: cap,
+        declared_window,
+        upper,
+    })
 }
 
 /// Cold numerical representation contract shared by source inspection and the
@@ -201,11 +237,45 @@ pub(crate) fn metal_geometry(
     c: &model::Config,
     architecture: crate::mlx::dense::Architecture,
 ) -> Result<(), GeometryError> {
+    let cap = metal_geometry_context_cap(c, architecture)?;
+    check_context(c, architecture, cap)
+}
+
+fn check_context(
+    c: &model::Config,
+    architecture: crate::mlx::dense::Architecture,
+    cap: Option<usize>,
+) -> Result<(), GeometryError> {
+    if cap.is_some_and(|limit| c.max_positions > limit) {
+        use crate::mlx::dense::Architecture;
+        return Err(GeometryError::Unsupported(match architecture {
+            Architecture::Qwen3 => {
+                "Metal Qwen3 requires the admitted tiny/0.6B geometry, context and ordinary RoPE"
+            }
+            Architecture::Mistral => {
+                "Metal requires qualified full-attention Mistral geometry and at most 512 positions"
+            }
+            Architecture::Llama | Architecture::Phi3 => {
+                "Metal dense initial implemented context is at most 512 positions"
+            }
+            Architecture::Qwen2 => unreachable!("Qwen2 has no extra graph cap"),
+        }));
+    }
+    Ok(())
+}
+
+/// Select the existing ordinary graph bound once, along with its shape checks.
+/// None means no additional graph cap: declarations/global parser bounds remain.
+fn metal_geometry_context_cap(
+    c: &model::Config,
+    architecture: crate::mlx::dense::Architecture,
+) -> Result<Option<usize>, GeometryError> {
+    use crate::mlx::dense::Architecture;
     match architecture {
-        crate::mlx::dense::Architecture::Qwen3 => {
+        Architecture::Qwen3 => {
             c.validate()
                 .map_err(|_| GeometryError::Invalid("invalid Qwen3 configuration"))?;
-            let supported = match (
+            let cap = match (
                 c.hidden_size,
                 c.intermediate_size,
                 c.query_heads,
@@ -214,33 +284,32 @@ pub(crate) fn metal_geometry(
                 c.num_layers,
                 c.vocab_size,
             ) {
-                (32, 64, 4, 2, 16, 2, 64) => {
-                    c.max_positions <= 32 && c.rope_theta == 10000.0 && c.rms_norm_eps == 1e-6
+                (32, 64, 4, 2, 16, 2, 64) if c.rope_theta == 10000.0 && c.rms_norm_eps == 1e-6 => {
+                    32
                 }
-                (1024, 3072, 16, 8, 128, 28, 151936) => {
-                    c.max_positions <= 512 && c.rope_theta == 1e6 && c.rms_norm_eps == 1e-6
+                (1024, 3072, 16, 8, 128, 28, 151936)
+                    if c.rope_theta == 1e6 && c.rms_norm_eps == 1e-6 =>
+                {
+                    512
                 }
-                _ => false,
+                _ => {
+                    return Err(GeometryError::Unsupported(
+                        "Metal Qwen3 requires the admitted tiny/0.6B geometry, context and ordinary RoPE",
+                    ));
+                }
             };
-            if !supported {
-                return Err(GeometryError::Unsupported(
-                    "Metal Qwen3 requires the admitted tiny/0.6B geometry, context and ordinary RoPE",
-                ));
-            }
-            Ok(())
+            Ok(Some(cap))
         }
-        crate::mlx::dense::Architecture::Qwen2 => qwen_geometry(c),
-        crate::mlx::dense::Architecture::Llama | crate::mlx::dense::Architecture::Phi3 => {
+        Architecture::Qwen2 => {
+            qwen_geometry(c)?;
+            Ok(None)
+        }
+        Architecture::Llama | Architecture::Phi3 => {
             c.validate()
                 .map_err(|_| GeometryError::Invalid("invalid dense model configuration"))?;
             if !c.rms_norm_eps.is_normal() {
                 return Err(GeometryError::Unsupported(
                     "native dense RMS epsilon requires positive normal FP32",
-                ));
-            }
-            if c.max_positions > 512 {
-                return Err(GeometryError::Unsupported(
-                    "Metal dense initial implemented context is at most 512 positions",
                 ));
             }
             for n in [
@@ -256,12 +325,16 @@ pub(crate) fn metal_geometry(
                     ));
                 }
             }
-            Ok(())
+            Ok(Some(if architecture == Architecture::Phi3 {
+                super::phi3::IMPLEMENTED_POSITIONS
+            } else {
+                512
+            }))
         }
-        crate::mlx::dense::Architecture::Mistral => {
+        Architecture::Mistral => {
             c.validate()
                 .map_err(|_| GeometryError::Invalid("invalid Mistral model configuration"))?;
-            let shape = (
+            let cap = match (
                 c.hidden_size,
                 c.intermediate_size,
                 c.query_heads,
@@ -269,22 +342,20 @@ pub(crate) fn metal_geometry(
                 c.head_dim,
                 c.num_layers,
                 c.vocab_size,
-            );
-            let supported = match shape {
-                (32, 64, 4, 2, 8, 2, 64) => {
-                    c.rope_theta == 10000.0 && c.rms_norm_eps == 1e-6 && c.max_positions <= 32
+            ) {
+                (32, 64, 4, 2, 8, 2, 64) if c.rope_theta == 10000.0 && c.rms_norm_eps == 1e-6 => 32,
+                (4096, 14336, 32, 8, 128, 32, 32768)
+                    if c.rope_theta == 1e6 && c.rms_norm_eps == 1e-5 =>
+                {
+                    512
                 }
-                (4096, 14336, 32, 8, 128, 32, 32768) => {
-                    c.rope_theta == 1e6 && c.rms_norm_eps == 1e-5 && c.max_positions <= 512
+                _ => {
+                    return Err(GeometryError::Unsupported(
+                        "Metal requires qualified full-attention Mistral geometry and at most 512 positions",
+                    ));
                 }
-                _ => false,
             };
-            if !supported {
-                return Err(GeometryError::Unsupported(
-                    "Metal requires qualified full-attention Mistral geometry and at most 512 positions",
-                ));
-            }
-            Ok(())
+            Ok(Some(cap))
         }
     }
 }
@@ -643,6 +714,15 @@ mod tests {
                 rms_norm_eps: epsilon,
             };
             assert!(metal_geometry(&c, architecture).is_ok());
+            let expected_cap = match architecture {
+                Architecture::Qwen2 => None,
+                Architecture::Llama | Architecture::Phi3 => Some(512),
+                Architecture::Qwen3 | Architecture::Mistral => Some(positions),
+            };
+            assert_eq!(
+                metal_geometry_context_cap(&c, architecture).unwrap(),
+                expected_cap
+            );
             let invalid = model::Config {
                 max_positions: 0,
                 ..c.clone()

@@ -20,6 +20,17 @@ pub struct CompatibilityOptions {
     /// Exact budget reported to the engine, without numerical bridge deduction.
     pub memory_limit_bytes: u64,
 }
+/// Cold context facts for a specific existing native MLX loading route.
+/// No requested context/budget is supplied or inferred. All reserved bits reject.
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct NativeLimitsOptions {
+    pub abi_version: u32,
+    pub struct_size: u32,
+    /// 0 ordinary native MLX; 1 exact audited Smol metadata route.
+    pub load_profile: u32,
+    pub reserved: u32,
+}
 pub struct CompatibilityHandle {
     owner: ThreadId,
     json: Box<[u8]>,
@@ -91,6 +102,49 @@ pub unsafe extern "C" fn toklet_mlx_inspect_create(
                     memory_limit_bytes,
                 },
             );
+            out.write(capture(&report)?);
+            Ok(())
+        })
+    }
+}
+
+/// Capture the ordinary native MLX factory's declared/enforced context facts.
+/// Same immutable JSON handle/copy/release contract as compatibility inspection.
+/// No GPU, model/session, budget fit or qualification is evaluated. The audited
+/// profile checks its frozen metadata, but complete payload authentication still
+/// requires the existing audited load entrypoint.
+/// # Safety
+/// Follow the parent foreign pointer/thread contract; out is cleared on error.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_mlx_context_limits_create(
+    path: *const u8,
+    len: usize,
+    opts: *const NativeLimitsOptions,
+    out: *mut *mut CompatibilityHandle,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe {
+        boundary(error, || {
+            pointer(out)?;
+            out.write(ptr::null_mut());
+            pointer(opts)?;
+            let options = *opts;
+            if options.abi_version != ABI_VERSION
+                || options.struct_size as usize != size_of::<NativeLimitsOptions>()
+                || options.reserved != 0
+            {
+                return Err(fail(
+                    INVALID,
+                    "unsupported native limits options version, size or reserved bits",
+                ));
+            }
+            use crate::mlx::native_limits::{self, LoadProfile};
+            let profile = match options.load_profile {
+                0 => LoadProfile::Ordinary,
+                1 => LoadProfile::SmolAudited,
+                _ => return Err(fail(INVALID, "unknown native limits load profile")),
+            };
+            let report = native_limits::inspect(local_path(path, len)?, profile);
             out.write(capture(&report)?);
             Ok(())
         })
@@ -475,6 +529,146 @@ mod tests {
         );
         release(handle);
     }
+    #[test]
+    fn native_limits_use_existing_snapshot_handle_and_preserve_profile() {
+        assert_eq!(size_of::<NativeLimitsOptions>(), 16);
+        assert_eq!(std::mem::offset_of!(NativeLimitsOptions, load_profile), 8);
+        assert_eq!(std::mem::offset_of!(NativeLimitsOptions, reserved), 12);
+        let path = fixture("mlx-qwen3-v1/tied");
+        let raw = path.to_str().unwrap().as_bytes();
+        let valid = NativeLimitsOptions {
+            abi_version: ABI_VERSION,
+            struct_size: size_of::<NativeLimitsOptions>() as u32,
+            load_profile: 0,
+            reserved: 0,
+        };
+        let mut handle = ptr::null_mut();
+        assert_eq!(
+            unsafe {
+                toklet_mlx_context_limits_create(
+                    raw.as_ptr(),
+                    raw.len(),
+                    &valid,
+                    &mut handle,
+                    ptr::null_mut(),
+                )
+            },
+            OK
+        );
+        let captured = bytes(handle);
+        let value: Value = serde_json::from_slice(&captured).unwrap();
+        assert_eq!(value["report_kind"], "native_mlx_context_limits");
+        assert_eq!(value["load_profile"], "ordinary");
+        assert_eq!(value["factory_position_upper"], 32);
+        assert_eq!(value["qualification_evaluated"], false);
+        assert_eq!(value["budget_fit_evaluated"], false);
+        let address = handle as usize;
+        assert_eq!(
+            std::thread::spawn(move || unsafe {
+                toklet_mlx_inspect_release(address as *mut CompatibilityHandle, ptr::null_mut())
+            })
+            .join()
+            .unwrap(),
+            WRONG_THREAD
+        );
+        assert_eq!(bytes(handle), captured);
+        release(handle);
+        let audited = NativeLimitsOptions {
+            load_profile: 1,
+            ..valid
+        };
+        assert_eq!(
+            unsafe {
+                toklet_mlx_context_limits_create(
+                    raw.as_ptr(),
+                    raw.len(),
+                    &audited,
+                    &mut handle,
+                    ptr::null_mut(),
+                )
+            },
+            OK
+        );
+        let value: Value = serde_json::from_slice(&bytes(handle)).unwrap();
+        assert_eq!(value["load_profile"], "smol_audited");
+        assert_eq!(value["status"], "unsupported");
+        assert!(value["factory_position_upper"].is_null());
+        assert_eq!(value["complete_source_authentication_required"], true);
+        release(handle);
+        for invalid in [
+            NativeLimitsOptions {
+                abi_version: 0,
+                ..valid
+            },
+            NativeLimitsOptions {
+                struct_size: 24,
+                ..valid
+            },
+            NativeLimitsOptions {
+                load_profile: 2,
+                ..valid
+            },
+            NativeLimitsOptions {
+                reserved: 1,
+                ..valid
+            },
+        ] {
+            handle = std::ptr::dangling_mut();
+            assert_eq!(
+                unsafe {
+                    toklet_mlx_context_limits_create(
+                        raw.as_ptr(),
+                        raw.len(),
+                        &invalid,
+                        &mut handle,
+                        ptr::null_mut(),
+                    )
+                },
+                INVALID
+            );
+            assert!(handle.is_null());
+        }
+        handle = std::ptr::dangling_mut();
+        assert_eq!(
+            unsafe {
+                toklet_mlx_context_limits_create(
+                    ptr::null(),
+                    1,
+                    &valid,
+                    &mut handle,
+                    ptr::null_mut(),
+                )
+            },
+            INVALID
+        );
+        assert!(handle.is_null());
+        assert_eq!(
+            unsafe {
+                toklet_mlx_context_limits_create(
+                    raw.as_ptr(),
+                    raw.len(),
+                    ptr::null(),
+                    &mut handle,
+                    ptr::null_mut(),
+                )
+            },
+            INVALID
+        );
+        assert!(handle.is_null());
+        assert_eq!(
+            unsafe {
+                toklet_mlx_context_limits_create(
+                    raw.as_ptr(),
+                    raw.len(),
+                    &valid,
+                    ptr::null_mut(),
+                    ptr::null_mut(),
+                )
+            },
+            INVALID
+        );
+    }
+
     #[test]
     fn json_writer_rejects_overflow_without_extending_retained_storage() {
         let mut buffer = JsonBuffer(Vec::with_capacity(MAX_COMPATIBILITY_JSON_BYTES));

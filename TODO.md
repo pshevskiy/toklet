@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5b — report ordinary per-model context limits before capacity search**.
+Next implementation task: **B5c1 — typed Swift limits and capacity consumers**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -297,10 +297,18 @@ separate requirements below. Further model admissions require their own scope.
   reuses the pure solver and preserves the old report/schema, current factory
   admission and separate loading fit. All six Rust checks, static library/
   exports/compilation, five Mac planning/ABI jobs and Astra saved audit pass.
-- [ ] B5b: centralize the existing ordinary factory geometry/context-cap policy
-  and expose declared/enforced metadata-only limits before capacity search;
-  distinguish diagnostic routes and broader scalar metadata from ordinary app
-  admission. Then add typed Swift decoding and dedicated-worker integration.
+- [x] B5b: [shared ordinary context policy and metadata limits](docs/native-context-limits.md)
+  preserve actual geometry/declaration/window caps and distinguish audited
+  profiles, diagnostic routes and scalar metadata. All fourteen cold jobs,
+  five Mac checks, default 462/Metal 569 tests and Astra saved audit pass.
+- [ ] B5c: validate typed Swift limits/capacity reports and sequence their
+  requests on the dedicated worker, with explicit request identity and stale
+  result handling before wiring user settings.
+  - [ ] B5c1: typed limits/capacity validation and synchronous inspect wrappers;
+    preserve the old resource decoder, add malformed/boundary/request controls
+    and actual producer checks. Private proposal is under Astra review.
+  - [ ] B5c2: dedicated-worker preview sequencing and explicit request/artifact
+    selection identity, stale results and safe teardown before user controls.
 - [ ] Report declared context, implemented backend range, budget/device fit,
   validation scope and app/text limits separately for each model.
 - [ ] Include actual weights, KV owners, scratch, loading peaks and application
@@ -570,3 +578,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | B4 selected Mac qualification complete | Full unstubbed reader passes all 6,440 local groups/11,971,552 values, 303 strict groups/1,965,024 values, full state/codec/ordinary/budget coverage and clean endpoints. Astra verifies original inputs/raw extents/runtime and independently approves selected Mac64/C512 conformance; MAIN3/WIDE8 diagnostics remain rejected. | [Report](docs/lfm2-real-native.md). B5 native-policy capacity API is the next concrete task; original quality, ordinary app/phone/full-window/performance work remain open. |
 | 2026-10-30 | B4 report committed / B5a validation starts | Bounded qualification and synchronized plan committed as `415b831`. Astra-reviewed five-file capacity-report API is applied. All six Rust checks, release static library, exact header exports and C compilation pass; final Swift compilation fails because the runner invoked resolved swift-frontend instead of the swiftc alias. | Preserve the failed receipt and 13 successful jobs. Astra prepares an alias-preserving Swift-only retry; engine code and test outcomes remain unchanged, hardware checks pending. |
 | 2026-10-30 | B5a native capacity API checked | Alias-preserving Swift retry passes with explicit 13+1 successful-job provenance, preserving the failed original. All five exact Mac planning/C/Swift jobs pass and Astra independently audits current source/products/29 exports/closed groups. Default457/Metal564 tests pass (20/184 ignored). | [API report](docs/native-capacity-report.md); exact staged task review and commit next. B5b centralizes the actual ordinary factory context caps and adds metadata-only range facts before Swift/UI work. |
+| 2026-10-30 | B5a committed / B5b metadata limits applied | Capacity API committed as `0027ad6` after exact ten-file Astra review. The next seven-file shared ordinary factory/context-limit snapshot passes independent code review and guarded application. Existing caps/diagnostic routes are preserved; Phi3's existing sliding-window bound is reported explicitly. | Fresh default/Metal/C ABI/planning checks next. Swift decoding/worker integration is separate B5c; no app range/settings claim from the new metadata API. |
+| 2026-10-30 | B5b limits API checked | Four new integration tests and one native ABI control pass with all14freshcoldjobs/default462/Metal569 tests (20/184 ignored). Five exactMacplanning/newC/oldSwift jobs pass, all30exports match, and Astra audits unchanged admission/currentsource/products/runtime/closure. | [Limits report](docs/native-context-limits.md); exact staged task review/commit next. B5c1 typed Swift consumers are prepared privately; worker/UI/settings remain open. |

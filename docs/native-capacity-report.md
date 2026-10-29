@@ -30,8 +30,10 @@ Planning initializes Metal/MPS and pipelines, while allocating no numerical
 weights, KV, scratch or logits. Driver/framework bytes remain an allowance.
 This API searches an already admitted caller upper bound. It does not discover
 the model's declared maximum or the ordinary factory's enforced maximum;
-metadata-only per-model limits and Swift/app integration follow in B5b. It does
-not establish context, text, whole-app memory, phone or performance qualification.
+the [ordinary metadata-only limits report](native-context-limits.md) now supplies
+the enforced per-model bound. Typed Swift/app integration remains B5c. Neither
+report establishes context, text, whole-app memory, phone or performance
+qualification.
 
 Formatting, strict default/Metal Clippy, default 457 tests (20 ignored), Metal
 564 tests (184 ignored), release test compilation, static library build, exact

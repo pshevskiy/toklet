@@ -49,6 +49,13 @@ typedef struct {
     uint32_t abi_version, struct_size, backend, context_limit;
     uint64_t memory_limit_bytes;
 } TokletCompatibilityOptions;
+/* Metadata-only native MLX position policy; no requested capacity or budget.
+   load_profile: 0 ordinary native MLX; 1 frozen audited Smol metadata.
+   These select existing distinct load entrypoints, not additional architectures.
+   reserved must be zero. Native C alignment/16 bytes. */
+typedef struct {
+    uint32_t abi_version, struct_size, load_profile, reserved;
+} TokletNativeLimitsOptions;
 /* Explicit runtime planning, native C alignment/56 bytes. Normalization:
    0 Original, 1 Compensated; readback: 0 FullLogits, 1 GreedyToken;
    attention: 0 Reference, 1 Online, 2 native model factory policy.
@@ -77,6 +84,23 @@ typedef struct {
    and runtime requirements. This handle never authorizes inference. */
 uint32_t toklet_mlx_inspect_create(const uint8_t *, size_t,
     const TokletCompatibilityOptions *, TokletCompatibility **, TokletError *);
+/* Additive metadata-only native MLX context limits, no GPU/model/session.
+   Returns native_mlx_context_limits schema v1 through the existing JSON handle.
+   Reports validated declared total, global ceiling, optional graph cap and
+   nullable ordinary factory upper; the upper is not a budget-fitting capacity,
+   loaded-instance fact, artifact identity or qualified context. Unsupported or
+   unknown source metadata returns OK with upper:null. Unknown profile/reserved
+   bits, bad ABI/path/pointers return INVALID and clear a valid out.
+   Smol profile authenticates frozen metadata; complete consumed payload evidence
+   remains required at toklet_model_load_mlx_smol_audited. Ordinary inspection
+   does not authenticate that identity. Both routes require payload, runtime and
+   session revalidation; budget/qualification/text/whole-app fit are unevaluated.
+   Explicit Qwen3 diagnostics, specialized Gemma/LFM and scalar-reference paths
+   are outside this report. No numerical arrays are allocated; redundant tied
+   heads may be streamed by the existing bounded source inspector.
+   Uses the same JSON allowance and creating-thread copy/release rules. */
+uint32_t toklet_mlx_context_limits_create(const uint8_t *, size_t,
+    const TokletNativeLimitsOptions *, TokletCompatibility **, TokletError *);
 /* Additive ABI v1 runtime inspection: initializes Metal/MPS/precise pipelines.
    Returns the separate runtime schema v1 (session_memory and fit flags), not
    metadata status/reason. No numerical weight/KV/scratch/logit allocation.

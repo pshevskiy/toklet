@@ -1,0 +1,279 @@
+{
+  "format": "toklet-native-context-limits-result-v1",
+  "date": "2026-10-30",
+  "base_revision": "0027ad6",
+  "status": "ordinary_native_context_metadata_api_checked",
+  "api": "toklet_mlx_context_limits_create",
+  "options_bytes": 16,
+  "load_profiles": [
+    "ordinary",
+    "smol_audited"
+  ],
+  "source_files": [
+    {
+      "path": "apple/include/toklet.h",
+      "bytes": 17741,
+      "sha256": "b8fa29dec03088d529d4d6e1af6dab924de0cbf0aad16827b487d19f0a1cf394"
+    },
+    {
+      "path": "apple/tests/native_limits_smoke.c",
+      "bytes": 2475,
+      "sha256": "5d41bc8740fccb2d0cc8d9eb21c09c0fbf0ac49ac27c7670e09df2ec1daa6d11"
+    },
+    {
+      "path": "src/mlx/execution.rs",
+      "bytes": 25298,
+      "sha256": "e5db3c2e527fb894e97fe3888e7a5b49af8bcacadacb4620b273c0b768800ad5"
+    },
+    {
+      "path": "src/mlx/mod.rs",
+      "bytes": 475,
+      "sha256": "dc7fe6b3f081cf165cb781f35aa0361d8e50443643215c80225842ac4a515540"
+    },
+    {
+      "path": "src/mlx/native_limits.rs",
+      "bytes": 7618,
+      "sha256": "d3b7c4488c2816077b4303f2a2976ae2d5c1c991d6d3ff335c52c34bc085af75"
+    },
+    {
+      "path": "src/native/compatibility.rs",
+      "bytes": 22727,
+      "sha256": "bf02f704e086d329f82a3bf3ab546e0b919d31e4536706679fb7ecc1c318d9ec"
+    },
+    {
+      "path": "tests/mlx_native_limits.rs",
+      "bytes": 7388,
+      "sha256": "9306ebd4261d96070cec87205fac0a82d3938f64b543bf7f793fa4df5eef44f1"
+    }
+  ],
+  "ordinary_caps": {
+    "qwen2_extra_graph_cap": null,
+    "engine_global_ceiling": 32768,
+    "tiny_qwen3_and_mistral": 32,
+    "selected_real_qwen3_and_mistral": 512,
+    "admitted_llama_and_phi3": 512,
+    "phi3_window_bounds_existing_full_attention_prefix": true
+  },
+  "contract": {
+    "unknown_or_rejected_upper": null,
+    "private_seed_context": 1,
+    "seed_published_as_loaded_limit": false,
+    "no_gpu_or_model_session_creation": true,
+    "metadata_reader_limit_bytes": 6442450944,
+    "caller_budget_fit_evaluated": false,
+    "context_qualification_evaluated": false,
+    "payload_identity_published": false,
+    "complete_audited_payload_authentication_still_required": true,
+    "actual_load_revalidation_required": true
+  },
+  "verification": {
+    "format": true,
+    "strict_default_and_metal_clippy": true,
+    "default_tests": 462,
+    "default_ignored": 20,
+    "metal_tests": 569,
+    "metal_ignored": 184,
+    "counts_overlap": true,
+    "new_integration_tests": 4,
+    "new_native_abi_tests": 1,
+    "release_metal_test_build": true,
+    "release_static_library_build": true,
+    "cold_jobs": 14,
+    "fresh_jobs_for_changed_rust": true,
+    "c_and_strict_swift6_compile": true,
+    "header_exports": 30,
+    "hardware_jobs": 5
+  },
+  "products": {
+    "c": {
+      "bytes": 12195672,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5-native-limits-verification-owner-v1/retained/c",
+      "sha256": "86aebcb5260d6239374b9effbca0515f3dc4fbf709507827ef3b0833825a6ad4"
+    },
+    "library": {
+      "bytes": 26962624,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5-native-limits-verification-owner-v1/retained/libtoklet.a",
+      "sha256": "7960620117b9e41966a99ea75a534b95d206485343c80aba040f419344ea358f"
+    },
+    "swift": {
+      "bytes": 11992528,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5-native-limits-verification-owner-v1/retained/swift",
+      "sha256": "bd8561b1c7f289fc5073ff1654ea9277178aea32c9f04cbee10f009a90ec4040"
+    },
+    "tests": {
+      "bytes": 117368672,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5-native-limits-verification-owner-v1/retained/tests",
+      "sha256": "1a1a87504c87fae883da077645636c09ffff59773b50cdebbc4247611b0b2629"
+    }
+  },
+  "exported_symbols": [
+    "toklet_abi_version",
+    "toklet_cancel_create",
+    "toklet_cancel_release",
+    "toklet_cancel_set",
+    "toklet_chat_create",
+    "toklet_chat_create_smol_audited",
+    "toklet_chat_decode",
+    "toklet_chat_encode",
+    "toklet_chat_release",
+    "toklet_chat_stop_ids",
+    "toklet_mlx_capacity_plan_create",
+    "toklet_mlx_context_limits_create",
+    "toklet_mlx_inspect_create",
+    "toklet_mlx_inspect_json",
+    "toklet_mlx_inspect_release",
+    "toklet_mlx_plan_create",
+    "toklet_model_load",
+    "toklet_model_load_metal",
+    "toklet_model_load_mlx",
+    "toklet_model_load_mlx_smol_audited",
+    "toklet_model_release",
+    "toklet_session_context",
+    "toklet_session_create",
+    "toklet_session_generate",
+    "toklet_session_history",
+    "toklet_session_preflight",
+    "toklet_session_release",
+    "toklet_session_reset",
+    "toklet_session_score",
+    "toklet_session_state"
+  ],
+  "sdk": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+  "hardware_device": "Apple M1 Pro",
+  "hardware_commands": [
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5-native-limits-verification-owner-v1/retained/tests",
+        "--exact",
+        "native::runtime_planning::tests::gpu::native_capacity_planning_preserves_policy_bounds_and_separate_load_fit",
+        "--ignored",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "pid": 3826,
+      "exit_code": 0,
+      "process_group_closed": true,
+      "live_samples": 23,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 6865520,
+        "phys_footprint": 6849136,
+        "resident_size": 19365888
+      }
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5-native-limits-verification-owner-v1/retained/tests",
+        "--exact",
+        "native::runtime_planning::tests::gpu::native_policy_matches_factory_and_frozen_parent_memory",
+        "--ignored",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "pid": 3834,
+      "exit_code": 0,
+      "process_group_closed": true,
+      "live_samples": 1,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 180296,
+        "phys_footprint": 180296,
+        "resident_size": 458752
+      }
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5-native-limits-verification-owner-v1/retained/tests",
+        "--exact",
+        "native::runtime_planning::tests::gpu::native_runtime_planning_matches_direct_reports_and_keeps_snapshot_ownership",
+        "--ignored",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "pid": 3842,
+      "exit_code": 0,
+      "process_group_closed": true,
+      "live_samples": 2,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 7029360,
+        "phys_footprint": 7012976,
+        "resident_size": 19529728
+      }
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5-native-limits-verification-owner-v1/retained/c",
+        "/Users/coloner/work/rust/toklet/tests/fixtures/mlx-qwen3-v1/tied"
+      ],
+      "pid": 3854,
+      "exit_code": 0,
+      "process_group_closed": true,
+      "live_samples": 9,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 98376,
+        "phys_footprint": 81992,
+        "resident_size": 32768
+      }
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5-native-limits-verification-owner-v1/retained/swift",
+        "/Users/coloner/work/rust/toklet/tests/fixtures/mlx-qwen3-v1/tied"
+      ],
+      "pid": 3858,
+      "exit_code": 0,
+      "process_group_closed": true,
+      "live_samples": 10,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 3539472,
+        "phys_footprint": 3539472,
+        "resident_size": 12959744
+      }
+    }
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b5-native-limits-proposal-v1/manifest.json",
+      "bytes": 9660,
+      "sha256": "17b3cef10c027e7016cc3f710fc84d6e061e1f175de2561d1211cd3c43029a4d"
+    },
+    {
+      "path": "artifacts/new-goal-b5-native-limits-independent-review-v1/prospective-review.json",
+      "bytes": 6800,
+      "sha256": "24f5552bca048dfb9dba2bf728a4144e5795515604734463a4381f0b8fab5a3c"
+    },
+    {
+      "path": "artifacts/new-goal-b5-native-limits-verification-owner-v1/cold-v1/checks.json",
+      "bytes": 1257420,
+      "sha256": "79a05126c1cea41e503d8c4dcb7cbfaa073de762b6fb22da0799ed442d8a72d8"
+    },
+    {
+      "path": "artifacts/new-goal-b5-native-limits-verification-owner-v1/package.json",
+      "bytes": 1433443,
+      "sha256": "efa1cf1b3f8a70979755d6385d61e8c83e00f107b1dc12c9537806974dec4bc5"
+    },
+    {
+      "path": "artifacts/new-goal-b5-native-limits-verification-owner-v1/launch-review.json",
+      "bytes": 4416,
+      "sha256": "d7850f1a3b16967ea35c68b67f72cfe25adeacba9c8f29267b308a887237e7e0"
+    },
+    {
+      "path": "artifacts/new-goal-b5-native-limits-verification-owner-v1/hardware-v1/checks.json",
+      "bytes": 1246425,
+      "sha256": "10d5b50603b156618eb40cdc4bf5e96777e9852c3ddc3a5fadfe0f959b772fe3"
+    },
+    {
+      "path": "artifacts/new-goal-b5-native-limits-verification-independent-review-v1/saved-review.json",
+      "bytes": 11644,
+      "sha256": "c8cd7185b38f8da3d0d142c1ecb7f94cf18e7485f62650d32ad1fedd570d29df"
+    }
+  ],
+  "limits": [
+    "Facts use current ordinary factory rules; no geometry, architecture, context or diagnostic-route admission was widened.",
+    "Only Phi3 existing declared window constrains its full-attention prefix; not a general cache-retention rule.",
+    "Scalar metadata compatibility, specialized Gemma/LFM and diagnosticQwen31025/40960 are not ordinary admission.",
+    "Build backend availability is not device fit; budget/runtime/payload/session/text/qualification remain separate.",
+    "No source payload identity or cross-profile authentication from snapshot.",
+    "Compiled Rust/C/Swift assertions; not an additional independent full-JSON saved-byte decoder.",
+    "No real-model forward, enlarged-context, phone, whole-app, performance or broader-family qualification.",
+    "Sparse process samples do not establish full command/system peaks."
+  ]
+}

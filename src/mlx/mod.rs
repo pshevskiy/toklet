@@ -10,6 +10,7 @@ pub(crate) mod execution;
 pub mod gemma3;
 pub mod gemma4;
 pub mod lfm2;
+pub mod native_limits;
 mod payload;
 mod phi3;
 pub mod qwen;

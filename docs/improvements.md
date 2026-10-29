@@ -8174,3 +8174,24 @@ failed compiler-dispatch job and all scope limits. No real-model forward,
 new context/factory admission, phone or performance qualification is granted.
 B5b next shares the enforced ordinary geometry/context-cap policy with a
 metadata-only limits snapshot, before typed Swift previews and safe settings.
+
+The capacity API task is committed as `0027ad6`. B5b's reviewed seven-file
+implementation now shares existing ordinary geometry/context-cap policy with a
+metadata-only limits report. Ordinary and audited-Smol entrypoints are distinct
+profiles. Phi3's existing declared sliding-window admission is preserved and
+reported separately; no universal context/window minimum or larger diagnostic
+route is substituted. The snapshot grants no payload identity, runtime/budget
+fit or qualification. Fresh checks and the separate typed Swift/worker task
+remain next.
+
+The shared limits API passes all 14 fresh build/check/link jobs, default 462
+and Metal 569 tests (20/184 ignored), exact 30-header-export matching and five
+explicit Mac planning/metadata-C/old-Swift checks. Four new integration tests
+and one native ABI test preserve upper/adjacent rejection, source profiles,
+null unsupported bounds, declarations and Phi3's existing window limit. Astra
+verifies all actual products, source/runtime/aliases and closed groups.
+
+[Limits evidence](native-context-limits.md) records metadata-only behavior and
+compiled assertion scope, without a real-model forward or new context/factory/
+phone qualification. Typed Swift consumers and request/worker/UI integration
+remain separate. This checked task is ready for its exact staged review/commit.
