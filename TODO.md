@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **29 October 2026**. Active milestone: **M8**.
-Next implementation task: **B3d3b — collect and check a fresh bounded Gemma3 Mac comparison**.
+Next implementation task: **B4a — strict LFM2 cold metadata adapter and mixed layer/owner plan**.
 No implementation task is currently blocked on user input.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -116,7 +116,7 @@ qualification. Proceed to B2 as Astra's acceptance review requires.
 B2 closes only the pinned native Mac512 adapter. Production Phi text/Chat,
 iPhone, full declared context and adoption quality remain B5/M8 work.
 
-### B3 — Local/global composition
+### B3 — Local/global composition (complete in selected Mac544 native scope)
 
 - [x] Select and inventory public Gemma3 270M four-bit text at
   `ff1143e3a10547c9f2129e94ca37059b096b23f4`; independent Astra metadata/source
@@ -161,21 +161,22 @@ iPhone, full declared context and adoption quality remain B5/M8 work.
 - [x] B3c4c: concrete resident Model/Session, consumed optional operations,
   full tiny stage/state/failure/allocation/accounting checks.
   [Report](docs/gemma3-resident-graph.md); independent saved-byte audit and all three release GPU jobs pass.
-- [ ] B3d: verified real payload/text and fixed short/513-plus-window/resource
-  journey on Mac; prospective544 scope requires its own frozen run protocol.
+- [x] B3d: verified real payload/text and fixed short/513-plus-window/resource
+  journey on Mac; selected544 scope passes its frozen native conformance protocol.
 - [x] B3d1: acquire/authenticate original selected payload and tokenizer files,
   source identity and complete layout; no numerical/text admission.
   [Report](docs/gemma3-artifact-acquisition.md).
 - [x] B3d2: freeze independent selected real Half arithmetic/text/source protocol
   and selected544-position probes within the Mac process budget.
   [Report](docs/gemma3-real-reference.md); exact export/replay and independent saved-source audit pass.
-- [ ] B3d3: checked original-byte real loader/native runner, source comparisons,
+- [x] B3d3: checked original-byte real loader/native runner, source comparisons,
   two-partition window journey and bounded text/resource/state controls.
 - [x] B3d3a: original-byte CPU store, explicit raw-gamma preparation and resident
   upload lifetime; actual original-range/hash checks pass.
   [Report](docs/gemma3-original-loader.md).
-- [ ] B3d3b: bounded real native runner, frozen source comparisons and
+- [x] B3d3b: bounded real native runner, frozen conformance comparisons and
   two-partition544 window/text/state/resource journey.
+  [Report](docs/gemma3-real-native.md); historical trajectory screens remain rejected.
 - [x] Investigate both coupled-intermediate rejections without changing the
   engine: all84 source3 failures map to42 paired values matching own-input
   independent checks; strict final/teacher outputs pass. Astra reviews the proof.
@@ -183,15 +184,20 @@ iPhone, full declared context and adoption quality remain B5/M8 work.
   before checker implementation; preserve both historical failed screens.
 - [x] Implement/review the generic actual-input checker, analytic corruption
   controls and bounded resources; no coordinate whitelist or unsupported skip.
-  [Checked diagnostic](docs/gemma3-conformance-checker.md); fresh qualification pending.
-- [ ] Complete posthoc diagnostics, then a separately frozen fresh capture,
+  [Checked diagnostic](docs/gemma3-conformance-checker.md); subsequent fresh result above.
+- [x] Complete posthoc diagnostics, then a separately frozen fresh capture,
   independent full checking and Astra review before closing B3d3b.
 - [x] B3d3 prerequisite: qualify the source-supported FP16 clamped residual at
   both Gemma3 branch additions, preserving generic residual behavior and all
   finite/numerical gates; retain the failed strict-Half real-source evidence.
   [Report](docs/gemma3-half-residual.md); independent primitive/tiny raw audits pass.
-- [ ] Resolve selected-checkpoint numerical/quality gaps and obtain Astra review
-  before claiming the selected adapter complete. App/full quality remain B5/M8.
+- [x] Resolve selected bounded native conformance gaps and obtain Astra review
+  for the selected engine adapter. Original adoption quality/app/Chat/phone and
+  full-window work remain explicitly outside this B3 closure in B5/M8.
+
+B3 closes the selected Mac544 arithmetic/state/text-codec engine contract only.
+All18,537,288 fatal-route values pass; original92/84 trajectory rejections remain.
+It does not admit ordinary app/Chat or close original-unquantized10k/100 quality.
 
 ### B4 — Additional concrete mechanisms
 
@@ -411,3 +417,6 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-29 | B3d generic conformance checker applied | After policy`ae7a457`, Astra approves exact five-file generic checker proposal. All five private synthetic attempts pass; final16 operator plus12 checker controls pass again from live files under23,224 authenticated bindings. All237 Rust/Metal/Cargo files still match the passing native cold checks. | Code review`513ff607da5d7e408f9e5afd9f60f26c76a5d5213e3a9eba790e5db071e579a2`; controls`86fb5c32961f119dd2946dfa34ecdbd9523d8c1e728e6504c27bf841831542b7`. Complete saved-byte diagnostic next, then separately frozen fresh capture; no qualification yet. |
 | 2026-10-29 | B3d complete historical conformance diagnostic | All624 strict coupled groups/13,185,444 values and5,808 actual-input groups/5,351,844 values pass fatal checks;8 projection cases use exact fallback. Every18,537,288 original trajectory value is still reported, retaining84 MAIN/98 WIDE rejections. Single252.36s process closes cleanly, lifetime physical368,150,712 bytes and observed RSS743,981,056 bytes below6GiB. | Diagnostic owner`bd35a1db769d596a3d55cdf4cab87380fb43dd4e97a1f2d6f7a9be5095221057`; eligibility/qualification remain false. Astra saved-result and fresh-controller review next. |
 | 2026-10-29 | B3d checker code task complete | Astra independently audits all6,496 raw records,508 original ranges,9,132 masked+0 words,2,378 memory observations and closed group, preserving84/98 diagnostics. Sixteen operator/twelve reader controls and unchanged source checks pass. | [Report](docs/gemma3-conformance-checker.md); exact staged review and separate checker commit. Eight fallback branches are aggregate reports, not independently replayed retained certificates. Fresh native runner task stays open. |
+| 2026-10-29 | B3d checker committed / fresh native launch | Exact nine-file staged Astra review passes; checker task committed as`3cfd38a`. Astra then verifies final fresh placement, all23,573 identity-union entries and13 closed prior groups, approving one900s/6GiB native capture with unchanged binary/workload. | Fresh capture starts under policy`ae7a457`; structural completion and independent fresh numerical checking are still pending. |
+| 2026-10-29 | B3d fresh native and complete checker pass | Fresh native completes187 forwards/2,351 tokens in73.03s, lifetime physical815,334,720 bytes; full raw141,258,016 bytes match history exactly. Astra verifies15,003 events/6,496 records and688 observations. Separate fresh reader completes261.07s/2,445 samples with zero fatal failures across18,537,288 values, eligibility true after endpoints, original84/98 rejected diagnostics preserved. | Fresh owner`fed52da1fbfc16947b8c4dc5f2c0fc7d9f0c2aa08f2f6c67a7a2e365ea8dba5a`; checker owner`e3bf7eb8b0442f39ee023cd97381901158040623e5d5eee724b542c9be47ba7e`. Final independent bounded-scope decision and runner commit next. |
+| 2026-10-29 | B3 selected Mac native closure | Astra independently replays all13,185,444 fatal coupled gates, authenticates5,351,844 reviewed local results, complete raw/mask/weight/resource coverage and closed endpoints, approving selected Mac544 native conformance. Both historical rejections and all original quality/app/phone/full-window limits remain explicit. | [Release report](docs/gemma3-real-native.md); qualification`96e0cdd820ad4a86d7f0f4d3950d334196b2ecb7994e2f375fedd6726a06966e`. Exact runner/report staged review+commit, then B4a cold adapter; no extra model campaign. |

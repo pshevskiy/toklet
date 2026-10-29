@@ -1,0 +1,291 @@
+{
+  "format": "toklet-gemma3-real-native-result-v1",
+  "date": "2026-10-29",
+  "decision": "qualify_selected_bounded_Mac_native_conformance",
+  "bounded_native_conformance_qualified": true,
+  "original_unquantized_adoption_quality_qualified": false,
+  "app_chat_qualified": false,
+  "phone_qualified": false,
+  "performance_qualified": false,
+  "full_window_qualified": false,
+  "policy_commit": "ae7a457",
+  "checker_commit": "3cfd38a",
+  "policy": {
+    "path": "docs/gemma3-native-conformance.md",
+    "bytes": 10208,
+    "sha256": "415d493f1aac05c2cc387867e89001e0a7dc9e2f41c2b96d5e27af3b01111ba8"
+  },
+  "model": {
+    "repository": "mlx-community/gemma-3-270m-it-4bit",
+    "revision": "ff1143e3a10547c9f2129e94ca37059b096b23f4",
+    "payload_sha256": "bf8b442cff5dd7c9ac6b5695310d5b66a4d0a4c3780f5c774fb90cd0c352bd9d",
+    "layers": 18,
+    "hidden": 640,
+    "intermediate": 2048,
+    "query_heads": 4,
+    "kv_heads": 1,
+    "head_dim": 256,
+    "bits": 4,
+    "group_size": 64,
+    "declared_positions": 32768,
+    "implementation_capacity_range": [
+      1,
+      544
+    ],
+    "tested_session_capacity": 544,
+    "position_offset": 0,
+    "tested_absolute_position_max": 543,
+    "chunk_max": 32,
+    "all_admitted_configurations_exhaustively_qualified": false
+  },
+  "hardware": {
+    "chip": "Apple M1 Pro",
+    "ram_bytes": 17179869184,
+    "macos": "26.6.2",
+    "provenance": "root local read-only sysctl and sw_vers; independent review distinguishes retained same-host provenance"
+  },
+  "native_binary": {
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3d-native-cold-checks-v3/gemma3-checkpoint",
+    "bytes": 5360352,
+    "sha256": "a49c5c34d09f5c57b1cd0d41aec3ad14632916691d910d9aea680357dc3a982b"
+  },
+  "workload": {
+    "forwards": 187,
+    "committed_tokens": 2351,
+    "stage_groups": 6400,
+    "raw_records": 6496,
+    "raw_bytes": 141258016,
+    "source_teacher_distributions": 32,
+    "native_free_distributions": 64,
+    "free_distribution_independent_content_quality": false
+  },
+  "checks": {
+    "operator_controls": 16,
+    "reader_controls": 12,
+    "runner_controls_debug": 4,
+    "runner_controls_release": 4,
+    "native_source_bridge_files": 237,
+    "coupled_fatal": {
+      "groups": 624,
+      "values": 13185444,
+      "failures": 0,
+      "max_abs": 0.15432453155517578,
+      "max_fraction": 0.9701202949165697,
+      "wide_exceedances": 14,
+      "wide_max_abs": 0.13846445083618164,
+      "wide_max_fraction": 1.6814292148326078,
+      "main_bit_differences": 12012338,
+      "wide_bit_differences": 13113781
+    },
+    "actual_input": {
+      "groups": 5808,
+      "values": 5351844,
+      "semantic_failures": 0,
+      "numeric_failures": 0,
+      "max_abs": 0.0078125,
+      "max_fraction": 0.6093845216331505,
+      "projection_exact_fallbacks": 8,
+      "first_failure": null,
+      "numeric_owner_cap_bytes": 67108864,
+      "provider_check": "fixed published admissible sets; softmax interval enclosure, not hidden-intrinsic reconstruction"
+    },
+    "total_fatal_route_values": 18537288
+  },
+  "historical_trajectory": {
+    "original92_rejection_preserved": true,
+    "source3_84_rejection_preserved": true,
+    "fresh_diagnostic": {
+      "values": 18537288,
+      "failures": 84,
+      "max_abs": 24.0,
+      "max_fraction": 2.946375957572186,
+      "wide_exceedances": 98,
+      "wide_max_abs": 40.0,
+      "wide_max_fraction": 3.166030356644008,
+      "main_bit_differences": 15281284,
+      "wide_bit_differences": 17202197
+    },
+    "fidelity_qualified": false
+  },
+  "fresh_observations": {
+    "native": {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3d-native-cold-checks-v3/gemma3-checkpoint",
+        "--model",
+        "/Users/coloner/work/rust/toklet/models/MLX-Gemma-3-270m-it-4bit-ff1143e",
+        "--reference",
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3d-source-v3/reference/manifest.json",
+        "--reference-sha256",
+        "a62bb30d2fe5ed49bedecd07e4d801616afa31be6781e2f1a7dabae0922fa09d",
+        "--inputs",
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3d-reference-proposal-v1/numerical-inputs.json",
+        "--output",
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3d-native-conformance-fresh-run-v1/native"
+      ],
+      "pid": 92032,
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "live_samples": 688,
+      "observed_maxima": {
+        "resident_size": 976453632,
+        "phys_footprint": 815334720,
+        "lifetime_max_phys_footprint": 815334720
+      },
+      "deadline_seconds": 900,
+      "cleanup_TERM_seconds": 15,
+      "cleanup_KILL_seconds": 15,
+      "final_reap_seconds": 5,
+      "memory_limit_bytes": 6442450944,
+      "stdout": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3d-native-conformance-fresh-run-v1/native.stdout",
+      "stderr": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3d-native-conformance-fresh-run-v1/native.stderr",
+      "trace": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3d-native-conformance-fresh-run-v1/native-memory.jsonl",
+      "elapsed_seconds": 73.02744958316907
+    },
+    "reader": {
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-I",
+        "-B",
+        "-X",
+        "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/new-goal-b3d-native-conformance-fresh-check-v1/pycache-worker",
+        "-c",
+        "import resource,runpy,sys;from pathlib import Path;resource.setrlimit(resource.RLIMIT_FSIZE,(16777216,16777216));resource.setrlimit(resource.RLIMIT_NOFILE,(256,256));sys.path.insert(0,str(Path.cwd()/'tools/reference'));runpy.run_path(str(Path.cwd()/'tools/reference/check_gemma3_checkpoint.py'),run_name='__main__')",
+        "--source",
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3d-source-v3/reference/manifest.json",
+        "--inputs",
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3d-reference-proposal-v1/numerical-inputs.json",
+        "--model",
+        "/Users/coloner/work/rust/toklet/models/MLX-Gemma-3-270m-it-4bit-ff1143e",
+        "--native",
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3d-native-conformance-fresh-run-v1/native",
+        "--output",
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3d-native-conformance-fresh-check-v1/check.json",
+        "--legacy-manifest",
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3d-source-v2/reference/manifest.json",
+        "--legacy-limits",
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3d-native-store-gates-v1/gates.json",
+        "--capture-mode",
+        "fresh-preregistered",
+        "--conformance-policy",
+        "/Users/coloner/work/rust/toklet/docs/gemma3-native-conformance.md"
+      ],
+      "pid": 93988,
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "live_samples": 2445,
+      "observed_maxima": {
+        "resident_size": 823181312,
+        "phys_footprint": 343787632,
+        "lifetime_max_phys_footprint": 371427632
+      },
+      "deadline_seconds": 900,
+      "cleanup_TERM_seconds": 15,
+      "cleanup_KILL_seconds": 15,
+      "final_reap_seconds": 5,
+      "stdout": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3d-native-conformance-fresh-check-v1/checker.stdout",
+      "stderr": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3d-native-conformance-fresh-check-v1/checker.stderr",
+      "trace": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b3d-native-conformance-fresh-check-v1/checker-memory.jsonl",
+      "elapsed_seconds": 261.0726586668752
+    },
+    "timings_are_diagnostic_not_throughput": true,
+    "continuous_or_process_tree_peak_claim": false
+  },
+  "component_reports_keep_numerical_qualification_false": true,
+  "qualification_authority": {
+    "path": "artifacts/new-goal-b3d-native-conformance-qualification-review-v1/qualification.json",
+    "bytes": 15081,
+    "sha256": "96e0cdd820ad4a86d7f0f4d3950d334196b2ecb7994e2f375fedd6726a06966e"
+  },
+  "evidence": {
+    "policy_review": {
+      "path": "artifacts/new-goal-b3d-native-conformance-policy-publication-v1/final-review.json",
+      "bytes": 7602,
+      "sha256": "2d51a5279f296de5251aea4b97e23f4b443d6eead8bbe9598b5b53de523b1532"
+    },
+    "source_reference_owner": {
+      "path": "artifacts/new-goal-b3d-source-v3/source.json",
+      "bytes": 5413344,
+      "sha256": "c14302f19dcb6a4b94817c42e345af36956beee836f78ce1039f4acc9043dc20"
+    },
+    "source_reference_review": {
+      "path": "artifacts/new-goal-b3d-reference-independent-review-v1/saved-source-v3-review.json",
+      "bytes": 29606,
+      "sha256": "47187192f00378391691c4e4cd6b5586a496b62d32457038a6d68e630850d11f"
+    },
+    "original_loader_owner": {
+      "path": "artifacts/new-goal-b3d-loader-run-v3/run.json",
+      "bytes": 6260359,
+      "sha256": "b00dba08d71afd14f7c9714f6d96ef71f6c58a0ad0f4ebd37b6dc29d997fab33"
+    },
+    "native_cold_checks": {
+      "path": "artifacts/new-goal-b3d-native-cold-checks-v3/checks.json",
+      "bytes": 867729,
+      "sha256": "3a9d8f3f54053fdfb9a1020a0128b2fff9bbd4938b8edc1071d48db681aff4e8"
+    },
+    "runner_source_review": {
+      "path": "artifacts/new-goal-b3d-native-runner-final-source-review-v1/review.json",
+      "bytes": 5332,
+      "sha256": "ba6e908b9dc27a5dbc65ca5d26fa5f076d493cdeb75a6b34004deb9c27198466"
+    },
+    "portable_checker_controls": {
+      "path": "artifacts/new-goal-b3d-native-conformance-controls-v1/checks.json",
+      "bytes": 5372909,
+      "sha256": "86fb5c32961f119dd2946dfa34ecdbd9523d8c1e728e6504c27bf841831542b7"
+    },
+    "historical_conformance_owner": {
+      "path": "artifacts/new-goal-b3d-native-conformance-posthoc-v1/checks.json",
+      "bytes": 5390250,
+      "sha256": "bd35a1db769d596a3d55cdf4cab87380fb43dd4e97a1f2d6f7a9be5095221057"
+    },
+    "historical_conformance_review": {
+      "path": "artifacts/new-goal-b3d-native-conformance-posthoc-independent-review-v1/completed-review.json",
+      "bytes": 6517,
+      "sha256": "68920fc99a031f1d0838380b3b81728a7747a7de78afa1b6d70af4c0a18dec3b"
+    },
+    "fresh_capture_approval": {
+      "path": "artifacts/new-goal-b3d-native-conformance-fresh-independent-review-v1/final-launch-review.json",
+      "bytes": 7497,
+      "sha256": "4d39a2a6e652a5ae0b7da2598fd2d4d50f16a16965c203bb1ceb0e75fb7b7a6f"
+    },
+    "fresh_capture_owner": {
+      "path": "artifacts/new-goal-b3d-native-conformance-fresh-run-v1/run.json",
+      "bytes": 5445184,
+      "sha256": "fed52da1fbfc16947b8c4dc5f2c0fc7d9f0c2aa08f2f6c67a7a2e365ea8dba5a"
+    },
+    "fresh_capture_review": {
+      "path": "artifacts/new-goal-b3d-native-conformance-fresh-independent-review-v1/completed-capture-review.json",
+      "bytes": 9391,
+      "sha256": "24065b89a0aed8b7ca2077bc426c3a974eaf5c50f8ed344a6416528def1ab76a"
+    },
+    "fresh_checker_approval": {
+      "path": "artifacts/new-goal-b3d-native-conformance-fresh-checker-independent-review-v1/final-launch-review.json",
+      "bytes": 5382,
+      "sha256": "33b78b0e821b22f6d1efcdb9377dd3031f817a3abd3077edd56705c28dda84d4"
+    },
+    "fresh_checker_owner": {
+      "path": "artifacts/new-goal-b3d-native-conformance-fresh-check-v1/checks.json",
+      "bytes": 5393200,
+      "sha256": "e3bf7eb8b0442f39ee023cd97381901158040623e5d5eee724b542c9be47ba7e"
+    },
+    "fresh_checker_result": {
+      "path": "artifacts/new-goal-b3d-native-conformance-fresh-check-v1/check.json",
+      "bytes": 108290,
+      "sha256": "7fad365b7fc58bc94e3f6d61d49bd45d4d0a78f0b0be8f426918f738a77f446c"
+    },
+    "bounded_qualification_review": {
+      "path": "artifacts/new-goal-b3d-native-conformance-qualification-review-v1/qualification.json",
+      "bytes": 15081,
+      "sha256": "96e0cdd820ad4a86d7f0f4d3950d334196b2ecb7994e2f375fedd6726a06966e"
+    }
+  },
+  "limitations": [
+    "Selected model/capacity/rows/workloads only, not arbitrary inputs or all capacity combinations",
+    "Original unquantized10000-target/100-task adoption quality remains B5/M8",
+    "Plain codec and raw generation only; no production Chat/HF app admission",
+    "No real physicalKV fault injection claim; tiny transaction evidence remains scoped",
+    "Eight projection fallbacks are aggregate reports, no retained independent per-fallback certificates",
+    "Declared32768 and independent iPhone/performance/whole-app qualification remain open"
+  ]
+}

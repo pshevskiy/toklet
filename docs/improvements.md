@@ -7403,3 +7403,24 @@ from the still-open fresh native runner/qualification task. The eight projection
 fallback branches are reported aggregates, not individually retained independent
 certificates. Both historical rejections and all adoption/app/device limitations
 remain explicit in the tracked result.
+
+The checker task is committed as `3cfd38a` after exact nine-file Astra staged
+review. The separately reviewed fresh native collection now starts with the
+unchanged optimized binary/workload and actual successful posthoc/audit pins.
+Its capture and independent fresh checker must complete before native closure.
+
+The fresh native capture completes187 forwards/2,351 tokens and all6,496 records
+cleanly, with815,334,720-byte lifetime physical counter. Astra verifies complete
+raw-byte identity and15,003 structural journal events. The separate fresh reader
+then passes all18,537,288 fatal-route values, retaining the original84/98 failed
+trajectory diagnostics; its lifetime physical counter is371,427,632 bytes and
+all endpoints/owned cleanup pass. Final independent bounded qualification and
+the separate runner commit remain pending; neither diagnostic time is throughput.
+
+Independent Astra review now approves the selected Mac544 native conformance
+scope, independently replaying all13,185,444 coupled gates and authenticating
+all5,351,844 reviewed local results,508 original ranges, masks and closed resource
+endpoints. The [bounded release decision](gemma3-real-native.md) closes B3's engine
+contract and retains every historical rejection and original quality/app/device
+gap. The source-identical diagnostic runner receives its own reviewed commit;
+B4a's LFM2 cold plan is next. No production Chat or throughput claim is added.

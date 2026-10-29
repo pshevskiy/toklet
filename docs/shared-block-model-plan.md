@@ -128,13 +128,21 @@ raw generation and measured-memory requirements. This does not qualify declared
 Those remain B5/M8 closure work. Next is B2 fused-row composition; frontend
 qualification does not interrupt the breadth-first order.
 
-**B2 storage and tiny composition complete:** checked original row spans and
+**B2 complete in its selected Mac512 adapter scope:** checked original row spans and
 one [cold logical loading plan](logical-projection-loading.md) now compose the
 strict ordinary Phi3 adapter with existing dense blocks. The independent
 [head96 CPU/Metal checks](phi3-dense-composition.md) pass at the initial512 bound,
-retaining declared4096/window2047. This does not close B2: the acquired real
-checkpoint still needs short source/native/session/text and measured-memory
-qualification. B2c is next; no whole-family, app or full-window claim.
+retaining declared4096/window2047. The [real Phi3 vertical](phi3-real-model.md)
+also passes23,946,432 comparisons, source/native/session/text and measured-memory
+checks. No whole-family, app, full-window or original adoption-quality claim.
+
+**B3 complete in its selected Mac544 native conformance scope:** the
+[real Gemma3 vertical](gemma3-real-native.md) passes the prospectively frozen
+actual-input/coupled policy after fresh native collection and independent
+checking/review. All18,537,288 selected values retain fatal coverage. Earlier
+92/84 CPU-trajectory screens remain rejected. Original-unquantized10k/100 quality,
+ordinary app/Chat, declared full window and iPhone stay separate B5/M8 work.
+Next is B4a's strict LFM2 cold plan and actual short-convolution mechanism.
 
 | Task | Concrete delivery | Required checks |
 | --- | --- | --- |

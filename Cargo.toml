@@ -76,3 +76,7 @@ required-features = ["metal"]
 [[example]]
 name = "phi3_checkpoint"
 required-features = ["metal"]
+
+[[example]]
+name = "gemma3_checkpoint"
+required-features = ["metal"]
