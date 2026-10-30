@@ -1,0 +1,263 @@
+{
+  "base_revision": "4a6ce612eeddb34767bc76f2d77afa0df5b31b8a",
+  "checks": {
+    "astra_saved_audit": true,
+    "c_abi_passed": true,
+    "cached_ownership_probes": 1,
+    "cold_commands": 12,
+    "current_closed_groups": 13,
+    "default_ignored": 23,
+    "default_passed": 537,
+    "generation_executed": false,
+    "metal_ignored": 193,
+    "metal_passed": 645,
+    "moved_ordinary_codec_controls": 8,
+    "native_exports": 38,
+    "new_ordinary_controls": 7,
+    "raw_frames": 7,
+    "required_controls_each_suite": 15,
+    "retained_products": 3,
+    "session_created": false
+  },
+  "date": "2026-10-30",
+  "declared_probe_envelope_bytes": {
+    "application_reserve": 268435456,
+    "model": 5368709120,
+    "not_a_measurement_or_allocation_waiver": true,
+    "text": 67108864
+  },
+  "evidence": [
+    {
+      "bytes": 17160,
+      "path": "artifacts/new-goal-b5d5m-mistral-pairing-proposal-v1/manifest.json",
+      "sha256": "fa23d94bb0ce16c3e87f8be5e8de66a9dd221505dba67a59a03ae2fdecde7a90"
+    },
+    {
+      "bytes": 841074,
+      "path": "artifacts/new-goal-b5d5m-mistral-pairing-checks-v1/manifest.json",
+      "sha256": "fa5ead13cad04ecf2cf10013cfdf6dddf058194ab62821bc3e642996519a76bc"
+    },
+    {
+      "bytes": 6594,
+      "path": "artifacts/new-goal-b5d5m-mistral-pairing-independent-review-v1/prospective-review.json",
+      "sha256": "1989d8e6e7da40cff665157be12009862f58bf75e7b246b9148f938bfa38353d"
+    },
+    {
+      "bytes": 861431,
+      "path": "artifacts/new-goal-b5d5m-mistral-pairing-checks-v1/run-v1/checks.json",
+      "sha256": "4ccc0babcb4ae839b20ecba8938214a30b89771973d6e5c571b300c6a9739d3e"
+    },
+    {
+      "bytes": 2911,
+      "path": "artifacts/new-goal-b5d5m-mistral-pairing-checks-v1/frozen-products.json",
+      "sha256": "5f0bfec57a10410431fa7404371ac51313ac5c38605ebbc7300ca8789d524c73"
+    },
+    {
+      "bytes": 9857,
+      "path": "artifacts/new-goal-b5d5m-mistral-pairing-checks-v1/launch-review.json",
+      "sha256": "558835e895b6e20cb4b7f410e408a33280f790bb59a05ae64bd9cf041239b4b2"
+    },
+    {
+      "bytes": 846274,
+      "path": "artifacts/new-goal-b5d5m-mistral-pairing-checks-v1/hardware-v1/checks.json",
+      "sha256": "7576fb6a1d4b8b892caed1818837b9f8aad4a533a60258d6a7ebc7c3aa398dad"
+    },
+    {
+      "bytes": 13466,
+      "path": "artifacts/new-goal-b5d5m-mistral-pairing-independent-review-v1/saved-review.json",
+      "sha256": "d769f5846b7e56fb6cb16905f063d73ada2b3c5cf8248faf99518043b307a3eb"
+    }
+  ],
+  "format": "toklet-mistral-audited-pairing-result-v1",
+  "limitations": [
+    "One cached Mistral model at512 loaded positions; declared32768 remains separate. No new window/quality qualification.",
+    "No session, generation, app activation, phone, UI or performance qualification.",
+    "Mode/pointer/stop/Weak and snapshot lifetime are completed assertions plus raw ownership records, not separately exported numerical arrays.",
+    "Missing-codec-directory fails at first config read, not an ancillary stage.",
+    "Historical model/codec consumption does not establish current disk or resident-buffer identity; future preferences need fresh admission.",
+    "Sparse direct-process samples are not whole-process-tree peak or whole-device fit; declared5GiB/64MiB/256MiB envelope is separate policy.",
+    "Native source/header inventory38 is separate from selected37 package and later Swift integration."
+  ],
+  "observations": {
+    "closed": {
+      "all_owners_released": true,
+      "app_or_phone_qualified": false,
+      "generation": false,
+      "model_loads": 1,
+      "passed": true,
+      "snapshot_survived_owners": true
+    },
+    "complete": {
+      "nonnull": true,
+      "status": 0,
+      "strong_count": 2
+    },
+    "getter": {
+      "nonnull": true,
+      "status": 0,
+      "strong_count": 2
+    },
+    "identity": {
+      "assets": [
+        {
+          "bytes": 721,
+          "name": "config.json",
+          "roles": [
+            "source_metadata_consumed",
+            "codec_config_verified"
+          ],
+          "sha256": "efc145d2f53d6d6ef2639be0556b4ecf6faac6cf8a7199ad2b7bb5ebcf443bdd"
+        },
+        {
+          "bytes": 4077480215,
+          "name": "model.safetensors",
+          "roles": [
+            "source_bytes_delivered_to_assembled_model"
+          ],
+          "sha256": "d7182d886f93a9efa73d6d556ee33ffe839a4e09e15965eeef46f295ab5b503d"
+        },
+        {
+          "bytes": 52381,
+          "name": "model.safetensors.index.json",
+          "roles": [
+            "source_metadata_consumed"
+          ],
+          "sha256": "525940738b16d210fdfd692a24752d050c15a50cbe208dd82b06204d640d687b"
+        },
+        {
+          "bytes": 1961548,
+          "name": "tokenizer.json",
+          "roles": [
+            "tokenizer_parser_consumed"
+          ],
+          "sha256": "e553af6fff7d7ad76e830608b218c5c0b0822998d5a1a96099a74cd3c1cb1a49"
+        },
+        {
+          "bytes": 138039,
+          "name": "tokenizer_config.json",
+          "roles": [
+            "fixed_text_policy_verified"
+          ],
+          "sha256": "e8fbcfef34d855dba2c7f1d91a2c5470cf493d00ecfd06488ce21e45325bc8ae"
+        },
+        {
+          "bytes": 414,
+          "name": "special_tokens_map.json",
+          "roles": [
+            "ancillary_verified"
+          ],
+          "sha256": "6fa06efa2785e450051989a6f8fb4416b10149ded485ddd3f127a40734f5cfd0"
+        }
+      ],
+      "codec_constructed": true,
+      "current_disk_identity_evaluated": false,
+      "exact_model_pair": true,
+      "historical_evidence": true,
+      "loaded_position_limit": 512,
+      "model_assembled": true,
+      "model_instance": 1,
+      "preference_namespace": {
+        "backend": "metal_native_dense_v1",
+        "load": "mistral_audited_v1",
+        "manifest_algorithm": "toklet-full-manifest-v1",
+        "manifest_sha256": "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26",
+        "planning": "native_mlx_planning_v1",
+        "text": "mistral-instruct-v1",
+        "version": 1
+      },
+      "preferences_require_fresh_admission": true,
+      "qualification_evaluated": false,
+      "report_kind": "accepted_model_chat_identity",
+      "repository": "mlx-community/Mistral-7B-Instruct-v0.3-4bit",
+      "resident_buffer_identity_evaluated": false,
+      "revision": "a4b8f870474b0eb527f466a03fbc187830d271f5",
+      "schema_version": 1,
+      "source_container_physical_ranges": 745,
+      "source_container_verified_reads": 745,
+      "source_receipts_equal": true,
+      "whole_app_device_fit_evaluated": false
+    },
+    "load": {
+      "error_code": 0,
+      "nonnull": true,
+      "status": 0
+    },
+    "missing-codec-directory": {
+      "null": true,
+      "status": 2,
+      "strong_count": 1
+    },
+    "wrong-profile": {
+      "null": true,
+      "status": 9,
+      "strong_count": 1
+    }
+  },
+  "passed": true,
+  "source_files": {
+    "apple/include/toklet.h": {
+      "bytes": 23426,
+      "sha256": "ba17dc8882bebd8ef977c44eddd268c7441fb88baaae34681454ce675ab329fb"
+    },
+    "src/app_chat.rs": {
+      "bytes": 25531,
+      "sha256": "aae59298a3a05214562cb758573235c3b7566fa93430421e3b9d25fef23db57e"
+    },
+    "src/app_chat/dense_content.rs": {
+      "bytes": 8828,
+      "sha256": "bc30373310f6e459d254f1d1663b06a6e170de9d2e9e157bcfc1c21b4027eba5"
+    },
+    "src/app_chat/dense_content/mistral_tests.rs": {
+      "bytes": 5241,
+      "sha256": "010ed17d3bb90491bd938c636fc0af3d4d5aec7afa270f8b7800335018e2f2b8"
+    },
+    "src/app_chat/qwen3_content/tests.rs": {
+      "bytes": 7591,
+      "sha256": "06f58685ee2b302e67997c9393381638e1953cf7ff83b0269041b38d11e13b62"
+    },
+    "src/app_chat/qwen_content.rs": {
+      "bytes": 164,
+      "sha256": "4177c892c2f4da6fd3afe57233bf683032934c0bfd659e7a74351c2ba03c36eb"
+    },
+    "src/app_chat/qwen_content/qwen2_tests.rs": {
+      "bytes": 6369,
+      "sha256": "d0fd34d8d457832cd9720ba7ef228d87c07baad6d97ca70ccc4555d021f8a13f"
+    },
+    "src/app_chat/stream.rs": {
+      "bytes": 27274,
+      "sha256": "bc6b8f784427f153218247218605034f4f821b7a54ad9e6ea700fb77bd999c84"
+    },
+    "src/metal/mod.rs": {
+      "bytes": 140015,
+      "sha256": "0c22e735c8eaf01994455bb454a81421eaa7de5c98960a2dc5d4d732cd3fbf75"
+    },
+    "src/native.rs": {
+      "bytes": 37797,
+      "sha256": "b369487fca75b48afd0cb94e32575593e7fc08f054931692835a93b1963d96b4"
+    },
+    "src/native/mistral_pairing_tests.rs": {
+      "bytes": 2499,
+      "sha256": "2e36d010b03745a040a376ab73276adb19acb5de820b85d179444dae92d97830"
+    },
+    "src/native/tests.rs": {
+      "bytes": 49173,
+      "sha256": "c4eeb4738d20043211ae56c0aa04ff626d4a401378682807ed1e9b590bebd91f"
+    },
+    "src/native/text/complete.rs": {
+      "bytes": 7052,
+      "sha256": "89eb5ada8545c6425d11226280ebc393d6b7ec8b63e8379a2f51d18df11285f5"
+    },
+    "src/native/text/complete/mistral_metal_tests.rs": {
+      "bytes": 8229,
+      "sha256": "4fb1f2ff52ff1b10ff88c7e283c7406df6e5e9fdce5f249f18d8af5bb408263b"
+    },
+    "src/native/text/identity.rs": {
+      "bytes": 14196,
+      "sha256": "b8f98b411c370e2bc51acae60f164ccb2969af444ec108b80aeb38fb0c735b80"
+    },
+    "src/native/text/identity/tests.rs": {
+      "bytes": 14759,
+      "sha256": "59fa8f346c10651bd6043a8980201c54cd760033d326485df448b7c1110c8053"
+    }
+  }
+}

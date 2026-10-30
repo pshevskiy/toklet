@@ -1,12 +1,13 @@
 //! Cold selection from actual assembled owners; no directory/profile guessing.
 use super::*;
-use crate::mlx::qwen::{QwenSourceContentIdentity, SourceContentIdentity};
+use crate::mlx::qwen::{DenseSourceContentIdentity, SourceContentIdentity};
 
 #[derive(Clone, Copy)]
 pub(super) enum SourceReceipt {
     Smol(SourceContentIdentity),
-    Qwen2(QwenSourceContentIdentity),
-    Qwen3(QwenSourceContentIdentity),
+    Qwen2(DenseSourceContentIdentity),
+    Qwen3(DenseSourceContentIdentity),
+    Mistral(DenseSourceContentIdentity),
 }
 impl SourceReceipt {
     pub(super) fn profile(self) -> Profile {
@@ -14,16 +15,16 @@ impl SourceReceipt {
             Self::Smol(_) => Profile::Smol,
             Self::Qwen2(_) => Profile::Qwen,
             Self::Qwen3(_) => Profile::Qwen3,
+            Self::Mistral(_) => Profile::Mistral,
         }
     }
     pub(super) fn model(model: &ModelHandle) -> Result<(Self, usize)> {
-        let receipts: (
+        let (smol, dense, loaded): (
             Option<SourceContentIdentity>,
-            Option<QwenSourceContentIdentity>,
-            Option<QwenSourceContentIdentity>,
+            Option<DenseSourceContentIdentity>,
             usize,
         ) = match model.model.as_ref() {
-            NativeModel::Cpu(_) => (None, None, None, 0),
+            NativeModel::Cpu(_) => (None, None, 0),
             #[cfg(all(
                 feature = "metal",
                 any(target_os = "macos", target_os = "ios"),
@@ -31,15 +32,13 @@ impl SourceReceipt {
             ))]
             NativeModel::Metal(value) => (
                 value.mlx_source_content_identity().copied(),
-                value.mlx_qwen2_source_content_identity().copied(),
-                value.mlx_qwen3_source_content_identity().copied(),
+                value.mlx_dense_source_content_identity().copied(),
                 value.config().max_positions,
             ),
         };
-        let source = match (receipts.0, receipts.1, receipts.2) {
-            (Some(s), None, None) => Self::Smol(s),
-            (None, Some(s), None) => Self::Qwen2(s),
-            (None, None, Some(s)) => Self::Qwen3(s),
+        let source = match (smol, dense) {
+            (Some(s), None) => Self::Smol(s),
+            (None, Some(s)) => Self::dense(s)?,
             _ => {
                 return Err(fail(
                     UNSUPPORTED,
@@ -58,6 +57,7 @@ impl SourceReceipt {
                 Self::Smol(_) => crate::mlx::dense::Architecture::Llama,
                 Self::Qwen2(_) => crate::mlx::dense::Architecture::Qwen2,
                 Self::Qwen3(_) => crate::mlx::dense::Architecture::Qwen3,
+                Self::Mistral(_) => crate::mlx::dense::Architecture::Mistral,
             };
             if !source.profile().supports(value.config())
                 || value.native_session_modes()
@@ -77,21 +77,45 @@ impl SourceReceipt {
             crate::mlx::execution::metal_geometry(value.config(), architecture)
                 .map_err(|e| fail(UNSUPPORTED, e.message()))?;
         }
-        Ok((source, receipts.3))
+        Ok((source, loaded))
+    }
+    fn dense(source: DenseSourceContentIdentity) -> Result<Self> {
+        use crate::weights::content::{DenseProfile, QwenProfile};
+        for profile in [
+            DenseProfile::Qwen(QwenProfile::Qwen2),
+            DenseProfile::Qwen(QwenProfile::Qwen3),
+            DenseProfile::Mistral,
+        ] {
+            let manifest = profile
+                .manifest()
+                .map_err(|e| fail(ENGINE_ERROR, e.to_string()))?;
+            if source.expected_manifest_sha256() == manifest.identity() {
+                return Ok(match profile {
+                    DenseProfile::Qwen(QwenProfile::Qwen2) => Self::Qwen2(source),
+                    DenseProfile::Qwen(QwenProfile::Qwen3) => Self::Qwen3(source),
+                    DenseProfile::Mistral => Self::Mistral(source),
+                });
+            }
+        }
+        Err(fail(
+            UNSUPPORTED,
+            "unsupported assembled dense source identity",
+        ))
     }
     fn codec(self, directory: &Path, allowance: usize) -> Result<Codec> {
         match self {
             Self::Smol(s) => Codec::load_smol_complete_audited(directory, &s, allowance),
             Self::Qwen2(s) => Codec::load_qwen2_audited(directory, &s, allowance),
             Self::Qwen3(s) => Codec::load_qwen3_audited(directory, &s, allowance),
+            Self::Mistral(s) => Codec::load_mistral_audited(directory, &s, allowance),
         }
         .map_err(|e| fail(LOAD_ERROR, e.to_string()))
     }
 }
 
-/// Construct a complete audited codec from the actual attached Smol/Qwen2/Qwen3
+/// Construct a complete audited codec from the actual attached Smol/Qwen2/Qwen3/Mistral
 /// model evidence. No caller-selected profile/path is authority. Reserve a
-/// separate profile text allowance before loading the model (Smol64 MiB,
+/// separate profile text allowance before loading the model (Smol/Mistral64 MiB,
 /// Qwen2 128 MiB, Qwen3 256 MiB; at most6 GiB); combined process/device fit stays separate.
 /// Legacy factories retain their existing contracts. A missing ancillary asset
 /// fails this new route, and no partial codec or additional Rc is published.
@@ -146,3 +170,7 @@ mod metal_tests;
 #[cfg(all(test, feature = "metal", target_os = "macos", target_arch = "aarch64"))]
 #[path = "complete/qwen2_metal_tests.rs"]
 mod qwen2_metal_tests;
+
+#[cfg(all(test, feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+#[path = "complete/mistral_metal_tests.rs"]
+mod mistral_metal_tests;

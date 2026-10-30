@@ -322,3 +322,101 @@ fn qwen2_mixed_manifest_policy_and_each_role_reject() {
     e.reads = 629;
     assert!(build(e, 1, 512).is_err());
 }
+
+fn mistral_fixture() -> Evidence {
+    let m = mistral_manifest().unwrap();
+    let files = m.files();
+    Evidence {
+        profile: IdentityProfile::Mistral,
+        manifest: m.identity(),
+        digests: std::array::from_fn(|i| files[i].sha256),
+        container_bytes: files[1].bytes,
+        ranges: 745,
+        reads: 745,
+        text_policy: "mistral-instruct-v1",
+    }
+}
+#[test]
+fn mistral_identity_uses_distinct_fixed_policies_and_actual_factory_limit() {
+    let value = report(mistral_fixture(), 7, 512);
+    assert_eq!(
+        value["preference_namespace"],
+        json!({"version":1,"manifest_algorithm":"toklet-full-manifest-v1","manifest_sha256":"0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26","backend":"metal_native_dense_v1","load":"mistral_audited_v1","text":"mistral-instruct-v1","planning":"native_mlx_planning_v1"})
+    );
+    assert_eq!(
+        value["assets"][1]["roles"],
+        json!(["source_bytes_delivered_to_assembled_model"])
+    );
+    assert_eq!(value["source_container_physical_ranges"], 745);
+    assert!(build(mistral_fixture(), 7, 513).is_err());
+    assert!(build(mistral_fixture(), 7, 0).is_err());
+    assert!(build(mistral_fixture(), 0, 512).is_err());
+    assert_eq!(
+        report(mistral_fixture(), 8, 16)["preference_namespace"],
+        value["preference_namespace"]
+    );
+    assert_ne!(
+        report(fixture(), 7, 512)["preference_namespace"],
+        value["preference_namespace"]
+    );
+    assert_ne!(
+        report(qwen2_fixture(), 7, 512)["preference_namespace"],
+        value["preference_namespace"]
+    );
+    let config = crate::model::Config {
+        vocab_size: 32768,
+        hidden_size: 4096,
+        intermediate_size: 14336,
+        num_layers: 32,
+        query_heads: 32,
+        kv_heads: 8,
+        head_dim: 128,
+        max_positions: 512,
+        rms_norm_eps: 1e-5,
+        rope_theta: 1e6,
+    };
+    assert!(Profile::Mistral.supports(&config));
+    assert!(
+        crate::mlx::execution::metal_geometry(&config, crate::mlx::dense::Architecture::Mistral)
+            .is_ok()
+    );
+    assert!(
+        crate::mlx::execution::metal_geometry(
+            &crate::model::Config {
+                max_positions: 513,
+                ..config
+            },
+            crate::mlx::dense::Architecture::Mistral
+        )
+        .is_err()
+    );
+}
+#[test]
+fn mistral_identity_rejects_cross_profile_and_every_mismatched_asset() {
+    for i in 0..6 {
+        let mut e = mistral_fixture();
+        e.digests[i][0] ^= 1;
+        assert!(build(e, 1, 512).is_err());
+    }
+    for profile in [
+        IdentityProfile::Qwen2,
+        IdentityProfile::Qwen3,
+        IdentityProfile::Smol,
+    ] {
+        let mut e = mistral_fixture();
+        e.profile = profile;
+        assert!(build(e, 1, 512).is_err());
+    }
+    let mut e = fixture();
+    e.profile = IdentityProfile::Mistral;
+    assert!(build(e, 1, 512).is_err());
+    let mut e = mistral_fixture();
+    e.text_policy = "qwen-chatml-v1";
+    assert!(build(e, 1, 512).is_err());
+    let mut e = mistral_fixture();
+    e.reads = 744;
+    assert!(build(e, 1, 512).is_err());
+    let mut e = mistral_fixture();
+    e.container_bytes -= 1;
+    assert!(build(e, 1, 512).is_err());
+}

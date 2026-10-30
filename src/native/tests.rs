@@ -1548,3 +1548,6 @@ fn audited_qwen_chat_owner_and_null_validation_preserve_reference_count() {
 
 #[path = "qwen2_pairing_tests.rs"]
 mod qwen2_pairing_tests;
+
+#[path = "mistral_pairing_tests.rs"]
+mod mistral_pairing_tests;

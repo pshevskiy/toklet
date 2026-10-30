@@ -9187,3 +9187,35 @@ Final C6a publication review corrects the documented source allowance from5GiB
 to actual6GiB INITIAL_MEMORY_LIMIT_BYTES and clarifies that Qwen getters are
 explicitly profile-filtered. No code, workload, gates or results change; only
 content/whitespace review repeats.
+
+C6a is committed as `4a6ce61` after exact eighteen-file Astra final review and
+all eight passing checks; failed evidence remains retained. Only unrelated
+Apple DSStore remained. C6b prepares shared Mistral model/codec/getter identity
+and its routine cold checks together; actual-product probe remains a later
+gate. Source-only6GiB allowance is distinct from the prospective ownership
+probe's5GiB numerical/64MiB text/256MiB application envelope.
+
+C6b's combined sixteen-file source and twelve-job routine checks pass Astra
+review. Guarded application/whitespace pass. One neutral model/codec receipt
+slot and shared verified-buffer reader extend to Mistral, preserving Qwen
+aliases/const filters and existing numerical assembly. Mistral keeps Reference/
+512 and4MiB tokenizer/256KiB policy/64MiB text bounds. One new audited model
+factory raises header inventory to38; selected37, Swift and sessions remain
+unchanged. Cold/C ABI checks start before separately reviewed ownership probe.
+
+C6b passes all twelve cold/native checks:537default/645Metal tests, seven new
+and eight moved codec controls in both suites,38exactexports/C ABI and release
+builds. Three actual products are retained and six cached assets verified; all
+process groups close without endpoint errors. Astra retained-product approval
+precedes the one Mistral ownership probe. No session, generation, app settings
+or native package selection change is yet claimed.
+
+C6b's cached Mistral ownership probe passes seven frames: actual model1/
+loaded512/745source reads and all six exact roles, including the138039-byte
+policy under256KiB. Failure Rc1, complete/getter Rc2, exact-owner/Reference/
+stop assertions, final Weak exhaustion and JSON snapshot survival pass.
+No session or generation occurs. Astra saved audit passes source/products/logs,
+537/645test totals and all thirteen closed groups. Sparse process observations
+remain separate from the5GiB/64MiB/256MiB declared envelope; no peak/fit or
+performance inference. [Report](mistral-audited-pairing.md); final publication
+review/commit precedes native38/shared Swift settings.

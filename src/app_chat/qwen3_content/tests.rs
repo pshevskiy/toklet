@@ -24,7 +24,7 @@ impl Drop for Directory {
         let _ = fs::remove_dir_all(&self.0);
     }
 }
-pub(super) fn synthetic_source() -> QwenSourceContentIdentity {
+pub(super) fn synthetic_source() -> DenseSourceContentIdentity {
     let f = SourceFixture::new();
     let mut source = f.source();
     source.visit_raw("a", |_| Ok(())).unwrap();
@@ -77,7 +77,13 @@ fn source_and_allowance_admission_precedes_file_access() {
 fn each_consumed_or_verified_role_is_required_and_same_length_changes_fail() {
     let d = Directory::new();
     let expected = fixture(&d.0, b"tokenizer");
-    let a = assets(QwenProfile::Qwen3, &d.0, expected[0].sha256, &expected).unwrap();
+    let a = assets(
+        DenseProfile::Qwen(QwenProfile::Qwen3),
+        &d.0,
+        expected[0].sha256,
+        &expected,
+    )
+    .unwrap();
     assert_eq!(a.tokenizer, b"tokenizer");
     assert_eq!(a.tokenizer_sha, expected[3].sha256);
     assert_eq!(a.policy_sha, expected[4].sha256);
@@ -88,29 +94,74 @@ fn each_consumed_or_verified_role_is_required_and_same_length_changes_fail() {
         let mut changed = original.clone();
         changed[0] ^= 1;
         fs::write(&p, &changed).unwrap();
-        assert!(assets(QwenProfile::Qwen3, &d.0, expected[0].sha256, &expected).is_err());
+        assert!(
+            assets(
+                DenseProfile::Qwen(QwenProfile::Qwen3),
+                &d.0,
+                expected[0].sha256,
+                &expected
+            )
+            .is_err()
+        );
         fs::write(&p, &original).unwrap();
         fs::rename(&p, d.0.join("missing")).unwrap();
-        assert!(assets(QwenProfile::Qwen3, &d.0, expected[0].sha256, &expected).is_err());
+        assert!(
+            assets(
+                DenseProfile::Qwen(QwenProfile::Qwen3),
+                &d.0,
+                expected[0].sha256,
+                &expected
+            )
+            .is_err()
+        );
         fs::rename(d.0.join("missing"), p).unwrap();
     }
-    assert!(assets(QwenProfile::Qwen3, &d.0, [0; 32], &expected).is_err());
+    assert!(
+        assets(
+            DenseProfile::Qwen(QwenProfile::Qwen3),
+            &d.0,
+            [0; 32],
+            &expected
+        )
+        .is_err()
+    );
     // Model/index are covered by source evidence, not reopened by text loading.
     fs::remove_file(d.0.join(expected[1].name)).unwrap();
     fs::remove_file(d.0.join(expected[2].name)).unwrap();
-    assert!(assets(QwenProfile::Qwen3, &d.0, expected[0].sha256, &expected).is_ok());
+    assert!(
+        assets(
+            DenseProfile::Qwen(QwenProfile::Qwen3),
+            &d.0,
+            expected[0].sha256,
+            &expected
+        )
+        .is_ok()
+    );
 }
 #[test]
 fn verified_buffer_limits_and_parser_failure_do_not_publish_codec() {
     let d = Directory::new();
     let expected = fixture(&d.0, b"invalid tokenizer JSON");
     assert!(verified(&d.0, expected[3], expected[3].bytes as usize - 1).is_err());
-    let a = assets(QwenProfile::Qwen3, &d.0, expected[0].sha256, &expected).unwrap();
+    let a = assets(
+        DenseProfile::Qwen(QwenProfile::Qwen3),
+        &d.0,
+        expected[0].sha256,
+        &expected,
+    )
+    .unwrap();
     assert_eq!(
         a.tokenizer_sha,
         <[u8; 32]>::from(Sha256::digest(&a.tokenizer))
     );
-    assert!(build(QwenProfile::Qwen3, a, &synthetic_source()).is_err());
+    assert!(
+        build(
+            DenseProfile::Qwen(QwenProfile::Qwen3),
+            a,
+            &synthetic_source()
+        )
+        .is_err()
+    );
     fs::write(d.0.join(expected[3].name), b"longer invalid tokenizer JSON").unwrap();
     assert!(verified(&d.0, expected[3], 16 * 1024 * 1024).is_err());
 }
@@ -123,8 +174,14 @@ fn private_construction_attaches_only_after_same_buffer_parser_policy_passes() {
     let expected = fixture(&d.0, json);
     let source = synthetic_source();
     let codec = build(
-        QwenProfile::Qwen3,
-        assets(QwenProfile::Qwen3, &d.0, expected[0].sha256, &expected).unwrap(),
+        DenseProfile::Qwen(QwenProfile::Qwen3),
+        assets(
+            DenseProfile::Qwen(QwenProfile::Qwen3),
+            &d.0,
+            expected[0].sha256,
+            &expected,
+        )
+        .unwrap(),
         &source,
     )
     .unwrap();
@@ -143,8 +200,14 @@ fn private_construction_attaches_only_after_same_buffer_parser_policy_passes() {
     let expected = fixture(&d.0, bad.as_bytes());
     assert!(
         build(
-            QwenProfile::Qwen3,
-            assets(QwenProfile::Qwen3, &d.0, expected[0].sha256, &expected).unwrap(),
+            DenseProfile::Qwen(QwenProfile::Qwen3),
+            assets(
+                DenseProfile::Qwen(QwenProfile::Qwen3),
+                &d.0,
+                expected[0].sha256,
+                &expected
+            )
+            .unwrap(),
             &source
         )
         .is_err()
@@ -158,5 +221,13 @@ fn codec_final_component_symlink_is_not_followed() {
     let path = d.0.join("tokenizer.json");
     fs::rename(&path, d.0.join("real-tokenizer")).unwrap();
     std::os::unix::fs::symlink("real-tokenizer", &path).unwrap();
-    assert!(assets(QwenProfile::Qwen3, &d.0, expected[0].sha256, &expected).is_err());
+    assert!(
+        assets(
+            DenseProfile::Qwen(QwenProfile::Qwen3),
+            &d.0,
+            expected[0].sha256,
+            &expected
+        )
+        .is_err()
+    );
 }

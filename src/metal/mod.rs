@@ -99,6 +99,7 @@ enum MlxImport {
     Ordinary,
     SmolAudited,
     Qwen2Audited,
+    MistralAudited,
     Qwen3Audited,
     Qwen3QualityDiagnostic,
     Qwen3ContextDiagnostic,
@@ -204,7 +205,7 @@ pub struct Model {
     qwen3_context_diagnostic: bool,
     mlx_declared_positions: Option<usize>,
     mlx_source_identity: Option<crate::mlx::qwen::SourceContentIdentity>,
-    mlx_qwen_source_identity: Option<crate::mlx::qwen::QwenSourceContentIdentity>,
+    mlx_dense_source_identity: Option<crate::mlx::qwen::DenseSourceContentIdentity>,
     pub load_timing: LoadTiming,
 }
 impl Model {
@@ -312,19 +313,34 @@ impl Model {
     pub fn mlx_qwen3_source_content_identity(
         &self,
     ) -> Option<&crate::mlx::qwen::QwenSourceContentIdentity> {
-        self.mlx_qwen_content_identity(crate::weights::content::QwenProfile::Qwen3)
+        self.mlx_dense_profile_content_identity(crate::weights::content::DenseProfile::Qwen(
+            crate::weights::content::QwenProfile::Qwen3,
+        ))
     }
     /// Historical delivery for the audited Qwen2 profile, never Qwen3.
     pub fn mlx_qwen2_source_content_identity(
         &self,
     ) -> Option<&crate::mlx::qwen::QwenSourceContentIdentity> {
-        self.mlx_qwen_content_identity(crate::weights::content::QwenProfile::Qwen2)
+        self.mlx_dense_profile_content_identity(crate::weights::content::DenseProfile::Qwen(
+            crate::weights::content::QwenProfile::Qwen2,
+        ))
     }
-    fn mlx_qwen_content_identity(
+    /// Historical audited dense delivery attached only after successful assembly.
+    pub fn mlx_dense_source_content_identity(
         &self,
-        profile: crate::weights::content::QwenProfile,
+    ) -> Option<&crate::mlx::qwen::DenseSourceContentIdentity> {
+        self.mlx_dense_source_identity.as_ref()
+    }
+    pub fn mlx_mistral_source_content_identity(
+        &self,
+    ) -> Option<&crate::mlx::qwen::DenseSourceContentIdentity> {
+        self.mlx_dense_profile_content_identity(crate::weights::content::DenseProfile::Mistral)
+    }
+    fn mlx_dense_profile_content_identity(
+        &self,
+        profile: crate::weights::content::DenseProfile,
     ) -> Option<&crate::mlx::qwen::QwenSourceContentIdentity> {
-        let identity = self.mlx_qwen_source_identity.as_ref()?;
+        let identity = self.mlx_dense_source_identity.as_ref()?;
         (identity.expected_manifest_sha256() == profile.manifest().ok()?.identity())
             .then_some(identity)
     }
@@ -390,6 +406,13 @@ impl Model {
     pub fn load_mlx_qwen2_audited(directory: &Path, options: weights::LoadOptions) -> Result<Self> {
         Self::load_mlx_impl(directory, options, MlxImport::Qwen2Audited)
     }
+    /// Pinned Mistral audit; the existing Reference graph and geometry apply.
+    pub fn load_mlx_mistral_audited(
+        directory: &Path,
+        options: weights::LoadOptions,
+    ) -> Result<Self> {
+        Self::load_mlx_impl(directory, options, MlxImport::MistralAudited)
+    }
     /// Experimental Qwen3 0.6B quality execution up to1025 positions. Uses the
     /// unchanged Half graph, packed weights and session planners. This does not
     /// qualify numerics/quality, increase app limits, or waive known C512 failures.
@@ -418,6 +441,8 @@ impl Model {
             let clock = Instant::now();
             let mut source = if matches!(import, MlxImport::SmolAudited) {
                 crate::mlx::qwen::Source::open_smol_audited(directory, options)?
+            } else if matches!(import, MlxImport::MistralAudited) {
+                crate::mlx::qwen::Source::open_mistral_audited(directory, options)?
             } else if matches!(import, MlxImport::Qwen2Audited) {
                 crate::mlx::qwen::Source::open_qwen2_audited(directory, options)?
             } else if matches!(import, MlxImport::Qwen3Audited) {
@@ -537,14 +562,15 @@ impl Model {
                 ))?;
                 model.mlx_source_identity = Some(identity);
             }
-            let qwen_identity = match import {
+            let dense_identity = match import {
                 MlxImport::Qwen2Audited => Some(source.qwen2_content_identity()),
+                MlxImport::MistralAudited => Some(source.mistral_content_identity()),
                 MlxImport::Qwen3Audited => Some(source.qwen3_content_identity()),
                 _ => None,
             };
-            if let Some(identity) = qwen_identity {
-                model.mlx_qwen_source_identity = Some(identity.ok_or(Error::Options(
-                    "audited Qwen source incomplete after model assembly",
+            if let Some(identity) = dense_identity {
+                model.mlx_dense_source_identity = Some(identity.ok_or(Error::Options(
+                    "audited dense source incomplete after model assembly",
                 ))?);
             }
             model.load_timing = LoadTiming {
@@ -757,7 +783,7 @@ impl Model {
             qwen3_context_diagnostic: false,
             mlx_declared_positions: None,
             mlx_source_identity: None,
-            mlx_qwen_source_identity: None,
+            mlx_dense_source_identity: None,
             load_timing: LoadTiming {
                 load_seconds: 0.,
                 conversion_seconds: 0.,

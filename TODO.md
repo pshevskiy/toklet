@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5d5c6b — shared Mistral model/codec identity pairing**.
+Next implementation task: **B5d5c6c — shared Mistral app routing/preferences and coherent38 package**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -417,7 +417,10 @@ separate requirements below. Further model admissions require their own scope.
             passes530default/638Metal, seven controls and one cached745range
             stream with Astra saved audit. Qwen aliases/filtered getters and
             original caps/Whole/poison preserved; failed fixture migration retained.
-          - [ ] C6b: successful model/complete-codec/getter ownership identity.
+          - [x] C6b: [Mistral model/complete-codec/getter ownership identity](docs/mistral-audited-pairing.md)
+            passes12coldjobs,537default/645Metal,38exports and one cached
+            seven-frame ownership probe with Astra saved audit. No session/
+            generation; selected37 and Swift integration remain separate.
           - [ ] C6c: coherent native package and shared Swift app/preferences.
 
 New exact-history migration remains a separate Expert mode; first Friendly Apply
@@ -827,3 +830,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | C6a all checks pass | All8V2jobs pass:530default/638Metal, seven controls both suites and one cached745read/743tensor source stream,101712audit bytes. All groups close/no endpoints; original338pass/7fail receipt preserved. Fresh CUA inventory remains locked with no app actions. | [Report](docs/mistral-consumed-source.md); saved Astra audit and final publication review/commit next. No assembly, codec, GPU, app, phone or performance claim. |
 | 2026-10-30 | C6a saved audit passes | Astra verifies13source/current inputs,16current+10failed logs,530/638totals, seven controls both suites and complete raw canonical/hash/range/poison evidence. Eight current+five failed groups absent; V1 remains failed. | Final exact publication review/commit next, then private16path Mistral pairing draft freeze on actual commit. |
 | 2026-10-30 | C6a publication budget clarified | Astra catches documentation5GiB source allowance versus actual INITIAL_MEMORY_LIMIT_BYTES6GiB and requests precise explicit-filter wording. Both corrected before commit; no source, test result, gate or workload change. | Restaged publication review only; no benchmarks/tests repeated for documentation. |
+| 2026-10-30 | C6a committed / C6b begins | Shared Mistral consumed-source task committed as `4a6ce61` after exact18file Astra final review and all8checks. Only preservedDSStore remained; selected37 unchanged. | Freeze prepared16path Mistral pairing draft and routine cold builder together on actual commit; actual-product ownership probe stays separately gated. |
+| 2026-10-30 | C6b shared pairing source applied | Astra approves16sourcepaths and12cold checks together. Guarded source application/whitespace pass: neutral dense model/codec slots, preserved Qwen aliases/const filters, actual Mistral Reference/512 and codec bounds, one additive38th export. | Required Rust/native/C ABI/product checks start; actual one-model ownership probe waits retained-product review. No session, generation, Swift or package change. |
+| 2026-10-30 | C6b cold/native checks pass | All12jobs pass:537default/645Metal, seven new+eight moved codec controls both suites,38exports/C ABI and release products. Three actual products retained/six cached assets verified; all groups close/no endpoints. | Astra retained-product approval before single Mistral ownership probe. No sessions, generation, Swift activation or package update. |
+| 2026-10-30 | C6b ownership/audit pass | Single audited Mistral model/complete-codec/getter passes7frames: model1/loaded512/745reads, all6roles, failureRc1/successRc2, final owner exhaustion and snapshot survival. Astra audits current source/products/logs and13closedgroups; policy and sparse observations remain separate. | [Report](docs/mistral-audited-pairing.md); final exact publication review/commit, then native38/sharedSwift. No session, generation, broader window/app/device/performance claim. |

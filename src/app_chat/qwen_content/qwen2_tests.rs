@@ -4,12 +4,24 @@ use std::fs;
 
 #[test]
 fn qwen_profile_memory_and_asset_caps_remain_distinct() {
-    assert_eq!(text_profile(QwenProfile::Qwen2), Profile::Qwen);
-    assert_eq!(text_profile(QwenProfile::Qwen3), Profile::Qwen3);
+    assert_eq!(
+        text_profile(DenseProfile::Qwen(QwenProfile::Qwen2)),
+        Profile::Qwen
+    );
+    assert_eq!(
+        text_profile(DenseProfile::Qwen(QwenProfile::Qwen3)),
+        Profile::Qwen3
+    );
     assert_eq!(Profile::Qwen.allowance(), 128 * 1024 * 1024);
     assert_eq!(Profile::Qwen3.allowance(), 256 * 1024 * 1024);
-    assert_eq!(tokenizer_cap(QwenProfile::Qwen2), 8 * 1024 * 1024);
-    assert_eq!(tokenizer_cap(QwenProfile::Qwen3), 16 * 1024 * 1024);
+    assert_eq!(
+        tokenizer_cap(DenseProfile::Qwen(QwenProfile::Qwen2)),
+        8 * 1024 * 1024
+    );
+    assert_eq!(
+        tokenizer_cap(DenseProfile::Qwen(QwenProfile::Qwen3)),
+        16 * 1024 * 1024
+    );
     let source = synthetic_source();
     let missing = Path::new("/toklet-absent-audited-qwen2-codec");
     for allowance in [
@@ -25,9 +37,12 @@ fn qwen_profile_memory_and_asset_caps_remain_distinct() {
                 .contains("allowance")
         );
     }
-    for profile in [QwenProfile::Qwen2, QwenProfile::Qwen3] {
+    for profile in [
+        DenseProfile::Qwen(QwenProfile::Qwen2),
+        DenseProfile::Qwen(QwenProfile::Qwen3),
+    ] {
         let e =
-            Codec::load_qwen_audited(profile, missing, &source, text_profile(profile).allowance())
+            Codec::load_dense_audited(profile, missing, &source, text_profile(profile).allowance())
                 .err()
                 .unwrap();
         assert!(e.to_string().contains("Unsupported authenticated source"));
@@ -35,10 +50,26 @@ fn qwen_profile_memory_and_asset_caps_remain_distinct() {
     let d = Directory::new();
     let mut files = fixture(&d.0, b"tokenizer");
     files[4].bytes = 16 * 1024 + 1;
-    assert!(assets(QwenProfile::Qwen2, &d.0, files[0].sha256, &files).is_err());
+    assert!(
+        assets(
+            DenseProfile::Qwen(QwenProfile::Qwen2),
+            &d.0,
+            files[0].sha256,
+            &files
+        )
+        .is_err()
+    );
     files[4].bytes = b"policy".len() as u64;
-    files[3].bytes = tokenizer_cap(QwenProfile::Qwen2) as u64 + 1;
-    assert!(assets(QwenProfile::Qwen2, &d.0, files[0].sha256, &files).is_err());
+    files[3].bytes = tokenizer_cap(DenseProfile::Qwen(QwenProfile::Qwen2)) as u64 + 1;
+    assert!(
+        assets(
+            DenseProfile::Qwen(QwenProfile::Qwen2),
+            &d.0,
+            files[0].sha256,
+            &files
+        )
+        .is_err()
+    );
 }
 
 #[test]
@@ -49,8 +80,14 @@ fn qwen2_parser_publishes_only_its_profile_and_old_const_api_remains() {
     let files = fixture(&d.0, json);
     let source = synthetic_source();
     let codec = build(
-        QwenProfile::Qwen2,
-        assets(QwenProfile::Qwen2, &d.0, files[0].sha256, &files).unwrap(),
+        DenseProfile::Qwen(QwenProfile::Qwen2),
+        assets(
+            DenseProfile::Qwen(QwenProfile::Qwen2),
+            &d.0,
+            files[0].sha256,
+            &files,
+        )
+        .unwrap(),
         &source,
     )
     .unwrap();
@@ -70,8 +107,14 @@ fn qwen2_parser_publishes_only_its_profile_and_old_const_api_remains() {
     assert_eq!(codec.stop_ids(), &[151643, 151645]);
     assert!(Codec::load_qwen2_audited(&d.0, &source, Profile::Qwen.allowance()).is_err());
     let qwen3 = build(
-        QwenProfile::Qwen3,
-        assets(QwenProfile::Qwen3, &d.0, files[0].sha256, &files).unwrap(),
+        DenseProfile::Qwen(QwenProfile::Qwen3),
+        assets(
+            DenseProfile::Qwen(QwenProfile::Qwen3),
+            &d.0,
+            files[0].sha256,
+            &files,
+        )
+        .unwrap(),
         &source,
     )
     .unwrap();
@@ -86,8 +129,14 @@ fn qwen2_parser_publishes_only_its_profile_and_old_const_api_remains() {
     let files = fixture(&d.0, bad.as_bytes());
     assert!(
         build(
-            QwenProfile::Qwen2,
-            assets(QwenProfile::Qwen2, &d.0, files[0].sha256, &files).unwrap(),
+            DenseProfile::Qwen(QwenProfile::Qwen2),
+            assets(
+                DenseProfile::Qwen(QwenProfile::Qwen2),
+                &d.0,
+                files[0].sha256,
+                &files
+            )
+            .unwrap(),
             &source
         )
         .is_err()
@@ -101,8 +150,14 @@ fn qwen2_each_verified_role_and_failed_parser_prevents_publication() {
     let source = synthetic_source();
     assert!(
         build(
-            QwenProfile::Qwen2,
-            assets(QwenProfile::Qwen2, &d.0, files[0].sha256, &files).unwrap(),
+            DenseProfile::Qwen(QwenProfile::Qwen2),
+            assets(
+                DenseProfile::Qwen(QwenProfile::Qwen2),
+                &d.0,
+                files[0].sha256,
+                &files
+            )
+            .unwrap(),
             &source
         )
         .is_err()
@@ -113,13 +168,37 @@ fn qwen2_each_verified_role_and_failed_parser_prevents_publication() {
         let mut corrupt = original.clone();
         corrupt[0] ^= 1;
         fs::write(&path, &corrupt).unwrap();
-        assert!(assets(QwenProfile::Qwen2, &d.0, files[0].sha256, &files).is_err());
+        assert!(
+            assets(
+                DenseProfile::Qwen(QwenProfile::Qwen2),
+                &d.0,
+                files[0].sha256,
+                &files
+            )
+            .is_err()
+        );
         fs::write(&path, &original).unwrap();
         fs::rename(&path, d.0.join("missing")).unwrap();
-        assert!(assets(QwenProfile::Qwen2, &d.0, files[0].sha256, &files).is_err());
+        assert!(
+            assets(
+                DenseProfile::Qwen(QwenProfile::Qwen2),
+                &d.0,
+                files[0].sha256,
+                &files
+            )
+            .is_err()
+        );
         fs::rename(d.0.join("missing"), &path).unwrap();
     }
     fs::remove_file(d.0.join(files[1].name)).unwrap();
     fs::remove_file(d.0.join(files[2].name)).unwrap();
-    assert!(assets(QwenProfile::Qwen2, &d.0, files[0].sha256, &files).is_ok());
+    assert!(
+        assets(
+            DenseProfile::Qwen(QwenProfile::Qwen2),
+            &d.0,
+            files[0].sha256,
+            &files
+        )
+        .is_ok()
+    );
 }

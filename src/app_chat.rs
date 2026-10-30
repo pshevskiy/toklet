@@ -10,6 +10,7 @@ use std::{
 use tokenizers::Tokenizer;
 
 pub mod content;
+pub mod dense_content;
 pub mod gemma4;
 pub mod qwen3_content;
 mod qwen_content;
@@ -213,7 +214,7 @@ pub struct Codec {
     special_literals: Vec<String>,
     // Historical consumed asset pairing; legacy constructors remain unbound.
     content_identity: Option<content::CodecContentIdentity>,
-    qwen_content_identity: Option<qwen3_content::QwenCodecContentIdentity>,
+    dense_content_identity: Option<dense_content::DenseCodecContentIdentity>,
 }
 impl Codec {
     pub fn load(directory: &Path) -> io::Result<Self> {
@@ -285,7 +286,7 @@ impl Codec {
             profile,
             special_literals,
             content_identity: None,
-            qwen_content_identity: None,
+            dense_content_identity: None,
         })
     }
     pub fn stop_ids(&self) -> &'static [u32] {
@@ -333,7 +334,7 @@ pub(crate) fn decode_fixture() -> Codec {
         profile: Profile::Qwen,
         special_literals: Vec::new(),
         content_identity: None,
-        qwen_content_identity: None,
+        dense_content_identity: None,
     }
 }
 
