@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5 transition bridge refresh, then B5d3 worker adoption**.
+Next implementation task: **B5d3 — dedicated worker adoption of empty candidates**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -338,9 +338,10 @@ separate requirements below. Further model admissions require their own scope.
   the full saved conversation with reset+prompt on Send; make cache reset
   explicit and preserve conversation/draft bytes. New exact-history migration
   is a separate Expert mode, not a prerequisite for first Friendly Apply.
-- [ ] Build/export-check a coherent Apple framework containing new transition
-  APIs before Swift/app consumption. The currently selected C3 package remains
-  its historical30-export bundle; native32-export checks do not upgrade it.
+- [x] B5d3a: [coherent 32-export Apple bridge](docs/apple-session-transition-package.md)
+  passes all30 build/link jobs and independent Astra audit for Mac/iOS/simulator.
+  Current app sources compile; the new candidate is selected with the old C3
+  bundle preserved. No app launch, model execution or new Swift consumer yet.
 - [ ] Report declared context, implemented backend range, budget/device fit,
   validation scope and app/text limits separately for each model.
 - [ ] Include actual weights, KV owners, scratch, loading peaks and application
@@ -636,3 +637,6 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | B5d2 test-hook visibility corrected | Astra approves the single test-only visibility narrowing to the native ancestor; all seven other source files and every control body remain exact. Root applies the reviewed correction. | Fresh cold retry pending; original fmt pass/Clippy failure receipt stays preserved. |
 | 2026-10-30 | B5d2 cold verification passes | Fresh16jobs pass: default469/20ignored, Metal577/186ignored, formatting, both strict Clippy checks, release products, exact32exports and CPU C ABI. All groups close with endpoints unchanged; five actual products are retained. | Frozen two-job tiny Metal package awaits independent Astra launch review. Earlier failed Clippy attempt stays preserved; no app adoption or wider-context claim. |
 | 2026-10-30 | B5d2 empty-candidate verification complete | All16cold and2tinyMacjobs pass with independent Astra source/product/saved-result audit. Actual candidate-owned11776bytes matchesplan; raw final old6/6/0 and candidate0/0/0. Earlier6/5/1 and visible-logit rollback are completed assertions. The initial visibility failure stays recorded. | Publish bounded native evidence and commit after exact staged review. Fresh coherent32-export Apple package comes before worker adoption; app Apply, persistence, prompt/reply limits and wider context remain open. |
+| 2026-10-30 | B5d2 committed / coherent bridge refresh starts | Empty-candidate API committed as `c83625c` after exact12-file Astra review and the completed16+2 checks. Only preservedDSStore remained. | Freeze current32-export Mac/iOS/simulator package metadata against this actual revision, then build/link under the reviewed owner. No Swift transition call or bundle selection yet. |
+| 2026-10-30 | Bridge32 metadata frozen | First root invocation passes a relative review path and stops at strict identity comparison before package creation or child launch; the unchanged owner succeeds with absolute arguments. Actual package binds committedD2/current32exports/current30Swift sources and adequate prospective8GiB disk reserve. | Retain invocation failure record; independent actual-package review precedes the30build/link jobs. No compilation, selection change or model run yet. |
+| 2026-10-30 | Bridge32 build/link and selection complete | All30jobs pass: three32-export slices, full Mac/iOS/simulator apps, exact headers/assets/architectures/platform/minimum-OS checks. Astra audits2428inputs/77outputs and approves guarded selection; oldC3bundle is preserved. Both metadata invocation and signature semantics are recorded. | Publish bounded build/adoption evidence and commit after exactfive-file review. Dedicated worker transaction is next; no app/model/runtime/window qualification follows from linking. |

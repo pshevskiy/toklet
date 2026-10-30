@@ -28,15 +28,17 @@ Destinations must be new. The builder verifies exact archive/source/header pins,
 creates `apple/Binaries/Toklet.xcframework` and `apple/Generated/Tiny`, then builds
 release simulator and unsigned device apps. It refuses foreign or differently
 linked generated inputs. The current generated library link selects
-`artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native`, with all
-30 current C exports and complete Mac/iOS/simulator app compile/link evidence.
+`artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/build-v1/native`, with all
+32 current C exports and complete Mac/iOS/simulator app compile/link evidence.
 Its native build receipt SHA256 is
-`6e3d2733b5dd4803db4c5fa6f5e48323b9441328478767eb775953d96e4edfc4`.
-The [planning-package report](../docs/apple-planning-package.md) binds the
-independent audit and exact guarded link replacement. The previously selected
-`artifacts/m8-context-ui-native-package-v1/package` is preserved; it had 28
-exports and does not provide the two new planning APIs. This selection does not
-install or run any app or change a model/context admission.
+`fa072baca8fdb8931eda5e76feb28d4f765e9a22cf137525ae549b50aa6bc247`.
+The [session-transition package report](../docs/apple-session-transition-package.md)
+binds the independent audit and exact guarded link replacement. The preceding
+30-export [planning package](../docs/apple-planning-package.md) is preserved,
+as is the older 28-export package. The two newly available native APIs inspect
+same-model transition memory and prepare an empty candidate; the current app
+does not yet adopt that candidate or apply different Chat settings. Selecting
+this package does not install or run any app or change context admission.
 
 The [text profile](../docs/app-chat-profile.md),
 [interface guide](../docs/app-interface.md) and
@@ -47,9 +49,9 @@ results are not retroactively upgraded by a new compile/link result.
 Open `apple/TokletHarness.xcodeproj` after generated inputs exist. The shared
 scheme selects arm64, iOS18 minimum, complete Swift concurrency checks and
 warnings as errors. The legacy builder explicitly ad-hoc signs simulator apps and leaves the device
-app without a development signing stage. The new planning-package gate omits
+app without a development signing stage. The reviewed planning and session-transition package gates omit
 all explicit codesign/account/provisioning operations; its Mac/simulator link
-outputs can still contain LC_CODE_SIGNATURE. See its report before making any
+outputs can still contain LC_CODE_SIGNATURE. See their reports before making any
 signing or installation claim.
 
 ## Use

@@ -8396,3 +8396,23 @@ narrows test-only visibility. The completed [native report](native-empty-session
 does not enable worker adoption, app Apply, a larger loaded window, phone or
 performance qualification. The selected 30-export app bundle is unchanged;
 rebuilding a coherent 32-export bridge is next before Swift consumption.
+
+Empty-candidate preparation is committed as `c83625c` after exact twelve-file
+Astra review. The next task refreshes the coherent Mac/iOS/simulator bridge from
+this revision, before the worker can consume the two new transition APIs.
+
+The bridge refresh now has a frozen package bound to committed D2 and the
+current project source membership. A first metadata invocation stopped before
+any child launch because a relative review path failed exact identity matching;
+the unchanged owner succeeded with absolute arguments. That invocation record
+is retained. The prospective 8 GiB disk reserve is based on the previous
+1.52 GB build tree; it changes no historical acceptance result or evidence.
+
+The [32-export bridge refresh](apple-session-transition-package.md) passes all
+30 build/link jobs for Mac, iOS and simulator. Astra authenticates 2,428 inputs,
+77 outputs, all archive/header sets and the complete current app sources. The
+new framework is selected atomically and the old C3 bundle remains available.
+No app or model was launched. Mac/simulator binaries have implicit signature
+load commands; no explicit signing or provisioning stage ran. This closes the
+package prerequisite for the next dedicated worker transaction, while runtime,
+Apply, persistence and context-limit work remain separate.

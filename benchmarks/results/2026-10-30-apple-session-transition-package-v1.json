@@ -1,0 +1,271 @@
+{
+  "apps": [
+    {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/build-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app",
+      "platform": "iPhoneSimulator",
+      "signed": false
+    },
+    {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/build-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app",
+      "platform": "iPhoneOS",
+      "signed": false
+    },
+    {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/build-v1/Toklet.app",
+      "platform": "MacOSX",
+      "signed": false
+    }
+  ],
+  "code_signature_load_commands": {
+    "aarch64-apple-darwin-c-link": true,
+    "aarch64-apple-ios-c-link": false,
+    "aarch64-apple-ios-sim-c-link": true,
+    "iphoneos-app": false,
+    "iphonesimulator-app": true,
+    "mac-app": true
+  },
+  "date": "2026-10-30",
+  "disk": {
+    "after": {
+      "free_bytes": 11923083264,
+      "required_free_bytes": 8589934592,
+      "total_bytes": 994662584320,
+      "used_bytes": 982739501056
+    },
+    "before": {
+      "free_bytes": 13269934080,
+      "required_free_bytes": 8589934592,
+      "total_bytes": 994662584320,
+      "used_bytes": 981392650240
+    },
+    "peak_measured": false,
+    "prospective_free_reserve_bytes": 8589934592
+  },
+  "evidence": {
+    "adoption": {
+      "bytes": 1254,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/adoption.json",
+      "sha256": "237b663e367a26e3985cbf2032c1ea1db55c2081ecb9f5c1f305242da380df04"
+    },
+    "checks": {
+      "bytes": 67698,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/build-v1/checks.json",
+      "sha256": "d7f85abfe82472ae7c6fe9a35523a91add54f0271063882c8eb77d88f9cf107b"
+    },
+    "d1_publication": {
+      "bytes": 6790,
+      "path": "/Users/coloner/work/rust/toklet/docs/native-session-transition-report.md",
+      "sha256": "b4022d5ec78a428a18b4322bd605a2c548543f097232e4bd71d79bdf48283f7e"
+    },
+    "d2_publication": {
+      "bytes": 22036,
+      "path": "/Users/coloner/work/rust/toklet/benchmarks/results/2026-10-30-native-empty-session-candidate-v1.json",
+      "sha256": "3ea988b4e7d8920f37e8bbd217336a5f9eaa9a6cef65b5287a2b2e109962da03"
+    },
+    "d2_saved_review": {
+      "bytes": 12430,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-independent-review-v1/saved-review.json",
+      "sha256": "a04d3708f2b1d1a67f6a8b8116f0c4be81ae863fd5d7052d24bce1048f24a08f"
+    },
+    "disk_sizing": {
+      "bytes": 886,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/disk-sizing.json",
+      "sha256": "87ba7c597fbb7b98aa2cdcc853e43a5a1f3b743f70c3f612b1917b8e6836070d"
+    },
+    "launch_review": {
+      "bytes": 3474,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/launch-review.json",
+      "sha256": "c6603aa26574d0fe4099d9254911339d93f140d714e443ba6a2578ee9ea838a2"
+    },
+    "metadata_failed_attempt": {
+      "bytes": 409,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/root-metadata-attempt-v1.json",
+      "sha256": "768d43287ae4770d193eedca46a8a3570091823049d4ce1ec85e8e4b10e154db"
+    },
+    "metadata_review": {
+      "bytes": 1820,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-independent-review-v1/metadata-freeze-review.json",
+      "sha256": "1830c40ad8b0b9acc6f1ff6657d2c314e9e0e011ed71a44381d1e94858e3ea37"
+    },
+    "native_build": {
+      "bytes": 56504,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/build-v1/native/build.json",
+      "sha256": "fa072baca8fdb8931eda5e76feb28d4f765e9a22cf137525ae549b50aa6bc247"
+    },
+    "old_c3_adoption": {
+      "bytes": 1107,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/adoption.json",
+      "sha256": "dd554a7e9b2d8a6e4d9e85244460001b6ca3a426168fe592b199146ca79f19f8"
+    },
+    "owner_manifest": {
+      "bytes": 14259,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/manifest.json",
+      "sha256": "dc4c6d0a8767c7d3259bce3c53aa4528bc970d2427846925401b19f903744856"
+    },
+    "owner_protocol": {
+      "bytes": 1024,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/protocol.json",
+      "sha256": "923d7200926ba7955fd86b16111e8ff52ccaa2e47a9e8d31e010ccadebfaa3ce"
+    },
+    "package": {
+      "bytes": 540942,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/package.json",
+      "sha256": "12d9765fd4aa364bdca05eafeb15db72036cc09d2648b949edb36f4dd430ec37"
+    },
+    "saved_review": {
+      "bytes": 16537,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-independent-review-v1/saved-review.json",
+      "sha256": "80efba89147cf922b8975aeced6c5433114769feba5c62007842f99fe2bd25fe"
+    },
+    "structural_review": {
+      "bytes": 3601,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-independent-review-v1/prospective-review.json",
+      "sha256": "47e6e93c5876923cc837a1208a1811041d1ad45db93109f99df6749c30d216dd"
+    }
+  },
+  "format": "toklet-apple-session-transition-package-result-v1",
+  "limits": {
+    "app_executed": false,
+    "c_smoke_executed": false,
+    "cryptographic_signature_absence_claim": false,
+    "explicit_codesign_invoked": false,
+    "full_sdk_closure": false,
+    "model_or_gpu_executed": false,
+    "new_context_qualified": false,
+    "performance_claim": false,
+    "persistence_changed": false,
+    "physical_phone_qualified": false,
+    "rendered_ui_checked": false,
+    "ui_apply_qualified": false,
+    "worker_adoption_qualified": false
+  },
+  "native_exports_per_slice": 32,
+  "next": "Separate typed worker empty-session transaction with final locked identity/cancellation checks; no UI/persistence in that code task.",
+  "passed": true,
+  "prior_metadata_attempt": {
+    "cause": "Relative completed-review path failed exact absolute named identity; same immutable owner retried with absolute paths",
+    "children_spawned": false,
+    "evidence": {
+      "bytes": 409,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/root-metadata-attempt-v1.json",
+      "sha256": "768d43287ae4770d193eedca46a8a3570091823049d4ce1ec85e8e4b10e154db"
+    },
+    "package_written": false,
+    "passed": false
+  },
+  "scope": "Three-architecture native package and app compile/link; selected framework input only",
+  "selected_link": {
+    "app_launched": false,
+    "checks": {
+      "bytes": 67698,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/build-v1/checks.json",
+      "sha256": "d7f85abfe82472ae7c6fe9a35523a91add54f0271063882c8eb77d88f9cf107b"
+    },
+    "format": "toklet-b5d3a-bridge32-adoption-v1",
+    "model_executed": false,
+    "old_bundle_preserved": true,
+    "package": {
+      "bytes": 540942,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/package.json",
+      "sha256": "12d9765fd4aa364bdca05eafeb15db72036cc09d2648b949edb36f4dd430ec37"
+    },
+    "passed": true,
+    "path": "/Users/coloner/work/rust/toklet/apple/Binaries/Toklet.xcframework",
+    "previous_target": "../../artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/Toklet.xcframework",
+    "review": {
+      "bytes": 16537,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-independent-review-v1/saved-review.json",
+      "sha256": "80efba89147cf922b8975aeced6c5433114769feba5c62007842f99fe2bd25fe"
+    },
+    "selected_target": "../../artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/build-v1/native/Toklet.xcframework",
+    "source_commit": "c83625ceda4e97fa0fe9df15a847f40ef5dbecd6"
+  },
+  "slices": [
+    {
+      "exports": 32,
+      "library": {
+        "bytes": 35121176,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/build-v1/native/target/aarch64-apple-darwin/release/libtoklet.a",
+        "sha256": "5cef390a8fe54bff39e66c2406a4f1ff977da9621c1b8c2356a2a327996193b8"
+      },
+      "link_executable": {
+        "bytes": 12247248,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/build-v1/native/aarch64-apple-darwin-link-smoke",
+        "sha256": "2f0a88d3d8bf154ea65106c45f01df8170be48654e525400064cf5c21a46b873"
+      },
+      "minos": "15.0",
+      "platform": 1,
+      "target": "aarch64-apple-darwin"
+    },
+    {
+      "exports": 32,
+      "library": {
+        "bytes": 34818432,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/build-v1/native/target/aarch64-apple-ios/release/libtoklet.a",
+        "sha256": "1fac3ed5e7856b28de205b8124eb1a06519aa2ad6a0f3c5385c5ff288f5d3efb"
+      },
+      "link_executable": {
+        "bytes": 12132016,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/build-v1/native/aarch64-apple-ios-link-smoke",
+        "sha256": "20fd2472ee3401a5968cac9c366362f0367d5ed1bcb99d1c39a1f63ebd5d2b39"
+      },
+      "minos": "18.0",
+      "platform": 2,
+      "target": "aarch64-apple-ios"
+    },
+    {
+      "exports": 32,
+      "library": {
+        "bytes": 34809424,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/build-v1/native/target/aarch64-apple-ios-sim/release/libtoklet.a",
+        "sha256": "cc7503a13d9a9cbfb68eebd737ba12212008e3aa25b0a26205f54c9e4626664e"
+      },
+      "link_executable": {
+        "bytes": 12212832,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/build-v1/native/aarch64-apple-ios-sim-link-smoke",
+        "sha256": "08076eb144c6b27b03ae2a79b792ef07bb7e13f6e4ca53d6ee6ca2f5aee68d4c"
+      },
+      "minos": "18.0",
+      "platform": 7,
+      "target": "aarch64-apple-ios-sim"
+    }
+  ],
+  "source_commit": "c83625ceda4e97fa0fe9df15a847f40ef5dbecd6",
+  "source_snapshot": {
+    "copied_files": 42,
+    "includes_c4_preview_only_settings": true,
+    "ios_project_entries": 30,
+    "mac_compile_sources": 32,
+    "model_session_candidate_swift_consumer": false,
+    "strict_concurrency": "complete",
+    "swift_language_mode": 5,
+    "warnings_as_errors": true
+  },
+  "supervision": {
+    "aggregate_process_tree_peak_measured": false,
+    "all_30_groups_closed": true,
+    "child_deadline_seconds": 1800,
+    "direct_process_observation_limit_bytes": 6442450944,
+    "elapsed_claim": false,
+    "endpoint_errors": [],
+    "kill_seconds": 15,
+    "stream_cap_bytes": 16777216,
+    "term_seconds": 15
+  },
+  "verification": {
+    "all_bundle_libraries_and_headers_match": true,
+    "all_bundled_tiny_assets_match": true,
+    "all_platform_and_minos": true,
+    "all_slice_header_exports": 32,
+    "apps": 3,
+    "closed_successful_commands": 30,
+    "copied_source_files": 42,
+    "current_bindings": 2428,
+    "current_old_framework_preserved": true,
+    "ios_source_phase_paths": 30,
+    "mac_compile_paths": 32,
+    "native_commands": 21,
+    "outputs": 77,
+    "source_paths": 287
+  }
+}
