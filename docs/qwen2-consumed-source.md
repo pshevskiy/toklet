@@ -54,3 +54,7 @@ performance, model-memory, rendered UI or iPhone result follows from this stream
 Next: attach evidence after successful model assembly, verify complete codec
 assets through their actual parser buffers and bind the exact resident model
 owner before adding shared accepted-load/preferences integration.
+
+The later [Mistral source extension](mistral-consumed-source.md) extracts one
+neutral DenseAudit and receipt while preserving the public Qwen alias and
+family-specific getters. Codec/model integration remains separately qualified.

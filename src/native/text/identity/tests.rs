@@ -100,10 +100,10 @@ fn source_receipts_compare_full_delivery_facts_not_only_manifest() {
     let mut source = f.source();
     source.visit_raw("a", |_| Ok(())).unwrap();
     source.visit_raw("b", |_| Ok(())).unwrap();
-    let first = source.qwen_content_identity().unwrap();
+    let first = source.dense_content_identity().unwrap();
     assert!(same_source(&first, &first).is_ok());
     source.visit_raw("a", |_| Ok(())).unwrap();
-    let second = source.qwen_content_identity().unwrap();
+    let second = source.dense_content_identity().unwrap();
     assert_eq!(
         first.expected_manifest_sha256(),
         second.expected_manifest_sha256()

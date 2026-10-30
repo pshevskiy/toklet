@@ -386,11 +386,16 @@ mod qwen2;
 pub(crate) use qwen2::qwen2_manifest;
 mod qwen;
 mod qwen3;
+pub(crate) use qwen::QwenProfile;
 pub use qwen::QwenSourceContentIdentity;
-pub(crate) use qwen::{QwenAudit, QwenProfile};
+mod dense;
+pub use dense::DenseSourceContentIdentity;
+pub(crate) use dense::{DenseAudit, DenseProfile};
+mod mistral;
+pub(crate) use mistral::mistral_manifest;
 pub(crate) use qwen3::qwen3_manifest;
 #[cfg(test)]
 mod tests;
 
 #[cfg(test)]
-pub(crate) use qwen::tests::SourceFixture;
+pub(crate) use dense::tests::SourceFixture;

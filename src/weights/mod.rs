@@ -395,7 +395,7 @@ pub(crate) struct Source {
     buffer: Vec<u8>,
     conversion_seconds: f64,
     audit: Option<audit::Audit>,
-    qwen_audit: Option<content::QwenAudit>,
+    dense_audit: Option<content::DenseAudit>,
 }
 impl Source {
     pub(crate) fn open(directory: &Path) -> Result<Self, Error> {
@@ -484,7 +484,7 @@ impl Source {
             buffer,
             conversion_seconds: 0.0,
             audit,
-            qwen_audit: None,
+            dense_audit: None,
         })
     }
 
@@ -492,20 +492,30 @@ impl Source {
         self.audit.as_ref()?.identity()
     }
     pub(crate) fn qwen_content_identity(&self) -> Option<content::QwenSourceContentIdentity> {
-        self.qwen_audit.as_ref()?.identity()
+        self.qwen_profile_content_identity(content::QwenProfile::Qwen2)
+            .or_else(|| self.qwen_profile_content_identity(content::QwenProfile::Qwen3))
+    }
+    pub(crate) fn dense_content_identity(&self) -> Option<content::DenseSourceContentIdentity> {
+        self.dense_audit.as_ref()?.identity()
+    }
+    pub(crate) fn dense_profile_content_identity(
+        &self,
+        profile: content::DenseProfile,
+    ) -> Option<content::DenseSourceContentIdentity> {
+        self.dense_audit.as_ref()?.identity_for(profile)
     }
     pub(crate) fn qwen_profile_content_identity(
         &self,
         profile: content::QwenProfile,
     ) -> Option<content::QwenSourceContentIdentity> {
-        self.qwen_audit.as_ref()?.identity_for(profile)
+        self.dense_profile_content_identity(content::DenseProfile::Qwen(profile))
     }
     pub(crate) fn audit_owned_bytes(&self) -> Option<usize> {
         self.audit
             .as_ref()
             .map(audit::Audit::owned_bytes)
             .or_else(|| {
-                self.qwen_audit
+                self.dense_audit
                     .as_ref()
                     .and_then(|audit| audit.owned_bytes().ok())
             })
@@ -514,7 +524,7 @@ impl Source {
         if let Some(a) = self.audit.as_mut() {
             a.poison();
         }
-        if let Some(a) = self.qwen_audit.as_mut() {
+        if let Some(a) = self.dense_audit.as_mut() {
             a.poison();
         }
     }
@@ -625,7 +635,7 @@ impl Source {
         range: std::ops::Range<usize>,
         mut consume: impl FnMut(&[u8]) -> Result<(), Error>,
     ) -> Result<(), Error> {
-        if self.audit.is_some() || self.qwen_audit.is_some() {
+        if self.audit.is_some() || self.dense_audit.is_some() {
             self.poison_audit();
             return Err(invalid(
                 "audited source does not support tensor range reads",
@@ -677,26 +687,26 @@ impl Source {
         name: &str,
         mut consume: impl FnMut(&[u8]) -> Result<(), Error>,
     ) -> Result<(), Error> {
-        if self.qwen_audit.is_some() {
+        if self.dense_audit.is_some() {
             let result = (|| {
                 let index = *self
                     .locations
                     .get(name)
-                    .ok_or_else(|| invalid("unplanned Qwen tensor"))?;
+                    .ok_or_else(|| invalid("unplanned dense tensor"))?;
                 let shard = &self.shards[index];
                 let info = shard
                     .metadata
                     .info(name)
-                    .ok_or_else(|| invalid("absent Qwen tensor metadata"))?;
+                    .ok_or_else(|| invalid("absent dense tensor metadata"))?;
                 let begin = shard
                     .data_start
                     .checked_add(info.data_offsets.0 as u64)
-                    .ok_or_else(|| invalid("Qwen range overflow"))?;
+                    .ok_or_else(|| invalid("Dense range overflow"))?;
                 let end = shard
                     .data_start
                     .checked_add(info.data_offsets.1 as u64)
-                    .ok_or_else(|| invalid("Qwen range overflow"))?;
-                self.qwen_audit
+                    .ok_or_else(|| invalid("Dense range overflow"))?;
+                self.dense_audit
                     .as_mut()
                     .unwrap()
                     .visit(begin, end, &mut consume)

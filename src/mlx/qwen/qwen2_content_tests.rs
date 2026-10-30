@@ -65,8 +65,8 @@ fn selected_qwen_audit_rejects_wrong_architecture_before_source_metadata_open() 
     ] {
         let value = serde_json::from_str(config).unwrap();
         assert!(
-            matches!(Source::open_document(absent,options,true,value,None,Some((profile,f.config_receipt()))),
-            Err(Error::Invalid(message)) if message=="Qwen source audit profile mismatch")
+            matches!(Source::open_document(absent,options,true,value,None,Some((weights::content::DenseProfile::Qwen(profile),f.config_receipt()))),
+            Err(Error::Invalid(message)) if message=="Dense source audit profile mismatch")
         );
     }
 }

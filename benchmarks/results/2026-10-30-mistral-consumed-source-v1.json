@@ -1,0 +1,160 @@
+{
+  "base_revision": "b0faf7a114c31577fdda15e51a2c6fa15460dc7c",
+  "canonical_manifest_independently_reconstructed_from_catalog": "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26",
+  "checks": {
+    "astra_saved_audit": true,
+    "codec_pairing": false,
+    "commands": 8,
+    "current_closed_groups": 8,
+    "default_ignored": 23,
+    "default_passed": 530,
+    "explicit_release_source_streams": 1,
+    "generation": false,
+    "gpu_execution": false,
+    "metal_ignored": 192,
+    "metal_passed": 638,
+    "model_assembly": false,
+    "native_package_build": false,
+    "new_ordinary_controls": 7,
+    "preserved_failure_closed_groups": 5,
+    "source_only": true
+  },
+  "date": "2026-10-30",
+  "evidence": [
+    {
+      "bytes": 13576,
+      "path": "artifacts/new-goal-b5d5l-mistral-source-proposal-v2/manifest.json",
+      "sha256": "4fd8c2490b40121c803d11ec703cc0ea71754d1dd5e49c2e89bb0e7c0613061b"
+    },
+    {
+      "bytes": 1258669,
+      "path": "artifacts/new-goal-b5d5l-mistral-source-checks-v2/manifest.json",
+      "sha256": "21393eb1d713ada8134c85d7b417989dd802a452736d03cf7ecf703b2cad0399"
+    },
+    {
+      "bytes": 3651,
+      "path": "artifacts/new-goal-b5d5l-mistral-source-independent-review-v1/prospective-v2-review.json",
+      "sha256": "7650f5f1cd46864151e8ca146aa2dcb1b149b123496eff57aaf4474dcc0e87e7"
+    },
+    {
+      "bytes": 848907,
+      "path": "artifacts/new-goal-b5d5l-mistral-source-checks-v1/run-v1/checks.json",
+      "sha256": "9fe2fec4900598724630f485eef8447506038c9f4321690f425703dce111559b"
+    },
+    {
+      "bytes": 4367,
+      "path": "artifacts/new-goal-b5d5l-mistral-source-independent-review-v1/failure-review.json",
+      "sha256": "fa2986bb7b2e31151dfa0a57b8cc23e168a1a8962db9808e8121c60faff0de45"
+    },
+    {
+      "bytes": 864800,
+      "path": "artifacts/new-goal-b5d5l-mistral-source-checks-v2/run-v1/checks.json",
+      "sha256": "f7c09e40eaf09896b57bad0de7ba2d723328cd63208c83b7bef4ee6eba29dac7"
+    },
+    {
+      "bytes": 8554,
+      "path": "artifacts/new-goal-b5d5l-mistral-source-independent-review-v1/saved-review.json",
+      "sha256": "f034c41be586ac13f8710694d894688ad8694cf62f6e7c2793d0c0b6d3c19201"
+    }
+  ],
+  "format": "toklet-mistral-consumed-source-result-v1",
+  "limitations": [
+    "Expected six-file manifest is a distribution anchor; only config/index/container consumption is proved.",
+    "No tokenizer or ancillary reads, model assembly, codec pairing, resident owner, preference eligibility or new context admission.",
+    "No GPU/session/generation, app, rendered UI, iPhone, numerical quality or performance qualification.",
+    "Native37 package/header and numerical execution are unchanged; compatibility aliases preserve Qwen source APIs and old getters remain family-filtered.",
+    "600s/6GiB supervision samples the direct process; retained audit bytes and cold source allowance do not measure whole-process-tree or device peak."
+  ],
+  "passed": true,
+  "pre_execution_findings": [
+    "An accidental ordinary qwen_config parser rename in the private draft was corrected before source freeze or target execution.",
+    "The single stream marker permits only its exact optional libtest test-name prefix; logs, not a separate executable copy, are retained."
+  ],
+  "preserved_failure": {
+    "correction": "Exactly three calls in two test-only helpers now use neutral dense_content_identity; all original eleven source paths, assertions and production filters unchanged.",
+    "exits": [
+      0,
+      0,
+      0,
+      0,
+      101
+    ],
+    "library_failed": 7,
+    "library_ignored": 13,
+    "library_passed": 338,
+    "metal_or_stream_attempted": false,
+    "reason": "Three synthetic helper calls used the now family-filtered Qwen getter."
+  },
+  "source_files": {
+    "src/app_chat/qwen3_content/tests.rs": {
+      "bytes": 6565,
+      "sha256": "98b73ce04ec8da0cd8b18e6597ae199071740285439cda1924cc4e34376f76ae"
+    },
+    "src/mlx/qwen.rs": {
+      "bytes": 45010,
+      "sha256": "5250adc7c1714b0ad3097917b10653f550d93b74b61cfa4e5bed0fa51d94e356"
+    },
+    "src/mlx/qwen/mistral_content_tests.rs": {
+      "bytes": 6597,
+      "sha256": "7b70eb2273e3db34f9099480165284789d600c0a6e2ff593cfb3639a022f579d"
+    },
+    "src/mlx/qwen/qwen2_content_tests.rs": {
+      "bytes": 5512,
+      "sha256": "6301019efef89b795246fe510cdcb29e0865372e76dc7bf64d09e1fa64f84dac"
+    },
+    "src/mlx/qwen/qwen3_content_tests.rs": {
+      "bytes": 5346,
+      "sha256": "c21f4886777822ff9a7fd665d89a075cc03a7a50274ee316922ba60ee2cc1f03"
+    },
+    "src/native/text/identity/tests.rs": {
+      "bytes": 11520,
+      "sha256": "488ebe9fe200617fba1e9b73ed24fe22ba43825d1162264c49bf545c97460a33"
+    },
+    "src/weights/content.rs": {
+      "bytes": 14242,
+      "sha256": "5d5d328f0edb72301d412e053760646ff7335a1613dc054918b0d18a2970987d"
+    },
+    "src/weights/content/dense.rs": {
+      "bytes": 11871,
+      "sha256": "4c525635add3a82ca8e9e241cadf2eb66d5df7ab0d83db495347ec9e6f91a5b1"
+    },
+    "src/weights/content/dense/mistral_tests.rs": {
+      "bytes": 4693,
+      "sha256": "d99cac55498bcf1f60b3093aec7d8404a2dc12cbfc449a6e487575ecdc136102"
+    },
+    "src/weights/content/mistral.rs": {
+      "bytes": 2540,
+      "sha256": "a401c4e38b0f870c47014812214159a8d7643de6157e8e65d1adfce7f4bb9acd"
+    },
+    "src/weights/content/qwen.rs": {
+      "bytes": 786,
+      "sha256": "b5470cddf2fd9f7d42036255c936bccd10543df24fad71f30c4e88837db6c2b6"
+    },
+    "src/weights/content/qwen3/tests.rs": {
+      "bytes": 11859,
+      "sha256": "275565000e2aa73d3af0ea62b569746958fbf04b972121bf2ba97d9e85b2a345"
+    },
+    "src/weights/mod.rs": {
+      "bytes": 39060,
+      "sha256": "36da19ba1f308d7752e9d23b6574bcbc6fa0f649fac7c0b01fc317e75be705c0"
+    }
+  },
+  "source_observation": {
+    "after_invalid_public_read_identity_absent": true,
+    "codec_paired": false,
+    "config_sha256": "efc145d2f53d6d6ef2639be0556b4ecf6faac6cf8a7199ad2b7bb5ebcf443bdd",
+    "container_bytes": 4077480215,
+    "container_sha256": "d7182d886f93a9efa73d6d556ee33ffe839a4e09e15965eeef46f295ab5b503d",
+    "expected_manifest_sha256": "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26",
+    "index_sha256": "525940738b16d210fdfd692a24752d050c15a50cbe208dd82b06204d640d687b",
+    "model_assembled": false,
+    "passed": true,
+    "payload_bytes_delivered": 4077395968,
+    "physical_ranges": 745,
+    "qwen_identities_absent": true,
+    "retained_audit_bytes": 101712,
+    "source_only": true,
+    "tensor_ranges": 743,
+    "verified_reads": 745
+  }
+}

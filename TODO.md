@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5d5c6a — shared Mistral consumed-source verification**.
+Next implementation task: **B5d5c6b — shared Mistral model/codec identity pairing**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -413,8 +413,10 @@ separate requirements below. Further model admissions require their own scope.
           or rendered/device qualification.
         - [ ] C6: reuse the same mechanisms for Mistral with its explicit text
           policy bound and selected Reference attention contract.
-          - [ ] C6a: source-only DenseAudit sharing, compatibility Qwen aliases
-            and filtered accessors; original caps/Whole/poison semantics.
+          - [x] C6a: [source-only DenseAudit sharing](docs/mistral-consumed-source.md)
+            passes530default/638Metal, seven controls and one cached745range
+            stream with Astra saved audit. Qwen aliases/filtered getters and
+            original caps/Whole/poison preserved; failed fixture migration retained.
           - [ ] C6b: successful model/complete-codec/getter ownership identity.
           - [ ] C6c: coherent native package and shared Swift app/preferences.
 
@@ -818,3 +820,10 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | C5c Swift/CPU/app checks pass | All28freshjobs pass:81wire/88routing with9stale actions/77preferences/33advisory, existing28Apply/57planning/worker/preview controls and3apps.13actual products retained, all groups close without endpoint errors. | Astra actual-package review before tinyMetal and one cachedQwen2 restore/reply/Apply controller; native37candidate unselected,36preserved. |
 | 2026-10-30 | C5c both Mac checks pass | TinyMetal21 and one cachedQwen2 controller pass: restore512→256/chunk16/reply64 writes0, reply32 writes1, Apply128/chunk8 writes2; exact terminal/admission/candidate/durable records and other profile hashes remain, owning close succeeds. | Astra saved arithmetic/source/product audit and guarded37adoption before publication commit. No real generation, suspend/replay, rendered UI or phone result. |
 | 2026-10-30 | C5c saved audit and37adoption pass | Astra audits all28+2closed jobs,13products and raw terminal/D1/headroom/durable/save records. Full current binding/source/runtime/alias/model/protected precheck and candidate10file before/after hashes pass, atomic37selection preserves36. | [Report](docs/qwen2-managed-preferences.md); final exact publication review/commit next. C6a private shared Mistral source+runner will receive combined review; no app launch or broader qualification from adoption. |
+| 2026-10-30 | C5c committed / C6a combined review begins | Qwen2 shared app settings committed as `b0faf7a` after exact14file Astra review and all25native+28Swift+2Macchecks. Only preservedDSStore remained. Mistral11sourcepaths plus8job runner frozen together on that actual commit/current37. | One combined pre-execution review, then unchanged required Rust/source-stream checks. Early private accidental ordinary-parser rename was corrected before freeze; no live/target impact. |
+| 2026-10-30 | C6a source applied after combined review | Astra approves11sourcepaths and8job routine workflow together. Guarded application/whitespace pass: shared DenseAudit, neutral receipt with Qwen compatibility alias, filtered old getters and concrete Mistral source route. | Required fmt/strict default+Metal/tests and one source-only745range cached stream start next. No numerical/kernel, assembly, codec, API, Swift or package change. |
+| 2026-10-30 | C6a synthetic-helper failure | Fmt/default strictClippy pass; default library338pass/7fail/13ignored. Three stale synthetic Qwen getter calls across two test helpers now returnNone under intended family filtering. Five groups close without endpoint errors; no Metal/source stream reached. | Preserve failed receipt; Astra reviews narrow test-only dense-getter migration plus successor workflow together. Production filters/gates unchanged. |
+| 2026-10-30 | C6a fixture migration applied | Astra approves combinedV2: exactly3synthetic getter calls across2testfiles; all11original afterpaths/assertions/productionfilters unchanged. Guarded delta and whitespace pass; failed five-group evidence is authenticated/preserved. | Same8freshchecks retry next, with unchanged bounds and source-only scope. |
+| 2026-10-30 | C6a all checks pass | All8V2jobs pass:530default/638Metal, seven controls both suites and one cached745read/743tensor source stream,101712audit bytes. All groups close/no endpoints; original338pass/7fail receipt preserved. Fresh CUA inventory remains locked with no app actions. | [Report](docs/mistral-consumed-source.md); saved Astra audit and final publication review/commit next. No assembly, codec, GPU, app, phone or performance claim. |
+| 2026-10-30 | C6a saved audit passes | Astra verifies13source/current inputs,16current+10failed logs,530/638totals, seven controls both suites and complete raw canonical/hash/range/poison evidence. Eight current+five failed groups absent; V1 remains failed. | Final exact publication review/commit next, then private16path Mistral pairing draft freeze on actual commit. |
+| 2026-10-30 | C6a publication budget clarified | Astra catches documentation5GiB source allowance versus actual INITIAL_MEMORY_LIMIT_BYTES6GiB and requests precise explicit-filter wording. Both corrected before commit; no source, test result, gate or workload change. | Restaged publication review only; no benchmarks/tests repeated for documentation. |

@@ -29,7 +29,7 @@ pub(super) fn synthetic_source() -> QwenSourceContentIdentity {
     let mut source = f.source();
     source.visit_raw("a", |_| Ok(())).unwrap();
     source.visit_raw("b", |_| Ok(())).unwrap();
-    source.qwen_content_identity().unwrap()
+    source.dense_content_identity().unwrap()
 }
 pub(super) fn fixture(directory: &Path, tokenizer: &[u8]) -> [ExpectedFile<'static>; 6] {
     let data: [(&str, &[u8]); 6] = [

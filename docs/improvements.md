@@ -9136,3 +9136,54 @@ remains intact; no app install/launch or model work occurs during adoption.
 the bounded completion. Final exact publication review/commit follows, then
 shared Mistral source-only work. Its code+routine runner will receive one
 combined pre-execution review while retaining all validation gates.
+
+C5c is committed as `b0faf7a` after exact fourteen-file Astra publication
+review and all25native/28Swift/2Mac checks; only unrelated Apple DSStore
+remained. C6a freezes eleven source paths plus the ordinary eight-job runner
+together on that actual commit and selected37. Combined review reduces serial
+review handoffs without dropping any checks. Early private review caught an
+accidental ordinary-parser rename; it was restored before freeze with no live
+source or target impact. Mistral source-only validation is still prospective.
+
+Astra approves C6a source and routine checks together; guarded application of
+all eleven paths and whitespace pass. DenseAudit shares the same cold delivery
+mechanism across Qwen/Mistral, with neutral receipt, compatibility Qwen alias
+and filtered old Qwen accessors. Existing two-case Qwen codec/Metal profile
+contracts and ordinary parser remain intact. No hot-loop, assembly, codec,
+C ABI, Swift or native-package change. Required validation now starts.
+
+C6a's first attempt passes fmt/strict default Clippy, then default library
+tests report338passes/seven failures from three stale synthetic getter calls
+in two helpers. Their artificial manifest correctly fails the narrowed Qwen
+family accessor; those helpers must use the neutral dense getter. Five process
+groups close without endpoint errors, before Metal tests or the real stream.
+The failed receipt remains preserved. Astra reviews the test-only migration
+and successor workflow together; no production filter or gate is relaxed.
+
+Combined C6aV2 passes Astra review. Guarded application changes only three
+synthetic-helper getter calls in two test files; all original eleven after-files,
+assertions and production filters remain exact. Failed five-group evidence
+is authenticated/preserved. The same eight fresh checks retry with unchanged
+bounds and source-only scope.
+
+All eight corrected C6a checks pass:530default/638Metal tests, seven new
+portable controls in both suites and one cached source-only stream. Actual
+743tensors/745physical ranges and reads deliver4077395968payload bytes from
+4077480215container bytes, with101712audit-owner bytes. Canonical digest and
+three file hashes agree; all Qwen getters remain absent and invalid read poisons
+identity. Eight groups close/no endpoints; failed five-group evidence remains.
+Fresh Mac UI inventory is still locked with no app selection/launch/input.
+Astra saved audit/publication review precedes commit;
+[Mistral source report](mistral-consumed-source.md). No assembly, codec, GPU,
+app/device, new context or performance qualification.
+
+C6a's independent Astra saved audit passes all thirteen current source paths,
+inputs, sixteen current/ten failed logs,530/638test totals and all raw source
+evidence. Eight current and five failed groups are independently absent; V1
+remains failed. Final exact publication review/commit follows, then Mistral
+model/codec pairing. No failed outcome is promoted or qualification widened.
+
+Final C6a publication review corrects the documented source allowance from5GiB
+to actual6GiB INITIAL_MEMORY_LIMIT_BYTES and clarifies that Qwen getters are
+explicitly profile-filtered. No code, workload, gates or results change; only
+content/whitespace review repeats.

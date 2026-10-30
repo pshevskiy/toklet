@@ -59,7 +59,7 @@ impl SourceFixture {
     pub(crate) fn source(&self) -> Source {
         let manifest =
             Manifest::new("test/artifact", super::super::tests::REV, &self.expected).unwrap();
-        QwenAudit::open_source_expected(
+        DenseAudit::open_source_expected(
             &self.owner.path,
             self.config,
             &manifest,
@@ -73,7 +73,7 @@ impl SourceFixture {
 fn actual_source_consumer_requires_all_tensor_ranges_and_poison_on_public_raw_range() {
     let f = SourceFixture::new();
     let mut source = f.source();
-    assert!(source.qwen_content_identity().is_none());
+    assert!(source.dense_content_identity().is_none());
     assert_eq!(source.shards.len(), 1);
     assert!(source.buffer.is_empty()); // Only audit's reusable64KiB buffer.
     let mut values = Vec::new();
@@ -83,7 +83,7 @@ fn actual_source_consumer_requires_all_tensor_ranges_and_poison_on_public_raw_ra
             Ok(())
         })
         .unwrap();
-    assert!(source.qwen_content_identity().is_none());
+    assert!(source.dense_content_identity().is_none());
     source
         .visit("b", |v| {
             values.push(v);
@@ -91,7 +91,7 @@ fn actual_source_consumer_requires_all_tensor_ranges_and_poison_on_public_raw_ra
         })
         .unwrap();
     assert_eq!(values, [1., 2., 3.]);
-    let identity = source.qwen_content_identity().unwrap();
+    let identity = source.dense_content_identity().unwrap();
     assert_eq!(identity.config_sha256(), f.expected[0].sha256);
     assert_eq!(identity.index_sha256(), f.expected[2].sha256);
     assert_eq!(identity.container_sha256(), f.expected[1].sha256);
@@ -100,7 +100,7 @@ fn actual_source_consumer_requires_all_tensor_ranges_and_poison_on_public_raw_ra
     assert_eq!(identity.verified_container_reads(), 4);
     assert!(source.audit_owned_bytes().unwrap() < METADATA_ALLOWANCE_BYTES);
     assert!(source.visit_raw_range("a", 0..8, |_| Ok(())).is_err());
-    assert!(source.qwen_content_identity().is_none());
+    assert!(source.dense_content_identity().is_none());
     assert!(source.visit_raw("a", |_| Ok(())).is_err());
 }
 
@@ -110,17 +110,17 @@ fn source_conversion_failure_and_bad_name_poison_complete_evidence() {
     let mut source = f.source();
     source.visit_raw("a", |_| Ok(())).unwrap();
     source.visit_raw("b", |_| Ok(())).unwrap();
-    assert!(source.qwen_content_identity().is_some());
+    assert!(source.dense_content_identity().is_some());
     assert!(
         source
             .visit("a", |_| Err(invalid("synthetic decoded consumer failure")))
             .is_err()
     );
-    assert!(source.qwen_content_identity().is_none());
+    assert!(source.dense_content_identity().is_none());
     let mut source = f.source();
     assert!(source.visit_raw("absent", |_| Ok(())).is_err());
     assert!(source.visit_raw("a", |_| Ok(())).is_err());
-    assert!(source.qwen_content_identity().is_none());
+    assert!(source.dense_content_identity().is_none());
 }
 
 #[test]
@@ -136,7 +136,7 @@ fn source_mutation_and_index_budget_fail_before_receipt_publication() {
     )
     .unwrap();
     assert!(
-        matches!(QwenAudit::open_source_expected(&f.owner.path,f.config,&manifest,exact-1),Err(Error::Budget{required,..}) if required==exact)
+        matches!(DenseAudit::open_source_expected(&f.owner.path,f.config,&manifest,exact-1),Err(Error::Budget{required,..}) if required==exact)
     );
     fs::rename(
         f.owner.path.join("saved"),
@@ -144,7 +144,7 @@ fn source_mutation_and_index_budget_fail_before_receipt_publication() {
     )
     .unwrap();
     let mut source =
-        QwenAudit::open_source_expected(&f.owner.path, f.config, &manifest, exact).unwrap();
+        DenseAudit::open_source_expected(&f.owner.path, f.config, &manifest, exact).unwrap();
     let mut file = File::options()
         .write(true)
         .open(f.owner.path.join("model.safetensors"))
@@ -153,9 +153,9 @@ fn source_mutation_and_index_budget_fail_before_receipt_publication() {
     file.write_all(&9_f32.to_le_bytes()).unwrap();
     source.visit_raw("a", |_| Ok(())).unwrap();
     assert!(source.visit_raw("b", |_| Ok(())).is_err());
-    assert!(source.qwen_content_identity().is_none());
+    assert!(source.dense_content_identity().is_none());
     // A fresh prepass also fails expected full-file SHA, independently of size.
-    assert!(QwenAudit::open_source_expected(&f.owner.path, f.config, &manifest, exact).is_err());
+    assert!(DenseAudit::open_source_expected(&f.owner.path, f.config, &manifest, exact).is_err());
 }
 
 #[test]
@@ -171,7 +171,7 @@ fn full_manifest_anchor_does_not_claim_codec_or_ancillary_consumption() {
     let mut source = f.source();
     source.visit_raw("a", |_| Ok(())).unwrap();
     source.visit_raw("b", |_| Ok(())).unwrap();
-    let receipt = source.qwen_content_identity().unwrap();
+    let receipt = source.dense_content_identity().unwrap();
     let manifest = Manifest::new("test/artifact", super::super::tests::REV, &f.expected).unwrap();
     assert_eq!(receipt.expected_manifest_sha256(), manifest.identity());
     let mut changed = f.expected;
@@ -179,7 +179,7 @@ fn full_manifest_anchor_does_not_claim_codec_or_ancillary_consumption() {
     let different = Manifest::new("test/artifact", super::super::tests::REV, &changed).unwrap();
     assert_ne!(manifest.identity(), different.identity());
     assert!(
-        QwenAudit::open_source_expected(&f.owner.path, f.config, &different, 1024 * 1024 * 1024)
+        DenseAudit::open_source_expected(&f.owner.path, f.config, &different, 1024 * 1024 * 1024)
             .is_err()
     );
 }
@@ -227,8 +227,8 @@ fn selected_profile_rejects_cross_manifest_config_before_any_index_open() {
             reads: 1,
         };
         assert!(
-            matches!(QwenAudit::open_source(to,missing,receipt,1024*1024*1024),
-            Err(Error::Invalid(message)) if message == "Qwen source config receipt mismatch")
+            matches!(DenseAudit::open_source(DenseProfile::Qwen(to),missing,receipt,1024*1024*1024),
+            Err(Error::Invalid(message)) if message == "Dense source config receipt mismatch")
         );
         // Matching manifest still cannot substitute the wrong config digest/name.
         for bad in [
@@ -242,8 +242,8 @@ fn selected_profile_rejects_cross_manifest_config_before_any_index_open() {
             },
         ] {
             assert!(
-                matches!(QwenAudit::open_source(from,missing,bad,1024*1024*1024),
-                Err(Error::Invalid(message)) if message == "Qwen source config receipt mismatch")
+                matches!(DenseAudit::open_source(DenseProfile::Qwen(from),missing,bad,1024*1024*1024),
+                Err(Error::Invalid(message)) if message == "Dense source config receipt mismatch")
             );
         }
     }
@@ -293,7 +293,7 @@ fn shared_source_rejects_authenticated_malformed_header_and_index_plans() {
             ..f.config
         };
         assert!(
-            QwenAudit::open_source_expected(&f.owner.path, receipt, &manifest, 1024 * 1024 * 1024)
+            DenseAudit::open_source_expected(&f.owner.path, receipt, &manifest, 1024 * 1024 * 1024)
                 .is_err(),
             "case{case}"
         );
