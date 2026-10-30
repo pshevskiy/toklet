@@ -4,6 +4,7 @@ fn fixture() -> Evidence {
     let m = qwen3_manifest().unwrap();
     let f = m.files();
     Evidence {
+        profile: IdentityProfile::Qwen3,
         manifest: m.identity(),
         digests: std::array::from_fn(|i| f[i].sha256),
         container_bytes: f[1].bytes,
@@ -185,4 +186,66 @@ fn immutable_json_capture_short_copy_and_owner_release() {
         assert_eq!(full, second);
         assert_eq!(toklet_mlx_inspect_release(handle, ptr::null_mut()), OK);
     }
+}
+
+#[test]
+fn smol_complete_namespace_and_reference_role_are_profile_specific() {
+    let codec = crate::app_chat::content::tests::synthetic_complete_identity(694, true);
+    let e = smol_evidence(codec.source(), &codec).unwrap();
+    let a = report(e.clone(), 1, 512);
+    let b = report(e, 99, 16);
+    assert_eq!(a["preference_namespace"], b["preference_namespace"]);
+    assert_ne!(
+        a["preference_namespace"],
+        report(fixture(), 1, 512)["preference_namespace"]
+    );
+    assert_eq!(a["repository"], codec.source().repository());
+    assert_eq!(a["revision"], codec.source().revision());
+    assert_eq!(a["preference_namespace"]["load"], "smol_witness_audited_v1");
+    assert_eq!(a["preference_namespace"]["text"], "smol-chatml-v1");
+    assert_eq!(
+        a["assets"][1]["roles"],
+        json!([
+            "source_bytes_delivered_to_assembled_model",
+            "reference_container_digest_anchor"
+        ])
+    );
+    assert_eq!(a["assets"][5]["roles"], json!(["ancillary_verified"]));
+    assert_eq!(a["source_container_physical_ranges"], 694);
+    assert!(serde_json::to_vec(&a).unwrap().len() < 8 * 1024);
+}
+#[test]
+fn smol_legacy_cross_profile_and_changed_source_facts_reject() {
+    let old = crate::app_chat::content::tests::synthetic_complete_identity(694, false);
+    assert_eq!(
+        smol_evidence(old.source(), &old).err().unwrap().0,
+        UNSUPPORTED
+    );
+    let complete = crate::app_chat::content::tests::synthetic_complete_identity(694, true);
+    let other = crate::app_chat::content::tests::synthetic_complete_identity(695, true);
+    assert_eq!(
+        smol_evidence(other.source(), &complete).err().unwrap().0,
+        INVALID
+    );
+    let baseline = smol_evidence(complete.source(), &complete).unwrap();
+    for i in 0..6 {
+        let mut e = baseline.clone();
+        e.digests[i][0] ^= 1;
+        assert!(build(e, 1, 512).is_err());
+    }
+    let mut e = baseline.clone();
+    e.profile = IdentityProfile::Qwen3;
+    assert!(build(e, 1, 512).is_err());
+    let mut e = baseline.clone();
+    e.ranges = 693;
+    assert!(build(e, 1, 512).is_err());
+    let mut e = baseline.clone();
+    e.reads = 693;
+    assert!(build(e, 1, 512).is_err());
+    let mut e = baseline.clone();
+    e.text_policy = "qwen3-plain-nonthinking-v1";
+    assert!(build(e, 1, 512).is_err());
+    let mut e = baseline;
+    e.manifest[0] ^= 1;
+    assert!(build(e, 1, 512).is_err());
 }

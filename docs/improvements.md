@@ -8767,3 +8767,62 @@ codec evidence and reusing its existing audit/getter ownership mechanism before
 Swift adoption; Qwen2.5/Mistral subsequently reuse the bounded reader with their
 own layout, size and text-policy checks. Private Smol native work starts while
 this completed preference task goes through final publication review.
+
+Managed Qwen3 settings are committed as `ab4742e` after exact14-file Astra final
+review, all23+2checks and local-link/whitespace checks. Only the unrelated Apple
+DSStore remained. The next private Smol native extension preserves its trusted
+694-range source audit and legacy three-asset codec factory, adding complete
+ancillary evidence through the shared identity path. It is not applied or
+executed yet and does not enable Smol preference restoration by itself.
+
+Astra approves the exact15-file Smol native extension: one shared complete-audited
+chat factory, six-file completion, witness-anchor role and existing getter reuse.
+Nine portable controls and one ignored cached probe are authored. The first
+root application guard rejects a dictionary-shaped dependency inventory before
+any writes; corrected traversal authenticates all inputs and applies the exact
+approved source. Whitespace passes. Standard Rust/C/exports checks and separately
+reviewed actual-model validation are pending; selected Apple35/Swift stay unchanged.
+
+Astra's app follow-up inspection distinguishes ordinary resource estimates from
+audited loading and fresh model-bound transition admission. Smol's audited
+preview is currently metadata-only, so adding identity/preference restoration
+will preserve that limit. Its numerical-capacity preview and Apply UI need a
+separate explicit contract and remain open in TODO; the identity task does not
+silently claim all-model context controls. Native checks continue independently.
+
+The first Smol validation stops at default library tests:323pass and two new
+missing-file controls fail because they expect NotFound. The unchanged shared
+verified reader converts file-open errors to InvalidInput. Formatting/default
+Clippy pass and all five groups close without endpoint errors. The failed receipt
+is preserved; Astra investigates a minimal test-only correction before any retry.
+Metal/release/model checks were not reached and no gate is relaxed.
+
+Astra authenticates the failure and approves a one-file test correction:
+missing-file errors must contain the ancillary path and InvalidInput, while
+malformed sizes must match the exact extent/digest diagnostic. Other14paths,
+production behavior and numerical criteria are unchanged. Guarded application
+and whitespace pass; a reviewed successor cold run follows with failedV1 retained.
+
+All12fresh V2 native/C jobs pass: formatting, strict default/Metal Clippy,
+510default/618Metal tests (21/189 intentionally ignored), exact36exports, C ABI
+and release staticlib/test builds. All12groups close without endpoint errors;
+failedV1 remains preserved. The three actual products are retained for Astra
+review before one cached Smol model/codec/getter probe. Selected Apple35 and
+Swift app behavior remain unchanged.
+
+The separately reviewed cached Smol probe passes seven frames with one model,
+694physical ranges and694verified reads. Missing ancillary data adds no owner;
+the legacy codec still works but its incomplete evidence is rejected by the
+getter. Complete codec/getter succeed with exact retained ownership, and captured
+JSON survives model/codec release before its own release. All owners close; no
+session, generation, app/device, quality or performance qualification is claimed.
+Astra saved audit and exact publication review precede commit.
+
+The [Smol complete-identity task](smol-complete-identity.md) passes Astra saved
+audit:3817inputs,26logs,3retainedproducts,current15source paths and13current plus
+5prior process groups are authenticated. Seven frames and the canonical manifest
+reconstruct exactly. Lifetime, stop and surviving-snapshot behavior also rely on
+completed compiled assertions, not an independent reconstruction of native state.
+FailedV1 remains preserved and selected Apple35 stays unchanged. Final publication
+review/commit precedes shared Swift identity/preference integration and package36;
+Smol numerical preview/Apply remains a separate explicit contract.

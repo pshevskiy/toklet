@@ -286,3 +286,33 @@ mod real {
         run().unwrap();
     }
 }
+
+/// Synthetic historical fields for native report-builder controls only.
+/// No model, file consumption, or successful complete factory is attested.
+pub(crate) fn synthetic_complete_identity(reads: usize, complete: bool) -> CodecContentIdentity {
+    let source = synthetic_codec_source(reads);
+    let m = crate::weights::content::smol_manifest().unwrap();
+    let f = m.files();
+    CodecContentIdentity {
+        source,
+        tokenizer_config: f[4].sha256,
+        tokenizer: f[3].sha256,
+        complete: complete.then_some(CompleteAssets {
+            manifest: m.identity(),
+            ancillary: f[5].sha256,
+        }),
+    }
+}
+#[test]
+fn legacy_and_complete_receipts_are_distinct_historical_values() {
+    let old = synthetic_complete_identity(694, false);
+    let full = synthetic_complete_identity(694, true);
+    assert_eq!(old.source(), full.source());
+    assert_ne!(old, full);
+    assert_eq!(old.complete_manifest_sha256(), None);
+    assert_eq!(old.ancillary_special_map_sha256(), None);
+    assert_eq!(
+        full.complete_manifest_sha256(),
+        Some(crate::weights::content::smol_manifest().unwrap().identity())
+    );
+}

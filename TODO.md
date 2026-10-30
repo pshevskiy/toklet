@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5d5c4a — complete SmolLM2 accepted model/codec identity**.
+Next implementation task: **B5d5c4b — shared Swift Smol identity and preference integration**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -382,10 +382,16 @@ separate requirements below. Further model admissions require their own scope.
     - [ ] Extend accepted identity and persisted settings to other adopted managed
       profiles before closing all-model persistence; the first Qwen3 route does
       not qualify SmolLM2, Qwen2.5, Mistral or later app adapters automatically.
-      - [ ] C4a: complete SmolLM2 codec evidence and shared native identity getter,
-        preserving its existing audited model and three-asset codec contracts.
+      - [x] C4a: [complete SmolLM2 codec/shared native identity](docs/smol-complete-identity.md)
+        preserves its audited model and three-asset codec contracts. Twelve
+        native/C jobs (510default/618Metal,36exports) and one cached seven-frame
+        model/codec/getter lifetime probe pass with Astra saved audit. Failed
+        test-oracleV1 remains preserved; no Swift/package/preference activation.
       - [ ] C4b: consume the Smol identity in the existing Swift preference path,
         with a coherent native package and fresh model/controller checks.
+      - [ ] Define and validate Smol numerical-capacity preview/Apply separately
+        from its current audited metadata-only preview. Identity and fresh
+        model-bound restoration alone do not complete its context controls.
       - [ ] Reuse concrete consumed-source/codec mechanisms for Qwen2.5 and
         Mistral, checking each profile's actual layouts, bounds and text policy.
 
@@ -741,3 +747,11 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | C3 build and CPU checks pass | All23fresh jobs pass:60preference/28Apply/57planning/37routing controls, current transaction/configuration and preview regressions, and three app builds. Source/native inheritance and process closure pass; no endpoint errors. | Freeze actual products for Astra review before two Mac jobs. No loaded restoration or rendered/device outcome yet. |
 | 2026-10-30 | C3 Mac controls pass | Tiny Metal preview21 and one cached Qwen3 controller pass. Fresh restore256/chunk16/reply64 writes zero; pre/postcommit edits save only terminal healthy settings. Actual45-token rendered request rejects against33 with empty prefix/newer draft; injected committed64 quarantine preserves healthy33 record and owning close succeeds. | Astra saved audit and exact publication review before commit. Other profiles, rendered UI, phone, successful resized real generation and performance remain open. |
 | 2026-10-30 | C3 independent audit passes | Astra authenticates all23+2jobs,5990bindings,66outputs,10products,10record hashes and25closed groups. Quarantine remains committed-but-unsavable; synthetic rejection/storage controls and actual loaded restore stay distinct. | [Report](docs/managed-model-preferences.md); final publication review/commit next. Astra recommends Smol first for shared identity extension; private native-only implementation begins without executing it. |
+| 2026-10-30 | C3 committed / Smol extension begins | Managed Qwen3 preferences committed as `ab4742e` after exact14file Astra publication review and all23+2checks. Only preservedDSStore remained. | C4a private Smol complete codec/getter extension reuses the existing witness-backed loader, preserves legacy contracts and adds one coarse shared factory. Source review precedes application/checks; Swift and all-model persistence remain later work. |
+| 2026-10-30 | C4a Smol source applied | Astra approves15paths,36exports,9ordinary controls and one bounded cached probe. Root's first application guard rejects the dictionary-shaped dependency inventory before writes; corrected traversal authenticates all inputs and applies exact approved bytes. Whitespace passes. | Standard Rust/C/exports checks next, then actual-product review before one cached Smol getter/lifetime check. No native-package/Swift activation or model execution yet. |
+| 2026-10-30 | Smol app-planning scope clarified | Astra confirms ordinary resource preflight is an advisory estimate; actual audited loading and model-bound D1/D2 remain authority. Smol's audited preview currently returns metadata only. | Preserve that behavior in identity/preference integration; a separate numerical-preview/Apply contract remains open. C4a Rust/C checks are running without app changes. |
+| 2026-10-30 | C4a first default-test failure | Formatting/default Clippy pass; default library tests have323passes and2new failures. Missing-file controls expect NotFound, but the unchanged shared verified reader maps those errors to InvalidInput. Five groups close without endpoint errors. | Preserve failed receipt. Astra investigates the exact error chain and minimal test-only correction; Metal/release/model checks were not reached. |
+| 2026-10-30 | C4a test oracle corrected | Astra authenticates the failed run and approves one test-file correction: missing errors require InvalidInput plus the actual ancillary path; malformed sizes require exact extent/digest diagnostics. Other14paths, production semantics and numerical gates are unchanged. Guarded application/whitespace pass. | Reviewed successor12-job cold retry next; failedV1 retained and no model/GPU execution yet. |
+| 2026-10-30 | C4a native/C checks pass | All12fresh V2 jobs pass:fmt/bothstrict Clippy,510default/618Metal tests,36exports/C ABI and both release products. FailedV1 stays retained; all12groups close without endpoint errors. | Freeze actual three products for Astra review before one cached Smol model/codec/getter lifetime probe. Selected Apple35 and app sources remain unchanged. |
+| 2026-10-30 | C4a Smol cached probe passes | One audited model load,694ranges/694reads and seven identity/lifetime frames pass. Missing ancillary rejects without ownership growth; legacy codec remains incomplete; complete codec/getter succeed and captured JSON survives released model/codec owners. | Astra saved audit and exact publication review precede commit. No session/generation, Swift activation, app/device, quality or performance claim. |
+| 2026-10-30 | C4a saved audit passes | Astra authenticates3817inputs/26logs/3retainedproducts/current15source,13current+5prior closed groups,7frames and canonical manifest. Lifetime/stop/snapshot checks are completed source assertions, not independent binary-state reconstruction. | [Report](docs/smol-complete-identity.md); final review/commit next, then shared Swift descriptor/routing/preference integration and coherent36 package. |

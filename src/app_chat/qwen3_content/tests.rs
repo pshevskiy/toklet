@@ -1,5 +1,6 @@
 use super::*;
 use crate::weights::content::SourceFixture;
+use sha2::{Digest, Sha256};
 use std::{
     fs,
     path::PathBuf,

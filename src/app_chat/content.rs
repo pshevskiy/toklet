@@ -1,7 +1,10 @@
 //! Cold consumed-asset pairing for one qualified Smol source profile.
 //! This does not associate a codec with a live model or grant app capability.
 use super::{CONFIG_SHA, Codec, Profile, TOKENIZER_ALLOWANCE, TOKENIZER_SHA, invalid};
-use crate::{mlx::qwen::SourceContentIdentity, weights::audit::open_regular};
+use crate::{
+    mlx::qwen::SourceContentIdentity,
+    weights::{audit::open_regular, content::ExpectedFile},
+};
 use sha2::{Digest, Sha256};
 use std::{
     io::{self, Read},
@@ -18,8 +21,29 @@ pub struct CodecContentIdentity {
     source: SourceContentIdentity,
     tokenizer_config: [u8; 32],
     tokenizer: [u8; 32],
+    // Absent on the original three-asset route. Never enrich an existing handle.
+    complete: Option<CompleteAssets>,
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+struct CompleteAssets {
+    manifest: [u8; 32],
+    ancillary: [u8; 32],
 }
 impl CodecContentIdentity {
+    /// Historical six-file completion, absent for the legacy audited codec.
+    pub const fn complete_manifest_sha256(&self) -> Option<[u8; 32]> {
+        match self.complete {
+            Some(value) => Some(value.manifest),
+            None => None,
+        }
+    }
+    /// Verified ancillary distribution bytes, not parsed template input.
+    pub const fn ancillary_special_map_sha256(&self) -> Option<[u8; 32]> {
+        match self.complete {
+            Some(value) => Some(value.ancillary),
+            None => None,
+        }
+    }
     pub const fn source(&self) -> &SourceContentIdentity {
         &self.source
     }
@@ -120,6 +144,7 @@ impl Codec {
             source: *source,
             tokenizer_config,
             tokenizer,
+            complete: None,
         });
         Ok(codec)
     }
@@ -127,6 +152,35 @@ impl Codec {
         self.content_identity.as_ref()
     }
 }
+
+pub(super) fn verified(
+    directory: &Path,
+    expected: ExpectedFile<'_>,
+    limit: usize,
+) -> io::Result<(Vec<u8>, [u8; 32])> {
+    let count = usize::try_from(expected.bytes).map_err(invalid)?;
+    if count == 0 || count > limit {
+        return Err(invalid("Audited codec asset size policy"));
+    }
+    let count_plus_one = count
+        .checked_add(1)
+        .ok_or_else(|| invalid("Audited codec size overflow"))?;
+    let path = directory.join(expected.name);
+    let file = open_regular(&path).map_err(invalid)?;
+    if file.metadata()?.len() != expected.bytes {
+        return Err(invalid("Audited codec asset extent differs"));
+    }
+    let mut bytes = Vec::new();
+    bytes.try_reserve_exact(count_plus_one).map_err(invalid)?;
+    file.take(count_plus_one as u64).read_to_end(&mut bytes)?;
+    let digest = Sha256::digest(&bytes).into();
+    if bytes.len() != count || digest != expected.sha256 {
+        return Err(invalid("Audited codec consumed bytes differ"));
+    }
+    Ok((bytes, digest))
+}
+
+mod complete;
 
 #[cfg(test)]
 pub(crate) mod tests;

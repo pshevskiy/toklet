@@ -1,7 +1,9 @@
 //! Additive, immutable text handle. Numerical handles remain raw-token APIs.
 use super::*;
+mod complete;
 mod identity;
 use crate::app_chat::{Codec, MAX_RESPONSE_TOKENS, MAX_TEXT, MAX_TOKENS, Profile};
+pub use complete::toklet_chat_create_complete_audited;
 pub use identity::toklet_model_chat_identity_create;
 
 pub struct ChatHandle {

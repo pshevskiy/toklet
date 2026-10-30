@@ -380,6 +380,8 @@ impl FileAudit {
     }
 }
 
+mod smol;
+pub(crate) use smol::smol_manifest;
 mod qwen3;
 pub(crate) use qwen3::QwenAudit;
 pub use qwen3::QwenSourceContentIdentity;

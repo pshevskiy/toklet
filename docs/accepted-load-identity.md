@@ -42,3 +42,8 @@ getter gate once, preserving the original cold-only result scope.
 This original cold-only task changed no numerical kernel, context policy, app
 preferences or selected package. The subsequent coherent Swift integration
 selects 35 exports after fresh default/three-Metal builds and consumer checks.
+
+The subsequent [complete Smol identity task](smol-complete-identity.md) extends
+the shared getter and adds one complete-audited codec factory. Its native36
+result preserves this Qwen3 report and the selected Apple35 package; Smol Swift
+activation requires the separate package/consumer integration.

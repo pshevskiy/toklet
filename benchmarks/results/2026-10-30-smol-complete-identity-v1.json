@@ -1,0 +1,302 @@
+{
+  "base_revision": "ab4742ec312badd079ee9f463d5798b7e7b710ac",
+  "checks": {
+    "astra_saved_audit_passed": true,
+    "cached_model_jobs": 1,
+    "cached_models_loaded": 1,
+    "codecs_constructed_sequentially": 2,
+    "cold_jobs": 12,
+    "current_process_groups_closed": 13,
+    "default_tests_ignored": 21,
+    "default_tests_passed": 510,
+    "generation_tokens": 0,
+    "json_frames": 7,
+    "metal_tests_ignored": 189,
+    "metal_tests_passed": 618,
+    "native_exports": 36,
+    "new_ordinary_controls": 9,
+    "prior_failed_process_groups_closed": 5
+  },
+  "date": "2026-10-30",
+  "evidence": [
+    {
+      "bytes": 12312,
+      "path": "artifacts/new-goal-b5d5f-smol-complete-identity-proposal-v1/manifest.json",
+      "sha256": "05920c146ec4cd452441c8b870e4584f06bf5b3d162b07236d7edca80309642e"
+    },
+    {
+      "bytes": 14853,
+      "path": "artifacts/new-goal-b5d5f-smol-complete-identity-proposal-v2/manifest.json",
+      "sha256": "6f3acf7522b278a775dc3c653fca848cbe5295f355584b61a9fdb210658742ee"
+    },
+    {
+      "bytes": 14767,
+      "path": "artifacts/new-goal-b5d5f-smol-complete-identity-independent-review-v1/prospective-v2-review.json",
+      "sha256": "495ed8f8f12871a02124dab53a2c01f8f3da2e62b7a9cb4e7f3d3ff88fdf3e6d"
+    },
+    {
+      "bytes": 835751,
+      "path": "artifacts/new-goal-b5d5f-smol-complete-identity-checks-v1/run-v1/checks.json",
+      "sha256": "7fedbe0a36b5722f60b8860fb4963b4de8038517aba2a4c73c29104ad721b9f6"
+    },
+    {
+      "bytes": 2947,
+      "path": "artifacts/new-goal-b5d5f-smol-complete-identity-checks-independent-review-v1/saved-failure-v1-review.json",
+      "sha256": "b5530ea562e600eeff38561fde302dc8f22e47de4a5ae4ad12dee3b128ec7d9d"
+    },
+    {
+      "bytes": 11860,
+      "path": "artifacts/new-goal-b5d5f-smol-complete-identity-checks-v2/manifest.json",
+      "sha256": "e59b4e66841ea4a4d8fcc7a7825b6392db6e6e43df5e05e16ccd7b056882c0a9"
+    },
+    {
+      "bytes": 16447,
+      "path": "artifacts/new-goal-b5d5f-smol-complete-identity-checks-independent-review-v1/prospective-v2-review.json",
+      "sha256": "e3b8c37ea89defc3ed3e44100b8ba75669f5353ace0618aaa7232a20223bac4f"
+    },
+    {
+      "bytes": 851438,
+      "path": "artifacts/new-goal-b5d5f-smol-complete-identity-checks-v2/run-v1/checks.json",
+      "sha256": "5e4f4a0c11581e0ca8786a5135ad4fee72039a1d07af0e8737092ec8e9a33ab0"
+    },
+    {
+      "bytes": 2923,
+      "path": "artifacts/new-goal-b5d5f-smol-complete-identity-checks-v2/frozen-products.json",
+      "sha256": "1368f4e8eccead1fbb843283f602bf535d7eb4774f7abf0af3b507a72265b14e"
+    },
+    {
+      "bytes": 6561,
+      "path": "artifacts/new-goal-b5d5f-smol-complete-identity-checks-v2/launch-review.json",
+      "sha256": "b4abfc62fc369682ddcfd857a1a4487c11b614b6f9e2fd67c0d97183cc87a676"
+    },
+    {
+      "bytes": 839683,
+      "path": "artifacts/new-goal-b5d5f-smol-complete-identity-checks-v2/hardware-v1/checks.json",
+      "sha256": "b8026a6c28579ad1489507dcb22a5f624b0e1ae789f7dc6c98cf77f9748ea19e"
+    },
+    {
+      "bytes": 9716,
+      "path": "artifacts/new-goal-b5d5f-smol-complete-identity-checks-independent-review-v1/saved-review.json",
+      "sha256": "b2eaaa430c48fd8340677778e769f57400473fde074f22b55ab5dd9ec0bf0859"
+    }
+  ],
+  "format": "toklet-smol-complete-identity-result-v1",
+  "limitations": [
+    "Historical consumed-source/model/codec identity, not current disk or resident-buffer rehashing. Smol container digest remains trusted694-range reference anchor, not a new native whole-file prepass.",
+    "One cached model, sequential legacy and complete codecs, no session or generation. No app, iPhone runtime, new quality/window or performance qualification.",
+    "Fixed receipt/ancillary size uses existing separate64MiB text policy; no measured heap or complete process peak claim.",
+    "Swift managedSmol routing and preference restoration require a later coherent36-export package and consumer. Current Apple35 is preserved.",
+    "Ordinary resource preflight remains advisory. Smol audited preview remains metadata-only; numerical preview/Apply needs its separate contract.",
+    "Lifetime/stop/snapshot/Weak-exhaustion proof includes completed compiled assertions, not independent reconstruction of all native state; model count follows reviewed one-call flow."
+  ],
+  "observations": {
+    "closed": {
+      "all_owners_released": true,
+      "app_or_phone_qualified": false,
+      "generation": false,
+      "model_loads": 1,
+      "passed": true,
+      "snapshot_survived_owners": true
+    },
+    "complete": {
+      "nonnull": true,
+      "status": 0,
+      "strong_count": 2
+    },
+    "getter": {
+      "nonnull": true,
+      "status": 0,
+      "strong_count": 2
+    },
+    "identity": {
+      "assets": [
+        {
+          "bytes": 1097,
+          "name": "config.json",
+          "roles": [
+            "source_metadata_consumed",
+            "codec_config_verified"
+          ],
+          "sha256": "5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73"
+        },
+        {
+          "bytes": 143030401,
+          "name": "model.safetensors",
+          "roles": [
+            "source_bytes_delivered_to_assembled_model",
+            "reference_container_digest_anchor"
+          ],
+          "sha256": "ec569c771e56424636be99625aba9031abc525a68a5f4ab16d678eca96fef12c"
+        },
+        {
+          "bytes": 48979,
+          "name": "model.safetensors.index.json",
+          "roles": [
+            "source_metadata_consumed"
+          ],
+          "sha256": "d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44"
+        },
+        {
+          "bytes": 3522656,
+          "name": "tokenizer.json",
+          "roles": [
+            "tokenizer_parser_consumed"
+          ],
+          "sha256": "7d27c493c729a66ecefc837280b05d948b1ed50d130eebdbf911b1b36cf38ed7"
+        },
+        {
+          "bytes": 3764,
+          "name": "tokenizer_config.json",
+          "roles": [
+            "fixed_text_policy_verified"
+          ],
+          "sha256": "a27f638bd2831f5c3dea654a75838930f2b11fbe550c4d4e1d5d7bd07157b2ee"
+        },
+        {
+          "bytes": 655,
+          "name": "special_tokens_map.json",
+          "roles": [
+            "ancillary_verified"
+          ],
+          "sha256": "2b7379f3ae813529281a5c602bc5a11c1d4e0a99107aaa597fe936c1e813ca52"
+        }
+      ],
+      "codec_constructed": true,
+      "current_disk_identity_evaluated": false,
+      "exact_model_pair": true,
+      "historical_evidence": true,
+      "loaded_position_limit": 512,
+      "model_assembled": true,
+      "model_instance": 1,
+      "preference_namespace": {
+        "backend": "metal_native_dense_v1",
+        "load": "smol_witness_audited_v1",
+        "manifest_algorithm": "toklet-full-manifest-v1",
+        "manifest_sha256": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+        "planning": "native_mlx_planning_v1",
+        "text": "smol-chatml-v1",
+        "version": 1
+      },
+      "preferences_require_fresh_admission": true,
+      "qualification_evaluated": false,
+      "report_kind": "accepted_model_chat_identity",
+      "repository": "mlx-community/SmolLM2-135M-Instruct-8bit",
+      "resident_buffer_identity_evaluated": false,
+      "revision": "0f0d9b8218915bc34d401e1a340b8c049d300d5e",
+      "schema_version": 1,
+      "source_container_physical_ranges": 694,
+      "source_container_verified_reads": 694,
+      "source_receipts_equal": true,
+      "whole_app_device_fit_evaluated": false
+    },
+    "legacy-incomplete": {
+      "null": true,
+      "status": 9,
+      "strong_count": 2
+    },
+    "load": {
+      "error_code": 0,
+      "nonnull": true,
+      "status": 0
+    },
+    "missing-ancillary": {
+      "null": true,
+      "status": 2,
+      "strong_count": 1
+    }
+  },
+  "passed": true,
+  "preserved_failure": {
+    "cause": "New tests expected NotFound; unchanged shared reader maps file errors to InvalidInput with path.",
+    "correction": "Only one test file changed. Missing errors require InvalidInput plus ancillary path; malformed sizes require exact extent/digest messages. Other14paths and production/numerical behavior unchanged.",
+    "failed": 2,
+    "ignored": 11,
+    "passed": 323,
+    "phase": "First default library tests",
+    "products_or_model_reached": false
+  },
+  "products": {
+    "c_abi": {
+      "bytes": 12399384,
+      "original_path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5f-smol-complete-identity-checks-v2/run-v1/c-abi",
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5f-smol-complete-identity-checks-v2/frozen-products/c_abi",
+      "sha256": "a9b571d2f4ef2d736b318c68f76ebc2b8af2b525c5cad9eb8eaf0824dcd9a718"
+    },
+    "metal_library": {
+      "bytes": 27279896,
+      "original_path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b0-checks-v1/target/release/libtoklet.a",
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5f-smol-complete-identity-checks-v2/frozen-products/libtoklet.a",
+      "sha256": "c553c98c7a9d50b89c2adac3f97a9055677f4b6482b904cea9821d53ae0d77cc"
+    },
+    "metal_test": {
+      "bytes": 108195696,
+      "original_path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b0-checks-v1/target/release/deps/toklet-e3bf10286fbd797a",
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5f-smol-complete-identity-checks-v2/frozen-products/metal_test",
+      "sha256": "727a2a3027f433b97f7bfe87e4aea95aa0d346cde412ac8a1c84452676223648"
+    }
+  },
+  "selected_apple_framework_changed": false,
+  "selected_exports": 35,
+  "source_files": {
+    "apple/include/toklet.h": {
+      "bytes": 22892,
+      "sha256": "39d806e89a04610ecb0eb87e90ea57a0e002315bbb397ae75edc6b978e27f623"
+    },
+    "src/app_chat/content.rs": {
+      "bytes": 7067,
+      "sha256": "7807ea309ae68ad1a013208a6e1f7f4a8a7b155b32323e531a0a9aa52cc7789e"
+    },
+    "src/app_chat/content/complete.rs": {
+      "bytes": 2272,
+      "sha256": "5e4ac29a580ee7b92b62bdd78e4b5bc9d1e634e54c86913e555fb7917d5a8a7a"
+    },
+    "src/app_chat/content/complete/tests.rs": {
+      "bytes": 4117,
+      "sha256": "7f417067653336f29651e975f0fcbce484766a7bf07ed8b765e12eac734fef2d"
+    },
+    "src/app_chat/content/tests.rs": {
+      "bytes": 14353,
+      "sha256": "a43fff35f43d42497bc1487638c1ebe8adc0598172e148fe31915d750b33a1fa"
+    },
+    "src/app_chat/qwen3_content.rs": {
+      "bytes": 4641,
+      "sha256": "ce5b0574236440d1d4aa1b6b8b3ab1a7162dabdfd3c2066ee4397b6adb69ed26"
+    },
+    "src/app_chat/qwen3_content/tests.rs": {
+      "bytes": 6249,
+      "sha256": "7b9d950e6c283890ad82d724664cce91bbb41b65ae0997f33fe0a3bf323f187d"
+    },
+    "src/native/text.rs": {
+      "bytes": 32065,
+      "sha256": "e1209a5a15e65aeb6bc4a5e6e2280fbddb1fad4ff1fc27ecfe137dfcfcc71f48"
+    },
+    "src/native/text/complete.rs": {
+      "bytes": 5084,
+      "sha256": "6eeb1b53a35e9de9c2a4c0bc3a25cdfefc10197caa3937a60171f6b7f5dfcdc1"
+    },
+    "src/native/text/complete/metal_tests.rs": {
+      "bytes": 7299,
+      "sha256": "0507873efe9d6d745b4f021511c39afa1f4d9dc7d0f5d6ae85c9f65922f1b15a"
+    },
+    "src/native/text/complete/tests.rs": {
+      "bytes": 2375,
+      "sha256": "ec197ba8d3de37a6e75b2c55a250626edbf9755f1679e417fb32bf17c6c4dbc3"
+    },
+    "src/native/text/identity.rs": {
+      "bytes": 12266,
+      "sha256": "64875d402faa904388864ae545164e4da53da20c067471214f713b31b447fbe3"
+    },
+    "src/native/text/identity/tests.rs": {
+      "bytes": 8903,
+      "sha256": "81f0a887e6705986127aca10586fdd90dc1cf04463f2c1c6c119d077fe5a195c"
+    },
+    "src/weights/content.rs": {
+      "bytes": 14024,
+      "sha256": "eb43e0d38f704b12668be19556a669e926a3f6b9b8350d6e7d1d6de1af9625a9"
+    },
+    "src/weights/content/smol.rs": {
+      "bytes": 2538,
+      "sha256": "d616cb183bdb02736c30273ecb8233e8f7c4eb962f7f7d974e839168c06b80d0"
+    }
+  }
+}

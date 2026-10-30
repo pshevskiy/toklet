@@ -1,19 +1,12 @@
 //! Concrete consumed-asset evidence for the pinned Qwen3 source and codec.
 //! A standalone codec receipt is historical; native pairing separately retains
 //! the exact assembled model Rc. No template execution or app grant is added.
-use super::{Codec, Profile, invalid};
+use super::{Codec, Profile, content::verified, invalid};
 use crate::{
     mlx::qwen::QwenSourceContentIdentity,
-    weights::{
-        audit::open_regular,
-        content::{ExpectedFile, qwen3_manifest},
-    },
+    weights::content::{ExpectedFile, qwen3_manifest},
 };
-use sha2::{Digest, Sha256};
-use std::{
-    io::{self, Read},
-    path::Path,
-};
+use std::{io, path::Path};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct QwenCodecContentIdentity {
@@ -70,33 +63,6 @@ fn admit(source: &QwenSourceContentIdentity, allowance: usize) -> io::Result<()>
         return Err(invalid("Unsupported authenticated source for Qwen3 codec"));
     }
     Ok(())
-}
-
-fn verified(
-    directory: &Path,
-    expected: ExpectedFile<'_>,
-    limit: usize,
-) -> io::Result<(Vec<u8>, [u8; 32])> {
-    let count = usize::try_from(expected.bytes).map_err(invalid)?;
-    if count == 0 || count > limit {
-        return Err(invalid("Audited codec asset size policy"));
-    }
-    let count_plus_one = count
-        .checked_add(1)
-        .ok_or_else(|| invalid("Audited codec size overflow"))?;
-    let path = directory.join(expected.name);
-    let file = open_regular(&path).map_err(invalid)?;
-    if file.metadata()?.len() != expected.bytes {
-        return Err(invalid("Audited codec asset extent differs"));
-    }
-    let mut bytes = Vec::new();
-    bytes.try_reserve_exact(count_plus_one).map_err(invalid)?;
-    file.take(count_plus_one as u64).read_to_end(&mut bytes)?;
-    let digest = Sha256::digest(&bytes).into();
-    if bytes.len() != count || digest != expected.sha256 {
-        return Err(invalid("Audited codec consumed bytes differ"));
-    }
-    Ok((bytes, digest))
 }
 
 struct Assets {

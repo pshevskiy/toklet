@@ -1,10 +1,11 @@
 //! Cold historical evidence for one exact assembled model/codec owner pair.
 //! No session, filesystem, GPU or preference-storage work occurs here.
+use super::complete::SourceReceipt;
 use super::*;
 use crate::{
     app_chat::qwen3_content::QwenCodecContentIdentity,
     mlx::qwen::QwenSourceContentIdentity,
-    weights::content::{Manifest, qwen3_manifest},
+    weights::content::{Manifest, qwen3_manifest, smol_manifest},
 };
 use serde::Serialize;
 
@@ -24,11 +25,15 @@ enum BackendPolicy {
 enum LoadPolicy {
     #[serde(rename = "qwen3_audited_v1")]
     Qwen3Audited,
+    #[serde(rename = "smol_witness_audited_v1")]
+    SmolWitnessAudited,
 }
 #[derive(Clone, Copy, Serialize)]
 enum TextPolicy {
     #[serde(rename = "qwen3-plain-nonthinking-v1")]
     Qwen3PlainNonthinking,
+    #[serde(rename = "smol-chatml-v1")]
+    SmolChatml,
 }
 #[derive(Clone, Copy, Serialize)]
 enum PlanningPolicy {
@@ -51,6 +56,7 @@ enum Role {
     SourceMetadataConsumed,
     CodecConfigVerified,
     SourceBytesDeliveredToAssembledModel,
+    ReferenceContainerDigestAnchor,
     TokenizerParserConsumed,
     FixedTextPolicyVerified,
     AncillaryVerified,
@@ -87,8 +93,41 @@ struct IdentityReport {
     preferences_require_fresh_admission: bool,
 }
 
+#[derive(Clone, Copy)]
+enum IdentityProfile {
+    Qwen3,
+    Smol,
+}
+impl IdentityProfile {
+    fn manifest(self) -> Result<Manifest<'static>> {
+        match self {
+            Self::Qwen3 => qwen3_manifest(),
+            Self::Smol => smol_manifest(),
+        }
+        .map_err(|e| fail(ENGINE_ERROR, e.to_string()))
+    }
+    fn repository(self) -> &'static str {
+        match self {
+            Self::Qwen3 => REPOSITORY,
+            Self::Smol => "mlx-community/SmolLM2-135M-Instruct-8bit",
+        }
+    }
+    fn revision(self) -> &'static str {
+        match self {
+            Self::Qwen3 => REVISION,
+            Self::Smol => "0f0d9b8218915bc34d401e1a340b8c049d300d5e",
+        }
+    }
+    fn text(self) -> &'static str {
+        match self {
+            Self::Qwen3 => "qwen3-plain-nonthinking-v1",
+            Self::Smol => "smol-chatml-v1",
+        }
+    }
+}
 #[derive(Clone)]
 struct Evidence {
+    profile: IdentityProfile,
     manifest: [u8; 32],
     digests: [[u8; 32]; 6],
     container_bytes: u64,
@@ -108,6 +147,7 @@ fn evidence(
 ) -> Result<Evidence> {
     same_source(source, codec.source())?;
     Ok(Evidence {
+        profile: IdentityProfile::Qwen3,
         manifest: codec.complete_manifest_sha256(),
         digests: [
             source.config_sha256(),
@@ -123,6 +163,40 @@ fn evidence(
         text_policy: codec.text_policy(),
     })
 }
+fn smol_evidence(
+    source: &crate::mlx::qwen::SourceContentIdentity,
+    codec: &crate::app_chat::content::CodecContentIdentity,
+) -> Result<Evidence> {
+    if source != codec.source() {
+        return Err(fail(INVALID, "model and codec source receipts differ"));
+    }
+    let manifest = codec.complete_manifest_sha256().ok_or_else(|| {
+        fail(
+            UNSUPPORTED,
+            "legacy Smol codec has no complete ancillary evidence",
+        )
+    })?;
+    let ancillary = codec
+        .ancillary_special_map_sha256()
+        .ok_or_else(|| fail(UNSUPPORTED, "Smol codec lacks ancillary evidence"))?;
+    Ok(Evidence {
+        profile: IdentityProfile::Smol,
+        manifest,
+        digests: [
+            source.config_sha256(),
+            source.reference_container_sha256(),
+            source.index_sha256(),
+            codec.tokenizer_sha256(),
+            codec.tokenizer_config_sha256(),
+            ancillary,
+        ],
+        container_bytes: source.container_bytes(),
+        ranges: source.physical_ranges(),
+        reads: source.verified_reads(),
+        text_policy: "smol-chatml-v1",
+    })
+}
+
 fn hex(value: [u8; 32]) -> String {
     const DIGITS: &[u8; 16] = b"0123456789abcdef";
     let mut text = String::with_capacity(64);
@@ -133,11 +207,12 @@ fn hex(value: [u8; 32]) -> String {
     text
 }
 fn build(evidence: Evidence, instance: u64, loaded: usize) -> Result<IdentityReport> {
-    let manifest = qwen3_manifest().map_err(|e| fail(ENGINE_ERROR, e.to_string()))?;
+    let profile = evidence.profile;
+    let manifest = profile.manifest()?;
     let files = manifest.files();
     // This fixed report identifies the same repository/revision bytes as the
     // source expectation; copied presentation constants cannot silently drift.
-    let presented = Manifest::new(REPOSITORY, REVISION, files)
+    let presented = Manifest::new(profile.repository(), profile.revision(), files)
         .map_err(|e| fail(ENGINE_ERROR, e.to_string()))?;
     if files.len() != 6
         || presented.identity() != manifest.identity()
@@ -149,18 +224,27 @@ fn build(evidence: Evidence, instance: u64, loaded: usize) -> Result<IdentityRep
         || evidence.container_bytes != files[1].bytes
         || !(3..=crate::weights::content::MAX_RANGES).contains(&evidence.ranges)
         || evidence.reads < evidence.ranges
-        || evidence.text_policy != "qwen3-plain-nonthinking-v1"
+        || evidence.text_policy != profile.text()
         || instance == 0
-        || !(1..=512).contains(&loaded)
+        || loaded == 0
+        || (matches!(profile, IdentityProfile::Qwen3) && loaded > 512)
+        || (matches!(profile, IdentityProfile::Smol) && evidence.ranges != 694)
     {
         return Err(fail(
             UNSUPPORTED,
             "unsupported complete model/codec identity evidence",
         ));
     }
+    let source_roles: &[Role] = match profile {
+        IdentityProfile::Qwen3 => &[Role::SourceBytesDeliveredToAssembledModel],
+        IdentityProfile::Smol => &[
+            Role::SourceBytesDeliveredToAssembledModel,
+            Role::ReferenceContainerDigestAnchor,
+        ],
+    };
     let roles: [&'static [Role]; 6] = [
         &[Role::SourceMetadataConsumed, Role::CodecConfigVerified],
-        &[Role::SourceBytesDeliveredToAssembledModel],
+        source_roles,
         &[Role::SourceMetadataConsumed],
         &[Role::TokenizerParserConsumed],
         &[Role::FixedTextPolicyVerified],
@@ -175,15 +259,21 @@ fn build(evidence: Evidence, instance: u64, loaded: usize) -> Result<IdentityRep
     Ok(IdentityReport {
         schema_version: 1,
         report_kind: "accepted_model_chat_identity",
-        repository: REPOSITORY,
-        revision: REVISION,
+        repository: profile.repository(),
+        revision: profile.revision(),
         preference_namespace: PreferenceNamespace {
             version: 1,
             manifest_algorithm: "toklet-full-manifest-v1",
             manifest_sha256: hex(manifest.identity()),
             backend: BackendPolicy::MetalNativeDense,
-            load: LoadPolicy::Qwen3Audited,
-            text: TextPolicy::Qwen3PlainNonthinking,
+            load: match profile {
+                IdentityProfile::Qwen3 => LoadPolicy::Qwen3Audited,
+                IdentityProfile::Smol => LoadPolicy::SmolWitnessAudited,
+            },
+            text: match profile {
+                IdentityProfile::Qwen3 => TextPolicy::Qwen3PlainNonthinking,
+                IdentityProfile::Smol => TextPolicy::SmolChatml,
+            },
             planning: PlanningPolicy::NativeMlx,
         },
         assets,
@@ -239,44 +329,22 @@ pub unsafe extern "C" fn toklet_model_chat_identity_create(
             owner(model.owner)?;
             owner(chat.owner)?;
             same_model(model, chat)?;
-            let accepted: Option<(QwenSourceContentIdentity, usize)> = match model.model.as_ref() {
-                NativeModel::Cpu(_) => None,
-                #[cfg(all(
-                    feature = "metal",
-                    any(target_os = "macos", target_os = "ios"),
-                    target_arch = "aarch64"
-                ))]
-                NativeModel::Metal(value) => {
-                    use crate::metal::{AttentionMode, NormalizationMode, ProjectionMode};
-                    if !Profile::Qwen3.supports(value.config())
-                        || value.native_session_modes()
-                            != (ProjectionMode::MlxAffine, NormalizationMode::Compensated)
-                        || value.native_attention_mode() != AttentionMode::Reference
-                    {
-                        return Err(fail(UNSUPPORTED, "unsupported identity execution policy"));
-                    }
-                    Some((
-                        value
-                            .mlx_qwen3_source_content_identity()
-                            .copied()
-                            .ok_or_else(|| {
-                                fail(UNSUPPORTED, "model has no audited Qwen3 source")
-                            })?,
-                        value.config().max_positions,
-                    ))
-                }
+            let (source, loaded) = SourceReceipt::model(model)?;
+            let evidence = match source {
+                SourceReceipt::Qwen3(source) => evidence(
+                    &source,
+                    chat.codec
+                        .qwen3_content_identity()
+                        .ok_or_else(|| fail(UNSUPPORTED, "chat has no audited Qwen3 codec"))?,
+                )?,
+                SourceReceipt::Smol(source) => smol_evidence(
+                    &source,
+                    chat.codec
+                        .content_identity()
+                        .ok_or_else(|| fail(UNSUPPORTED, "chat has no audited Smol codec"))?,
+                )?,
             };
-            let (source, loaded) = accepted.ok_or_else(|| {
-                fail(
-                    UNSUPPORTED,
-                    "identity requires an audited Qwen3 Metal model",
-                )
-            })?;
-            let codec = chat
-                .codec
-                .qwen3_content_identity()
-                .ok_or_else(|| fail(UNSUPPORTED, "chat has no audited Qwen3 codec"))?;
-            let report = build(evidence(&source, codec)?, model.instance, loaded)?;
+            let report = build(evidence, model.instance, loaded)?;
             out.write(compatibility::capture(&report)?);
             Ok(())
         })
