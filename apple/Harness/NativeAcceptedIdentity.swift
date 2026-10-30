@@ -6,10 +6,11 @@ import CToklet
 // Ordinary remains the default for Expert, external folders and other profiles.
 enum NativeLoadIdentity: String, Sendable, Equatable {
     case ordinary
+    case managedQwen2 = "managed_qwen2_audited_v1"
     case managedQwen3 = "managed_qwen3_audited_v1"
     case managedSmol = "managed_smol_audited_v1"
     var identityProfile: NativeAcceptedIdentity.Profile? {
-        switch self { case .ordinary: nil; case .managedQwen3: .qwen3; case .managedSmol: .smol }
+        switch self { case .ordinary: nil; case .managedQwen2: .qwen2; case .managedQwen3: .qwen3; case .managedSmol: .smol }
     }
 }
 
@@ -28,29 +29,37 @@ struct NativeAcceptedIdentity: Equatable, Sendable {
     // A concrete engine-policy allowlist, shared by wire decoding and preferences.
     // Profile recognition selects a route; only the native report proves pairing.
     enum Profile: CaseIterable, Equatable, Sendable {
-        case qwen3, smol
+        case qwen2, qwen3, smol
         var repository: String {
-            switch self { case .qwen3: "mlx-community/Qwen3-0.6B-8bit"; case .smol: "mlx-community/SmolLM2-135M-Instruct-8bit" }
+            switch self { case .qwen2: "mlx-community/Qwen2.5-0.5B-Instruct-8bit"; case .qwen3: "mlx-community/Qwen3-0.6B-8bit"; case .smol: "mlx-community/SmolLM2-135M-Instruct-8bit" }
         }
         var revision: String {
-            switch self { case .qwen3: "11de96878523501bcaa86104e3c186de07ff9068"; case .smol: "0f0d9b8218915bc34d401e1a340b8c049d300d5e" }
+            switch self { case .qwen2: "6474d4c1a05bd7bd634a9c993560e4e7272eda3d"; case .qwen3: "11de96878523501bcaa86104e3c186de07ff9068"; case .smol: "0f0d9b8218915bc34d401e1a340b8c049d300d5e" }
         }
         var manifestSHA256: String {
-            switch self { case .qwen3: "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51"; case .smol: "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce" }
+            switch self { case .qwen2: "e92e6d359697d8ada4714ff4f5ff618ba8d9fc69d7abc24bfb4ec905eae6c59b"; case .qwen3: "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51"; case .smol: "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce" }
         }
         var namespace: Namespace {
-            Namespace(version:1,manifestAlgorithm:"toklet-full-manifest-v1",manifestSHA256:manifestSHA256,
-                backend:"metal_native_dense_v1",load:self == .qwen3 ? "qwen3_audited_v1" : "smol_witness_audited_v1",
-                text:self == .qwen3 ? "qwen3-plain-nonthinking-v1" : "smol-chatml-v1",planning:"native_mlx_planning_v1")
+            let load: String, text: String
+            switch self {
+            case .qwen2: load = "qwen2_audited_v1"; text = "qwen-chatml-v1"
+            case .qwen3: load = "qwen3_audited_v1"; text = "qwen3-plain-nonthinking-v1"
+            case .smol: load = "smol_witness_audited_v1"; text = "smol-chatml-v1"
+            }
+            return Namespace(version:1,manifestAlgorithm:"toklet-full-manifest-v1",manifestSHA256:manifestSHA256,
+                backend:"metal_native_dense_v1",load:load,text:text,planning:"native_mlx_planning_v1")
         }
         var modelRoles: [String] {
-            self == .qwen3 ? ["source_bytes_delivered_to_assembled_model"]
-                : ["source_bytes_delivered_to_assembled_model","reference_container_digest_anchor"]
+            switch self {
+            case .qwen2, .qwen3: ["source_bytes_delivered_to_assembled_model"]
+            case .smol: ["source_bytes_delivered_to_assembled_model","reference_container_digest_anchor"]
+            }
         }
         func admits(loaded: UInt64, ranges: UInt64, reads: UInt64) -> Bool {
-            // Both existing native policies currently cap these profiles at512:
-            // Qwen3's exact tuple and Smol's Llama graph policy respectively.
-            (1...512).contains(loaded) && reads >= ranges
+            // Wire-policy bounds only; actual loaded context must also match.
+            // Qwen2 uses the global ceiling, not the Qwen3/Smol factory cap.
+            let upper: UInt64 = self == .qwen2 ? 32768 : 512
+            return (1...upper).contains(loaded) && reads >= ranges
                 && (self == .smol ? ranges == 694 : (3...4096).contains(ranges))
         }
         static func matching(_ namespace: Namespace) -> Self? { allCases.first { $0.namespace == namespace } }

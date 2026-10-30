@@ -28,19 +28,20 @@ Destinations must be new. The builder verifies exact archive/source/header pins,
 creates `apple/Binaries/Toklet.xcframework` and `apple/Generated/Tiny`, then builds
 release simulator and unsigned device apps. It refuses foreign or differently
 linked generated inputs. The current generated library link selects
-`artifacts/new-goal-b5d5g-native36-component-v2/run-v1/native/Toklet.xcframework`, with all 36 C
+`artifacts/new-goal-b5d5k-native37-component-v1/run-v1/native/Toklet.xcframework`, with all 37 C
 exports and complete Mac/iOS/simulator app compile/link evidence. Its native
 build receipt SHA256 is
-`2e81807368a97db17d3ee177741aae832bb73e7f231477a2641421d4ec2feb53`.
-The [shared Smol/Qwen3 integration](../docs/smol-managed-preferences.md) records
-strict decoding, explicit audited loading, actual Mac restore and guarded
-selection. [Managed settings](../docs/managed-model-preferences.md) save accepted
+`0b5a3bb96da2896814d8e3c62ec5b26cc5bcda803746be9c7a688aea57cafb80`.
+The [shared Qwen2.5 integration](../docs/qwen2-managed-preferences.md) and earlier
+[Smol/Qwen3 integration](../docs/smol-managed-preferences.md) record strict decoding,
+explicit audited loading, actual Mac settings checks and guarded selection. [Managed settings](../docs/managed-model-preferences.md) save accepted
 context/chunk/budget/reply choices and restore them after fresh model and memory
 admission. Smol [bound advisory preview/Apply](../docs/smol-advisory-preview.md)
 also uses actual loaded-owner admission; all existing
 [session Apply](../docs/friendly-chat-apply.md) routes retain their loaded bounds.
 Other profiles and external folders remain ephemeral for these engine settings.
-The previous 35 [identity package](../docs/swift-accepted-identity.md),
+The previous36 [shared Smol package](../docs/smol-managed-preferences.md),
+35 [identity package](../docs/swift-accepted-identity.md),
 32 [session-transition package](../docs/apple-session-transition-package.md),
 30-export [planning package](../docs/apple-planning-package.md) and older 28 package
 are preserved. Package selection does not install or launch an app or increase

@@ -20,6 +20,7 @@ struct FriendlyLoadRequest: Equatable, Sendable {
     static func managedMode(_ profile: HubProfile) throws -> NativeLoadIdentity {
         guard HubProfile.catalog.contains(profile) else { throw HubFailure("Unknown managed model profile") }
         switch profile {
+        case .qwen: return .managedQwen2
         case .qwen3: return .managedQwen3
         case .smol: return .managedSmol
         default: return .ordinary
@@ -27,7 +28,7 @@ struct FriendlyLoadRequest: Equatable, Sendable {
     }
     static func matches(_ mode: NativeLoadIdentity, profile: HubProfile) -> Bool {
         guard let expected = mode.identityProfile else { return true }
-        return (expected == .qwen3 && profile == .qwen3) || (expected == .smol && profile == .smol)
+        return (expected == .qwen2 && profile == .qwen) || (expected == .qwen3 && profile == .qwen3) || (expected == .smol && profile == .smol)
     }
 }
 

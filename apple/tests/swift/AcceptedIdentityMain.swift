@@ -130,7 +130,47 @@ struct AcceptedIdentityMain {
         try rejected { _ = try decode(wrongRevision) }
         try require(NativeLoadIdentity.managedSmol.identityProfile == completeSmol.profile
             && NativeLoadIdentity.managedQwen3.identityProfile != completeSmol.profile,"Managed route can accept the wrong descriptor")
-        guard checks == 65 else { throw NativeContextFailure("Control inventory changed") }
+        // Qwen2 has a distinct load/text namespace and a different factory cap.
+        let qwen2Assets: [[String:Any]] = [
+            ["name":"config.json","bytes":783,"sha256":"4dae7c9622e41e50752ba422149df0694044266c06cd851aff630799701c83c6","roles":["source_metadata_consumed","codec_config_verified"]],
+            ["name":"model.safetensors","bytes":525045902,"sha256":"3dd0b6c2983ac5fe35f60ba260b1c7c35e4c38f17f3d5139d0bb477924e7aef4","roles":["source_bytes_delivered_to_assembled_model"]],
+            ["name":"model.safetensors.index.json","bytes":44209,"sha256":"e48752ffebac15ee35d1d86e96c9b87f2efd7783b19ebf82a26955dbd43e0476","roles":["source_metadata_consumed"]],
+            ["name":"tokenizer.json","bytes":7031673,"sha256":"a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf","roles":["tokenizer_parser_consumed"]],
+            ["name":"tokenizer_config.json","bytes":7308,"sha256":"f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7","roles":["fixed_text_policy_verified"]],
+            ["name":"special_tokens_map.json","bytes":613,"sha256":"76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd","roles":["ancillary_verified"]]
+        ]
+        var qwen2 = wire, qwen2Namespace = namespace
+        qwen2["repository"] = "mlx-community/Qwen2.5-0.5B-Instruct-8bit"
+        qwen2["revision"] = "6474d4c1a05bd7bd634a9c993560e4e7272eda3d"
+        qwen2Namespace["manifest_sha256"] = "e92e6d359697d8ada4714ff4f5ff618ba8d9fc69d7abc24bfb4ec905eae6c59b"
+        qwen2Namespace["load"] = "qwen2_audited_v1"; qwen2Namespace["text"] = "qwen-chatml-v1"
+        qwen2["preference_namespace"] = qwen2Namespace; qwen2["assets"] = qwen2Assets
+        qwen2["source_container_physical_ranges"] = 630; qwen2["source_container_verified_reads"] = 630
+        let completeQwen2 = try decode(qwen2)
+        try require(completeQwen2.profile == .qwen2 && NativeLoadIdentity.managedQwen2.identityProfile == .qwen2,"Qwen2 descriptor route differs")
+        var reverseQwen2 = qwen2; reverseQwen2["assets"] = Array(qwen2Assets.reversed())
+        try require(try decode(reverseQwen2) == completeQwen2,"Qwen2 canonical asset order differs")
+        for bound in [UInt64(513),32768] {
+            var larger = qwen2; larger["loaded_position_limit"] = bound
+            let value = try NativeAcceptedIdentity.decode(data(larger),context:context(loaded:bound))
+            try require(value.loadedLimit == bound,"Qwen2 wire policy inherited another profile's cap")
+        }
+        try require(!NativeAcceptedIdentity.Profile.qwen2.admits(loaded:32769,ranges:630,reads:630),"Qwen2 global wire cap widened")
+        try require(!NativeAcceptedIdentity.Profile.qwen3.admits(loaded:513,ranges:706,reads:706)
+            && !NativeAcceptedIdentity.Profile.smol.admits(loaded:513,ranges:694,reads:694),"Old profile caps changed")
+        for key in ["manifest_sha256","load","text"] {
+            for other in [namespace,smolNamespace] {
+                var wrong = qwen2, mixed = qwen2Namespace; mixed[key] = other[key]; wrong["preference_namespace"] = mixed
+                try rejected { _ = try decode(wrong) }
+            }
+        }
+        var anchor = qwen2, anchored = qwen2Assets
+        anchored[1]["roles"] = ["source_bytes_delivered_to_assembled_model","reference_container_digest_anchor"]
+        anchor["assets"] = anchored; try rejected { _ = try decode(anchor) }
+        var swapped = qwen2; swapped["assets"] = assets; try rejected { _ = try decode(swapped) }
+        var unread = qwen2; unread["source_container_verified_reads"] = 629; try rejected { _ = try decode(unread) }
+        try rejected { _ = try NativeAcceptedIdentity.decode(data(qwen2),context:context(model:9)) }
+        guard checks == 81 else { throw NativeContextFailure("Control inventory changed") }
         FileHandle.standardOutput.write(try JSONSerialization.data(withJSONObject:["checks":checks,"passed":true,"actual_model_getter":false],options:[.sortedKeys]) + Data([10]))
     }
 }

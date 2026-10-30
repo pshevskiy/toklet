@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5d5c5c — shared Qwen2.5 app routing/preferences and coherent37 package**.
+Next implementation task: **B5d5c6a — shared Mistral consumed-source verification**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -406,9 +406,17 @@ separate requirements below. Further model admissions require their own scope.
           passes12coldchecks,523default/631Metal,37exports and one cached
           seven-frame ownership probe with Astra saved audit. No session or
           generation; lint failure preserved, package36/Swift remain unchanged.
-        - [ ] C5c: shared Swift routing/preferences and actual controller checks.
+        - [x] C5c: [shared Qwen2 Swift routing/preferences](docs/qwen2-managed-preferences.md)
+          passes25native component jobs,28Swift/CPU/app and2Mac checks with
+          Astra saved audit. Restore256/chunk16 writes0; reply32 andApply128/chunk8
+          save once each. Package37 selected with36retained; no real generation
+          or rendered/device qualification.
         - [ ] C6: reuse the same mechanisms for Mistral with its explicit text
           policy bound and selected Reference attention contract.
+          - [ ] C6a: source-only DenseAudit sharing, compatibility Qwen aliases
+            and filtered accessors; original caps/Whole/poison semantics.
+          - [ ] C6b: successful model/complete-codec/getter ownership identity.
+          - [ ] C6c: coherent native package and shared Swift app/preferences.
 
 New exact-history migration remains a separate Expert mode; first Friendly Apply
 uses the existing full saved-conversation reset+prompt path on Send.
@@ -803,3 +811,10 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | C5b lint correction applied | Astra authenticates failed4group attempt and approves exact private LoadPolicy variant/reference rename. All serde strings and15otherpaths remain byte-identical; guarded one-file delta/whitespace pass. | Reviewed successor12coldjobs next; no tests, native products or cached model probe yet. |
 | 2026-10-30 | C5b corrected cold checks pass | All12jobs pass:523default/631Metal tests,37exactexports/C ABI, release library/test build. Actual three products are bounded-copied and cached6asset pins checked;12groups close without endpoint errors. | Astra actual-product review before one cached Qwen2 ownership probe. First lint failure retained; selected36 and Swift unchanged. |
 | 2026-10-30 | C5b cached ownership/audit pass | Single audited Qwen2 load and complete codec/getter pass seven raw frames: actual six roles/630reads, failureRc1/successRc2, exact model pair and snapshot surviving released owners. Astra audits13current+4prior closed groups and all products/source/counts. | [Report](docs/qwen2-audited-pairing.md); final publication review/commit then coherent37/sharedSwift. No session, generation, quality, app/device or performance claim. |
+| 2026-10-30 | C5b committed / native37 starts | Qwen2 assembled-model/codec/getter committed as `dd84196` after exact20file Astra review and12+1passing checks. Reviewed compiler-only cleanup under debug+release Cargo locks removes5537unbound objects/incremental cache; observedfree8,685,273,088meets8GiB reserve, protectedproducts unchanged. | Astra approves25serial native37/default build/link jobs, now running; candidate remains unselected and36preserved. SharedSwift7path source review continues independently. |
+| 2026-10-30 | C5c Swift source applied | Astra approves exact7paths and guarded application/whitespace pass: third shared identity descriptor, explicitQwen2 audited worker route and unchanged preference store;81wire/88routing/77preference controls and8frame loaded driver authored. Cleanup saved audit reauthenticates18protectedproducts and removed cache. | Independent native37build continues with nonoverlapping source closure; actual products gate Swift/CPU/app checks and one loaded restore/reply/Apply controller. |
+| 2026-10-30 | C5c native37 build/link pass | All25serial native/default jobs pass with3Metal37slices/default37/header/linkedC checks and closed groups. Only the bare shared archive is intentionally superseded by default37 after retainedMetal37equality; retained proof/products exact and selected36 unchanged. | Astra saved component audit and actual-product-bound28Swift/CPU/app checks next; no native tests/model loads repeated or package adoption. |
+| 2026-10-30 | C5c app-build reserve restored | Astra reviews a separate object-only cleanup manifest after native build consumes reserve. Under both Cargo locks/compiler exclusion,8261unbound rustc objects removed;87protectedoutputs unchanged, observedfree9,846,628,352meets8GiB. | Await final28job Swift owner approval; no app/model execution or retainedproduct deletion. |
+| 2026-10-30 | C5c Swift/CPU/app checks pass | All28freshjobs pass:81wire/88routing with9stale actions/77preferences/33advisory, existing28Apply/57planning/worker/preview controls and3apps.13actual products retained, all groups close without endpoint errors. | Astra actual-package review before tinyMetal and one cachedQwen2 restore/reply/Apply controller; native37candidate unselected,36preserved. |
+| 2026-10-30 | C5c both Mac checks pass | TinyMetal21 and one cachedQwen2 controller pass: restore512→256/chunk16/reply64 writes0, reply32 writes1, Apply128/chunk8 writes2; exact terminal/admission/candidate/durable records and other profile hashes remain, owning close succeeds. | Astra saved arithmetic/source/product audit and guarded37adoption before publication commit. No real generation, suspend/replay, rendered UI or phone result. |
+| 2026-10-30 | C5c saved audit and37adoption pass | Astra audits all28+2closed jobs,13products and raw terminal/D1/headroom/durable/save records. Full current binding/source/runtime/alias/model/protected precheck and candidate10file before/after hashes pass, atomic37selection preserves36. | [Report](docs/qwen2-managed-preferences.md); final exact publication review/commit next. C6a private shared Mistral source+runner will receive combined review; no app launch or broader qualification from adoption. |

@@ -29,7 +29,7 @@ struct FriendlyIdentityMain {
         try require(NativeSettings(directory:folder.path).loadIdentity == .ordinary,"Path recognition selected audited routing")
         try require(try FriendlyLoadRequest.managedMode(.qwen3) == .managedQwen3,"Explicit managed Qwen routing missing")
         try require(try FriendlyLoadRequest.managedMode(.smol) == .managedSmol,"Explicit managed Smol routing missing")
-        for profile in [HubProfile.qwen,.mistral] {
+        for profile in [HubProfile.mistral] {
             try require(try FriendlyLoadRequest.managedMode(profile) == .ordinary,"Other profile admission changed")
         }
         let modified = HubProfile(repository:HubProfile.qwen3.repository,revision:HubProfile.qwen3.revision,files:[])
@@ -76,10 +76,23 @@ struct FriendlyIdentityMain {
         smolLoad.complete(worker:ObjectIdentifier(first),instance:7,chatEnabled:true)
         try require(smolLoad.target(worker:ObjectIdentifier(first),instance:7,conversation:request.conversation,
             loadedKey:"same",selectedKey:"same")?.profile == .smolAudited,"Smol preview promoted to ordinary numerical authority")
+        try require(try FriendlyLoadRequest.managedMode(.qwen) == .managedQwen2,"Explicit managed Qwen2 routing missing")
+        try require(FriendlyLoadRequest.matches(.managedQwen2,profile:.qwen),"Exact Qwen2 route rejected")
+        try require(!FriendlyLoadRequest.matches(.managedQwen2,profile:.qwen3),"Qwen3 metadata accepted for Qwen2")
+        try require(!FriendlyLoadRequest.matches(.managedQwen3,profile:.qwen),"Qwen2 metadata accepted for Qwen3")
+        try require(!FriendlyLoadRequest.matches(.managedSmol,profile:.qwen),"Qwen2 metadata accepted for Smol")
+        let fakeQwen2 = HubProfile(repository:HubProfile.qwen.repository,revision:HubProfile.qwen.revision,files:[])
+        try require(!FriendlyLoadRequest.matches(.managedQwen2,profile:fakeQwen2),"Partial Qwen2 catalog recognized")
+        var qwen2Settings = NativeSettings(directory:folder.path); qwen2Settings.loadIdentity = .managedQwen2
+        var qwen2Load = FriendlyPlanningLoad(worker:ObjectIdentifier(first),settings:qwen2Settings)
+        qwen2Load.complete(worker:ObjectIdentifier(first),instance:7,chatEnabled:true)
+        try require(qwen2Load.target(worker:ObjectIdentifier(first),instance:7,conversation:request.conversation,
+            loadedKey:"same",selectedKey:"same")?.profile == .ordinary,"Qwen2 ordinary numerical estimator route changed")
         // Existing queue hook blocks before dispatch. Each lifecycle operation
         // supersedes an audited request before any path, model or codec read.
         for (action,mode) in [(0,NativeLoadIdentity.managedQwen3),(1,.managedQwen3),(2,.managedQwen3),
-                              (0,.managedSmol),(1,.managedSmol),(2,.managedSmol)] {
+                              (0,.managedSmol),(1,.managedSmol),(2,.managedSmol),
+                              (0,.managedQwen2),(1,.managedQwen2),(2,.managedQwen2)] {
             let gate = IdentityDequeueGate()
             let worker = try NativeWorker(beforeCommandDequeue:{ gate.pause($0) })
             var settings = NativeSettings(directory:folder.path)
@@ -114,7 +127,7 @@ struct FriendlyIdentityMain {
         } catch { failure = error }
         worker.close(); try require(worker.waitUntilClosed(seconds:30),"Rejected-route worker did not close")
         if let failure { throw failure }
-        guard checks == 64 else { throw NativeContextFailure("Control inventory changed") }
-        FileHandle.standardOutput.write(try JSONSerialization.data(withJSONObject:["checks":checks,"passed":true,"model_loads":0,"stale_queue_actions":6],options:[.sortedKeys]) + Data([10]))
+        guard checks == 88 else { throw NativeContextFailure("Control inventory changed") }
+        FileHandle.standardOutput.write(try JSONSerialization.data(withJSONObject:["checks":checks,"passed":true,"model_loads":0,"stale_queue_actions":9],options:[.sortedKeys]) + Data([10]))
     }
 }

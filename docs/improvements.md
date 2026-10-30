@@ -9074,3 +9074,65 @@ First lint failure remains preserved; final publication review precedes commit.
 [Report](qwen2-audited-pairing.md). Native37coherent packaging and shared Swift
 activation/preferences remain next; no new quality/window/device/performance
 qualification follows from this identity-only probe.
+
+C5b is committed as `dd84196` after exact twenty-file Astra final review and
+all twelve cold/one ownership checks. C5c native37 component starts only after
+Astra reviews a bounded compiler-cache cleanup: debug/release Cargo locks,
+closed groups/compiler exclusion and exact protected-product guards pass;
+5537manifest-listed unbound rustc objects and regenerated incremental cache
+are removed. Observed free increase3444531200bytes leaves8685273088bytes,
+meeting the existing8GiB start reserve. All models/logs/archives/executables
+and eighteen protected products are preserved. This is build housekeeping, not
+model-memory or performance evidence. Astra-approved25serial native37/default
+build/link jobs now run; selected36 stays guarded,37candidate unselected.
+
+C5c's seven-file shared Swift extension passes Astra review and guarded
+application. It adds Qwen2 to existing descriptors/routing, uses its audited
+model/complete-codec route and leaves the shared preference engine unchanged.
+Wire bounds use Qwen2's actual global ceiling, not Qwen3/Smol512; larger-window
+qualification remains separate.81wire/88routing/77preference controls and one
+eight-frame loaded restore/reply/Apply driver await actual native37products.
+The independent native build has no overlapping Swift inputs. Astra's cleanup
+saved audit confirms all removed caches absent and18protectedproducts exact.
+
+All twenty-five C5c native/default build/link commands pass, with three37-export
+Metal slices and default37/header/C ABI agreement. All groups close without
+endpoint errors. The original shared-target Metal archive is intentionally
+superseded by default37 only after retained-Metal equality; no other inherited
+product/input is mutable. Saved native523/631proof is reused without rerunning
+tests or model loads. Candidate37 remains unselected, selected36 preserved;
+Astra component audit precedes actual-product-bound Swift/app validation.
+
+The Swift build owner retains the existing8GiB start reserve. After native
+builds, a separate Astra-reviewed object-only cache manifest removes8261old
+unbound debug codegen objects under debug/release Cargo locks and compiler
+exclusion. All87protectedoutputs remain exact, no archives/executables/models/
+logs are removed, and observed free space rises2150612992bytes to9846628352.
+This restores the actual gate without lowering it;28Swift checks remain pending.
+
+All28C5c Swift/CPU/app checks pass:81strict identity controls,88routing with
+nine stale actions,77preference,33Smol advisory, existing28Apply/57planning
+and worker/preview regressions, maintainedSmol compile-only and all three apps.
+Thirteen actual products are retained with closed process groups/no endpoint
+errors. Astra actual-package approval precedes two Mac jobs; no Qwen2 actual
+restore/Apply or package-adoption outcome is yet claimed.
+
+Both C5c Mac jobs pass. One audited Qwen2 load restores512→256/chunk16/reply64
+with zero writes, saves reply32 once, then previews/applies128/chunk8 and saves
+once more. Actual D1 aggregates1122933718/1102414390fit1610612736; planned
+constructors607308634/600468858equal actual candidates. Fresh incremental
+headroom99238588/92398812fits observed configured process allowances. Exact
+terminal-before-observe and final durable/save evidence are separate; other
+profile records and post-reply workspace hashes remain intact and close succeeds.
+Tiny21regression passes. Astra saved audit/adoption remain pending. No real
+generation, suspend/replay, visible UI, phone or performance claim.
+
+C5c's independent Astra saved audit passes the raw correlations, Online
+ledgers, exact products and all28+2closed groups. Guarded atomic selection
+adopts37only after full current source/runtime/alias/model/protected binding
+precheck,30closed groups and ten candidate-file hashes before/after. Old36
+remains intact; no app install/launch or model work occurs during adoption.
+[Qwen2 managed settings](qwen2-managed-preferences.md) and public result record
+the bounded completion. Final exact publication review/commit follows, then
+shared Mistral source-only work. Its code+routine runner will receive one
+combined pre-execution review while retaining all validation gates.

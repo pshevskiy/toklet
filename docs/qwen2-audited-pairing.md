@@ -54,3 +54,7 @@ The probe uses1GiB numerical,128MiB text and256MiB application allowances; that
 envelope and sparse direct-process samples do not prove whole-process peak or
 device fit. No session or text generation occurs. Final exact publication review
 precedes commit; coherent package37 and shared Swift preferences are next.
+
+The subsequent [shared app integration](qwen2-managed-preferences.md) records
+coherent package37, strict Swift routing/preferences and actual Mac settings
+restoration/Apply. Those are separate results from this no-session pairing probe.
