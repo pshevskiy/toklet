@@ -11,6 +11,7 @@ use tokenizers::Tokenizer;
 
 pub mod content;
 pub mod gemma4;
+pub mod qwen3_content;
 pub mod stream;
 
 pub const MAX_TEXT: usize = 64 * 1024;
@@ -211,6 +212,7 @@ pub struct Codec {
     special_literals: Vec<String>,
     // Historical consumed asset pairing; legacy constructors remain unbound.
     content_identity: Option<content::CodecContentIdentity>,
+    qwen3_content_identity: Option<qwen3_content::QwenCodecContentIdentity>,
 }
 impl Codec {
     pub fn load(directory: &Path) -> io::Result<Self> {
@@ -282,6 +284,7 @@ impl Codec {
             profile,
             special_literals,
             content_identity: None,
+            qwen3_content_identity: None,
         })
     }
     pub fn stop_ids(&self) -> &'static [u32] {
@@ -329,6 +332,7 @@ pub(crate) fn decode_fixture() -> Codec {
         profile: Profile::Qwen,
         special_literals: Vec::new(),
         content_identity: None,
+        qwen3_content_identity: None,
     }
 }
 

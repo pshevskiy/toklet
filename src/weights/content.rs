@@ -383,8 +383,7 @@ impl FileAudit {
 mod qwen3;
 pub(crate) use qwen3::QwenAudit;
 pub use qwen3::QwenSourceContentIdentity;
-#[cfg(test)]
-use qwen3::qwen3_manifest;
+pub(crate) use qwen3::qwen3_manifest;
 #[cfg(test)]
 mod tests;
 

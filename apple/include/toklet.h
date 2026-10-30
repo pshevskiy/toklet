@@ -232,6 +232,9 @@ uint32_t toklet_model_load_mlx(const uint8_t *, size_t, const TokletOptions *, T
    Unsupported artifacts/builds reject; no text or app capability is granted.
    Existing options, output-null-on-error and creating-thread rules apply. */
 uint32_t toklet_model_load_mlx_smol_audited(const uint8_t *, size_t, const TokletOptions *, TokletModel **, TokletError *);
+/* Exact pinned Qwen3 audited source import, attached only after assembly.
+   Ordinary geometry/context limits remain unchanged; no text/app grant. */
+uint32_t toklet_model_load_mlx_qwen3_audited(const uint8_t *, size_t, const TokletOptions *, TokletModel **, TokletError *);
 uint32_t toklet_model_release(TokletModel *, TokletError *);
 uint32_t toklet_session_create(const TokletModel *, const TokletOptions *, TokletSession **, TokletError *);
 uint32_t toklet_session_release(TokletSession *, TokletError *);
@@ -288,6 +291,12 @@ uint32_t toklet_chat_create(const TokletModel *, uint64_t allowance, TokletChat 
    allowance maxima do not qualify combined process/device fit. No app grant.
    Existing encode/decode/stop limits and pointer/thread rules apply. */
 uint32_t toklet_chat_create_smol_audited(const TokletModel *, uint64_t allowance, TokletChat **, TokletError *);
+/* Bind verified Qwen3 codec assets to the exact live audited model allocation.
+   Separately reserve >=256MiB (<=6GiB) text memory before model loading. Retains
+   the same model until chat release; combined process/device fit is separate.
+   tokenizer_config is verified policy data; special_tokens_map is ancillary.
+   Raw token APIs do not prevent IDs from being passed to another session. */
+uint32_t toklet_chat_create_qwen3_audited(const TokletModel *, uint64_t allowance, TokletChat **, TokletError *);
 /* JSON array of alternating {role,content} messages, starting/ending user.
    Max63 messages/64KiB UTF-8, no template control tokens; output max512 IDs.
    NULL+0 queries required count. Small output returns INVALID, sets required

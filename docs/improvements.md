@@ -8592,3 +8592,43 @@ model assembly, codec, app preferences or qualification scope changes.
 Astra independently verifies all 248 input and 16 log identities, seventeen new
 controls in each suite, the actual one-test stream marker and closed groups.
 The scoped source task is approved for publication and commit.
+
+The source-only audit is committed as `6f6e427` after exact eleven-file Astra
+review. No passing check or cached source stream was repeated. B5d5b now
+implements successful model-assembly attachment and exact model/codec ownership
+pairing privately; no new native factory or app route has been applied yet.
+
+### 2026-10-30 — Audited model/codec pairing source applied
+
+Astra approved eleven paths that attach Qwen3 source evidence only after
+successful resident model assembly, authenticate the actual tokenizer parser
+buffer, distinguish verified policy/ancillary assets and retain the exact model
+Rc after complete codec construction. Two additive native factories preserve
+ordinary/Smol behavior and the existing geometry/memory contracts. Eight
+portable controls and one cached ownership probe are authored. Standard Rust,
+C header/export and invalid-input ABI checks are running. The cached Metal
+probe requires successful cold checks and review of the actual built test
+product. The selected Apple package, Swift app and preferences are unchanged.
+
+All twelve cold pairing checks pass: 494 default/602 Metal tests, strict Clippy
+and formatting, exact 34-export library, C header/link/invalid-call probe and
+release test build. Astra found an unbounded read in the private, unexecuted
+product-copy helper; it now checks retained-descriptor extent, limits reads to
+remaining expected bytes plus one and rejects growth before writing excess.
+Three byte-identical build products are preserved locally before launch review.
+No source or passing check was rerun for that helper correction.
+
+The [audited Qwen3 pairing](qwen3-audited-pairing.md) passes its single retained
+Metal probe and Astra saved audit. One assembled model pairs with authenticated
+codec buffers; model-owner count is 1→2→1→released. Missing assets return a null
+chat without retaining an owner; the surviving codec encodes/decodes the synthetic
+hello request after external model release, with stop 151645. All six historical
+asset roles and 706 source reads match. All thirteen command groups close.
+
+Ninety-two direct sparse samples observe RSS 838,483,968 bytes, physical
+footprint 772,719,744 and OS lifetime-maximum field 812,532,864. They are bounded
+native-probe observations, not a complete peak, app/device fit or speed result.
+No session/KV, generation, Swift adoption or preference qualification is added.
+The 34-export library is retained separately; the selected bridge stays at 32.
+Next, a read-only report must bind exact model/chat ownership and explicit
+backend/load/text/planning semantics before a coherent Swift consumer and prefs.

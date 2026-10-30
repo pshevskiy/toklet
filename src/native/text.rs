@@ -125,6 +125,69 @@ pub unsafe extern "C" fn toklet_chat_create_smol_audited(
     }
 }
 
+/// Bind verified Qwen3 codec/policy/ancillary assets to the exact supplied
+/// audited model allocation. Requires a separately reserved 256 MiB text allowance
+/// (up to 6 GiB), in addition to model/session memory; no combined-fit claim.
+/// Legacy/CPU/wrong-profile models reject before file access. The chat retains
+/// the same Rc only after successful codec construction. Token APIs still return
+/// ordinary raw IDs; callers remain responsible for using them with the right model.
+/// # Safety
+/// Follow the parent module's foreign pointer, output and thread contract.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_chat_create_qwen3_audited(
+    model: *const ModelHandle,
+    allowance: u64,
+    out: *mut *mut ChatHandle,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe {
+        boundary(error, || {
+            pointer(out)?;
+            out.write(ptr::null_mut());
+            pointer(model)?;
+            let model = &*model;
+            owner(model.owner)?;
+            if allowance < Profile::Qwen3.allowance() as u64
+                || allowance > weights::INITIAL_MEMORY_LIMIT_BYTES as u64
+            {
+                return Err(fail(
+                    INVALID,
+                    "reserve audited Qwen3 text memory separately: >=256MiB and <=6GiB",
+                ));
+            }
+            let source = match model.model.as_ref() {
+                NativeModel::Cpu(_) => None,
+                #[cfg(all(
+                    feature = "metal",
+                    any(target_os = "macos", target_os = "ios"),
+                    target_arch = "aarch64"
+                ))]
+                NativeModel::Metal(value) => {
+                    if Profile::Qwen3.supports(value.config()) {
+                        value.mlx_qwen3_source_content_identity().copied()
+                    } else {
+                        None
+                    }
+                }
+            }
+            .ok_or_else(|| {
+                fail(
+                    UNSUPPORTED,
+                    "audited Qwen3 chat requires an audited loaded Qwen3 model",
+                )
+            })?;
+            let codec = Codec::load_qwen3_audited(&model.directory, &source, allowance as usize)
+                .map_err(|e| fail(LOAD_ERROR, e.to_string()))?;
+            out.write(Box::into_raw(Box::new(ChatHandle {
+                owner: thread::current().id(),
+                codec,
+                _model: Some(Rc::clone(&model.model)),
+            })));
+            Ok(())
+        })
+    }
+}
+
 /// Encode a bounded JSON user/assistant conversation using the pinned template.
 /// NULL+0 queries required count; undersized buffers copy no elements.
 /// # Safety
@@ -854,3 +917,6 @@ mod audited_tests;
 
 #[cfg(test)]
 mod audited_capture_tests;
+
+#[cfg(all(test, feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+mod qwen3_audited_tests;

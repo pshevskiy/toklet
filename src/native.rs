@@ -536,7 +536,7 @@ pub unsafe extern "C" fn toklet_model_load_mlx(
     out: *mut *mut ModelHandle,
     error: *mut NativeError,
 ) -> u32 {
-    unsafe { load_mlx(path, len, opts, out, error, false) }
+    unsafe { load_mlx(path, len, opts, out, error, MlxLoadProfile::Ordinary) }
 }
 /// Explicit audited import of the frozen Smol checkpoint. Successful handles
 /// carry authenticated consumed-source evidence; other artifacts reject.
@@ -551,7 +551,27 @@ pub unsafe extern "C" fn toklet_model_load_mlx_smol_audited(
     out: *mut *mut ModelHandle,
     error: *mut NativeError,
 ) -> u32 {
-    unsafe { load_mlx(path, len, opts, out, error, true) }
+    unsafe { load_mlx(path, len, opts, out, error, MlxLoadProfile::SmolAudited) }
+}
+/// Explicit consumed-source audited Qwen3 import. The immutable model carries
+/// evidence only after successful resident assembly; no codec or app grant.
+/// # Safety
+/// Follow this module's foreign pointer and creating-thread contract.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_model_load_mlx_qwen3_audited(
+    path: *const u8,
+    len: usize,
+    opts: *const Options,
+    out: *mut *mut ModelHandle,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe { load_mlx(path, len, opts, out, error, MlxLoadProfile::Qwen3Audited) }
+}
+#[derive(Clone, Copy)]
+enum MlxLoadProfile {
+    Ordinary,
+    SmolAudited,
+    Qwen3Audited,
 }
 // Select the loader once at this cold boundary; publication and ABI checks are
 // shared. No backend choice or evidence hashing enters numerical hot loops.
@@ -561,7 +581,7 @@ unsafe fn load_mlx(
     opts: *const Options,
     out: *mut *mut ModelHandle,
     error: *mut NativeError,
-    audited_smol: bool,
+    profile: MlxLoadProfile,
 ) -> u32 {
     unsafe {
         boundary(error, || {
@@ -579,10 +599,14 @@ unsafe fn load_mlx(
                     context_limit: options.capacity,
                     memory_limit_bytes: options.memory_limit_bytes,
                 };
-                let model = if audited_smol {
-                    crate::metal::Model::load_mlx_smol_audited(&path, options)
-                } else {
-                    crate::metal::Model::load_mlx(&path, options)
+                let model = match profile {
+                    MlxLoadProfile::Ordinary => crate::metal::Model::load_mlx(&path, options),
+                    MlxLoadProfile::SmolAudited => {
+                        crate::metal::Model::load_mlx_smol_audited(&path, options)
+                    }
+                    MlxLoadProfile::Qwen3Audited => {
+                        crate::metal::Model::load_mlx_qwen3_audited(&path, options)
+                    }
                 }
                 .map_err(|e| fail(LOAD_ERROR, e.to_string()))?;
                 out.write(Box::into_raw(Box::new(ModelHandle {
@@ -599,7 +623,7 @@ unsafe fn load_mlx(
                 target_arch = "aarch64"
             )))]
             {
-                let _ = (options, path, audited_smol);
+                let _ = (options, path, profile);
                 Err(fail(
                     UNSUPPORTED,
                     "Native MLX Metal backend unavailable in this build/platform",

@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5d5b — successful model/codec identity pairing**.
+Next implementation task: **B5d5c1 — read-only accepted-load identity report**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -359,11 +359,18 @@ separate requirements below. Further model admissions require their own scope.
     stream: all 704 tensors/706 ranges/633,364,480 payload bytes verified.
     Expected six-file manifest and consumed config/index/container roles stay
     distinct; ordinary/Smol, model assembly, codec and preferences unchanged.
-  - [ ] B5d5b: attach source identity only after successful model assembly, pair
-    authenticated codec buffers with the exact model owner, and account ancillary
-    assets separately before publishing an accepted-load identity.
+  - [x] B5d5b: [post-assembly Qwen3 model/codec pairing](docs/qwen3-audited-pairing.md)
+    passes 12 cold checks, 494 default/602 Metal tests, 34 exports/C ABI and
+    one cached Metal ownership/text probe with Astra saved audit. Complete six-file
+    historical roles and exact Rc lifetime pass; no generation or app adoption.
   - [ ] B5d5c: persist and restore untrusted settings by accepted artifact/backend/
     load/planning-policy/schema identity with fresh admission and stale handling.
+    - [ ] C1: expose a cold accepted-load report bound to exact model/chat owners
+      and explicit engine-owned backend/load/text/planning semantics.
+    - [ ] C2: strict Swift report consumption and coherent package adoption,
+      followed by one actual audited-load controller check.
+    - [ ] C3: managed preference save/restore with fresh admission; keep external
+      or unauthenticated selections ephemeral and rejected settings preserved.
 
 New exact-history migration remains a separate Expert mode; first Friendly Apply
 uses the existing full saved-conversation reset+prompt path on Send.
@@ -697,3 +704,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | B5d5 source consumer frozen | Astra author froze seven paths for one opt-in Qwen3 source reader, 17 synthetic controls and one ignored cached full-source stream. Expected manifest and consumed roles remain distinct; ordinary/Smol, model assembly, codec, app and preferences unchanged. | Independent code review before applying or running; B5d5a/b/c boundaries now explicit. |
 | 2026-10-30 | B5d5a source applied | Astra independently approves all seven frozen source paths, concrete Whole loading seam, sticky rejection and source-only receipt boundary. Guarded application and whitespace pass. | Standard Rust fmt/strict default+Metal Clippy/tests and one cached source-only streaming check running; no model/codec or persistence claim. |
 | 2026-10-30 | B5d5a checks pass | All eight owned commands pass: fmt, strict Clippy, 486 default/594 Metal tests and one explicit release cached source stream. Actual 704 tensors/706 ranges/633,364,480 payload bytes, 99,840 audit-owner bytes; invalid public access disables later identity. | [Report](docs/qwen3-consumed-source.md); Astra saved audit passes all source/log/count/closed-group checks; task commit next. No assembly/codec/app/persistence/GPU/performance claim. |
+| 2026-10-30 | B5d5a commit | Exact eleven-file source-only task passes Astra final review and is committed as `6f6e427`; all eight checks pass, with no runtime retry. | B5d5b actual assembled-model/codec pairing; private implementation in progress. |
+| 2026-10-30 | B5d5b source applied | Astra approves all eleven frozen paths, post-assembly attachment, exact parser-buffer hashing, policy/ancillary roles and exact model-Rc ownership. Two additive audited factories imply 34 header exports; selected Apple package remains 32. Guarded application/whitespace pass. | Standard Rust and C/export checks running. One cached Metal assembly/codec ownership probe awaits completed cold/product review; no generation or app claim. |
+| 2026-10-30 | B5d5b cold checks | All twelve commands pass: fmt/strict Clippy, 494 default/602 Metal tests, 34 exact exports, C compile/link/invalid-call probe and release test build. Owner-local byte-identical products preserved; pre-execution review bounded the copy helper before use. | Actual cold/product review before one cached Metal ownership probe; no inference/app/device/performance qualification. |
+| 2026-10-30 | B5d5b audited pairing passes | Twelve cold checks and one retained cached Metal probe pass Astra saved audit: model1 Rc1→2→1→released, all six role hashes/706 source reads and encode/decode/stop151645; no generation. All13 groups closed. | [Report](docs/qwen3-audited-pairing.md); task commit next, then exact-owner identity report. Selected Apple bridge remains32exports; app/preferences untouched. |

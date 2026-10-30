@@ -98,6 +98,7 @@ fn mlx_geometry(c: &model::Config, architecture: crate::mlx::dense::Architecture
 enum MlxImport {
     Ordinary,
     SmolAudited,
+    Qwen3Audited,
     Qwen3QualityDiagnostic,
     Qwen3ContextDiagnostic,
 }
@@ -202,6 +203,7 @@ pub struct Model {
     qwen3_context_diagnostic: bool,
     mlx_declared_positions: Option<usize>,
     mlx_source_identity: Option<crate::mlx::qwen::SourceContentIdentity>,
+    mlx_qwen3_source_identity: Option<crate::mlx::qwen::QwenSourceContentIdentity>,
     pub load_timing: LoadTiming,
 }
 impl Model {
@@ -304,6 +306,13 @@ impl Model {
     pub fn mlx_source_content_identity(&self) -> Option<&crate::mlx::qwen::SourceContentIdentity> {
         self.mlx_source_identity.as_ref()
     }
+    /// Historical consumed-source identity attached only after complete audited
+    /// Qwen assembly. Not tokenizer pairing, current-disk or numerical quality.
+    pub fn mlx_qwen3_source_content_identity(
+        &self,
+    ) -> Option<&crate::mlx::qwen::QwenSourceContentIdentity> {
+        self.mlx_qwen3_source_identity.as_ref()
+    }
     pub(crate) fn native_attention_mode(&self) -> AttentionMode {
         planning::native_attention_mode(self.mlx_architecture)
     }
@@ -356,6 +365,11 @@ impl Model {
     pub fn load_mlx_smol_audited(directory: &Path, options: weights::LoadOptions) -> Result<Self> {
         Self::load_mlx_impl(directory, options, MlxImport::SmolAudited)
     }
+    /// Explicit audited import of the pinned managed Qwen3 checkpoint. Uses the
+    /// ordinary geometry and execution policy; attaches identity after assembly.
+    pub fn load_mlx_qwen3_audited(directory: &Path, options: weights::LoadOptions) -> Result<Self> {
+        Self::load_mlx_impl(directory, options, MlxImport::Qwen3Audited)
+    }
     /// Experimental Qwen3 0.6B quality execution up to1025 positions. Uses the
     /// unchanged Half graph, packed weights and session planners. This does not
     /// qualify numerics/quality, increase app limits, or waive known C512 failures.
@@ -384,6 +398,8 @@ impl Model {
             let clock = Instant::now();
             let mut source = if matches!(import, MlxImport::SmolAudited) {
                 crate::mlx::qwen::Source::open_smol_audited(directory, options)?
+            } else if matches!(import, MlxImport::Qwen3Audited) {
+                crate::mlx::qwen::Source::open_qwen3_audited(directory, options)?
             } else if matches!(import, MlxImport::Qwen3ContextDiagnostic) {
                 crate::mlx::qwen::Source::open_qwen3_context_diagnostic(directory, options)?
             } else {
@@ -498,6 +514,11 @@ impl Model {
                     "audited source incomplete after model assembly",
                 ))?;
                 model.mlx_source_identity = Some(identity);
+            }
+            if matches!(import, MlxImport::Qwen3Audited) {
+                model.mlx_qwen3_source_identity = Some(source.qwen3_content_identity().ok_or(
+                    Error::Options("audited Qwen source incomplete after model assembly"),
+                )?);
             }
             model.load_timing = LoadTiming {
                 load_seconds: clock.elapsed().as_secs_f64(),
@@ -709,6 +730,7 @@ impl Model {
             qwen3_context_diagnostic: false,
             mlx_declared_positions: None,
             mlx_source_identity: None,
+            mlx_qwen3_source_identity: None,
             load_timing: LoadTiming {
                 load_seconds: 0.,
                 conversion_seconds: 0.,

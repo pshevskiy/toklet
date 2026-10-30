@@ -1390,3 +1390,158 @@ mod transition_tests;
 
 #[path = "candidate_tests.rs"]
 mod candidate_tests;
+
+#[test]
+fn audited_qwen_factory_foreign_validation_and_budget_clear_outputs() {
+    for (path, options) in [
+        (&b""[..], opts()),
+        (&b"bad\0path"[..], opts()),
+        (&b"\xff"[..], opts()),
+        (
+            &b"missing"[..],
+            Options {
+                abi_version: 99,
+                ..opts()
+            },
+        ),
+        (
+            &b"missing"[..],
+            Options {
+                struct_size: 0,
+                ..opts()
+            },
+        ),
+        (
+            &b"missing"[..],
+            Options {
+                memory_limit_bytes: MODEL_SESSION_BRIDGE_BYTES as u64,
+                ..opts()
+            },
+        ),
+    ] {
+        let mut output = ptr::dangling_mut();
+        assert_eq!(
+            unsafe {
+                toklet_model_load_mlx_qwen3_audited(
+                    path.as_ptr(),
+                    path.len(),
+                    &options,
+                    &mut output,
+                    ptr::null_mut(),
+                )
+            },
+            INVALID
+        );
+        assert!(output.is_null());
+    }
+    let mut output = ptr::dangling_mut();
+    assert_eq!(
+        unsafe {
+            toklet_model_load_mlx_qwen3_audited(
+                b"missing".as_ptr(),
+                7,
+                ptr::null(),
+                &mut output,
+                ptr::null_mut(),
+            )
+        },
+        INVALID
+    );
+    assert!(output.is_null());
+    assert_eq!(
+        unsafe {
+            toklet_model_load_mlx_qwen3_audited(
+                b"missing".as_ptr(),
+                7,
+                &opts(),
+                ptr::null_mut(),
+                ptr::null_mut(),
+            )
+        },
+        INVALID
+    );
+}
+#[test]
+fn audited_qwen_chat_rejects_cpu_and_insufficient_allowance_before_files() {
+    let handle = Box::into_raw(Box::new(ModelHandle {
+        owner: thread::current().id(),
+        instance: context::next_instance().unwrap(),
+        model: Rc::new(NativeModel::Cpu(Box::new(model()))),
+        directory: Path::new("absent/qwen-looking-directory").to_owned(),
+    }));
+    unsafe {
+        for (budget, expected) in [
+            (0, INVALID),
+            (
+                (crate::app_chat::Profile::Qwen3.allowance() - 1) as u64,
+                INVALID,
+            ),
+            (u64::MAX, INVALID),
+            (
+                crate::app_chat::Profile::Qwen3.allowance() as u64,
+                UNSUPPORTED,
+            ),
+        ] {
+            let mut chat = ptr::dangling_mut();
+            assert_eq!(
+                toklet_chat_create_qwen3_audited(handle, budget, &mut chat, ptr::null_mut()),
+                expected
+            );
+            assert!(chat.is_null());
+            assert_eq!(Rc::strong_count(&(*handle).model), 1);
+        }
+        assert_eq!(toklet_model_release(handle, ptr::null_mut()), OK);
+    }
+}
+#[test]
+fn audited_qwen_chat_owner_and_null_validation_preserve_reference_count() {
+    let handle = Box::into_raw(Box::new(ModelHandle {
+        owner: thread::current().id(),
+        instance: context::next_instance().unwrap(),
+        model: Rc::new(NativeModel::Cpu(Box::new(model()))),
+        directory: Path::new("not-opened").to_owned(),
+    }));
+    let address = handle as usize;
+    thread::spawn(move || {
+        let mut chat = ptr::dangling_mut();
+        assert_eq!(
+            unsafe {
+                toklet_chat_create_qwen3_audited(
+                    address as *const ModelHandle,
+                    256 * 1024 * 1024,
+                    &mut chat,
+                    ptr::null_mut(),
+                )
+            },
+            WRONG_THREAD
+        );
+        assert!(chat.is_null());
+    })
+    .join()
+    .unwrap();
+    unsafe {
+        assert_eq!(Rc::strong_count(&(*handle).model), 1);
+        assert_eq!(
+            toklet_chat_create_qwen3_audited(
+                handle,
+                256 * 1024 * 1024,
+                ptr::null_mut(),
+                ptr::null_mut()
+            ),
+            INVALID
+        );
+        let mut chat = ptr::dangling_mut();
+        assert_eq!(
+            toklet_chat_create_qwen3_audited(
+                ptr::null(),
+                256 * 1024 * 1024,
+                &mut chat,
+                ptr::null_mut()
+            ),
+            INVALID
+        );
+        assert!(chat.is_null());
+        assert_eq!(Rc::strong_count(&(*handle).model), 1);
+        assert_eq!(toklet_model_release(handle, ptr::null_mut()), OK);
+    }
+}

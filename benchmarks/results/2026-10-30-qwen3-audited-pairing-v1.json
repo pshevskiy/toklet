@@ -1,0 +1,336 @@
+{
+  "format": "toklet-qwen3-audited-pairing-result-v1",
+  "date": "2026-10-30",
+  "base_revision": "6f6e4275bce7573a0bf3d0f7be9a80b1cfe14131",
+  "passed": true,
+  "source_files": {
+    "apple/include/toklet.h": {
+      "after": {
+        "bytes": 21487,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5b-qwen-pairing-proposal-v1/proposed/apple/include/toklet.h",
+        "sha256": "a19151c82d1ae23c2649289d6f32e8fbeec9921c76992b9f0ddfd1413194b0f4"
+      },
+      "before": {
+        "bytes": 20700,
+        "path": "/Users/coloner/work/rust/toklet/apple/include/toklet.h",
+        "sha256": "6a6c831a59d497bb5cab661cbdc72becd43013734ea9725ed15235256b5591f8"
+      }
+    },
+    "src/app_chat.rs": {
+      "after": {
+        "bytes": 25489,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5b-qwen-pairing-proposal-v1/proposed/src/app_chat.rs",
+        "sha256": "714aa1265a55cbbd69bc7de81d9137160e36ae17e7f70b145af2ca6215a38509"
+      },
+      "before": {
+        "bytes": 25309,
+        "path": "/Users/coloner/work/rust/toklet/src/app_chat.rs",
+        "sha256": "188fe60aa93abcf16156c7de63d37e99b8012b79655260124e319290c62fa17c"
+      }
+    },
+    "src/app_chat/qwen3_content.rs": {
+      "after": {
+        "bytes": 5728,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5b-qwen-pairing-proposal-v1/proposed/src/app_chat/qwen3_content.rs",
+        "sha256": "a6c76ab0492d82bef5ed2ab8f15bd1d857ae0e0d0a52ad4741cdbcc8d2479051"
+      },
+      "before": null
+    },
+    "src/app_chat/qwen3_content/tests.rs": {
+      "after": {
+        "bytes": 6221,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5b-qwen-pairing-proposal-v1/proposed/src/app_chat/qwen3_content/tests.rs",
+        "sha256": "02a8afe3c7f0fd65f8635b6e0f834802d9d8485b9c2dbd0e5e03abab014d366b"
+      },
+      "before": null
+    },
+    "src/app_chat/stream.rs": {
+      "after": {
+        "bytes": 27274,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5b-qwen-pairing-proposal-v1/proposed/src/app_chat/stream.rs",
+        "sha256": "95f18900ee5053ac2eb8270021f250d6bbc8b752c979cd634e2de4d39f4cc2e2"
+      },
+      "before": {
+        "bytes": 27232,
+        "path": "/Users/coloner/work/rust/toklet/src/app_chat/stream.rs",
+        "sha256": "ddfe5d6e2de239df94f1e5f2d78ceaa4ca9df8c5ac62d3ecbbf8cc3563ae9b44"
+      }
+    },
+    "src/metal/mod.rs": {
+      "after": {
+        "bytes": 137408,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5b-qwen-pairing-proposal-v1/proposed/src/metal/mod.rs",
+        "sha256": "deefc0ac08f539f8612740ea20c2d6d9b5da50ab64abfda5cee06924bbbfea28"
+      },
+      "before": {
+        "bytes": 136150,
+        "path": "/Users/coloner/work/rust/toklet/src/metal/mod.rs",
+        "sha256": "272d7eb330128e8c9294609998b9fd30760f114b392c0ed4ce2cd5812d11e687"
+      }
+    },
+    "src/native.rs": {
+      "after": {
+        "bytes": 36333,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5b-qwen-pairing-proposal-v1/proposed/src/native.rs",
+        "sha256": "8e5efc0216115e1105aae8846101fd6a80aa3e13581af623e1500092f6a8b5aa"
+      },
+      "before": {
+        "bytes": 35411,
+        "path": "/Users/coloner/work/rust/toklet/src/native.rs",
+        "sha256": "7551ef873a853445d7465ca68eea002ce972b8c2e6df17676053ed7be1c3ce78"
+      }
+    },
+    "src/native/tests.rs": {
+      "after": {
+        "bytes": 49025,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5b-qwen-pairing-proposal-v1/proposed/src/native/tests.rs",
+        "sha256": "7f289144cc43be8b78518bd1cd144993266e1fe597fbb067c454919a297037ee"
+      },
+      "before": {
+        "bytes": 44548,
+        "path": "/Users/coloner/work/rust/toklet/src/native/tests.rs",
+        "sha256": "b8d467e4709c057f470295fca836d8967d42aab8a972c69fa108d384c1db23cb"
+      }
+    },
+    "src/native/text.rs": {
+      "after": {
+        "bytes": 31929,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5b-qwen-pairing-proposal-v1/proposed/src/native/text.rs",
+        "sha256": "af66ec186eddf3a7e52244e51a2913dca41495a31e1e9b885869fd2c9aacac80"
+      },
+      "before": {
+        "bytes": 29310,
+        "path": "/Users/coloner/work/rust/toklet/src/native/text.rs",
+        "sha256": "f23a750a32009a2fec00854758bc4c96ba0b227d4bb3c2d387fd47be366f04d7"
+      }
+    },
+    "src/native/text/qwen3_audited_tests.rs": {
+      "after": {
+        "bytes": 7833,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5b-qwen-pairing-proposal-v1/proposed/src/native/text/qwen3_audited_tests.rs",
+        "sha256": "480d6a208c958120a0fb21cacfb2a28b626226b78a08aed8fd65aa9107470f4e"
+      },
+      "before": null
+    },
+    "src/weights/content.rs": {
+      "after": {
+        "bytes": 13978,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5b-qwen-pairing-proposal-v1/proposed/src/weights/content.rs",
+        "sha256": "db166cfff4b0e2a3787ca6a92d4d29390e477f807d05423033b8b235efebd7ba"
+      },
+      "before": {
+        "bytes": 13980,
+        "path": "/Users/coloner/work/rust/toklet/src/weights/content.rs",
+        "sha256": "6522a27c0162f7667db043e9d709d1848271f7dc0d64060ab7a7bddadf566c3e"
+      }
+    }
+  },
+  "tests": {
+    "default": {
+      "groups": 58,
+      "passed": 494,
+      "failed": 0,
+      "ignored": 21
+    },
+    "metal": {
+      "groups": 58,
+      "passed": 602,
+      "failed": 0,
+      "ignored": 188
+    }
+  },
+  "new_portable_controls": 8,
+  "cold_commands": 12,
+  "cached_metal_probes": 1,
+  "all_commands_exit_zero": true,
+  "all_groups_closed": true,
+  "endpoint_errors": [],
+  "exact_exports": [
+    "toklet_abi_version",
+    "toklet_cancel_create",
+    "toklet_cancel_release",
+    "toklet_cancel_set",
+    "toklet_chat_create",
+    "toklet_chat_create_qwen3_audited",
+    "toklet_chat_create_smol_audited",
+    "toklet_chat_decode",
+    "toklet_chat_encode",
+    "toklet_chat_release",
+    "toklet_chat_stop_ids",
+    "toklet_mlx_capacity_plan_create",
+    "toklet_mlx_context_limits_create",
+    "toklet_mlx_inspect_create",
+    "toklet_mlx_inspect_json",
+    "toklet_mlx_inspect_release",
+    "toklet_mlx_plan_create",
+    "toklet_model_load",
+    "toklet_model_load_metal",
+    "toklet_model_load_mlx",
+    "toklet_model_load_mlx_qwen3_audited",
+    "toklet_model_load_mlx_smol_audited",
+    "toklet_model_release",
+    "toklet_session_context",
+    "toklet_session_create",
+    "toklet_session_generate",
+    "toklet_session_history",
+    "toklet_session_preflight",
+    "toklet_session_prepare_empty",
+    "toklet_session_release",
+    "toklet_session_reset",
+    "toklet_session_score",
+    "toklet_session_state",
+    "toklet_session_transition_plan_create"
+  ],
+  "observations": {
+    "load": {
+      "status": 0,
+      "nonnull": true,
+      "error_code": 0
+    },
+    "reject": {
+      "status": 2,
+      "null": true,
+      "strong_count": 1
+    },
+    "pair": {
+      "model_instance": 1,
+      "strong_before": 1,
+      "strong_paired": 2,
+      "exact_rc": true,
+      "source_expected_manifest": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+      "source_config": "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240",
+      "source_index": "45addf7779cdbd5af18d92f9f7b79c188f6ebbf32cff7b4ae7dbe68a91340ebc",
+      "source_container": "3ad5c96e0a476d4eee48e9f525d0ee0a3f1830b3e5b8e17b441de0661e921397",
+      "source_container_bytes": 633442994,
+      "source_ranges": 706,
+      "source_reads": 706,
+      "complete_manifest": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+      "tokenizer_consumed": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4",
+      "tokenizer_config_verified_policy": "8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6",
+      "special_map_verified_ancillary": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+      "text_policy": "qwen3-plain-nonthinking-v1"
+    },
+    "text": {
+      "model_handle_released": true,
+      "retained_strong": 1,
+      "ids": [
+        151644,
+        872,
+        198,
+        14990,
+        151645,
+        198,
+        151644,
+        77091,
+        198,
+        151667,
+        271,
+        151668,
+        271
+      ],
+      "decoded": "user\nhello\nassistant\n<think>\n\n</think>\n\n",
+      "stops": [
+        151645
+      ],
+      "generation": false
+    },
+    "done": {
+      "passed": true,
+      "all_owners_released": true,
+      "model_loads": 1,
+      "model_assembled": true,
+      "codec_paired": true,
+      "generation": false,
+      "app_or_phone_qualified": false,
+      "performance_qualified": false
+    }
+  },
+  "direct_process_usage": {
+    "sampling": "sparse; largest observed values, not a complete peak measurement",
+    "samples": 92,
+    "observed_maxima": {
+      "resident_size": 838483968,
+      "phys_footprint": 772719744,
+      "lifetime_max_phys_footprint": 812532864
+    }
+  },
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b5d5b-qwen-pairing-proposal-v1/manifest.json",
+      "bytes": 9715,
+      "sha256": "d324783a3731d992a682104a18fec5b828936f54f4adff332a20e7fe6ba97306"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5b-qwen-pairing-proposal-v1/DESIGN.md",
+      "bytes": 6288,
+      "sha256": "868b7b1fc4c9486b19e86f0ce144e588a54d738c838d5bd87b5f528187ee49c2"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5b-qwen-pairing-independent-review-v1/prospective-review.json",
+      "bytes": 13773,
+      "sha256": "fc9d643845da78a8021b2acc8acdd2b2e1df19a03d347714278c25d0587b3f1e"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5b-qwen-pairing-independent-review-v1/cold-scope-review.json",
+      "bytes": 2615,
+      "sha256": "813ee4c5c7ac173c356879a43797519e45c1041f6220ee2c54aeb6ec44ce9994"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5b-qwen-pairing-independent-review-v1/continuation-scope-review.json",
+      "bytes": 3393,
+      "sha256": "e2e4d922566cc1bc3156a7625f7771c36d4ed212b1d3fbec85d0bb32119081c9"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5b-qwen-pairing-independent-review-v1/launch-review.json",
+      "bytes": 5238,
+      "sha256": "109c20734eb039dbd2352a14c4b37c4c131ce3a6786068d068c048bf595fc512"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5b-qwen-pairing-independent-review-v1/saved-review.json",
+      "bytes": 13716,
+      "sha256": "90df0f385280e1336cc2d995a6fe29abc2907247285814f830a5be3d8e48a033"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5b-qwen-pairing-checks-v1/cold.py",
+      "bytes": 5429,
+      "sha256": "3b9cafac00ea7ff39cdbcbbe17aeb4ebd558cac3c67a084cdddbe388304b0b28"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5b-qwen-pairing-checks-v1/freeze.py",
+      "bytes": 2044,
+      "sha256": "7c42a1ae463de5a8a66073ea856bf2b00455af96a2abba8cd5080e7e621c3960"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5b-qwen-pairing-checks-v1/hardware.py",
+      "bytes": 5163,
+      "sha256": "d273a89bfd272df9f074eae25539eed9be8e97dade7d951bdcde1c30391a70c9"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5b-qwen-pairing-checks-v1/run-v1/checks.json",
+      "bytes": 65426,
+      "sha256": "75186dbda8e71b9528f35016450e8b027323d74c81a0c77a82dcb7b3fa7ea748"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5b-qwen-pairing-checks-v1/frozen-products.json",
+      "bytes": 1522,
+      "sha256": "bb1872be0501e82e204484248e20dda60f97f47fe6cd5c17979a6fefeeea1677"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5b-qwen-pairing-checks-v1/hardware-v1/checks.json",
+      "bytes": 55197,
+      "sha256": "bb954c48a53bb541346728a6ad46a212719b08cf5352632759692a20ee682450"
+    }
+  ],
+  "limitations": [
+    "Historical source/codec/distribution roles, not an immutable directory snapshot or resident GPU-byte hash.",
+    "Fixed Rust non-thinking text policy; no arbitrary Jinja execution.",
+    "No session/KV allocation, generation, numerical quality or performance qualification.",
+    "No Swift app, preferences, rendered UI, physical-device or whole-app fit qualification.",
+    "The verified 34-export library is not adopted; selected Apple package remains 32 exports.",
+    "Launch guards include shared-target originals and are historical after later builds; owner-local byte-identical copies preserve products.",
+    "Ordinary bounded source/check verification; complete runtime/toolchain identities were not frozen."
+  ],
+  "preexecution_corrections": [
+    "Astra identified the unexecuted retention helper could read a growing product without a bound; retained-descriptor copy now reads at most remaining expected bytes plus one, rejects growth before writing excess and checks exact final extent and hashes. No engine/source change or passing-check rerun."
+  ]
+}
