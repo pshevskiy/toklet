@@ -1,0 +1,926 @@
+{
+  "base_commit": "d7a81d96c33ced09d639ac52d0d0f82641b5f8be",
+  "cpu_observation": {
+    "records": [
+      {
+        "busy": false,
+        "committed": 5,
+        "context": {
+          "admission": 67227360,
+          "capacity": 32,
+          "loaded_limit": 32,
+          "model": 1,
+          "session": 2
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 6,
+        "ids": [
+          47,
+          47
+        ],
+        "label": "used-current",
+        "pending": 1,
+        "restart_required": false,
+        "revision": 89,
+        "saved_prefix": [
+          1,
+          7,
+          13,
+          3,
+          47,
+          47
+        ],
+        "status": 0
+      },
+      {
+        "busy": false,
+        "committed": 5,
+        "context": {
+          "admission": 67227360,
+          "capacity": 32,
+          "loaded_limit": 32,
+          "model": 1,
+          "session": 2
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 6,
+        "ids": [
+          47,
+          47
+        ],
+        "label": "underbudget-rejection",
+        "pending": 1,
+        "restart_required": false,
+        "revision": 94,
+        "saved_prefix": [
+          1,
+          7,
+          13,
+          3,
+          47,
+          47
+        ],
+        "status": 0,
+        "transition": {
+          "committed": false,
+          "outcome": "rejected",
+          "requested_capacity": 16,
+          "requested_chunk": 3,
+          "status": 1
+        }
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "context": {
+          "admission": 67217860,
+          "capacity": 3,
+          "loaded_limit": 32,
+          "model": 1,
+          "session": 4
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "empty-adoption",
+        "pending": 0,
+        "plan": {
+          "aggregate_bytes": 136590052,
+          "candidate_chunk": 2,
+          "candidate_planned_bytes": 4868,
+          "current_chunk": 3,
+          "current_owned_bytes": 14368,
+          "reserves_bytes": 136487168,
+          "shared_bytes": 83648
+        },
+        "restart_required": false,
+        "revision": 128,
+        "saved_prefix": [],
+        "status": 0,
+        "transition": {
+          "committed": true,
+          "outcome": "committed",
+          "requested_capacity": 3,
+          "requested_chunk": 2,
+          "status": 0
+        }
+      },
+      {
+        "busy": true,
+        "committed": 0,
+        "context": {
+          "admission": 67223072,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 40,
+          "session": 42
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "accepted-before-late-cancel",
+        "pending": 0,
+        "plan": {
+          "aggregate_bytes": 136595264,
+          "candidate_chunk": 3,
+          "candidate_planned_bytes": 10080,
+          "current_chunk": 3,
+          "current_owned_bytes": 14368,
+          "reserves_bytes": 136487168,
+          "shared_bytes": 83648
+        },
+        "restart_required": false,
+        "revision": 114,
+        "saved_prefix": null,
+        "status": 0,
+        "transition": {
+          "committed": true,
+          "outcome": "committed",
+          "requested_capacity": 16,
+          "requested_chunk": 3,
+          "status": 0
+        }
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "context": {
+          "admission": 67223072,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 40,
+          "session": 42
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "accepted-after-late-cancel",
+        "pending": 0,
+        "restart_required": false,
+        "revision": 117,
+        "saved_prefix": null,
+        "status": 0
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "context": {
+          "admission": 67223072,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 43,
+          "session": 45
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "retirement-busy",
+        "pending": 0,
+        "plan": {
+          "aggregate_bytes": 136595264,
+          "candidate_chunk": 3,
+          "candidate_planned_bytes": 10080,
+          "current_chunk": 3,
+          "current_owned_bytes": 14368,
+          "reserves_bytes": 136487168,
+          "shared_bytes": 83648
+        },
+        "restart_required": true,
+        "revision": 118,
+        "saved_prefix": null,
+        "status": 0,
+        "transition": {
+          "committed": true,
+          "outcome": "cleanupFailed",
+          "requested_capacity": 16,
+          "requested_chunk": 3,
+          "status": 4
+        }
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "context": {
+          "admission": 67223072,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 46,
+          "session": 48
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "retirement-panic",
+        "pending": 0,
+        "plan": {
+          "aggregate_bytes": 136595264,
+          "candidate_chunk": 3,
+          "candidate_planned_bytes": 10080,
+          "current_chunk": 3,
+          "current_owned_bytes": 14368,
+          "reserves_bytes": 136487168,
+          "shared_bytes": 83648
+        },
+        "restart_required": true,
+        "revision": 118,
+        "saved_prefix": null,
+        "status": 0,
+        "transition": {
+          "committed": true,
+          "outcome": "cleanupFailed",
+          "requested_capacity": 16,
+          "requested_chunk": 3,
+          "status": 6
+        }
+      }
+    ],
+    "summary": {
+      "backend": "cpu",
+      "closed": true,
+      "empty_commit": true,
+      "old_pending_witness": true,
+      "passed": true,
+      "postcommit_cancel": true,
+      "pure_controls": 37,
+      "retirement_controls": 2,
+      "stale_barriers": 15
+    }
+  },
+  "current_verification": {
+    "app_platforms": [
+      "iPhoneSimulator",
+      "iPhoneOS",
+      "MacOSX"
+    ],
+    "apps_executed": false,
+    "endpoint_errors": [],
+    "fresh_cold_commands": 14,
+    "legacy_preview": {
+      "app_qualified": false,
+      "barrier_cases": 21,
+      "compiledMetal": true,
+      "passed": true,
+      "preview_loads_model": false,
+      "tiny_generation_witness": true
+    },
+    "pure_controls_per_backend": 37,
+    "raw_records_per_backend": 7,
+    "retirement_controls_per_backend": 2,
+    "separately_approved_mac_commands": 2,
+    "stale_barriers_per_backend": 15,
+    "successful_closed_groups": 16,
+    "typed_swift_language_version": 6,
+    "worker_swift_language_version": 5
+  },
+  "date": "2026-10-30",
+  "decision": "bounded_worker_empty_adoption_checked",
+  "evidence": {
+    "artifacts/new-goal-b5d3b-worker-transition-independent-review-v1/prospective-review.json": {
+      "bytes": 5527,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-independent-review-v1/prospective-review.json",
+      "sha256": "ca0067151de4b2102f3308e221939062dc9e77af0c298177538f95b48fb5f9a7"
+    },
+    "artifacts/new-goal-b5d3b-worker-transition-independent-review-v1/prospective-v2-review.json": {
+      "bytes": 5402,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-independent-review-v1/prospective-v2-review.json",
+      "sha256": "8cc034f849095d62941782c5d438c3d4ddc9d565146760934dd02549cb7326eb"
+    },
+    "artifacts/new-goal-b5d3b-worker-transition-proposal-v1/manifest.json": {
+      "bytes": 8114,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-proposal-v1/manifest.json",
+      "sha256": "f482d29dcb2a9e1475ba2b2c8066d22796f67d5ccdebfaced29f63d9b65eda25"
+    },
+    "artifacts/new-goal-b5d3b-worker-transition-proposal-v2/manifest.json": {
+      "bytes": 9997,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-proposal-v2/manifest.json",
+      "sha256": "4e1e6ff0d605c8275d98b8a3b04428b4c150a4a3495e39a10baea87341021dd7"
+    },
+    "artifacts/new-goal-b5d3b-worker-transition-verification-independent-review-v1/failed-hardware-v1-review.json": {
+      "bytes": 4630,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-independent-review-v1/failed-hardware-v1-review.json",
+      "sha256": "179903afb19d70926499fd6e93ee581aab87830bb1a87ec99881b4896b840736"
+    },
+    "artifacts/new-goal-b5d3b-worker-transition-verification-independent-review-v1/prospective-v2-review.json": {
+      "bytes": 2861,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-independent-review-v1/prospective-v2-review.json",
+      "sha256": "ece165de2e36246fca2330743a99e86f80c3604e9268c4060ca4eb5f7ff315c1"
+    },
+    "artifacts/new-goal-b5d3b-worker-transition-verification-independent-review-v1/saved-review.json": {
+      "bytes": 23498,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-independent-review-v1/saved-review.json",
+      "sha256": "5f036e8cbb6c8fcbe7b1e88405f5ecdd803f40107a05a2caef6de2eba0a13120"
+    },
+    "artifacts/new-goal-b5d3b-worker-transition-verification-owner-v1/cold-v1/checks.json": {
+      "bytes": 1750529,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v1/cold-v1/checks.json",
+      "sha256": "55506f25d98e871022719992a622f316804cfa29d011c1d9f24fe061681e7118"
+    },
+    "artifacts/new-goal-b5d3b-worker-transition-verification-owner-v1/hardware-v1/checks.json": {
+      "bytes": 1299598,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v1/hardware-v1/checks.json",
+      "sha256": "f95a2a3a32df59041c7c2fd6c0fd6aa8a1be375d706d420cb89d75183d36ddf3"
+    },
+    "artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/checks.json": {
+      "bytes": 1753963,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/checks.json",
+      "sha256": "9ce354ead304b8ac36c1ade44730e053c334d90087df937b997e412e18cc1e81"
+    },
+    "artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/hardware-v1/checks.json": {
+      "bytes": 1309830,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/hardware-v1/checks.json",
+      "sha256": "364e46260bd44809d15c23c0519dfb434192937e92c4c6fd9efac8b0ca7e3597"
+    },
+    "artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/inheritance.json": {
+      "bytes": 64617,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/inheritance.json",
+      "sha256": "9600f0875dacd294b044884647ba495db6f17b29d6f94a0cee43ef4573556ca4"
+    },
+    "artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/launch-review.json": {
+      "bytes": 4632,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/launch-review.json",
+      "sha256": "a42422a9a5430a674ba127509f9094cc2a8671cf805b044e0cfecf155388ad1a"
+    },
+    "artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/manifest.json": {
+      "bytes": 7588,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/manifest.json",
+      "sha256": "bc7be566ab567034529a9451383a5c578c01a3fff2589e12cdf18823b22c76a4"
+    },
+    "artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/package.json": {
+      "bytes": 1897093,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/package.json",
+      "sha256": "75753ad58cb99d5a525a971919f2be907ede4e341f0de091970eb428456745f8"
+    },
+    "artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/prior-failure.json": {
+      "bytes": 3733,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/prior-failure.json",
+      "sha256": "ec1e89ccaa9e9cee26da0d84d131152ea56430c86e969d5f1b5656ad3e85c674"
+    }
+  },
+  "evidence_limits": [
+    "Full ordinary snapshot preservation and stale/continuation/cleanup behavior include completed assertions; seven records do not export all logits, weights or internal state.",
+    "Context admission, actual owned ledger, constructor admission and aggregate coexistence have different scopes.",
+    "Retirement PANIC is safely simulated after successful native release; actual ambiguous destruction is never retried.",
+    "Cancellation after acceptance may suppress the transient result but cannot undo adopted session identity.",
+    "Application reserve includes declared logical Swift history extents, not measured allocator capacities; native driver/metadata reserves remain explicit.",
+    "No elapsed/performance or complete process-peak claim; observations remain in retained receipts.",
+    "No new durable configuration, Friendly Apply, preference persistence, rendered UI, real text-profile or physical phone qualification."
+  ],
+  "format": "toklet-native-worker-session-transition-evidence-v1",
+  "independent_saved_review": {
+    "bytes": 23498,
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-independent-review-v1/saved-review.json",
+    "sha256": "5f036e8cbb6c8fcbe7b1e88405f5ecdd803f40107a05a2caef6de2eba0a13120"
+  },
+  "metal_observation": {
+    "records": [
+      {
+        "busy": false,
+        "committed": 5,
+        "context": {
+          "admission": 67170700,
+          "capacity": 32,
+          "loaded_limit": 32,
+          "model": 1,
+          "session": 2
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 6,
+        "ids": [
+          3,
+          3
+        ],
+        "label": "used-current",
+        "pending": 1,
+        "restart_required": false,
+        "revision": 89,
+        "saved_prefix": [
+          1,
+          7,
+          13,
+          3,
+          3,
+          3
+        ],
+        "status": 0
+      },
+      {
+        "busy": false,
+        "committed": 5,
+        "context": {
+          "admission": 67170700,
+          "capacity": 32,
+          "loaded_limit": 32,
+          "model": 1,
+          "session": 2
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 6,
+        "ids": [
+          3,
+          3
+        ],
+        "label": "underbudget-rejection",
+        "pending": 1,
+        "restart_required": false,
+        "revision": 94,
+        "saved_prefix": [
+          1,
+          7,
+          13,
+          3,
+          3,
+          3
+        ],
+        "status": 0,
+        "transition": {
+          "committed": false,
+          "outcome": "rejected",
+          "requested_capacity": 16,
+          "requested_chunk": 3,
+          "status": 1
+        }
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "context": {
+          "admission": 67158620,
+          "capacity": 3,
+          "loaded_limit": 32,
+          "model": 1,
+          "session": 4
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "empty-adoption",
+        "pending": 0,
+        "plan": {
+          "aggregate_bytes": 136538396,
+          "candidate_chunk": 2,
+          "candidate_planned_bytes": 5392,
+          "current_chunk": 3,
+          "current_owned_bytes": 17472,
+          "reserves_bytes": 136487168,
+          "shared_bytes": 28364
+        },
+        "restart_required": false,
+        "revision": 128,
+        "saved_prefix": [],
+        "status": 0,
+        "transition": {
+          "committed": true,
+          "outcome": "committed",
+          "requested_capacity": 3,
+          "requested_chunk": 2,
+          "status": 0
+        }
+      },
+      {
+        "busy": true,
+        "committed": 0,
+        "context": {
+          "admission": 67165004,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 40,
+          "session": 42
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "accepted-before-late-cancel",
+        "pending": 0,
+        "plan": {
+          "aggregate_bytes": 136544780,
+          "candidate_chunk": 3,
+          "candidate_planned_bytes": 11776,
+          "current_chunk": 3,
+          "current_owned_bytes": 17472,
+          "reserves_bytes": 136487168,
+          "shared_bytes": 28364
+        },
+        "restart_required": false,
+        "revision": 114,
+        "saved_prefix": null,
+        "status": 0,
+        "transition": {
+          "committed": true,
+          "outcome": "committed",
+          "requested_capacity": 16,
+          "requested_chunk": 3,
+          "status": 0
+        }
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "context": {
+          "admission": 67165004,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 40,
+          "session": 42
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "accepted-after-late-cancel",
+        "pending": 0,
+        "restart_required": false,
+        "revision": 117,
+        "saved_prefix": null,
+        "status": 0
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "context": {
+          "admission": 67165004,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 43,
+          "session": 45
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "retirement-busy",
+        "pending": 0,
+        "plan": {
+          "aggregate_bytes": 136544780,
+          "candidate_chunk": 3,
+          "candidate_planned_bytes": 11776,
+          "current_chunk": 3,
+          "current_owned_bytes": 17472,
+          "reserves_bytes": 136487168,
+          "shared_bytes": 28364
+        },
+        "restart_required": true,
+        "revision": 118,
+        "saved_prefix": null,
+        "status": 0,
+        "transition": {
+          "committed": true,
+          "outcome": "cleanupFailed",
+          "requested_capacity": 16,
+          "requested_chunk": 3,
+          "status": 4
+        }
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "context": {
+          "admission": 67165004,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 46,
+          "session": 48
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "retirement-panic",
+        "pending": 0,
+        "plan": {
+          "aggregate_bytes": 136544780,
+          "candidate_chunk": 3,
+          "candidate_planned_bytes": 11776,
+          "current_chunk": 3,
+          "current_owned_bytes": 17472,
+          "reserves_bytes": 136487168,
+          "shared_bytes": 28364
+        },
+        "restart_required": true,
+        "revision": 118,
+        "saved_prefix": null,
+        "status": 0,
+        "transition": {
+          "committed": true,
+          "outcome": "cleanupFailed",
+          "requested_capacity": 16,
+          "requested_chunk": 3,
+          "status": 6
+        }
+      }
+    ],
+    "summary": {
+      "backend": "metal",
+      "closed": true,
+      "empty_commit": true,
+      "old_pending_witness": true,
+      "passed": true,
+      "postcommit_cancel": true,
+      "pure_controls": 37,
+      "retirement_controls": 2,
+      "stale_barriers": 15
+    }
+  },
+  "native_inheritance": {
+    "default_ignored": 20,
+    "default_tests": 469,
+    "engine_input_count": 338,
+    "header_exports": 32,
+    "libraries": {
+      "default_library": {
+        "bytes": 24488880,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/cold-v1/retained/default_library.a",
+        "sha256": "12b6f23104bf0f739e7e3dcc7e51485e63c833939b7aa12357a7a75d4ace66e8"
+      },
+      "metal_library": {
+        "bytes": 35121176,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/build-v1/native/Toklet.xcframework/macos-arm64/libtoklet.a",
+        "sha256": "5cef390a8fe54bff39e66c2406a4f1ff977da9621c1b8c2356a2a327996193b8"
+      }
+    },
+    "metal_ignored": 186,
+    "metal_tests": 577,
+    "native_slices_rebuilt": false,
+    "native_source_changed": false
+  },
+  "preserved_first_attempt": {
+    "cause_classification": "static producer/consumer inference: Metal constructor excludes shared host model table but aggregate includes it once",
+    "cold_commands_passed": 14,
+    "correction": "strict backend-specific constructor equation plus four typed controls; native/API/budget/fit/aggregate definitions unchanged",
+    "decoder_error_observed": false,
+    "error": "acceptance barrier deadline",
+    "host_model_table_bytes": 4480,
+    "metal_commands_attempted": 1,
+    "metal_passed": false,
+    "record": {
+      "bytes": 1299598,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v1/hardware-v1/checks.json",
+      "sha256": "f95a2a3a32df59041c7c2fd6c0fd6aa8a1be375d706d420cb89d75183d36ddf3"
+    },
+    "second_regression_unrun": true,
+    "stdout_bytes": 0
+  },
+  "products": {
+    "default_library": {
+      "bytes": 24488880,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/retained/default_library.a",
+      "sha256": "12b6f23104bf0f739e7e3dcc7e51485e63c833939b7aa12357a7a75d4ace66e8"
+    },
+    "metal_library": {
+      "bytes": 35121176,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/retained/metal_library.a",
+      "sha256": "5cef390a8fe54bff39e66c2406a4f1ff977da9621c1b8c2356a2a327996193b8"
+    },
+    "preview-metal": {
+      "bytes": 12724704,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/retained/preview-metal",
+      "sha256": "2bfe73e7a19ad2645c11a5bdb62e2e4a3fcd486157279d8c66bbebbdb252a9d7"
+    },
+    "transition-default": {
+      "bytes": 11225376,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/retained/transition-default",
+      "sha256": "a66cd1153323096c78110e65e3fe1b086726d984143f85cf083b1b458555bef3"
+    },
+    "transition-metal": {
+      "bytes": 12745024,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/retained/transition-metal",
+      "sha256": "0aea6c7837b08c9469064d89634a053a8ff1ec2fca67f4c59cb38abd0fcc1671"
+    }
+  },
+  "raw_output_pins": {
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v1/hardware-v1/tiny-worker-transition.stderr": {
+      "bytes": 133,
+      "sha256": "cb594a60bb40e915b7c5b87bbfb4e430d4335e955042fd23a4b3ead165223801"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v1/hardware-v1/tiny-worker-transition.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/Toklet.app/Contents/Info.plist": {
+      "bytes": 588,
+      "sha256": "747b4ca09c66043df397f42c7b1dc59a6b982bef206451b7b81203c240840afe"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/Toklet.app/Contents/MacOS/Toklet": {
+      "bytes": 16291848,
+      "sha256": "e740e889701eb35f51c1d1d36b5e431e83aa28fc9d729d42e52cf2bd37dacc18"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/Toklet.app/Contents/Resources/Tiny/config.json": {
+      "bytes": 357,
+      "sha256": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/Toklet.app/Contents/Resources/Tiny/model.safetensors": {
+      "bytes": 85640,
+      "sha256": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Info.plist": {
+      "bytes": 1165,
+      "sha256": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/config.json": {
+      "bytes": 357,
+      "sha256": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/model.safetensors": {
+      "bytes": 85640,
+      "sha256": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/TokletHarness": {
+      "bytes": 10536424,
+      "sha256": "c6dab4dc9814af54edc5ee04352bca8ea1029b50b245b51ee4f55f53bbf1433f"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Info.plist": {
+      "bytes": 1145,
+      "sha256": "128687f70cd7b314576a92777a9343d73aefbc7cbe2b44ed332100849be84d36"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/config.json": {
+      "bytes": 357,
+      "sha256": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/model.safetensors": {
+      "bytes": 85640,
+      "sha256": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/TokletHarness": {
+      "bytes": 10568624,
+      "sha256": "bb270058824905b6a7d18a88abff8ecaf3daaf902745f1f95f68766194590996"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/iphoneos-arch.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/iphoneos-arch.stdout": {
+      "bytes": 6,
+      "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/iphoneos-build.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/iphoneos-build.stdout": {
+      "bytes": 106693,
+      "sha256": "d1a1faed9f95d979bf0db89c6ebcd7d8837edb6740e7b1ed1ab319cd9c030c64"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/iphoneos-load.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/iphoneos-load.stdout": {
+      "bytes": 20269,
+      "sha256": "9da745ca9339579358ce0f75acb5e760f5f2f2beaeff2dd606362f0e65486a5d"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/iphonesimulator-arch.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/iphonesimulator-arch.stdout": {
+      "bytes": 6,
+      "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/iphonesimulator-build.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/iphonesimulator-build.stdout": {
+      "bytes": 110926,
+      "sha256": "1769b90bdca7a35aee292494a397f9897f13bf2925f1a4df104eb82963fc039b"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/iphonesimulator-load.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/iphonesimulator-load.stdout": {
+      "bytes": 20227,
+      "sha256": "99cee4ed59f3084672124cd1d27c38073c3912de137d66cddf906c1dd380d5d4"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/mac-arch.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/mac-arch.stdout": {
+      "bytes": 6,
+      "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/mac-build.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/mac-build.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/mac-load.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/mac-load.stdout": {
+      "bytes": 20282,
+      "sha256": "6ea8b9300205ea5785671708498d4a54b592e7537958a35e3572ff8e7cc1b159"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/preview-metal-compile.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/preview-metal-compile.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/transition-cpu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/transition-cpu.stdout": {
+      "bytes": 3706,
+      "sha256": "ad26701e2c6c0aee0d429de7df89208b0c57290cf003d2adc27c56ffe97e8b93"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/transition-default-compile.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/transition-default-compile.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/transition-metal-compile.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/transition-metal-compile.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/typed-swift6.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/cold-v1/typed-swift6.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/hardware-v1/tiny-preview-regression.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/hardware-v1/tiny-preview-regression.stdout": {
+      "bytes": 137,
+      "sha256": "13f601027fe7ca72c6722a41a8b80779d7647364152d297527991df9e4492b91"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/hardware-v1/tiny-worker-transition.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-owner-v2/hardware-v1/tiny-worker-transition.stdout": {
+      "bytes": 3700,
+      "sha256": "9caca9e7c5c297d56f42ab481f2d7d817a399cca8d2ae28e0d75bee8d54455cb"
+    }
+  },
+  "scope": {
+    "UI_apply": false,
+    "context_window_widening": false,
+    "loaded_limit_unchanged": true,
+    "performance_qualification": false,
+    "persistence": false,
+    "phone_qualification": false,
+    "real_model_transition": false,
+    "rendered_UI": false,
+    "same_model_empty_adoption": true,
+    "standalone_worker_cpu_and_tiny_metal": true,
+    "whole_device_fit": false
+  },
+  "source_files": {
+    "apple/Harness/NativeSessionTransition.swift": {
+      "bytes": 12894,
+      "path": "/Users/coloner/work/rust/toklet/apple/Harness/NativeSessionTransition.swift",
+      "sha256": "f91f59ad5ce18e9255f58bee3efcd565d9ecb42469e513443f3c9351f200d10b"
+    },
+    "apple/Harness/NativeWorker.swift": {
+      "bytes": 56936,
+      "path": "/Users/coloner/work/rust/toklet/apple/Harness/NativeWorker.swift",
+      "sha256": "d2850a6873ef8b9e465a86bd8684838fa5dab7bfb1abd066b139e19149a32271"
+    },
+    "apple/TokletHarness.xcodeproj/project.pbxproj": {
+      "bytes": 14028,
+      "path": "/Users/coloner/work/rust/toklet/apple/TokletHarness.xcodeproj/project.pbxproj",
+      "sha256": "7c37eb640c07e36382b3ff9ad395ce9994ffb299ead95c193654d430646d6c09"
+    },
+    "apple/tests/swift/SessionTransitionMain.swift": {
+      "bytes": 21800,
+      "path": "/Users/coloner/work/rust/toklet/apple/tests/swift/SessionTransitionMain.swift",
+      "sha256": "f9c0a6c369219b994fe36ca820318ef1247c37c652d60185c9e083571f0de4d7"
+    }
+  },
+  "source_proposal": {
+    "bytes": 9997,
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-proposal-v2/manifest.json",
+    "sha256": "4e1e6ff0d605c8275d98b8a3b04428b4c150a4a3495e39a10baea87341021dd7"
+  }
+}

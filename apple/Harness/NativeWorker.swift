@@ -23,6 +23,8 @@ struct NativeSettings: Sendable {
 
 enum NativeCommand: Sendable {
     case preview(NativePreviewRequest)
+    // Explicit adoption: successful acceptance resets only native session cache.
+    case replaceWithEmptySession(NativeTransitionRequest)
     case load(NativeSettings)
     case chat(id: UUID, conversation: Data, maximum: UInt32, autoCancelAfter: Int = 0)
     // Raw IDs only. autoCancelAfter is a deterministic diagnostic interruption.
@@ -83,6 +85,8 @@ struct NativeSnapshot: Sendable {
     var runtimePlan: NativeResourcePlan?
     // Independent historical preview; does not replace the last load plan.
     var preview: NativePreviewResult?
+    var transition: NativeTransitionResult?
+    var restartRequired = false
     var compatibilityDirectory = ""
     var workerFinished = false
     var modelContext: NativeModelContext?
@@ -129,6 +133,9 @@ final class NativeWorker: @unchecked Sendable {
     private var previewSelection: NativePreviewSelection?
     private var previewRequest: NativePreviewRequest?
     private var previewPriorPhase = "Idle"
+    private var transitionSelection: NativeTransitionSelection?
+    private var transitionRequest: NativeTransitionRequest?
+    private var transitionCancelled = false
     private var snapshotRevision: UInt64 = 0
     // All view mutations hold condition. Avoid retaining oldValue here: it
     // would force callback arrays to copy on every append. Observer self-writes
@@ -153,12 +160,21 @@ final class NativeWorker: @unchecked Sendable {
     private let afterPreviewLimits: (@Sendable (NativePreviewRequest, NativeContextLimits) -> Void)?
     private let beforePreviewPublication: (@Sendable (NativePreviewResult) -> Void)?
 
+    private let beforeTransitionAcceptance: (@Sendable (NativeTransitionRequest, NativeContextFacts) -> Void)?
+    private let beforeTransitionRejection: (@Sendable (NativeTransitionRequest, UInt32) -> Void)?
+    private let afterTransitionAcceptance: (@Sendable (NativeTransitionResult) -> Void)?
+    private let transitionRetirementFault: (@Sendable () -> NativeTransitionRetirementFault?)?
+
     init(captureSavedPrefix: Bool = false, beforeScorePublication: (@Sendable () -> Void)? = nil,
          afterScorePublication: (@Sendable (Bool) -> Void)? = nil,
          beforeCommandDequeue: (@Sendable (NativeCommand) -> Void)? = nil,
          afterRuntimeInspection: (@Sendable (NativeResourcePlan) -> Void)? = nil,
          afterPreviewLimits: (@Sendable (NativePreviewRequest, NativeContextLimits) -> Void)? = nil,
-         beforePreviewPublication: (@Sendable (NativePreviewResult) -> Void)? = nil) throws {
+         beforePreviewPublication: (@Sendable (NativePreviewResult) -> Void)? = nil,
+         beforeTransitionAcceptance: (@Sendable (NativeTransitionRequest, NativeContextFacts) -> Void)? = nil,
+         beforeTransitionRejection: (@Sendable (NativeTransitionRequest, UInt32) -> Void)? = nil,
+         afterTransitionAcceptance: (@Sendable (NativeTransitionResult) -> Void)? = nil,
+         transitionRetirementFault: (@Sendable () -> NativeTransitionRetirementFault?)? = nil) throws {
         self.captureSavedPrefix = captureSavedPrefix
         self.beforeScorePublication = beforeScorePublication
         self.afterScorePublication = afterScorePublication
@@ -166,6 +182,10 @@ final class NativeWorker: @unchecked Sendable {
         self.afterRuntimeInspection = afterRuntimeInspection
         self.afterPreviewLimits = afterPreviewLimits
         self.beforePreviewPublication = beforePreviewPublication
+        self.beforeTransitionAcceptance = beforeTransitionAcceptance
+        self.beforeTransitionRejection = beforeTransitionRejection
+        self.afterTransitionAcceptance = afterTransitionAcceptance
+        self.transitionRetirementFault = transitionRetirementFault
         var error = TokletError()
         try requireOK(toklet_cancel_create(&cancelFlag, &error), &error)
         view.ids.reserveCapacity(Int(NativeSettings.maximumChatOutputTokens))
@@ -184,7 +204,18 @@ final class NativeWorker: @unchecked Sendable {
     @discardableResult
     func submit(_ command: NativeCommand, initiallyCancelled: Bool = false) -> Bool {
         condition.lock(); defer { condition.unlock() }
-        guard !closing, !view.closed, !view.busy, let flag = cancelFlag else { return false }
+        guard !closing, !view.closed, !view.busy, !view.restartRequired, let flag = cancelFlag else { return false }
+        if case .replaceWithEmptySession(let request) = command {
+            guard transitionSelection == request.selection,
+                  view.liveContext?.modelInstance == request.selection.modelInstance,
+                  view.liveContext?.sessionInstance == request.selection.sessionInstance else { return false }
+            do { try request.validate() } catch { return false }
+            transitionRequest = request; transitionCancelled = initiallyCancelled; view.transition = nil
+            _ = toklet_cancel_set(flag,initiallyCancelled ? 1 : 0,nil)
+            queued = command; view.busy = true
+            condition.signal()
+            return true
+        }
         if case .preview(let request) = command {
             guard !initiallyCancelled, previewSelection == request.selection else { return false }
             do { try request.validate() } catch { return false }
@@ -194,6 +225,7 @@ final class NativeWorker: @unchecked Sendable {
             return true
         }
         invalidatePreview()
+        invalidateTransition()
         // Clear only while idle, under the same lock as cancel/enqueue. A cancel
         // arriving after this point survives until the request observes it.
         _ = toklet_cancel_set(flag, initiallyCancelled ? 1 : 0, nil)
@@ -304,6 +336,102 @@ final class NativeWorker: @unchecked Sendable {
         condition.broadcast(); condition.unlock()
     }
 
+    // A model/session-bound selection, independent of path-based previews.
+    // Changing it invalidates pending success AND error without touching Engine.
+    @discardableResult
+    func selectTransition(_ selection: NativeTransitionSelection?) -> Bool {
+        condition.lock(); defer { condition.unlock() }
+        guard !closing, !view.closed, !view.restartRequired else { return false }
+        if let selection {
+            guard selection.modelInstance > 0, selection.sessionInstance > 0,
+                  selection.modelInstance != selection.sessionInstance else { return false }
+        }
+        transitionSelection = selection; invalidateTransition()
+        return true
+    }
+    private func invalidateTransition() {
+        transitionRequest = nil; transitionCancelled = true; view.transition = nil
+    }
+    private func transitionCurrent(_ request: NativeTransitionRequest) -> Bool {
+        !closing && queued == nil && !view.restartRequired && !transitionCancelled
+            && transitionRequest == request && transitionSelection == request.selection
+            && view.liveContext?.modelInstance == request.selection.modelInstance
+            && view.liveContext?.sessionInstance == request.selection.sessionInstance
+    }
+
+    // All candidate construction and validation runs offside, on Engine's thread.
+    // No native calls, throwing work, allocation, or callbacks in the swap lock.
+    private func performTransition(_ request: NativeTransitionRequest, engine: Engine, flag: OpaquePointer) {
+        var prepared: PreparedTransition?
+        var failure: NSError?
+        var plan: NativeTransitionPlan?
+        condition.lock(); let start = transitionCurrent(request); condition.unlock()
+        if start {
+            do { try autoreleasepool {
+                let value = try engine.prepareEmpty(request,flag:flag,captureSavedPrefix:captureSavedPrefix)
+                prepared = value; plan = value.plan
+            } } catch { failure = error as NSError }
+        }
+        if let prepared { beforeTransitionAcceptance?(request,prepared.context) }
+        else if let failure { beforeTransitionRejection?(request,UInt32(clamping:failure.code)) }
+        var retired: OpaquePointer?
+        var result: NativeTransitionResult?
+        let acceptedResult = prepared.map {
+            NativeTransitionResult(request:request,outcome:.committed,committed:true,
+                plan:$0.plan,candidate:$0.context,status:0,message:"")
+        }
+        let rejectedResult = NativeTransitionResult(request:request,outcome:.rejected,committed:false,
+            plan:plan,candidate:nil,status:UInt32(clamping:failure?.code ?? Int(TOKLET_CANCELLED)),
+            message:String((failure?.localizedDescription ?? "Transition cancelled").prefix(512)))
+        condition.lock()
+        if transitionCurrent(request), let value = prepared, let handle = value.handle {
+            retired = engine.session
+            engine.session = handle; value.handle = nil
+            engine.settings = value.settings; engine.saved = value.saved; engine.savedCount = 0
+            engine.report = value.report; engine.lastEmitted = 0
+            engine.modelContext = value.modelContext; engine.liveContext = value.context
+            engine.requestBudget = nil; engine.score = nil
+            engine.admissionUpperBound = value.context.numericalAdmission
+            engine.phase = "Ready; native cache reset"
+            view.modelContext = value.modelContext; view.liveContext = value.context
+            view.requestBudget = nil; view.score = nil; view.savedPrefix = value.emptyPrefix
+            view.preview = nil
+            view.savedHistory = 0; view.history = 0; view.evaluated = 0; view.pending = 0
+            view.reason = 0; view.emitted = 0; view.stopToken = .max
+            view.ids = value.emptyIDs; view.tokenTimings = value.emptyTimings
+            view.requestStartedUptimeNanoseconds = nil; view.requestCompletedUptimeNanoseconds = nil
+            view.admittedBytes = value.context.numericalAdmission; view.status = 0; view.message = ""
+            view.phase = engine.phase
+            result = acceptedResult
+            view.transition = result; transitionRequest = nil; transitionSelection = nil
+        } else if transitionCurrent(request) {
+            result = rejectedResult
+            view.transition = result
+        }
+        condition.unlock()
+        // Cancellation after the acceptance point does not undo a committed swap.
+        if let result, result.committed { afterTransitionAcceptance?(result) }
+        var cleanup = engine.retirementFailure
+        if let retired { cleanup = engine.retire(retired,fault:transitionRetirementFault?()) }
+        if let pending = prepared?.handle {
+            prepared?.handle = nil
+            cleanup = engine.retire(pending,fault:nil)
+        }
+        let cleanupResult = cleanup.map {
+            NativeTransitionResult(request:request,outcome:.cleanupFailed,committed:retired != nil,
+                plan:plan,candidate:retired == nil ? nil : prepared?.context,
+                status:UInt32(clamping:$0.code),message:$0.localizedDescription)
+        }
+        condition.lock()
+        if let cleanupResult {
+            view.restartRequired = true; view.transition = cleanupResult
+            view.phase = "Session cleanup failed; restart required"
+        }
+        transitionRequest = nil
+        view.busy = closing || queued != nil
+        condition.broadcast(); condition.unlock()
+    }
+
     // Non-UI diagnostics can wait for command/queued-cleanup completion without
     // retaining repeated snapshots or estimating completion from a polling tick.
     // NSCondition uses a wall-clock deadline; event timestamps stay monotonic.
@@ -320,6 +448,7 @@ final class NativeWorker: @unchecked Sendable {
     func cancel() {
         condition.lock(); defer { condition.unlock() }
         invalidatePreview()
+        invalidateTransition()
         if let flag = cancelFlag { _ = toklet_cancel_set(flag, 1, nil) }
     }
 
@@ -329,6 +458,7 @@ final class NativeWorker: @unchecked Sendable {
         condition.lock(); defer { condition.unlock() }
         guard !closing, !view.closed else { return }
         invalidatePreview()
+        invalidateTransition()
         if let flag = cancelFlag { _ = toklet_cancel_set(flag, 1, nil) }
         cancelQueuedChat()
         view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = ""
@@ -347,6 +477,7 @@ final class NativeWorker: @unchecked Sendable {
         condition.lock(); defer { condition.unlock() }
         guard !view.closed else { return }
         invalidatePreview()
+        invalidateTransition()
         cancelQueuedChat()
         closing = true; queued = nil
         view.modelContext = nil; view.liveContext = nil; view.requestBudget = nil
@@ -409,8 +540,17 @@ final class NativeWorker: @unchecked Sendable {
                 condition.unlock(); beforeCommandDequeue(pending); condition.lock()
                 if closing { condition.unlock(); break }
             }
+            if view.restartRequired {
+                closing = true; queued = nil; condition.unlock(); break
+            }
             let command = queued!
             queued = nil
+            if case .replaceWithEmptySession(let request) = command {
+                let flag = cancelFlag!
+                condition.unlock()
+                performTransition(request,engine:engine,flag:flag)
+                continue
+            }
             if case .preview(let request) = command {
                 condition.unlock()
                 performPreview(request)
@@ -520,6 +660,28 @@ private let nativeSink: @convention(c) (UnsafeMutableRawPointer?, TokletTokenEve
 // Private thread-local native owners. All FFI callbacks are synchronous and the
 // Sink remains strongly owned until generate returns. No actor/queue is used as
 // a substitute for the C boundary's OS-thread affinity.
+private final class PreparedTransition {
+    var handle: OpaquePointer?
+    let plan: NativeTransitionPlan
+    let settings: NativeSettings
+    let context: NativeContextFacts
+    let modelContext: NativeModelContext
+    let report: TokletReport
+    let saved: [UInt32]
+    let emptyPrefix: [UInt32]?
+    var emptyIDs: [UInt32] = []
+    var emptyTimings: [NativeTokenTiming] = []
+    init(handle: OpaquePointer, plan: NativeTransitionPlan, settings: NativeSettings,
+         context: NativeContextFacts, report: TokletReport, captureSavedPrefix: Bool) {
+        self.handle = handle; self.plan = plan; self.settings = settings
+        self.context = context; modelContext = NativeModelContext(context); self.report = report
+        saved = Array(repeating:0,count:Int(settings.capacity))
+        emptyPrefix = captureSavedPrefix ? [] : nil
+        emptyIDs.reserveCapacity(Int(NativeSettings.maximumChatOutputTokens))
+        emptyTimings.reserveCapacity(Int(NativeSettings.maximumChatOutputTokens))
+    }
+}
+
 private final class Engine {
     var model: OpaquePointer?
     var session: OpaquePointer?
@@ -540,6 +702,72 @@ private final class Engine {
     var modelContext: NativeModelContext?
     var liveContext: NativeContextFacts?
     var requestBudget: NativeRequestBudget?
+    // Only BUSY/WRONG_THREAD prove a failed release did not consume the pointer.
+    // At most one retained owner; no automatic retry loop or reuse for inference.
+    var retiredSession: OpaquePointer?
+    var retirementFailure: NSError?
+
+    func retire(_ pointer: OpaquePointer, fault: NativeTransitionRetirementFault?) -> NSError? {
+        var error = TokletError()
+        let code: UInt32
+        if fault == .busy { code = TOKLET_BUSY }
+        else {
+            let actual = toklet_session_release(pointer,&error)
+            code = actual == TOKLET_OK && fault == .consumedPanic ? TOKLET_PANIC : actual
+        }
+        guard code != TOKLET_OK else { return nil }
+        if code == TOKLET_BUSY || code == TOKLET_WRONG_THREAD { retiredSession = pointer }
+        let failure = nativeError(code,&error)
+        retirementFailure = failure
+        return failure
+    }
+
+    func prepareEmpty(_ request: NativeTransitionRequest, flag: OpaquePointer,
+                      captureSavedPrefix: Bool) throws -> PreparedTransition {
+        try request.validate()
+        guard let model, let session, let settings, let old = liveContext,
+              old.modelInstance == request.selection.modelInstance,
+              old.sessionInstance == request.selection.sessionInstance else { throw invalid("Stale session transition") }
+        // Conservative caller allowance for the two Swift history buffers,
+        // report decoding/retained values and transaction metadata. This is a
+        // requirement, not measured Swift allocator or whole-process storage.
+        let app = try NativeTransitionPlan.sum([1024 * 1024,UInt64(saved.count) * 4,UInt64(request.capacity) * 4])
+        guard request.applicationReserve >= app,
+              request.textReserve >= (chat == nil ? 0 : settings.textBudget) else {
+            throw invalid("Transition reserves omit retained Swift/text owners")
+        }
+        let plan = try NativeTransitionPlan.inspect(model:model,session:session,request:request,
+            current:old,chunk:settings.chunk,wholeBudget:settings.numericalBudget)
+        guard plan.fitsTransitionBudget, plan.fitsCandidateIndividualBudget else { throw invalid("Transition memory budget does not fit") }
+        var options = request.options(), accounting = request.accounting(), error = TokletError()
+        var pointer: OpaquePointer?
+        try requireOK(toklet_session_prepare_empty(model,session,&options,&accounting,flag,&pointer,&error),&error)
+        guard let pointer else { throw invalid("Native preparation returned no candidate") }
+        // Native ownership remains scoped here until validation and all Swift
+        // staging finish; every throwing failure releases on this thread.
+        do {
+            var raw = TokletContextInfo(), report = TokletReport()
+            try requireOK(toklet_session_context(pointer,&raw,&error),&error)
+            let next = try NativeContextFacts(raw)
+            try NativeTransitionPlan.validateCandidate(next,old:old,request:request)
+            try requireOK(toklet_session_state(pointer,&report,&error),&error)
+            guard report.abi_version == TOKLET_ABI_VERSION,
+                  report.struct_size == UInt32(MemoryLayout<TokletReport>.size),
+                  report.history_tokens == 0, report.evaluated_tokens == 0, report.pending_tokens == 0,
+                  report.emitted_tokens == 0, report.reason == 0, report.stop_token == .max,
+                  report.admitted_bytes == next.numericalAdmission else {
+                throw invalid("Candidate is not an empty validated session")
+            }
+            var nextSettings = settings
+            nextSettings.capacity = request.capacity; nextSettings.chunk = request.chunk
+            nextSettings.numericalBudget = request.wholeSessionBudget
+            return PreparedTransition(handle:pointer,plan:plan,settings:nextSettings,
+                context:next,report:report,captureSavedPrefix:captureSavedPrefix)
+        } catch {
+            if let cleanup = retire(pointer,fault:nil) { throw cleanup }
+            throw error
+        }
+    }
 
     func refreshContext() throws {
         liveContext = nil
@@ -621,6 +849,13 @@ private final class Engine {
         report = TokletReport()
     }
     func unload() throws {
+        var retiredError: NSError?
+        if let retired = retiredSession {
+            retiredSession = nil
+            var error = TokletError()
+            let code = toklet_session_release(retired,&error)
+            if code != TOKLET_OK { retiredError = nativeError(code,&error) }
+        }
         modelContext = nil; liveContext = nil; requestBudget = nil
         try releaseSession()
         if let value = chat {
@@ -635,6 +870,7 @@ private final class Engine {
         }
         compatibility = nil; runtimePlan = nil; compatibilityDirectory = ""
         saved = []; savedCount = 0; admissionUpperBound = 0; settings = nil; phase = "Unloaded; fresh prompt required"
+        if let retiredError { throw retiredError }
     }
     func createSession() throws {
         guard let model, let settings else { throw invalid("Load a model first") }
@@ -716,7 +952,7 @@ private final class Engine {
         score = nil
         requestBudget = nil
         switch command {
-        case .preview:
+        case .preview, .replaceWithEmptySession:
             throw invalid("Planning previews must use the independent worker branch")
         case .chat(let id,let conversation,let maximum,let autoCancel):
             try generateChat(id,conversation,maximum,autoCancel,flag,worker)

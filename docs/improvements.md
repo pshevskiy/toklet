@@ -8416,3 +8416,49 @@ No app or model was launched. Mac/simulator binaries have implicit signature
 load commands; no explicit signing or provisioning stage ran. This closes the
 package prerequisite for the next dedicated worker transaction, while runtime,
 Apply, persistence and context-limit work remain separate.
+
+Bridge32 verification and selection evidence is committed as `d7a81d9` after
+exact five-file Astra review. The dedicated worker adoption transaction is next;
+its tests will exercise the actual new archive rather than infer runtime
+behavior from these successful links.
+
+### 2026-10-30 — Dedicated worker transaction applied; checks pending
+
+Astra reviewed the four-file worker/typed-consumer proposal, and root applied
+its exact bytes. The new command prepares and validates off to the side, accepts
+under the worker lock only for the current request/model/session, and retires
+the old handle afterward. Rejection preserves ordinary visible state; cleanup
+failure after acceptance is explicitly committed and requires restart. Authored
+controls cover stale requests, cancellation, lifecycle barriers and retirement.
+No compiled or runtime outcome is claimed yet; UI Apply and persistence remain
+separate tasks.
+
+The first worker Metal check failed at its acceptance barrier deadline; the
+process group closed cleanly and the second Mac job did not run. Buffered
+stdout was empty, so the exact decoder error was not captured. Astra traced a
+strict Swift consumer equation error by comparing it with the native producer:
+Metal constructor
+admission excludes its separate 4,480-byte shared host table, while coexistence
+counts it once; CPU constructor admission includes its shared metadata. The
+fix preserves both native budget policies and adds explicit positive/negative
+backend controls plus unbuffered failure diagnostics. The 14 prior successes
+remain historical evidence; changed Swift/app checks will run fresh.
+
+The corrected [worker transaction](native-worker-session-transition.md) now
+passes 14 fresh compile/CPU/app jobs and both tiny Mac jobs. Both backends pass
+37 pure controls, 15 stale/lifecycle barriers and two retirement controls; the
+existing 21-case preview/generation regression passes on the new archive. Astra
+checks all source/product bindings, raw records and closed groups. The Metal
+witness adopts capacity 3/chunk 2 from capacity 32 while retaining loaded limit
+32; its individual admission is 67,158,620 bytes and coexistence is 136,538,396.
+Late cancellation keeps the accepted session, and retirement failure reports a
+committed swap with restart required. Full-snapshot guarantees remain reviewed
+completed assertions, not independent raw-logit reconstruction.
+
+The first Metal failure stays recorded. The Swift-only correction follows each
+backend’s existing constructor equation and preserves aggregate accounting; no
+native policy or budget changed. UI integration next needs a durable applied
+configuration because cancellation clears transient results after acceptance.
+Friendly Apply and full-artifact/plan-keyed persistence remain separate tasks;
+no real-model transition, rendered UI, phone, context expansion or performance
+qualification is claimed by this worker task.

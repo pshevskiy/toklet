@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5d3 — dedicated worker adoption of empty candidates**.
+Next implementation task: **B5d4a — durable applied-session configuration for UI**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -333,11 +333,24 @@ separate requirements below. Further model admissions require their own scope.
   passes16fresh cold jobs and2tinyMacchecks with Astra saved audit. Old session
   state/usability survives cancellation and candidate errors/panics; actual
   individual/coexistence budgets are rechecked. No worker adoption or new window.
-- [ ] B5d3: atomically adopt a validated candidate in the worker, then wire
-  Apply/persistence by artifact and plan identity. Friendly Chat already renders
-  the full saved conversation with reset+prompt on Send; make cache reset
-  explicit and preserve conversation/draft bytes. New exact-history migration
-  is a separate Expert mode, not a prerequisite for first Friendly Apply.
+- [x] B5d3b: [dedicated worker transaction](docs/native-worker-session-transition.md)
+  passes14 fresh compile/CPU/app jobs and2 tinyMacjobs with Astra saved audit.
+  Both backends pass37pure/15stale-barrier/2retirement controls; old state survives
+  rejection and successful empty adoption is distinct from cleanup failure.
+  Native/Rust policies stay unchanged; the initial Metal consumer failure is retained.
+- [ ] B5d4a: publish durable applied-session configuration (model/session IDs,
+  capacity, chunk, budget and accepted request ID) across load/resume/adoption.
+  It must survive transient-result cancellation and clear with session retirement.
+- [ ] B5d4b: wire explicit nonpersistent Friendly Apply within the loaded bound,
+  with separate aggregate/headroom admission and accurate caller reserves.
+  Preserve conversation, draft and rejected fields; explain empty cache recreation.
+  Next Send must check the actual full rendered prompt plus reply, without trimming.
+- [ ] B5d5: persist settings by authenticated full-artifact manifest and plan
+  identity. Path keys or config-only recognition do not authenticate an artifact.
+  Preserve rejected settings and handle stale/replaced artifacts explicitly.
+
+New exact-history migration remains a separate Expert mode; first Friendly Apply
+uses the existing full saved-conversation reset+prompt path on Send.
 - [x] B5d3a: [coherent 32-export Apple bridge](docs/apple-session-transition-package.md)
   passes all30 build/link jobs and independent Astra audit for Mac/iOS/simulator.
   Current app sources compile; the new candidate is selected with the old C3
@@ -640,3 +653,9 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | B5d2 committed / coherent bridge refresh starts | Empty-candidate API committed as `c83625c` after exact12-file Astra review and the completed16+2 checks. Only preservedDSStore remained. | Freeze current32-export Mac/iOS/simulator package metadata against this actual revision, then build/link under the reviewed owner. No Swift transition call or bundle selection yet. |
 | 2026-10-30 | Bridge32 metadata frozen | First root invocation passes a relative review path and stops at strict identity comparison before package creation or child launch; the unchanged owner succeeds with absolute arguments. Actual package binds committedD2/current32exports/current30Swift sources and adequate prospective8GiB disk reserve. | Retain invocation failure record; independent actual-package review precedes the30build/link jobs. No compilation, selection change or model run yet. |
 | 2026-10-30 | Bridge32 build/link and selection complete | All30jobs pass: three32-export slices, full Mac/iOS/simulator apps, exact headers/assets/architectures/platform/minimum-OS checks. Astra audits2428inputs/77outputs and approves guarded selection; oldC3bundle is preserved. Both metadata invocation and signature semantics are recorded. | Publish bounded build/adoption evidence and commit after exactfive-file review. Dedicated worker transaction is next; no app/model/runtime/window qualification follows from linking. |
+| 2026-10-30 | Bridge32 committed / dedicated worker transaction starts | Coherent bridge evidence committed as `d7a81d9` after all30jobs, saved/adoption audits, exactfive-file Astra review and837local-link checks. Only preservedDSStore remained. | Privately implement and review dedicated typed worker candidate preparation/atomic acceptance/retirement controls. No ordinary snapshot clearing on rejection, no UI/persistence changes yet. |
+| 2026-10-30 | B5d3 worker transaction source applied | Astra formally approves the four-file typed transition/worker/control/project proposal; root reads and applies exact frozen bytes. Dedicated prepare/accept/retire avoids ordinary state clearing, validates empty-candidate facts, and distinguishes committed adoption from cleanup failure. | Controlled Swift CPU/app compilation and actual selected-archive tiny Metal checks are pending. Existing Rust checks may be inherited only with unchanged full source/header pins. No UI/persistence or context widening. |
+| 2026-10-30 | B5d3 worker compile/CPU/app phase passes | All14jobs pass: strictSwift6 typed checks, threeSwift5 harnesses, CPU33pure/15stale-barrier/2retirement controls and allthree appbuilds. Astra authenticates unchanged Rust inheritance and actual five retained products. | Separately approved two tinyMacjobs now run against the new32-export archive. UI Apply/persistence and durable postcommit settings observation remain separate integration work. |
+| 2026-10-30 | B5d3 first Metal check fails at acceptance barrier | The first Metal worker test exits at its30-second barrier deadline; group closes/endpoints remain unchanged, second Mac job is unrun, and buffered stdout is empty. Astra identifies a strict Swift equation error: Metal constructor admission excludes the separately counted shared model table, while coexistence includes it once; CPU includes it in constructor admission. | Retain14historical passes and failed receipt. Correct only typed backend-specific equality and test diagnostics; add positive/negative Metal/CPU ledger controls. Fresh14Swift/app checks and both Mac jobs follow, reusing unchanged Rust/native libraries. |
+| 2026-10-30 | B5d3 strict accounting correction applied | Astra approves the two-path V2 correction. Constructor equality now follows each native backend exactly; aggregate/model-table accounting and native budgets remain unchanged. Four additional controls cover valid Metal ownership and wrong constructor/aggregate equations, for37pure controls; test rejection diagnostics write bounded stderr snapshots. | Fresh14compile/CPU/app jobs started under reviewed ownerV2. Reuse only unchanged Rust/native libraries; retain all V1 pass/failure evidence. |
+| 2026-10-30 | B5d3 worker verification complete | Fresh14compile/CPU/app jobs and both tinyMacjobs pass with Astra saved audit. CPU/Metal37pure/15barrier/2retirement controls and oldpreview21generation checks pass. Raw Metal32→3capacity/chunk2 adoption retains loaded32; latecancel keeps accepted session, cleanup4/6is committed. V1failure remains retained. | Publish bounded worker evidence and commit after exactreview. Next durable applied configuration precedes ephemeral Friendly Apply; full artifact-identity persistence is separate. No real-model transition, UI or wider-window claim. |
