@@ -1,0 +1,119 @@
+{
+  "format": "toklet-standalone-swift-inventory-result-v1",
+  "date": "2026-10-30",
+  "passed": true,
+  "base_revision": "ecfcadd1e4fd66970effd1b9d3d40b798c87b074",
+  "scope": "Restore current standalone NativeWorker source inventories in ten M7 check wrappers. No inference policy or numerical code changes.",
+  "source_files": [
+    {
+      "path": "tools/experiments/m7_native_lifecycle_app_check.py",
+      "before": "1a642e245da20612d6623547be5ff02f10d52e2b1f93127f08b91594246c102b",
+      "after": "c93a28ee13daa2e2cee637b9feb87fa79c9d1bd92cee39db7f9b857eabfe432b"
+    },
+    {
+      "path": "tools/experiments/m7_native_lifecycle_check.py",
+      "before": "aee74926fa7612bb453b825e374871c6c248c32af1f4d1bbd185eee528a5ef8a",
+      "after": "e6b1188d79c44780c116d69b4135a84d959082a367d3c125d036d82a0bf317cb"
+    },
+    {
+      "path": "tools/experiments/m7_native_measurement_check.py",
+      "before": "a903b68b9a5a3ab1a67157bae96483dd1fde6457f3c59dbbc7df75c39c98747d",
+      "after": "f64d83da3f6d0fa74f69635294d09b32c128ffde1a26381fa53bd6d7ce83c272"
+    },
+    {
+      "path": "tools/experiments/m7_native_prefix_check.py",
+      "before": "ca9a44a433f4cccfeefbcef6e43a4b8ce119263e36d4cfe55a0dd469d19d641a",
+      "after": "6392a10786e56960785a4d5a047df7aed6baf5bb1d1cc17d7153a09b135fdef9"
+    },
+    {
+      "path": "tools/experiments/m7_native_quality_check.py",
+      "before": "19e7b1f921dfaa9a7152c767abde9816c587e86b53f17514d24de777264a217f",
+      "after": "4eca4813c0a0036c45bdc0d96417c1e619c2b8c7ea45b252957f0115884e5647"
+    },
+    {
+      "path": "tools/experiments/m7_native_score_check.py",
+      "before": "e9467e90201be43f705dc4706cf744389390d51a08e7084ca89a15f76c9d8189",
+      "after": "e156379c7051e9074b36e4fed6ebd69fc3bb595427d53efb16d7bfa0cc757a21"
+    },
+    {
+      "path": "tools/experiments/m7_native_state_check.py",
+      "before": "5b3063fdeabf6b82465cf404a7bb548263ee921bf35be16ce723a21fb3cdfd15",
+      "after": "dd73947df31226e3e4bd92011f0b2b68cc5eb522e85f2c17c014d9f8e98e2b1a"
+    },
+    {
+      "path": "tools/experiments/m7_native_task_check.py",
+      "before": "6dc23beda93e49e2b77aeea2efb11318f200d24252d80443ac112ae8e2900f27",
+      "after": "ce7b89976b7655dd5ee261ffdb948b9ebfdce652666e5f7195e519dcc5921e3c"
+    },
+    {
+      "path": "tools/experiments/m7_native_tasks_check.py",
+      "before": "946d302974e8d7219049580cc4220fccecc36a9b4c2f8552b38c77fc6bdd5faf",
+      "after": "478e0f9d4cadf8162eb59ac7ee89a46ffe71d81850c7d64eb26780b4accf5043"
+    },
+    {
+      "path": "tools/experiments/m7_native_teacher_check.py",
+      "before": "457d946fba45d206efcdd1b415943c0ca0a6ffb6430b5d5f0d353150b5e7cd2d",
+      "after": "05e669f2f67e14fb05a14fc6e1fe0d2363ec4a04ca47fdb993c7ca5688eb43ff"
+    },
+    {
+      "path": "tools/experiments/m7_swift_sources.py",
+      "before": null,
+      "after": "6556fd7fb991c1585cdae4e1ec98ce6914ae284992c238b06014a191fc30af98"
+    }
+  ],
+  "verification": {
+    "python_unit_tests": 89,
+    "python_test_modules": 11,
+    "mac_compile_link_groups": 11,
+    "ios_simulator_library_groups": 4,
+    "ios_simulator_lifecycle_typechecks": 2,
+    "sdk_queries": 3,
+    "total_owned_commands": 21,
+    "all_exit_zero": true,
+    "all_groups_closed": true,
+    "retained_products": 15,
+    "endpoint_errors": []
+  },
+  "evidence": [
+    {
+      "path": "artifacts/m8-swift-inventory-repair-v1/manifest.json",
+      "bytes": 3046,
+      "sha256": "2407138712b11d19fc1c794f1deddc0c2a0b42ad5347fc30b0073232e00b9082"
+    },
+    {
+      "path": "artifacts/m8-swift-inventory-repair-v1/prospective-review.json",
+      "bytes": 9679,
+      "sha256": "bb806cd32a96c748ad08e47c4733d732892c91204853097a3f9ba607e524f20d"
+    },
+    {
+      "path": "artifacts/m8-swift-inventory-repair-v1/verification-scope-review.json",
+      "bytes": 3574,
+      "sha256": "4ddebab35a945dbbfb4c66e45b70a761aa36cc95888ea2a5b74835becb7f949a"
+    },
+    {
+      "path": "artifacts/m8-swift-inventory-repair-v1/run.py",
+      "bytes": 6293,
+      "sha256": "9766047530f7533e550108d0262a78eea99bddf53b1c8ea901c7a8e65c85279a"
+    },
+    {
+      "path": "artifacts/m8-swift-inventory-repair-v1/checks-v1/checks.json",
+      "bytes": 106074,
+      "sha256": "e1883850e17feeec311bb03d7461c10bd0b808ab56dc70b75172408754b2274d"
+    },
+    {
+      "path": "artifacts/m8-swift-inventory-repair-v1/saved-review.json",
+      "bytes": 25833,
+      "sha256": "b0add53d22bc4a15f4d6c60ecd59a9d10e847450e67155905a655e960fc6f4d8"
+    }
+  ],
+  "limitations": [
+    "No full nested wrapper execution; existing artifact/package admission requirements remain.",
+    "No app, model, GPU or physical device execution; no new runtime or performance qualification.",
+    "The compiler/Python runtime were not fully frozen before this ordinary inventory check. Saved source, command, log and product identities are retained.",
+    "Unchanged Rust/native checks were not repeated for this Python source-inventory change."
+  ],
+  "preflight_corrections": [
+    "Private generator v1 stopped on import-spelling assertion; v2 on multiline helpers SyntaxError before live edits. AST end_lineno insertion fixes both; all final private files parse."
+  ],
+  "astra_saved_audit_passed": true
+}

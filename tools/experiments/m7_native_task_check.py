@@ -1,4 +1,5 @@
 """Check bounded task responses on Mac; no physical-device actions."""
+import m7_swift_sources as swift_sources
 import json
 from pathlib import Path
 import struct
@@ -57,8 +58,9 @@ def main(native,expected,output):
     try:
         env,_=package.build_environment();env['TMPDIR']=str(output/'tmp')
         merge(integration.admit_build(native,expected));merge(integration.FIXTURE);merge(ORACLE)
-        sources=[ROOT/'apple/Harness/NativeWorker.swift',ROOT/'apple/Harness/NativeCompatibility.swift',ROOT/'apple/Harness/NativeResourcePlan.swift',ROOT/'apple/Harness/NativeTaskResponse.swift',ROOT/'apple/tests/swift/TaskResponseMain.swift']
+        sources=swift_sources.worker_sources('NativeTaskResponse.swift')+[ROOT/'apple/tests/swift/TaskResponseMain.swift']
         helpers=[Path(module.__file__).resolve() for module in (package,integration)]
+        helpers.append(Path(swift_sources.__file__).resolve())
         helpers.extend([Path(__file__).resolve(),Path(__file__).with_name('test_m7_native_task_check.py')])
         merge({str(p.relative_to(ROOT)):package.sha(p) for p in sources+helpers});guard()
         with (ROOT/'tests/fixtures/tiny-v1/cases.prompt.logits.f32le').open('rb') as stream:raw=stream.read(1025)

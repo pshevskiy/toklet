@@ -382,10 +382,11 @@ uses the existing full saved-conversation reset+prompt path on Send.
 
 - [ ] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation.
-- [ ] Repair already-stale legacy standalone Swift check source inventories.
-  Several public M7 wrappers omit newer worker/context dependencies; current
-  app and new task controls use complete inventories, but those old wrappers
-  must not be described as verified or runnable until updated.
+- [x] Repair legacy standalone Swift check source inventories. Ten wrappers
+  share current worker dependencies and bind the helper in their receipts;
+  89 Python controls, 11 Mac compile/link groups and six mobile compiler checks
+  pass. [Evidence](benchmarks/results/2026-10-30-standalone-swift-inventories-v1.json).
+  Full nested wrapper execution and package-admission requirements are separate.
 - [ ] Complete required full adoption quality for newly adopted artifacts,
   including Llama3's original unquantized 10,000-target / 100-task gates. The
   1,024-target same-artifact screen is not a substitute or app qualification.
@@ -679,3 +680,6 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | B5d4b compile/CPU/app phase passes | All 22 jobs pass: strict Swift checks, eight standalone compiles, four CPU control programs and all three app builds. New memory boundary and Apply controls pass with existing transaction/configuration and 57 planning regressions. Ten actual products are frozen; groups close without endpoint errors. | Astra actual-product review precedes four Mac jobs, including one cached Qwen3 controller load with three replacements. No real-model Apply or rendered UI outcome yet. |
 | 2026-10-30 | B5d4b four Mac jobs pass; visual check blocked | Tiny headroom/transaction/preview regressions and cached Qwen3 controller all pass. One model load supports three replacements at 256/chunk16; workspace/file hashes and two writes stay exact; actual 281-token request is rejected against 256 before generation with newer draft retained. Computer-use inventory still reports a locked Mac; no app selected/launched or UI input sent. | Independent saved audit/publication/commit next. Rendered Mac/iPhone checks remain open; successful real-model generation after resizing is not claimed by this controller test. |
 | 2026-10-30 | B5d4b verification complete | Astra independently audits all 22+4 closed jobs, current source/products and raw records. Three Qwen3 replacements retain model1, use sessions3/4/5 at 256/chunk16, and keep Apply/edit workspace/file hashes plus writes2→2. Fresh incremental requirement125957028 fits observed policy headroom; later request281>256 rejects without generation and preserves the newer draft. | Publish bounded feature evidence and commit after exact staged review. Mac remains locked; visible UI, phone and post-resize successful real generation stay open. Next persistence first needs actual consumed artifact/codec identity, not paths or pre-open receipts. |
+| 2026-10-30 | B5d4b committed / consumed identity prerequisite starts | Friendly Apply committed as `ecfcadd` after exact sixteen-file Astra review and all 22+4 checks, reusing completed evidence through the service interruption. Only preserved DSStore remained. | B5d5 first establishes actual consumed model/codec identity for one pinned managed profile using the existing audit mechanism; preferences follow only after that proof. No path/config/pre-open receipt shortcut, parallel phone work or full-window restart. |
+| 2026-10-30 | M8 standalone inventory repair | Astra reviewed a shared explicit nine-file worker dependency list and ten wrapper consumers, including named score/legacy entrypoints and receipt binding. Private generator import/multiline preflights were corrected before application; no target checks had run. | Compile/link all eleven Mac groups, six mobile compile/typecheck branches and existing Python parser controls; D5 identity integration remains private. |
+| 2026-10-30 | M8 standalone inventory checks | All 21 owned jobs pass: 89 Python controls, 11 Mac compile/link groups, four mobile module builds, two lifecycle mobile typechecks and three SDK queries; input/product/log hashes and closed groups rechecked. No full wrapper, model, app or device execution. | [Evidence](benchmarks/results/2026-10-30-standalone-swift-inventories-v1.json); Astra saved audit passes all 286 input, 15 product and 42 log hashes; task commit next. |

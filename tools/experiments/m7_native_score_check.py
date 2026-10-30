@@ -3,6 +3,7 @@
 Requires an exact reviewed package receipt with the additive score export.
 No signing, physical-device launch or full-quality acceptance occurs here.
 """
+import m7_swift_sources as swift_sources
 import json
 import math
 from pathlib import Path
@@ -88,9 +89,12 @@ def main(native,expected,output):
     try:
         env,_=package.build_environment();env['TMPDIR']=str(temporary)
         merge(integration.admit_build(native,expected));merge(integration.FIXTURE)
-        sources=[ROOT/'apple/Harness/NativeWorker.swift',ROOT/'apple/Harness/NativeCompatibility.swift',ROOT/'apple/Harness/NativeResourcePlan.swift',ROOT/'apple/tests/swift/ScoreMain.swift',
-                 ROOT/'apple/tests/swift/WorkerChecks.swift',ROOT/'apple/tests/swift/main.swift']
+        worker_sources=swift_sources.worker_sources()
+        score_sources=worker_sources+[ROOT/'apple/tests/swift/ScoreMain.swift']
+        legacy_sources=worker_sources+[ROOT/'apple/tests/swift/WorkerChecks.swift',ROOT/'apple/tests/swift/main.swift']
+        sources=list(dict.fromkeys(score_sources+legacy_sources))
         helpers=[Path(module.__file__).resolve() for module in (package,integration,builder)]
+        helpers.append(Path(swift_sources.__file__).resolve())
         helpers.extend([Path(__file__).resolve(),Path(__file__).with_name('test_m7_native_score_check.py')])
         merge({str(p.relative_to(ROOT)):package.sha(p) for p in sources+helpers})
         guard()
@@ -108,7 +112,7 @@ def main(native,expected,output):
                '-swift-version','5','-strict-concurrency=complete','-warnings-as-errors','-target','arm64-apple-macos15.0','-O','-I',str(ROOT/'apple/include')]
         links=[str(archive),'-framework','Metal','-framework','MetalPerformanceShaders','-framework','Foundation','-framework','Security',
                '-lobjc','-liconv','-lresolv','-lc++']
-        for label,files in [('score',sources[:4]),('legacy',[*sources[:3],*sources[4:]])]:
+        for label,files in [('score',score_sources),('legacy',legacy_sources)]:
             binary=output/label
             execute(flags+[str(p) for p in files]+links+['-o',str(binary)],label+'-compile')
             merge({str(binary.relative_to(ROOT)):package.sha(binary)})

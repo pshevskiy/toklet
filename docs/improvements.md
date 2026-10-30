@@ -8533,3 +8533,31 @@ no app was selected or launched. Physical phone, successful real-model
 generation after resizing, full artifact identity and persisted preferences
 remain open. All pre-execution review corrections are retained separately from
 runtime outcomes; no numerical policy or native budget was relaxed.
+
+Friendly Apply is committed as `ecfcadd` after exact sixteen-file Astra review.
+The completed checks and saved audit were reused through the service recovery;
+no passing build or model load was repeated. Next, persistence needs actual
+consumed model/codec identity. The initial bounded task reuses the existing
+audit mechanism for a pinned managed profile; path/config recognition and a
+pre-open receipt remain insufficient, and external folders stay ephemeral.
+
+### 2026-10-30 — Standalone Swift inventory repair in verification
+
+Ten legacy M7 wrappers now share the explicit current NativeWorker source
+dependencies, including context/capacity, preview, transition and process-memory
+modules. Each receipt binds the helper as well as the expanded sources. Score
+and legacy programs use separate named lists rather than obsolete index slices.
+Astra approved source application; parser controls and eleven Mac plus six
+mobile compiler branches are in progress. No app/model/GPU execution or full
+wrapper journey is claimed. Two private generator preflight errors were fixed
+before live application and target checks.
+
+The [inventory repair checks](../benchmarks/results/2026-10-30-standalone-swift-inventories-v1.json)
+pass all 21 owned commands: 89 Python tests, eleven Mac compile/link groups,
+four teacher/task mobile module builds, two lifecycle mobile typechecks and
+three SDK queries. All 15 retained products, 286 inputs and command logs pass
+hash rechecks, and every owned process/group is absent. These ordinary source
+and compiler checks do not freeze the complete compiler/Python runtime or run
+full nested wrappers. Numerical, app, model and device qualifications are unchanged.
+Astra independently rechecked all source/product/log identities and the exact
+source groups and accepts this inventory-only repair for commit.

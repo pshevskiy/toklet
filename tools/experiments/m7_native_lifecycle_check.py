@@ -1,4 +1,5 @@
 """Bounded synthetic lifecycle core checks; actual OS integration is separate."""
+import m7_swift_sources as swift_sources
 from pathlib import Path
 import json,sys
 import m7_native_prefix_check as prefix
@@ -67,8 +68,9 @@ def main(native,expected,output):
   guard();return ROOT/row['stdout']
  try:
   env,_=package.build_environment();env['TMPDIR']=str(temporary);merge(integration.admit_build(native,expected));merge(integration.FIXTURE)
-  sources=[ROOT/'apple/Harness/NativeWorker.swift',ROOT/'apple/Harness/NativeCompatibility.swift',ROOT/'apple/Harness/NativeResourcePlan.swift',ROOT/'apple/Harness/NativeMeasurement.swift',ROOT/'apple/Harness/NativeLifecycle.swift',ROOT/'apple/tests/swift/LifecycleMain.swift']
+  sources=swift_sources.worker_sources('NativeMeasurement.swift','NativeLifecycle.swift')+[ROOT/'apple/tests/swift/LifecycleMain.swift']
   helpers=[Path(v.__file__).resolve() for v in (prefix,package,integration)]+[Path(__file__).resolve(),Path(__file__).with_name('test_m7_native_lifecycle_check.py')]
+  helpers.append(Path(swift_sources.__file__).resolve())
   merge({str(p.relative_to(ROOT)):package.sha(p) for p in sources+helpers})
   execute(['xcodebuild','-version'],'xcode-version')
   sdk=package.small(execute(['xcrun','--sdk','macosx','--show-sdk-path'],'sdk-path')).strip()

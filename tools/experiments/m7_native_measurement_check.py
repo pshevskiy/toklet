@@ -4,6 +4,7 @@ Uses an already reviewed native package; does not sign or launch an iOS app.
 The fixture and every compiled input are admitted before compilation and checked
 again after the bounded owned child returns. Outputs are always exclusive.
 """
+import m7_swift_sources as swift_sources
 import json
 from pathlib import Path
 import sys
@@ -89,10 +90,11 @@ def main(native, expected, output):
         integration.merge(pins,integration.admit_build(native,expected))
         helpers=[Path(package.__file__).resolve(),Path(integration.__file__).resolve(),
                  Path(__file__).resolve(),Path(__file__).with_name('test_m7_native_measurement_check.py')]
+        helpers.append(Path(swift_sources.__file__).resolve())
         integration.merge(pins,{str(p.relative_to(ROOT)):package.sha(p) for p in helpers})
         verify_inputs(pins)
         archive=native/'Toklet.xcframework/macos-arm64/libtoklet.a'
-        sources=[ROOT/'apple/Harness/NativeWorker.swift',ROOT/'apple/Harness/NativeCompatibility.swift',ROOT/'apple/Harness/NativeResourcePlan.swift',ROOT/'apple/Harness/NativeMeasurement.swift',ROOT/'apple/tests/swift/MeasurementMain.swift']
+        sources=swift_sources.worker_sources('NativeMeasurement.swift')+[ROOT/'apple/tests/swift/MeasurementMain.swift']
         fixture=ROOT/'artifacts/m7-native-tiny-v2'
         paths=[*sources,Path(__file__).resolve(),archive,fixture/'config.json',fixture/'model.safetensors']
         integration.merge(pins,{str(p.relative_to(ROOT)):package.sha(p) for p in paths})

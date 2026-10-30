@@ -1,4 +1,5 @@
 """Sealed bounded task-runner checks with quality/measurement/app regressions."""
+import m7_swift_sources as swift_sources
 import json
 import math
 from pathlib import Path
@@ -152,9 +153,10 @@ def main(native,expected,output):
  try:
   env,_=package.build_environment();env['TMPDIR']=str(output/'tmp')
   merge(integration.admit_build(native,expected));merge(integration.FIXTURE);merge(task.ORACLE)
-  sources=[ROOT/'apple/Harness'/name for name in ['NativeWorker.swift','NativeCompatibility.swift','NativeResourcePlan.swift','NativeMeasurement.swift','NativeTaskResponse.swift','NativeTasks.swift']]
+  sources=swift_sources.worker_sources('NativeMeasurement.swift','NativeTaskResponse.swift','NativeTasks.swift')
   sources.append(ROOT/'apple/tests/swift/TasksMain.swift')
   helpers=[Path(m.__file__).resolve() for m in (package,integration,task,quality,measurement,builder)]
+  helpers.append(Path(swift_sources.__file__).resolve())
   helpers += [Path(__file__).resolve(),Path(__file__).with_name('test_m7_native_tasks_check.py'),ROOT/'apple/Harness/HarnessApp.swift',ROOT/'apple/TokletHarness.xcodeproj/project.pbxproj']
   merge({str(p.relative_to(ROOT)):package.sha(p) for p in sources+helpers});guard()
   with (ROOT/'tests/fixtures/tiny-v1/cases.prompt.logits.f32le').open('rb') as stream:oracle_raw=stream.read(1025)
