@@ -567,10 +567,25 @@ pub unsafe extern "C" fn toklet_model_load_mlx_qwen3_audited(
 ) -> u32 {
     unsafe { load_mlx(path, len, opts, out, error, MlxLoadProfile::Qwen3Audited) }
 }
+/// Audited Qwen2.5 source import through the existing native Online policy.
+/// Evidence attaches only after complete assembly; reserve text separately.
+/// # Safety
+/// Follow the parent foreign pointer, thread and disjoint-output contract.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_model_load_mlx_qwen2_audited(
+    path: *const u8,
+    len: usize,
+    opts: *const Options,
+    out: *mut *mut ModelHandle,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe { load_mlx(path, len, opts, out, error, MlxLoadProfile::Qwen2Audited) }
+}
 #[derive(Clone, Copy)]
 enum MlxLoadProfile {
     Ordinary,
     SmolAudited,
+    Qwen2Audited,
     Qwen3Audited,
 }
 // Select the loader once at this cold boundary; publication and ABI checks are
@@ -603,6 +618,9 @@ unsafe fn load_mlx(
                     MlxLoadProfile::Ordinary => crate::metal::Model::load_mlx(&path, options),
                     MlxLoadProfile::SmolAudited => {
                         crate::metal::Model::load_mlx_smol_audited(&path, options)
+                    }
+                    MlxLoadProfile::Qwen2Audited => {
+                        crate::metal::Model::load_mlx_qwen2_audited(&path, options)
                     }
                     MlxLoadProfile::Qwen3Audited => {
                         crate::metal::Model::load_mlx_qwen3_audited(&path, options)

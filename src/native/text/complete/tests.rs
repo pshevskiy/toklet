@@ -10,6 +10,7 @@ fn complete_factory_cpu_budget_and_null_failures_add_no_owner() {
             (64 * 1024 * 1024 - 1, INVALID),
             (6 * 1024 * 1024 * 1024 + 1, INVALID),
             (64 * 1024 * 1024, UNSUPPORTED),
+            (128 * 1024 * 1024, UNSUPPORTED),
             (256 * 1024 * 1024, UNSUPPORTED),
         ] {
             let mut out = ptr::dangling_mut();

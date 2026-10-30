@@ -249,3 +249,76 @@ fn smol_legacy_cross_profile_and_changed_source_facts_reject() {
     e.manifest[0] ^= 1;
     assert!(build(e, 1, 512).is_err());
 }
+
+fn qwen2_fixture() -> Evidence {
+    let m = qwen2_manifest().unwrap();
+    let f = m.files();
+    Evidence {
+        profile: IdentityProfile::Qwen2,
+        manifest: m.identity(),
+        digests: std::array::from_fn(|i| f[i].sha256),
+        container_bytes: f[1].bytes,
+        ranges: 630,
+        reads: 630,
+        text_policy: "qwen-chatml-v1",
+    }
+}
+#[test]
+fn qwen2_namespace_roles_and_existing_factory_bound_are_distinct() {
+    // Pure builder facts, not a second loaded-model owner or enlarged-window test.
+    let a = report(qwen2_fixture(), 1, 512);
+    let b = report(qwen2_fixture(), 99, 32768);
+    assert_eq!(a["preference_namespace"], b["preference_namespace"]);
+    assert_eq!(
+        a["preference_namespace"],
+        json!({"version":1,"manifest_algorithm":"toklet-full-manifest-v1",
+        "manifest_sha256":"e92e6d359697d8ada4714ff4f5ff618ba8d9fc69d7abc24bfb4ec905eae6c59b",
+        "backend":"metal_native_dense_v1","load":"qwen2_audited_v1","text":"qwen-chatml-v1","planning":"native_mlx_planning_v1"})
+    );
+    assert_ne!(
+        a["preference_namespace"],
+        report(fixture(), 1, 512)["preference_namespace"]
+    );
+    assert_eq!(
+        a["assets"][1]["roles"],
+        json!(["source_bytes_delivered_to_assembled_model"])
+    );
+    assert_eq!(
+        a["assets"][4]["roles"],
+        json!(["fixed_text_policy_verified"])
+    );
+    assert_eq!(a["source_container_physical_ranges"], 630);
+    assert!(build(qwen2_fixture(), 1, 32769).is_err());
+    assert!(build(qwen2_fixture(), 1, 0).is_err());
+    assert!(build(qwen2_fixture(), 0, 512).is_err());
+    assert!(serde_json::to_vec(&a).unwrap().len() < 8 * 1024);
+}
+#[test]
+fn qwen2_mixed_manifest_policy_and_each_role_reject() {
+    for i in 0..6 {
+        let mut e = qwen2_fixture();
+        e.digests[i][0] ^= 1;
+        assert!(build(e, 1, 512).is_err());
+    }
+    let mut e = qwen2_fixture();
+    e.manifest[0] ^= 1;
+    assert!(build(e, 1, 512).is_err());
+    let mut e = qwen2_fixture();
+    e.profile = IdentityProfile::Qwen3;
+    assert!(build(e, 1, 512).is_err());
+    let mut e = fixture();
+    e.profile = IdentityProfile::Qwen2;
+    assert!(build(e, 1, 512).is_err());
+    let mut e = qwen2_fixture();
+    e.profile = IdentityProfile::Smol;
+    assert!(build(e, 1, 512).is_err());
+    let mut e = qwen2_fixture();
+    e.text_policy = "qwen3-plain-nonthinking-v1";
+    assert!(build(e, 1, 512).is_err());
+    let mut e = qwen2_fixture();
+    e.container_bytes += 1;
+    assert!(build(e, 1, 512).is_err());
+    let mut e = qwen2_fixture();
+    e.reads = 629;
+    assert!(build(e, 1, 512).is_err());
+}

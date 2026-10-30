@@ -235,6 +235,8 @@ uint32_t toklet_model_load_mlx_smol_audited(const uint8_t *, size_t, const Tokle
 /* Exact pinned Qwen3 audited source import, attached only after assembly.
    Ordinary geometry/context limits remain unchanged; no text/app grant. */
 uint32_t toklet_model_load_mlx_qwen3_audited(const uint8_t *, size_t, const TokletOptions *, TokletModel **, TokletError *);
+/* Explicit consumed-source Qwen2.5 import; ordinary Online policy, text separate. */
+uint32_t toklet_model_load_mlx_qwen2_audited(const uint8_t *, size_t, const TokletOptions *, TokletModel **, TokletError *);
 uint32_t toklet_model_release(TokletModel *, TokletError *);
 uint32_t toklet_session_create(const TokletModel *, const TokletOptions *, TokletSession **, TokletError *);
 uint32_t toklet_session_release(TokletSession *, TokletError *);
@@ -297,9 +299,9 @@ uint32_t toklet_chat_create_smol_audited(const TokletModel *, uint64_t allowance
    tokenizer_config is verified policy data; special_tokens_map is ancillary.
    Raw token APIs do not prevent IDs from being passed to another session. */
 uint32_t toklet_chat_create_qwen3_audited(const TokletModel *, uint64_t allowance, TokletChat **, TokletError *);
-/* Complete six-file audited codec for an actually attached Smol or Qwen3 model.
+/* Complete six-file audited codec for an actually attached Smol, Qwen2 or Qwen3 model.
    Selects from the assembled receipt, never a supplied name/path. Same owner,
-   memory and output rules: separate text reserve Smol>=64MiB/Qwen3>=256MiB,
+   memory and output rules: separate text reserve Smol>=64MiB/Qwen2>=128MiB/Qwen3>=256MiB,
    <=6GiB. Verifies ancillary assets before publication and retains exact model.
    Existing audited factories are unchanged. Legacy Smol codecs lack complete
    identity; this new factory does not retroactively enrich old handles. */

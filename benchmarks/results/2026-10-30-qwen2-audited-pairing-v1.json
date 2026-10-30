@@ -1,0 +1,280 @@
+{
+  "base_revision": "d70dc756bdfec284ce6d68c3101d498b5f6e7e8c",
+  "checks": {
+    "astra_saved_audit": true,
+    "c_abi_passed": true,
+    "cached_ownership_probes": 1,
+    "cold_commands": 12,
+    "current_closed_groups": 13,
+    "default_ignored": 22,
+    "default_passed": 523,
+    "metal_ignored": 191,
+    "metal_passed": 631,
+    "native_exports": 37,
+    "new_ordinary_controls": 7,
+    "preserved_failure_closed_groups": 4,
+    "raw_frames": 7,
+    "retained_actual_products": 3
+  },
+  "date": "2026-10-30",
+  "evidence": [
+    {
+      "bytes": 20634,
+      "path": "artifacts/new-goal-b5d5j-qwen2-pairing-proposal-v2/manifest.json",
+      "sha256": "319a277ed09ab68d82fc25842a9384827ffd01068b6f7f0cfdf6d150b09ccd2e"
+    },
+    {
+      "bytes": 2472,
+      "path": "artifacts/new-goal-b5d5j-qwen2-pairing-independent-review-v1/prospective-v2-review.json",
+      "sha256": "c3933abf255fa46be1d6ca8ecf100b273c0acb0ba03f83240332ad42fde7a5d8"
+    },
+    {
+      "bytes": 842694,
+      "path": "artifacts/new-goal-b5d5j-qwen2-pairing-checks-v1/run-v1/checks.json",
+      "sha256": "b3116a6cffce4a9547ecab72c1b05c9d594659b87ea40a54091b1a479425041d"
+    },
+    {
+      "bytes": 3384,
+      "path": "artifacts/new-goal-b5d5j-qwen2-pairing-checks-independent-review-v1/failure-v1-review.json",
+      "sha256": "a8f1513f2b5f05cd38898a3dcc36555bcf7e94fc5389396b7cf12ad32679e65e"
+    },
+    {
+      "bytes": 839427,
+      "path": "artifacts/new-goal-b5d5j-qwen2-pairing-checks-v2/manifest.json",
+      "sha256": "4e21206afa6f83d16afbec1404f165ef33fa09fbf44abbaee5110e265dde534d"
+    },
+    {
+      "bytes": 7777,
+      "path": "artifacts/new-goal-b5d5j-qwen2-pairing-checks-independent-review-v1/prospective-v2-review.json",
+      "sha256": "a230189a0e5c1eedd037a6265ed187c548bdb263858239e75f4339933ebbf735"
+    },
+    {
+      "bytes": 858722,
+      "path": "artifacts/new-goal-b5d5j-qwen2-pairing-checks-v2/run-v1/checks.json",
+      "sha256": "33efdcc8140a142bfc25f877f39fafb9afe59e6ab8df5f80d7b3433d54c0fdf0"
+    },
+    {
+      "bytes": 2878,
+      "path": "artifacts/new-goal-b5d5j-qwen2-pairing-checks-v2/frozen-products.json",
+      "sha256": "ef9092b7f02b846c49db14920470dbe1fcad8b3fb52c63687353c0392d508aea"
+    },
+    {
+      "bytes": 6910,
+      "path": "artifacts/new-goal-b5d5j-qwen2-pairing-checks-v2/launch-review.json",
+      "sha256": "0e0a189a096b2f02622a6ccbaac2d18f9e38b5a979ae4a866a2562350589ef8c"
+    },
+    {
+      "bytes": 846926,
+      "path": "artifacts/new-goal-b5d5j-qwen2-pairing-checks-v2/hardware-v1/checks.json",
+      "sha256": "c4694e5ae8cd79b22cbafdc9e63bd86403cd85ad2f1c6a3de86a59314cd12cbe"
+    },
+    {
+      "bytes": 13304,
+      "path": "artifacts/new-goal-b5d5j-qwen2-pairing-checks-independent-review-v1/saved-review.json",
+      "sha256": "46f329f93ff3ae04b7a06085f80925a01344c79bca28865ac5c11648df8a8873"
+    }
+  ],
+  "format": "toklet-qwen2-audited-pairing-result-v1",
+  "limitations": [
+    "One cached Qwen2 load at512 positions; no session, generation, context expansion, real-model quality, app, phone or performance qualification.",
+    "Exact mode/Rc pointer/stop behavior are completed test assertions; raw records report identity and ownership counts, not unexported arrays.",
+    "The missing-codec-directory case fails at first config read and is not a missing-ancillary-stage result.",
+    "Historical consumed model/codec evidence does not establish current disk or resident buffer identity; preferences require fresh admission.",
+    "Numerical1GiB/text128MiB/application256MiB envelope is not whole-device fit; sparse direct-process samples are not peak memory.",
+    "Source/header inventory37 is separate from selected Apple package36; Swift routing/preferences remain pending."
+  ],
+  "observations": {
+    "closed": {
+      "all_owners_released": true,
+      "app_or_phone_qualified": false,
+      "generation": false,
+      "model_loads": 1,
+      "passed": true,
+      "snapshot_survived_owners": true
+    },
+    "complete": {
+      "nonnull": true,
+      "status": 0,
+      "strong_count": 2
+    },
+    "getter": {
+      "nonnull": true,
+      "status": 0,
+      "strong_count": 2
+    },
+    "identity": {
+      "assets": [
+        {
+          "bytes": 783,
+          "name": "config.json",
+          "roles": [
+            "source_metadata_consumed",
+            "codec_config_verified"
+          ],
+          "sha256": "4dae7c9622e41e50752ba422149df0694044266c06cd851aff630799701c83c6"
+        },
+        {
+          "bytes": 525045902,
+          "name": "model.safetensors",
+          "roles": [
+            "source_bytes_delivered_to_assembled_model"
+          ],
+          "sha256": "3dd0b6c2983ac5fe35f60ba260b1c7c35e4c38f17f3d5139d0bb477924e7aef4"
+        },
+        {
+          "bytes": 44209,
+          "name": "model.safetensors.index.json",
+          "roles": [
+            "source_metadata_consumed"
+          ],
+          "sha256": "e48752ffebac15ee35d1d86e96c9b87f2efd7783b19ebf82a26955dbd43e0476"
+        },
+        {
+          "bytes": 7031673,
+          "name": "tokenizer.json",
+          "roles": [
+            "tokenizer_parser_consumed"
+          ],
+          "sha256": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf"
+        },
+        {
+          "bytes": 7308,
+          "name": "tokenizer_config.json",
+          "roles": [
+            "fixed_text_policy_verified"
+          ],
+          "sha256": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7"
+        },
+        {
+          "bytes": 613,
+          "name": "special_tokens_map.json",
+          "roles": [
+            "ancillary_verified"
+          ],
+          "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+        }
+      ],
+      "codec_constructed": true,
+      "current_disk_identity_evaluated": false,
+      "exact_model_pair": true,
+      "historical_evidence": true,
+      "loaded_position_limit": 512,
+      "model_assembled": true,
+      "model_instance": 1,
+      "preference_namespace": {
+        "backend": "metal_native_dense_v1",
+        "load": "qwen2_audited_v1",
+        "manifest_algorithm": "toklet-full-manifest-v1",
+        "manifest_sha256": "e92e6d359697d8ada4714ff4f5ff618ba8d9fc69d7abc24bfb4ec905eae6c59b",
+        "planning": "native_mlx_planning_v1",
+        "text": "qwen-chatml-v1",
+        "version": 1
+      },
+      "preferences_require_fresh_admission": true,
+      "qualification_evaluated": false,
+      "report_kind": "accepted_model_chat_identity",
+      "repository": "mlx-community/Qwen2.5-0.5B-Instruct-8bit",
+      "resident_buffer_identity_evaluated": false,
+      "revision": "6474d4c1a05bd7bd634a9c993560e4e7272eda3d",
+      "schema_version": 1,
+      "source_container_physical_ranges": 630,
+      "source_container_verified_reads": 630,
+      "source_receipts_equal": true,
+      "whole_app_device_fit_evaluated": false
+    },
+    "load": {
+      "error_code": 0,
+      "nonnull": true,
+      "status": 0
+    },
+    "missing-codec-directory": {
+      "null": true,
+      "status": 2,
+      "strong_count": 1
+    },
+    "wrong-profile": {
+      "null": true,
+      "status": 9,
+      "strong_count": 1
+    }
+  },
+  "passed": true,
+  "preserved_failure": {
+    "correction": "Only three private names and three references renamed; serde strings and all other source bytes preserved.",
+    "diagnostic": "enum_variant_names: all LoadPolicy variants share Audited suffix",
+    "exits": [
+      0,
+      0,
+      0,
+      101
+    ],
+    "stage": "default Clippy after fmt/tool identity",
+    "tests_or_release_or_model_executed": false
+  },
+  "source_files": {
+    "apple/include/toklet.h": {
+      "bytes": 23124,
+      "sha256": "a936f776c1a0bd02a92114124af79d4c8052c46c0d0edef29c80e913a2e5b031"
+    },
+    "src/app_chat.rs": {
+      "bytes": 25504,
+      "sha256": "fd58662704028f264970eab19785b7751925dd1f76fb5f62d7596182c9ac23c4"
+    },
+    "src/app_chat/qwen3_content.rs": {
+      "bytes": 191,
+      "sha256": "40641b621862123a176f736a4c76fa2ee3647a3da8bced4337923d29bb3f9352"
+    },
+    "src/app_chat/qwen3_content/tests.rs": {
+      "bytes": 6564,
+      "sha256": "437a5c53051bf2ebab55e86d3be8a894adc2ead92ee5d52416c9c7d06a1daef9"
+    },
+    "src/app_chat/qwen_content.rs": {
+      "bytes": 6811,
+      "sha256": "1453e83e708fe85c04d512b26dcc2c489dbf7b685d1d365ccd0b6942ec4371d8"
+    },
+    "src/app_chat/qwen_content/qwen2_tests.rs": {
+      "bytes": 5070,
+      "sha256": "71374602c2348126cacafb19a4638281704f38bd5950d58d5897c67720f82999"
+    },
+    "src/app_chat/stream.rs": {
+      "bytes": 27273,
+      "sha256": "e9ed45437b27bd86ddec3a91952afb2a94d4148b6b0c3a97506158063b2e3656"
+    },
+    "src/metal/mod.rs": {
+      "bytes": 138806,
+      "sha256": "71c584f2ec047f35e272941a7eaf4df95c87592da1b575816eb93b794ce2f495"
+    },
+    "src/native.rs": {
+      "bytes": 37057,
+      "sha256": "f894738544448da2b22f663208ec77778fcb7fd434c1a387c9ebe19e4045d62f"
+    },
+    "src/native/qwen2_pairing_tests.rs": {
+      "bytes": 2485,
+      "sha256": "f394b3de770ee5c7664d0217789a5ea5d302e941140878123de483b55018fc91"
+    },
+    "src/native/tests.rs": {
+      "bytes": 49108,
+      "sha256": "2caa3f2a04498549d27e818c94bbf85e83aabaff982c2741696d2ee2eba0f406"
+    },
+    "src/native/text/complete.rs": {
+      "bytes": 5871,
+      "sha256": "18be5738fb348582df4fe6779c0cb903a268db25951786d90a2f1d26050824be"
+    },
+    "src/native/text/complete/qwen2_metal_tests.rs": {
+      "bytes": 8062,
+      "sha256": "9e8322e372c57ab48bb41a3910d01e95b10d2b0534f9be32f5c18d434a667cd7"
+    },
+    "src/native/text/complete/tests.rs": {
+      "bytes": 2421,
+      "sha256": "907558ff5ef4e97e57c4458f9b4ba786d819509fdcc935c9264d3e5ff5e8f43b"
+    },
+    "src/native/text/identity.rs": {
+      "bytes": 13259,
+      "sha256": "6080e85aa94c823b13c1810ee461f04e5f104316ff658e7b75cc2011890246e4"
+    },
+    "src/native/text/identity/tests.rs": {
+      "bytes": 11518,
+      "sha256": "0348bbcf760c604e426909695950f92bf1b3e7cdb0ae715cf20a6d4eb8146d28"
+    }
+  }
+}

@@ -98,6 +98,7 @@ fn mlx_geometry(c: &model::Config, architecture: crate::mlx::dense::Architecture
 enum MlxImport {
     Ordinary,
     SmolAudited,
+    Qwen2Audited,
     Qwen3Audited,
     Qwen3QualityDiagnostic,
     Qwen3ContextDiagnostic,
@@ -203,7 +204,7 @@ pub struct Model {
     qwen3_context_diagnostic: bool,
     mlx_declared_positions: Option<usize>,
     mlx_source_identity: Option<crate::mlx::qwen::SourceContentIdentity>,
-    mlx_qwen3_source_identity: Option<crate::mlx::qwen::QwenSourceContentIdentity>,
+    mlx_qwen_source_identity: Option<crate::mlx::qwen::QwenSourceContentIdentity>,
     pub load_timing: LoadTiming,
 }
 impl Model {
@@ -311,7 +312,21 @@ impl Model {
     pub fn mlx_qwen3_source_content_identity(
         &self,
     ) -> Option<&crate::mlx::qwen::QwenSourceContentIdentity> {
-        self.mlx_qwen3_source_identity.as_ref()
+        self.mlx_qwen_content_identity(crate::weights::content::QwenProfile::Qwen3)
+    }
+    /// Historical delivery for the audited Qwen2 profile, never Qwen3.
+    pub fn mlx_qwen2_source_content_identity(
+        &self,
+    ) -> Option<&crate::mlx::qwen::QwenSourceContentIdentity> {
+        self.mlx_qwen_content_identity(crate::weights::content::QwenProfile::Qwen2)
+    }
+    fn mlx_qwen_content_identity(
+        &self,
+        profile: crate::weights::content::QwenProfile,
+    ) -> Option<&crate::mlx::qwen::QwenSourceContentIdentity> {
+        let identity = self.mlx_qwen_source_identity.as_ref()?;
+        (identity.expected_manifest_sha256() == profile.manifest().ok()?.identity())
+            .then_some(identity)
     }
     pub(crate) fn native_attention_mode(&self) -> AttentionMode {
         planning::native_attention_mode(self.mlx_architecture)
@@ -370,6 +385,11 @@ impl Model {
     pub fn load_mlx_qwen3_audited(directory: &Path, options: weights::LoadOptions) -> Result<Self> {
         Self::load_mlx_impl(directory, options, MlxImport::Qwen3Audited)
     }
+    /// Audited Qwen2.5 import through the unchanged ordinary Online graph.
+    /// Source identity is attached only after complete successful assembly.
+    pub fn load_mlx_qwen2_audited(directory: &Path, options: weights::LoadOptions) -> Result<Self> {
+        Self::load_mlx_impl(directory, options, MlxImport::Qwen2Audited)
+    }
     /// Experimental Qwen3 0.6B quality execution up to1025 positions. Uses the
     /// unchanged Half graph, packed weights and session planners. This does not
     /// qualify numerics/quality, increase app limits, or waive known C512 failures.
@@ -398,6 +418,8 @@ impl Model {
             let clock = Instant::now();
             let mut source = if matches!(import, MlxImport::SmolAudited) {
                 crate::mlx::qwen::Source::open_smol_audited(directory, options)?
+            } else if matches!(import, MlxImport::Qwen2Audited) {
+                crate::mlx::qwen::Source::open_qwen2_audited(directory, options)?
             } else if matches!(import, MlxImport::Qwen3Audited) {
                 crate::mlx::qwen::Source::open_qwen3_audited(directory, options)?
             } else if matches!(import, MlxImport::Qwen3ContextDiagnostic) {
@@ -515,10 +537,15 @@ impl Model {
                 ))?;
                 model.mlx_source_identity = Some(identity);
             }
-            if matches!(import, MlxImport::Qwen3Audited) {
-                model.mlx_qwen3_source_identity = Some(source.qwen3_content_identity().ok_or(
-                    Error::Options("audited Qwen source incomplete after model assembly"),
-                )?);
+            let qwen_identity = match import {
+                MlxImport::Qwen2Audited => Some(source.qwen2_content_identity()),
+                MlxImport::Qwen3Audited => Some(source.qwen3_content_identity()),
+                _ => None,
+            };
+            if let Some(identity) = qwen_identity {
+                model.mlx_qwen_source_identity = Some(identity.ok_or(Error::Options(
+                    "audited Qwen source incomplete after model assembly",
+                ))?);
             }
             model.load_timing = LoadTiming {
                 load_seconds: clock.elapsed().as_secs_f64(),
@@ -730,7 +757,7 @@ impl Model {
             qwen3_context_diagnostic: false,
             mlx_declared_positions: None,
             mlx_source_identity: None,
-            mlx_qwen3_source_identity: None,
+            mlx_qwen_source_identity: None,
             load_timing: LoadTiming {
                 load_seconds: 0.,
                 conversion_seconds: 0.,

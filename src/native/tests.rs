@@ -1545,3 +1545,6 @@ fn audited_qwen_chat_owner_and_null_validation_preserve_reference_count() {
         assert_eq!(toklet_model_release(handle, ptr::null_mut()), OK);
     }
 }
+
+#[path = "qwen2_pairing_tests.rs"]
+mod qwen2_pairing_tests;

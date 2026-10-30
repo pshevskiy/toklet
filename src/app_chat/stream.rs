@@ -416,7 +416,7 @@ mod tests {
             profile,
             special_literals: Vec::new(),
             content_identity: None,
-            qwen3_content_identity: None,
+            qwen_content_identity: None,
         }
     }
     fn reference() -> Value {

@@ -5,7 +5,7 @@ use super::*;
 use crate::{
     app_chat::qwen3_content::QwenCodecContentIdentity,
     mlx::qwen::QwenSourceContentIdentity,
-    weights::content::{Manifest, qwen3_manifest, smol_manifest},
+    weights::content::{Manifest, qwen2_manifest, qwen3_manifest, smol_manifest},
 };
 use serde::Serialize;
 
@@ -23,13 +23,17 @@ enum BackendPolicy {
 }
 #[derive(Clone, Copy, Serialize)]
 enum LoadPolicy {
+    #[serde(rename = "qwen2_audited_v1")]
+    Qwen2,
     #[serde(rename = "qwen3_audited_v1")]
-    Qwen3Audited,
+    Qwen3,
     #[serde(rename = "smol_witness_audited_v1")]
-    SmolWitnessAudited,
+    SmolWitness,
 }
 #[derive(Clone, Copy, Serialize)]
 enum TextPolicy {
+    #[serde(rename = "qwen-chatml-v1")]
+    QwenChatml,
     #[serde(rename = "qwen3-plain-nonthinking-v1")]
     Qwen3PlainNonthinking,
     #[serde(rename = "smol-chatml-v1")]
@@ -95,12 +99,14 @@ struct IdentityReport {
 
 #[derive(Clone, Copy)]
 enum IdentityProfile {
+    Qwen2,
     Qwen3,
     Smol,
 }
 impl IdentityProfile {
     fn manifest(self) -> Result<Manifest<'static>> {
         match self {
+            Self::Qwen2 => qwen2_manifest(),
             Self::Qwen3 => qwen3_manifest(),
             Self::Smol => smol_manifest(),
         }
@@ -108,18 +114,21 @@ impl IdentityProfile {
     }
     fn repository(self) -> &'static str {
         match self {
+            Self::Qwen2 => "mlx-community/Qwen2.5-0.5B-Instruct-8bit",
             Self::Qwen3 => REPOSITORY,
             Self::Smol => "mlx-community/SmolLM2-135M-Instruct-8bit",
         }
     }
     fn revision(self) -> &'static str {
         match self {
+            Self::Qwen2 => "6474d4c1a05bd7bd634a9c993560e4e7272eda3d",
             Self::Qwen3 => REVISION,
             Self::Smol => "0f0d9b8218915bc34d401e1a340b8c049d300d5e",
         }
     }
     fn text(self) -> &'static str {
         match self {
+            Self::Qwen2 => "qwen-chatml-v1",
             Self::Qwen3 => "qwen3-plain-nonthinking-v1",
             Self::Smol => "smol-chatml-v1",
         }
@@ -142,12 +151,13 @@ fn same_source(a: &QwenSourceContentIdentity, b: &QwenSourceContentIdentity) -> 
     Ok(())
 }
 fn evidence(
+    profile: IdentityProfile,
     source: &QwenSourceContentIdentity,
     codec: &QwenCodecContentIdentity,
 ) -> Result<Evidence> {
     same_source(source, codec.source())?;
     Ok(Evidence {
-        profile: IdentityProfile::Qwen3,
+        profile,
         manifest: codec.complete_manifest_sha256(),
         digests: [
             source.config_sha256(),
@@ -227,6 +237,7 @@ fn build(evidence: Evidence, instance: u64, loaded: usize) -> Result<IdentityRep
         || evidence.text_policy != profile.text()
         || instance == 0
         || loaded == 0
+        || (matches!(profile, IdentityProfile::Qwen2) && loaded > crate::weights::MAX_CONTEXT_LIMIT)
         || (matches!(profile, IdentityProfile::Qwen3) && loaded > 512)
         || (matches!(profile, IdentityProfile::Smol) && evidence.ranges != 694)
     {
@@ -236,7 +247,9 @@ fn build(evidence: Evidence, instance: u64, loaded: usize) -> Result<IdentityRep
         ));
     }
     let source_roles: &[Role] = match profile {
-        IdentityProfile::Qwen3 => &[Role::SourceBytesDeliveredToAssembledModel],
+        IdentityProfile::Qwen2 | IdentityProfile::Qwen3 => {
+            &[Role::SourceBytesDeliveredToAssembledModel]
+        }
         IdentityProfile::Smol => &[
             Role::SourceBytesDeliveredToAssembledModel,
             Role::ReferenceContainerDigestAnchor,
@@ -267,10 +280,12 @@ fn build(evidence: Evidence, instance: u64, loaded: usize) -> Result<IdentityRep
             manifest_sha256: hex(manifest.identity()),
             backend: BackendPolicy::MetalNativeDense,
             load: match profile {
-                IdentityProfile::Qwen3 => LoadPolicy::Qwen3Audited,
-                IdentityProfile::Smol => LoadPolicy::SmolWitnessAudited,
+                IdentityProfile::Qwen2 => LoadPolicy::Qwen2,
+                IdentityProfile::Qwen3 => LoadPolicy::Qwen3,
+                IdentityProfile::Smol => LoadPolicy::SmolWitness,
             },
             text: match profile {
+                IdentityProfile::Qwen2 => TextPolicy::QwenChatml,
                 IdentityProfile::Qwen3 => TextPolicy::Qwen3PlainNonthinking,
                 IdentityProfile::Smol => TextPolicy::SmolChatml,
             },
@@ -331,7 +346,15 @@ pub unsafe extern "C" fn toklet_model_chat_identity_create(
             same_model(model, chat)?;
             let (source, loaded) = SourceReceipt::model(model)?;
             let evidence = match source {
+                SourceReceipt::Qwen2(source) => evidence(
+                    IdentityProfile::Qwen2,
+                    &source,
+                    chat.codec
+                        .qwen2_content_identity()
+                        .ok_or_else(|| fail(UNSUPPORTED, "chat has no audited Qwen2 codec"))?,
+                )?,
                 SourceReceipt::Qwen3(source) => evidence(
+                    IdentityProfile::Qwen3,
                     &source,
                     chat.codec
                         .qwen3_content_identity()

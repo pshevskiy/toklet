@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5d5c5b — shared Qwen2.5 model/codec identity pairing**.
+Next implementation task: **B5d5c5c — shared Qwen2.5 app routing/preferences and coherent37 package**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -402,7 +402,10 @@ separate requirements below. Further model admissions require their own scope.
           passes516default/624Metal tests, six new controls and one cached
          630range stream with Astra saved audit. FilteredQwen3 accessor,
           existing bounds and tied-head/QKV-bias semantics preserved.
-        - [ ] C5b: Qwen2.5 assembled-model/complete-codec identity and getter.
+        - [x] C5b: [Qwen2.5 assembled-model/complete-codec identity and getter](docs/qwen2-audited-pairing.md)
+          passes12coldchecks,523default/631Metal,37exports and one cached
+          seven-frame ownership probe with Astra saved audit. No session or
+          generation; lint failure preserved, package36/Swift remain unchanged.
         - [ ] C5c: shared Swift routing/preferences and actual controller checks.
         - [ ] C6: reuse the same mechanisms for Mistral with its explicit text
           policy bound and selected Reference attention contract.
@@ -795,3 +798,8 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | C5a checks start / rendered UI unavailable | Astra approves8serial Rust/source-only jobs with existing target/toolchain and bounded supervision; root starts them. Fresh computer-use inventory still reports lockedMac/appsnone, so no app selection/launch/input occurs. | Keep visibleMac/phone checks pending and continue independent source validation; no nativepackage rebuild or extra model load. |
 | 2026-10-30 | C5a all checks pass | All8jobs pass:516default/624Metal tests, six new controls in each, exact cached source stream628tensors/630ranges/630reads/96192audit bytes. All groups close without endpoint errors. | [Report](docs/qwen2-consumed-source.md); Astra saved audit and final publication review before commit. No assembly, codec, GPU, app or preferences claim. |
 | 2026-10-30 | C5a saved audit passes | Astra authenticates3814inputs/16logs/current9sourcepins and8absent groups, independently sums516/624passes and checks all raw source/hash/poison evidence. | Final exact publication review/commit next; private shared Qwen2 pairing draft is ready for review, not active admission. |
+| 2026-10-30 | C5a committed / C5b source applied | Source-only task committed as `d70dc75` after exact14file Astra final review/all8checks. Astra then approves16path shared Qwen2 assembled-model/codec/getter extension with one additive37th model export; complete guarded application and whitespace pass. | Reviewed cold/native/C ABI checks and one cached ownership probe next. Package36 remains selected; no Swift activation, session/generation or broader context qualification. |
+| 2026-10-30 | C5b first lint failure | Formatting/tool identities pass, then defaultClippy rejects three internal LoadPolicy variants sharing Audited suffix. Four groups close without endpoint errors; no tests/library/model/GPU execution is reached. | Preserve failed receipt; Astra reviews internal variant rename with serde strings/behavior/gates unchanged, then successor checks. |
+| 2026-10-30 | C5b lint correction applied | Astra authenticates failed4group attempt and approves exact private LoadPolicy variant/reference rename. All serde strings and15otherpaths remain byte-identical; guarded one-file delta/whitespace pass. | Reviewed successor12coldjobs next; no tests, native products or cached model probe yet. |
+| 2026-10-30 | C5b corrected cold checks pass | All12jobs pass:523default/631Metal tests,37exactexports/C ABI, release library/test build. Actual three products are bounded-copied and cached6asset pins checked;12groups close without endpoint errors. | Astra actual-product review before one cached Qwen2 ownership probe. First lint failure retained; selected36 and Swift unchanged. |
+| 2026-10-30 | C5b cached ownership/audit pass | Single audited Qwen2 load and complete codec/getter pass seven raw frames: actual six roles/630reads, failureRc1/successRc2, exact model pair and snapshot surviving released owners. Astra audits13current+4prior closed groups and all products/source/counts. | [Report](docs/qwen2-audited-pairing.md); final publication review/commit then coherent37/sharedSwift. No session, generation, quality, app/device or performance claim. |

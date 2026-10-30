@@ -9035,3 +9035,42 @@ C5a's independent Astra saved audit passes3814input/16log/current9source
 bindings and eight closed PID/process groups, independently summed test totals
 and all source-stream evidence. Final publication review/commit follows; C5b
 shared model/codec pairing remains a private draft with no assembly execution.
+
+C5a is committed as `d70dc75` after all eight checks and exact fourteen-file
+Astra publication review. Only unrelated Apple DSStore remained. The next
+sixteen-file C5b source passes Astra review and guarded application: one shared
+Qwen model receipt slot, shared complete codec reader with filtered legacy APIs,
+Qwen2 Online policy and actual profile text bounds, and one additive model
+factory/export37. Numerical upload/assembly and existing factories remain
+unchanged. Cold/native checks and one cached ownership probe are prospective;
+selected package36, Swift activation/preferences and generation stay separate.
+
+C5b's first cold attempt stops on strict Clippy enum-variant naming after
+adding the third Audited suffix. Formatting and tool identities pass; four
+process groups close without endpoint errors. No tests, release products or
+model/GPU run are reached. The failed receipt is preserved. A minimal internal
+variant rename keeps all serialized policy strings and behavioral gates exact;
+Astra reviews that correction before a successor run.
+
+Astra authenticates C5b's four closed failed-attempt groups/logs and approves
+exactly three private enum names plus their three references. Serde strings and
+all fifteen other source files stay byte-identical. Guarded one-file delta and
+whitespace pass; the successor twelve-command owner still needs approval.
+
+Corrected C5b passes all twelve cold jobs:523default/631Metal tests,37exact
+header/exports, C ABI and release library/test build. Three actual products are
+bounded-copied for retention and six cached assets verified; all twelve groups
+close without endpoint errors. First lint failure remains preserved. Astra
+actual-product review precedes the one cached Qwen2 ownership probe.
+
+C5b's one cached Qwen2 model/complete-codec/getter probe passes seven frames.
+Actual identity reports model1/loaded512, all six consumed/verified roles and
+630physical source reads/ranges. Missing-codec-directory fails at config, not
+ancillary stage; wrong-profile rejects. Failure Rc1, success Rc2, exact-owner
+assertions, final ownership exhaustion and snapshot survival all pass. No
+session/generation occurs. Astra saved audit authenticates source/products,
+523/631test totals, raw roles and thirteen current/four prior closed groups.
+First lint failure remains preserved; final publication review precedes commit.
+[Report](qwen2-audited-pairing.md). Native37coherent packaging and shared Swift
+activation/preferences remain next; no new quality/window/device/performance
+qualification follows from this identity-only probe.
