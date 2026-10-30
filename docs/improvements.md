@@ -9219,3 +9219,60 @@ No session or generation occurs. Astra saved audit passes source/products/logs,
 remain separate from the5GiB/64MiB/256MiB declared envelope; no peak/fit or
 performance inference. [Report](mistral-audited-pairing.md); final publication
 review/commit precedes native38/shared Swift settings.
+
+C6b is committed as `66aca8c` after all twelve cold/one ownership checks and
+exact twenty-file Astra publication review; only unrelated Apple DSStore
+remained. Astra approves C6c's seven Swift paths and native38builder together.
+Guarded application/whitespace pass: fourth shared descriptor/managed route,
+unchanged store/old namespaces, existing Mistral budgets/Reference512.100wire/
+116route/90preference controls and one loaded controller remain prospective.
+The native builder has no overlapping Swift inputs; reserve cleanup remains
+a separate reviewed housekeeping gate before execution.
+
+C6c's Astra-reviewed bounded cleanup runs under both Cargo locks and compiler
+exclusion:18677unbound codegen objects and regenerated incremental cache are
+removed;91protectedoutputs remain exact. Observed free increase5071908864bytes
+leaves9494249472, meeting the unchanged8GiB gate. No models/logs/archives/
+executables are removed. Combined-reviewed25serial native38/default build/link
+jobs now run independently of Swift source changes; selected37stays guarded.
+Exact537/645native proof is reused without repeat tests/model loads.
+
+All25C6c native/default build/link jobs pass with three38-exportMetal slices,
+default38/header/C ABI agreement and closed groups/no endpoint errors. Sole
+planned bare archive supersession preserves retainedMetal38; selected37 stays
+unchanged. Native537/645source proof is reused without rerunning suites or
+models. Astra component audit precedes actual-product-bound28Swift/CPU/app
+checks and one cached settings controller.
+
+Astra's native38saved audit passes all25closed jobs, threeMetal/default38
+exports/platforms,3803native proof paths and69outputs; selected37unchanged.
+Before cold invocation, adviser-approved ownerV2 scopes real-model bytes to
+the phase that consumes them: compile/CPU/app checks bind true inputs and
+model expectations, while product freeze authenticates exact6+2cached files
+and hardware requires the complete set with full per-job guards. Partial sets
+reject. This avoids repeatedly hashing4GBduring28nonconsumer jobs without
+removing source/runtime/fixture/product checks or actual model-run protection.
+V1 is preserved uninvoked.28Swift/CPU/app jobs now run.
+
+C6c's28cold/CPU/app jobs pass:100strict identity,116routing with twelve stale
+actions,90preference/33advisory, existing shared controls and all three apps.
+Product freeze authenticates all six native/two auxiliary cached files and
+retains thirteen actual products; all groups close without endpoint errors.
+The user requests finishing this task and then pausing. Only twoMacchecks,
+reviewed adoption/publication/commit remain authorized now; private B5e1 work
+is stopped and no next implementation task will start.
+
+C6c's two Mac jobs and Astra saved audit pass. One Mistral load restores256/
+chunk16/reply64 with zero writes, reply32 saves once and Apply128/chunk8 saves
+once more. Actual aggregates4685205878/4623712214fit5905580032; planned constructor admissions
+4184279074/4164305474equal returned candidate admissions; incremental123790740/103817140
+fits configured observed headroom. Terminal-before-observe and final durable
+evidence stay distinct, three other profile records remain exact and owning
+close succeeds. No real-model generation occurs.
+
+Guarded atomic adoption selects38after full current prechecks,30closed jobs
+and ten candidate hashes before/after; old37remains. No app launches/installs
+by adoption. [Mistral shared settings](mistral-managed-preferences.md) records
+the bounded completion. Final publication review/commit is the last work before
+the requested pause. Astra's next-load-upper then text-policy recommendation is
+recorded only as pending B5e1/B5e2; private future work is stopped.

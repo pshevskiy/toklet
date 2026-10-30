@@ -1,0 +1,849 @@
+{
+  "base_revision": "66aca8c23114f71022913a1d2b09d631a93cced3",
+  "checks": {
+    "app_build_inspection_jobs": 9,
+    "apply_controls": 28,
+    "apps_built": 3,
+    "astra_saved_audit": true,
+    "configuration_controls": 11,
+    "cpu_preview_barriers": 16,
+    "cpu_runs": 8,
+    "framework_adopted": true,
+    "fresh_swift_cpu_app_jobs": 28,
+    "loaded_candidates": 2,
+    "loaded_generation_tokens": 0,
+    "loaded_model_loads": 1,
+    "loaded_replacements": 2,
+    "mac_jobs": 2,
+    "native_component_groups_closed": 25,
+    "native_component_jobs": 25,
+    "native_default_tests_inherited": 537,
+    "native_exports": 38,
+    "native_metal_tests_inherited": 645,
+    "native_tests_rerun": false,
+    "planning_controls": 57,
+    "preference_controls": 90,
+    "preference_writes": 2,
+    "retained_products": 13,
+    "retirement_controls": 2,
+    "routing_controls": 116,
+    "smol_advisory_controls": 33,
+    "stale_barriers": 15,
+    "stale_queue_actions": 12,
+    "swift_and_mac_groups_closed": 30,
+    "swift_compiles": 11,
+    "tiny_metal_preview_barriers": 21,
+    "transition_controls": 37,
+    "wire_controls": 100
+  },
+  "date": "2026-10-30",
+  "evidence": [
+    {
+      "bytes": 12099,
+      "path": "artifacts/new-goal-b5d5n-mistral-swift-proposal-v1/manifest.json",
+      "sha256": "a489a95e22ccb1a4c23aba25b7c1ac665cae9a85bfc9c5b487cedf32cb24a3fa"
+    },
+    {
+      "bytes": 7089,
+      "path": "artifacts/new-goal-b5d5n-mistral-swift-independent-review-v1/prospective-review.json",
+      "sha256": "3e38e41a6938900ecefda4a9d2b95410930e2161349ed64d00bc9794f7ae5c1a"
+    },
+    {
+      "bytes": 2970,
+      "path": "artifacts/new-goal-b5d5n-native38-component-v1/manifest.json",
+      "sha256": "b23c81db3e057f55ad3fc7790a38577b26785554325e310f9b38ea6bce4598db"
+    },
+    {
+      "bytes": 894552,
+      "path": "artifacts/new-goal-b5d5n-native38-component-v1/run-v1/checks.json",
+      "sha256": "15305b67ea0c25f31cc05394c312cd0117485b1ed2ac4244d1cfa5c7aed37b58"
+    },
+    {
+      "bytes": 60315,
+      "path": "artifacts/new-goal-b5d5n-native38-component-v1/run-v1/native/build.json",
+      "sha256": "2a069edf753d1eb82c1e3018a9686b41764858e54d4f973cd236b39806e2e3a2"
+    },
+    {
+      "bytes": 10348,
+      "path": "artifacts/new-goal-b5d5n-native38-component-independent-review-v1/saved-review.json",
+      "sha256": "028e0c6935a75dfd7352c2fa124570f9bfc30c0e6fced6529354922337e80fb9"
+    },
+    {
+      "bytes": 2370,
+      "path": "artifacts/new-goal-b5d5n-build-cache-cleanup-v1/review.json",
+      "sha256": "7e2370ada2a49e88888b25dea7e209247f0d6882f13a2f3daa461eeb290b9169"
+    },
+    {
+      "bytes": 23457,
+      "path": "artifacts/new-goal-b5d5n-build-cache-cleanup-v1/cleanup.json",
+      "sha256": "4b6d5691b13fbfd989620eb6310576efdeeb3feddd14341d727662efa31d8a7a"
+    },
+    {
+      "bytes": 684,
+      "path": "artifacts/new-goal-b5d5n-mistral-extra-metadata-v1/metadata.json",
+      "sha256": "09ec017e7322fa61d9c663259272f7b43675768ccd9f026e0e4ad16155813d45"
+    },
+    {
+      "bytes": 5916,
+      "path": "artifacts/new-goal-b5d5n-mistral-swift-verification-owner-v1/manifest.json",
+      "sha256": "7ea96d55d8984987b5fe30fb4f249c761b42fc5fd3e83c3e21698d2bf370d679"
+    },
+    {
+      "bytes": 6918,
+      "path": "artifacts/new-goal-b5d5n-mistral-swift-verification-owner-v2/manifest.json",
+      "sha256": "210f3f9c9e81e402330c910ff799248f9ff1229ed4fd459db06b0764c676e688"
+    },
+    {
+      "bytes": 5904,
+      "path": "artifacts/new-goal-b5d5n-mistral-swift-verification-independent-review-v1/prospective-v2-review.json",
+      "sha256": "cdaf9233bcaef9a4cb438baa164a7ad53d3d39019b64f55a9b0f31a0c3d0f85d"
+    },
+    {
+      "bytes": 1815942,
+      "path": "artifacts/new-goal-b5d5n-mistral-swift-verification-owner-v2/cold-v1/checks.json",
+      "sha256": "a3189ec5cc6dea24f563689b4c93a605bd77e98656158626dc802c4a40a33dad"
+    },
+    {
+      "bytes": 1912860,
+      "path": "artifacts/new-goal-b5d5n-mistral-swift-verification-owner-v2/package.json",
+      "sha256": "dc0cc0e9ac99cb0587a29b84b86452cae1079ee426971d99e3ea89c1ae2d87e9"
+    },
+    {
+      "bytes": 10867,
+      "path": "artifacts/new-goal-b5d5n-mistral-swift-verification-owner-v2/launch-review.json",
+      "sha256": "2111968cc2a58faced7c0a335ece1d8c64c1b0bc8bb9ac99a85a5e6212ef6786"
+    },
+    {
+      "bytes": 1391784,
+      "path": "artifacts/new-goal-b5d5n-mistral-swift-verification-owner-v2/hardware-v1/checks.json",
+      "sha256": "91c511a565bf928378d5b22aff32e4c751b4fd64e8a5790a78b6cccf4e175749"
+    },
+    {
+      "bytes": 18786,
+      "path": "artifacts/new-goal-b5d5n-mistral-swift-verification-independent-review-v1/saved-review.json",
+      "sha256": "0d402e352f32434ab3449178bf8493dd1698d679c5b3275e47712743206da32d"
+    },
+    {
+      "bytes": 4400,
+      "path": "artifacts/new-goal-b5d5n-native38-adoption-v1/adoption.json",
+      "sha256": "f9b2346b1548a367564a899bbb7043f558df6cb903f4777fc961466cd5467428"
+    }
+  ],
+  "format": "toklet-mistral-managed-preferences-result-v1",
+  "framework_selection": {
+    "app_launched_or_installed": false,
+    "atomic_sibling_symlink_replacement": true,
+    "candidate_files_rehashed_before_after": 10,
+    "full_current_bindings_prechecked": true,
+    "old_preserved": "../../artifacts/new-goal-b5d5k-native37-component-v1/run-v1/native/Toklet.xcframework",
+    "selected": "../../artifacts/new-goal-b5d5n-native38-component-v1/run-v1/native/Toklet.xcframework"
+  },
+  "limitations": [
+    "One Mistral load at512 positions, restored256/chunk16 and applied128/chunk8; no larger-window or successful real-model generation qualification.",
+    "Close only; no suspend/replay, rendered UI, iPhone runtime, quality or performance qualification.",
+    "Workspace equality is checked after intentional reply edit through preview/Apply/close; other three profile records remain exact throughout.",
+    "Ordinary numerical preview is advisory; actual loaded-model D1, configured fresh process headroom and D2 remain final authority.",
+    "Headroom is a configured Mac process policy, not free RAM/reservation; sparse direct-process samples and ledger totals are not peak or whole-device fit.",
+    "Native537/645 tests are inherited through exact source; no native suite/model load repeat for packaging. Linker implicit signatures are distinct from explicit signing.",
+    "User requested pause after this task; no next task is authorized until resumed."
+  ],
+  "loaded_records": [
+    {
+      "committed": 0,
+      "configuration": {
+        "accepted_request": null,
+        "capacity": 512,
+        "chunk": 32,
+        "model": 1,
+        "session": 2,
+        "whole_budget": 5368709120
+      },
+      "draft": "Keep this Mistral unsent draft.",
+      "event": "restore-before-acceptance",
+      "file_sha256": "a1266208454fddde2becaa37f88600e6cfb63a5f521325e328159b09e20c9c4e",
+      "generated": 0,
+      "history": 0,
+      "load_policy": "mistral_audited_v1",
+      "loaded_limit": 512,
+      "manifest": "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26",
+      "messages": 0,
+      "model": 1,
+      "other_record_hashes": [
+        "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+        "cc40d1e3d04af4713fc634e2f6c24fcbbd810323899469bf0ed1a7c63b83907a",
+        "b0707473304e915e8b3effb189b4820268b207845e0f7c43f32bc3c86c2b5fd3"
+      ],
+      "pending": 0,
+      "preference_writes": 0,
+      "record": {
+        "capacity": 256,
+        "chunk": 16,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "mistral_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26",
+          "planning": "native_mlx_planning_v1",
+          "text": "mistral-instruct-v1",
+          "version": 1
+        },
+        "reply": 64,
+        "schema": 1,
+        "whole_budget": 5368709120
+      },
+      "record_sha256": "18239be5d71fa9ca94c7db56523bba16d1760d16e231a4a14c61229623f3f2de",
+      "reply": 128,
+      "source_ranges": 745,
+      "source_reads": 745,
+      "submitted_request": {
+        "application_reserve": 285212672,
+        "capacity": 256,
+        "chunk": 16,
+        "coexistence_budget": 5905580032,
+        "id": "51CDF3DA-46D3-4B75-A14B-4CFC4B143EAA",
+        "model": 1,
+        "old_session": 2,
+        "replay_reserve": 0,
+        "selection": "D1738DFF-6B27-4108-A36D-0B6664CF7F89",
+        "text_reserve": 67108864,
+        "whole_budget": 5368709120
+      },
+      "text_policy": "mistral-instruct-v1",
+      "workspace_sha256": "fe75e23d324b8d8990147c358e9d35029667a5acd58667f5dc7d6565158cc55c"
+    },
+    {
+      "actual_candidate": {
+        "capacity": 256,
+        "loaded_limit": 512,
+        "model": 1,
+        "offset": 0,
+        "session": 3
+      },
+      "actual_candidate_admission": 4184279074,
+      "actual_plan": {
+        "aggregate": 4685205878,
+        "application": 285212672,
+        "attention": "Reference",
+        "candidate_allocated_in_plan": false,
+        "candidate_allowance": 67108864,
+        "candidate_bridge": 20480,
+        "candidate_budget": 5368709120,
+        "candidate_constructor": 4184279074,
+        "candidate_planned": 39752852,
+        "current_allowance": 67108864,
+        "current_bridge": 20480,
+        "current_owned": 81272916,
+        "fits_aggregate": true,
+        "fits_individual": true,
+        "json": 131328,
+        "learned": 4077396878,
+        "loaded_limit": 512,
+        "model": 1,
+        "model_table": 71680,
+        "positional": 0,
+        "replay": 0,
+        "reserves": 486711552,
+        "session": 2,
+        "shared": 4077468558,
+        "text": 67108864,
+        "transition_budget": 5905580032
+      },
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "51CDF3DA-46D3-4B75-A14B-4CFC4B143EAA",
+        "capacity": 256,
+        "chunk": 16,
+        "model": 1,
+        "session": 3,
+        "whole_budget": 5368709120
+      },
+      "draft": "Keep this Mistral unsent draft.",
+      "event": "restore-accepted-before-reconcile",
+      "file_sha256": "a1266208454fddde2becaa37f88600e6cfb63a5f521325e328159b09e20c9c4e",
+      "generated": 0,
+      "headroom": {
+        "available": 2261496328,
+        "fits": true,
+        "instrument": "Configured Mac process allowance min(RAM/2,6GiB) minus TASK_VM_INFO footprint; not free system RAM",
+        "required": 123790740
+      },
+      "history": 0,
+      "load_policy": "mistral_audited_v1",
+      "loaded_limit": 512,
+      "manifest": "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26",
+      "messages": 0,
+      "model": 1,
+      "other_record_hashes": [
+        "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+        "cc40d1e3d04af4713fc634e2f6c24fcbbd810323899469bf0ed1a7c63b83907a",
+        "b0707473304e915e8b3effb189b4820268b207845e0f7c43f32bc3c86c2b5fd3"
+      ],
+      "pending": 0,
+      "preference_writes": 0,
+      "record": {
+        "capacity": 256,
+        "chunk": 16,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "mistral_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26",
+          "planning": "native_mlx_planning_v1",
+          "text": "mistral-instruct-v1",
+          "version": 1
+        },
+        "reply": 64,
+        "schema": 1,
+        "whole_budget": 5368709120
+      },
+      "record_sha256": "18239be5d71fa9ca94c7db56523bba16d1760d16e231a4a14c61229623f3f2de",
+      "reply": 128,
+      "source_ranges": 745,
+      "source_reads": 745,
+      "submitted_request": {
+        "application_reserve": 285212672,
+        "capacity": 256,
+        "chunk": 16,
+        "coexistence_budget": 5905580032,
+        "id": "51CDF3DA-46D3-4B75-A14B-4CFC4B143EAA",
+        "model": 1,
+        "old_session": 2,
+        "replay_reserve": 0,
+        "selection": "D1738DFF-6B27-4108-A36D-0B6664CF7F89",
+        "text_reserve": 67108864,
+        "whole_budget": 5368709120
+      },
+      "text_policy": "mistral-instruct-v1",
+      "transition": {
+        "committed": true,
+        "message": "",
+        "outcome": "committed",
+        "status": 0
+      },
+      "transition_request": {
+        "application_reserve": 285212672,
+        "capacity": 256,
+        "chunk": 16,
+        "coexistence_budget": 5905580032,
+        "id": "51CDF3DA-46D3-4B75-A14B-4CFC4B143EAA",
+        "model": 1,
+        "old_session": 2,
+        "replay_reserve": 0,
+        "selection": "D1738DFF-6B27-4108-A36D-0B6664CF7F89",
+        "text_reserve": 67108864,
+        "whole_budget": 5368709120
+      },
+      "workspace_sha256": "fe75e23d324b8d8990147c358e9d35029667a5acd58667f5dc7d6565158cc55c"
+    },
+    {
+      "actual_candidate": {
+        "capacity": 256,
+        "loaded_limit": 512,
+        "model": 1,
+        "offset": 0,
+        "session": 3
+      },
+      "actual_candidate_admission": 4184279074,
+      "actual_plan": {
+        "aggregate": 4685205878,
+        "application": 285212672,
+        "attention": "Reference",
+        "candidate_allocated_in_plan": false,
+        "candidate_allowance": 67108864,
+        "candidate_bridge": 20480,
+        "candidate_budget": 5368709120,
+        "candidate_constructor": 4184279074,
+        "candidate_planned": 39752852,
+        "current_allowance": 67108864,
+        "current_bridge": 20480,
+        "current_owned": 81272916,
+        "fits_aggregate": true,
+        "fits_individual": true,
+        "json": 131328,
+        "learned": 4077396878,
+        "loaded_limit": 512,
+        "model": 1,
+        "model_table": 71680,
+        "positional": 0,
+        "replay": 0,
+        "reserves": 486711552,
+        "session": 2,
+        "shared": 4077468558,
+        "text": 67108864,
+        "transition_budget": 5905580032
+      },
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "51CDF3DA-46D3-4B75-A14B-4CFC4B143EAA",
+        "capacity": 256,
+        "chunk": 16,
+        "model": 1,
+        "session": 3,
+        "whole_budget": 5368709120
+      },
+      "draft": "Keep this Mistral unsent draft.",
+      "event": "restored",
+      "file_sha256": "f6d48c798270b7cdbc154cf8d083c4995609fe43cd867454db6a6e123320c900",
+      "generated": 0,
+      "headroom": {
+        "available": 2261496328,
+        "fits": true,
+        "instrument": "Configured Mac process allowance min(RAM/2,6GiB) minus TASK_VM_INFO footprint; not free system RAM",
+        "required": 123790740
+      },
+      "history": 0,
+      "load_policy": "mistral_audited_v1",
+      "loaded_limit": 512,
+      "manifest": "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26",
+      "messages": 0,
+      "model": 1,
+      "other_record_hashes": [
+        "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+        "cc40d1e3d04af4713fc634e2f6c24fcbbd810323899469bf0ed1a7c63b83907a",
+        "b0707473304e915e8b3effb189b4820268b207845e0f7c43f32bc3c86c2b5fd3"
+      ],
+      "pending": 0,
+      "preference_writes": 0,
+      "record": {
+        "capacity": 256,
+        "chunk": 16,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "mistral_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26",
+          "planning": "native_mlx_planning_v1",
+          "text": "mistral-instruct-v1",
+          "version": 1
+        },
+        "reply": 64,
+        "schema": 1,
+        "whole_budget": 5368709120
+      },
+      "record_sha256": "18239be5d71fa9ca94c7db56523bba16d1760d16e231a4a14c61229623f3f2de",
+      "reply": 64,
+      "source_ranges": 745,
+      "source_reads": 745,
+      "text_policy": "mistral-instruct-v1",
+      "transition": {
+        "committed": true,
+        "message": "",
+        "outcome": "committed",
+        "status": 0
+      },
+      "transition_request": {
+        "application_reserve": 285212672,
+        "capacity": 256,
+        "chunk": 16,
+        "coexistence_budget": 5905580032,
+        "id": "51CDF3DA-46D3-4B75-A14B-4CFC4B143EAA",
+        "model": 1,
+        "old_session": 2,
+        "replay_reserve": 0,
+        "selection": "D1738DFF-6B27-4108-A36D-0B6664CF7F89",
+        "text_reserve": 67108864,
+        "whole_budget": 5368709120
+      },
+      "workspace_sha256": "6e2ba1c7dff29d55fdd7c3c28e424814acb26988a1fbe20bf0d79a1189efd330"
+    },
+    {
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "51CDF3DA-46D3-4B75-A14B-4CFC4B143EAA",
+        "capacity": 256,
+        "chunk": 16,
+        "model": 1,
+        "session": 3,
+        "whole_budget": 5368709120
+      },
+      "draft": "Keep this Mistral unsent draft.",
+      "event": "reply-saved",
+      "file_sha256": "b5ff9f9d865ccf97094faddbab0e3917b88085a803a36ff3d06072e96648fef5",
+      "generated": 0,
+      "history": 0,
+      "load_policy": "mistral_audited_v1",
+      "loaded_limit": 512,
+      "manifest": "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26",
+      "messages": 0,
+      "model": 1,
+      "other_record_hashes": [
+        "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+        "cc40d1e3d04af4713fc634e2f6c24fcbbd810323899469bf0ed1a7c63b83907a",
+        "b0707473304e915e8b3effb189b4820268b207845e0f7c43f32bc3c86c2b5fd3"
+      ],
+      "pending": 0,
+      "preference_writes": 1,
+      "record": {
+        "capacity": 256,
+        "chunk": 16,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "mistral_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26",
+          "planning": "native_mlx_planning_v1",
+          "text": "mistral-instruct-v1",
+          "version": 1
+        },
+        "reply": 32,
+        "schema": 1,
+        "whole_budget": 5368709120
+      },
+      "record_sha256": "d7220c82f56f7927194f365cf794d48b2bc11c08f98f45a0bc13e4bdc9b72c6e",
+      "reply": 32,
+      "source_ranges": 745,
+      "source_reads": 745,
+      "text_policy": "mistral-instruct-v1",
+      "workspace_sha256": "9a8a8fc1404e0c61cc4ab923a6a44fd01b2fa20dda7c0f537e99ace496807a3d"
+    },
+    {
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "51CDF3DA-46D3-4B75-A14B-4CFC4B143EAA",
+        "capacity": 256,
+        "chunk": 16,
+        "model": 1,
+        "session": 3,
+        "whole_budget": 5368709120
+      },
+      "draft": "Keep this Mistral unsent draft.",
+      "effective_upper": 128,
+      "estimator": "sourceProfile",
+      "event": "preview",
+      "file_sha256": "b5ff9f9d865ccf97094faddbab0e3917b88085a803a36ff3d06072e96648fef5",
+      "generated": 0,
+      "history": 0,
+      "load_policy": "mistral_audited_v1",
+      "loaded_limit": 512,
+      "manifest": "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26",
+      "messages": 0,
+      "model": 1,
+      "other_record_hashes": [
+        "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+        "cc40d1e3d04af4713fc634e2f6c24fcbbd810323899469bf0ed1a7c63b83907a",
+        "b0707473304e915e8b3effb189b4820268b207845e0f7c43f32bc3c86c2b5fd3"
+      ],
+      "pending": 0,
+      "preference_writes": 1,
+      "preview_allocated": false,
+      "preview_attention": "Reference",
+      "preview_identity_authority": false,
+      "profile": "ordinary",
+      "record": {
+        "capacity": 256,
+        "chunk": 16,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "mistral_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26",
+          "planning": "native_mlx_planning_v1",
+          "text": "mistral-instruct-v1",
+          "version": 1
+        },
+        "reply": 32,
+        "schema": 1,
+        "whole_budget": 5368709120
+      },
+      "record_sha256": "d7220c82f56f7927194f365cf794d48b2bc11c08f98f45a0bc13e4bdc9b72c6e",
+      "reply": 32,
+      "requested_upper": 128,
+      "selected": 128,
+      "source_ranges": 745,
+      "source_reads": 745,
+      "text_policy": "mistral-instruct-v1",
+      "workspace_sha256": "9a8a8fc1404e0c61cc4ab923a6a44fd01b2fa20dda7c0f537e99ace496807a3d"
+    },
+    {
+      "actual_candidate": {
+        "capacity": 128,
+        "loaded_limit": 512,
+        "model": 1,
+        "offset": 0,
+        "session": 4
+      },
+      "actual_candidate_admission": 4164305474,
+      "actual_plan": {
+        "aggregate": 4623712214,
+        "application": 285212672,
+        "attention": "Reference",
+        "candidate_allocated_in_plan": false,
+        "candidate_allowance": 67108864,
+        "candidate_bridge": 20480,
+        "candidate_budget": 5368709120,
+        "candidate_constructor": 4164305474,
+        "candidate_planned": 19779252,
+        "current_allowance": 67108864,
+        "current_bridge": 20480,
+        "current_owned": 39752852,
+        "fits_aggregate": true,
+        "fits_individual": true,
+        "json": 131328,
+        "learned": 4077396878,
+        "loaded_limit": 512,
+        "model": 1,
+        "model_table": 71680,
+        "positional": 0,
+        "replay": 0,
+        "reserves": 486711552,
+        "session": 3,
+        "shared": 4077468558,
+        "text": 67108864,
+        "transition_budget": 5905580032
+      },
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "5DBFF979-C8C8-4489-8190-9C101779BD28",
+        "capacity": 128,
+        "chunk": 8,
+        "model": 1,
+        "session": 4,
+        "whole_budget": 5368709120
+      },
+      "draft": "Keep this Mistral unsent draft.",
+      "effective_upper": 128,
+      "estimator": "sourceProfile",
+      "event": "apply-accepted-before-reconcile",
+      "file_sha256": "b5ff9f9d865ccf97094faddbab0e3917b88085a803a36ff3d06072e96648fef5",
+      "generated": 0,
+      "headroom": {
+        "available": 2301686280,
+        "fits": true,
+        "instrument": "Configured Mac process allowance min(RAM/2,6GiB) minus TASK_VM_INFO footprint; not free system RAM",
+        "required": 103817140
+      },
+      "history": 0,
+      "load_policy": "mistral_audited_v1",
+      "loaded_limit": 512,
+      "manifest": "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26",
+      "messages": 0,
+      "model": 1,
+      "other_record_hashes": [
+        "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+        "cc40d1e3d04af4713fc634e2f6c24fcbbd810323899469bf0ed1a7c63b83907a",
+        "b0707473304e915e8b3effb189b4820268b207845e0f7c43f32bc3c86c2b5fd3"
+      ],
+      "pending": 0,
+      "preference_writes": 1,
+      "preview_allocated": false,
+      "preview_attention": "Reference",
+      "preview_identity_authority": false,
+      "profile": "ordinary",
+      "record": {
+        "capacity": 256,
+        "chunk": 16,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "mistral_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26",
+          "planning": "native_mlx_planning_v1",
+          "text": "mistral-instruct-v1",
+          "version": 1
+        },
+        "reply": 32,
+        "schema": 1,
+        "whole_budget": 5368709120
+      },
+      "record_sha256": "d7220c82f56f7927194f365cf794d48b2bc11c08f98f45a0bc13e4bdc9b72c6e",
+      "reply": 32,
+      "requested_upper": 128,
+      "selected": 128,
+      "source_ranges": 745,
+      "source_reads": 745,
+      "submitted_request": {
+        "application_reserve": 285212672,
+        "capacity": 128,
+        "chunk": 8,
+        "coexistence_budget": 5905580032,
+        "id": "5DBFF979-C8C8-4489-8190-9C101779BD28",
+        "model": 1,
+        "old_session": 3,
+        "replay_reserve": 0,
+        "selection": "3FAC6AF6-70A7-4010-822C-F6333AEB9DC6",
+        "text_reserve": 67108864,
+        "whole_budget": 5368709120
+      },
+      "text_policy": "mistral-instruct-v1",
+      "transition": {
+        "committed": true,
+        "message": "",
+        "outcome": "committed",
+        "status": 0
+      },
+      "transition_request": {
+        "application_reserve": 285212672,
+        "capacity": 128,
+        "chunk": 8,
+        "coexistence_budget": 5905580032,
+        "id": "5DBFF979-C8C8-4489-8190-9C101779BD28",
+        "model": 1,
+        "old_session": 3,
+        "replay_reserve": 0,
+        "selection": "3FAC6AF6-70A7-4010-822C-F6333AEB9DC6",
+        "text_reserve": 67108864,
+        "whole_budget": 5368709120
+      },
+      "workspace_sha256": "9a8a8fc1404e0c61cc4ab923a6a44fd01b2fa20dda7c0f537e99ace496807a3d"
+    },
+    {
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "5DBFF979-C8C8-4489-8190-9C101779BD28",
+        "capacity": 128,
+        "chunk": 8,
+        "model": 1,
+        "session": 4,
+        "whole_budget": 5368709120
+      },
+      "draft": "Keep this Mistral unsent draft.",
+      "effective_upper": 128,
+      "estimator": "sourceProfile",
+      "event": "applied",
+      "file_sha256": "b5ff9f9d865ccf97094faddbab0e3917b88085a803a36ff3d06072e96648fef5",
+      "generated": 0,
+      "history": 0,
+      "load_policy": "mistral_audited_v1",
+      "loaded_limit": 512,
+      "manifest": "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26",
+      "messages": 0,
+      "model": 1,
+      "other_record_hashes": [
+        "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+        "cc40d1e3d04af4713fc634e2f6c24fcbbd810323899469bf0ed1a7c63b83907a",
+        "b0707473304e915e8b3effb189b4820268b207845e0f7c43f32bc3c86c2b5fd3"
+      ],
+      "pending": 0,
+      "preference_writes": 2,
+      "preview_allocated": false,
+      "preview_attention": "Reference",
+      "preview_identity_authority": false,
+      "profile": "ordinary",
+      "record": {
+        "capacity": 128,
+        "chunk": 8,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "mistral_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26",
+          "planning": "native_mlx_planning_v1",
+          "text": "mistral-instruct-v1",
+          "version": 1
+        },
+        "reply": 32,
+        "schema": 1,
+        "whole_budget": 5368709120
+      },
+      "record_sha256": "fc60346c3bfe04b2638659ab2b4ada5324b183bdd46c501c9f00694bb5e096bf",
+      "reply": 32,
+      "requested_upper": 128,
+      "selected": 128,
+      "source_ranges": 745,
+      "source_reads": 745,
+      "submitted_request": {
+        "application_reserve": 285212672,
+        "capacity": 128,
+        "chunk": 8,
+        "coexistence_budget": 5905580032,
+        "id": "5DBFF979-C8C8-4489-8190-9C101779BD28",
+        "model": 1,
+        "old_session": 3,
+        "replay_reserve": 0,
+        "selection": "3FAC6AF6-70A7-4010-822C-F6333AEB9DC6",
+        "text_reserve": 67108864,
+        "whole_budget": 5368709120
+      },
+      "text_policy": "mistral-instruct-v1",
+      "workspace_sha256": "9a8a8fc1404e0c61cc4ab923a6a44fd01b2fa20dda7c0f537e99ace496807a3d"
+    },
+    {
+      "committed": 0,
+      "draft": "Keep this Mistral unsent draft.",
+      "event": "closed",
+      "file_sha256": "b5ff9f9d865ccf97094faddbab0e3917b88085a803a36ff3d06072e96648fef5",
+      "generated": 0,
+      "history": 0,
+      "messages": 0,
+      "other_record_hashes": [
+        "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+        "cc40d1e3d04af4713fc634e2f6c24fcbbd810323899469bf0ed1a7c63b83907a",
+        "b0707473304e915e8b3effb189b4820268b207845e0f7c43f32bc3c86c2b5fd3"
+      ],
+      "pending": 0,
+      "preference_writes": 2,
+      "record": {
+        "capacity": 128,
+        "chunk": 8,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "mistral_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26",
+          "planning": "native_mlx_planning_v1",
+          "text": "mistral-instruct-v1",
+          "version": 1
+        },
+        "reply": 32,
+        "schema": 1,
+        "whole_budget": 5368709120
+      },
+      "record_sha256": "fc60346c3bfe04b2638659ab2b4ada5324b183bdd46c501c9f00694bb5e096bf",
+      "reply": 32,
+      "workspace_sha256": "9a8a8fc1404e0c61cc4ab923a6a44fd01b2fa20dda7c0f537e99ace496807a3d"
+    }
+  ],
+  "loaded_summary": {
+    "accepted_replacements": 2,
+    "closed": true,
+    "model_loads": 1,
+    "other_records_unchanged": true,
+    "passed": true,
+    "phone_checked": false,
+    "preference_writes": 2,
+    "prepared_candidates": 2,
+    "previews": 1,
+    "real_generation_tokens": 0,
+    "rendered_ui_checked": false
+  },
+  "passed": true,
+  "source_files": {
+    "apple/Harness/FriendlyChatStore.swift": {
+      "bytes": 39051,
+      "sha256": "442a082d389222a40c7dbf29fc55f6765605c8929f208ed16b4de124a061f363"
+    },
+    "apple/Harness/NativeAcceptedIdentity.swift": {
+      "bytes": 12467,
+      "sha256": "f88d93eb295c85ffe88614d32807a552b0d6b21453a1a76c15a54e9563de0b27"
+    },
+    "apple/Harness/NativeWorker.swift": {
+      "bytes": 64111,
+      "sha256": "e6bb69cfc8cf5040b35314eb29a067c6d874d5c583b9094e3c88be9ea01ec142"
+    },
+    "apple/tests/swift/AcceptedIdentityMain.swift": {
+      "bytes": 18906,
+      "sha256": "b16ea7c667ea52af136f24282029c8baecdaf0de79b6371e522747b550f7edce"
+    },
+    "apple/tests/swift/FriendlyIdentityMain.swift": {
+      "bytes": 12277,
+      "sha256": "6078b25711f64610538936612932d5c377456f8e11f03a28901bec638ec2f84c"
+    },
+    "apple/tests/swift/FriendlyMistralPreferenceLoadedMain.swift": {
+      "bytes": 19899,
+      "sha256": "bbe15be12a5982fff98eeca5453450ba27a23e1d60576dfca0a12e9a4b6f6ed4"
+    },
+    "apple/tests/swift/FriendlyPreferenceMain.swift": {
+      "bytes": 17953,
+      "sha256": "3ba8f35255397b29c5397055e89ade69137db53c01dca19435f38094190fff3b"
+    }
+  },
+  "verification_phase_scope": {
+    "cold_model_expectations_bound": true,
+    "cold_real_model_bytes_used_or_bound": false,
+    "freeze_full_model_inventory_files": 8,
+    "hardware_full_pre_post_job_guards": true,
+    "hardware_requires_all_model_bindings": true,
+    "partial_binding_sets_rejected": true,
+    "v1_preserved_uninvoked": true
+  }
+}

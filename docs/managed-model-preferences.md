@@ -1,7 +1,7 @@
 # Managed model settings
 
 Friendly Chat can save context capacity, prefill chunk size, whole-session
-budget and reply limit for authenticated managed Qwen2.5, Qwen3 and Smol profiles. Choose the
+budget and reply limit for authenticated managed Qwen2.5, Qwen3, Smol and Mistral profiles. Choose the
 model through Models → Use; after the audited model and tokenizer open, Toklet
 checks saved settings against the current loaded limit and fresh memory facts.
 Startup restores conversation history without automatically loading a model.
@@ -9,7 +9,9 @@ The [shared Smol integration](smol-managed-preferences.md) has separate evidence
 the later [bound advisory preview](smol-advisory-preview.md) enables its Friendly
 window estimates and Apply with actual native admission. The
 [shared Qwen2.5 integration](qwen2-managed-preferences.md) adds its own namespace,
-Online attention and actual restore/reply/Apply evidence. Other managed
+Online attention and actual restore/reply/Apply evidence. The
+[shared Mistral integration](mistral-managed-preferences.md) adds Reference-policy
+restoration/Apply with its existing budgets. Other managed
 profiles, external folders and Expert remain separate persistence
 work; this change does not grant arbitrary Hugging Face model support.
 

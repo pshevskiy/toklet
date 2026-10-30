@@ -45,3 +45,7 @@ application envelope. That policy, separate from source-only6GiB, proves neither
 whole-device fit nor peak memory. The probe creates no session or generated text.
 Final publication review precedes commit; coherent package38 and shared Swift
 app/preferences integration remain next.
+
+The later [shared app integration](mistral-managed-preferences.md) records
+coherent package38, strict Swift routing/preferences and actual Mac settings
+restoration/Apply, separately from this no-session pairing probe.

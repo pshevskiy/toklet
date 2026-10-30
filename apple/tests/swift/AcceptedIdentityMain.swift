@@ -170,7 +170,46 @@ struct AcceptedIdentityMain {
         var swapped = qwen2; swapped["assets"] = assets; try rejected { _ = try decode(swapped) }
         var unread = qwen2; unread["source_container_verified_reads"] = 629; try rejected { _ = try decode(unread) }
         try rejected { _ = try NativeAcceptedIdentity.decode(data(qwen2),context:context(model:9)) }
-        guard checks == 81 else { throw NativeContextFailure("Control inventory changed") }
+        // Mistral has delivered/assembled container evidence, not Smol's witness anchor.
+        let mistralAssets: [[String:Any]] = [
+            ["name":"config.json","bytes":721,"sha256":"efc145d2f53d6d6ef2639be0556b4ecf6faac6cf8a7199ad2b7bb5ebcf443bdd","roles":["source_metadata_consumed","codec_config_verified"]],
+            ["name":"model.safetensors","bytes":4077480215,"sha256":"d7182d886f93a9efa73d6d556ee33ffe839a4e09e15965eeef46f295ab5b503d","roles":["source_bytes_delivered_to_assembled_model"]],
+            ["name":"model.safetensors.index.json","bytes":52381,"sha256":"525940738b16d210fdfd692a24752d050c15a50cbe208dd82b06204d640d687b","roles":["source_metadata_consumed"]],
+            ["name":"tokenizer.json","bytes":1961548,"sha256":"e553af6fff7d7ad76e830608b218c5c0b0822998d5a1a96099a74cd3c1cb1a49","roles":["tokenizer_parser_consumed"]],
+            ["name":"tokenizer_config.json","bytes":138039,"sha256":"e8fbcfef34d855dba2c7f1d91a2c5470cf493d00ecfd06488ce21e45325bc8ae","roles":["fixed_text_policy_verified"]],
+            ["name":"special_tokens_map.json","bytes":414,"sha256":"6fa06efa2785e450051989a6f8fb4416b10149ded485ddd3f127a40734f5cfd0","roles":["ancillary_verified"]]
+        ]
+        var mistral = wire, mistralNamespace = namespace
+        mistral["repository"] = "mlx-community/Mistral-7B-Instruct-v0.3-4bit"
+        mistral["revision"] = "a4b8f870474b0eb527f466a03fbc187830d271f5"
+        mistralNamespace["manifest_sha256"] = "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26"
+        mistralNamespace["load"] = "mistral_audited_v1"; mistralNamespace["text"] = "mistral-instruct-v1"
+        mistral["preference_namespace"] = mistralNamespace; mistral["assets"] = mistralAssets
+        mistral["source_container_physical_ranges"] = 745; mistral["source_container_verified_reads"] = 745
+        let completeMistral = try decode(mistral)
+        try require(completeMistral.profile == .mistral && NativeLoadIdentity.managedMistral.identityProfile == .mistral,"Mistral descriptor route differs")
+        var reverseMistral = mistral; reverseMistral["assets"] = Array(mistralAssets.reversed())
+        try require(try decode(reverseMistral) == completeMistral,"Mistral canonical asset order differs")
+        for bound in [UInt64(513),32768] {
+            var larger = mistral; larger["loaded_position_limit"] = bound
+            try rejected { _ = try NativeAcceptedIdentity.decode(data(larger),context:context(loaded:bound)) }
+        }
+        for key in ["manifest_sha256","load","text"] {
+            for other in [namespace,smolNamespace,qwen2Namespace] {
+                var wrong = mistral, mixed = mistralNamespace; mixed[key] = other[key]; wrong["preference_namespace"] = mixed
+                try rejected { _ = try decode(wrong) }
+            }
+        }
+        var mistralAnchor = mistral, anchorRows = mistralAssets
+        anchorRows[1]["roles"] = ["source_bytes_delivered_to_assembled_model","reference_container_digest_anchor"]
+        mistralAnchor["assets"] = anchorRows; try rejected { _ = try decode(mistralAnchor) }
+        for otherAssets in [assets,smolAssets,qwen2Assets] {
+            var wrong = mistral; wrong["assets"] = otherAssets; try rejected { _ = try decode(wrong) }
+        }
+        var unreadMistral = mistral; unreadMistral["source_container_verified_reads"] = 744
+        try rejected { _ = try decode(unreadMistral) }
+        try rejected { _ = try NativeAcceptedIdentity.decode(data(mistral),context:context(model:9)) }
+        guard checks == 100 else { throw NativeContextFailure("Control inventory changed") }
         FileHandle.standardOutput.write(try JSONSerialization.data(withJSONObject:["checks":checks,"passed":true,"actual_model_getter":false],options:[.sortedKeys]) + Data([10]))
     }
 }

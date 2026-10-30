@@ -23,12 +23,13 @@ struct FriendlyLoadRequest: Equatable, Sendable {
         case .qwen: return .managedQwen2
         case .qwen3: return .managedQwen3
         case .smol: return .managedSmol
+        case .mistral: return .managedMistral
         default: return .ordinary
         }
     }
     static func matches(_ mode: NativeLoadIdentity, profile: HubProfile) -> Bool {
         guard let expected = mode.identityProfile else { return true }
-        return (expected == .qwen2 && profile == .qwen) || (expected == .qwen3 && profile == .qwen3) || (expected == .smol && profile == .smol)
+        return (expected == .qwen2 && profile == .qwen) || (expected == .qwen3 && profile == .qwen3) || (expected == .smol && profile == .smol) || (expected == .mistral && profile == .mistral)
     }
 }
 

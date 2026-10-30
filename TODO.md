@@ -1,14 +1,15 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5d5c6c — shared Mistral app routing/preferences and coherent38 package**.
+**Paused after completing C6c, at the user’s request.**
+Next task when resumed: **B5e1 — separate admitted model upper from initial KV capacity**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
 trajectory diagnostics have 3/8 failing coordinates. The original quality,
 ordinary app integration, full declared window, phone and performance scopes
 remain open. See [the bounded report](docs/lfm2-real-native.md).
-Independent implementation can continue. The rendered Mac Settings check awaits
+Implementation is paused after the current task. The rendered Mac Settings check awaits
 an unlocked Mac; no app was launched during the locked-screen attempt.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -421,7 +422,10 @@ separate requirements below. Further model admissions require their own scope.
             passes12coldjobs,537default/645Metal,38exports and one cached
             seven-frame ownership probe with Astra saved audit. No session/
             generation; selected37 and Swift integration remain separate.
-          - [ ] C6c: coherent native package and shared Swift app/preferences.
+          - [x] C6c: [coherent38 and shared Mistral app/preferences](docs/mistral-managed-preferences.md)
+            passes25native/28Swift/2Mac jobs with Astra saved audit. Restore256
+            writes0; reply32 andApply128 save once each; other3records intact.
+            Package38selected,37retained. No real generation/UI/phone claim.
 
 New exact-history migration remains a separate Expert mode; first Friendly Apply
 uses the existing full saved-conversation reset+prompt path on Send.
@@ -429,6 +433,12 @@ uses the existing full saved-conversation reset+prompt path on Send.
   passes all30 build/link jobs and independent Astra audit for Mac/iOS/simulator.
   Current app sources compile; the new candidate is selected with the old C3
   bundle preserved. No app launch, model execution or new Swift consumer yet.
+- [ ] B5e1: separate explicit Qwen2 next-load upper512/1024 from initialKV512;
+  validate before unload, reuse model/session planners and D1/headroom/D2, test
+  stable-model growth and beyond-upper rejection. Current text caps stay separate.
+- [ ] B5e2: reconcile Rust/native/Swift prompt512 limits, actual rendered
+  prompt+reply admission and resized successful generation before longer Chat
+  claims; output256 and byte/event limits remain until deliberately qualified.
 - [ ] Report declared context, implemented backend range, budget/device fit,
   validation scope and app/text limits separately for each model.
 - [ ] Include actual weights, KV owners, scratch, loading peaks and application
@@ -834,3 +844,9 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | C6b shared pairing source applied | Astra approves16sourcepaths and12cold checks together. Guarded source application/whitespace pass: neutral dense model/codec slots, preserved Qwen aliases/const filters, actual Mistral Reference/512 and codec bounds, one additive38th export. | Required Rust/native/C ABI/product checks start; actual one-model ownership probe waits retained-product review. No session, generation, Swift or package change. |
 | 2026-10-30 | C6b cold/native checks pass | All12jobs pass:537default/645Metal, seven new+eight moved codec controls both suites,38exports/C ABI and release products. Three actual products retained/six cached assets verified; all groups close/no endpoints. | Astra retained-product approval before single Mistral ownership probe. No sessions, generation, Swift activation or package update. |
 | 2026-10-30 | C6b ownership/audit pass | Single audited Mistral model/complete-codec/getter passes7frames: model1/loaded512/745reads, all6roles, failureRc1/successRc2, final owner exhaustion and snapshot survival. Astra audits current source/products/logs and13closedgroups; policy and sparse observations remain separate. | [Report](docs/mistral-audited-pairing.md); final exact publication review/commit, then native38/sharedSwift. No session, generation, broader window/app/device/performance claim. |
+| 2026-10-30 | C6b committed / C6c source applied | Mistral pairing committed as `66aca8c` after exact20file Astra final review and12+1checks. Astra approves7Swiftpaths/native38builder together; complete guarded application/whitespace pass. | Reviewed compiler-only cleanup must restore8GiB reserve before25nativejobs; selected37 preserved. App controls100wire/116routes/90preferences and loaded controller remain prospective. |
+| 2026-10-30 | C6c reserve restored/native38 starts | Reviewed cleanup under both Cargo locks/compiler exclusion removes18677unbound rustc objects and incremental cache;91protectedoutputs exact, free9,494,249,472meets8GiB. Combined-reviewed25native38/default build/link jobs now run,37selected stays protected. | Actual native products will gate Swift/CPU/3app checks and one Mistral settings controller. No native tests/model loads repeated. |
+| 2026-10-30 | C6c native38 build/link pass | All25serial native/default jobs pass, threeMetal38slices/default38/header/C ABI and all groups closed/no endpoints. Current shared bare archive is nowdefault38 through exact planned supersession; retainedMetal38 and selected37 preserved. | Astra component audit then actual-product-bound28Swift/CPU/app checks. No native suites, model loads or app launches repeated. |
+| 2026-10-30 | C6c app checks start with scoped model guards | Astra approves immutable ownerV2 before execution:28cold jobs bind true compile/CPU inputs and model expectations; unused4GBcached bytes move to freeze, with complete6+2 inventory and unchanged full hardware guards/partial-set rejection. Native38saved audit passes25closedgroups. |28Swift/CPU/3app checks now run; no test/source/product/fixture gate removed. Actual model controller remains separately gated. |
+| 2026-10-30 | C6c cold checks pass / finish-current then pause | All28jobs pass:100wire/116routing with12stale actions/90preferences/33advisory, existing controls and3apps. Freeze authenticates complete6+2cached model inventory and13retainedproducts; all groups close/no endpoints. User requests finish only this current task, then pause. | Astra actual-package approval,2Macjobs, saved/adoption/finalreview and commit only. B5e1 private draft/research stopped; no next task will start. |
+| 2026-10-30 | C6c saved audit and38adoption pass / pause next | Astra verifies30current closures, exact products and raw Reference restore/Apply ledger/headroom/save/preservation. Full prechecks and ten candidate hashes before/after pass; atomic38selection preserves37. | [Report](docs/mistral-managed-preferences.md); final publication review/commit only, then pause. B5e1/B5e2 adviser recommendation recorded as pending, with private draft stopped and no future task resumed. |

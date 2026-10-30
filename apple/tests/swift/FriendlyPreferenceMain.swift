@@ -52,6 +52,20 @@ struct FriendlyPreferenceMain {
         try rejects("qwen3-record-cannot-restore-as-qwen2") { _ = try FriendlyModelPreference.decode(bytes,namespace:qwen2Namespace) }
         try rejects("smol-record-cannot-restore-as-qwen2") { _ = try FriendlyModelPreference.decode(smolBytes,namespace:qwen2Namespace) }
 
+        let mistralNamespace = NativeAcceptedIdentity.Profile.mistral.namespace
+        let mistralValue = FriendlyModelPreference(namespace:mistralNamespace,capacity:256,chunk:16,reply:64,wholeBudget:5*1024*1024*1024)
+        let mistralBytes = try mistralValue.encoded()
+        try check("mistral-record-roundtrip",try FriendlyModelPreference.decode(mistralBytes,namespace:mistralNamespace) == mistralValue)
+        let fourKeys = try [n,smolNamespace,qwen2Namespace,mistralNamespace].map { try FriendlyModelPreference.filename($0) }
+        try check("four-profiles-distinct-keys",Set(fourKeys).count == 4)
+        for (label,other,otherBytes) in [("qwen3",n,bytes),("smol",smolNamespace,smolBytes),("qwen2",qwen2Namespace,qwen2Bytes)] {
+            try rejects("mistral-record-cannot-restore-as-\(label)") { _ = try FriendlyModelPreference.decode(mistralBytes,namespace:other) }
+            try rejects("\(label)-record-cannot-restore-as-mistral") { _ = try FriendlyModelPreference.decode(otherBytes,namespace:mistralNamespace) }
+        }
+        let mixedMistral = NativeAcceptedIdentity.Namespace(version:1,manifestAlgorithm:mistralNamespace.manifestAlgorithm,
+            manifestSHA256:mistralNamespace.manifestSHA256,backend:mistralNamespace.backend,load:qwen2Namespace.load,
+            text:mistralNamespace.text,planning:mistralNamespace.planning)
+        try rejects("mistral-mixed-policy-key") { _ = try FriendlyModelPreference.filename(mixedMistral) }
         try check("smol-record-roundtrip",try FriendlyModelPreference.decode(smolBytes,namespace:smolNamespace) == smolValue)
         try check("profiles-have-distinct-keys",try FriendlyModelPreference.filename(smolNamespace) != FriendlyModelPreference.filename(n))
         try rejects("qwen-record-cannot-restore-as-smol") { _ = try FriendlyModelPreference.decode(bytes,namespace:smolNamespace) }
@@ -99,6 +113,12 @@ struct FriendlyPreferenceMain {
         try check("shared-store-loads-qwen2",try reopened.load(qwen2Namespace) == qwen2Value)
         try check("qwen2-save-keeps-qwen3",try Data(contentsOf:path) == original)
         try check("qwen2-save-keeps-smol",try Data(contentsOf:reopened.url(smolNamespace)) == preservedSmol)
+        let preservedQwen2 = try Data(contentsOf:reopened.url(qwen2Namespace))
+        try reopened.save(mistralValue)
+        try check("shared-store-loads-mistral",try reopened.load(mistralNamespace) == mistralValue)
+        try check("mistral-save-keeps-qwen3",try Data(contentsOf:path) == original)
+        try check("mistral-save-keeps-smol",try Data(contentsOf:reopened.url(smolNamespace)) == preservedSmol)
+        try check("mistral-save-keeps-qwen2",try Data(contentsOf:reopened.url(qwen2Namespace)) == preservedQwen2)
 
         let failure = FriendlyPreferenceStore(directory:directory,persist:{ _,_ in throw NativeContextFailure("Injected atomic write failure") })
         let other = FriendlyModelPreference(namespace:n,capacity:256,chunk:8,reply:64,wholeBudget:budget)
@@ -171,7 +191,7 @@ struct FriendlyPreferenceMain {
         try check("ordinary-no-identity-no-record-save",chat.workspace.outputLimit == 64 && chat.acceptedIdentity == nil && writes == 1 && (try Data(contentsOf:path)) == original)
         chat.setReplyLimit(31)
         try check("rejected-reply-keeps-workspace-record",chat.workspace.outputLimit == 64 && (try Data(contentsOf:workspaceFile)) == workspaceBytes && writes == 1 && (try Data(contentsOf:path)) == original)
-        guard names.count == 77 else { throw NativeContextFailure("Preference control inventory changed") }
+        guard names.count == 90 else { throw NativeContextFailure("Preference control inventory changed") }
         FileHandle.standardOutput.write(try JSONSerialization.data(withJSONObject:["passed":true,"controls":names,
             "count":names.count,"model_loaded":false,"rendered_admission_tested":false],options:[.sortedKeys]) + Data([10]))
     }

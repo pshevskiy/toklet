@@ -29,9 +29,10 @@ struct FriendlyIdentityMain {
         try require(NativeSettings(directory:folder.path).loadIdentity == .ordinary,"Path recognition selected audited routing")
         try require(try FriendlyLoadRequest.managedMode(.qwen3) == .managedQwen3,"Explicit managed Qwen routing missing")
         try require(try FriendlyLoadRequest.managedMode(.smol) == .managedSmol,"Explicit managed Smol routing missing")
-        for profile in [HubProfile.mistral] {
-            try require(try FriendlyLoadRequest.managedMode(profile) == .ordinary,"Other profile admission changed")
-        }
+        let unknown = HubProfile(repository:"unsupported/model",revision:String(repeating:"a",count:40),files:[])
+        var unknownRejected = false
+        do { _ = try FriendlyLoadRequest.managedMode(unknown) } catch { unknownRejected = true }
+        try require(unknownRejected,"Unknown managed profile was promoted")
         let modified = HubProfile(repository:HubProfile.qwen3.repository,revision:HubProfile.qwen3.revision,files:[])
         var rejected = false
         do { _ = try FriendlyLoadRequest.managedMode(modified) } catch { rejected = true }
@@ -88,11 +89,27 @@ struct FriendlyIdentityMain {
         qwen2Load.complete(worker:ObjectIdentifier(first),instance:7,chatEnabled:true)
         try require(qwen2Load.target(worker:ObjectIdentifier(first),instance:7,conversation:request.conversation,
             loadedKey:"same",selectedKey:"same")?.profile == .ordinary,"Qwen2 ordinary numerical estimator route changed")
+        try require(try FriendlyLoadRequest.managedMode(.mistral) == .managedMistral,"Explicit managed Mistral routing missing")
+        try require(FriendlyLoadRequest.matches(.managedMistral,profile:.mistral),"Exact Mistral route rejected")
+        for mode in [NativeLoadIdentity.managedQwen2,.managedQwen3,.managedSmol] {
+            try require(!FriendlyLoadRequest.matches(mode,profile:.mistral),"Mistral accepted for other managed mode")
+        }
+        for other in [HubProfile.qwen,.qwen3,.smol] {
+            try require(!FriendlyLoadRequest.matches(.managedMistral,profile:other),"Other profile accepted as Mistral")
+        }
+        let fakeMistral = HubProfile(repository:HubProfile.mistral.repository,revision:HubProfile.mistral.revision,files:[])
+        try require(!FriendlyLoadRequest.matches(.managedMistral,profile:fakeMistral),"Partial Mistral catalog recognized")
+        var mistralSettings = NativeSettings(directory:folder.path); mistralSettings.loadIdentity = .managedMistral
+        var mistralLoad = FriendlyPlanningLoad(worker:ObjectIdentifier(first),settings:mistralSettings)
+        mistralLoad.complete(worker:ObjectIdentifier(first),instance:7,chatEnabled:true)
+        try require(mistralLoad.target(worker:ObjectIdentifier(first),instance:7,conversation:request.conversation,
+            loadedKey:"same",selectedKey:"same")?.profile == .ordinary,"Mistral advisory estimator route changed")
         // Existing queue hook blocks before dispatch. Each lifecycle operation
         // supersedes an audited request before any path, model or codec read.
         for (action,mode) in [(0,NativeLoadIdentity.managedQwen3),(1,.managedQwen3),(2,.managedQwen3),
                               (0,.managedSmol),(1,.managedSmol),(2,.managedSmol),
-                              (0,.managedQwen2),(1,.managedQwen2),(2,.managedQwen2)] {
+                              (0,.managedQwen2),(1,.managedQwen2),(2,.managedQwen2),
+                              (0,.managedMistral),(1,.managedMistral),(2,.managedMistral)] {
             let gate = IdentityDequeueGate()
             let worker = try NativeWorker(beforeCommandDequeue:{ gate.pause($0) })
             var settings = NativeSettings(directory:folder.path)
@@ -127,7 +144,7 @@ struct FriendlyIdentityMain {
         } catch { failure = error }
         worker.close(); try require(worker.waitUntilClosed(seconds:30),"Rejected-route worker did not close")
         if let failure { throw failure }
-        guard checks == 88 else { throw NativeContextFailure("Control inventory changed") }
-        FileHandle.standardOutput.write(try JSONSerialization.data(withJSONObject:["checks":checks,"passed":true,"model_loads":0,"stale_queue_actions":9],options:[.sortedKeys]) + Data([10]))
+        guard checks == 116 else { throw NativeContextFailure("Control inventory changed") }
+        FileHandle.standardOutput.write(try JSONSerialization.data(withJSONObject:["checks":checks,"passed":true,"model_loads":0,"stale_queue_actions":12],options:[.sortedKeys]) + Data([10]))
     }
 }

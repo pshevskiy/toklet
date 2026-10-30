@@ -28,11 +28,12 @@ Destinations must be new. The builder verifies exact archive/source/header pins,
 creates `apple/Binaries/Toklet.xcframework` and `apple/Generated/Tiny`, then builds
 release simulator and unsigned device apps. It refuses foreign or differently
 linked generated inputs. The current generated library link selects
-`artifacts/new-goal-b5d5k-native37-component-v1/run-v1/native/Toklet.xcframework`, with all 37 C
+`artifacts/new-goal-b5d5n-native38-component-v1/run-v1/native/Toklet.xcframework`, with all 38 C
 exports and complete Mac/iOS/simulator app compile/link evidence. Its native
 build receipt SHA256 is
-`0b5a3bb96da2896814d8e3c62ec5b26cc5bcda803746be9c7a688aea57cafb80`.
-The [shared Qwen2.5 integration](../docs/qwen2-managed-preferences.md) and earlier
+`2a069edf753d1eb82c1e3018a9686b41764858e54d4f973cd236b39806e2e3a2`.
+The [shared Mistral integration](../docs/mistral-managed-preferences.md),
+[Qwen2.5 integration](../docs/qwen2-managed-preferences.md) and earlier
 [Smol/Qwen3 integration](../docs/smol-managed-preferences.md) record strict decoding,
 explicit audited loading, actual Mac settings checks and guarded selection. [Managed settings](../docs/managed-model-preferences.md) save accepted
 context/chunk/budget/reply choices and restore them after fresh model and memory
@@ -40,7 +41,8 @@ admission. Smol [bound advisory preview/Apply](../docs/smol-advisory-preview.md)
 also uses actual loaded-owner admission; all existing
 [session Apply](../docs/friendly-chat-apply.md) routes retain their loaded bounds.
 Other profiles and external folders remain ephemeral for these engine settings.
-The previous36 [shared Smol package](../docs/smol-managed-preferences.md),
+The previous37 [Qwen2 package](../docs/qwen2-managed-preferences.md),
+36 [shared Smol package](../docs/smol-managed-preferences.md),
 35 [identity package](../docs/swift-accepted-identity.md),
 32 [session-transition package](../docs/apple-session-transition-package.md),
 30-export [planning package](../docs/apple-planning-package.md) and older 28 package

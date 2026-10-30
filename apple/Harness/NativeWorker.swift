@@ -1079,6 +1079,7 @@ private final class Engine {
                     requested.loadIdentity == .managedSmol ? toklet_model_load_mlx_smol_audited(path.baseAddress,path.count,&options,&model,&error)
                     : requested.loadIdentity == .managedQwen2 ? toklet_model_load_mlx_qwen2_audited(path.baseAddress,path.count,&options,&model,&error)
                     : requested.loadIdentity == .managedQwen3 ? toklet_model_load_mlx_qwen3_audited(path.baseAddress,path.count,&options,&model,&error)
+                    : requested.loadIdentity == .managedMistral ? toklet_model_load_mlx_mistral_audited(path.baseAddress,path.count,&options,&model,&error)
                     : requested.mlx ? toklet_model_load_mlx(path.baseAddress,path.count,&options,&model,&error)
                     : requested.metal ? toklet_model_load_metal(path.baseAddress,path.count,packed.baseAddress,packed.count,&options,&model,&error)
                                     : toklet_model_load(path.baseAddress,path.count,&options,&model,&error)
@@ -1090,7 +1091,7 @@ private final class Engine {
             do {
                 try createSession()
                 if requested.chat {
-                    let chatCode = requested.loadIdentity == .managedSmol || requested.loadIdentity == .managedQwen2
+                    let chatCode = requested.loadIdentity == .managedSmol || requested.loadIdentity == .managedQwen2 || requested.loadIdentity == .managedMistral
                         ? toklet_chat_create_complete_audited(model,requested.textBudget,&chat,&error)
                         : requested.loadIdentity == .managedQwen3 ? toklet_chat_create_qwen3_audited(model,requested.textBudget,&chat,&error)
                         : toklet_chat_create(model,requested.textBudget,&chat,&error)
