@@ -55,3 +55,7 @@ Next: attach source evidence after successful assembly, authenticate the actual
 codec parser buffers and bind the exact model owner. Then restore untrusted
 settings by accepted artifact/backend/load/policy/schema identity with fresh
 context and memory admission.
+
+The later [Qwen2 extension](qwen2-consumed-source.md) extracts the same concrete
+cold reader for engine-owned Qwen profiles. The existing Qwen3 accessor remains
+profile-filtered; the neutral accessor covers either admitted source.

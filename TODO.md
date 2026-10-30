@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5d5c5a — shared Qwen2.5 consumed-source verification**.
+Next implementation task: **B5d5c5b — shared Qwen2.5 model/codec identity pairing**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -398,8 +398,10 @@ separate requirements below. Further model admissions require their own scope.
         no larger-window, generation, rendered UI, phone or performance claim.
       - [ ] Reuse concrete consumed-source/codec mechanisms for Qwen2.5 and
         Mistral, checking each profile's actual layouts, bounds and text policy.
-        - [ ] C5a: shared Qwen2.5 source-only verification; preserve filtered
-          Qwen3 accessor and existing bounds, tied-head/QKV-bias semantics.
+        - [x] C5a: [shared Qwen2.5 source-only verification](docs/qwen2-consumed-source.md)
+          passes516default/624Metal tests, six new controls and one cached
+         630range stream with Astra saved audit. FilteredQwen3 accessor,
+          existing bounds and tied-head/QKV-bias semantics preserved.
         - [ ] C5b: Qwen2.5 assembled-model/complete-codec identity and getter.
         - [ ] C5c: shared Swift routing/preferences and actual controller checks.
         - [ ] C6: reuse the same mechanisms for Mistral with its explicit text
@@ -788,3 +790,8 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | C4c continuation preflight correction | Before invocation, Astra finds continuation metadata expects nil primary errors for both old Mac rows, although the preserved failed loaded row is exactly `tool exit -5`. | Immutable successor requires exact exits/errors `[0,-5]`/`[nil,tool exit -5]` plus all closure/cleanup guards. No failure outcome promoted and no target command executed. |
 | 2026-10-30 | C4c corrected loaded compile passes | Lean successor runs exactly1new compile successfully;25unaffected cold outcomes/11products and passedtiny21 are authenticated and inherited. All current8source pins match V4; no production change. | Freeze/review actual corrected loaded product before one Mac retry. Both observed failures remain failed and preserved; no other successful check is rerun. |
 | 2026-10-30 | C4c checked and audited | Corrected loaded Mac controller passes8frames plus summary: request1024/effective512, actualD1 rejects synthetic1MiB, actual256/chunk16 candidate matches220246514constructor bytes, aggregate660314446fits805306368 and freshheadroom passes; durable save occurs once. Astra authenticates inherited outcomes/products and31closed groups. | [Report](docs/smol-advisory-preview.md); exact staged review/commit next, then shared Qwen2 source-only task. Both failures remain preserved; no additional native build or broader qualification. |
+| 2026-10-30 | C4c committed / C5a begins | Bound Smol advisory preview/Apply committed as `17ae08a` after exact16file Astra publication review and all scoped checks. Only preservedDSStore remained. | Freeze shared Qwen2 source-only task on the actual commit; no native/API/Swift/package change or model assembly in this step. |
+| 2026-10-30 | C5a source applied | Astra approves exact9paths on17ae08a: shared Qwen profile orchestration, opt-in Qwen2 source and filtered Qwen3/neutral receipts; six cold controls plus one cached630range stream. All guards and whitespace pass. | Standard Rust default/Metal checks and source-only stream await reviewed owner; no assembly, codec, API, Swift or package change. |
+| 2026-10-30 | C5a checks start / rendered UI unavailable | Astra approves8serial Rust/source-only jobs with existing target/toolchain and bounded supervision; root starts them. Fresh computer-use inventory still reports lockedMac/appsnone, so no app selection/launch/input occurs. | Keep visibleMac/phone checks pending and continue independent source validation; no nativepackage rebuild or extra model load. |
+| 2026-10-30 | C5a all checks pass | All8jobs pass:516default/624Metal tests, six new controls in each, exact cached source stream628tensors/630ranges/630reads/96192audit bytes. All groups close without endpoint errors. | [Report](docs/qwen2-consumed-source.md); Astra saved audit and final publication review before commit. No assembly, codec, GPU, app or preferences claim. |
+| 2026-10-30 | C5a saved audit passes | Astra authenticates3814inputs/16logs/current9sourcepins and8absent groups, independently sums516/624passes and checks all raw source/hash/poison evidence. | Final exact publication review/commit next; private shared Qwen2 pairing draft is ready for review, not active admission. |

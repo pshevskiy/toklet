@@ -9004,3 +9004,34 @@ iPhone, quality or performance qualification is claimed. See
 [bound Smol advisory preview](smol-advisory-preview.md) and its public result.
 Next is shared Qwen2.5 consumed-source verification, then complete pairing and
 Swift/preferences; all-model persistence remains open.
+
+C4c is committed as `17ae08a` after Astra's exact sixteen-file final review;
+only the unrelated Apple DSStore remains. C5a continues the shared source-only
+Qwen2.5 reader on that actual base, with pairing/preferences kept as later gates.
+
+Astra approves C5a's exact nine-file source-only change on `17ae08a`.
+Qwen2.5 reuses concrete config/index/container orchestration; engine-owned
+profile selection and architecture checks precede loading. Existing Qwen3
+accessor remains filtered; the neutral accessor exposes either receipt.
+Catalog anchors and shared delivery bodies remain unchanged. Guarded source
+application passes; required Rust/source-only checks remain prospective.
+
+C5a's eight-job verification owner passes Astra review and root starts it
+using the existing Cargo target and toolchain. Fresh computer-use inventory
+still reports a locked Mac with no available native apps; no selection, launch
+or UI input occurs. Rendered Mac and phone qualification remain pending.
+
+All eight C5a checks pass: formatting, strict default/Metal Clippy,516default
+and624Metal-feature tests, six new controls in each, and one exact release
+cached source-only stream. The source delivers524976896payload bytes across
+628tensors,630physical ranges/verified reads and retains96192audit-owner bytes.
+Independent catalog digest and three delivered-file hashes agree; invalid
+public read poisons identity. All eight groups close without endpoint errors.
+Astra saved audit/publication review precede commit. See
+[Qwen2 consumed source](qwen2-consumed-source.md); assembly/codec/preferences,
+GPU execution, rendered UI, phone, new context and performance remain separate.
+
+C5a's independent Astra saved audit passes3814input/16log/current9source
+bindings and eight closed PID/process groups, independently summed test totals
+and all source-stream evidence. Final publication review/commit follows; C5b
+shared model/codec pairing remains a private draft with no assembly execution.

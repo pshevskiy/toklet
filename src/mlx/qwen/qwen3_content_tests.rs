@@ -53,7 +53,7 @@ fn audited_qwen_public_wrappers_poison_on_invalid_type_name_and_range() {
         let mut source = wrapper(f.source());
         source.visit_logical_float("a", |_| Ok(())).unwrap();
         source.visit_logical_float("b", |_| Ok(())).unwrap();
-        assert!(source.qwen3_content_identity().is_some());
+        assert!(source.qwen_content_identity().is_some());
         let rejected = match case {
             0 => source.visit_float("absent", |_| Ok(())).is_err(),
             1 => source.read_affine("a", &mut [], &mut [], &mut []).is_err(),
@@ -63,7 +63,7 @@ fn audited_qwen_public_wrappers_poison_on_invalid_type_name_and_range() {
                 .is_err(),
         };
         assert!(rejected);
-        assert!(source.qwen3_content_identity().is_none());
+        assert!(source.qwen_content_identity().is_none());
         assert!(source.visit_float("a", |_| Ok(())).is_err());
     }
 }

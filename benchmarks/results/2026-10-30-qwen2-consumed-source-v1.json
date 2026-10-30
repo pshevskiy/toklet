@@ -1,0 +1,119 @@
+{
+  "base_revision": "17ae08a443e6f140c2a89c1c37de22cfbe3da529",
+  "canonical_manifest_independently_reconstructed_from_catalog": "e92e6d359697d8ada4714ff4f5ff618ba8d9fc69d7abc24bfb4ec905eae6c59b",
+  "checks": {
+    "astra_saved_audit": true,
+    "closed_process_groups": 8,
+    "codec_pairing": false,
+    "commands": 8,
+    "default_ignored": 22,
+    "default_passed": 516,
+    "explicit_release_source_streams": 1,
+    "generation": false,
+    "gpu_execution": false,
+    "metal_ignored": 190,
+    "metal_passed": 624,
+    "model_assembly": false,
+    "native_package_build": false,
+    "new_ordinary_controls": 6,
+    "source_only": true
+  },
+  "date": "2026-10-30",
+  "evidence": [
+    {
+      "bytes": 10085,
+      "path": "artifacts/new-goal-b5d5i-qwen2-source-proposal-v1/manifest.json",
+      "sha256": "81ca5f5670890d3403e275ac657918de19e42ef35ab5b6df0c4f8fd121e7bb20"
+    },
+    {
+      "bytes": 11826,
+      "path": "artifacts/new-goal-b5d5i-qwen2-source-independent-review-v1/prospective-review.json",
+      "sha256": "8d8f54777b7d72f1b39451e66aad358cc9855fff8d4d527601b736e7919e5873"
+    },
+    {
+      "bytes": 1235482,
+      "path": "artifacts/new-goal-b5d5i-qwen2-source-checks-v1/manifest.json",
+      "sha256": "c574d1706d699d87156cb6c902490eb9c6a3bb5c44cd8256cdfda772a1280921"
+    },
+    {
+      "bytes": 5156,
+      "path": "artifacts/new-goal-b5d5i-qwen2-source-checks-independent-review-v1/prospective-review.json",
+      "sha256": "2a9643c4884ebae83ad7a78a8c96e0312791b1716f802ed74ebaae8a1dd8e9bf"
+    },
+    {
+      "bytes": 845139,
+      "path": "artifacts/new-goal-b5d5i-qwen2-source-checks-v1/run-v1/checks.json",
+      "sha256": "6a7e39356fec540c65d0d08fcd9c214395d169e0fb3433d9a5067c71f20a3e2d"
+    },
+    {
+      "bytes": 20277,
+      "path": "artifacts/new-goal-b5d5i-qwen2-source-checks-independent-review-v1/saved-review.json",
+      "sha256": "04a20435f17fc9e47fee6adfa88a85248d257fcb7f1e0a4c812478a74ef1e351"
+    }
+  ],
+  "format": "toklet-qwen2-consumed-source-result-v1",
+  "limitations": [
+    "Expected six-file manifest is a distribution anchor; only config/index/container consumption is proved.",
+    "No tokenizer/ancillary reads, assembled model, codec ownership, accepted-load getter, preferences, new context or generation qualification.",
+    "Existing Qwen3 specific accessor remains filtered; neutral accessor covers either admitted Qwen profile.",
+    "Selected native36 package unchanged; no app, rendered Mac UI, iPhone, numerical quality or performance qualification.",
+    "600-second/6GiB supervision samples the direct process, not whole-process-tree peak memory; disk observations are not model memory measurements."
+  ],
+  "passed": true,
+  "source_files": {
+    "src/mlx/qwen.rs": {
+      "bytes": 43583,
+      "sha256": "9fcd804d67c45a83a5fbad1bd0283a5e282fd2b109d930077ab2408d6851ae50"
+    },
+    "src/mlx/qwen/qwen2_content_tests.rs": {
+      "bytes": 5473,
+      "sha256": "6812622594d2c3a42c75778107424f40a90fc2ac74fc00137491ac6b729c08b7"
+    },
+    "src/mlx/qwen/qwen3_content_tests.rs": {
+      "bytes": 5344,
+      "sha256": "fcf21da035142b05aaa269d5dc43a98520e124381da2cf229e180939fdf57c8d"
+    },
+    "src/weights/content.rs": {
+      "bytes": 14095,
+      "sha256": "5c5bf938411fc76654edbe71db46ca61effa7bd3318e550367d5136bddb4ee5b"
+    },
+    "src/weights/content/qwen.rs": {
+      "bytes": 11740,
+      "sha256": "70490d97761839feca73ad203e97c7853cd0859cbe0a0ce9faf8b7f2eb6bcc7e"
+    },
+    "src/weights/content/qwen2.rs": {
+      "bytes": 2531,
+      "sha256": "bc25a217d82cb632a1f9d947f421a2d2c10f06c95c23558134701e4d145cf87f"
+    },
+    "src/weights/content/qwen3.rs": {
+      "bytes": 2688,
+      "sha256": "308f85e352ab95930eff8a8aa7315a5a6495238bd436a3538981f7d554d64674"
+    },
+    "src/weights/content/qwen3/tests.rs": {
+      "bytes": 11800,
+      "sha256": "f43bcc12f30a6a95f7689179937b6dae3bc5ca5fa1eb01e131a9af6b0915f149"
+    },
+    "src/weights/mod.rs": {
+      "bytes": 38534,
+      "sha256": "5cb3c615419931fe3bf68af66c5ff3e07b2d33162484df12c2112cb8a0bc4ff9"
+    }
+  },
+  "source_observation": {
+    "after_invalid_public_read_identity_absent": true,
+    "codec_paired": false,
+    "config_sha256": "4dae7c9622e41e50752ba422149df0694044266c06cd851aff630799701c83c6",
+    "container_bytes": 525045902,
+    "container_sha256": "3dd0b6c2983ac5fe35f60ba260b1c7c35e4c38f17f3d5139d0bb477924e7aef4",
+    "expected_manifest_sha256": "e92e6d359697d8ada4714ff4f5ff618ba8d9fc69d7abc24bfb4ec905eae6c59b",
+    "index_sha256": "e48752ffebac15ee35d1d86e96c9b87f2efd7783b19ebf82a26955dbd43e0476",
+    "model_assembled": false,
+    "passed": true,
+    "payload_bytes_delivered": 524976896,
+    "physical_ranges": 630,
+    "qwen3_identity_absent": true,
+    "retained_audit_bytes": 96192,
+    "source_only": true,
+    "tensor_ranges": 628,
+    "verified_reads": 630
+  }
+}

@@ -239,17 +239,48 @@ impl Source {
     /// Discard partial destinations after any error. Invalid public consuming
     /// operations poison later source-identity publication, as in the Smol path.
     pub fn open_qwen3_audited(directory: &Path, options: LoadOptions) -> Result<Self, Error> {
+        Self::open_qwen_audited(directory, options, weights::content::QwenProfile::Qwen3)
+    }
+    /// Opt-in config/index/container delivery for the existing pinned Qwen2.5
+    /// 0.5B 8-bit artifact. No model assembly, codec or native mode is implied.
+    /// Failed consuming operations poison evidence; discard partial destinations.
+    pub fn open_qwen2_audited(directory: &Path, options: LoadOptions) -> Result<Self, Error> {
+        Self::open_qwen_audited(directory, options, weights::content::QwenProfile::Qwen2)
+    }
+    fn open_qwen_audited(
+        directory: &Path,
+        options: LoadOptions,
+        profile: weights::content::QwenProfile,
+    ) -> Result<Self, Error> {
         Self::validate_budget(options)?;
         let (bytes, receipt) =
-            weights::content::QwenAudit::config(directory, options.memory_limit_bytes)?;
+            weights::content::QwenAudit::config(profile, directory, options.memory_limit_bytes)?;
         let document = parse_json(&bytes)?;
         drop(bytes);
-        Self::open_document(directory, options, true, document, None, Some(receipt))
+        Self::open_document(
+            directory,
+            options,
+            true,
+            document,
+            None,
+            Some((profile, receipt)),
+        )
     }
     /// Historical config/index/container consumption only. The embedded full
     /// manifest is an expected anchor, not proof of tokenizer/ancillary reads,
     /// model assembly, codec pairing or persistent preference eligibility.
     pub fn qwen3_content_identity(&self) -> Option<QwenSourceContentIdentity> {
+        self.source
+            .qwen_profile_content_identity(weights::content::QwenProfile::Qwen3)
+    }
+    /// Historical delivery for the pinned Qwen2 profile only; never Qwen3.
+    pub fn qwen2_content_identity(&self) -> Option<QwenSourceContentIdentity> {
+        self.source
+            .qwen_profile_content_identity(weights::content::QwenProfile::Qwen2)
+    }
+    /// Historical config/index/container delivery for either admitted Qwen
+    /// profile. The expected manifest identifies its scope, not model ownership.
+    pub fn qwen_content_identity(&self) -> Option<QwenSourceContentIdentity> {
         self.source.qwen_content_identity()
     }
     /// Historical evidence only after every trusted physical range was consumed
@@ -293,7 +324,10 @@ impl Source {
         allow_dense: bool,
         mut document: Value,
         audit: Option<weights::audit::Audit>,
-        qwen_config: Option<weights::content::FileDelivery>,
+        qwen_config: Option<(
+            weights::content::QwenProfile,
+            weights::content::FileDelivery,
+        )>,
     ) -> Result<Self, Error> {
         Self::validate_budget(options)?;
         let object = document
@@ -338,6 +372,15 @@ impl Source {
                 declared_sliding_window: None,
             }
         };
+        if let Some((profile, _)) = qwen_config {
+            let expected = match profile {
+                weights::content::QwenProfile::Qwen2 => Architecture::Qwen2,
+                weights::content::QwenProfile::Qwen3 => Architecture::Qwen3,
+            };
+            if audit.is_some() || architecture != expected {
+                return Err(invalid("Qwen source audit profile mismatch"));
+            }
+        }
         // Bound name-map construction before looping over declared layers.
         let count = config
             .num_layers
@@ -368,11 +411,9 @@ impl Source {
         } else {
             Vec::new()
         };
-        let source = if let Some(config_receipt) = qwen_config {
-            if audit.is_some() || architecture != Architecture::Qwen3 {
-                return Err(invalid("Qwen source audit profile mismatch"));
-            }
+        let source = if let Some((profile, config_receipt)) = qwen_config {
             weights::content::QwenAudit::open_source(
+                profile,
                 directory,
                 config_receipt,
                 options.memory_limit_bytes,
@@ -1057,3 +1098,7 @@ pub(crate) mod logical_tests;
 #[cfg(test)]
 #[path = "qwen/qwen3_content_tests.rs"]
 mod qwen3_content_tests;
+
+#[cfg(test)]
+#[path = "qwen/qwen2_content_tests.rs"]
+mod qwen2_content_tests;

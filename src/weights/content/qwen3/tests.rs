@@ -1,5 +1,5 @@
 use super::*;
-use crate::weights::content::tests::Fixture;
+use crate::weights::content::{ExpectedFile, tests::Fixture};
 use serde_json::json;
 use std::fs;
 
@@ -52,6 +52,9 @@ impl SourceFixture {
             config: receipt,
             data_start,
         }
+    }
+    pub(crate) fn config_receipt(&self) -> FileDelivery {
+        self.config
     }
     pub(crate) fn source(&self) -> Source {
         let manifest =
@@ -179,4 +182,120 @@ fn full_manifest_anchor_does_not_claim_codec_or_ancillary_consumption() {
         QwenAudit::open_source_expected(&f.owner.path, f.config, &different, 1024 * 1024 * 1024)
             .is_err()
     );
+}
+
+#[test]
+fn engine_qwen_manifests_keep_canonical_anchors_and_exact_catalog_bounds() {
+    let qwen2 = QwenProfile::Qwen2.manifest().unwrap();
+    let qwen3 = QwenProfile::Qwen3.manifest().unwrap();
+    assert_eq!(
+        qwen2
+            .identity()
+            .iter()
+            .map(|b| format!("{b:02x}"))
+            .collect::<String>(),
+        "e92e6d359697d8ada4714ff4f5ff618ba8d9fc69d7abc24bfb4ec905eae6c59b"
+    );
+    assert_eq!(
+        qwen3
+            .identity()
+            .iter()
+            .map(|b| format!("{b:02x}"))
+            .collect::<String>(),
+        "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51"
+    );
+    assert_ne!(qwen2.identity(), qwen3.identity());
+    assert_eq!(qwen2.files()[1].bytes, 525045902);
+    assert_eq!(qwen2.files()[4].bytes, 7308);
+    assert_eq!(qwen2.files().len(), 6);
+}
+
+#[test]
+fn selected_profile_rejects_cross_manifest_config_before_any_index_open() {
+    let missing = Path::new("/toklet-absent-audited-profile");
+    for (from, to) in [
+        (QwenProfile::Qwen2, QwenProfile::Qwen3),
+        (QwenProfile::Qwen3, QwenProfile::Qwen2),
+    ] {
+        let m = from.manifest().unwrap();
+        let receipt = FileDelivery {
+            manifest: m.identity(),
+            file: m.files()[0].sha256,
+            name: sha2::Sha256::digest(b"config.json").into(),
+            bytes: m.files()[0].bytes,
+            ranges: 1,
+            reads: 1,
+        };
+        assert!(
+            matches!(QwenAudit::open_source(to,missing,receipt,1024*1024*1024),
+            Err(Error::Invalid(message)) if message == "Qwen source config receipt mismatch")
+        );
+        // Matching manifest still cannot substitute the wrong config digest/name.
+        for bad in [
+            FileDelivery {
+                file: [0; 32],
+                ..receipt
+            },
+            FileDelivery {
+                name: [0; 32],
+                ..receipt
+            },
+        ] {
+            assert!(
+                matches!(QwenAudit::open_source(from,missing,bad,1024*1024*1024),
+                Err(Error::Invalid(message)) if message == "Qwen source config receipt mismatch")
+            );
+        }
+    }
+}
+
+#[test]
+fn shared_source_rejects_authenticated_malformed_header_and_index_plans() {
+    for case in 0..7 {
+        let mut f = SourceFixture::new();
+        let (name, bytes) = if case < 3 {
+            let index = match case {
+                0 => {
+                    json!({"metadata":{"total_size":12},"weight_map":{"a":"other.safetensors","b":"model.safetensors"}})
+                }
+                1 => {
+                    json!({"metadata":{"total_size":12},"weight_map":{"a":"model.safetensors","absent":"model.safetensors"}})
+                }
+                _ => {
+                    json!({"metadata":{"total_size":13},"weight_map":{"a":"model.safetensors","b":"model.safetensors"}})
+                }
+            };
+            (
+                "model.safetensors.index.json",
+                serde_json::to_vec(&index).unwrap(),
+            )
+        } else {
+            let header = match case {
+                3 => r#"{"a":{"dtype":"F32","shape":[2],"data_offsets":[0,8]},"a":{"dtype":"F32","shape":[1],"data_offsets":[8,12]}}"#.as_bytes().to_vec(),
+                4 => serde_json::to_vec(&json!({"a":{"dtype":"F32","shape":[1],"data_offsets":[0,4]},"b":{"dtype":"F32","shape":[1],"data_offsets":[8,12]}})).unwrap(),
+                5 => serde_json::to_vec(&json!({"a":{"dtype":"F32","shape":[2],"data_offsets":[0,8]},"b":{"dtype":"F32","shape":[2],"data_offsets":[4,12]}})).unwrap(),
+                _ => serde_json::to_vec(&json!({"a":{"dtype":"F32","shape":[2],"data_offsets":[0,8]},"b":{"dtype":"F32","shape":[0],"data_offsets":[8,8]}})).unwrap(),
+            };
+            let mut model = (header.len() as u64).to_le_bytes().to_vec();
+            model.extend(header);
+            model.extend([0; 12]);
+            ("model.safetensors", model)
+        };
+        fs::write(f.owner.path.join(name), &bytes).unwrap();
+        let entry = f.expected.iter_mut().find(|x| x.name == name).unwrap();
+        entry.bytes = bytes.len() as u64;
+        entry.sha256 = sha2::Sha256::digest(bytes).into();
+        let manifest =
+            Manifest::new("test/artifact", super::super::tests::REV, &f.expected).unwrap();
+        // Rebind synthetic config to this intentionally malformed expected artifact.
+        let receipt = FileDelivery {
+            manifest: manifest.identity(),
+            ..f.config
+        };
+        assert!(
+            QwenAudit::open_source_expected(&f.owner.path, receipt, &manifest, 1024 * 1024 * 1024)
+                .is_err(),
+            "case{case}"
+        );
+    }
 }

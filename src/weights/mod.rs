@@ -494,6 +494,12 @@ impl Source {
     pub(crate) fn qwen_content_identity(&self) -> Option<content::QwenSourceContentIdentity> {
         self.qwen_audit.as_ref()?.identity()
     }
+    pub(crate) fn qwen_profile_content_identity(
+        &self,
+        profile: content::QwenProfile,
+    ) -> Option<content::QwenSourceContentIdentity> {
+        self.qwen_audit.as_ref()?.identity_for(profile)
+    }
     pub(crate) fn audit_owned_bytes(&self) -> Option<usize> {
         self.audit
             .as_ref()
