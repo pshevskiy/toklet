@@ -1387,3 +1387,6 @@ mod context_info;
 
 #[path = "transition_tests.rs"]
 mod transition_tests;
+
+#[path = "candidate_tests.rs"]
+mod candidate_tests;

@@ -1,0 +1,525 @@
+{
+  "api": {
+    "cancelled_status": 10,
+    "existing_generation_cancel_unchanged": true,
+    "export": "toklet_session_prepare_empty",
+    "failure_can_consume_instance_id": true,
+    "late_cancel_can_race_with_success": true,
+    "new_session_id_shared_model_id": true,
+    "old_session_panic_wrapper_not_used": true,
+    "oom_abort_contained": false,
+    "synchronous_constructor_interruptible": false
+  },
+  "bridge": {
+    "app_bridge_rebuilt_or_adopted": false,
+    "native_header_exports": 32,
+    "selected_application_bridge_exports": 30
+  },
+  "completed_verification": {
+    "caught_panic_diagnostics": 3,
+    "cold_receipt": {
+      "bytes": 1267156,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/cold-v1/checks.json",
+      "sha256": "dc0d1063b570facb1f12651f2babe4144dbf11bdec682d59fd25d8e9551f8253"
+    },
+    "complete_process_peak_or_performance_claim": false,
+    "earlier_pending_counts_asserted_not_exported": [
+      6,
+      5,
+      1
+    ],
+    "hardware_receipt": {
+      "bytes": 1245593,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/hardware-v1/checks.json",
+      "sha256": "8573e69a415b0aba200a1cedae04cba9062c395d25f6dbf2f4d9e58288f3a7fa"
+    },
+    "launch_review": {
+      "bytes": 4372,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/launch-review.json",
+      "sha256": "1f423d9b4f55e2d3fade85a6837039b43ce06cee1756b37dacf27f2f22d8a32f"
+    },
+    "new_d2_api_created_empty_handle": true,
+    "package": {
+      "bytes": 1438668,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/package.json",
+      "sha256": "2db4ba6919b050225fccaf47eb88a3f549a72886f4153e7009e4da6908fc46bb"
+    },
+    "products": {
+      "c_default": {
+        "bytes": 10726968,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/cold-v1/retained/c_default",
+        "sha256": "d08d86a5365e892c0d918b7c125a1cc3fb3ccf874062b22ed3eca1f72ea9043e"
+      },
+      "c_metal": {
+        "bytes": 12239928,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/cold-v1/retained/c_metal",
+        "sha256": "b11f53ec27f42a02df1bfd52e133ff6e0304dbdc3117b7243ea9a47c077c2fa5"
+      },
+      "default_library": {
+        "bytes": 24488880,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/cold-v1/retained/default_library.a",
+        "sha256": "12b6f23104bf0f739e7e3dcc7e51485e63c833939b7aa12357a7a75d4ace66e8"
+      },
+      "metal_library": {
+        "bytes": 27022312,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/cold-v1/retained/metal_library.a",
+        "sha256": "284e7627778ae4c6d36669804e7741e750ca9c68b82cc505bdfc365137304734"
+      },
+      "tests": {
+        "bytes": 106588480,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/cold-v1/retained/tests",
+        "sha256": "a6a956c8448415ad83069c98ae5449a47a68dfc3fe8b18c61c2e0b7503acbc2e"
+      }
+    },
+    "raw_final_current_counts": [
+      6,
+      6,
+      0
+    ],
+    "raw_outputs": [
+      {
+        "bytes": 3782,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/hardware-v1/empty-candidate-used-session.stdout",
+        "sha256": "28703cd4c12c26a45d0c7f1e1e86f610b73f7505ff1c82194570125aaa6a7df4"
+      },
+      {
+        "bytes": 679,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/hardware-v1/empty-candidate-used-session.stderr",
+        "sha256": "7a468d365f86d1dd2e8fb69baae8f00c66c61e49e3f729e6e5b4792389dbf266"
+      },
+      {
+        "bytes": 52,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/hardware-v1/c-metal-run.stdout",
+        "sha256": "ec091c3c14797b532f358df17c7206b9edc300a6498d299de810a7615c944c29"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/hardware-v1/c-metal-run.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "raw_report": {
+      "actual_candidate": {
+        "aggregate_required_bytes": 134454348,
+        "backend": "metal",
+        "candidate": {
+          "capacity": 16,
+          "chunk": 3,
+          "individual_numerical_budget_bytes": 134197248,
+          "position_offset": 0
+        },
+        "candidate_allocated": false,
+        "candidate_constructor_required_bytes": 67165004,
+        "candidate_largest_device_buffer_bytes": 1038,
+        "candidate_planned": {
+          "history_bytes": 64,
+          "kv_bytes": 4152,
+          "logits_bytes": 512,
+          "scratch_bytes": 6624,
+          "session_table_bytes": 424,
+          "total_bytes": 11776
+        },
+        "candidate_whole_budget_bytes": 134217728,
+        "committed_tokens": 0,
+        "context_qualification_evaluated": false,
+        "creation_revalidation_required": true,
+        "current": {
+          "capacity": 16,
+          "chunk": 3,
+          "individual_numerical_budget_bytes": 134197248,
+          "position_offset": 0
+        },
+        "current_allocated": {
+          "history_bytes": 64,
+          "kv_bytes": 4152,
+          "logits_bytes": 512,
+          "scratch_bytes": 6624,
+          "session_table_bytes": 424,
+          "total_bytes": 11776
+        },
+        "device_maximum_buffer_bytes": 9534832640,
+        "execution_modes": {
+          "attention": "Reference",
+          "normalization": "Compensated",
+          "projection": "MlxAffine",
+          "readback": "FullLogits"
+        },
+        "fits_candidate_individual_budget": true,
+        "fits_transition_budget": true,
+        "history_tokens": 0,
+        "loaded_position_limit": 32,
+        "mode_selection": "existing_native_factory",
+        "model_instance": 1,
+        "pending_tokens": 0,
+        "report_kind": "same_model_session_transition",
+        "reserves": {
+          "application_bytes": 8192,
+          "candidate_bridge_bytes": 20480,
+          "candidate_metadata_driver_bytes": 67108864,
+          "current_bridge_bytes": 20480,
+          "current_metadata_driver_bytes": 67108864,
+          "json_snapshot_bytes": 131328,
+          "replay_bytes": 128,
+          "text_bytes": 4096,
+          "total_bytes": 134402432
+        },
+        "reserves_verified": false,
+        "schema_version": 1,
+        "session_instance": 12,
+        "shared_model": {
+          "learned_bytes": 23884,
+          "model_table_bytes": 4480,
+          "positional_bytes": 0,
+          "total_bytes": 28364
+        },
+        "transition_budget_bytes": 268435456,
+        "whole_app_device_fit_evaluated": false
+      },
+      "empty_candidate": true,
+      "plan": {
+        "aggregate_required_bytes": 134460044,
+        "backend": "metal",
+        "candidate": {
+          "capacity": 16,
+          "chunk": 3,
+          "individual_numerical_budget_bytes": 134197248,
+          "position_offset": 0
+        },
+        "candidate_allocated": false,
+        "candidate_constructor_required_bytes": 67165004,
+        "candidate_largest_device_buffer_bytes": 1038,
+        "candidate_planned": {
+          "history_bytes": 64,
+          "kv_bytes": 4152,
+          "logits_bytes": 512,
+          "scratch_bytes": 6624,
+          "session_table_bytes": 424,
+          "total_bytes": 11776
+        },
+        "candidate_whole_budget_bytes": 134217728,
+        "committed_tokens": 6,
+        "context_qualification_evaluated": false,
+        "creation_revalidation_required": true,
+        "current": {
+          "capacity": 32,
+          "chunk": 3,
+          "individual_numerical_budget_bytes": 134197248,
+          "position_offset": 0
+        },
+        "current_allocated": {
+          "history_bytes": 128,
+          "kv_bytes": 8248,
+          "logits_bytes": 512,
+          "scratch_bytes": 8160,
+          "session_table_bytes": 424,
+          "total_bytes": 17472
+        },
+        "device_maximum_buffer_bytes": 9534832640,
+        "execution_modes": {
+          "attention": "Reference",
+          "normalization": "Compensated",
+          "projection": "MlxAffine",
+          "readback": "FullLogits"
+        },
+        "fits_candidate_individual_budget": true,
+        "fits_transition_budget": true,
+        "history_tokens": 6,
+        "loaded_position_limit": 32,
+        "mode_selection": "existing_native_factory",
+        "model_instance": 1,
+        "pending_tokens": 0,
+        "report_kind": "same_model_session_transition",
+        "reserves": {
+          "application_bytes": 8192,
+          "candidate_bridge_bytes": 20480,
+          "candidate_metadata_driver_bytes": 67108864,
+          "current_bridge_bytes": 20480,
+          "current_metadata_driver_bytes": 67108864,
+          "json_snapshot_bytes": 131328,
+          "replay_bytes": 128,
+          "text_bytes": 4096,
+          "total_bytes": 134402432
+        },
+        "reserves_verified": false,
+        "schema_version": 1,
+        "session_instance": 2,
+        "shared_model": {
+          "learned_bytes": 23884,
+          "model_table_bytes": 4480,
+          "positional_bytes": 0,
+          "total_bytes": 28364
+        },
+        "transition_budget_bytes": 268435456,
+        "whole_app_device_fit_evaluated": false
+      },
+      "rollback_and_pending_state_preserved": true
+    },
+    "sparse_process_observations": [
+      {
+        "pid": 39347,
+        "retained_log_bytes": {
+          "stderr": 679,
+          "stdout": 3782
+        },
+        "samples": 17,
+        "sparse_maxima": {
+          "lifetime_max_phys_footprint": 5833256,
+          "phys_footprint": 5833256,
+          "resident_size": 17547264
+        }
+      },
+      {
+        "pid": 39353,
+        "retained_log_bytes": {
+          "stderr": 0,
+          "stdout": 52
+        },
+        "samples": 7,
+        "sparse_maxima": {
+          "lifetime_max_phys_footprint": 98376,
+          "phys_footprint": 81992,
+          "resident_size": 32768
+        }
+      }
+    ],
+    "subsequent_d1_report_created_another_handle": false,
+    "verified": {
+      "all_successful_and_failed_groups_absent": true,
+      "cold_jobs": 16,
+      "current_hardware_bindings": 5728,
+      "default_and_metal_c_smoke": true,
+      "endpoint_errors": [],
+      "exports_each_library": 32,
+      "mac_jobs": 2,
+      "new_portable_controls": 3,
+      "package_bindings": 5726,
+      "runtime_files": 1881,
+      "source_files": 8,
+      "suites": {
+        "default": {
+          "ignored": 20,
+          "passed": 469
+        },
+        "metal": {
+          "ignored": 186,
+          "passed": 577
+        }
+      }
+    }
+  },
+  "date": "2026-10-30",
+  "decision": "bounded_empty_same_model_candidate_native_checks_verified",
+  "evidence": [
+    {
+      "bytes": 67700,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-proposal-v2/manifest.json",
+      "sha256": "36d44a02d48986e7809ccb01e46db514d0424bb15c13102381c5e5bf63e3edf3"
+    },
+    {
+      "bytes": 3834,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-independent-review-v1/prospective-review.json",
+      "sha256": "2a05b357f37411f881d359acc087b029db37eb27cee8a0e378dde43dc994ff0b"
+    },
+    {
+      "bytes": 2080,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-independent-review-v1/prospective-v2-review.json",
+      "sha256": "270480d798c6431b39a78d815822762f2477cc3f60dbc30122d8dbe0acb07296"
+    },
+    {
+      "bytes": 8239,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/manifest.json",
+      "sha256": "4efd1b924cb87b472d2905d25907fa5effdeef52dad272ffaf7d72cccc30a717"
+    },
+    {
+      "bytes": 2068,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-independent-review-v1/prospective-v2-review.json",
+      "sha256": "809634777be1c804d5d0b2293d26de87389fd7ab06094816044270c4d39927a3"
+    },
+    {
+      "bytes": 1618,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-proposal-v2/failure.json",
+      "sha256": "a77d0644f28d328286c724d691608eb599df847a4010f002444d3fe15ae8d227"
+    },
+    {
+      "bytes": 1235069,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v1/cold-v1/checks.json",
+      "sha256": "a88bf0412319dec528c586ce8c1269e0a2d9286389584c452cc836946236f9ba"
+    },
+    {
+      "bytes": 899,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v1/cold-v1/default-clippy.stderr",
+      "sha256": "24b1983288e78a2908e8d4cee15f530719f5c952baa10f158faf98935aee6b5c"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v1/cold-v1/default-clippy.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v1/cold-v1/fmt.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v1/cold-v1/fmt.stdout",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 1267156,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/cold-v1/checks.json",
+      "sha256": "dc0d1063b570facb1f12651f2babe4144dbf11bdec682d59fd25d8e9551f8253"
+    },
+    {
+      "bytes": 1245593,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/hardware-v1/checks.json",
+      "sha256": "8573e69a415b0aba200a1cedae04cba9062c395d25f6dbf2f4d9e58288f3a7fa"
+    },
+    {
+      "bytes": 1438668,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/package.json",
+      "sha256": "2db4ba6919b050225fccaf47eb88a3f549a72886f4153e7009e4da6908fc46bb"
+    },
+    {
+      "bytes": 4372,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/launch-review.json",
+      "sha256": "1f423d9b4f55e2d3fade85a6837039b43ce06cee1756b37dacf27f2f22d8a32f"
+    },
+    {
+      "bytes": 12430,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-independent-review-v1/saved-review.json",
+      "sha256": "a04d3708f2b1d1a67f6a8b8116f0c4be81ae863fd5d7052d24bce1048f24a08f"
+    },
+    {
+      "bytes": 3782,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/hardware-v1/empty-candidate-used-session.stdout",
+      "sha256": "28703cd4c12c26a45d0c7f1e1e86f610b73f7505ff1c82194570125aaa6a7df4"
+    },
+    {
+      "bytes": 679,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/hardware-v1/empty-candidate-used-session.stderr",
+      "sha256": "7a468d365f86d1dd2e8fb69baae8f00c66c61e49e3f729e6e5b4792389dbf266"
+    },
+    {
+      "bytes": 52,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/hardware-v1/c-metal-run.stdout",
+      "sha256": "ec091c3c14797b532f358df17c7206b9edc300a6498d299de810a7615c944c29"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/hardware-v1/c-metal-run.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "evidence_limits": [
+    "Raw final current history/committed/pending is6/6/0. The earlier6/5/1 pending witness is a completed assertion before continuation and discard_pending, not the final raw state.",
+    "Rollback/error/panic/cancellation isolation, unchanged pending/history and bitwise visible logits, Rc cleanup, actual excess-capacity rejection, exact/under individual and coexistence budgets are supported by reviewed completed controls; full state arrays and every boundary report were not exported.",
+    "Three expected panic-hook diagnostics appear on stderr and are caught by native boundary; test exits0 and final harness reports1passed. They are deliberate controls, not unhandled failures.",
+    "Raw plan and actual-candidate ledger independently reconcile. D2 creator returned an empty handle; candidate_allocated:false belongs to the subsequent D1 report API, not a denial of D2 allocation.",
+    "C smoke results are compiled assertions rather than independently retained complete C context records.",
+    "Sparse directprocess observations, especially short C startup samples, are not complete process peaks or performance measurements; no elapsed inference.",
+    "No candidate adoption, replay,worker/Apply/persistence,app/XCFramework upgrade,realmodel,phone or larger-context qualification. Selected app bundle remains30exports; native/Cproducts have32."
+  ],
+  "format": "toklet-native-empty-session-candidate-v1",
+  "independent_saved_review": {
+    "bytes": 12430,
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-independent-review-v1/saved-review.json",
+    "sha256": "a04d3708f2b1d1a67f6a8b8116f0c4be81ae863fd5d7052d24bce1048f24a08f"
+  },
+  "preserved_failure": {
+    "completed_jobs": 2,
+    "format": "toklet-empty-candidate-private-interface-failure-v1",
+    "groups_closed": true,
+    "later_jobs_not_reached": true,
+    "outputs": [
+      {
+        "bytes": 899,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v1/cold-v1/default-clippy.stderr",
+        "sha256": "24b1983288e78a2908e8d4cee15f530719f5c952baa10f158faf98935aee6b5c"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v1/cold-v1/default-clippy.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v1/cold-v1/fmt.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v1/cold-v1/fmt.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "reason": "Test-only construction_fault returned private native::Failure at crate visibility; narrow function visibility to crate::native. No error widening/lint suppression/behavior change.",
+    "receipt": {
+      "bytes": 1235069,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v1/cold-v1/checks.json",
+      "sha256": "a88bf0412319dec528c586ce8c1269e0a2d9286389584c452cc836946236f9ba"
+    }
+  },
+  "publication_ready": true,
+  "qualification": {
+    "app": false,
+    "context": false,
+    "native_checks_complete": true,
+    "performance": false,
+    "phone": false,
+    "real_model": false,
+    "ui": false
+  },
+  "scope": {
+    "actual_postallocation_individual_and_coexistence_readmission": true,
+    "generation_by_api": false,
+    "new_context_admission": false,
+    "old_session_adoption_or_release": false,
+    "same_model_empty_candidate": true,
+    "token_replay": false,
+    "weights_reload": false,
+    "worker_ui_persistence": false
+  },
+  "source_files": {
+    "apple/include/toklet.h": {
+      "bytes": 20700,
+      "path": "/Users/coloner/work/rust/toklet/apple/include/toklet.h",
+      "sha256": "6a6c831a59d497bb5cab661cbdc72becd43013734ea9725ed15235256b5591f8"
+    },
+    "apple/tests/native_candidate_smoke.c": {
+      "bytes": 3033,
+      "path": "/Users/coloner/work/rust/toklet/apple/tests/native_candidate_smoke.c",
+      "sha256": "67331f0a54622dd6a158ce7867d0b35718900cea1a2ac6a471e791a4c074f32a"
+    },
+    "src/native.rs": {
+      "bytes": 35411,
+      "path": "/Users/coloner/work/rust/toklet/src/native.rs",
+      "sha256": "7551ef873a853445d7465ca68eea002ce972b8c2e6df17676053ed7be1c3ce78"
+    },
+    "src/native/candidate_tests.rs": {
+      "bytes": 13536,
+      "path": "/Users/coloner/work/rust/toklet/src/native/candidate_tests.rs",
+      "sha256": "49b0a034b50fbbf8a91f69b296ed5f0069638152d159688432f7c9c06d7ec589"
+    },
+    "src/native/tests.rs": {
+      "bytes": 44548,
+      "path": "/Users/coloner/work/rust/toklet/src/native/tests.rs",
+      "sha256": "b8d467e4709c057f470295fca836d8967d42aab8a972c69fa108d384c1db23cb"
+    },
+    "src/native/transition_planning.rs": {
+      "bytes": 14083,
+      "path": "/Users/coloner/work/rust/toklet/src/native/transition_planning.rs",
+      "sha256": "09449c792fcf27c9e47451419cbbe0f9d8ca87356751d66adfb8750148d527f6"
+    },
+    "src/native/transition_planning/candidate.rs": {
+      "bytes": 7138,
+      "path": "/Users/coloner/work/rust/toklet/src/native/transition_planning/candidate.rs",
+      "sha256": "9ba3190e443f677b0581a1d5e1887a710a57facb373d42d64478e2a2c07b0bd3"
+    },
+    "src/session.rs": {
+      "bytes": 22010,
+      "path": "/Users/coloner/work/rust/toklet/src/session.rs",
+      "sha256": "a7ec278b760529ba1bcf6c62836d1c7bd99070f77f46350ab998cb708c5c9c13"
+    }
+  }
+}

@@ -1,6 +1,8 @@
 //! Model-bound, non-reserving old-plus-candidate session accounting.
 use super::*;
 use serde::Serialize;
+mod candidate;
+pub use candidate::*;
 
 #[repr(C)]
 #[derive(Clone, Copy)]

@@ -8360,3 +8360,39 @@ Full raw state arrays were not exported, and sparse memory is not a peak. The
 report API itself allocates no candidate. Both earlier failures remain failed
 evidence. The selected 30-export app bundle is unchanged by the verified
 31-export Rust/C library; session replacement and app consumption remain next.
+
+Model-bound transition accounting is committed as `e0e06be` after exact
+fourteen-file Astra review and the completed 16+3+2 evidence. D2 now prepares
+an explicit empty candidate while retaining the current session. It must
+re-admit actual allocations and isolate cancellation/errors/panics so failure
+leaves the old session usable. Worker adoption, Apply, persistence, text-limit
+reconciliation and a fresh coherent app package remain separate.
+
+### 2026-10-30 — B5d2 source applied; verification pending
+
+Astra reviewed and root applied the additive empty-candidate preparation API. It
+keeps the active session usable through candidate errors, cancellation and Rust
+unwinding, then checks actual candidate allocation against both budgets before
+returning a new handle. No test outcome or worker adoption is claimed yet; the
+selected Apple bundle still predates these transition APIs.
+
+The first D2 cold attempt stops at strict Clippy: the test-only constructor fault
+hook exposes a private error type. Formatting passed, both groups closed, and
+no runtime test ran. The failed receipt remains at
+`artifacts/new-goal-b5d2-empty-candidate-verification-owner-v1/cold-v1/checks.json`;
+a visibility-only correction is under Astra review.
+
+B5d2 now passes all 16 fresh compile/CPU jobs and both explicit tiny Mac jobs.
+Default 469 (20 ignored) and Metal 577 (186 ignored) tests pass, as do both strict
+Clippy checks, formatting, both 32-export libraries and C callers. Astra
+independently verifies source, products, runtime bindings and closed groups.
+The empty candidate owns 11,776 bytes, exactly as planned; the old session’s final
+raw counts are 6/6/0 and candidate counts 0/0/0. Earlier pending 6/5/1 and
+visible-logit/panic/cancellation rollback are reviewed completed assertions,
+not exported raw arrays. Actual individual and coexistence admission pass.
+
+The first failed test-hook compile remains preserved; its correction only
+narrows test-only visibility. The completed [native report](native-empty-session-candidate.md)
+does not enable worker adoption, app Apply, a larger loaded window, phone or
+performance qualification. The selected 30-export app bundle is unchanged;
+rebuilding a coherent 32-export bridge is next before Swift consumption.

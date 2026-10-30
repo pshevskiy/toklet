@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5d2 — explicit empty-candidate session preparation**.
+Next implementation task: **B5 transition bridge refresh, then B5d3 worker adoption**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -329,9 +329,10 @@ separate requirements below. Further model admissions require their own scope.
   audit. Default466/Metal574 tests,31exports, C ABI, actual candidate ownership
   comparison and unchanged current state pass. Both failures stay recorded.
   This is a read-only report; no candidate allocation, Apply or new context.
-- [ ] B5d2: prepare an explicit empty same-model candidate without mutating the
-  current session; isolate candidate errors/panics, re-admit actual coexistence
-  storage, and retain old usability on cancellation or failure.
+- [x] B5d2: [explicit empty same-model candidate preparation](docs/native-empty-session-candidate.md)
+  passes16fresh cold jobs and2tinyMacchecks with Astra saved audit. Old session
+  state/usability survives cancellation and candidate errors/panics; actual
+  individual/coexistence budgets are rechecked. No worker adoption or new window.
 - [ ] B5d3: atomically adopt a validated candidate in the worker, then wire
   Apply/persistence by artifact and plan identity. Friendly Chat already renders
   the full saved conversation with reset+prompt on Send; make cache reset
@@ -339,7 +340,7 @@ separate requirements below. Further model admissions require their own scope.
   is a separate Expert mode, not a prerequisite for first Friendly Apply.
 - [ ] Build/export-check a coherent Apple framework containing new transition
   APIs before Swift/app consumption. The currently selected C3 package remains
-  its historical30-export bundle; native31-export checks do not upgrade it.
+  its historical30-export bundle; native32-export checks do not upgrade it.
 - [ ] Report declared context, implemented backend range, budget/device fit,
   validation scope and app/text limits separately for each model.
 - [ ] Include actual weights, KV owners, scratch, loading peaks and application
@@ -629,3 +630,9 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | B5d1 cold phase passes / Metal fixture setup fails | Full16jobs pass: default466/20ignored, Metal574/185ignored, strictchecks, two31-export libraries andCPU CABI. First tinyMetal check then stops at second-session profile setup:134253388required vs134197248budget; groupclosed/endpoints[], secondCjobunrun. Astra authenticates exact failure. | Preserve failure; correct only ignored-test profile setup budget, retaining production and exact/under report gates. Reuse unchanged passing16jobs/libs/Ccallers; rebuild only changedtest and retry2Macjobs afterreview. |
 | 2026-10-30 | B5d1 minimal fixture retry starts | Astra approves the ignored-test-only candidate setup budget correction. Nine other source paths, portable controls and exact/under aggregate assertions remain exact. Freshthree-job formatting/Metalcompile/release-test rebuild begins with explicit inheritance of16passingcoldjobs andunchangedlibs/Cproducts. | Review rebuilt actual products beforeretryingbothMacjobs. D2empty-candidate route is chosen from actual Chat reset+prompt semantics; transactional rollback and capacity preflight remain mandatory. |
 | 2026-10-30 | B5d1 accounting verification complete | Minimal3buildchecks andbothMetaljobs pass with16coldjobs inherited. Astra authenticates inputs/products/closures and recomputes134460044total; actualcandidate11776equalsplan, oldhistory6/5/1preserved. ReportAPIcreatesnocandidate; testsecondsession is separate. | Publish bounded report and commit afterexactstagedreview. Both failuresretained; selected30-exportappbundleunchanged. NextD2explicitEMPTYcandidatepreparation, thenworkerApply/persistence/Chatlimitreconciliation. |
+| 2026-10-30 | B5d1 committed / D2 empty candidate starts | Read-only transition accounting committed as `e0e06be` after exact14-file Astra review,814rootlinks and3980trackedMarkdownlinks. Current tree had onlypreservedDSStore. D2private contract/implementation now targets explicitEMPTYcandidate creation with old-session rollback andactualpostallocadmission. | No workeradoption/Apply/newwindow yet; current31-exportRustAPI andselected30-exportappbundle remain separate. Candidatepanicmustnotpoisoncurrenthandle. |
+| 2026-10-30 | B5d2 empty-candidate source applied | Astra approves the frozen eight-file API/constructor extraction and rollback controls; root authenticates all before/after bytes and applies exactly. Current session stays outside the candidate panic path; actual storage must pass both budgets before publication. | Run default/Metal/ABI checks under a fresh reviewed owner, then separately reviewed tiny Mac checks. No adoption, app call or wider context is enabled. |
+| 2026-10-30 | B5d2 first cold check catches test-hook visibility | Formatting passes; strict default Clippy rejects a test-only construction hook exposing private native Failure at crate visibility. Both process groups close and endpoints remain exact; no runtime or hardware job runs. | Preserve failed receipt, narrow the hook visibility with Astra review, then retry fresh cold checks. No production behavior or tolerance change. |
+| 2026-10-30 | B5d2 test-hook visibility corrected | Astra approves the single test-only visibility narrowing to the native ancestor; all seven other source files and every control body remain exact. Root applies the reviewed correction. | Fresh cold retry pending; original fmt pass/Clippy failure receipt stays preserved. |
+| 2026-10-30 | B5d2 cold verification passes | Fresh16jobs pass: default469/20ignored, Metal577/186ignored, formatting, both strict Clippy checks, release products, exact32exports and CPU C ABI. All groups close with endpoints unchanged; five actual products are retained. | Frozen two-job tiny Metal package awaits independent Astra launch review. Earlier failed Clippy attempt stays preserved; no app adoption or wider-context claim. |
+| 2026-10-30 | B5d2 empty-candidate verification complete | All16cold and2tinyMacjobs pass with independent Astra source/product/saved-result audit. Actual candidate-owned11776bytes matchesplan; raw final old6/6/0 and candidate0/0/0. Earlier6/5/1 and visible-logit rollback are completed assertions. The initial visibility failure stays recorded. | Publish bounded native evidence and commit after exact staged review. Fresh coherent32-export Apple package comes before worker adoption; app Apply, persistence, prompt/reply limits and wider context remain open. |

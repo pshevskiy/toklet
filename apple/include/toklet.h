@@ -16,6 +16,7 @@ extern "C" {
 #define TOKLET_POISONED 7u
 #define TOKLET_CALLBACK_ERROR 8u
 #define TOKLET_UNSUPPORTED 9u
+#define TOKLET_CANCELLED 10u
 /* Ordinary TokletOptions budgets include this fixed logical owner allowance.
    Actual load/session admission subtracts it; no reservation or peak is implied. */
 #define TOKLET_MODEL_SESSION_BRIDGE_BYTES 20480u
@@ -29,7 +30,8 @@ extern "C" {
    legacy chat handles retain no model.
    Callbacks run synchronously there, may not throw/unwind, and may not destroy
    active resources. Reentrant session calls return BUSY. Rust panic poisons a
-   session: release/recreate it. OOM abort/foreign exceptions are not contained.
+   session: release/recreate it. Empty-candidate preparation only reads current
+   and does not poison it on candidate panic. OOM abort/foreign exceptions are not contained.
    Cancellation alone may run concurrently; release its flag only after every
    user returns. NULL error suppresses messages. Release NULL is a no-op. */
 typedef struct TokletModel TokletModel;
@@ -92,6 +94,22 @@ typedef struct {
    No context, text, whole-app/device or performance qualification is evaluated. */
 uint32_t toklet_session_transition_plan_create(const TokletModel *, const TokletSession *,
     const TokletOptions *, const TokletTransitionPlanningOptions *, TokletCompatibility **, TokletError *);
+/* Prepare an explicitly EMPTY same-model session; does not adopt/release/change
+   current, replay history or reopen weights. Capacity may be below old history.
+   Uses the same transition request and rechecks actual candidate allocation
+   against both individual and aggregate budgets. Caller reserves are unverified.
+   Required cancellation flag is sampled before construction and before return,
+   never cleared. Synchronous construction is not interruptible. Cancellation
+   after the final check can race with success; callers must still reject stale
+   results. CANCELLED=10 returns NULL; all other failures also clear out.
+   Candidate-only Rust unwinding returns PANIC without poisoning current; OOM
+   abort/foreign exceptions remain uncontained. Failed attempts may consume IDs.
+   Success transfers an ordinary new session handle, with empty history/KV
+   validity and shared model identity; release it normally if not adopted. */
+uint32_t toklet_session_prepare_empty(const TokletModel *, const TokletSession *,
+    const TokletOptions *, const TokletTransitionPlanningOptions *,
+    const TokletCancel *, TokletSession **, TokletError *);
+
 #define TOKLET_MAX_CHAT_OUTPUT_TOKENS 256u
 #define TOKLET_MAX_COMPATIBILITY_JSON_BYTES 65536u
 /* Literal for the Swift importer; checked against 2*maximum+256 by C smoke. */

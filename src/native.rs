@@ -12,7 +12,8 @@
 //! wait until all users, including generation, have returned. Callbacks are
 //! synchronous on the inference thread and must not unwind/throw across C.
 //! Reentrant session calls return Busy. Rust unwinding poisons the session;
-//! recreate it afterwards. OOM abort and foreign exceptions are not contained.
+//! recreate it afterwards. Empty-candidate preparation only reads current and
+//! does not poison it on candidate panic. OOM abort and foreign exceptions are not contained.
 
 use crate::{generation, model, session, weights};
 mod compatibility;
@@ -49,6 +50,8 @@ pub const PANIC: u32 = 6;
 pub const POISONED: u32 = 7;
 pub const CALLBACK_ERROR: u32 = 8;
 pub const UNSUPPORTED: u32 = 9;
+/// Empty-candidate preparation cancelled; generation retains its report reason.
+pub const CANCELLED: u32 = 10;
 // Original 4KiB owners plus the bounded absolute model-directory allocation.
 /// Fixed logical native model/session-owner allowance, not a reservation or peak.
 pub const MODEL_SESSION_BRIDGE_BYTES: usize = 20 * 1024;
@@ -626,6 +629,51 @@ pub unsafe extern "C" fn toklet_model_release(
         })
     }
 }
+fn create_session(model: &ModelHandle, opts: session::Options) -> Result<Box<SessionHandle>> {
+    let instance = context::next_instance()?;
+    let retained = Rc::clone(&model.model);
+    #[cfg(test)]
+    transition_planning::construction_fault()?;
+    // SAFETY: private OwnedSession retains this immutable stable allocation
+    // and drops the session first. No reference can escape the wrapper.
+    let borrowed = unsafe { &*Rc::as_ptr(&retained) };
+    let session = match borrowed {
+        NativeModel::Cpu(model) => NativeSession::Cpu(Box::new(
+            session::Session::new(model, opts).map_err(|e| fail(ENGINE_ERROR, e.to_string()))?,
+        )),
+        #[cfg(all(
+            feature = "metal",
+            any(target_os = "macos", target_os = "ios"),
+            target_arch = "aarch64"
+        ))]
+        NativeModel::Metal(model) => {
+            use crate::metal::{ReadbackMode, Session};
+            let (projection, normalization) = model.native_session_modes();
+            NativeSession::Metal(Box::new(
+                Session::with_attention_mode(
+                    model,
+                    opts,
+                    projection,
+                    normalization,
+                    ReadbackMode::FullLogits,
+                    model.native_attention_mode(),
+                )
+                .map_err(|e| fail(ENGINE_ERROR, e.to_string()))?,
+            ))
+        }
+    };
+    Ok(Box::new(SessionHandle {
+        owner: thread::current().id(),
+        instance,
+        poisoned: Cell::new(false),
+        state: RefCell::new(OwnedSession {
+            session,
+            _model: retained,
+            model_instance: model.instance,
+        }),
+    }))
+}
+
 /// Create fixed-capacity session state retaining the immutable model allocation.
 /// # Safety
 /// Follow the foreign caller contract; outputs must be disjoint from inputs.
@@ -643,47 +691,7 @@ pub unsafe extern "C" fn toklet_session_create(
             pointer(model)?;
             owner((*model).owner)?;
             let opts = options(opts)?;
-            let instance = context::next_instance()?;
-            let retained = Rc::clone(&(*model).model);
-            // SAFETY: private OwnedSession retains this immutable stable allocation
-            // and drops the session first. No reference can escape the wrapper.
-            let borrowed = &*Rc::as_ptr(&retained);
-            let session = match borrowed {
-                NativeModel::Cpu(model) => NativeSession::Cpu(Box::new(
-                    session::Session::new(model, opts)
-                        .map_err(|e| fail(ENGINE_ERROR, e.to_string()))?,
-                )),
-                #[cfg(all(
-                    feature = "metal",
-                    any(target_os = "macos", target_os = "ios"),
-                    target_arch = "aarch64"
-                ))]
-                NativeModel::Metal(model) => {
-                    use crate::metal::{ReadbackMode, Session};
-                    let (projection, normalization) = model.native_session_modes();
-                    NativeSession::Metal(Box::new(
-                        Session::with_attention_mode(
-                            model,
-                            opts,
-                            projection,
-                            normalization,
-                            ReadbackMode::FullLogits,
-                            model.native_attention_mode(),
-                        )
-                        .map_err(|e| fail(ENGINE_ERROR, e.to_string()))?,
-                    ))
-                }
-            };
-            out.write(Box::into_raw(Box::new(SessionHandle {
-                owner: thread::current().id(),
-                instance,
-                poisoned: Cell::new(false),
-                state: RefCell::new(OwnedSession {
-                    session,
-                    _model: retained,
-                    model_instance: (*model).instance,
-                }),
-            })));
+            out.write(Box::into_raw(create_session(&*model, opts)?));
             Ok(())
         })
     }

@@ -277,6 +277,11 @@ impl<'model> Session<'model> {
         Ok(memory)
     }
 
+    #[cfg(test)]
+    pub(crate) fn test_reserve_history(&mut self, additional: usize) {
+        self.history.reserve_exact(additional);
+    }
+
     pub(crate) fn options(&self) -> Options {
         self.options
     }
