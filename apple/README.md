@@ -35,7 +35,10 @@ build receipt SHA256 is
 The [Swift identity/bridge report](../docs/swift-accepted-identity.md) records
 strict decoding, explicit managed-Qwen audited loading, one actual Mac getter
 and guarded selection. Friendly [session Apply](../docs/friendly-chat-apply.md)
-is available within the loaded bound; preferences remain subsequent work.
+is available within the loaded bound. [Managed Qwen3 settings](../docs/managed-model-preferences.md)
+save accepted context/chunk/budget/reply choices and restore them after fresh
+model and memory admission. Other profiles and external folders remain ephemeral
+for these engine settings.
 The previous 32 [session-transition package](../docs/apple-session-transition-package.md),
 30-export [planning package](../docs/apple-planning-package.md) and older 28 package
 are preserved. Package selection does not install or launch an app or increase

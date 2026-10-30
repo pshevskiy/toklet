@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5d5c3 — managed preference save/restore with fresh admission**.
+Next implementation task: **B5d5c4a — complete SmolLM2 accepted model/codec identity**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -374,8 +374,20 @@ separate requirements below. Further model admissions require their own scope.
       app builds and two Mac jobs. Actual getter/model1 identity survives replay
       and256/chunk16 replacement; prior compile failure preserved. Package35 is
       selected with32 retained; no real-model generation or rendered/device claim.
-    - [ ] C3: managed preference save/restore with fresh admission; keep external
-      or unauthenticated selections ephemeral and rejected settings preserved.
+    - [x] C3: [managed Qwen3 preference save/restore](docs/managed-model-preferences.md)
+      passes23cold/CPU/app and2Mac jobs with Astra saved audit. Fresh restore,
+      reply/edit/late-commit reconciliation, actual45>33 rendered rejection and
+      no-save quarantine pass; other routes remain ephemeral and rejected records
+      stay preserved. Rendered UI/phone and resized real generation stay open.
+    - [ ] Extend accepted identity and persisted settings to other adopted managed
+      profiles before closing all-model persistence; the first Qwen3 route does
+      not qualify SmolLM2, Qwen2.5, Mistral or later app adapters automatically.
+      - [ ] C4a: complete SmolLM2 codec evidence and shared native identity getter,
+        preserving its existing audited model and three-asset codec contracts.
+      - [ ] C4b: consume the Smol identity in the existing Swift preference path,
+        with a coherent native package and fresh model/controller checks.
+      - [ ] Reuse concrete consumed-source/codec mechanisms for Qwen2.5 and
+        Mistral, checking each profile's actual layouts, bounds and text policy.
 
 New exact-history migration remains a separate Expert mode; first Friendly Apply
 uses the existing full saved-conversation reset+prompt path on Send.
@@ -722,3 +734,10 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | C2 verification handoff restarted | The owner-ready message did not restart a completed Astra reviewer; root detected the idle state and issued an explicit followup. No verification command had run or failed, and all source/product pins stayed unchanged. | Root now explicitly dispatches every ready-owner review with followup and checks agent state instead of waiting on an informational message. |
 | 2026-10-30 | C2 first compile failure | Strict Swift6 identity executable compiled. The next full store/worker compile rejects a duplicate local `code` binding in chat creation versus stop-ID setup. Both groups close with no endpoint errors; runtime/app/model jobs were not reached. Failed receipt retained. | Minimal status-name correction and reviewed continuation; reuse the unaffected typed product where its exact closure permits. No assertions or native gates change. |
 | 2026-10-30 | C2 reviewed integration and selection | Astra audits18fresh+1inherited cold jobs and both Mac jobs; actual model1 identity survives session2→3→4, loaded512/selected256, hashes/writes2→2 through replacement. Guarded atomic selection adopts exact35 candidate, preserving32. Prior duplicate-name compile failure and handoff correction remain recorded. | [Report](docs/swift-accepted-identity.md); final task publication/commit, then freshly admitted managed prefs. No real-model generation/rendered UI/phone/performance claim. |
+| 2026-10-30 | C2 commit | Exact fifteen-file integration passes Astra final review and is committed as `e58eb3d`; selected generated bridge35 is verified and old32 retained. All scoped cold/Mac results and the failed first compile remain recorded. | C3 bounded managed preferences and fresh restoration; no native rebuild planned. |
+| 2026-10-30 | C3 preference review in progress | Private eight-file draft integrates bounded namespace-keyed records, fresh restore and one reply setter. Astra finds a busy→idle invalidation race that could discard a deferred save; correction and stale/rejected restore, failed-save and ordinary-route controls are requested before source approval. | No preference source applied or executed. Reuse qualified native35 products; one cached-model controller covers restore, edits, small-window rejection and cleanup quarantine after cold checks. |
+| 2026-10-30 | C3 preference source applied | Astra approves all eight frozen paths, the captured-snapshot race correction and production-used terminal resolver. Guarded application and whitespace checks pass; 60 CPU controls and a one-load controller are authored. | Compile/CPU/app checks precede separately reviewed actual-product Mac checks. No runtime or persistence qualification yet; native35 products are reused. |
+| 2026-10-30 | C3 validation preflight correction | Root and Astra catch two uninvoked runner defects: the new CPU program needs an exclusive directory argument, and loop-generated control names cannot be counted with a literal-site regex. | Correct before owner freeze/execution; no check failure or runtime result is claimed. |
+| 2026-10-30 | C3 build and CPU checks pass | All23fresh jobs pass:60preference/28Apply/57planning/37routing controls, current transaction/configuration and preview regressions, and three app builds. Source/native inheritance and process closure pass; no endpoint errors. | Freeze actual products for Astra review before two Mac jobs. No loaded restoration or rendered/device outcome yet. |
+| 2026-10-30 | C3 Mac controls pass | Tiny Metal preview21 and one cached Qwen3 controller pass. Fresh restore256/chunk16/reply64 writes zero; pre/postcommit edits save only terminal healthy settings. Actual45-token rendered request rejects against33 with empty prefix/newer draft; injected committed64 quarantine preserves healthy33 record and owning close succeeds. | Astra saved audit and exact publication review before commit. Other profiles, rendered UI, phone, successful resized real generation and performance remain open. |
+| 2026-10-30 | C3 independent audit passes | Astra authenticates all23+2jobs,5990bindings,66outputs,10products,10record hashes and25closed groups. Quarantine remains committed-but-unsavable; synthetic rejection/storage controls and actual loaded restore stay distinct. | [Report](docs/managed-model-preferences.md); final publication review/commit next. Astra recommends Smol first for shared identity extension; private native-only implementation begins without executing it. |

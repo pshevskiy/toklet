@@ -8709,3 +8709,61 @@ with all candidate files freshly checked and the old32 package retained. The
 failed duplicate-name compile, corrected source and inherited typed product
 remain auditable. Next is bounded namespace-keyed settings save/restore with
 fresh admission, rejected-record preservation and reply/late-commit handling.
+
+Strict Swift accepted identity and bridge35 integration is committed as
+`e58eb3d` after exact fifteen-file Astra review. All passed checks and the first
+failed compile are preserved. Next, the managed preference layer uses that
+accepted namespace and fresh admission, with global reply-edit and late-commit
+reconciliation; native code and package rebuilding are unnecessary.
+
+All-model persistence remains explicitly open after the first managed Qwen3
+route: other adopted profiles and later app adapters need their own accepted
+content/codec identity coverage before saved settings can be restored for them.
+
+The private managed-preference draft now includes bounded namespace-keyed local
+records, fresh restoration and one reply-setting boundary. Astra identifies a
+busy-to-idle invalidation race: observing completion in a second snapshot could
+discard a deferred save without reconciling it. The draft is being corrected
+before source approval, with behavior controls for stale/rejected restoration,
+postcommit storage failure and ordinary-route no-save. No preference source has
+been applied or executed; existing native35 products will be reused.
+
+Astra approves the corrected exact eight-file preference proposal; guarded
+application and whitespace checks pass. Terminal reconciliation now uses the
+same captured snapshot, and only healthy idle completion can save settings or
+install a restored reply. Sixty CPU controls and the one-load controller are
+authored, with synthetic and loaded scopes kept separate. Compile/CPU/app checks
+and actual-product Mac validation remain pending; native code is unchanged.
+
+Validation preflight catches the new CPU entry point's missing temporary-directory
+argument and a control-name parser that counted literal sites instead of
+loop-generated runtime cases. Both are corrected before invocation; these are
+unexecuted runner drafts, not failed engine checks.
+
+All 23 fresh compile/CPU/app jobs pass, including 60 preference controls,
+28 Apply, 57 planning, 37 routing, current worker transaction/configuration and
+tiny CPU preview regressions, plus Mac/iOS/simulator app build checks. All owned
+processes close without endpoint errors. Existing strict identity/native results
+are authenticated and inherited; no native build or suite is repeated. Actual
+retained products await Astra review before the two Mac checks.
+
+Both Mac checks now pass: the 21-barrier tiny Metal preview regression and one
+cached Qwen3 preference controller. Fresh restore to256/chunk16/reply64 writes
+zero records; precommit cancellation and postcommit editing retain actual state,
+newer drafts/replies and terminal-only saving. The mode-valid33/reply32 request
+actually needs45 rendered tokens, so it rejects before generation and preserves
+the newer draft and empty native prefix. Final injected retirement quarantine
+commits64/chunk8 but keeps the healthy33 record at five explicit writes. Owning
+close completes. No successful real-model generation or UI/phone/performance
+claim is added; Astra saved audit and exact publication review are next.
+
+The [managed Qwen3 preference task](managed-model-preferences.md) passes Astra's
+independent saved audit: all23+2jobs,5990bindings,66outputs,10products,10record
+hashes and25closed process groups are authenticated. Workspace preservation is
+checked across the stated busy/terminal and rejection/close scopes, not across
+intentional reply/draft edits. Existing native35 products remain selected.
+Other-model persistence stays open. Astra recommends Smol first, completing its
+codec evidence and reusing its existing audit/getter ownership mechanism before
+Swift adoption; Qwen2.5/Mistral subsequently reuse the bounded reader with their
+own layout, size and text-policy checks. Private Smol native work starts while
+this completed preference task goes through final publication review.

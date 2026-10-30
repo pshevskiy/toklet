@@ -71,6 +71,12 @@ final class FriendlyChatStore: ObservableObject {
     @Published private(set) var applying = FriendlyApplyState()
     @Published private(set) var acceptedIdentity: NativeAcceptedIdentity?
     @Published private(set) var currentSessionConfiguration: NativeSessionConfiguration?
+    @Published private(set) var restoringPreference = false
+    @Published private(set) var preferenceMessage = ""
+    private let preferences: FriendlyPreferenceStore
+    private var preferenceEdit = UUID()
+    private var loadPreferenceEdit = UUID()
+    private var preferenceIntent: FriendlyPreferenceIntent?
     private var saving: Task<Void,Never>?
     private var storageBlocked = false
     private let file: URL
@@ -78,7 +84,7 @@ final class FriendlyChatStore: ObservableObject {
     private let persist: (Data,URL) throws -> Void
 
     init(harness: HarnessStore, fileURL: URL? = nil, admission: @escaping () throws -> HubAdmission = { try HubDeviceSnapshot.current().admission },
-         persist: ((Data,URL) throws -> Void)? = nil) {
+         persist: ((Data,URL) throws -> Void)? = nil, preferences: FriendlyPreferenceStore? = nil) {
         self.harness = harness
         self.admission = admission
         self.persist = persist ?? { bytes,file in
@@ -90,6 +96,8 @@ final class FriendlyChatStore: ObservableObject {
         }
         file = fileURL ?? FileManager.default.urls(for:.applicationSupportDirectory,in:.userDomainMask)[0]
             .appendingPathComponent("Toklet/chat-v1.json")
+        self.preferences = preferences ?? FriendlyPreferenceStore(directory:file.deletingLastPathComponent()
+            .appendingPathComponent("preferences-v1",isDirectory:true))
         restore()
         refreshFolders()
     }
@@ -102,7 +110,7 @@ final class FriendlyChatStore: ObservableObject {
     }
     var ready: Bool {
         guard let harness else { return false }
-        return hasChatModel && harness.state.modelContext != nil && !loadingModel && !harness.state.closed && !harness.state.restartRequired && !harness.state.busy && !running
+        return hasChatModel && harness.state.modelContext != nil && !loadingModel && !restoringPreference && !harness.state.closed && !harness.state.restartRequired && !harness.state.busy && !running
     }
     var availableOutputLimits: [UInt32] {
         // Before choosing/opening this conversation's model these are saved
@@ -287,6 +295,7 @@ final class FriendlyChatStore: ObservableObject {
             if !matched || !actual.chatEnabled { planningLoad = nil }
             observePlanning(actual)
             if !matched || !actual.chatEnabled { notice = actual.message.isEmpty ? "The model could not be opened. Choose a model to try again." : actual.message }
+            else { restorePreference(actual,worker:worker) }
         }
         if let result = state.chatResult, result.id == request {
             workspace.finish(result,restoreRejectedDraft:requestDraftEdit == draftEdit)
@@ -343,6 +352,8 @@ final class FriendlyChatStore: ObservableObject {
             if workspace.current.modelKey != key(folder), !workspace.current.messages.isEmpty { try workspace.newChat(modelKey:key(folder)) }
             workspace.conversations[workspace.selectedIndex].modelKey = key(folder)
             save()
+            loadPreferenceEdit = preferenceEdit
+            preferenceMessage = ""
             let request = FriendlyLoadRequest(folder:folder,mode:mode,conversation:workspace.selected)
             acceptedIdentity = nil
             if harness.state.hasModel {
@@ -421,6 +432,7 @@ final class FriendlyChatStore: ObservableObject {
            !actual.closed, identity.matches(context) {
             acceptedIdentity = identity
         } else { acceptedIdentity = nil }
+        reconcilePreference(actual)
         let active = planningTarget(actual,requireVisible:false)
         if let prior = planning.target,
            active?.worker != prior.worker || active?.modelInstance != prior.modelInstance
@@ -445,13 +457,28 @@ final class FriendlyChatStore: ObservableObject {
     func showPlanning() { planningVisible = true; refreshPlanning() }
     func hidePlanning() { planningVisible = false; invalidatePlanning(); _ = planning.select(nil) }
     func invalidatePlanning() {
+        // Also suppress a restored reply after a later UI/lifecycle intent.
+        // This does not undo an accepted native session or its explicit save.
+        preferenceEdit = UUID()
         // Serialize invalidation against acceptance, then observe any commit
         // which won the race. Never cancel unrelated generation.
         planningWorker?.selectTransition(nil)
         if planningWorker !== harness?.worker { harness?.worker?.selectTransition(nil) }
-        if let actual = harness?.worker?.snapshot() {
+        let actual = harness?.worker?.snapshot()
+        if let actual {
+            reconcilePreference(actual)
             applying.observe(target:planningTarget(actual,requireVisible:false),snapshot:actual)
             currentSessionConfiguration = planningTarget(actual,requireVisible:false)?.configuration
+        }
+        // A committed candidate is still retiring its old owner while busy.
+        // Keep that one intent until terminal health is known; cancelling its
+        // transient result cannot undo the swap or authorize an early save.
+        let committedBusy = actual.map { preferenceIntent?.retainDuringCleanup($0) == true } ?? false
+        if !committedBusy {
+            if preferenceIntent?.restoring == true {
+                preferenceMessage = "Saved settings restore was cancelled. Check the current settings; the saved record is kept."
+            }
+            preferenceIntent = nil; restoringPreference = false
         }
         if !applying.committed { applying.invalidate() }
         planning.invalidate()
@@ -459,13 +486,16 @@ final class FriendlyChatStore: ObservableObject {
         if planningWorker !== harness?.worker { harness?.worker?.selectPreview(nil) }
     }
     func editPlanning(_ field: FriendlyPlanningDraft.Field, _ text: String) {
-        invalidatePlanning(); applying.invalidate(); planning.edit(field,text)
+        invalidatePlanning()
+        // Rebind to a commit which won invalidation before retaining the new
+        // draft edit; a later poll must not reset that edit to accepted values.
+        refreshPlanning(); applying.invalidate(); preferenceMessage = ""; planning.edit(field,text)
     }
     func previewPlanning() {
         guard let harness, let worker = harness.worker else { planning.reject("The engine is unavailable."); return }
         let actual = worker.snapshot()
         observePlanning(actual)
-        guard planningVisible, !actual.busy, !actual.closed, !running, !loadingModel,
+        guard planningVisible, !actual.busy, !actual.closed, !running, !loadingModel, !restoringPreference,
               planning.target != nil else { planning.reject("Wait for an idle loaded chat model before previewing."); return }
         do {
             let request = try planning.begin()
@@ -478,7 +508,7 @@ final class FriendlyChatStore: ObservableObject {
     var planningApplyUnavailableReason: String? {
         guard let worker = harness?.worker else { return "The engine is unavailable." }
         let actual = worker.snapshot()
-        guard planningVisible, !running, !loadingModel, !applying.pending,
+        guard planningVisible, !running, !loadingModel, !restoringPreference, !applying.pending,
               let target = planningTarget(actual) else { return "Open an idle chat session before applying." }
         do {
             _ = try FriendlyApplyState.prepare(planning:planning,current:actual,target:target,reply:workspace.outputLimit)
@@ -489,19 +519,132 @@ final class FriendlyChatStore: ObservableObject {
         guard let harness, let worker = harness.worker else { applying.reject("The engine is unavailable."); return }
         let actual = worker.snapshot()
         observePlanning(actual)
-        guard planningVisible, !running, !loadingModel, !applying.pending,
+        guard planningVisible, !running, !loadingModel, !restoringPreference, !applying.pending,
               let target = planningTarget(actual) else { applying.reject("Wait for an idle active chat session before applying."); return }
         do {
             let request = try FriendlyApplyState.prepare(planning:planning,current:actual,target:target,reply:workspace.outputLimit)
             applying.begin(request)
+            if let identity = acceptedIdentity, let loadID = actual.acceptedLoadRequestID,
+               actual.acceptedIdentity == identity, identity.modelInstance == request.target.modelInstance {
+                preferenceIntent = FriendlyPreferenceIntent(worker:ObjectIdentifier(worker),conversation:workspace.selected,
+                    loadRequest:loadID,editGeneration:preferenceEdit,identity:identity,acceptance:.replacement(request.transition),
+                    value:FriendlyModelPreference(namespace:identity.namespace,capacity:request.transition.capacity,
+                        chunk:request.transition.chunk,reply:workspace.outputLimit,wholeBudget:request.transition.wholeSessionBudget),restoring:false)
+            }
             guard worker.selectTransition(request.transition.selection),
                   worker.submit(.replaceWithEmptySession(request.transition)) else {
                 worker.selectTransition(nil)
+                preferenceIntent = nil
                 applying.reject("The engine changed or is busy. Your current chat and edited values are kept.")
                 return
             }
             harness.poll()
         } catch { applying.reject(error.localizedDescription) }
+    }
+
+
+    // One user-setting boundary: invalidate before reading current committed
+    // facts, so a late replacement can never be mistaken for rolled back.
+    func setReplyLimit(_ reply: UInt32) {
+        invalidatePlanning()
+        guard !storageBlocked else { return }
+        do {
+            guard ChatWorkspace.outputLimits.contains(reply), reply <= NativeGenerationPolicy.maximumChatOutput else {
+                throw NativeContextFailure("Unsupported reply limit. Your previous choice is kept.")
+            }
+            let actual = harness?.worker?.snapshot()
+            if let context = actual?.modelContext {
+                try FriendlyModelPreference.validateReply(reply,capacity:context.sharedWindow,model:context)
+            }
+            workspace.outputLimit = reply
+            _ = save()
+            preferenceMessage = ""
+            if let actual { saveCurrentPreference(actual) }
+        } catch { preferenceMessage = error.localizedDescription }
+    }
+    private func saveCurrentPreference(_ actual: NativeSnapshot) {
+        guard let worker = harness?.worker, let target = planningTarget(actual,requireVisible:false),
+              target.worker == ObjectIdentifier(worker), !actual.restartRequired,
+              let identity = acceptedIdentity, actual.acceptedIdentity == identity,
+              actual.acceptedLoadRequestID == planningLoad?.settings.loadRequestID,
+              let context = actual.modelContext, identity.matches(context),
+              let configuration = actual.sessionConfiguration,
+              configuration.modelInstance == identity.modelInstance,
+              UInt64(configuration.capacity) == context.configuredCapacity else { return }
+        let value = FriendlyModelPreference(namespace:identity.namespace,capacity:configuration.capacity,
+            chunk:configuration.chunk,reply:workspace.outputLimit,wholeBudget:configuration.wholeSessionBudget)
+        do {
+            try value.validate(model:context)
+            guard let loadID = actual.acceptedLoadRequestID else { return }
+            preferenceIntent = FriendlyPreferenceIntent(worker:ObjectIdentifier(worker),conversation:workspace.selected,
+                loadRequest:loadID,editGeneration:preferenceEdit,identity:identity,acceptance:.current(configuration),
+                value:value,restoring:false)
+            restoringPreference = false
+            // This may defer through generation or candidate retirement. Only
+            // the latest accepted edit for this exact configuration can save.
+            reconcilePreference(actual)
+        } catch { preferenceMessage = "Current settings are active, but could not be saved: " + error.localizedDescription }
+    }
+    private func restorePreference(_ actual: NativeSnapshot, worker: NativeWorker) {
+        guard preferenceEdit == loadPreferenceEdit, preferenceIntent == nil, !actual.busy, !actual.restartRequired,
+              let identity = acceptedIdentity, actual.acceptedIdentity == identity,
+              actual.acceptedLoadRequestID == planningLoad?.settings.loadRequestID,
+              let context = actual.modelContext, identity.matches(context), let live = actual.liveContext,
+              let accepted = planningLoad, accepted.worker == ObjectIdentifier(worker),
+              accepted.settings.loadIdentity == .managedQwen3,
+              let loadID = actual.acceptedLoadRequestID, loadID == accepted.settings.loadRequestID else { return }
+        do {
+            guard let value = try preferences.load(identity.namespace) else { return }
+            try value.validate(model:context)
+            let selection = NativeTransitionSelection(id:UUID(),modelInstance:live.modelInstance,sessionInstance:live.sessionInstance)
+            var request = NativeTransitionRequest(id:UUID(),selection:selection,capacity:value.capacity,chunk:value.chunk,
+                wholeSessionBudget:value.wholeBudget,coexistenceBudget:accepted.coexistenceBudget,replayReserve:0,
+                textReserve:accepted.settings.textBudget,applicationReserve:NativeTransitionHeadroomCheck.applicationReserve)
+            request.memoryPolicy = .friendly; try request.validate()
+            let intent = FriendlyPreferenceIntent(worker:ObjectIdentifier(worker),conversation:workspace.selected,
+                loadRequest:loadID,editGeneration:preferenceEdit,identity:identity,acceptance:.replacement(request),value:value,restoring:true)
+            guard worker.selectTransition(selection), worker.submit(.replaceWithEmptySession(request)) else {
+                worker.selectTransition(nil)
+                throw NativeContextFailure("The engine changed before saved settings could be restored.")
+            }
+            preferenceIntent = intent; restoringPreference = true
+            preferenceMessage = "Checking saved settings against the current model and memory…"
+            harness?.poll()
+        } catch {
+            preferenceMessage = "Saved settings were not restored. Current settings and the saved record are kept. " + error.localizedDescription
+        }
+    }
+    private func reconcilePreference(_ actual: NativeSnapshot) {
+        guard let intent = preferenceIntent else { return }
+        let currentWorker = harness?.worker
+        let result = intent.resolve(worker:currentWorker.map(ObjectIdentifier.init),conversation:workspace.selected,
+            expert:harness?.expert ?? true,editGeneration:preferenceEdit,snapshot:actual)
+        guard result != .waiting else { return }
+        preferenceIntent = nil; restoringPreference = false
+        switch result {
+        case .waiting, .discarded: return
+        case .rejected:
+            if intent.restoring {
+                preferenceMessage = "Saved settings were not restored. Current settings and the saved record are kept. "
+                    + (actual.transition?.message ?? "Restoration was cancelled.")
+            }
+        case .quarantine:
+            preferenceMessage = "Settings changed, but the engine requires a restart. The saved record is kept."
+        case .newerEdit:
+            preferenceMessage = "The session changed; your newer settings choice is kept. Check the current reply limit."
+        case .restoreReply(let context):
+            do {
+                try intent.value.validate(model:context)
+                workspace.outputLimit = intent.value.reply
+                _ = save()
+                preferenceMessage = "Saved settings restored. The next Send checks the rendered conversation and reply together."
+            } catch { preferenceMessage = "The session changed, but the saved reply is unavailable: " + error.localizedDescription }
+        case .save(let context):
+            do {
+                try intent.value.validate(model:context)
+                preferenceMessage = preferences.saveAccepted(intent.value)
+            } catch { preferenceMessage = "Current settings could not be saved: " + error.localizedDescription }
+        }
     }
 
     func refreshFolders() {

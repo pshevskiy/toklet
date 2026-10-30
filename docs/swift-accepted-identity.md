@@ -67,3 +67,7 @@ resizing, broader accuracy/windows, speed or whole-app/device fit. No explicit
 signing, account, provisioning or device-installation stage occurs. Mac/simulator
 linked products can contain implicit `LC_CODE_SIGNATURE`. Next: bounded per-model
 preferences, freshly admitted restoration and reply/edit/late-commit handling.
+
+The subsequent [managed-preference task](managed-model-preferences.md) implements
+that Qwen3 save/restore path with separate CPU, Apple-build and Mac-controller
+evidence. It reuses this native package without changing the results above.

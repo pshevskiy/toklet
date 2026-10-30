@@ -967,7 +967,7 @@ private final class Engine {
             let after = base.addingReportingOverflow(UInt64(tokens.count))
             let required = after.partialValue.addingReportingOverflow(UInt64(maximum))
             if !after.overflow, !required.overflow, required.partialValue > liveContext.capacity {
-                throw invalid("This request needs \(required.partialValue.formatted()) tokens including its reply; the current shared window is \(liveContext.capacity.formatted()). Choose a shorter reply or a new chat.")
+                throw invalid("This request needs \(required.partialValue.formatted()) tokens including its reply; the current shared window is \(liveContext.capacity.formatted()). Increase context, choose a shorter reply, or start a new chat. Even a new chat includes template tokens.")
             }
         }
         try requireOK(preflight,&error)

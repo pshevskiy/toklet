@@ -1,0 +1,614 @@
+{
+  "base_revision": "e58eb3dac01ee361968b36ec0911b0911508d315",
+  "checks": {
+    "all_25_process_groups_closed": true,
+    "apply_controls": 28,
+    "artifact_local_apps": 3,
+    "astra_saved_audit_passed": true,
+    "cpu_preview_barriers": 16,
+    "endpoint_errors": [],
+    "fresh_compile_cpu_app_jobs": 23,
+    "inherited_default_rust_tests": 501,
+    "inherited_identity_wire_controls": 51,
+    "inherited_metal_rust_tests": 609,
+    "mac_jobs": 2,
+    "mac_sources": 36,
+    "native_rebuilds": 0,
+    "planning_controls": 57,
+    "preference_cpu_controls": 60,
+    "project_sources": 35,
+    "retirement_cases": 2,
+    "routing_controls": 37,
+    "tiny_metal_preview_barriers": 21,
+    "transaction_and_configuration_pure": 48,
+    "transaction_barriers": 15
+  },
+  "date": "2026-10-30",
+  "evidence": [
+    {
+      "bytes": 10828,
+      "path": "artifacts/new-goal-b5d5e-managed-preferences-proposal-v1/manifest.json",
+      "sha256": "1e82c28fd12572e6ead63b179dfd2abdc8c7653da17c0b87f6248454f0470c50"
+    },
+    {
+      "bytes": 14269,
+      "path": "artifacts/new-goal-b5d5e-managed-preferences-independent-review-v1/prospective-review.json",
+      "sha256": "bc215bc272141a583502ad8e5ae91151f6a3f55413bf654eb7276a1c4492d6a0"
+    },
+    {
+      "bytes": 11305,
+      "path": "artifacts/new-goal-b5d5e-managed-preferences-verification-owner-v1/manifest.json",
+      "sha256": "f2f85937b249c44f66d7c7f8a255ff915b6752b53132f91ec0835b358dd921ac"
+    },
+    {
+      "bytes": 12445,
+      "path": "artifacts/new-goal-b5d5e-managed-preferences-verification-independent-review-v1/prospective-review.json",
+      "sha256": "71df9db2c3cae9fc7d868e57f768cc6006be200587e040db4aabce3dde318780"
+    },
+    {
+      "bytes": 1801647,
+      "path": "artifacts/new-goal-b5d5e-managed-preferences-verification-owner-v1/cold-v1/checks.json",
+      "sha256": "578942309efd22c5070bfe5290435cad1436c821fd32656b89c20a3ddcefaef8"
+    },
+    {
+      "bytes": 1910735,
+      "path": "artifacts/new-goal-b5d5e-managed-preferences-verification-owner-v1/package.json",
+      "sha256": "3abafba4c6ba6c67113f84e8bd891f7ea4967a738f0a25d2f5238c989bca0d87"
+    },
+    {
+      "bytes": 10512,
+      "path": "artifacts/new-goal-b5d5e-managed-preferences-verification-owner-v1/launch-review.json",
+      "sha256": "1cf87c1db3c32791a5db995c7a83181a9c8c18824a91e3aed606117afb9830e7"
+    },
+    {
+      "bytes": 1383699,
+      "path": "artifacts/new-goal-b5d5e-managed-preferences-verification-owner-v1/hardware-v1/checks.json",
+      "sha256": "d2cbddb689979d4674d608179a8977e791437b4dd4e851c86f27e530049d9b49"
+    },
+    {
+      "bytes": 22672,
+      "path": "artifacts/new-goal-b5d5e-managed-preferences-verification-independent-review-v1/saved-review.json",
+      "sha256": "43434183f5408b846427fd0a4834f9d7c11f0a72a5d92f9c48d1c250216f4136"
+    }
+  ],
+  "format": "toklet-managed-model-preferences-result-v1",
+  "limitations": [
+    "Only authenticated managed Qwen3 receives model preference persistence; other managed profiles, external folders and Expert remain outside this route.",
+    "Constructed terminal/rejected-restore/storage-failure controls are synthetic; no actual low-headroom restore or full process restart is claimed.",
+    "One cached-model load and zero successful real-model generation tokens; the actual 45-token rendered requirement is an observed result, not a hardcoded admission threshold.",
+    "Four native replacements include one injected committed-but-quarantined session; that commit is not healthy and does not save.",
+    "Source/controller/compile scope; no rendered UI, iPhone runtime, new quality, performance or whole-app/device fit qualification.",
+    "Atomic local replacement does not establish power-loss durability or protection against a hostile concurrent filesystem.",
+    "Configured headroom is existing Mac process policy, not free RAM or a reservation; sampled direct-process usage is not an aggregate peak."
+  ],
+  "loaded_records": [
+    {
+      "busy": false,
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "09F38344-8C76-492C-B56A-7B1ECD110023",
+        "capacity": 256,
+        "chunk": 16,
+        "model": 1,
+        "session": 3,
+        "whole_budget": 1610612736
+      },
+      "draft": "Keep this unsent preference draft.",
+      "event": "restored",
+      "file_sha256": "8590e5e1231f94c4377c8b1227a2001066a146c94d87bca94ef27f59cc212406",
+      "generated": 0,
+      "headroom": {
+        "available": 5599001352,
+        "fits": true,
+        "instrument": "Configured Mac process allowance min(RAM/2,6GiB) minus TASK_VM_INFO footprint; not free system RAM",
+        "required": 125957028
+      },
+      "history": 0,
+      "manifest": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+      "message": "",
+      "messages": 0,
+      "model": 1,
+      "pending": 0,
+      "preference_message": "Saved settings restored. The next Send checks the rendered conversation and reply together.",
+      "preference_writes": 0,
+      "record": {
+        "capacity": 256,
+        "chunk": 16,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "reply": 64,
+        "schema": 1,
+        "whole_budget": 1610612736
+      },
+      "record_sha256": "c7ecd93337b98fdad6a8c4cfb898692b002fb37d6343c456a356c0ebce3c3eec",
+      "reply": 64,
+      "restart_required": false,
+      "restoring": false,
+      "status": 0,
+      "transition": {
+        "committed": true,
+        "message": "",
+        "status": 0
+      },
+      "workspace_sha256": "9bfea34ffa593926f72eb2db4f03ddb6c412950b49af4f8a4d7232aec052a39e"
+    },
+    {
+      "busy": true,
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "09F38344-8C76-492C-B56A-7B1ECD110023",
+        "capacity": 256,
+        "chunk": 16,
+        "model": 1,
+        "session": 3,
+        "whole_budget": 1610612736
+      },
+      "draft": "Keep this unsent preference draft.",
+      "event": "precommit-reply-edit-busy",
+      "file_sha256": "36e475854f0681b9ca12be2ce7a94681436c8d3bb4b3c4e26e299e8c46ff4859",
+      "generated": 0,
+      "history": 0,
+      "manifest": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+      "message": "",
+      "messages": 0,
+      "model": 1,
+      "pending": 0,
+      "preference_message": "",
+      "preference_writes": 0,
+      "record": {
+        "capacity": 256,
+        "chunk": 16,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "reply": 64,
+        "schema": 1,
+        "whole_budget": 1610612736
+      },
+      "record_sha256": "c7ecd93337b98fdad6a8c4cfb898692b002fb37d6343c456a356c0ebce3c3eec",
+      "reply": 128,
+      "restart_required": false,
+      "restoring": false,
+      "status": 0,
+      "workspace_sha256": "25da27982fa664649052de7bd14d50731a7245817e54710395982e7d20ca0a85"
+    },
+    {
+      "busy": false,
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "09F38344-8C76-492C-B56A-7B1ECD110023",
+        "capacity": 256,
+        "chunk": 16,
+        "model": 1,
+        "session": 3,
+        "whole_budget": 1610612736
+      },
+      "draft": "Keep this unsent preference draft.",
+      "event": "precommit-reply-edit-terminal",
+      "file_sha256": "36e475854f0681b9ca12be2ce7a94681436c8d3bb4b3c4e26e299e8c46ff4859",
+      "generated": 0,
+      "history": 0,
+      "manifest": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+      "message": "",
+      "messages": 0,
+      "model": 1,
+      "pending": 0,
+      "preference_message": "Current chat settings saved for this managed model.",
+      "preference_writes": 1,
+      "record": {
+        "capacity": 256,
+        "chunk": 16,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "reply": 128,
+        "schema": 1,
+        "whole_budget": 1610612736
+      },
+      "record_sha256": "807835e2af3f8fe5af654dfcef55b2306636bc40a3afbbb4cb5911916000d231",
+      "reply": 128,
+      "restart_required": false,
+      "restoring": false,
+      "status": 0,
+      "workspace_sha256": "25da27982fa664649052de7bd14d50731a7245817e54710395982e7d20ca0a85"
+    },
+    {
+      "busy": true,
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "CCE6AA88-76B5-44E8-8191-D22B4B7749F7",
+        "capacity": 128,
+        "chunk": 8,
+        "model": 1,
+        "session": 5,
+        "whole_budget": 1610612736
+      },
+      "draft": "Keep this unsent preference draft.",
+      "event": "postcommit-edit-busy",
+      "file_sha256": "8590e5e1231f94c4377c8b1227a2001066a146c94d87bca94ef27f59cc212406",
+      "generated": 0,
+      "history": 0,
+      "manifest": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+      "message": "",
+      "messages": 0,
+      "model": 1,
+      "pending": 0,
+      "preference_message": "",
+      "preference_writes": 2,
+      "record": {
+        "capacity": 256,
+        "chunk": 16,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "reply": 32,
+        "schema": 1,
+        "whole_budget": 1610612736
+      },
+      "record_sha256": "4f3b11c7c1a95758646feac788eb5185c299b2d2d84ce150f27b458dc1971ac6",
+      "reply": 64,
+      "restart_required": false,
+      "restoring": false,
+      "status": 0,
+      "workspace_sha256": "9bfea34ffa593926f72eb2db4f03ddb6c412950b49af4f8a4d7232aec052a39e"
+    },
+    {
+      "busy": false,
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "CCE6AA88-76B5-44E8-8191-D22B4B7749F7",
+        "capacity": 128,
+        "chunk": 8,
+        "model": 1,
+        "session": 5,
+        "whole_budget": 1610612736
+      },
+      "draft": "Keep this unsent preference draft.",
+      "event": "postcommit-edit-terminal",
+      "file_sha256": "8590e5e1231f94c4377c8b1227a2001066a146c94d87bca94ef27f59cc212406",
+      "generated": 0,
+      "history": 0,
+      "manifest": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+      "message": "",
+      "messages": 0,
+      "model": 1,
+      "pending": 0,
+      "preference_message": "Current chat settings saved for this managed model.",
+      "preference_writes": 3,
+      "record": {
+        "capacity": 128,
+        "chunk": 8,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "reply": 64,
+        "schema": 1,
+        "whole_budget": 1610612736
+      },
+      "record_sha256": "2bf3a87bf5903cc99bdb795e3294633b4114ca4318c9cd736d3046750b13a255",
+      "reply": 64,
+      "restart_required": false,
+      "restoring": false,
+      "status": 0,
+      "workspace_sha256": "9bfea34ffa593926f72eb2db4f03ddb6c412950b49af4f8a4d7232aec052a39e"
+    },
+    {
+      "busy": false,
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "F77F2C0F-4F2B-4C5C-85C1-C044562102A7",
+        "capacity": 33,
+        "chunk": 1,
+        "model": 1,
+        "session": 6,
+        "whole_budget": 1610612736
+      },
+      "draft": "Keep this unsent preference draft.",
+      "event": "small-window-mode-valid",
+      "file_sha256": "d50d725c095f865fde876a1979fb5f59bb50b4190e82f828c212c66eba8e385e",
+      "generated": 0,
+      "history": 0,
+      "manifest": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+      "message": "",
+      "messages": 0,
+      "model": 1,
+      "pending": 0,
+      "preference_message": "Current chat settings saved for this managed model.",
+      "preference_writes": 5,
+      "record": {
+        "capacity": 33,
+        "chunk": 1,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "reply": 32,
+        "schema": 1,
+        "whole_budget": 1610612736
+      },
+      "record_sha256": "2aa1f7c970a201febe5933a9afbbc48beb2fb12ab35eef5e981c592fea268c8d",
+      "reply": 32,
+      "restart_required": false,
+      "restoring": false,
+      "status": 0,
+      "workspace_sha256": "41f025b5ab0cafca475c5db022f5ee6549cf32e08625bcd7181c7f9d654aad27"
+    },
+    {
+      "busy": false,
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "F77F2C0F-4F2B-4C5C-85C1-C044562102A7",
+        "capacity": 33,
+        "chunk": 1,
+        "model": 1,
+        "session": 6,
+        "whole_budget": 1610612736
+      },
+      "draft": "Keep this newer draft after rendered rejection.",
+      "event": "small-window-rendered-rejection",
+      "file_sha256": "06dc3129d7b23b564468d82725016e2042e2f0ed44796daf9d17edfe31288cbe",
+      "generated": 0,
+      "history": 0,
+      "manifest": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+      "message": "This request needs 45 tokens including its reply; the current shared window is 33. Increase context, choose a shorter reply, or start a new chat. Even a new chat includes template tokens.",
+      "messages": 0,
+      "model": 1,
+      "pending": 0,
+      "preference_message": "Current chat settings saved for this managed model.",
+      "preference_writes": 5,
+      "record": {
+        "capacity": 33,
+        "chunk": 1,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "reply": 32,
+        "schema": 1,
+        "whole_budget": 1610612736
+      },
+      "record_sha256": "2aa1f7c970a201febe5933a9afbbc48beb2fb12ab35eef5e981c592fea268c8d",
+      "rendered_required_tokens": 45,
+      "reply": 32,
+      "required_source": "actual worker preflight message",
+      "restart_required": false,
+      "restoring": false,
+      "status": 1,
+      "workspace_sha256": "3968fc2e424f7e134e1f056fbdf74aee350ecf30308bee24368820dc0e6cb518"
+    },
+    {
+      "busy": true,
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "3783AA8F-C013-4172-BD2A-BD018867A9C1",
+        "capacity": 64,
+        "chunk": 8,
+        "model": 1,
+        "session": 7,
+        "whole_budget": 1610612736
+      },
+      "draft": "Keep this newer draft after rendered rejection.",
+      "event": "quarantine-commit-busy",
+      "file_sha256": "06dc3129d7b23b564468d82725016e2042e2f0ed44796daf9d17edfe31288cbe",
+      "generated": 0,
+      "history": 0,
+      "manifest": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+      "message": "",
+      "messages": 0,
+      "model": 1,
+      "pending": 0,
+      "preference_message": "",
+      "preference_writes": 5,
+      "record": {
+        "capacity": 33,
+        "chunk": 1,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "reply": 32,
+        "schema": 1,
+        "whole_budget": 1610612736
+      },
+      "record_sha256": "2aa1f7c970a201febe5933a9afbbc48beb2fb12ab35eef5e981c592fea268c8d",
+      "reply": 32,
+      "restart_required": false,
+      "restoring": false,
+      "status": 0,
+      "workspace_sha256": "3968fc2e424f7e134e1f056fbdf74aee350ecf30308bee24368820dc0e6cb518"
+    },
+    {
+      "busy": false,
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "3783AA8F-C013-4172-BD2A-BD018867A9C1",
+        "capacity": 64,
+        "chunk": 8,
+        "model": 1,
+        "session": 7,
+        "whole_budget": 1610612736
+      },
+      "draft": "Keep this newer draft after rendered rejection.",
+      "event": "quarantine-terminal",
+      "file_sha256": "06dc3129d7b23b564468d82725016e2042e2f0ed44796daf9d17edfe31288cbe",
+      "generated": 0,
+      "headroom": {
+        "available": 5675006752,
+        "fits": true,
+        "instrument": "Configured Mac process allowance min(RAM/2,6GiB) minus TASK_VM_INFO footprint; not free system RAM",
+        "required": 98221252
+      },
+      "history": 0,
+      "manifest": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+      "message": "",
+      "messages": 0,
+      "model": 1,
+      "pending": 0,
+      "preference_message": "Settings changed, but the engine requires a restart. The saved record is kept.",
+      "preference_writes": 5,
+      "record": {
+        "capacity": 33,
+        "chunk": 1,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "reply": 32,
+        "schema": 1,
+        "whole_budget": 1610612736
+      },
+      "record_sha256": "2aa1f7c970a201febe5933a9afbbc48beb2fb12ab35eef5e981c592fea268c8d",
+      "reply": 32,
+      "restart_required": true,
+      "restoring": false,
+      "status": 0,
+      "transition": {
+        "committed": true,
+        "message": "Native status 4",
+        "status": 4
+      },
+      "workspace_sha256": "3968fc2e424f7e134e1f056fbdf74aee350ecf30308bee24368820dc0e6cb518"
+    },
+    {
+      "busy": false,
+      "committed": 0,
+      "draft": "Keep this newer draft after rendered rejection.",
+      "event": "closed",
+      "file_sha256": "06dc3129d7b23b564468d82725016e2042e2f0ed44796daf9d17edfe31288cbe",
+      "generated": 0,
+      "history": 0,
+      "message": "",
+      "messages": 0,
+      "pending": 0,
+      "preference_message": "Settings changed, but the engine requires a restart. The saved record is kept.",
+      "preference_writes": 5,
+      "record": {
+        "capacity": 33,
+        "chunk": 1,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "reply": 32,
+        "schema": 1,
+        "whole_budget": 1610612736
+      },
+      "record_sha256": "2aa1f7c970a201febe5933a9afbbc48beb2fb12ab35eef5e981c592fea268c8d",
+      "reply": 32,
+      "restart_required": true,
+      "restoring": false,
+      "status": 0,
+      "workspace_sha256": "3968fc2e424f7e134e1f056fbdf74aee350ecf30308bee24368820dc0e6cb518"
+    }
+  ],
+  "loaded_summary": {
+    "accepted_replacements": 4,
+    "actual_model_loads": 1,
+    "closed": true,
+    "passed": true,
+    "phone_checked": false,
+    "preference_writes": 5,
+    "prepared_candidates": 5,
+    "quarantine_injected": true,
+    "real_generation_tokens": 0,
+    "rendered_small_window_rejection": true,
+    "rendered_ui_checked": false
+  },
+  "passed": true,
+  "pre_execution_corrections": [
+    "Deferred intent reconciliation uses one captured snapshot to avoid busy-to-idle loss.",
+    "New CPU entry point receives an exclusive temporary directory.",
+    "Control parser uses the actual ordered 60-name vector, including loop-generated names."
+  ],
+  "scope": "Authenticated managed Qwen3 preference storage and fresh restore, Mac controller and Apple builds",
+  "source_files": {
+    "apple/Harness/FriendlyChatStore.swift": {
+      "bytes": 38332,
+      "sha256": "0a59b11b8c3a3379a1db66c3f8805a8f60c823ed77f1865689d7ba967fa3a0ad"
+    },
+    "apple/Harness/FriendlyHarness.swift": {
+      "bytes": 38557,
+      "sha256": "4906d635ee8f4ddc26af3dd773cb5b63949d8df6a2e6eb28599abca4cf819288"
+    },
+    "apple/Harness/FriendlyModelPreference.swift": {
+      "bytes": 11172,
+      "sha256": "0b081923da71c8a20d6f18fe1e65cc8b84af936abd2c2f3046faa1076326d9f7"
+    },
+    "apple/Harness/FriendlyPlanningDraft.swift": {
+      "bytes": 11968,
+      "sha256": "50ea4875607252b76c29694cc723e2285be6c87a2962f9e35eca2db9ce1c5981"
+    },
+    "apple/Harness/NativeWorker.swift": {
+      "bytes": 62699,
+      "sha256": "8b5ba7728f338a30c7f1c49123cde1c5d3050093497d37e47326382812d1650e"
+    },
+    "apple/TokletHarness.xcodeproj/project.pbxproj": {
+      "bytes": 15262,
+      "sha256": "e0be3c809b091783bb683ed3a60eeb541462b9de2d4c9a01a43a13b40768cc96"
+    },
+    "apple/tests/swift/FriendlyPreferenceLoadedMain.swift": {
+      "bytes": 16114,
+      "sha256": "d8cd21a4fbba9009d6011f7767efc1f7552fed769f3f7cdc34cbb3e3775b1785"
+    },
+    "apple/tests/swift/FriendlyPreferenceMain.swift": {
+      "bytes": 12770,
+      "sha256": "9c7c62029663a3585fe8209b963d395548c8b93569de914e34b5089e1218ed0a"
+    }
+  }
+}

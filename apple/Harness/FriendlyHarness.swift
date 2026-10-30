@@ -121,7 +121,7 @@ struct FriendlyHarnessView: View {
     private var trailingPlacement: ToolbarItemPlacement { .primaryAction }
     private var folderHelp: String { "Downloads run while the app is open. A verified download works offline. Use Show models in Finder to remove a damaged model folder before downloading again." }
     #endif
-    private var unlocked: Bool { !store.state.busy && !chat.running && !chat.loadingModel && chat.storageAvailable }
+    private var unlocked: Bool { !store.state.busy && !chat.running && !chat.loadingModel && !chat.restoringPreference && chat.storageAvailable }
 
     var body: some View {
         Group {
@@ -575,14 +575,15 @@ struct FriendlyHarnessView: View {
     private var settings: some View {
         Form {
             Section("Responses") {
-                Picker("Response limit",selection:$chat.workspace.outputLimit) {
+                if !chat.preferenceMessage.isEmpty { Text(chat.preferenceMessage).font(.footnote).foregroundStyle(.secondary) }
+                Picker("Response limit",selection:Binding(get:{ chat.workspace.outputLimit },set:{ chat.setReplyLimit($0) })) {
                     ForEach(chat.availableOutputLimits,id:\.self) { limit in
                         Text("\(limit.formatted()) tokens").tag(limit)
                     }
                     if !chat.outputLimitAvailable {
                         Text("\(chat.workspace.outputLimit.formatted()) tokens (unavailable)").tag(chat.workspace.outputLimit)
                     }
-                }.disabled(!unlocked).onChange(of:chat.workspace.outputLimit) { _,_ in chat.save() }
+                }.disabled(!unlocked)
                 Text("Tokens are pieces of words. This sets the maximum reply length; a model can finish earlier. The rendered prompt, chat history and requested reply must fit together.").font(.footnote).foregroundStyle(.secondary)
                 if chat.hasChatModel, let context = store.state.modelContext {
                     ContextWindowSummary(model:context,detailed:true).font(.footnote)

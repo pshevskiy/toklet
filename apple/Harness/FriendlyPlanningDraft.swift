@@ -151,9 +151,8 @@ struct FriendlyApplyState {
         guard UInt64(selected.capacity) <= live.loadedLimit else {
             throw NativeContextFailure("This estimate exceeds the opened model’s limit. Reloading with a larger limit is a separate action.")
         }
-        guard reply > 0, reply < selected.capacity else {
-            throw NativeContextFailure("Choose a shorter reply limit before applying this window. Your current preference is kept.")
-        }
+        guard let model = current.modelContext else { throw NativeContextFailure("The model context is unavailable.") }
+        try FriendlyModelPreference.validateReply(reply,capacity:UInt64(selected.capacity),model:model)
         let whole = try NativeTransitionPlan.sum([capacityRequest.sessionBudget,UInt64(TOKLET_MODEL_SESSION_BRIDGE_BYTES)])
         let draftRequest = try planning.draft.request(selection:selection)
         guard draftRequest.upper == requested.upper, draftRequest.chunk == requested.chunk,
