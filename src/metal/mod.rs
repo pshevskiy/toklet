@@ -35,6 +35,7 @@ pub mod mlx;
 pub mod planning;
 mod profile;
 mod reference_schedule;
+mod transition;
 use crate::{model, q4, session, weights};
 pub use diagnostic::Diagnostic;
 use memory::{Buffer, Gpu, Kernel, Layout, matrix, matrix_offset, multiply};
@@ -204,6 +205,60 @@ pub struct Model {
     pub load_timing: LoadTiming,
 }
 impl Model {
+    // Shared by the constructor and native model-bound cold planning.
+    fn validate_session_modes(
+        &self,
+        projection_mode: ProjectionMode,
+        normalization_mode: NormalizationMode,
+        attention_mode: AttentionMode,
+    ) -> Result<()> {
+        if self.is_mlx() != (projection_mode == ProjectionMode::MlxAffine) {
+            return Err(Error::Options(
+                "MLX artifacts require the explicit MlxAffine projection mode",
+            ));
+        }
+        if self.qwen3_context_diagnostic && normalization_mode != NormalizationMode::Compensated {
+            return Err(Error::Options(
+                "Qwen3 context diagnostic requires Compensated normalization",
+            ));
+        }
+        planning::validate_attention(self.mlx_architecture, attention_mode)?;
+        planning::validate_attention_device(&self.gpu, attention_mode)?;
+        if self.q4_format() == Some(q4::Format::V2)
+            && (!matches!(
+                projection_mode,
+                ProjectionMode::Q4Compensated | ProjectionMode::Q4CompensatedTiled
+            ) || normalization_mode != NormalizationMode::Compensated)
+        {
+            return Err(Error::Options(
+                "Q4 v2 requires frozen compensated execution modes",
+            ));
+        }
+        if projection_mode == ProjectionMode::HalfCompensated {
+            if !matches!(self.layers[0].q.storage, TensorStorage::Half(_)) {
+                return Err(Error::Options(
+                    "Half projection mode requires Half model weights",
+                ));
+            }
+            if self.gpu.execution_width(Kernel::HalfCompensated)
+                != self.gpu.execution_width(Kernel::HalfCompensatedFloat)
+            {
+                return Err(Error::Unsupported(
+                    "Half projection reduction widths differ",
+                ));
+            }
+        } else if !matches!(
+            projection_mode,
+            ProjectionMode::Original | ProjectionMode::MlxAffine
+        ) && !matches!(self.layers[0].q.storage, TensorStorage::Q4 { .. })
+        {
+            return Err(Error::Options(
+                "Q4 projection mode requires Q4 model weights",
+            ));
+        }
+        Ok(())
+    }
+
     fn output_weights(&self) -> &Tensor {
         self.output.as_ref().unwrap_or(&self.embedding)
     }
@@ -920,52 +975,7 @@ impl<'m> Session<'m> {
         attention_mode: AttentionMode,
     ) -> Result<Self> {
         autoreleasepool(|_| {
-            if model.is_mlx() != (projection_mode == ProjectionMode::MlxAffine) {
-                return Err(Error::Options(
-                    "MLX artifacts require the explicit MlxAffine projection mode",
-                ));
-            }
-            if model.qwen3_context_diagnostic
-                && normalization_mode != NormalizationMode::Compensated
-            {
-                return Err(Error::Options(
-                    "Qwen3 context diagnostic requires Compensated normalization",
-                ));
-            }
-            planning::validate_attention(model.mlx_architecture, attention_mode)?;
-            planning::validate_attention_device(&model.gpu, attention_mode)?;
-            if model.q4_format() == Some(q4::Format::V2)
-                && (!matches!(
-                    projection_mode,
-                    ProjectionMode::Q4Compensated | ProjectionMode::Q4CompensatedTiled
-                ) || normalization_mode != NormalizationMode::Compensated)
-            {
-                return Err(Error::Options(
-                    "Q4 v2 requires frozen compensated execution modes",
-                ));
-            }
-            if projection_mode == ProjectionMode::HalfCompensated {
-                if !matches!(model.layers[0].q.storage, TensorStorage::Half(_)) {
-                    return Err(Error::Options(
-                        "Half projection mode requires Half model weights",
-                    ));
-                }
-                if model.gpu.execution_width(Kernel::HalfCompensated)
-                    != model.gpu.execution_width(Kernel::HalfCompensatedFloat)
-                {
-                    return Err(Error::Unsupported(
-                        "Half projection reduction widths differ",
-                    ));
-                }
-            } else if !matches!(
-                projection_mode,
-                ProjectionMode::Original | ProjectionMode::MlxAffine
-            ) && !matches!(model.layers[0].q.storage, TensorStorage::Q4 { .. })
-            {
-                return Err(Error::Options(
-                    "Q4 projection mode requires Q4 model weights",
-                ));
-            }
+            model.validate_session_modes(projection_mode, normalization_mode, attention_mode)?;
             let c = &model.config;
             let plan = if model.qwen3_context_diagnostic {
                 planning::SessionPlan::new_qwen3_context_diagnostic(

@@ -249,7 +249,7 @@ impl SessionPlan {
             32,
         ])
     }
-    fn largest_buffer_bytes(&self) -> Result<usize> {
+    pub(super) fn largest_buffer_bytes(&self) -> Result<usize> {
         Ok(self.buffer_bytes()?.into_iter().max().unwrap_or(0))
     }
     pub fn validate_buffers(&self, maximum: usize) -> Result<()> {

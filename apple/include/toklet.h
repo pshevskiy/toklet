@@ -69,6 +69,29 @@ typedef struct {
     uint32_t position_offset, normalization, readback, attention, reserved;
     uint64_t load_memory_limit_bytes, session_memory_limit_bytes;
 } TokletRuntimePlanningOptions;
+/* Same-model old-plus-candidate accounting, native alignment/64 bytes.
+   expected IDs must match the live model and current session; reserved=0.
+   Aggregate budget includes both sessions and reserves, may be zero, <=6GiB.
+   Replay/text/application reserves are caller claims, not measured ownership.
+   Existing candidate TokletOptions and its individual whole budget are unchanged. */
+typedef struct {
+    uint32_t abi_version, struct_size;
+    uint64_t expected_model_instance, expected_session_instance;
+    uint64_t transition_budget_bytes, replay_reserve_bytes;
+    uint64_t text_reserve_bytes, application_reserve_bytes, reserved;
+} TokletTransitionPlanningOptions;
+/* Idle model/session must retain the exact same immutable model allocation.
+   No source files, candidate, numerical work, mutation or reservation. A valid
+   out is cleared on error. Uses existing inspection JSON copy/release functions.
+   Report individual candidate fit separately from aggregate old+candidate fit.
+   Metadata/driver and bridge allowances for both sessions remain conservative;
+   actual candidate capacities must be rechecked before any future publication.
+   Fit=false is an OK report. Wrong IDs/Rc/options: INVALID; unsupported retained
+   diagnostic/profile/mode owners: UNSUPPORTED. Busy/poisoned/wrong-thread rules
+   are unchanged. This snapshot cannot authorize later creation or publication.
+   No context, text, whole-app/device or performance qualification is evaluated. */
+uint32_t toklet_session_transition_plan_create(const TokletModel *, const TokletSession *,
+    const TokletOptions *, const TokletTransitionPlanningOptions *, TokletCompatibility **, TokletError *);
 #define TOKLET_MAX_CHAT_OUTPUT_TOKENS 256u
 #define TOKLET_MAX_COMPATIBILITY_JSON_BYTES 65536u
 /* Literal for the Swift importer; checked against 2*maximum+256 by C smoke. */

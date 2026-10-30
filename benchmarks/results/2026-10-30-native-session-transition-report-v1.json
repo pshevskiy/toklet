@@ -1,0 +1,902 @@
+{
+  "accounting": {
+    "bridge_allowances": [
+      20480,
+      20480
+    ],
+    "caller_replay_text_app_reserves_unverified": true,
+    "candidate_constructor_plan_only": true,
+    "current_actual_typed_buffer_lengths_and_host_capacities": true,
+    "json_allowance": 131328,
+    "metadata_driver_allowances": [
+      67108864,
+      67108864
+    ],
+    "os_peak_measurement": false,
+    "shared_model_once": true
+  },
+  "bridge": {
+    "bundle_adopted_by_task": false,
+    "new_api_app_consumer": false,
+    "new_header_export_count": 31,
+    "selected_app_bundle_export_count": 30
+  },
+  "date": "2026-10-30",
+  "decision": "bounded_native_transition_accounting_and_abi_verified",
+  "evidence": [
+    {
+      "bytes": 67626,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-accounting-proposal-v2/manifest.json",
+      "sha256": "8b0a1eebb6fe8c751f964a585a7e644c502b0046189520eb84cf13cef5cd8940"
+    },
+    {
+      "bytes": 9126,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-accounting-independent-review-v1/prospective-review.json",
+      "sha256": "bc20b2dd6eabc3016b3f2db4359e33593e2e29bbb76046ccb84d88c128c38c0c"
+    },
+    {
+      "bytes": 1916,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-accounting-independent-review-v1/prospective-v2-review.json",
+      "sha256": "228da28c9b94517920cea051b327f84ab7ab477d6bc086ad60d3028df44655fa"
+    },
+    {
+      "bytes": 4425,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-root-preflight-v1/checks.json",
+      "sha256": "3e9968ccd725bd3ffdfec79aae0421b025de5cf370f1bd94f65a7e54029973c1"
+    },
+    {
+      "bytes": 4883,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-root-preflight-v2/checks.json",
+      "sha256": "8a1272d1067c8fa1909ecc18c48ba4cb4de8ddbda7e753e58d72513c1dd604ae"
+    },
+    {
+      "bytes": 6786,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/manifest.json",
+      "sha256": "0e8db37c35fe65ba3bd37cb8f0b4adb274f5ba975880db63bab27b814d308a0c"
+    },
+    {
+      "bytes": 2778,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-independent-review-v1/prospective-review.json",
+      "sha256": "c4f7edf0b26d00753dc035243e022308c8dd0571f0153c40bf0012e636d4a56f"
+    },
+    {
+      "bytes": 1266074,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/checks.json",
+      "sha256": "8cb8b679ecb91119f9a8cc06ba1fc4ceb13ba678f6f839dbad2ee712f5e251c8"
+    },
+    {
+      "bytes": 69173,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-accounting-proposal-v3/manifest.json",
+      "sha256": "e0fde403a6dfb79e7e8bdee492a8aee637f83f8635472b853c948ddee75d5a77"
+    },
+    {
+      "bytes": 2399,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-accounting-independent-review-v1/prospective-v3-review.json",
+      "sha256": "84c11bd10b5840edb3150c472f0be765648096e27e0d777bf900707e849f37e9"
+    },
+    {
+      "bytes": 1244305,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/hardware-v1/checks.json",
+      "sha256": "3093b83bc7043c78db851bd2a162f3ff09ca2723cb0ddb2cb1020b30f8e188a1"
+    },
+    {
+      "bytes": 3712,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-independent-review-v1/failed-hardware-v1-review.json",
+      "sha256": "116a437551cffe39f688cf6b7a933d43ada1f6aeb215cf7df7f97075fe9246af"
+    },
+    {
+      "bytes": 5672,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/manifest.json",
+      "sha256": "b9b3997b032524989e196b215fe969f0000bf08cdbde98bcfb60875010032653"
+    },
+    {
+      "bytes": 4300,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/inheritance.json",
+      "sha256": "c54428a51e4a868bbae3823855f7fcb46f0e090572cc42120b9f9d22f909a6fa"
+    },
+    {
+      "bytes": 2860,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-independent-review-v1/prospective-v2-review.json",
+      "sha256": "38705571513500114529d7691280c88fd1d38db2d958ca9a58f61ca2c49a9fcb"
+    },
+    {
+      "bytes": 1260715,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/cold-v1/checks.json",
+      "sha256": "9c0e3667c0b7e922cadaa81e62c98e8e9a85827c74ecf3752c163c0142a286f9"
+    },
+    {
+      "bytes": 1251272,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/hardware-v1/checks.json",
+      "sha256": "d6ada3acebe3115b4599dc7251b1d6b63145522785a4fdbc4069de8397221473"
+    },
+    {
+      "bytes": 4255,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/launch-review.json",
+      "sha256": "4f83733ceb1cd3ed0f7cd29639d64ca6b0789a930357374f0cd09c322c61d73f"
+    },
+    {
+      "bytes": 1445927,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/package.json",
+      "sha256": "496b326ce4a3a5322314072fc681938521b2e866ce0de3ae2ae3a2c01fe8046b"
+    },
+    {
+      "bytes": 12625,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-independent-review-v1/saved-review.json",
+      "sha256": "26fd5cf70a7959e405a0e70079e7491ff4ef7829a43d3e946c345bc9bb287977"
+    },
+    {
+      "bytes": 3834,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/hardware-v1/transition-used-session.stdout",
+      "sha256": "d1620084c1b887ef5e6646c155a915073a5c0b5afbe3011524d5bc1cd8d22719"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/hardware-v1/transition-used-session.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "bytes": 47,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/hardware-v1/c-metal-run.stdout",
+      "sha256": "18dec16aabb22947d80b8976c6c7c31b07a78ec876a38434073f869cae391d3a"
+    },
+    {
+      "bytes": 0,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/hardware-v1/c-metal-run.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "evidence_limits": [
+    "Raw JSON accounting sums and identities independently recomputed. State/history/logit preservation, exact/under aggregate admission and diagnostic/profile rejection are backed by reviewed assertions in the completed test; full state arrays and boundary report JSON were not exported.",
+    "CPU C and Metal C smoke outcomes are compiled assertions, not retained full report JSON.",
+    "Sixteen original cold outcomes inherited under exactly one ignored-test source supersession; three new compile jobs do not represent new default/full Metal suite runs.",
+    "Sampled native usage is not a complete process peak or whole-app memory qualification; no elapsed time inferred.",
+    "No real model, new context range, session Apply/replacement, Swift/app/XCFramework adoption, phone or performance qualification."
+  ],
+  "format": "toklet-native-session-transition-report-v1",
+  "future": [
+    "actual-capacity re-admission before candidate publication",
+    "explicit empty candidate transaction first; exact history replay remains a separate future mode",
+    "Apply and identity-scoped persistence",
+    "checked Chat prompt/output/event and session-capacity reconciliation"
+  ],
+  "independent_saved_review": {
+    "bytes": 12625,
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-independent-review-v1/saved-review.json",
+    "sha256": "26fd5cf70a7959e405a0e70079e7491ff4ef7829a43d3e946c345bc9bb287977"
+  },
+  "observed_cold": {
+    "closed_groups": 16,
+    "commands": 16,
+    "cpu_c_smoke": true,
+    "endpoint_errors": [],
+    "export_counts": {
+      "default": 31,
+      "metal": 31
+    },
+    "gpu_executed": false,
+    "outputs": [
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/c-compile-default.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/c-compile-default.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/c-compile-metal.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/c-compile-metal.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/c-default-run.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 47,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/c-default-run.stdout",
+        "sha256": "18dec16aabb22947d80b8976c6c7c31b07a78ec876a38434073f869cae391d3a"
+      },
+      {
+        "bytes": 134,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/default-clippy.stderr",
+        "sha256": "8e2e872dfea21c990a8775b2a674082ffbd358cd4f7210d3a2840f939b7182e7"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/default-clippy.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 6965,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/default-test.stderr",
+        "sha256": "ccf31bcd2bbac6b75c5780fefc562eaae14bb345238c32bbb07f3225cebe55e7"
+      },
+      {
+        "bytes": 51607,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/default-test.stdout",
+        "sha256": "6190e63d4a518d5f05647a49697de7319a1191ddbea28bfc0e0231e087e03140"
+      },
+      {
+        "bytes": 1718,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/exports-default.stderr",
+        "sha256": "eea27aa6e41e1497f97f639382af4d2b9ec0c61147c20e0c500ae665da3c9309"
+      },
+      {
+        "bytes": 2144029,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/exports-default.stdout",
+        "sha256": "abd086cf655fc41ef4d4f654a2890cd35fe0ac3fd526452f611feffcead15629"
+      },
+      {
+        "bytes": 1702,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/exports-metal.stderr",
+        "sha256": "2393f10c58436ab33d31716e96404fe144bfb933710587a45c5f98520526ab80"
+      },
+      {
+        "bytes": 2436920,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/exports-metal.stdout",
+        "sha256": "77828a3ba0e35c4f01be706d2302cf61ff4a158a9793dc56b7bc1c9e033fd4d1"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/find-clang.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 93,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/find-clang.stdout",
+        "sha256": "083060ae79a9cc17bc69cb6166b1e16396c638b533de036324d8c6d49b77af24"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/find-nm.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 90,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/find-nm.stdout",
+        "sha256": "29983124c0f9d6dfa2f69a51605a2e707821d664012242fb8903527d15f03ee7"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/fmt.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/fmt.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 692,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/mac-sdk.stderr",
+        "sha256": "9778626eef261cb3f62715bef25d0336842fc500c2f1c9c1fa961c8dd168750e"
+      },
+      {
+        "bytes": 99,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/mac-sdk.stdout",
+        "sha256": "7da0fd6d11521838939c36a6c45bfaeb893ecd0f8db281f9093f2c93af465ed1"
+      },
+      {
+        "bytes": 134,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/metal-clippy.stderr",
+        "sha256": "f3f4fe1b63c32226a8ea63892e99a8e7b951469fa88e20c578ead04f0f70c2d7"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/metal-clippy.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 6965,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/metal-test.stderr",
+        "sha256": "640f2edb68c5e50001b3b41fcd61cd1b605d5fdc2a9aff0f3e6efd9fc5762cf1"
+      },
+      {
+        "bytes": 90547,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/metal-test.stdout",
+        "sha256": "3213e889bd56b73a3a0bcbc98c643af68e4c2857d09338879e15f2cc484c1e5d"
+      },
+      {
+        "bytes": 124,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/release-tests.stderr",
+        "sha256": "1b1f6f9b896541062335328e5d04d8097bd126b4da1d4657da7685e893262e99"
+      },
+      {
+        "bytes": 110387,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/release-tests.stdout",
+        "sha256": "5f47de2b56b3edae002cd673b609dd9fafd08731b805095f4e38b452742e3bad"
+      },
+      {
+        "bytes": 123,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/staticlib-default.stderr",
+        "sha256": "a5c0503fb70847025e0fb5b43b75efb6599b878fa3a1e5bed3a5016e1fcb2348"
+      },
+      {
+        "bytes": 105982,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/staticlib-default.stdout",
+        "sha256": "bc1470137b1341948a9b502301152c4595184f5e98ac7bf27c5a056fe184af42"
+      },
+      {
+        "bytes": 123,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/staticlib-metal.stderr",
+        "sha256": "cbb3b2432fde2ffbf26acabaa24324e25a0bf2c889b891d8cd23fdc94904cff2"
+      },
+      {
+        "bytes": 110362,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/staticlib-metal.stdout",
+        "sha256": "553667ff0a726b816c2b7f8f5c5bac0f7af8ed5036a0cb7489e828190204df3a"
+      }
+    ],
+    "products": {
+      "c_default": {
+        "bytes": 10721432,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/retained/c_default",
+        "sha256": "7456ead32b85026b69562312fc2d7fbde0aec2cc45534dfc0d2e8d17662fe80e"
+      },
+      "c_metal": {
+        "bytes": 12225304,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/retained/c_metal",
+        "sha256": "150096ca7421e9057db963203481fd7050ea1481341bf70b32b7ade9f68460df"
+      },
+      "default_library": {
+        "bytes": 24477192,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/retained/default_library.a",
+        "sha256": "d219c16b29280e5daddff3a40d41dededc6a557946e72929deb9e7fbb52891fd"
+      },
+      "metal_library": {
+        "bytes": 27012704,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/retained/metal_library.a",
+        "sha256": "a113f13af70cffeea67bd5af13bcbe9d299ecb55521680100fbbfc3e7d28ae1c"
+      },
+      "tests": {
+        "bytes": 106360816,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/retained/tests",
+        "sha256": "3a0bf798214d318bb1b25288448d3eb510657ff3b6f03ed1db171c09f3524fc5"
+      }
+    },
+    "provenance": "Executed against sourceV2; unchanged production/portable controls/libraries/Cproducts inherited under one approved ignored-test source supersession. Not a fresh V3 full-suite execution.",
+    "real_model_executed": false,
+    "receipt": {
+      "bytes": 1266074,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/checks.json",
+      "sha256": "8cb8b679ecb91119f9a8cc06ba1fc4ceb13ba678f6f839dbad2ee712f5e251c8"
+    },
+    "suites": {
+      "default": {
+        "failed": 0,
+        "ignored": 20,
+        "passed": 466
+      },
+      "metal": {
+        "failed": 0,
+        "ignored": 185,
+        "passed": 574
+      }
+    }
+  },
+  "observed_compile_retry": {
+    "checks": [
+      "fmt",
+      "strict Metal all-target Clippy",
+      "release Metal test binary build"
+    ],
+    "closed_groups": 3,
+    "commands": 3,
+    "endpoint_errors": [],
+    "inherited_cold_commands": 16,
+    "inherited_cold_receipt": {
+      "bytes": 1266074,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/checks.json",
+      "sha256": "8cb8b679ecb91119f9a8cc06ba1fc4ceb13ba678f6f839dbad2ee712f5e251c8"
+    },
+    "inherited_previous_test_binary": {
+      "bytes": 106360816,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/retained/tests",
+      "sha256": "3a0bf798214d318bb1b25288448d3eb510657ff3b6f03ed1db171c09f3524fc5"
+    },
+    "outputs": [
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/cold-v1/fmt.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/cold-v1/fmt.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 133,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/cold-v1/metal-clippy.stderr",
+        "sha256": "cee0c3035cc84ce35e4198f612d70cd55ccfef783e99753d6e3b8956982f05a7"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/cold-v1/metal-clippy.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 124,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/cold-v1/release-tests.stderr",
+        "sha256": "7c6fcdab195ccfd12aec872daa56610d4757f8fe92614dd895938511ad204631"
+      },
+      {
+        "bytes": 110387,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/cold-v1/release-tests.stdout",
+        "sha256": "fcd836964931b16950b87cb1a4f22864af281ccd88054ad62f53b904851adac9"
+      }
+    ],
+    "products": {
+      "c_default": {
+        "bytes": 10721432,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/retained/c_default",
+        "sha256": "7456ead32b85026b69562312fc2d7fbde0aec2cc45534dfc0d2e8d17662fe80e"
+      },
+      "c_metal": {
+        "bytes": 12225304,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/retained/c_metal",
+        "sha256": "150096ca7421e9057db963203481fd7050ea1481341bf70b32b7ade9f68460df"
+      },
+      "default_library": {
+        "bytes": 24477192,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/retained/default_library.a",
+        "sha256": "d219c16b29280e5daddff3a40d41dededc6a557946e72929deb9e7fbb52891fd"
+      },
+      "metal_library": {
+        "bytes": 27012704,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/retained/metal_library.a",
+        "sha256": "a113f13af70cffeea67bd5af13bcbe9d299ecb55521680100fbbfc3e7d28ae1c"
+      },
+      "tests": {
+        "bytes": 106360816,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/cold-v1/retained/tests",
+        "sha256": "377a94843eebd2fc22cfc1a8d9c9f1f163acbe07de8298bce5d2795b2637b484"
+      }
+    },
+    "receipt": {
+      "bytes": 1260715,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/cold-v1/checks.json",
+      "sha256": "9c0e3667c0b7e922cadaa81e62c98e8e9a85827c74ecf3752c163c0142a286f9"
+    },
+    "test_artifact": {
+      "executable": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b0-checks-v1/target/release/deps/toklet-148bdb7c5191ba43",
+      "features": [
+        "default",
+        "metal"
+      ],
+      "filenames": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b0-checks-v1/target/release/deps/toklet-148bdb7c5191ba43"
+      ],
+      "fresh": false,
+      "manifest_path": "/Users/coloner/work/rust/toklet/Cargo.toml",
+      "package_id": "path+file:///Users/coloner/work/rust/toklet#0.1.0",
+      "profile": {
+        "debug_assertions": false,
+        "debuginfo": 0,
+        "opt_level": "3",
+        "overflow_checks": false,
+        "test": true
+      },
+      "reason": "compiler-artifact",
+      "target": {
+        "crate_types": [
+          "rlib",
+          "staticlib"
+        ],
+        "doc": true,
+        "doctest": true,
+        "edition": "2024",
+        "kind": [
+          "rlib",
+          "staticlib"
+        ],
+        "name": "toklet",
+        "src_path": "/Users/coloner/work/rust/toklet/src/lib.rs",
+        "test": true
+      }
+    },
+    "test_only_supersession": {
+      "after": {
+        "bytes": 16220,
+        "sha256": "aacb442708e8eb5334e7b1680aec97a76c53e1c406e7f5df39bbf60a6953dc31"
+      },
+      "before": {
+        "bytes": 16014,
+        "sha256": "bb051c65d83919f2a5524a5dc2354338a0c36e9d03ee3b34db9e62c47cd87d86"
+      },
+      "new_literal": "    let candidate_options = Options {\n        capacity: 16,\n        chunk: 3,\n        // This test later enables profiling on the second session, which adds\n        // its own 64 MiB allowance. Ordinary fit/aggregate checks stay intact.\n        memory_limit_bytes: 256 * 1024 * 1024,\n        ..opts()\n    };",
+      "old_literal": "    let candidate_options = Options {\n        capacity: 16,\n        chunk: 3,\n        ..opts()\n    };",
+      "old_source": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-accounting-proposal-v2/proposed/src/native/transition_tests.rs",
+      "path": "/Users/coloner/work/rust/toklet/src/native/transition_tests.rs"
+    }
+  },
+  "observed_hardware": {
+    "actual_package": {
+      "bytes": 1445927,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/package.json",
+      "sha256": "496b326ce4a3a5322314072fc681938521b2e866ce0de3ae2ae3a2c01fe8046b"
+    },
+    "closed_groups": 2,
+    "commands": 2,
+    "complete_process_peak_claim": false,
+    "elapsed_or_performance_claim": false,
+    "endpoint_errors": [],
+    "launch_review": {
+      "bytes": 4255,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/launch-review.json",
+      "sha256": "4f83733ceb1cd3ed0f7cd29639d64ca6b0789a930357374f0cd09c322c61d73f"
+    },
+    "outputs": [
+      {
+        "bytes": 3834,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/hardware-v1/transition-used-session.stdout",
+        "sha256": "d1620084c1b887ef5e6646c155a915073a5c0b5afbe3011524d5bc1cd8d22719"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/hardware-v1/transition-used-session.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 47,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/hardware-v1/c-metal-run.stdout",
+        "sha256": "18dec16aabb22947d80b8976c6c7c31b07a78ec876a38434073f869cae391d3a"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/hardware-v1/c-metal-run.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "products": {
+      "c_default": {
+        "bytes": 10721432,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/retained/c_default",
+        "sha256": "7456ead32b85026b69562312fc2d7fbde0aec2cc45534dfc0d2e8d17662fe80e"
+      },
+      "c_metal": {
+        "bytes": 12225304,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/retained/c_metal",
+        "sha256": "150096ca7421e9057db963203481fd7050ea1481341bf70b32b7ade9f68460df"
+      },
+      "default_library": {
+        "bytes": 24477192,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/retained/default_library.a",
+        "sha256": "d219c16b29280e5daddff3a40d41dededc6a557946e72929deb9e7fbb52891fd"
+      },
+      "metal_library": {
+        "bytes": 27012704,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/cold-v1/retained/metal_library.a",
+        "sha256": "a113f13af70cffeea67bd5af13bcbe9d299ecb55521680100fbbfc3e7d28ae1c"
+      },
+      "tests": {
+        "bytes": 106360816,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/cold-v1/retained/tests",
+        "sha256": "377a94843eebd2fc22cfc1a8d9c9f1f163acbe07de8298bce5d2795b2637b484"
+      }
+    },
+    "raw_report": {
+      "actual_candidate": {
+        "aggregate_required_bytes": 134454348,
+        "backend": "metal",
+        "candidate": {
+          "capacity": 16,
+          "chunk": 3,
+          "individual_numerical_budget_bytes": 268414976,
+          "position_offset": 0
+        },
+        "candidate_allocated": false,
+        "candidate_constructor_required_bytes": 67165004,
+        "candidate_largest_device_buffer_bytes": 1038,
+        "candidate_planned": {
+          "history_bytes": 64,
+          "kv_bytes": 4152,
+          "logits_bytes": 512,
+          "scratch_bytes": 6624,
+          "session_table_bytes": 424,
+          "total_bytes": 11776
+        },
+        "candidate_whole_budget_bytes": 268435456,
+        "committed_tokens": 0,
+        "context_qualification_evaluated": false,
+        "creation_revalidation_required": true,
+        "current": {
+          "capacity": 16,
+          "chunk": 3,
+          "individual_numerical_budget_bytes": 268414976,
+          "position_offset": 0
+        },
+        "current_allocated": {
+          "history_bytes": 64,
+          "kv_bytes": 4152,
+          "logits_bytes": 512,
+          "scratch_bytes": 6624,
+          "session_table_bytes": 424,
+          "total_bytes": 11776
+        },
+        "device_maximum_buffer_bytes": 9534832640,
+        "execution_modes": {
+          "attention": "Reference",
+          "normalization": "Compensated",
+          "projection": "MlxAffine",
+          "readback": "FullLogits"
+        },
+        "fits_candidate_individual_budget": true,
+        "fits_transition_budget": true,
+        "history_tokens": 0,
+        "loaded_position_limit": 32,
+        "mode_selection": "existing_native_factory",
+        "model_instance": 1,
+        "pending_tokens": 0,
+        "report_kind": "same_model_session_transition",
+        "reserves": {
+          "application_bytes": 8192,
+          "candidate_bridge_bytes": 20480,
+          "candidate_metadata_driver_bytes": 67108864,
+          "current_bridge_bytes": 20480,
+          "current_metadata_driver_bytes": 67108864,
+          "json_snapshot_bytes": 131328,
+          "replay_bytes": 128,
+          "text_bytes": 4096,
+          "total_bytes": 134402432
+        },
+        "reserves_verified": false,
+        "schema_version": 1,
+        "session_instance": 3,
+        "shared_model": {
+          "learned_bytes": 23884,
+          "model_table_bytes": 4480,
+          "positional_bytes": 0,
+          "total_bytes": 28364
+        },
+        "transition_budget_bytes": 268435456,
+        "whole_app_device_fit_evaluated": false
+      },
+      "current_state_preserved": true,
+      "diagnostic_and_trace_rejected": true,
+      "native_transition_plan": true,
+      "report": {
+        "aggregate_required_bytes": 134460044,
+        "backend": "metal",
+        "candidate": {
+          "capacity": 16,
+          "chunk": 3,
+          "individual_numerical_budget_bytes": 268414976,
+          "position_offset": 0
+        },
+        "candidate_allocated": false,
+        "candidate_constructor_required_bytes": 67165004,
+        "candidate_largest_device_buffer_bytes": 1038,
+        "candidate_planned": {
+          "history_bytes": 64,
+          "kv_bytes": 4152,
+          "logits_bytes": 512,
+          "scratch_bytes": 6624,
+          "session_table_bytes": 424,
+          "total_bytes": 11776
+        },
+        "candidate_whole_budget_bytes": 268435456,
+        "committed_tokens": 5,
+        "context_qualification_evaluated": false,
+        "creation_revalidation_required": true,
+        "current": {
+          "capacity": 32,
+          "chunk": 3,
+          "individual_numerical_budget_bytes": 134197248,
+          "position_offset": 0
+        },
+        "current_allocated": {
+          "history_bytes": 128,
+          "kv_bytes": 8248,
+          "logits_bytes": 512,
+          "scratch_bytes": 8160,
+          "session_table_bytes": 424,
+          "total_bytes": 17472
+        },
+        "device_maximum_buffer_bytes": 9534832640,
+        "execution_modes": {
+          "attention": "Reference",
+          "normalization": "Compensated",
+          "projection": "MlxAffine",
+          "readback": "FullLogits"
+        },
+        "fits_candidate_individual_budget": true,
+        "fits_transition_budget": true,
+        "history_tokens": 6,
+        "loaded_position_limit": 32,
+        "mode_selection": "existing_native_factory",
+        "model_instance": 1,
+        "pending_tokens": 1,
+        "report_kind": "same_model_session_transition",
+        "reserves": {
+          "application_bytes": 8192,
+          "candidate_bridge_bytes": 20480,
+          "candidate_metadata_driver_bytes": 67108864,
+          "current_bridge_bytes": 20480,
+          "current_metadata_driver_bytes": 67108864,
+          "json_snapshot_bytes": 131328,
+          "replay_bytes": 128,
+          "text_bytes": 4096,
+          "total_bytes": 134402432
+        },
+        "reserves_verified": false,
+        "schema_version": 1,
+        "session_instance": 2,
+        "shared_model": {
+          "learned_bytes": 23884,
+          "model_table_bytes": 4480,
+          "positional_bytes": 0,
+          "total_bytes": 28364
+        },
+        "transition_budget_bytes": 268435456,
+        "whole_app_device_fit_evaluated": false
+      }
+    },
+    "receipt": {
+      "bytes": 1251272,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v2/hardware-v1/checks.json",
+      "sha256": "d6ada3acebe3115b4599dc7251b1d6b63145522785a4fdbc4069de8397221473"
+    },
+    "report_api_created_candidate": false,
+    "separately_constructed_test_session": true,
+    "sparse_process_observations": [
+      {
+        "pid": 30756,
+        "retained_log_bytes": {
+          "stderr": 0,
+          "stdout": 3834
+        },
+        "samples": 19,
+        "sparse_maxima": {
+          "lifetime_max_phys_footprint": 7668336,
+          "phys_footprint": 7668336,
+          "resident_size": 20480000
+        }
+      },
+      {
+        "pid": 30761,
+        "retained_log_bytes": {
+          "stderr": 0,
+          "stdout": 47
+        },
+        "samples": 7,
+        "sparse_maxima": {
+          "lifetime_max_phys_footprint": 1835344,
+          "phys_footprint": 1835344,
+          "resident_size": 8192000
+        }
+      }
+    ]
+  },
+  "observed_preflight": {
+    "closed_groups": 3,
+    "fmt": true,
+    "receipt": {
+      "bytes": 4883,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-root-preflight-v2/checks.json",
+      "sha256": "8a1272d1067c8fa1909ecc18c48ba4cb4de8ddbda7e753e58d72513c1dd604ae"
+    },
+    "strict_default_clippy": true,
+    "strict_metal_clippy": true
+  },
+  "preserved_failed_hardware": {
+    "available_numerical_bytes": 134197248,
+    "c_metal_job_executed": false,
+    "closed_groups": 1,
+    "correction": "Only ignored Metal test candidate budget128MiB->256MiB for existing extra64MiB profile allowance; production admission/current128MiB/exact-underaggregate checks unchanged.",
+    "exit_code": 101,
+    "final_report_emitted": false,
+    "independent_audit": {
+      "bytes": 3712,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-independent-review-v1/failed-hardware-v1-review.json",
+      "sha256": "116a437551cffe39f688cf6b7a933d43ada1f6aeb215cf7df7f97075fe9246af"
+    },
+    "job_count": 1,
+    "receipt": {
+      "bytes": 1244305,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-transition-verification-owner-v1/hardware-v1/checks.json",
+      "sha256": "3093b83bc7043c78db851bd2a162f3ff09ca2723cb0ddb2cb1020b30f8e188a1"
+    },
+    "required_profile_setup_bytes": 134253388,
+    "shortfall_bytes": 56140
+  },
+  "preserved_failure": {
+    "failed": true,
+    "reason": "Default-only optional tuple inference E0282 after formatting pass; V2 type annotation only",
+    "receipt": {
+      "bytes": 4425,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d1-root-preflight-v1/checks.json",
+      "sha256": "3e9968ccd725bd3ffdfec79aae0421b025de5cf370f1bd94f65a7e54029973c1"
+    }
+  },
+  "publication_ready": true,
+  "qualification": {
+    "app": false,
+    "context": false,
+    "native_report_checks_complete": true,
+    "performance": false,
+    "phone": false,
+    "rendered_ui": false
+  },
+  "scope": {
+    "candidate_allocation": false,
+    "current_session_mutation": false,
+    "exact_retained_model_identity": true,
+    "model_bound": true,
+    "new_context_eligibility": false,
+    "source_reopen": false,
+    "token_replay": false,
+    "worker_or_ui_apply": false
+  },
+  "source_files": {
+    "apple/include/toklet.h": {
+      "bytes": 19422,
+      "path": "/Users/coloner/work/rust/toklet/apple/include/toklet.h",
+      "sha256": "f9c4d3842d548b68c7ba2ada136503578d6aeed01695acc4c1c269bf6ca5d378"
+    },
+    "apple/tests/native_transition_smoke.c": {
+      "bytes": 3208,
+      "path": "/Users/coloner/work/rust/toklet/apple/tests/native_transition_smoke.c",
+      "sha256": "dc8d57996d578208a2df182aa03497dc98addf03e70959362532ab1179b2dd29"
+    },
+    "src/metal/mod.rs": {
+      "bytes": 136150,
+      "path": "/Users/coloner/work/rust/toklet/src/metal/mod.rs",
+      "sha256": "272d7eb330128e8c9294609998b9fd30760f114b392c0ed4ce2cd5812d11e687"
+    },
+    "src/metal/planning.rs": {
+      "bytes": 48243,
+      "path": "/Users/coloner/work/rust/toklet/src/metal/planning.rs",
+      "sha256": "bef14b1a9de01f84f830f8167bb96570802ded598e8e4ac51ea28ffa73a77c36"
+    },
+    "src/metal/transition.rs": {
+      "bytes": 6881,
+      "path": "/Users/coloner/work/rust/toklet/src/metal/transition.rs",
+      "sha256": "1f329c895d1ba2cb98aad84c933908f5d5ec0b074c4c5ea208fdd4c7656afd5b"
+    },
+    "src/native.rs": {
+      "bytes": 35335,
+      "path": "/Users/coloner/work/rust/toklet/src/native.rs",
+      "sha256": "2612fb2488e2342d127ef58a46492870ccefa9414436b30375a0df5cdfaa1c76"
+    },
+    "src/native/tests.rs": {
+      "bytes": 44495,
+      "path": "/Users/coloner/work/rust/toklet/src/native/tests.rs",
+      "sha256": "e0ed85f83dd6e5b8019dd18e30d1fea0922e4bdba5d99161f321933092f063e8"
+    },
+    "src/native/transition_planning.rs": {
+      "bytes": 14046,
+      "path": "/Users/coloner/work/rust/toklet/src/native/transition_planning.rs",
+      "sha256": "9fa5ddaf1645bf84e4e5b0bea55a0047b3b492f7309204e26734cd83cbe88317"
+    },
+    "src/native/transition_tests.rs": {
+      "bytes": 16220,
+      "path": "/Users/coloner/work/rust/toklet/src/native/transition_tests.rs",
+      "sha256": "aacb442708e8eb5334e7b1680aec97a76c53e1c406e7f5df39bbf60a6953dc31"
+    },
+    "src/session.rs": {
+      "bytes": 21867,
+      "path": "/Users/coloner/work/rust/toklet/src/session.rs",
+      "sha256": "6c3843ea580d94a11c06d8b637d1ef3ed3ca8edeaa97d4d8d16a34e4e75afab5"
+    }
+  },
+  "verification_provenance": {
+    "current_source_files": 10,
+    "failed_attempts_preserved": true,
+    "fresh_compile_commands": 3,
+    "fresh_full_v3_suite_run": false,
+    "inherited_cold_commands": 16,
+    "new_header_and_each_library_exports": 31,
+    "selected_c3_app_exports": 30,
+    "successful_mac_commands": 2
+  }
+}

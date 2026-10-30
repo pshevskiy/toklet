@@ -140,6 +140,55 @@ impl fmt::Display for Error {
 }
 impl std::error::Error for Error {}
 
+/// Existing constructor preallocation arithmetic; no numerical allocation.
+pub(crate) fn planned_memory(model: &Model, options: Options) -> Result<Memory, Error> {
+    let c = model.config();
+    if options.capacity == 0 || options.capacity > weights::INITIAL_CONTEXT_LIMIT {
+        return Err(Error::InvalidOptions("capacity must be within 1..=2048"));
+    }
+    if options.prefill_chunk_size == 0 || options.prefill_chunk_size > options.capacity {
+        return Err(Error::InvalidOptions(
+            "chunk size must be within 1..=capacity",
+        ));
+    }
+    if options.memory_limit_bytes == 0
+        || options.memory_limit_bytes > weights::INITIAL_MEMORY_LIMIT_BYTES
+    {
+        return Err(Error::InvalidOptions(
+            "memory budget must be within the initial 6 GiB limit",
+        ));
+    }
+    let end = options
+        .position_offset
+        .checked_add(options.capacity)
+        .ok_or(model::Error::Kernel(cpu::Error::SizeOverflow))?;
+    if end > c.max_positions {
+        return Err(model::Error::Capacity {
+            offset: options.position_offset,
+            tokens: options.capacity,
+            limit: c.max_positions,
+        }
+        .into());
+    }
+    // u32 token IDs and f32 storage both occupy four bytes.
+    let mut memory = Memory {
+        weights_bytes: model.allocated_weights_bytes()?,
+        positional_bytes: 0,
+        kv_bytes: KvCache::planned_bytes(c, options.capacity)?,
+        scratch_bytes: Scratch::planned_bytes(c, options.prefill_chunk_size, options.capacity)?,
+        history_bytes: total_bytes(&[options.capacity])?,
+        logits_bytes: total_bytes(&[c.vocab_size, c.vocab_size])?,
+        metadata_bytes: model
+            .allocated_metadata_bytes()?
+            .checked_add(KvCache::planned_metadata_bytes(c)?)
+            .ok_or(model::Error::Kernel(cpu::Error::SizeOverflow))?,
+        metadata_allowance_bytes: METADATA_ALLOWANCE_BYTES,
+        admitted_bytes: 0,
+    };
+    memory.sum()?;
+    Ok(memory)
+}
+
 pub struct Session<'model> {
     model: &'model Model,
     options: Options,
@@ -159,49 +208,7 @@ impl<'model> Session<'model> {
     /// fixed for the session lifetime; numerical execution performs no allocation.
     pub fn new(model: &'model Model, options: Options) -> Result<Self, Error> {
         let c = model.config();
-        if options.capacity == 0 || options.capacity > weights::INITIAL_CONTEXT_LIMIT {
-            return Err(Error::InvalidOptions("capacity must be within 1..=2048"));
-        }
-        if options.prefill_chunk_size == 0 || options.prefill_chunk_size > options.capacity {
-            return Err(Error::InvalidOptions(
-                "chunk size must be within 1..=capacity",
-            ));
-        }
-        if options.memory_limit_bytes == 0
-            || options.memory_limit_bytes > weights::INITIAL_MEMORY_LIMIT_BYTES
-        {
-            return Err(Error::InvalidOptions(
-                "memory budget must be within the initial 6 GiB limit",
-            ));
-        }
-        let end = options
-            .position_offset
-            .checked_add(options.capacity)
-            .ok_or(model::Error::Kernel(cpu::Error::SizeOverflow))?;
-        if end > c.max_positions {
-            return Err(model::Error::Capacity {
-                offset: options.position_offset,
-                tokens: options.capacity,
-                limit: c.max_positions,
-            }
-            .into());
-        }
-        // u32 token IDs and f32 storage both occupy four bytes.
-        let mut memory = Memory {
-            weights_bytes: model.allocated_weights_bytes()?,
-            positional_bytes: 0,
-            kv_bytes: KvCache::planned_bytes(c, options.capacity)?,
-            scratch_bytes: Scratch::planned_bytes(c, options.prefill_chunk_size, options.capacity)?,
-            history_bytes: total_bytes(&[options.capacity])?,
-            logits_bytes: total_bytes(&[c.vocab_size, c.vocab_size])?,
-            metadata_bytes: model
-                .allocated_metadata_bytes()?
-                .checked_add(KvCache::planned_metadata_bytes(c)?)
-                .ok_or(model::Error::Kernel(cpu::Error::SizeOverflow))?,
-            metadata_allowance_bytes: METADATA_ALLOWANCE_BYTES,
-            admitted_bytes: 0,
-        };
-        memory.sum()?;
+        let mut memory = planned_memory(model, options)?;
         memory.admit(options.memory_limit_bytes)?;
         let cache = KvCache::new(c, options.capacity)?;
         let scratch = Scratch::for_session(c, options.prefill_chunk_size, options.capacity)?;
@@ -252,6 +259,28 @@ impl<'model> Session<'model> {
     pub fn vocab_size(&self) -> usize {
         self.model.config().vocab_size
     }
+    /// Cold current storage, including any excess host-vector capacities.
+    pub(crate) fn owned_memory(&self) -> Result<Memory, Error> {
+        let mut memory = self.memory;
+        memory.weights_bytes = self.model.allocated_weights_bytes()?;
+        memory.kv_bytes = self.cache.allocated_bytes;
+        memory.scratch_bytes = self.scratch.allocated_bytes();
+        memory.history_bytes = total_bytes(&[self.history.capacity()])?;
+        memory.logits_bytes =
+            total_bytes(&[self.logits.capacity(), self.staged_logits.capacity()])?;
+        memory.metadata_bytes = self
+            .model
+            .allocated_metadata_bytes()?
+            .checked_add(self.cache.metadata_bytes)
+            .ok_or(model::Error::Kernel(cpu::Error::SizeOverflow))?;
+        memory.sum()?;
+        Ok(memory)
+    }
+
+    pub(crate) fn options(&self) -> Options {
+        self.options
+    }
+
     pub fn memory(&self) -> Memory {
         self.memory
     }
@@ -469,5 +498,116 @@ impl InferenceSession for Session<'_> {
     }
     fn reset(&mut self) {
         Session::reset(self)
+    }
+}
+
+#[cfg(test)]
+mod transition_tests {
+    use super::*;
+    use crate::model::{Config, LayerWeights, Projection, Weights};
+
+    #[test]
+    fn transition_plan_and_actual_capacity_are_distinct_without_changing_memory_report() {
+        let projection = || Projection {
+            weight: vec![0.0; 4],
+            bias: vec![0.0; 2],
+        };
+        let model = Model::new(
+            Config {
+                vocab_size: 2,
+                hidden_size: 2,
+                intermediate_size: 2,
+                num_layers: 1,
+                query_heads: 1,
+                kv_heads: 1,
+                head_dim: 2,
+                max_positions: 4096,
+                rms_norm_eps: 1e-6,
+                rope_theta: 10_000.0,
+            },
+            Weights {
+                embedding: vec![0.0; 4],
+                final_norm: vec![1.0; 2],
+                layers: vec![LayerWeights {
+                    input_norm: vec![1.0; 2],
+                    post_attention_norm: vec![1.0; 2],
+                    q: projection(),
+                    k: projection(),
+                    v: projection(),
+                    o: vec![0.0; 4],
+                    gate: vec![0.0; 4],
+                    up: vec![0.0; 4],
+                    down: vec![0.0; 4],
+                }],
+            },
+        )
+        .unwrap();
+        let options = Options {
+            capacity: 4,
+            prefill_chunk_size: 2,
+            ..Default::default()
+        };
+        let planned = planned_memory(&model, options).unwrap();
+        assert_eq!(planned.weights_bytes, 176); // Tied embedding counted once.
+        let mut current = Session::new(&model, options).unwrap();
+        let original = current.memory();
+        let before = current.owned_memory().unwrap();
+        assert!(before.admitted_bytes >= planned.admitted_bytes);
+        assert_eq!(before, original);
+        current.history.reserve_exact(17);
+        current.logits.reserve_exact(19);
+        current.staged_logits.reserve_exact(23);
+        let actual = current.owned_memory().unwrap();
+        assert_eq!(actual.history_bytes, current.history.capacity() * 4);
+        assert_eq!(
+            actual.logits_bytes,
+            (current.logits.capacity() + current.staged_logits.capacity()) * 4
+        );
+        assert!(actual.admitted_bytes > original.admitted_bytes);
+        assert_eq!(current.memory(), original);
+        assert_eq!(planned_memory(&model, options).unwrap(), planned);
+        assert!(matches!(
+            planned_memory(
+                &model,
+                Options {
+                    capacity: 2049,
+                    ..options
+                }
+            ),
+            Err(Error::InvalidOptions(_))
+        ));
+        assert!(
+            planned_memory(
+                &model,
+                Options {
+                    position_offset: usize::MAX,
+                    ..options
+                }
+            )
+            .is_err()
+        );
+        let required = planned.admitted_bytes;
+        assert!(
+            Session::new(
+                &model,
+                Options {
+                    memory_limit_bytes: required - 1,
+                    ..options
+                }
+            )
+            .is_err()
+        );
+        let candidate = Session::new(
+            &model,
+            Options {
+                memory_limit_bytes: before.admitted_bytes,
+                ..options
+            },
+        )
+        .unwrap();
+        assert_eq!(
+            candidate.owned_memory().unwrap().admitted_bytes,
+            before.admitted_bytes
+        );
     }
 }

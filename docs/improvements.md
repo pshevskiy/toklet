@@ -8310,3 +8310,53 @@ against the selected bridge. These are estimates and controller checks, not
 performance or whole-device-fit measurements. The attempted rendered Mac check
 finds a locked Mac, launches no app and remains pending; phone evidence is
 separate. Transition accounting is the next independent implementation task.
+
+Settings previews are committed as `5d03e68` after exact eleven-file Astra
+review and 813 local-link checks. The next reviewed ten-file change adds a
+model/session-bound transition report: actual current storage plus planned
+candidate storage, known shared model owners counted once, conservative
+allowances for both sessions and explicit caller reserves. The early ordinary-
+forward marker rejection was corrected before application and has a post-step
+regression control. It creates no candidate and changes no numerical kernel.
+The additive 31st C export requires a future coherent app bridge before app
+consumption; the selected 30-export bundle retains its historical UI scope.
+Full Rust, ABI/export and explicit tiny Mac verification remain pending.
+
+B5d1 formatting passes. The early default Clippy preflight catches a missing
+Option tuple annotation when the Metal branch is compiled out. The failed logs
+and closed groups are retained; the correction is type-only and precedes full
+default/Metal checks. No runtime behavior or acceptance criterion changes.
+
+All 16 B5d1 cold jobs pass: 466 default and 574 Metal-feature tests (20/185
+explicit ignores), strict checks, two release libraries with all 31 exports and
+the CPU C ABI smoke. The first tiny Metal check then fails while enabling
+profiling on its second test session: required 134,253,388 bytes exceed its
+134,197,248-byte numerical setup budget. Astra authenticates this fixture
+boundary and clean closure; no final success report is emitted and the C Metal
+job is not reached. The correction is limited to adequate ignored-test setup
+memory, preserving production limits and exact/one-byte-under assertions.
+Unchanged passing suites/libraries will be inherited; only the modified test
+and the two pending Mac checks need fresh validation.
+
+The reviewed Metal fixture correction changes only its ignored-test candidate
+setup budget to 256 MiB for the later profile case; the current 128 MiB session,
+production paths, portable controls and exact/under aggregate assertions remain
+unchanged. The minimal retry rebuilds only the test binary after formatting and
+strict Metal compilation, inheriting the valid 16-job phase and libraries.
+Astra also confirms explicit empty-candidate recreation as the first Friendly
+Apply path: Send already encodes the full saved conversation with reset+prompt.
+Conversation/draft preservation, explicit cache reset, panic/cancel isolation
+and postallocation admission stay mandatory; exact-history Expert migration is
+separate. No Apply implementation or behavior is added by this decision.
+
+B5d1 now passes its three focused retry build checks and both tiny Metal jobs,
+with the original 16 passing cold jobs inherited explicitly. Astra audits all
+inputs/products/closures and independently recomputes 134,460,044 bytes: known
+shared storage 28,364 + current-owned 17,472 + planned candidate 11,776 +
+reserves 134,402,432. The separately constructed test candidate’s session-owned component is exactly
+11,776 bytes. Current history/committed/pending counts remain 6/5/1; reviewed
+completed assertions preserve state/logits and exact-budget/rejection behavior.
+Full raw state arrays were not exported, and sparse memory is not a peak. The
+report API itself allocates no candidate. Both earlier failures remain failed
+evidence. The selected 30-export app bundle is unchanged by the verified
+31-export Rust/C library; session replacement and app consumption remain next.

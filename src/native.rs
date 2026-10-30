@@ -17,7 +17,9 @@
 use crate::{generation, model, session, weights};
 mod compatibility;
 mod runtime_planning;
+mod transition_planning;
 pub use runtime_planning::*;
+pub use transition_planning::*;
 mod context;
 pub use context::*;
 mod text;
@@ -657,17 +659,8 @@ pub unsafe extern "C" fn toklet_session_create(
                     target_arch = "aarch64"
                 ))]
                 NativeModel::Metal(model) => {
-                    use crate::metal::{NormalizationMode, ProjectionMode, ReadbackMode, Session};
-                    let (projection, normalization) = if model.is_mlx() {
-                        (ProjectionMode::MlxAffine, NormalizationMode::Compensated)
-                    } else if model.q4_format().is_some() {
-                        (
-                            ProjectionMode::Q4CompensatedTiled,
-                            NormalizationMode::Compensated,
-                        )
-                    } else {
-                        (ProjectionMode::HalfCompensated, NormalizationMode::Original)
-                    };
+                    use crate::metal::{ReadbackMode, Session};
+                    let (projection, normalization) = model.native_session_modes();
                     NativeSession::Metal(Box::new(
                         Session::with_attention_mode(
                             model,

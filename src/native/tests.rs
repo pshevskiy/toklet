@@ -1384,3 +1384,6 @@ fn audited_mlx_small_admission_rejects_before_gpu_and_never_publishes() {
 }
 
 mod context_info;
+
+#[path = "transition_tests.rs"]
+mod transition_tests;

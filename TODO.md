@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5d1 — model-bound session-transition memory accounting**.
+Next implementation task: **B5d2 — explicit empty-candidate session preparation**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -324,12 +324,22 @@ separate requirements below. Further model admissions require their own scope.
   stay exact. Source/controller/build scope only; rendered UI remains pending.
 - [ ] Check rendered Mac Settings when the Mac is unlocked; record separate
   iPhone runtime evidence. The attempted computer-use inventory was locked.
-- [ ] B5d1: model-bound transition accounting for one shared immutable model
-  and current plus proposed sessions. Count actual current owners and planned
-  candidate storage, both bridge/driver allowances and explicit caller reserves;
-  preserve existing one-session admission and numerical behavior. Candidate
-  creation, atomic replacement, Apply/persistence and Chat limit reconciliation
-  follow as separate reviewed tasks.
+- [x] B5d1: [model-bound transition accounting](docs/native-session-transition-report.md) passes16inherited cold jobs,
+  three fresh fixture-retry checks and both tinyMacchecks with Astra saved
+  audit. Default466/Metal574 tests,31exports, C ABI, actual candidate ownership
+  comparison and unchanged current state pass. Both failures stay recorded.
+  This is a read-only report; no candidate allocation, Apply or new context.
+- [ ] B5d2: prepare an explicit empty same-model candidate without mutating the
+  current session; isolate candidate errors/panics, re-admit actual coexistence
+  storage, and retain old usability on cancellation or failure.
+- [ ] B5d3: atomically adopt a validated candidate in the worker, then wire
+  Apply/persistence by artifact and plan identity. Friendly Chat already renders
+  the full saved conversation with reset+prompt on Send; make cache reset
+  explicit and preserve conversation/draft bytes. New exact-history migration
+  is a separate Expert mode, not a prerequisite for first Friendly Apply.
+- [ ] Build/export-check a coherent Apple framework containing new transition
+  APIs before Swift/app consumption. The currently selected C3 package remains
+  its historical30-export bundle; native31-export checks do not upgrade it.
 - [ ] Report declared context, implemented backend range, budget/device fit,
   validation scope and app/text limits separately for each model.
 - [ ] Include actual weights, KV owners, scratch, loading peaks and application
@@ -614,3 +624,8 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | C4 retry compiles; preservation control fails | Escalated retry compiles all three test executables, then stops at the unloaded-worker full-snapshot equality assertion. All four process groups close with no endpoint errors; apps/real-model jobs are not reached. | Preserve failed result. Astra investigates the precise field difference; polling revision is included in this test unlike the existing worker-state oracle. No production fix or functional gate change is assumed. |
 | 2026-10-30 | C4 compile/CPU/app phase passes | Reviewed test-only oracle correction preserves all functional fields and57controls. Fresh13jobs pass, including all three app builds; retained raw snapshots independently show revision0→3 with every other reflected field exact. All13groupsclose/endpoints[]. | Exact actual binaries retained for separate two-job Mac phase: loadedQwen3 previews512/256 and tiny Metal regression. Runtime/saved audit/commit remain pending; both failed attempts preserved. |
 | 2026-10-30 | C4 loaded controller checked; visual gate pending | Both Mac jobs pass with Astra saved audit: realQwen3estimates512/256 andallfitflags, exactactive512/chunk32/IDs/workspace/filehashes, plus21tinyMetal cases. All15successfulgroupsclosed; both failed attempts preserved. Mac computer-use inventory reportslocked, no app launched. | Publish selected source/controller/build evidence and commit; renderedMac/phonechecks stayopen. ContinueB5d1transitionaccounting independently. |
+| 2026-10-30 | C4 committed / B5d1 accounting applied | Settings preview task committed as `5d03e68` after exact eleven-file Astra review,813links and passing57/13/2/21 checks. Reviewed ten-file model-bound transition report is now applied, with CPU/Metal constructor behavior preserved and no candidate allocation. | Formatting/strictClippypreflight and fullRust/ABI/C/export/tinyMacchecks next. New31stCexport is not yet provided by the selected historical30-export appbundle; no app calls it in this task. |
+| 2026-10-30 | B5d1 early default-build inference error | Formatting passes. Strict default Clippy stops atE0282because the CPU-only branch’s None tuple loses its Metal-only type inference. Both preflight process groups close with source pins unchanged. | Preserve logs; reviewed type-only annotation fixes compilation before full default/Metal validation. No runtime behavior, test oracle or acceptance change. |
+| 2026-10-30 | B5d1 cold phase passes / Metal fixture setup fails | Full16jobs pass: default466/20ignored, Metal574/185ignored, strictchecks, two31-export libraries andCPU CABI. First tinyMetal check then stops at second-session profile setup:134253388required vs134197248budget; groupclosed/endpoints[], secondCjobunrun. Astra authenticates exact failure. | Preserve failure; correct only ignored-test profile setup budget, retaining production and exact/under report gates. Reuse unchanged passing16jobs/libs/Ccallers; rebuild only changedtest and retry2Macjobs afterreview. |
+| 2026-10-30 | B5d1 minimal fixture retry starts | Astra approves the ignored-test-only candidate setup budget correction. Nine other source paths, portable controls and exact/under aggregate assertions remain exact. Freshthree-job formatting/Metalcompile/release-test rebuild begins with explicit inheritance of16passingcoldjobs andunchangedlibs/Cproducts. | Review rebuilt actual products beforeretryingbothMacjobs. D2empty-candidate route is chosen from actual Chat reset+prompt semantics; transactional rollback and capacity preflight remain mandatory. |
+| 2026-10-30 | B5d1 accounting verification complete | Minimal3buildchecks andbothMetaljobs pass with16coldjobs inherited. Astra authenticates inputs/products/closures and recomputes134460044total; actualcandidate11776equalsplan, oldhistory6/5/1preserved. ReportAPIcreatesnocandidate; testsecondsession is separate. | Publish bounded report and commit afterexactstagedreview. Both failuresretained; selected30-exportappbundleunchanged. NextD2explicitEMPTYcandidatepreparation, thenworkerApply/persistence/Chatlimitreconciliation. |
