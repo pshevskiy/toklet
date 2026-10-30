@@ -8462,3 +8462,33 @@ configuration because cancellation clears transient results after acceptance.
 Friendly Apply and full-artifact/plan-keyed persistence remain separate tasks;
 no real-model transition, rendered UI, phone, context expansion or performance
 qualification is claimed by this worker task.
+
+Worker replacement is committed as `498280e` after exact eight-file Astra review.
+Next is the small durable applied-configuration boundary, before Friendly Apply:
+accepted settings must remain observable after transient-result cancellation,
+while session retirement and retained resume preferences remain distinct.
+
+### 2026-10-30 — Durable applied-session configuration source applied
+
+Astra reviewed and root applied a three-file metadata change. Accepted model/
+session IDs, capacity, chunk, budget and request correlation are staged before
+locked adoption and retained across ordinary same-session work and late
+cancellation. Session retirement clears this descriptor; retained resume
+settings remain separate. It describes accepted configuration and cannot
+authorize token-history reuse. Eleven pure controls and expanded lifecycle
+witnesses are authored; compile and runtime verification are pending.
+
+The D4a verification handoff initially remained idle because a message did not
+restart a completed adviser turn. Root restarted it explicitly; no check had
+run or failed, and the source remained unchanged. Future Apply memory-policy
+work prepared during that interval is private and unexecuted.
+
+The [durable configuration boundary](native-session-configuration.md) now passes
+14 fresh compile/CPU/app jobs and both tiny Mac jobs, with independent Astra
+audit. Both backends pass 37 transition and 11 configuration controls, 15 stale
+barriers and two retirement cases; the 21-case preview/generation regression
+passes. Twelve records per backend retain the accepted UUID through late
+cancellation and generation, reset it on a new replay session and clear the
+descriptor on cancelled replay and shutdown. Configuration remains metadata,
+with no token-history, artifact identity or restart authority. UI Apply,
+persistence and real-model/device transition checks remain separate.

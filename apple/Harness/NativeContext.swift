@@ -60,6 +60,35 @@ struct NativeContextFacts: Equatable, Sendable {
     }
 }
 
+// Accepted configuration of one live session, not token-history authority or
+// artifact identity. Retained separately from transient command results. A
+// caller still needs idle/current NativeContextFacts for numerical admission.
+struct NativeSessionConfiguration: Equatable, Sendable {
+    let modelInstance, sessionInstance: UInt64
+    let capacity, chunk: UInt32
+    let wholeSessionBudget: UInt64
+    let acceptedRequestID: UUID?
+
+    init(context: NativeContextFacts, capacity: UInt32, chunk: UInt32,
+         wholeSessionBudget: UInt64, acceptedRequestID: UUID? = nil) throws {
+        guard context.modelInstance > 0, context.sessionInstance > 0,
+              context.modelInstance != context.sessionInstance,
+              capacity > 0, UInt64(capacity) == context.capacity,
+              context.capacity <= context.loadedLimit, context.offset == 0,
+              chunk > 0, chunk <= capacity,
+              wholeSessionBudget > UInt64(TOKLET_MODEL_SESSION_BRIDGE_BYTES),
+              wholeSessionBudget <= 6 * 1024 * 1024 * 1024,
+              context.numericalAdmission <= wholeSessionBudget else {
+            throw NativeContextFailure("Invalid accepted session configuration")
+        }
+        // Ordinary CPU constructors accept chunks above the preview/transition
+        // request limit 1024; reflect accepted settings without narrowing them.
+        modelInstance = context.modelInstance; sessionInstance = context.sessionInstance
+        self.capacity = capacity; self.chunk = chunk
+        self.wholeSessionBudget = wholeSessionBudget; self.acceptedRequestID = acceptedRequestID
+    }
+}
+
 // Retain only model/configuration facts across suspend. There is deliberately
 // no session identity, active history or available-capacity claim in this value.
 struct NativeModelContext: Equatable, Sendable {

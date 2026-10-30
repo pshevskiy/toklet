@@ -91,6 +91,7 @@ struct NativeSnapshot: Sendable {
     var workerFinished = false
     var modelContext: NativeModelContext?
     var liveContext: NativeContextFacts?
+    var sessionConfiguration: NativeSessionConfiguration?
     var requestBudget: NativeRequestBudget?
     var chatEnabled = false
     // Retained across queued lifecycle cleanup until the next text request.
@@ -243,7 +244,7 @@ final class NativeWorker: @unchecked Sendable {
         if case .suspend = command { view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = "" }
         switch command {
         case .load, .unload, .suspend:
-            view.modelContext = nil; view.liveContext = nil
+            view.modelContext = nil; view.liveContext = nil; view.sessionConfiguration = nil
         case .chat, .generate, .reset, .replay:
             view.liveContext = nil
         default: break
@@ -390,10 +391,12 @@ final class NativeWorker: @unchecked Sendable {
             engine.settings = value.settings; engine.saved = value.saved; engine.savedCount = 0
             engine.report = value.report; engine.lastEmitted = 0
             engine.modelContext = value.modelContext; engine.liveContext = value.context
+            engine.sessionConfiguration = value.configuration
             engine.requestBudget = nil; engine.score = nil
             engine.admissionUpperBound = value.context.numericalAdmission
             engine.phase = "Ready; native cache reset"
             view.modelContext = value.modelContext; view.liveContext = value.context
+            view.sessionConfiguration = value.configuration
             view.requestBudget = nil; view.score = nil; view.savedPrefix = value.emptyPrefix
             view.preview = nil
             view.savedHistory = 0; view.history = 0; view.evaluated = 0; view.pending = 0
@@ -466,6 +469,7 @@ final class NativeWorker: @unchecked Sendable {
         if case .unload? = queued {} else { queued = unload ? .unload : .suspend }
         view.busy = true
         view.modelContext = nil; view.liveContext = nil; view.requestBudget = nil
+        view.sessionConfiguration = nil
         view.phase = "Cancelling for lifecycle cleanup"
         view.score = nil
         view.savedPrefix = nil
@@ -481,6 +485,7 @@ final class NativeWorker: @unchecked Sendable {
         cancelQueuedChat()
         closing = true; queued = nil
         view.modelContext = nil; view.liveContext = nil; view.requestBudget = nil
+        view.sessionConfiguration = nil
         view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = ""
         view.score = nil
         view.savedPrefix = nil
@@ -581,6 +586,7 @@ final class NativeWorker: @unchecked Sendable {
             view.hasSession = engine.session != nil
             view.modelContext = !closing && queued == nil ? engine.modelContext : nil
             view.liveContext = !closing && queued == nil ? engine.liveContext : nil
+            view.sessionConfiguration = !closing && queued == nil ? engine.sessionConfiguration : nil
             view.requestBudget = !closing && queued == nil ? engine.requestBudget : nil
             view.chatEnabled = engine.chat != nil
             if case .chat = command { view.chatResult = engine.chatResult }
@@ -623,6 +629,7 @@ final class NativeWorker: @unchecked Sendable {
         view.hasModel = false; view.hasSession = false
         view.chatEnabled = false
         view.modelContext = nil; view.liveContext = nil; view.requestBudget = nil
+        view.sessionConfiguration = nil
         view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = ""
         // Closed means there is no active numerical prefix. Do not retain the
         // last command's counts when close supersedes an in-flight operation.
@@ -665,6 +672,7 @@ private final class PreparedTransition {
     let plan: NativeTransitionPlan
     let settings: NativeSettings
     let context: NativeContextFacts
+    let configuration: NativeSessionConfiguration
     let modelContext: NativeModelContext
     let report: TokletReport
     let saved: [UInt32]
@@ -672,9 +680,11 @@ private final class PreparedTransition {
     var emptyIDs: [UInt32] = []
     var emptyTimings: [NativeTokenTiming] = []
     init(handle: OpaquePointer, plan: NativeTransitionPlan, settings: NativeSettings,
-         context: NativeContextFacts, report: TokletReport, captureSavedPrefix: Bool) {
+         context: NativeContextFacts, configuration: NativeSessionConfiguration,
+         report: TokletReport, captureSavedPrefix: Bool) {
         self.handle = handle; self.plan = plan; self.settings = settings
-        self.context = context; modelContext = NativeModelContext(context); self.report = report
+        self.context = context; self.configuration = configuration
+        modelContext = NativeModelContext(context); self.report = report
         saved = Array(repeating:0,count:Int(settings.capacity))
         emptyPrefix = captureSavedPrefix ? [] : nil
         emptyIDs.reserveCapacity(Int(NativeSettings.maximumChatOutputTokens))
@@ -701,6 +711,7 @@ private final class Engine {
     var compatibilityDirectory = ""
     var modelContext: NativeModelContext?
     var liveContext: NativeContextFacts?
+    var sessionConfiguration: NativeSessionConfiguration?
     var requestBudget: NativeRequestBudget?
     // Only BUSY/WRONG_THREAD prove a failed release did not consume the pointer.
     // At most one retained owner; no automatic retry loop or reuse for inference.
@@ -761,8 +772,10 @@ private final class Engine {
             var nextSettings = settings
             nextSettings.capacity = request.capacity; nextSettings.chunk = request.chunk
             nextSettings.numericalBudget = request.wholeSessionBudget
+            let configuration = try NativeSessionConfiguration(context:next,capacity:nextSettings.capacity,
+                chunk:nextSettings.chunk,wholeSessionBudget:nextSettings.numericalBudget,acceptedRequestID:request.id)
             return PreparedTransition(handle:pointer,plan:plan,settings:nextSettings,
-                context:next,report:report,captureSavedPrefix:captureSavedPrefix)
+                context:next,configuration:configuration,report:report,captureSavedPrefix:captureSavedPrefix)
         } catch {
             if let cleanup = retire(pointer,fault:nil) { throw cleanup }
             throw error
@@ -770,7 +783,8 @@ private final class Engine {
     }
 
     func refreshContext() throws {
-        liveContext = nil
+        let prior = sessionConfiguration
+        liveContext = nil; sessionConfiguration = nil
         guard let session else { return }
         do {
             var value = TokletContextInfo(); var error = TokletError()
@@ -782,7 +796,10 @@ private final class Engine {
                   modelContext == nil || modelContext == retained else {
                 throw invalid("Native context does not match the loaded model/settings")
             }
-            modelContext = retained; liveContext = fresh
+            let configuration = try NativeSessionConfiguration(context:fresh,capacity:settings.capacity,
+                chunk:settings.chunk,wholeSessionBudget:settings.numericalBudget,acceptedRequestID:prior?.acceptedRequestID)
+            guard prior == nil || prior == configuration else { throw invalid("Accepted session configuration changed") }
+            modelContext = retained; liveContext = fresh; sessionConfiguration = configuration
         } catch { modelContext = nil; requestBudget = nil; throw error }
     }
 
@@ -839,7 +856,7 @@ private final class Engine {
     }
 
     func releaseSession() throws {
-        liveContext = nil; requestBudget = nil
+        liveContext = nil; sessionConfiguration = nil; requestBudget = nil
         score = nil
         if let value = session {
             session = nil
@@ -874,6 +891,8 @@ private final class Engine {
     }
     func createSession() throws {
         guard let model, let settings else { throw invalid("Load a model first") }
+        // Retained settings are resume policy, not a live accepted request.
+        sessionConfiguration = nil
         var options = settings.options(); var error = TokletError()
         try requireOK(toklet_session_create(model, &options, &session, &error), &error)
         try requireOK(toklet_session_state(session, &report, &error), &error)

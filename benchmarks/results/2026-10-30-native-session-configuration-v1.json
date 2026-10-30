@@ -1,0 +1,1253 @@
+{
+  "base_commit": "498280e87f1398af33496452ce8e189e44e25bdf",
+  "configuration_contract": {
+    "cleanup_failed_configuration_retained_until_shutdown": true,
+    "configuration_not_history_authority": true,
+    "late_cancel_cannot_erase_accepted_configuration": true,
+    "ordinary_cpu_chunk2048_preserved": true,
+    "ordinary_create_replay_uuid_nil": true,
+    "quarantine_still_authoritative": true,
+    "release_invalid_context_clear": true,
+    "request_uuid_not_artifact_identity": true,
+    "resume_settings_distinct": true,
+    "same_session_generation_reset_score_preview_stable": true
+  },
+  "cpu_observation": {
+    "records": [
+      {
+        "busy": false,
+        "committed": 5,
+        "configuration": {
+          "accepted_request": null,
+          "capacity": 32,
+          "chunk": 3,
+          "model": 1,
+          "session": 2,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67227360,
+          "capacity": 32,
+          "loaded_limit": 32,
+          "model": 1,
+          "session": 2
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 6,
+        "ids": [
+          47,
+          47
+        ],
+        "label": "used-current",
+        "pending": 1,
+        "restart_required": false,
+        "revision": 92,
+        "saved_prefix": [
+          1,
+          7,
+          13,
+          3,
+          47,
+          47
+        ],
+        "status": 0
+      },
+      {
+        "busy": false,
+        "committed": 5,
+        "configuration": {
+          "accepted_request": null,
+          "capacity": 32,
+          "chunk": 3,
+          "model": 1,
+          "session": 2,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67227360,
+          "capacity": 32,
+          "loaded_limit": 32,
+          "model": 1,
+          "session": 2
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 6,
+        "ids": [
+          47,
+          47
+        ],
+        "label": "underbudget-rejection",
+        "pending": 1,
+        "restart_required": false,
+        "revision": 97,
+        "saved_prefix": [
+          1,
+          7,
+          13,
+          3,
+          47,
+          47
+        ],
+        "status": 0,
+        "transition": {
+          "committed": false,
+          "outcome": "rejected",
+          "requested_capacity": 16,
+          "requested_chunk": 3,
+          "status": 1
+        }
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "configuration": {
+          "accepted_request": "0382B292-9B19-43EC-BC4D-578118722891",
+          "capacity": 3,
+          "chunk": 2,
+          "model": 1,
+          "session": 4,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67217860,
+          "capacity": 3,
+          "loaded_limit": 32,
+          "model": 1,
+          "session": 4
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "empty-adoption",
+        "pending": 0,
+        "plan": {
+          "aggregate_bytes": 136590052,
+          "candidate_chunk": 2,
+          "candidate_planned_bytes": 4868,
+          "current_chunk": 3,
+          "current_owned_bytes": 14368,
+          "reserves_bytes": 136487168,
+          "shared_bytes": 83648
+        },
+        "restart_required": false,
+        "revision": 132,
+        "saved_prefix": [],
+        "status": 0,
+        "transition": {
+          "committed": true,
+          "outcome": "committed",
+          "requested_capacity": 3,
+          "requested_chunk": 2,
+          "status": 0
+        }
+      },
+      {
+        "busy": true,
+        "committed": 0,
+        "configuration": {
+          "accepted_request": "7D1D6254-0E9E-4B4B-8079-2EC1B5804BEE",
+          "capacity": 16,
+          "chunk": 3,
+          "model": 40,
+          "session": 42,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67223072,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 40,
+          "session": 42
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "accepted-before-late-cancel",
+        "pending": 0,
+        "plan": {
+          "aggregate_bytes": 136595264,
+          "candidate_chunk": 3,
+          "candidate_planned_bytes": 10080,
+          "current_chunk": 3,
+          "current_owned_bytes": 14368,
+          "reserves_bytes": 136487168,
+          "shared_bytes": 83648
+        },
+        "restart_required": false,
+        "revision": 118,
+        "saved_prefix": null,
+        "status": 0,
+        "transition": {
+          "committed": true,
+          "outcome": "committed",
+          "requested_capacity": 16,
+          "requested_chunk": 3,
+          "status": 0
+        }
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "configuration": {
+          "accepted_request": "7D1D6254-0E9E-4B4B-8079-2EC1B5804BEE",
+          "capacity": 16,
+          "chunk": 3,
+          "model": 40,
+          "session": 42,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67223072,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 40,
+          "session": 42
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "accepted-after-late-cancel",
+        "pending": 0,
+        "restart_required": false,
+        "revision": 121,
+        "saved_prefix": null,
+        "status": 0
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "configuration": {
+          "accepted_request": "D192278C-070B-4F33-8FE1-4F65ED0A0596",
+          "capacity": 16,
+          "chunk": 3,
+          "model": 43,
+          "session": 45,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67223072,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 43,
+          "session": 45
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "configuration-adopted-after-cancel",
+        "pending": 0,
+        "restart_required": false,
+        "revision": 121,
+        "saved_prefix": [],
+        "status": 0
+      },
+      {
+        "busy": false,
+        "committed": 2,
+        "configuration": {
+          "accepted_request": "D192278C-070B-4F33-8FE1-4F65ED0A0596",
+          "capacity": 16,
+          "chunk": 3,
+          "model": 43,
+          "session": 45,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67223072,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 43,
+          "session": 45
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 2,
+        "ids": [],
+        "label": "configuration-generated",
+        "pending": 0,
+        "restart_required": false,
+        "revision": 163,
+        "saved_prefix": [
+          1,
+          7
+        ],
+        "status": 0
+      },
+      {
+        "busy": false,
+        "committed": 2,
+        "configuration": {
+          "accepted_request": null,
+          "capacity": 16,
+          "chunk": 3,
+          "model": 43,
+          "session": 46,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67223072,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 43,
+          "session": 46
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 2,
+        "ids": [],
+        "label": "configuration-resumed",
+        "pending": 0,
+        "restart_required": false,
+        "revision": 386,
+        "saved_prefix": [
+          1,
+          7
+        ],
+        "status": 0
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "has_model": true,
+        "has_session": false,
+        "history": 0,
+        "ids": [],
+        "label": "configuration-cancelled-replay",
+        "pending": 0,
+        "restart_required": false,
+        "revision": 473,
+        "saved_prefix": [
+          1,
+          7
+        ],
+        "status": 0
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "has_model": false,
+        "has_session": false,
+        "history": 0,
+        "ids": [],
+        "label": "configuration-closed",
+        "pending": 0,
+        "restart_required": false,
+        "revision": 601,
+        "saved_prefix": null,
+        "status": 0
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "configuration": {
+          "accepted_request": "ABFDD7F0-7760-4B50-B775-743D42864A45",
+          "capacity": 16,
+          "chunk": 3,
+          "model": 49,
+          "session": 51,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67223072,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 49,
+          "session": 51
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "retirement-busy",
+        "pending": 0,
+        "plan": {
+          "aggregate_bytes": 136595264,
+          "candidate_chunk": 3,
+          "candidate_planned_bytes": 10080,
+          "current_chunk": 3,
+          "current_owned_bytes": 14368,
+          "reserves_bytes": 136487168,
+          "shared_bytes": 83648
+        },
+        "restart_required": true,
+        "revision": 122,
+        "saved_prefix": null,
+        "status": 0,
+        "transition": {
+          "committed": true,
+          "outcome": "cleanupFailed",
+          "requested_capacity": 16,
+          "requested_chunk": 3,
+          "status": 4
+        }
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "configuration": {
+          "accepted_request": "D65E811F-BBAE-49EF-B058-8FBF1B8DF1E2",
+          "capacity": 16,
+          "chunk": 3,
+          "model": 52,
+          "session": 54,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67223072,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 52,
+          "session": 54
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "retirement-panic",
+        "pending": 0,
+        "plan": {
+          "aggregate_bytes": 136595264,
+          "candidate_chunk": 3,
+          "candidate_planned_bytes": 10080,
+          "current_chunk": 3,
+          "current_owned_bytes": 14368,
+          "reserves_bytes": 136487168,
+          "shared_bytes": 83648
+        },
+        "restart_required": true,
+        "revision": 122,
+        "saved_prefix": null,
+        "status": 0,
+        "transition": {
+          "committed": true,
+          "outcome": "cleanupFailed",
+          "requested_capacity": 16,
+          "requested_chunk": 3,
+          "status": 6
+        }
+      }
+    ],
+    "summary": {
+      "backend": "cpu",
+      "closed": true,
+      "configuration_controls": 11,
+      "configuration_lifecycle": true,
+      "empty_commit": true,
+      "old_pending_witness": true,
+      "passed": true,
+      "postcommit_cancel": true,
+      "pure_controls": 37,
+      "retirement_controls": 2,
+      "stale_barriers": 15
+    }
+  },
+  "current_verification": {
+    "app_platforms": [
+      "iPhoneSimulator",
+      "iPhoneOS",
+      "MacOSX"
+    ],
+    "apps_executed": false,
+    "configuration_lifecycle": true,
+    "configuration_pure_per_backend": 11,
+    "endpoint_errors": [],
+    "fresh_cold_commands": 14,
+    "legacy_preview": {
+      "app_qualified": false,
+      "barrier_cases": 21,
+      "compiledMetal": true,
+      "passed": true,
+      "preview_loads_model": false,
+      "tiny_generation_witness": true
+    },
+    "raw_records_per_backend": 12,
+    "retirement_per_backend": 2,
+    "separately_approved_mac_commands": 2,
+    "stale_barriers_per_backend": 15,
+    "successful_closed_groups": 16,
+    "transition_pure_per_backend": 37,
+    "typed_swift_language_version": 6,
+    "worker_swift_language_version": 5
+  },
+  "date": "2026-10-30",
+  "decision": "bounded_durable_session_configuration_checked",
+  "evidence": {
+    "artifacts/new-goal-b5d3b-worker-transition-verification-independent-review-v1/saved-review.json": {
+      "bytes": 23498,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3b-worker-transition-verification-independent-review-v1/saved-review.json",
+      "sha256": "5f036e8cbb6c8fcbe7b1e88405f5ecdd803f40107a05a2caef6de2eba0a13120"
+    },
+    "artifacts/new-goal-b5d4a-session-configuration-independent-review-v1/prospective-review.json": {
+      "bytes": 5163,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-independent-review-v1/prospective-review.json",
+      "sha256": "31d873a9c13482ca6a2f370937d11521f6bd52ca970d03088ef870eb65c659d8"
+    },
+    "artifacts/new-goal-b5d4a-session-configuration-proposal-v1/manifest.json": {
+      "bytes": 6530,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-proposal-v1/manifest.json",
+      "sha256": "1c4848bed6415e3b7476d5432824126ac430a8f0a894efb23a46896d2db90a4e"
+    },
+    "artifacts/new-goal-b5d4a-session-configuration-verification-independent-review-v1/prospective-review.json": {
+      "bytes": 3232,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-independent-review-v1/prospective-review.json",
+      "sha256": "6f25714ae38a3a8e56f907efbadc950ed50b488ecaa2a86939ed5dd5cd7e2a66"
+    },
+    "artifacts/new-goal-b5d4a-session-configuration-verification-independent-review-v1/saved-review.json": {
+      "bytes": 32635,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-independent-review-v1/saved-review.json",
+      "sha256": "8cabb8c81e0632f7e90866e262caae2094fe06d9adc51ed35aadd39585405a6b"
+    },
+    "artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/checks.json": {
+      "bytes": 1759953,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/checks.json",
+      "sha256": "a1a1a0f0a8d06eaa3fef0888be94ce2092b61727fc6c9a758b2b6bce2763372e"
+    },
+    "artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/hardware-v1/checks.json": {
+      "bytes": 1315216,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/hardware-v1/checks.json",
+      "sha256": "b7f26496d66db7c47b2d32ccb177440ca793e91d02f81c9e6e6fe1449ba779a0"
+    },
+    "artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/inheritance.json": {
+      "bytes": 64617,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/inheritance.json",
+      "sha256": "9600f0875dacd294b044884647ba495db6f17b29d6f94a0cee43ef4573556ca4"
+    },
+    "artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/launch-review.json": {
+      "bytes": 4387,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/launch-review.json",
+      "sha256": "f06659d243160e661ed4bd25c8183fffcf133d3416f8c87b27fb21fe300b166d"
+    },
+    "artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/manifest.json": {
+      "bytes": 8185,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/manifest.json",
+      "sha256": "19376f0744bb447bafb75ff774ca0969c168bc8cbc43b52a01fc58b912aabd5e"
+    },
+    "artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/package.json": {
+      "bytes": 1897881,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/package.json",
+      "sha256": "f562eeea2984bba4f26791f9cff1476dc9bee236cab6e65260b42b38fcff7b61"
+    },
+    "artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/prior-failure.json": {
+      "bytes": 3733,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/prior-failure.json",
+      "sha256": "ec1e89ccaa9e9cee26da0d84d131152ea56430c86e969d5f1b5656ad3e85c674"
+    }
+  },
+  "evidence_limits": [
+    "The12 records/backend accompany completed assertions; they do not export every internal state or logits/weights.",
+    "Score/reset/preview/inflight and rejected-state assertions are not separate raw frames.",
+    "Process-local IDs and UUIDs identify these test observations only.",
+    "Descriptor and context have different authority; a descriptor while liveContext is nil does not authorize numerical use.",
+    "No elapsed or complete process-peak claim. Prior D3 failed outcome remains historical and unchanged."
+  ],
+  "format": "toklet-native-session-configuration-evidence-v1",
+  "independent_saved_review": {
+    "bytes": 32635,
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-independent-review-v1/saved-review.json",
+    "sha256": "8cabb8c81e0632f7e90866e262caae2094fe06d9adc51ed35aadd39585405a6b"
+  },
+  "metal_observation": {
+    "records": [
+      {
+        "busy": false,
+        "committed": 5,
+        "configuration": {
+          "accepted_request": null,
+          "capacity": 32,
+          "chunk": 3,
+          "model": 1,
+          "session": 2,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67170700,
+          "capacity": 32,
+          "loaded_limit": 32,
+          "model": 1,
+          "session": 2
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 6,
+        "ids": [
+          3,
+          3
+        ],
+        "label": "used-current",
+        "pending": 1,
+        "restart_required": false,
+        "revision": 92,
+        "saved_prefix": [
+          1,
+          7,
+          13,
+          3,
+          3,
+          3
+        ],
+        "status": 0
+      },
+      {
+        "busy": false,
+        "committed": 5,
+        "configuration": {
+          "accepted_request": null,
+          "capacity": 32,
+          "chunk": 3,
+          "model": 1,
+          "session": 2,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67170700,
+          "capacity": 32,
+          "loaded_limit": 32,
+          "model": 1,
+          "session": 2
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 6,
+        "ids": [
+          3,
+          3
+        ],
+        "label": "underbudget-rejection",
+        "pending": 1,
+        "restart_required": false,
+        "revision": 97,
+        "saved_prefix": [
+          1,
+          7,
+          13,
+          3,
+          3,
+          3
+        ],
+        "status": 0,
+        "transition": {
+          "committed": false,
+          "outcome": "rejected",
+          "requested_capacity": 16,
+          "requested_chunk": 3,
+          "status": 1
+        }
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "configuration": {
+          "accepted_request": "CB437B80-1778-40AA-8B9C-93DC4AD78E9A",
+          "capacity": 3,
+          "chunk": 2,
+          "model": 1,
+          "session": 4,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67158620,
+          "capacity": 3,
+          "loaded_limit": 32,
+          "model": 1,
+          "session": 4
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "empty-adoption",
+        "pending": 0,
+        "plan": {
+          "aggregate_bytes": 136538396,
+          "candidate_chunk": 2,
+          "candidate_planned_bytes": 5392,
+          "current_chunk": 3,
+          "current_owned_bytes": 17472,
+          "reserves_bytes": 136487168,
+          "shared_bytes": 28364
+        },
+        "restart_required": false,
+        "revision": 132,
+        "saved_prefix": [],
+        "status": 0,
+        "transition": {
+          "committed": true,
+          "outcome": "committed",
+          "requested_capacity": 3,
+          "requested_chunk": 2,
+          "status": 0
+        }
+      },
+      {
+        "busy": true,
+        "committed": 0,
+        "configuration": {
+          "accepted_request": "9B126B3C-FA12-4E34-9FD7-B74FC4E9E314",
+          "capacity": 16,
+          "chunk": 3,
+          "model": 40,
+          "session": 42,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67165004,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 40,
+          "session": 42
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "accepted-before-late-cancel",
+        "pending": 0,
+        "plan": {
+          "aggregate_bytes": 136544780,
+          "candidate_chunk": 3,
+          "candidate_planned_bytes": 11776,
+          "current_chunk": 3,
+          "current_owned_bytes": 17472,
+          "reserves_bytes": 136487168,
+          "shared_bytes": 28364
+        },
+        "restart_required": false,
+        "revision": 118,
+        "saved_prefix": null,
+        "status": 0,
+        "transition": {
+          "committed": true,
+          "outcome": "committed",
+          "requested_capacity": 16,
+          "requested_chunk": 3,
+          "status": 0
+        }
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "configuration": {
+          "accepted_request": "9B126B3C-FA12-4E34-9FD7-B74FC4E9E314",
+          "capacity": 16,
+          "chunk": 3,
+          "model": 40,
+          "session": 42,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67165004,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 40,
+          "session": 42
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "accepted-after-late-cancel",
+        "pending": 0,
+        "restart_required": false,
+        "revision": 121,
+        "saved_prefix": null,
+        "status": 0
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "configuration": {
+          "accepted_request": "435D7A9B-0C3E-476A-93C0-38FBA35101F5",
+          "capacity": 16,
+          "chunk": 3,
+          "model": 43,
+          "session": 45,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67165004,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 43,
+          "session": 45
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "configuration-adopted-after-cancel",
+        "pending": 0,
+        "restart_required": false,
+        "revision": 121,
+        "saved_prefix": [],
+        "status": 0
+      },
+      {
+        "busy": false,
+        "committed": 2,
+        "configuration": {
+          "accepted_request": "435D7A9B-0C3E-476A-93C0-38FBA35101F5",
+          "capacity": 16,
+          "chunk": 3,
+          "model": 43,
+          "session": 45,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67165004,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 43,
+          "session": 45
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 2,
+        "ids": [],
+        "label": "configuration-generated",
+        "pending": 0,
+        "restart_required": false,
+        "revision": 163,
+        "saved_prefix": [
+          1,
+          7
+        ],
+        "status": 0
+      },
+      {
+        "busy": false,
+        "committed": 2,
+        "configuration": {
+          "accepted_request": null,
+          "capacity": 16,
+          "chunk": 3,
+          "model": 43,
+          "session": 46,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67165004,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 43,
+          "session": 46
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 2,
+        "ids": [],
+        "label": "configuration-resumed",
+        "pending": 0,
+        "restart_required": false,
+        "revision": 386,
+        "saved_prefix": [
+          1,
+          7
+        ],
+        "status": 0
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "has_model": true,
+        "has_session": false,
+        "history": 0,
+        "ids": [],
+        "label": "configuration-cancelled-replay",
+        "pending": 0,
+        "restart_required": false,
+        "revision": 473,
+        "saved_prefix": [
+          1,
+          7
+        ],
+        "status": 0
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "has_model": false,
+        "has_session": false,
+        "history": 0,
+        "ids": [],
+        "label": "configuration-closed",
+        "pending": 0,
+        "restart_required": false,
+        "revision": 601,
+        "saved_prefix": null,
+        "status": 0
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "configuration": {
+          "accepted_request": "EB987D65-8059-4749-8D0E-55C9C6926A15",
+          "capacity": 16,
+          "chunk": 3,
+          "model": 49,
+          "session": 51,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67165004,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 49,
+          "session": 51
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "retirement-busy",
+        "pending": 0,
+        "plan": {
+          "aggregate_bytes": 136544780,
+          "candidate_chunk": 3,
+          "candidate_planned_bytes": 11776,
+          "current_chunk": 3,
+          "current_owned_bytes": 17472,
+          "reserves_bytes": 136487168,
+          "shared_bytes": 28364
+        },
+        "restart_required": true,
+        "revision": 122,
+        "saved_prefix": null,
+        "status": 0,
+        "transition": {
+          "committed": true,
+          "outcome": "cleanupFailed",
+          "requested_capacity": 16,
+          "requested_chunk": 3,
+          "status": 4
+        }
+      },
+      {
+        "busy": false,
+        "committed": 0,
+        "configuration": {
+          "accepted_request": "0FA5FBA1-C231-41BD-881A-7F780249F7B6",
+          "capacity": 16,
+          "chunk": 3,
+          "model": 52,
+          "session": 54,
+          "whole_budget": 134217728
+        },
+        "context": {
+          "admission": 67165004,
+          "capacity": 16,
+          "loaded_limit": 32,
+          "model": 52,
+          "session": 54
+        },
+        "has_model": true,
+        "has_session": true,
+        "history": 0,
+        "ids": [],
+        "label": "retirement-panic",
+        "pending": 0,
+        "plan": {
+          "aggregate_bytes": 136544780,
+          "candidate_chunk": 3,
+          "candidate_planned_bytes": 11776,
+          "current_chunk": 3,
+          "current_owned_bytes": 17472,
+          "reserves_bytes": 136487168,
+          "shared_bytes": 28364
+        },
+        "restart_required": true,
+        "revision": 122,
+        "saved_prefix": null,
+        "status": 0,
+        "transition": {
+          "committed": true,
+          "outcome": "cleanupFailed",
+          "requested_capacity": 16,
+          "requested_chunk": 3,
+          "status": 6
+        }
+      }
+    ],
+    "summary": {
+      "backend": "metal",
+      "closed": true,
+      "configuration_controls": 11,
+      "configuration_lifecycle": true,
+      "empty_commit": true,
+      "old_pending_witness": true,
+      "passed": true,
+      "postcommit_cancel": true,
+      "pure_controls": 37,
+      "retirement_controls": 2,
+      "stale_barriers": 15
+    }
+  },
+  "native_inheritance": {
+    "default_ignored": 20,
+    "default_tests": 469,
+    "engine_inputs": 338,
+    "header_exports": 32,
+    "libraries": {
+      "default_library": {
+        "bytes": 24488880,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d2-empty-candidate-verification-owner-v2/cold-v1/retained/default_library.a",
+        "sha256": "12b6f23104bf0f739e7e3dcc7e51485e63c833939b7aa12357a7a75d4ace66e8"
+      },
+      "metal_library": {
+        "bytes": 35121176,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/build-v1/native/Toklet.xcframework/macos-arm64/libtoklet.a",
+        "sha256": "5cef390a8fe54bff39e66c2406a4f1ff977da9621c1b8c2356a2a327996193b8"
+      }
+    },
+    "metal_ignored": 186,
+    "metal_tests": 577,
+    "native_slices_rebuilt": false,
+    "rust_changed": false
+  },
+  "products": {
+    "default_library": {
+      "bytes": 24488880,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/retained/default_library.a",
+      "sha256": "12b6f23104bf0f739e7e3dcc7e51485e63c833939b7aa12357a7a75d4ace66e8"
+    },
+    "metal_library": {
+      "bytes": 35121176,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/retained/metal_library.a",
+      "sha256": "5cef390a8fe54bff39e66c2406a4f1ff977da9621c1b8c2356a2a327996193b8"
+    },
+    "preview-metal": {
+      "bytes": 12746640,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/retained/preview-metal",
+      "sha256": "cac63d772313f8393845c161fea1dc4e71aa91a6948434d34ed1cd766236e719"
+    },
+    "transition-default": {
+      "bytes": 11281712,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/retained/transition-default",
+      "sha256": "125f92a9f80b5156adf8f578f158ce38a7c487446e66f9c5dd638d6a273a1f49"
+    },
+    "transition-metal": {
+      "bytes": 12784912,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/retained/transition-metal",
+      "sha256": "87087b086a65a866486291a6e2c675d1f774ed62795a1b70c4426ffb0e6736b6"
+    }
+  },
+  "raw_output_pins": {
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/Toklet.app/Contents/Info.plist": {
+      "bytes": 588,
+      "sha256": "747b4ca09c66043df397f42c7b1dc59a6b982bef206451b7b81203c240840afe"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/Toklet.app/Contents/MacOS/Toklet": {
+      "bytes": 16296920,
+      "sha256": "bd2f0ceaa1ad7979b251eb63e6e9dcdf51b5a29780d18d87108a3b2c6b796d39"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/Toklet.app/Contents/Resources/Tiny/config.json": {
+      "bytes": 357,
+      "sha256": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/Toklet.app/Contents/Resources/Tiny/model.safetensors": {
+      "bytes": 85640,
+      "sha256": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Info.plist": {
+      "bytes": 1165,
+      "sha256": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/config.json": {
+      "bytes": 357,
+      "sha256": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/model.safetensors": {
+      "bytes": 85640,
+      "sha256": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/TokletHarness": {
+      "bytes": 10573680,
+      "sha256": "f88814548bc28d7eb537d8aaedeb767edc62bd532df608e6cc264d8dd61579a3"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Info.plist": {
+      "bytes": 1145,
+      "sha256": "128687f70cd7b314576a92777a9343d73aefbc7cbe2b44ed332100849be84d36"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/config.json": {
+      "bytes": 357,
+      "sha256": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/model.safetensors": {
+      "bytes": 85640,
+      "sha256": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/TokletHarness": {
+      "bytes": 10589760,
+      "sha256": "49dfd2c4cd0913db255a01a2de96418515499d08a075826987d740e9419605b0"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/iphoneos-arch.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/iphoneos-arch.stdout": {
+      "bytes": 6,
+      "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/iphoneos-build.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/iphoneos-build.stdout": {
+      "bytes": 108347,
+      "sha256": "6c87bab5228fd6c6509784df08c8b27899d0602f0f75b07029004b2c31659b3b"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/iphoneos-load.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/iphoneos-load.stdout": {
+      "bytes": 20273,
+      "sha256": "2b735eba5a6d505c5e9ec72b6bc8b3a81bf1e8bc2f292163f79071998b1aee60"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/iphonesimulator-arch.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/iphonesimulator-arch.stdout": {
+      "bytes": 6,
+      "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/iphonesimulator-build.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/iphonesimulator-build.stdout": {
+      "bytes": 112584,
+      "sha256": "6c006436209a29ef9c955a7643bb0d10ccec2563eccc596aef5e866bd0f1202d"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/iphonesimulator-load.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/iphonesimulator-load.stdout": {
+      "bytes": 20231,
+      "sha256": "b3f5e7b49901f47356c559df0d12d81e4bedb2c88444516206638a5d2217d0b6"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/mac-arch.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/mac-arch.stdout": {
+      "bytes": 6,
+      "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/mac-build.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/mac-build.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/mac-load.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/mac-load.stdout": {
+      "bytes": 20286,
+      "sha256": "609c8c18ed9bf366a8006e548f3bb482ef5edd3b5fdcc0be2ab6b88ef640c7b1"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/preview-metal-compile.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/preview-metal-compile.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/transition-cpu.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/transition-cpu.stdout": {
+      "bytes": 6575,
+      "sha256": "e6e3739ac1b281428305fe4ff1841b0fe990f83894c1e32e1bb13606b8ec6a8b"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/transition-default-compile.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/transition-default-compile.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/transition-metal-compile.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/transition-metal-compile.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/typed-swift6.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/cold-v1/typed-swift6.stdout": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/hardware-v1/tiny-preview-regression.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/hardware-v1/tiny-preview-regression.stdout": {
+      "bytes": 137,
+      "sha256": "13f601027fe7ca72c6722a41a8b80779d7647364152d297527991df9e4492b91"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/hardware-v1/tiny-worker-transition.stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-verification-owner-v1/hardware-v1/tiny-worker-transition.stdout": {
+      "bytes": 6569,
+      "sha256": "e048be8bd67bdd691355e8d8cffb77c351e4bd5ab267515eb9c9a8b4a0f8b721"
+    }
+  },
+  "scope": {
+    "UI_apply": false,
+    "bounded_cpu_and_tiny_metal_worker": true,
+    "context_window_widening": false,
+    "native_api_change": false,
+    "performance": false,
+    "persistence": false,
+    "phone_qualification": false,
+    "project_membership_change": false,
+    "real_model_transition": false,
+    "rendered_ui": false,
+    "typed_configuration": true,
+    "whole_device_fit": false
+  },
+  "source_files": {
+    "apple/Harness/NativeContext.swift": {
+      "bytes": 10896,
+      "path": "/Users/coloner/work/rust/toklet/apple/Harness/NativeContext.swift",
+      "sha256": "6c7812060427be6f3ea7c32b2d3641ac88e7ab7bd2499c65c62fc43c1f260e5b"
+    },
+    "apple/Harness/NativeWorker.swift": {
+      "bytes": 58428,
+      "path": "/Users/coloner/work/rust/toklet/apple/Harness/NativeWorker.swift",
+      "sha256": "3bd75a09900d23d80339d7cdbf1f96807384833b60ab81f0a756e14bb47cb3dd"
+    },
+    "apple/tests/swift/SessionTransitionMain.swift": {
+      "bytes": 31717,
+      "path": "/Users/coloner/work/rust/toklet/apple/tests/swift/SessionTransitionMain.swift",
+      "sha256": "52f073a5e945b84480fb121ed897a01a79ae59241e62ac41453e3df904f13a35"
+    }
+  },
+  "source_proposal": {
+    "bytes": 6530,
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d4a-session-configuration-proposal-v1/manifest.json",
+    "sha256": "1c4848bed6415e3b7476d5432824126ac430a8f0a894efb23a46896d2db90a4e"
+  }
+}

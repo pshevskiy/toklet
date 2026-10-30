@@ -22,6 +22,11 @@ private func capture(_ label: String, _ snapshot: NativeSnapshot) throws {
         "has_model":snapshot.hasModel,"has_session":snapshot.hasSession,"restart_required":snapshot.restartRequired,
         "history":snapshot.history,"committed":snapshot.evaluated,"pending":snapshot.pending,
         "ids":snapshot.ids,"saved_prefix":snapshot.savedPrefix as Any? ?? NSNull(),"status":snapshot.status]
+    if let configuration = snapshot.sessionConfiguration {
+        fields["configuration"] = ["model":configuration.modelInstance,"session":configuration.sessionInstance,
+            "capacity":configuration.capacity,"chunk":configuration.chunk,"whole_budget":configuration.wholeSessionBudget,
+            "accepted_request":configuration.acceptedRequestID?.uuidString as Any? ?? NSNull()]
+    }
     if let context = snapshot.liveContext {
         fields["context"] = ["model":context.modelInstance,"session":context.sessionInstance,
             "capacity":context.capacity,"loaded_limit":context.loadedLimit,"admission":context.numericalAdmission]
@@ -195,6 +200,39 @@ private func pureControls() throws -> Int {
     return 37
 }
 
+private func configurationControls() throws -> Int {
+    var raw = TokletContextInfo()
+    raw.abi_version = TOKLET_ABI_VERSION; raw.struct_size = UInt32(MemoryLayout<TokletContextInfo>.size)
+    raw.model_instance = 1; raw.session_instance = 2; raw.backend = TOKLET_CONTEXT_CPU
+    raw.engine_global_position_ceiling = 32768; raw.loaded_position_limit = 2048; raw.session_capacity = 32
+    raw.numerical_and_bridge_admitted_bytes = 1024*1024
+    let facts = try NativeContextFacts(raw), id = UUID(), budget: UInt64 = 128*1024*1024
+    func make(_ context: NativeContextFacts, _ capacity: UInt32 = 32, _ chunk: UInt32 = 3,
+              _ whole: UInt64 = 128*1024*1024, _ request: UUID? = nil) throws -> NativeSessionConfiguration {
+        try NativeSessionConfiguration(context:context,capacity:capacity,chunk:chunk,
+            wholeSessionBudget:whole,acceptedRequestID:request)
+    }
+    let initial = try make(facts)
+    try check(initial.acceptedRequestID == nil && initial.modelInstance == 1 && initial.sessionInstance == 2,"Initial configuration")
+    let adopted = try make(facts,32,3,budget,id)
+    try check(adopted.acceptedRequestID == id && adopted != initial,"Accepted correlation")
+    raw.history_tokens = 2; raw.committed_tokens = 1; raw.pending_tokens = 1
+    let withHistory = try make(NativeContextFacts(raw),32,3,budget,id)
+    try check(withHistory == adopted,"History leaked into configuration")
+    try rejects { _ = try make(facts,16) }
+    try rejects { _ = try make(facts,32,0) }
+    try rejects { _ = try make(facts,32,33) }
+    try rejects { _ = try make(facts,32,3,UInt64(TOKLET_MODEL_SESSION_BRIDGE_BYTES)) }
+    try rejects { _ = try make(facts,32,3,1024*1024-1) }
+    try rejects { _ = try make(facts,32,3,6*1024*1024*1024+1) }
+    raw.absolute_position_offset = 1
+    try rejects { _ = try make(NativeContextFacts(raw)) }
+    raw.absolute_position_offset = 0; raw.session_capacity = 2048
+    let wideChunk = try make(NativeContextFacts(raw),2048,2048)
+    try check(wideChunk.chunk == 2048,"Descriptor narrowed accepted ordinary CPU chunks")
+    return 11
+}
+
 @main
 struct SessionTransitionMain {
     static func main() throws {
@@ -203,11 +241,14 @@ struct SessionTransitionMain {
         }
         let root = URL(fileURLWithPath:CommandLine.arguments[1]), metal = CommandLine.arguments[2] == "metal"
         let pure = try pureControls()
+        let configurationPure = try configurationControls()
         let gate = Gate()
         let worker = try NativeWorker(captureSavedPrefix:true,beforeTransitionAcceptance:{ _,_ in gate.pause() },
             beforeTransitionRejection:{ _,status in gate.reject(status) })
         defer { gate.proceed.signal(); worker.close(); _ = worker.waitUntilClosed(seconds:30) }
         let generated = try loaded(worker,root:root,metal:metal), selected = try selection(generated)
+        try check(generated.sessionConfiguration?.acceptedRequestID == nil
+            && generated.sessionConfiguration?.sessionInstance == generated.liveContext?.sessionInstance,"Loaded configuration")
         try capture("used-current",generated)
         try check(worker.selectTransition(selected),"Selection")
         try check(!worker.submit(.replaceWithEmptySession(request(selected,capacity:0))),"Malformed request enqueued")
@@ -240,6 +281,7 @@ struct SessionTransitionMain {
         try check(!worker.submit(.replaceWithEmptySession(smaller)),"Old selection reused")
         try check(worker.submit(.generate(operation:3,tokens:[1],maximum:1,stops:[])),"New session unusable")
         state = try idle(worker); try check(state.status == 0 && state.ids.count == 1,"Candidate generation failed")
+        try check(state.sessionConfiguration?.acceptedRequestID == smaller.id,"Generation discarded accepted request")
 
         var barriers = 0
         for stage in ["dequeue","acceptance","rejection"] {
@@ -248,6 +290,7 @@ struct SessionTransitionMain {
             }
         }
         try afterAcceptance(root:root,metal:metal)
+        try configurationLifecycle(root:root,metal:metal)
         for fault in [NativeTransitionRetirementFault.busy,.consumedPanic] {
             try retirement(root:root,metal:metal,fault:fault)
         }
@@ -255,7 +298,8 @@ struct SessionTransitionMain {
         print("SESSION_TRANSITION_CHECKS " + String(data:try JSONSerialization.data(withJSONObject:[
             "passed":true,"pure_controls":pure,"stale_barriers":barriers,"retirement_controls":2,
             "backend":metal ? "metal":"cpu","empty_commit":true,"old_pending_witness":true,
-            "postcommit_cancel":true,"closed":true],options:[.sortedKeys]),encoding:.utf8)!)
+            "postcommit_cancel":true,"configuration_controls":configurationPure,
+            "configuration_lifecycle":true,"closed":true],options:[.sortedKeys]),encoding:.utf8)!)
     }
 
     private static func stale(root: URL, metal: Bool, stage: String, action: String) throws {
@@ -304,6 +348,87 @@ struct SessionTransitionMain {
         let after = try idle(worker)
         try capture("accepted-after-late-cancel",after)
         try check(after.liveContext == committed.liveContext && after.hasSession,"Late cancellation rolled back adoption")
+        try check(after.sessionConfiguration == committed.sessionConfiguration
+            && after.sessionConfiguration?.acceptedRequestID == committed.transition?.request.id,
+            "Late cancel discarded committed configuration")
+    }
+
+    private static func configurationLifecycle(root: URL, metal: Bool) throws {
+        let accepted = Gate(), command = Gate()
+        let worker = try NativeWorker(captureSavedPrefix:true,
+            beforeCommandDequeue:{ value in if case .generate = value { command.pause() } },
+            beforeTransitionRejection:{ _,status in accepted.reject(status) },
+            afterTransitionAcceptance:{ _ in accepted.pause() })
+        defer { accepted.proceed.signal(); command.proceed.signal(); worker.close(); _ = worker.waitUntilClosed(seconds:30) }
+        let initial = try loaded(worker,root:root,metal:metal), selected = try selection(initial)
+        let wanted = request(selected)
+        worker.selectTransition(selected); accepted.arm()
+        try check(worker.submit(.replaceWithEmptySession(wanted)),"Configuration adoption enqueue")
+        try accepted.wait(worker)
+        // No snapshot/UI poll between acceptance and cancellation.
+        worker.cancel(); accepted.proceed.signal()
+        var state = try idle(worker)
+        try capture("configuration-adopted-after-cancel",state)
+        guard let configuration = state.sessionConfiguration else { throw NativeContextFailure("Missing durable configuration") }
+        try check(state.transition == nil && configuration.acceptedRequestID == wanted.id
+            && configuration.capacity == wanted.capacity && configuration.chunk == wanted.chunk
+            && configuration.wholeSessionBudget == wanted.wholeSessionBudget
+            && configuration.modelInstance == selected.modelInstance
+            && configuration.sessionInstance != selected.sessionInstance,"Lost unobserved commit facts")
+        command.arm()
+        try check(worker.submit(.generate(operation:3,tokens:[1,7],maximum:0,stops:[])),"Configuration generation enqueue")
+        try command.wait(worker)
+        let queued = worker.snapshot()
+        try check(queued.sessionConfiguration == configuration && queued.liveContext == nil,
+            "Configuration was treated as live history")
+        command.proceed.signal(); state = try idle(worker)
+        try capture("configuration-generated",state)
+        try check(state.status == 0 && state.evaluated == 2 && state.sessionConfiguration == configuration,"Generation changed configuration")
+        try check(worker.submit(.score(target:0)),"Configuration score enqueue")
+        state = try idle(worker)
+        try check(state.status == 0 && state.score != nil && state.sessionConfiguration == configuration,"Score changed configuration")
+        let previewSelection = NativePreviewSelection(id:UUID(),directory:root.appendingPathComponent("tests/fixtures/mlx-qwen3-v1/tied").path,profile:.ordinary)
+        try check(worker.selectPreview(previewSelection),"Configuration preview selection")
+        let preview = NativePreviewRequest(id:UUID(),selection:previewSelection,upper:16,chunk:3,offset:0,
+            contextCeiling:nil,loadBudget:128*1024*1024,sessionBudget:128*1024*1024)
+        try check(worker.submit(.preview(preview)),"Configuration preview enqueue")
+        state = try idle(worker)
+        try check(state.preview?.request == preview && state.sessionConfiguration == configuration,"Preview changed configuration")
+        worker.selectPreview(nil)
+        let beforeReject = worker.snapshot(), currentSelection = try selection(beforeReject)
+        worker.selectTransition(currentSelection)
+        try check(worker.submit(.replaceWithEmptySession(request(currentSelection,budget:0))),"Configuration rejection enqueue")
+        state = try idle(worker); try unchanged(beforeReject,state)
+        try check(state.sessionConfiguration == configuration,"Rejected replacement lost accepted UUID")
+        try check(worker.submit(.reset),"Configuration reset enqueue")
+        state = try idle(worker)
+        try check(state.status == 0 && state.history == 0 && state.sessionConfiguration == configuration,"Reset changed configuration")
+        try check(worker.submit(.generate(operation:3,tokens:[1,7],maximum:0,stops:[])),"Replay prefix enqueue")
+        state = try idle(worker); try check(state.status == 0,"Replay prefix failed")
+        try check(worker.submit(.suspend),"Configuration suspend enqueue")
+        try check(worker.snapshot().sessionConfiguration == nil,"Queued retirement retained configuration")
+        state = try idle(worker); try check(!state.hasSession && state.sessionConfiguration == nil,"Suspend retained configuration")
+        try check(worker.submit(.replay),"Configuration replay enqueue")
+        state = try idle(worker)
+        try capture("configuration-resumed",state)
+        guard let resumed = state.sessionConfiguration else { throw NativeContextFailure("Replay missing configuration") }
+        try check(state.status == 0 && resumed.modelInstance == configuration.modelInstance
+            && resumed.sessionInstance != configuration.sessionInstance && resumed.acceptedRequestID == nil
+            && resumed.capacity == configuration.capacity && resumed.chunk == configuration.chunk
+            && resumed.wholeSessionBudget == configuration.wholeSessionBudget && state.evaluated == 2,
+            "Resume settings confused with prior accepted request")
+        try check(worker.submit(.suspend),"Second suspend enqueue"); _ = try idle(worker)
+        try check(worker.submit(.replay,initiallyCancelled:true),"Cancelled replay enqueue")
+        state = try idle(worker)
+        try capture("configuration-cancelled-replay",state)
+        try check(!state.hasSession && state.sessionConfiguration == nil && state.savedPrefix == [1,7],"Cancelled replay retained live configuration")
+        try check(worker.submit(.replay),"Final replay enqueue"); state = try idle(worker)
+        try check(state.status == 0 && state.sessionConfiguration?.acceptedRequestID == nil,"Fresh replay failed")
+        try check(worker.submit(.unload),"Configuration unload enqueue"); state = try idle(worker)
+        try check(!state.hasModel && state.sessionConfiguration == nil,"Unload retained configuration")
+        worker.close(); try check(worker.waitUntilClosed(seconds:30),"Configuration close")
+        state = worker.snapshot(); try capture("configuration-closed",state)
+        try check(state.sessionConfiguration == nil,"Close retained configuration")
     }
 
     private static func retirement(root: URL, metal: Bool, fault: NativeTransitionRetirementFault) throws {
@@ -318,7 +443,10 @@ struct SessionTransitionMain {
             && after.transition?.committed == true && after.liveContext?.sessionInstance != selected.sessionInstance,
             "Cleanup failure claimed rollback")
         try check(after.transition?.status == (fault == .busy ? TOKLET_BUSY:TOKLET_PANIC),"Cleanup status mismatch")
+        try check(after.sessionConfiguration?.sessionInstance == after.liveContext?.sessionInstance
+            && after.sessionConfiguration?.acceptedRequestID == after.transition?.request.id,"Cleanup failure lost adopted configuration")
         try check(!worker.submit(.reset),"Quarantined worker accepted command")
         worker.close(); try check(worker.waitUntilClosed(seconds:30),"Retirement shutdown")
+        try check(worker.snapshot().sessionConfiguration == nil,"Closed cleanup retained configuration")
     }
 }

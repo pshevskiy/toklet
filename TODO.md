@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5d4a — durable applied-session configuration for UI**.
+Next implementation task: **B5d4b — explicit nonpersistent Friendly Apply**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -338,9 +338,12 @@ separate requirements below. Further model admissions require their own scope.
   Both backends pass37pure/15stale-barrier/2retirement controls; old state survives
   rejection and successful empty adoption is distinct from cleanup failure.
   Native/Rust policies stay unchanged; the initial Metal consumer failure is retained.
-- [ ] B5d4a: publish durable applied-session configuration (model/session IDs,
-  capacity, chunk, budget and accepted request ID) across load/resume/adoption.
-  It must survive transient-result cancellation and clear with session retirement.
+- [x] B5d4a: [durable applied-session configuration](docs/native-session-configuration.md)
+  passes 14 fresh compile/CPU/app jobs and two tiny Metal checks with Astra audit.
+  Accepted settings survive transient-result cancellation and same-session work;
+  recreated sessions clear request correlation and retirement clears the descriptor.
+  Both backends pass 37 transition + 11 configuration controls, 15 barriers and two
+  retirement cases; this metadata cannot authorize token-history reuse.
 - [ ] B5d4b: wire explicit nonpersistent Friendly Apply within the loaded bound,
   with separate aggregate/headroom admission and accurate caller reserves.
   Preserve conversation, draft and rejected fields; explain empty cache recreation.
@@ -659,3 +662,8 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | B5d3 first Metal check fails at acceptance barrier | The first Metal worker test exits at its30-second barrier deadline; group closes/endpoints remain unchanged, second Mac job is unrun, and buffered stdout is empty. Astra identifies a strict Swift equation error: Metal constructor admission excludes the separately counted shared model table, while coexistence includes it once; CPU includes it in constructor admission. | Retain14historical passes and failed receipt. Correct only typed backend-specific equality and test diagnostics; add positive/negative Metal/CPU ledger controls. Fresh14Swift/app checks and both Mac jobs follow, reusing unchanged Rust/native libraries. |
 | 2026-10-30 | B5d3 strict accounting correction applied | Astra approves the two-path V2 correction. Constructor equality now follows each native backend exactly; aggregate/model-table accounting and native budgets remain unchanged. Four additional controls cover valid Metal ownership and wrong constructor/aggregate equations, for37pure controls; test rejection diagnostics write bounded stderr snapshots. | Fresh14compile/CPU/app jobs started under reviewed ownerV2. Reuse only unchanged Rust/native libraries; retain all V1 pass/failure evidence. |
 | 2026-10-30 | B5d3 worker verification complete | Fresh14compile/CPU/app jobs and both tinyMacjobs pass with Astra saved audit. CPU/Metal37pure/15barrier/2retirement controls and oldpreview21generation checks pass. Raw Metal32→3capacity/chunk2 adoption retains loaded32; latecancel keeps accepted session, cleanup4/6is committed. V1failure remains retained. | Publish bounded worker evidence and commit after exactreview. Next durable applied configuration precedes ephemeral Friendly Apply; full artifact-identity persistence is separate. No real-model transition, UI or wider-window claim. |
+| 2026-10-30 | B5d3 committed / durable applied-state task starts | Worker transaction committed as `498280e` after exacteight-file Astra review and passing fresh14+2 checks. Source correction, failed V1 attempt and unchanged Rust inheritance remain recorded. Only preservedDSStore remained before progress updates. | Implement B5d4a durable model/session-bound configuration privately with Astra, then run lifecycle/late-cancel controls. No UI Apply, persistence or new limits in this task. |
+| 2026-10-30 | B5d4a durable configuration source applied | Astra approves the three-file proposal; root reads and applies exact bytes. Configuration is staged before locked adoption, survives temporary live-context suppression/cancellation, and clears on retirement. Existing ordinary CPU chunk acceptance is preserved. Eleven pure controls and lifecycle/preview/score/cancelled-replay witnesses are authored. | Run controlled Swift/CPU/app checks and separate actual-product Metal checks. No UI Apply, persistence, new limits or runtime outcome claimed yet. |
+| 2026-10-30 | B5d4a verification handoff corrected | A follow-up was initially sent as a message after the author task had completed, so no verification owner preparation started. Root restarts it explicitly. No build/test ran and live source remains the reviewed proposal. A separate future Apply memory-gate prototype is private and unexecuted. | Prepare/review the D4a owner now; keep subsequent prototype outside live source and validation claims. |
+| 2026-10-30 | B5d4a compile/CPU/app phase passes | All 14 fresh jobs pass, including strict Swift checks, all three app builds and CPU 37 transition + 11 configuration controls, 15 stale barriers, two retirement cases and lifecycle witnesses. Groups close with no endpoint errors; actual products are frozen. | Astra actual-package review precedes two tiny Metal jobs. No UI Apply or persistence claim. |
+| 2026-10-30 | B5d4a verification complete | All 14 compile/CPU/app jobs and two Metal jobs pass with Astra saved audit; 12 records per backend retain accepted configuration across late cancellation/generation, recreated sessions have nil request UUID, and cancelled replay/close have no live descriptor. Existing 21-case preview/generation regression passes. | Publish bounded evidence and commit after exact staged review. Next explicit Friendly Apply uses actual D1 coexistence and fresh incremental-headroom checks; persistence remains separate. |
