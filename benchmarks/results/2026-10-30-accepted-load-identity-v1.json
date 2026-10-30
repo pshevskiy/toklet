@@ -1,0 +1,193 @@
+{
+  "format": "toklet-accepted-load-identity-result-v1",
+  "date": "2026-10-30",
+  "base_revision": "567d8adede8080e0e69f8ee0be828c278ade9462",
+  "passed": true,
+  "scope": "Read-only exact model/chat historical accepted-load identity implementation and portable/API checks; successful assembled getter coverage remains open.",
+  "source_files": {
+    "apple/include/toklet.h": {
+      "after": {
+        "bytes": 22303,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5c-accepted-identity-proposal-v1/proposed/apple/include/toklet.h",
+        "sha256": "2ed90cb29ff852cd0f838d36775b99d63475bbc1607ab653ea78544cae7e4601"
+      },
+      "before": {
+        "bytes": 21487,
+        "path": "/Users/coloner/work/rust/toklet/apple/include/toklet.h",
+        "sha256": "a19151c82d1ae23c2649289d6f32e8fbeec9921c76992b9f0ddfd1413194b0f4"
+      }
+    },
+    "src/native/tests.rs": {
+      "after": {
+        "bytes": 49047,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5c-accepted-identity-proposal-v1/proposed/src/native/tests.rs",
+        "sha256": "5ea296cca46073ae2deee65576784e8049d16f9abafcf5d8534b0db69c4d8721"
+      },
+      "before": {
+        "bytes": 49025,
+        "path": "/Users/coloner/work/rust/toklet/src/native/tests.rs",
+        "sha256": "7f289144cc43be8b78518bd1cd144993266e1fe597fbb067c454919a297037ee"
+      }
+    },
+    "src/native/text.rs": {
+      "after": {
+        "bytes": 31996,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5c-accepted-identity-proposal-v1/proposed/src/native/text.rs",
+        "sha256": "d8bc0fcc3057dfbda4557180f80a92373f0ac8ab5374a3c831b18e0101fa4b72"
+      },
+      "before": {
+        "bytes": 31929,
+        "path": "/Users/coloner/work/rust/toklet/src/native/text.rs",
+        "sha256": "af66ec186eddf3a7e52244e51a2913dca41495a31e1e9b885869fd2c9aacac80"
+      }
+    },
+    "src/native/text/identity.rs": {
+      "after": {
+        "bytes": 10365,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5c-accepted-identity-proposal-v1/proposed/src/native/text/identity.rs",
+        "sha256": "532a4a934d4961f17cb70d6a1eda56466f0d073db1b29b4aa6a90b2a12fd535c"
+      },
+      "before": null
+    },
+    "src/native/text/identity/ffi_tests.rs": {
+      "after": {
+        "bytes": 4806,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5c-accepted-identity-proposal-v1/proposed/src/native/text/identity/ffi_tests.rs",
+        "sha256": "dab5b215f5d2f4acc607f1927029fc2a644a827de7d3be9c6c37edde2137f12e"
+      },
+      "before": null
+    },
+    "src/native/text/identity/tests.rs": {
+      "after": {
+        "bytes": 6446,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5c-accepted-identity-proposal-v1/proposed/src/native/text/identity/tests.rs",
+        "sha256": "407a120618f79055914fae0b1a32d1969607b5af6332e9104e1353f9051ceb5b"
+      },
+      "before": null
+    }
+  },
+  "tests": {
+    "default": {
+      "groups": 58,
+      "passed": 501,
+      "failed": 0,
+      "ignored": 21
+    },
+    "metal": {
+      "groups": 58,
+      "passed": 609,
+      "failed": 0,
+      "ignored": 188
+    }
+  },
+  "new_portable_controls": 7,
+  "owned_commands": 11,
+  "all_commands_exit_zero": true,
+  "all_groups_closed": true,
+  "endpoint_errors": [],
+  "exact_exports": [
+    "toklet_abi_version",
+    "toklet_cancel_create",
+    "toklet_cancel_release",
+    "toklet_cancel_set",
+    "toklet_chat_create",
+    "toklet_chat_create_qwen3_audited",
+    "toklet_chat_create_smol_audited",
+    "toklet_chat_decode",
+    "toklet_chat_encode",
+    "toklet_chat_release",
+    "toklet_chat_stop_ids",
+    "toklet_mlx_capacity_plan_create",
+    "toklet_mlx_context_limits_create",
+    "toklet_mlx_inspect_create",
+    "toklet_mlx_inspect_json",
+    "toklet_mlx_inspect_release",
+    "toklet_mlx_plan_create",
+    "toklet_model_chat_identity_create",
+    "toklet_model_load",
+    "toklet_model_load_metal",
+    "toklet_model_load_mlx",
+    "toklet_model_load_mlx_qwen3_audited",
+    "toklet_model_load_mlx_smol_audited",
+    "toklet_model_release",
+    "toklet_session_context",
+    "toklet_session_create",
+    "toklet_session_generate",
+    "toklet_session_history",
+    "toklet_session_preflight",
+    "toklet_session_prepare_empty",
+    "toklet_session_release",
+    "toklet_session_reset",
+    "toklet_session_score",
+    "toklet_session_state",
+    "toklet_session_transition_plan_create"
+  ],
+  "stable_namespace": [
+    "version",
+    "manifest_algorithm",
+    "manifest_sha256",
+    "backend",
+    "load",
+    "text",
+    "planning"
+  ],
+  "correlation_not_namespace": [
+    "model_instance",
+    "loaded_position_limit"
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b5d5c-accepted-identity-proposal-v1/manifest.json",
+      "bytes": 8491,
+      "sha256": "ac3ebcfedeeb2fb03e672e0620cafcd9b66e4cd9bcb96bb3e37e8096bc351840"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5c-accepted-identity-proposal-v1/DESIGN.md",
+      "bytes": 5761,
+      "sha256": "8cd87abbf63803d13b94ce7a4b9224c336095d0d9a580372ac2cc491b18ddfe9"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5c-accepted-identity-independent-review-v1/prospective-review.json",
+      "bytes": 10998,
+      "sha256": "60c04e51c5131fa98566e335c9f7734230d33dbceb78d2f46dba8f65bfd7860e"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5c-accepted-identity-independent-review-v1/cold-scope-review.json",
+      "bytes": 2201,
+      "sha256": "dd1ccba966cdf58d10f4b859b08ef1cb99c880843d1ad83ec67d8c80eb6f0a07"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5c-accepted-identity-independent-review-v1/saved-review.json",
+      "bytes": 11714,
+      "sha256": "b2e24538c5647d64f09a39403a83d0a57283dfaf5fc68bfd6004423d002f5550"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5c-accepted-identity-checks-v1/cold.py",
+      "bytes": 4751,
+      "sha256": "d22000e57bb1214dfc78816e1f58919f119c8256427ee6d1c3887a40377770b4"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5c-accepted-identity-checks-v1/freeze.py",
+      "bytes": 2049,
+      "sha256": "81f9efaf4aaa5f112ea98509b623582493af658ce1b3e9c5fad5f591d386ffc6"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5c-accepted-identity-checks-v1/run-v1/checks.json",
+      "bytes": 64460,
+      "sha256": "80492301111365efac7cba2d6f3ac6a94f0935b7bdb515e2413f29c3b5f3be13"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5c-accepted-identity-checks-v1/frozen-products.json",
+      "bytes": 1153,
+      "sha256": "bbbcd771428facd9ae1c3add1ac14fd9bb5b53927aa55b77533fa03e4388928c"
+    }
+  ],
+  "limitations": [
+    "Pure builder success is not successful getter use with an assembled audited model; that integration gate remains open.",
+    "Ordinary CPU fixtures run in Cargo suites; no additional cached audited-model or GPU invocation.",
+    "Historical roles/owner association, not current disk or resident buffer identity, accuracy or device fit.",
+    "Preferences remain untrusted and require fresh admission; no preference storage or Swift consumer yet.",
+    "Verified 35-export library retained separately; selected Apple package still has 32 exports.",
+    "Ordinary bounded verification does not freeze complete toolchain/runtime; shared-target guards are historical after later builds and owner-local copies preserve products."
+  ]
+}

@@ -6,7 +6,7 @@ use crate::{
 #[path = "../../tests/support/mod.rs"]
 mod fixtures;
 
-fn model() -> model::Model {
+pub(super) fn model() -> model::Model {
     let f = fixtures::Fixture::tiny();
     let m = &f.manifest["model"];
     let n = |key: &str| m[key].as_u64().unwrap() as usize;
@@ -61,7 +61,7 @@ fn opts() -> Options {
         memory_limit_bytes: 128 * 1024 * 1024,
     }
 }
-fn handles() -> (*mut ModelHandle, *mut SessionHandle, *mut CancelHandle) {
+pub(super) fn handles() -> (*mut ModelHandle, *mut SessionHandle, *mut CancelHandle) {
     let m = Box::into_raw(Box::new(ModelHandle {
         owner: thread::current().id(),
         instance: context::next_instance().unwrap(),

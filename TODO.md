@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5d5c1 — read-only accepted-load identity report**.
+Next implementation task: **B5d5c2 — strict Swift consumer and coherent 35-export bridge**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -365,8 +365,10 @@ separate requirements below. Further model admissions require their own scope.
     historical roles and exact Rc lifetime pass; no generation or app adoption.
   - [ ] B5d5c: persist and restore untrusted settings by accepted artifact/backend/
     load/planning-policy/schema identity with fresh admission and stale handling.
-    - [ ] C1: expose a cold accepted-load report bound to exact model/chat owners
-      and explicit engine-owned backend/load/text/planning semantics.
+    - [x] C1: [cold accepted-load identity report](docs/accepted-load-identity.md)
+      implements exact owner/source checks and engine-owned semantic namespace.
+      Eleven checks, 501 default/609 Metal tests, 35 exports/C ABI and Astra saved
+      audit pass. Positive assembled getter remains a distinct C2 integration gate.
     - [ ] C2: strict Swift report consumption and coherent package adoption,
       followed by one actual audited-load controller check.
     - [ ] C3: managed preference save/restore with fresh admission; keep external
@@ -708,3 +710,6 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | B5d5b source applied | Astra approves all eleven frozen paths, post-assembly attachment, exact parser-buffer hashing, policy/ancillary roles and exact model-Rc ownership. Two additive audited factories imply 34 header exports; selected Apple package remains 32. Guarded application/whitespace pass. | Standard Rust and C/export checks running. One cached Metal assembly/codec ownership probe awaits completed cold/product review; no generation or app claim. |
 | 2026-10-30 | B5d5b cold checks | All twelve commands pass: fmt/strict Clippy, 494 default/602 Metal tests, 34 exact exports, C compile/link/invalid-call probe and release test build. Owner-local byte-identical products preserved; pre-execution review bounded the copy helper before use. | Actual cold/product review before one cached Metal ownership probe; no inference/app/device/performance qualification. |
 | 2026-10-30 | B5d5b audited pairing passes | Twelve cold checks and one retained cached Metal probe pass Astra saved audit: model1 Rc1→2→1→released, all six role hashes/706 source reads and encode/decode/stop151645; no generation. All13 groups closed. | [Report](docs/qwen3-audited-pairing.md); task commit next, then exact-owner identity report. Selected Apple bridge remains32exports; app/preferences untouched. |
+| 2026-10-30 | B5d5b commit | Exact fifteen-file task passes Astra final review and is committed as `567d8ad`; all twelve cold checks and the one cached probe pass. | C1 accepted-load identity report; private draft awaits rebased freeze. Selected Apple package remains32exports. |
+| 2026-10-30 | B5d5c1 report applied | Astra approves six frozen paths, exact owner/thread/source checks, engine-owned policy versions and six-file historical role report using the existing JSON handle. Seven portable controls and no-model ABI probe authored; guarded application/whitespace pass. | Standard Rust/C/export checks running; successful assembled getter remains explicit in the later coherent Swift consumer, not claimed by synthetic positives. |
+| 2026-10-30 | B5d5c1 cold/API checks pass | All eleven commands and Astra saved audit pass: 501 default/609 Metal tests, seven new portable controls, exact35exports/C ABI and two retained products; all groups closed. | [Report](docs/accepted-load-identity.md); task commit next. Pure builder/API rejection coverage does not qualify a successful assembled getter; C2 retains that gate. |

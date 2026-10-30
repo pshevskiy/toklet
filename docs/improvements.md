@@ -8632,3 +8632,29 @@ No session/KV, generation, Swift adoption or preference qualification is added.
 The 34-export library is retained separately; the selected bridge stays at 32.
 Next, a read-only report must bind exact model/chat ownership and explicit
 backend/load/text/planning semantics before a coherent Swift consumer and prefs.
+
+Audited model/codec pairing is committed as `567d8ad` after exact fifteen-file
+Astra review. All passing checks are retained without reruns. A cold exact-owner
+identity report is next, followed by coherent Swift/package consumption and
+freshly admitted preference restoration. The selected app bridge is unchanged.
+
+### 2026-10-30 — Accepted-load identity report source applied
+
+Astra approved a cold model-plus-chat report with exact retained Rc, both owner
+threads and complete source-receipt equality. Engine-owned backend/load/text/
+planning policy versions and historical six-file roles form the future key;
+paths, process instance IDs and current capacity do not. The existing bounded
+JSON report owner is reused without borrowing session state. Seven portable
+controls and a no-model C ABI probe are authored; standard checks are running.
+Successful assembled-model getter use stays an explicit later integration gate.
+
+The [accepted-load report](accepted-load-identity.md) passes all eleven cold/API
+checks and Astra saved audit: 501 default/609 Metal tests, seven new portable
+controls in each configuration, exact 35 exports and C null-input behavior.
+Two compiled products are preserved; all eleven groups close. Ordinary CPU
+fixtures execute, while no additional cached audited-model or GPU test runs.
+
+Positive pure report construction and public unsupported/mismatch rejection
+remain separate from successful getter use with an assembled model. That gate
+stays open for the next coherent Swift controller. The selected package remains
+32 exports; no app preference or numerical/context policy change is claimed.

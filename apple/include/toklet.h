@@ -297,6 +297,16 @@ uint32_t toklet_chat_create_smol_audited(const TokletModel *, uint64_t allowance
    tokenizer_config is verified policy data; special_tokens_map is ancillary.
    Raw token APIs do not prevent IDs from being passed to another session. */
 uint32_t toklet_chat_create_qwen3_audited(const TokletModel *, uint64_t allowance, TokletChat **, TokletError *);
+/* Read-only historical identity of the exact audited model/chat allocation pair.
+   Same owner thread; model and chat must retain the same Rc and source evidence.
+   Ordinary/source-only/unpaired handles: UNSUPPORTED; different retained owners:
+   INVALID. No path, file read, session borrow, GPU work or allocation reservation.
+   out is cleared before validation; publication is atomic on success. Uses the
+   existing bounded inspection JSON copy/release functions and their allowance.
+   Snapshot survives handle release; instance IDs correlate only this process.
+   No preferences, current-disk identity, quality or device fit is authorized. */
+uint32_t toklet_model_chat_identity_create(const TokletModel *, const TokletChat *,
+                                         TokletCompatibility **, TokletError *);
 /* JSON array of alternating {role,content} messages, starting/ending user.
    Max63 messages/64KiB UTF-8, no template control tokens; output max512 IDs.
    NULL+0 queries required count. Small output returns INVALID, sets required
