@@ -24,6 +24,7 @@ use std::{
 };
 
 pub(crate) mod audit;
+pub(crate) mod content;
 
 const CONVERSION_BYTES: usize = 64 * 1024;
 const MAX_JSON_BYTES: usize = 1024 * 1024;
@@ -394,6 +395,7 @@ pub(crate) struct Source {
     buffer: Vec<u8>,
     conversion_seconds: f64,
     audit: Option<audit::Audit>,
+    qwen_audit: Option<content::QwenAudit>,
 }
 impl Source {
     pub(crate) fn open(directory: &Path) -> Result<Self, Error> {
@@ -482,17 +484,31 @@ impl Source {
             buffer,
             conversion_seconds: 0.0,
             audit,
+            qwen_audit: None,
         })
     }
 
     pub(crate) fn content_identity(&self) -> Option<audit::SourceContentIdentity> {
         self.audit.as_ref()?.identity()
     }
+    pub(crate) fn qwen_content_identity(&self) -> Option<content::QwenSourceContentIdentity> {
+        self.qwen_audit.as_ref()?.identity()
+    }
     pub(crate) fn audit_owned_bytes(&self) -> Option<usize> {
-        self.audit.as_ref().map(audit::Audit::owned_bytes)
+        self.audit
+            .as_ref()
+            .map(audit::Audit::owned_bytes)
+            .or_else(|| {
+                self.qwen_audit
+                    .as_ref()
+                    .and_then(|audit| audit.owned_bytes().ok())
+            })
     }
     pub(crate) fn poison_audit(&mut self) {
         if let Some(a) = self.audit.as_mut() {
+            a.poison();
+        }
+        if let Some(a) = self.qwen_audit.as_mut() {
             a.poison();
         }
     }
@@ -603,7 +619,7 @@ impl Source {
         range: std::ops::Range<usize>,
         mut consume: impl FnMut(&[u8]) -> Result<(), Error>,
     ) -> Result<(), Error> {
-        if self.audit.is_some() {
+        if self.audit.is_some() || self.qwen_audit.is_some() {
             self.poison_audit();
             return Err(invalid(
                 "audited source does not support tensor range reads",
@@ -655,6 +671,35 @@ impl Source {
         name: &str,
         mut consume: impl FnMut(&[u8]) -> Result<(), Error>,
     ) -> Result<(), Error> {
+        if self.qwen_audit.is_some() {
+            let result = (|| {
+                let index = *self
+                    .locations
+                    .get(name)
+                    .ok_or_else(|| invalid("unplanned Qwen tensor"))?;
+                let shard = &self.shards[index];
+                let info = shard
+                    .metadata
+                    .info(name)
+                    .ok_or_else(|| invalid("absent Qwen tensor metadata"))?;
+                let begin = shard
+                    .data_start
+                    .checked_add(info.data_offsets.0 as u64)
+                    .ok_or_else(|| invalid("Qwen range overflow"))?;
+                let end = shard
+                    .data_start
+                    .checked_add(info.data_offsets.1 as u64)
+                    .ok_or_else(|| invalid("Qwen range overflow"))?;
+                self.qwen_audit
+                    .as_mut()
+                    .unwrap()
+                    .visit(begin, end, &mut consume)
+            })();
+            if result.is_err() {
+                self.poison_audit();
+            }
+            return result;
+        }
         // Begin poisons provisionally before reads/callbacks. Errors or unwind
         // leave it sticky; only this successful operation can clear that state.
         let mut ticket = self.audit.as_mut().map(|a| a.begin(name)).transpose()?;

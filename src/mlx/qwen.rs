@@ -141,6 +141,7 @@ impl QuantizationPlan {
 }
 
 pub use crate::weights::audit::SourceContentIdentity;
+pub use crate::weights::content::QwenSourceContentIdentity;
 
 /// Immutable metadata and open shard handles. Tensor-name lookups belong to
 /// loading only; execution should retain resolved concrete buffers/operations.
@@ -229,7 +230,27 @@ impl Source {
             weights::audit::MetadataKind::Config,
         )?;
         let document = parse_json(&bytes)?;
-        Self::open_document(directory, options, true, document, Some(audit))
+        Self::open_document(directory, options, true, document, Some(audit), None)
+    }
+    /// Opt-in consumed-source audit for the pinned managed Qwen3-0.6B 8-bit
+    /// inventory. Full-file prepasses authenticate range hashes, then the same
+    /// bytes delivered to consumers are reverified. This adds cold I/O, not a
+    /// new architecture/context/mode admission. No model or codec is assembled.
+    /// Discard partial destinations after any error. Invalid public consuming
+    /// operations poison later source-identity publication, as in the Smol path.
+    pub fn open_qwen3_audited(directory: &Path, options: LoadOptions) -> Result<Self, Error> {
+        Self::validate_budget(options)?;
+        let (bytes, receipt) =
+            weights::content::QwenAudit::config(directory, options.memory_limit_bytes)?;
+        let document = parse_json(&bytes)?;
+        drop(bytes);
+        Self::open_document(directory, options, true, document, None, Some(receipt))
+    }
+    /// Historical config/index/container consumption only. The embedded full
+    /// manifest is an expected anchor, not proof of tokenizer/ancillary reads,
+    /// model assembly, codec pairing or persistent preference eligibility.
+    pub fn qwen3_content_identity(&self) -> Option<QwenSourceContentIdentity> {
+        self.source.qwen_content_identity()
     }
     /// Historical evidence only after every trusted physical range was consumed
     /// successfully. Prefer querying once at the final consumption boundary.
@@ -244,7 +265,7 @@ impl Source {
     fn open_impl(directory: &Path, options: LoadOptions, allow_dense: bool) -> Result<Self, Error> {
         Self::validate_budget(options)?;
         let document = read_config(&directory.join("config.json"))?;
-        Self::open_document(directory, options, allow_dense, document, None)
+        Self::open_document(directory, options, allow_dense, document, None, None)
     }
 
     fn validate_budget(options: LoadOptions) -> Result<(), Error> {
@@ -263,7 +284,7 @@ impl Source {
         options: LoadOptions,
         document: Value,
     ) -> Result<Self, Error> {
-        Self::open_document(directory, options, true, document, None)
+        Self::open_document(directory, options, true, document, None, None)
     }
 
     fn open_document(
@@ -272,6 +293,7 @@ impl Source {
         allow_dense: bool,
         mut document: Value,
         audit: Option<weights::audit::Audit>,
+        qwen_config: Option<weights::content::FileDelivery>,
     ) -> Result<Self, Error> {
         Self::validate_budget(options)?;
         let object = document
@@ -346,7 +368,18 @@ impl Source {
         } else {
             Vec::new()
         };
-        let source = weights::Source::open_with_audit(directory, audit)?;
+        let source = if let Some(config_receipt) = qwen_config {
+            if audit.is_some() || architecture != Architecture::Qwen3 {
+                return Err(invalid("Qwen source audit profile mismatch"));
+            }
+            weights::content::QwenAudit::open_source(
+                directory,
+                config_receipt,
+                options.memory_limit_bytes,
+            )?
+        } else {
+            weights::Source::open_with_audit(directory, audit)?
+        };
         let has_head = source.info("lm_head.weight").is_some();
         if has_head || !tied_output {
             expected.insert(
@@ -1020,3 +1053,7 @@ mod row_tests;
 #[cfg(test)]
 #[path = "qwen/logical_tests.rs"]
 pub(crate) mod logical_tests;
+
+#[cfg(test)]
+#[path = "qwen/qwen3_content_tests.rs"]
+mod qwen3_content_tests;

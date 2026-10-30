@@ -8561,3 +8561,34 @@ and compiler checks do not freeze the complete compiler/Python runtime or run
 full nested wrappers. Numerical, app, model and device qualifications are unchanged.
 Astra independently rechecked all source/product/log identities and the exact
 source groups and accepts this inventory-only repair for commit.
+
+The inventory repair is committed as `f09da28` after exact fourteen-file Astra
+review. The active identity task now includes a concrete opt-in Qwen3 source
+consumer, rather than adding unused test-only verification machinery. Successful
+source consumption, loaded-model attachment and codec pairing remain distinct
+acceptance boundaries before settings persistence.
+
+B5d5 is split into concrete source consumption, successful model/codec pairing,
+and preference restoration. The frozen first implementation covers authenticated
+Qwen3 config/index/container delivery only. A complete six-file expected manifest
+is an anchor, not evidence that tokenizer or ancillary files were consumed.
+Seventeen synthetic controls and one explicit cached streaming probe are authored;
+code review and checks are still pending.
+
+Astra approved the seven-path concrete source change and guarded application
+passed. The audit replaces the opt-in source stream buffer and retains one
+file handle with bounded range hashes; errors and partial reads invalidate later
+identity publication. Standard Rust checks and the explicit cached streaming
+check are running. Ordinary and existing Smol routes remain unchanged.
+
+The [Qwen3 source audit](qwen3-consumed-source.md) passes all eight owned
+commands: fmt, strict Clippy for both configurations, 486 default/594 Metal
+tests and the explicit cached source stream. All 704 tensors, 706 physical
+ranges and 633,364,480 payload bytes are verified; retained audit ownership is
+99,840 bytes. Invalid later public access correctly prevents new identity
+publication. The expected canonical manifest is independently reconstructed
+from the Swift catalog. No numerical kernel, native factory, Apple package,
+model assembly, codec, app preferences or qualification scope changes.
+Astra independently verifies all 248 input and 16 log identities, seventeen new
+controls in each suite, the actual one-test stream marker and closed groups.
+The scoped source task is approved for publication and commit.

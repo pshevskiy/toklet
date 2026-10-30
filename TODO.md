@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5d5 — consumed artifact/codec identity before persistence**.
+Next implementation task: **B5d5b — successful model/codec identity pairing**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -354,6 +354,16 @@ separate requirements below. Further model admissions require their own scope.
 - [ ] B5d5: persist settings by authenticated full-artifact manifest and plan
   identity. Path keys or config-only recognition do not authenticate an artifact.
   Preserve rejected settings and handle stale/replaced artifacts explicitly.
+  - [x] B5d5a: [concrete audited Qwen3 Source reader](docs/qwen3-consumed-source.md)
+    passes fmt, strict Clippy, 486 default/594 Metal tests and one cached source
+    stream: all 704 tensors/706 ranges/633,364,480 payload bytes verified.
+    Expected six-file manifest and consumed config/index/container roles stay
+    distinct; ordinary/Smol, model assembly, codec and preferences unchanged.
+  - [ ] B5d5b: attach source identity only after successful model assembly, pair
+    authenticated codec buffers with the exact model owner, and account ancillary
+    assets separately before publishing an accepted-load identity.
+  - [ ] B5d5c: persist and restore untrusted settings by accepted artifact/backend/
+    load/planning-policy/schema identity with fresh admission and stale handling.
 
 New exact-history migration remains a separate Expert mode; first Friendly Apply
 uses the existing full saved-conversation reset+prompt path on Send.
@@ -683,3 +693,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | B5d4b committed / consumed identity prerequisite starts | Friendly Apply committed as `ecfcadd` after exact sixteen-file Astra review and all 22+4 checks, reusing completed evidence through the service interruption. Only preserved DSStore remained. | B5d5 first establishes actual consumed model/codec identity for one pinned managed profile using the existing audit mechanism; preferences follow only after that proof. No path/config/pre-open receipt shortcut, parallel phone work or full-window restart. |
 | 2026-10-30 | M8 standalone inventory repair | Astra reviewed a shared explicit nine-file worker dependency list and ten wrapper consumers, including named score/legacy entrypoints and receipt binding. Private generator import/multiline preflights were corrected before application; no target checks had run. | Compile/link all eleven Mac groups, six mobile compile/typecheck branches and existing Python parser controls; D5 identity integration remains private. |
 | 2026-10-30 | M8 standalone inventory checks | All 21 owned jobs pass: 89 Python controls, 11 Mac compile/link groups, four mobile module builds, two lifecycle mobile typechecks and three SDK queries; input/product/log hashes and closed groups rechecked. No full wrapper, model, app or device execution. | [Evidence](benchmarks/results/2026-10-30-standalone-swift-inventories-v1.json); Astra saved audit passes all 286 input, 15 product and 42 log hashes; task commit next. |
+| 2026-10-30 | M8 standalone inventory commit | Exact fourteen-file task passes Astra final review and all scoped checks; committed as `f09da28`. Only the unrelated Apple `.DS_Store` remains untracked. | Continue B5d5 concrete consumed Qwen3 source identity, then model/codec pairing before persistence. |
+| 2026-10-30 | B5d5 source consumer frozen | Astra author froze seven paths for one opt-in Qwen3 source reader, 17 synthetic controls and one ignored cached full-source stream. Expected manifest and consumed roles remain distinct; ordinary/Smol, model assembly, codec, app and preferences unchanged. | Independent code review before applying or running; B5d5a/b/c boundaries now explicit. |
+| 2026-10-30 | B5d5a source applied | Astra independently approves all seven frozen source paths, concrete Whole loading seam, sticky rejection and source-only receipt boundary. Guarded application and whitespace pass. | Standard Rust fmt/strict default+Metal Clippy/tests and one cached source-only streaming check running; no model/codec or persistence claim. |
+| 2026-10-30 | B5d5a checks pass | All eight owned commands pass: fmt, strict Clippy, 486 default/594 Metal tests and one explicit release cached source stream. Actual 704 tensors/706 ranges/633,364,480 payload bytes, 99,840 audit-owner bytes; invalid public access disables later identity. | [Report](docs/qwen3-consumed-source.md); Astra saved audit passes all source/log/count/closed-group checks; task commit next. No assembly/codec/app/persistence/GPU/performance claim. |

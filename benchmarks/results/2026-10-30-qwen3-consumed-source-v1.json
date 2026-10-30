@@ -1,0 +1,151 @@
+{
+  "format": "toklet-qwen3-consumed-source-result-v1",
+  "date": "2026-10-30",
+  "base_revision": "f09da28932d93989622ed5867952fc082f8681e5",
+  "passed": true,
+  "source_files": {
+    "src/mlx/qwen.rs": {
+      "after": {
+        "bytes": 41738,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5a-content-audit-proposal-v2/proposed/src/mlx/qwen.rs",
+        "sha256": "be3bb309290b890ec296e858109a37374e36a439aa811fdbb737537e84612d80"
+      },
+      "before": {
+        "bytes": 39850,
+        "path": "/Users/coloner/work/rust/toklet/src/mlx/qwen.rs",
+        "sha256": "0071a738c95f5586af9c4d60036985b4b0ceee5e98a1c56f9c9782ed7bed0e1a"
+      }
+    },
+    "src/mlx/qwen/qwen3_content_tests.rs": {
+      "after": {
+        "bytes": 5346,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5a-content-audit-proposal-v2/proposed/src/mlx/qwen/qwen3_content_tests.rs",
+        "sha256": "af92d403138eceaf9f03b34e144067375422ef29a51fac2d41deee32c52004d0"
+      },
+      "before": null
+    },
+    "src/weights/content.rs": {
+      "after": {
+        "bytes": 13980,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5a-content-audit-proposal-v2/proposed/src/weights/content.rs",
+        "sha256": "6522a27c0162f7667db043e9d709d1848271f7dc0d64060ab7a7bddadf566c3e"
+      },
+      "before": null
+    },
+    "src/weights/content/qwen3.rs": {
+      "after": {
+        "bytes": 13519,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5a-content-audit-proposal-v2/proposed/src/weights/content/qwen3.rs",
+        "sha256": "f80db7cfa4cfb0598e58f3997132fe72bc5f7fc65d88ee9ccb4b6997bce703b8"
+      },
+      "before": null
+    },
+    "src/weights/content/qwen3/tests.rs": {
+      "after": {
+        "bytes": 6978,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5a-content-audit-proposal-v2/proposed/src/weights/content/qwen3/tests.rs",
+        "sha256": "1d339afcd1366d34e420e380c21a7be81a9311c196a4b7d097f2b0d4b03c8f67"
+      },
+      "before": null
+    },
+    "src/weights/content/tests.rs": {
+      "after": {
+        "bytes": 12516,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5a-content-audit-proposal-v2/proposed/src/weights/content/tests.rs",
+        "sha256": "fc221d3c878a48d99c35417ca39b23f8a34d70dab1812f4af78f5678c767ec10"
+      },
+      "before": null
+    },
+    "src/weights/mod.rs": {
+      "after": {
+        "bytes": 38315,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5a-content-audit-proposal-v2/proposed/src/weights/mod.rs",
+        "sha256": "e4bb46e235ddcb4f497dcf28dd6834d3bbfacfb1198eb16076e17c3bb3f4a38e"
+      },
+      "before": {
+        "bytes": 36631,
+        "path": "/Users/coloner/work/rust/toklet/src/weights/mod.rs",
+        "sha256": "2dd3315f4b646e634ea3684d1c630e2f294e8b87f7cc7719b1ac2626ebcfc118"
+      }
+    }
+  },
+  "scope": "opt-in public Qwen3 Source consumer; private cold manifest/range audit; expected six-file anchor vs consumed config/index/container explicitly distinct; no model assembly/codec/native API/persistence",
+  "tests": {
+    "default": {
+      "groups": 58,
+      "passed": 486,
+      "failed": 0,
+      "ignored": 21
+    },
+    "metal": {
+      "groups": 58,
+      "passed": 594,
+      "failed": 0,
+      "ignored": 187
+    }
+  },
+  "new_portable_controls": 17,
+  "explicit_cached_source_probes": 1,
+  "owned_commands": 8,
+  "all_commands_exit_zero": true,
+  "all_groups_closed": true,
+  "endpoint_errors": [],
+  "observation": {
+    "passed": true,
+    "source_only": true,
+    "model_assembled": false,
+    "codec_paired": false,
+    "expected_manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+    "config_sha256": "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240",
+    "index_sha256": "45addf7779cdbd5af18d92f9f7b79c188f6ebbf32cff7b4ae7dbe68a91340ebc",
+    "container_sha256": "3ad5c96e0a476d4eee48e9f525d0ee0a3f1830b3e5b8e17b441de0661e921397",
+    "container_bytes": 633442994,
+    "payload_bytes_delivered": 633364480,
+    "tensor_ranges": 704,
+    "physical_ranges": 706,
+    "verified_reads": 706,
+    "retained_audit_bytes": 99840,
+    "after_invalid_public_read_identity_absent": true
+  },
+  "canonical_manifest_independently_reconstructed_from_catalog": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b5d5a-content-audit-proposal-v2/manifest.json",
+      "bytes": 6298,
+      "sha256": "cb4905bbf42b482a475caf7dbe856eb55a317ca58f0c7c1bbbf2ba28ea1bf38c"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5a-content-audit-proposal-v2/DESIGN.md",
+      "bytes": 6293,
+      "sha256": "e2460e7ca9ec3719a8822e9a35dd42760be67657db0b43d6409fce8a4a5e6491"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5a-content-audit-independent-review-v1/prospective-review.json",
+      "bytes": 14343,
+      "sha256": "3dc8a2b6123729966539b76c83bb2b85715669beeb86fe382b2389538ab41243"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5a-content-audit-checks-v1/run.py",
+      "bytes": 5612,
+      "sha256": "494b81f044781b149acfc3b977ebac5936bd25515b8bd4059fc502808565c449"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5a-content-audit-checks-v1/run-v1/checks.json",
+      "bytes": 58181,
+      "sha256": "417e4daa065bb8c672949f9d6b801c996d19f3671eb11314a52dbdb7eb349ce7"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5a-content-audit-independent-review-v1/saved-review.json",
+      "bytes": 18462,
+      "sha256": "7565048a98c8b2ed727d4423f9ed9ff779d9d72d454e0deae2878a3d9258b63d"
+    }
+  ],
+  "limitations": [
+    "Expected six-file manifest is not proof of consumed tokenizer or ancillary assets.",
+    "Source evidence does not prove model assembly, resident identity or exact codec/model pairing.",
+    "No native factory, Apple package, app preference, numerical kernel, context policy or capability change.",
+    "No GPU, generation, full quality, performance, rendered UI or physical-device qualification.",
+    "Ordinary bounded verification retains source/command/log identities; complete runtime/toolchain identity was not frozen."
+  ],
+  "astra_saved_audit_passed": true
+}
