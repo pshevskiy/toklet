@@ -1,0 +1,720 @@
+{
+  "apps": [
+    {
+      "executable": {
+        "bytes": 10242400,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/TokletHarness",
+        "sha256": "1329c0225e0c33cc76e66a965392e6e29492336b50b65ff801d12964201d4136"
+      },
+      "explicit_signing_stage": false,
+      "info": {
+        "bytes": 1145,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Info.plist",
+        "sha256": "128687f70cd7b314576a92777a9343d73aefbc7cbe2b44ed332100849be84d36"
+      },
+      "lc_code_signature_present": true,
+      "load_metadata": {
+        "bytes": 20218,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/logs/iphonesimulator-load.stdout",
+        "sha256": "2b83752ba17ff14fba8f937f7eee510a31b1370abf674d15f6f829feb22c491f"
+      },
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app",
+      "platform": "iPhoneSimulator",
+      "signed": false
+    },
+    {
+      "executable": {
+        "bytes": 10224456,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/TokletHarness",
+        "sha256": "9a8574ca21835231a23caa9654dd794d31b9df6fef99d1ef048f3a456ecacdfb"
+      },
+      "explicit_signing_stage": false,
+      "info": {
+        "bytes": 1165,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Info.plist",
+        "sha256": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47"
+      },
+      "lc_code_signature_present": false,
+      "load_metadata": {
+        "bytes": 20260,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/logs/iphoneos-load.stdout",
+        "sha256": "c22ba607aca35357b1de5a1ad4783acadaaf04d762f5435b4fe0ce3004fd80cc"
+      },
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app",
+      "platform": "iPhoneOS",
+      "signed": false
+    },
+    {
+      "executable": {
+        "bytes": 15935320,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/Toklet.app/Contents/MacOS/Toklet",
+        "sha256": "e140872f88484316c82b5af8d3c10a9e99d448b598358db0c6ec8372a81282a9"
+      },
+      "explicit_signing_stage": false,
+      "info": {
+        "bytes": 588,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/Toklet.app/Contents/Info.plist",
+        "sha256": "747b4ca09c66043df397f42c7b1dc59a6b982bef206451b7b81203c240840afe"
+      },
+      "lc_code_signature_present": true,
+      "load_metadata": {
+        "bytes": 20273,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/logs/mac-load.stdout",
+        "sha256": "2b10bfa1a3c5116fa8354f40258f3727b2f8f083cbd63b9b16f48da8fdd0a43c"
+      },
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/Toklet.app",
+      "platform": "MacOSX",
+      "signed": false
+    }
+  ],
+  "bounded_package_app_link_qualified": true,
+  "bundle_files": [
+    {
+      "bytes": 1614,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/Toklet.xcframework/Info.plist",
+      "sha256": "f9ce2f5bf3fad89f1c9a30ada11f8384bd2879decf12376e0da617c246de3d09"
+    },
+    {
+      "bytes": 54,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/Toklet.xcframework/ios-arm64/Headers/module.modulemap",
+      "sha256": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af"
+    },
+    {
+      "bytes": 17741,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/Toklet.xcframework/ios-arm64/Headers/toklet.h",
+      "sha256": "b8fa29dec03088d529d4d6e1af6dab924de0cbf0aad16827b487d19f0a1cf394"
+    },
+    {
+      "bytes": 34784168,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/Toklet.xcframework/ios-arm64/libtoklet.a",
+      "sha256": "7d97375059090d1670651dcbff4dfa23374abb40e5c75e4dc47fdc993fe7d73b"
+    },
+    {
+      "bytes": 54,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/Toklet.xcframework/ios-arm64-simulator/Headers/module.modulemap",
+      "sha256": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af"
+    },
+    {
+      "bytes": 17741,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/Toklet.xcframework/ios-arm64-simulator/Headers/toklet.h",
+      "sha256": "b8fa29dec03088d529d4d6e1af6dab924de0cbf0aad16827b487d19f0a1cf394"
+    },
+    {
+      "bytes": 34741256,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/Toklet.xcframework/ios-arm64-simulator/libtoklet.a",
+      "sha256": "4140fab3b78c783d3e1346198f351cf48d5a2a92b0c28ae72231fae4a3769c2e"
+    },
+    {
+      "bytes": 54,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/Toklet.xcframework/macos-arm64/Headers/module.modulemap",
+      "sha256": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af"
+    },
+    {
+      "bytes": 17741,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/Toklet.xcframework/macos-arm64/Headers/toklet.h",
+      "sha256": "b8fa29dec03088d529d4d6e1af6dab924de0cbf0aad16827b487d19f0a1cf394"
+    },
+    {
+      "bytes": 35051704,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/Toklet.xcframework/macos-arm64/libtoklet.a",
+      "sha256": "b9874577d10b6ed6c83e8fd2ea47c4048ef90fdcd3ac3b1c1e6b79dbeb4508be"
+    }
+  ],
+  "candidate_bundle": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/Toklet.xcframework",
+  "candidate_compile_link_passed": true,
+  "date": "2026-10-30",
+  "evidence": {
+    "checks": {
+      "bytes": 67091,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/checks.json",
+      "sha256": "5d292c43836ece37b74e5de90d8c0d7f7fba95ddf2ebecae6b9aa2cde9c31867"
+    },
+    "independent_saved_review": {
+      "bytes": 12498,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-independent-review-v1/saved-review.json",
+      "sha256": "24a95859e0e76ae35ee29a36b1ceb247b4fe89a547798d249e34a1c4ee927546"
+    },
+    "launch_review": {
+      "bytes": 1910,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/launch-review.json",
+      "sha256": "e5d62ebd391292d826de2f07ce8fd948dd815ba79ba0be95c10370c791e8e96e"
+    },
+    "native_package": {
+      "bytes": 55915,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/build.json",
+      "sha256": "6e3d2733b5dd4803db4c5fa6f5e48323b9441328478767eb775953d96e4edfc4"
+    },
+    "owner_manifest": {
+      "bytes": 4416,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/manifest.json",
+      "sha256": "34c70dae4725e84fb13bfb84ba1aac23290729b616a2ba7ecb93e112d82c61e6"
+    },
+    "package": {
+      "bytes": 536988,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/package.json",
+      "sha256": "e2ad8b462aec2655aaa7a16019c755d9dcd8f7e4154263d29fbb97ff258492f0"
+    },
+    "prior_selected_build": {
+      "bytes": 39513,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/m8-context-ui-native-package-v1/package/build.json",
+      "sha256": "1f187db18feb5131a8c2dc31d28963ea329ab029a6741d642b144cb5053caffc"
+    },
+    "selected_link_adoption": {
+      "bytes": 1107,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/adoption.json",
+      "sha256": "dd554a7e9b2d8a6e4d9e85244460001b6ca3a426168fe592b199146ca79f19f8"
+    },
+    "structural_review": {
+      "bytes": 10215,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-independent-review-v1/prospective-v3-review.json",
+      "sha256": "e2a60c65c029c4cd5bb7e52a6bc123e2d008984e036e761b1203fbcddfeeb0f3"
+    }
+  },
+  "format": "toklet-apple-planning-package-result-v1",
+  "independent_saved_review": {
+    "bytes": 12498,
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-independent-review-v1/saved-review.json",
+    "sha256": "24a95859e0e76ae35ee29a36b1ceb247b4fe89a547798d249e34a1c4ee927546"
+  },
+  "jobs": {
+    "closed_process_groups": 30,
+    "endpoint_errors": [],
+    "ios_device_simulator_app": 6,
+    "mac_app": 3,
+    "native_package": 21,
+    "total": 30
+  },
+  "limits": {
+    "aggregate_compiler_memory_peak_measured": false,
+    "cleanup_seconds": [
+      15,
+      15
+    ],
+    "disk_reserve_bytes": 17179869184,
+    "elapsed_seconds": null,
+    "job_seconds": 1800,
+    "log_bytes_per_stream": 16777216,
+    "observed_direct_process_bytes": 6442450944
+  },
+  "publication_ready": true,
+  "qualified": false,
+  "resource_observations": [
+    {
+      "live_samples": 1,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 311440,
+        "phys_footprint": 196752,
+        "resident_size": 131072
+      },
+      "pid": 11314
+    },
+    {
+      "live_samples": 1,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 163912,
+        "phys_footprint": 163912,
+        "resident_size": 409600
+      },
+      "pid": 11318
+    },
+    {
+      "live_samples": 1,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 98376,
+        "phys_footprint": 81992,
+        "resident_size": 32768
+      },
+      "pid": 11322
+    },
+    {
+      "live_samples": 5,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 5587472,
+        "phys_footprint": 5587472,
+        "resident_size": 35831808
+      },
+      "pid": 11328
+    },
+    {
+      "live_samples": 1,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 180296,
+        "phys_footprint": 180296,
+        "resident_size": 458752
+      },
+      "pid": 11336
+    },
+    {
+      "live_samples": 1,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 245832,
+        "phys_footprint": 245832,
+        "resident_size": 720896
+      },
+      "pid": 11340
+    },
+    {
+      "live_samples": 273,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 29327888,
+        "phys_footprint": 29295120,
+        "resident_size": 46350336
+      },
+      "pid": 11344
+    },
+    {
+      "live_samples": 2,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 6603088,
+        "phys_footprint": 6603088,
+        "resident_size": 18743296
+      },
+      "pid": 11668
+    },
+    {
+      "live_samples": 2,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 2720056,
+        "phys_footprint": 2720056,
+        "resident_size": 15712256
+      },
+      "pid": 11673
+    },
+    {
+      "live_samples": 1,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 229448,
+        "phys_footprint": 229448,
+        "resident_size": 704512
+      },
+      "pid": 11682
+    },
+    {
+      "live_samples": 1,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 278672,
+        "phys_footprint": 278672,
+        "resident_size": 737280
+      },
+      "pid": 11690
+    },
+    {
+      "live_samples": 205,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 28361232,
+        "phys_footprint": 28328464,
+        "resident_size": 45334528
+      },
+      "pid": 11692
+    },
+    {
+      "live_samples": 2,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 7225680,
+        "phys_footprint": 7225680,
+        "resident_size": 20365312
+      },
+      "pid": 11849
+    },
+    {
+      "live_samples": 3,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 2638160,
+        "phys_footprint": 2638160,
+        "resident_size": 15581184
+      },
+      "pid": 11853
+    },
+    {
+      "live_samples": 1,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 245832,
+        "phys_footprint": 196704,
+        "resident_size": 655360
+      },
+      "pid": 11859
+    },
+    {
+      "live_samples": 1,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 262288,
+        "phys_footprint": 278672,
+        "resident_size": 720896
+      },
+      "pid": 11867
+    },
+    {
+      "live_samples": 209,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 28393976,
+        "phys_footprint": 28361208,
+        "resident_size": 45465600
+      },
+      "pid": 11869
+    },
+    {
+      "live_samples": 2,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 7438672,
+        "phys_footprint": 7438672,
+        "resident_size": 20692992
+      },
+      "pid": 12031
+    },
+    {
+      "live_samples": 2,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 2654544,
+        "phys_footprint": 2654544,
+        "resident_size": 15597568
+      },
+      "pid": 12036
+    },
+    {
+      "live_samples": 1,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 229448,
+        "phys_footprint": 229448,
+        "resident_size": 704512
+      },
+      "pid": 12042
+    },
+    {
+      "live_samples": 22,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 51774352,
+        "phys_footprint": 51364752,
+        "resident_size": 149798912
+      },
+      "pid": 12049
+    },
+    {
+      "live_samples": 250,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 70517720,
+        "phys_footprint": 70484952,
+        "resident_size": 195264512
+      },
+      "pid": 12079
+    },
+    {
+      "live_samples": 1,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 245832,
+        "phys_footprint": 245832,
+        "resident_size": 720896
+      },
+      "pid": 12235
+    },
+    {
+      "live_samples": 1,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 229448,
+        "phys_footprint": 229448,
+        "resident_size": 704512
+      },
+      "pid": 12240
+    },
+    {
+      "live_samples": 242,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 70222856,
+        "phys_footprint": 70222856,
+        "resident_size": 194789376
+      },
+      "pid": 12250
+    },
+    {
+      "live_samples": 1,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 295056,
+        "phys_footprint": 295056,
+        "resident_size": 737280
+      },
+      "pid": 12397
+    },
+    {
+      "live_samples": 1,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 229448,
+        "phys_footprint": 229448,
+        "resident_size": 704512
+      },
+      "pid": 12404
+    },
+    {
+      "live_samples": 483,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 11108784,
+        "phys_footprint": 11076016,
+        "resident_size": 36306944
+      },
+      "pid": 12412
+    },
+    {
+      "live_samples": 1,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 98376,
+        "phys_footprint": 81992,
+        "resident_size": 49152
+      },
+      "pid": 12571
+    },
+    {
+      "live_samples": 1,
+      "observed_maxima": {
+        "lifetime_max_phys_footprint": 245832,
+        "phys_footprint": 213088,
+        "resident_size": 671744
+      },
+      "pid": 12580
+    }
+  ],
+  "scope": {
+    "app_executed": false,
+    "explicit_signing_stage": false,
+    "gpu_or_model_executed": false,
+    "new_context_or_factory_qualified": false,
+    "performance_qualified": false,
+    "phone_qualified": false,
+    "sdk_entire_tree_authenticated": false,
+    "signing_identity_verified": false,
+    "ui_behavior_qualified": false
+  },
+  "selected_link_adoption": {
+    "bytes": 1107,
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/adoption.json",
+    "sha256": "dd554a7e9b2d8a6e4d9e85244460001b6ca3a426168fe592b199146ca79f19f8"
+  },
+  "selected_link_after_adoption": {
+    "old_package_preserved": true,
+    "path": "apple/Binaries/Toklet.xcframework",
+    "target": "../../artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/Toklet.xcframework"
+  },
+  "selected_link_at_build": {
+    "path": "apple/Binaries/Toklet.xcframework",
+    "target": "../../artifacts/m8-context-ui-native-package-v1/package/Toklet.xcframework",
+    "unchanged_during_build": true
+  },
+  "signature_note": "Owner signed:false means no explicit codesign/identity/provisioning stage. Mac and simulator contain LC_CODE_SIGNATURE; device does not. No cryptographically-unsigned assertion.",
+  "slices": [
+    {
+      "exported_c_symbols": [
+        "toklet_abi_version",
+        "toklet_cancel_create",
+        "toklet_cancel_release",
+        "toklet_cancel_set",
+        "toklet_chat_create",
+        "toklet_chat_create_smol_audited",
+        "toklet_chat_decode",
+        "toklet_chat_encode",
+        "toklet_chat_release",
+        "toklet_chat_stop_ids",
+        "toklet_mlx_capacity_plan_create",
+        "toklet_mlx_context_limits_create",
+        "toklet_mlx_inspect_create",
+        "toklet_mlx_inspect_json",
+        "toklet_mlx_inspect_release",
+        "toklet_mlx_plan_create",
+        "toklet_model_load",
+        "toklet_model_load_metal",
+        "toklet_model_load_mlx",
+        "toklet_model_load_mlx_smol_audited",
+        "toklet_model_release",
+        "toklet_session_context",
+        "toklet_session_create",
+        "toklet_session_generate",
+        "toklet_session_history",
+        "toklet_session_preflight",
+        "toklet_session_release",
+        "toklet_session_reset",
+        "toklet_session_score",
+        "toklet_session_state"
+      ],
+      "library": "artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/target/aarch64-apple-darwin/release/libtoklet.a",
+      "library_sha256": "b9874577d10b6ed6c83e8fd2ea47c4048ef90fdcd3ac3b1c1e6b79dbeb4508be",
+      "link_executable": "artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/aarch64-apple-darwin-link-smoke",
+      "link_sha256": "1c47017163a97fdf20ad6dead7cdde306844e541d70107f153aad20e6e1bddf0",
+      "minos": "15.0",
+      "name": "macos",
+      "platform": 1,
+      "sdk": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+      "target": "aarch64-apple-darwin",
+      "triple": "arm64-apple-macos15.0",
+      "variant": ""
+    },
+    {
+      "exported_c_symbols": [
+        "toklet_abi_version",
+        "toklet_cancel_create",
+        "toklet_cancel_release",
+        "toklet_cancel_set",
+        "toklet_chat_create",
+        "toklet_chat_create_smol_audited",
+        "toklet_chat_decode",
+        "toklet_chat_encode",
+        "toklet_chat_release",
+        "toklet_chat_stop_ids",
+        "toklet_mlx_capacity_plan_create",
+        "toklet_mlx_context_limits_create",
+        "toklet_mlx_inspect_create",
+        "toklet_mlx_inspect_json",
+        "toklet_mlx_inspect_release",
+        "toklet_mlx_plan_create",
+        "toklet_model_load",
+        "toklet_model_load_metal",
+        "toklet_model_load_mlx",
+        "toklet_model_load_mlx_smol_audited",
+        "toklet_model_release",
+        "toklet_session_context",
+        "toklet_session_create",
+        "toklet_session_generate",
+        "toklet_session_history",
+        "toklet_session_preflight",
+        "toklet_session_release",
+        "toklet_session_reset",
+        "toklet_session_score",
+        "toklet_session_state"
+      ],
+      "library": "artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/target/aarch64-apple-ios/release/libtoklet.a",
+      "library_sha256": "7d97375059090d1670651dcbff4dfa23374abb40e5c75e4dc47fdc993fe7d73b",
+      "link_executable": "artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/aarch64-apple-ios-link-smoke",
+      "link_sha256": "cf4a00631b87e7484135e96cbd2ba407fa756c58d11bc0abd71d4978a8fd2aa0",
+      "minos": "18.0",
+      "name": "ios",
+      "platform": 2,
+      "sdk": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.1.sdk",
+      "target": "aarch64-apple-ios",
+      "triple": "arm64-apple-ios18.0",
+      "variant": ""
+    },
+    {
+      "exported_c_symbols": [
+        "toklet_abi_version",
+        "toklet_cancel_create",
+        "toklet_cancel_release",
+        "toklet_cancel_set",
+        "toklet_chat_create",
+        "toklet_chat_create_smol_audited",
+        "toklet_chat_decode",
+        "toklet_chat_encode",
+        "toklet_chat_release",
+        "toklet_chat_stop_ids",
+        "toklet_mlx_capacity_plan_create",
+        "toklet_mlx_context_limits_create",
+        "toklet_mlx_inspect_create",
+        "toklet_mlx_inspect_json",
+        "toklet_mlx_inspect_release",
+        "toklet_mlx_plan_create",
+        "toklet_model_load",
+        "toklet_model_load_metal",
+        "toklet_model_load_mlx",
+        "toklet_model_load_mlx_smol_audited",
+        "toklet_model_release",
+        "toklet_session_context",
+        "toklet_session_create",
+        "toklet_session_generate",
+        "toklet_session_history",
+        "toklet_session_preflight",
+        "toklet_session_release",
+        "toklet_session_reset",
+        "toklet_session_score",
+        "toklet_session_state"
+      ],
+      "library": "artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/target/aarch64-apple-ios-sim/release/libtoklet.a",
+      "library_sha256": "4140fab3b78c783d3e1346198f351cf48d5a2a92b0c28ae72231fae4a3769c2e",
+      "link_executable": "artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native/aarch64-apple-ios-sim-link-smoke",
+      "link_sha256": "7cdecff256d679b24d95ea8cdf3385bc64e6344cab28e325f3aedd0278263622",
+      "minos": "18.0",
+      "name": "ios",
+      "platform": 7,
+      "sdk": "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk",
+      "target": "aarch64-apple-ios-sim",
+      "triple": "arm64-apple-ios18.0-simulator",
+      "variant": "simulator"
+    }
+  ],
+  "source_snapshot": {
+    "ios_source_count": 28,
+    "ios_sources": [
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeContextLimits.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeCapacityPlan.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativePlanningPreview.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeContext.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeWorker.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/HarnessApp.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/tests/swift/WorkerChecks.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeMeasurement.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeTeacherForcing.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeQuality.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeTaskResponse.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeTasks.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeLifecycle.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeLifecycleSignals.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeLifecycleRun.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeStateRun.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/ChatWorkspace.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/FriendlyHarness.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeChatCheck.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/HarnessStore.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/FriendlyChatStore.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/ModelHub.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/HubTransfer.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/HubStore.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/ExpertHarness.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeCompatibility.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/ChatContent.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeResourcePlan.swift"
+    ],
+    "mac_source_count": 30,
+    "mac_sources": [
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/ChatContent.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/ChatWorkspace.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/ExpertHarness.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/FriendlyChatStore.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/FriendlyHarness.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/GenerationCapabilities.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/GenerationResponse.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/HarnessStore.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/HubStore.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/HubTransfer.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/ModelHub.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeCapacityPlan.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeChatCheck.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeCompatibility.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeContext.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeContextLimits.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeLifecycle.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeLifecycleRun.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeLifecycleSignals.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeMeasurement.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativePlanningPreview.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeQuality.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeResourcePlan.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeStateRun.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeTaskResponse.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeTasks.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeTeacherForcing.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Harness/NativeWorker.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Mac/MacCoordinator.swift",
+      "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/snapshot/apple/Mac/MacHarnessApp.swift"
+    ],
+    "strict_concurrency": "complete",
+    "swift_language_version": 5,
+    "warnings_as_errors": true,
+    "workerchecks_explicit": true
+  },
+  "status": "three_platform_package_and_app_link_verified_and_selected",
+  "toolchain": {
+    "cargo_locked_offline": true,
+    "features": [
+      "metal"
+    ],
+    "panic": "unwind",
+    "release": true,
+    "rust": "1.90.0",
+    "rust_commit": "1159e78c4747b02ef996e55082b704c09b970588",
+    "xcode": "27.1",
+    "xcode_build": "27A9275"
+  }
+}

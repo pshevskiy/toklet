@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5c3 — coherent Apple bridge and app compile/link checks**.
+Next implementation task: **B5c4 — preview-only context and memory controls in Settings**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -301,7 +301,7 @@ separate requirements below. Further model admissions require their own scope.
   preserve actual geometry/declaration/window caps and distinguish audited
   profiles, diagnostic routes and scalar metadata. All fourteen cold jobs,
   five Mac checks, default 462/Metal 569 tests and Astra saved audit pass.
-- [ ] B5c: validate typed Swift limits/capacity reports and sequence their
+- [x] B5c: validate typed Swift limits/capacity reports and sequence their
   requests on the dedicated worker, with explicit request identity and stale
   result handling before wiring user settings.
   - [x] B5c1: [typed Swift limits/capacity consumers](docs/swift-planning-consumers.md)
@@ -313,9 +313,14 @@ separate requirements below. Further model admissions require their own scope.
     cases, actual generation-state preservation and unchanged legacy checks.
     Astra independently audits all saved results; both failed harness attempts
     remain recorded. This is standalone worker qualification.
-  - [ ] B5c3: rebuild a coherent current 30-export XCFramework and compile/link
-    artifact-local Mac, iOS and simulator apps. The selected old bridge has 28
-    exports; preserve it until fresh package/app checks pass.
+  - [x] B5c3: [coherent current 30-export XCFramework](docs/apple-planning-package.md) and artifact-local Mac,
+    iOS and simulator apps pass all 30 build/link checks. Astra independently
+    audits the saved results and guarded selection of the verified candidate;
+    the old package is preserved. No app/phone runtime qualification follows.
+- [ ] B5c4: nonpersistent planning draft and preview display in shared Settings,
+  keyed to the active model/worker/conversation. Show requested/effective and
+  selected planning capacities separately from current Chat settings; edits
+  invalidate old results. Applying/persisting settings remains separate.
 - [ ] Report declared context, implemented backend range, budget/device fit,
   validation scope and app/text limits separately for each model.
 - [ ] Include actual weights, KV owners, scratch, loading peaks and application
@@ -593,3 +598,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | C2 compile catches test syntax error | Strict preview-type and iOS worker-source checks pass. Compiling the new standalone default preview harness stops at a missing closing brace; no runtime controls or Metal jobs are reached. Owner endpoints/groups close cleanly. | Preserve failed receipt; Astra prepares a test-only syntax correction with all prospective controls/core/project bytes preserved before a fresh checked attempt. |
 | 2026-10-30 | C2 retry reaches runtime controls | Reviewed test-only brace correction passes all compile/type checks. The first default preview runtime test stops at tiny CPU loading; Astra confirms it selected reference-only arrays rather than the proven loadable tiny artifact. | Preserve failed V2 receipt and closed groups. Correct test/owner fixture inputs and diagnostic messages only; fresh full controls remain required before commit. |
 | 2026-10-30 | B5c2 worker previews checked | Fresh twelve compile/CPU and three Mac Metal jobs pass after reviewed test-only syntax/fixture corrections. All16default/21Metal preview cases, actual generation-state preservation and legacy worker/resource checks pass; Astra audits source/products/runtime/closed groups. | Standalone preview task ready for exact staged review/commit. Both failed attempts remain failed; coherent30-export bridge/app linking is next. |
+| 2026-10-30 | B5c2 committed / bridge gate starts | Exact eight-file Astra review and all checks pass; isolated worker previews committed as `9419617`. Current bridge metadata freeze begins under independently reviewed three-platform/30-export/unsigned-app protocol. | Build/link results remain pending. Existing selected bridge and user app data stay preserved; nonpersistent planning UI is prepared privately. |
+| 2026-10-30 | B5c3 bridge and app linkage checked | All30jobs pass: three fresh native slices with exact30exports, complete Mac/iOS/simulator app builds and arm64/platform/minimum-OS checks. Astra authenticates2413inputs/77outputs/30closedgroups and approves guarded candidate selection; oldbundle preserved. | Publish exact build/link evidence and commit; no app/model/phone execution. Preview-only Settings controls are next. |

@@ -27,21 +27,30 @@ Replace `REVIEWED_PACKAGE_SHA256` with the reviewed build receipt's digest.
 Destinations must be new. The builder verifies exact archive/source/header pins,
 creates `apple/Binaries/Toklet.xcframework` and `apple/Generated/Tiny`, then builds
 release simulator and unsigned device apps. It refuses foreign or differently
-linked generated inputs. In this checkout the generated library link selects
-`artifacts/m8-native-policy-v1/package`, with shared runtime resource planning,
-the SmolLM2/Qwen/Mistral text interface and bounded 256-token Chat replies.
-See the [physical model-switching follow-up](../docs/mobile-model-switching.md)
-for the current installed UI and its validation boundaries.
-Its reviewed build receipt digest is
-`2d7d35b02d5c35a343d29b657cbf254f722171846d0df49f57bb15f92ba2194d`.
-The [text profile](../docs/app-chat-profile.md) and
-[interface guide](../docs/app-interface.md) describe this selected scope. Earlier
-package/device results retain their original immutable packages and receipts.
+linked generated inputs. The current generated library link selects
+`artifacts/new-goal-b5c3-package-link-owner-proposal-v3/build-v1/native`, with all
+30 current C exports and complete Mac/iOS/simulator app compile/link evidence.
+Its native build receipt SHA256 is
+`6e3d2733b5dd4803db4c5fa6f5e48323b9441328478767eb775953d96e4edfc4`.
+The [planning-package report](../docs/apple-planning-package.md) binds the
+independent audit and exact guarded link replacement. The previously selected
+`artifacts/m8-context-ui-native-package-v1/package` is preserved; it had 28
+exports and does not provide the two new planning APIs. This selection does not
+install or run any app or change a model/context admission.
+
+The [text profile](../docs/app-chat-profile.md),
+[interface guide](../docs/app-interface.md) and
+[physical model-switching follow-up](../docs/mobile-model-switching.md) retain
+their recorded application/device scopes. Earlier packages and installed-app
+results are not retroactively upgraded by a new compile/link result.
 
 Open `apple/TokletHarness.xcodeproj` after generated inputs exist. The shared
 scheme selects arm64, iOS18 minimum, complete Swift concurrency checks and
-warnings as errors. Simulator builds use an ad-hoc signature; the device build
-is deliberately unsigned until a signing team is configured.
+warnings as errors. The legacy builder explicitly ad-hoc signs simulator apps and leaves the device
+app without a development signing stage. The new planning-package gate omits
+all explicit codesign/account/provisioning operations; its Mac/simulator link
+outputs can still contain LC_CODE_SIGNATURE. See its report before making any
+signing or installation claim.
 
 ## Use
 

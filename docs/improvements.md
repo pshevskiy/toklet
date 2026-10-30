@@ -8254,3 +8254,19 @@ eight retained products, inherited engine inputs, runtime and closed groups.
 Both failed harness attempts stay preserved. This closes standalone worker
 sequencing; rebuilt current bridge/app linking, UI controls, persistence and
 safe session reconfiguration remain separate tasks.
+
+Isolated worker previews are committed as `9419617` after exact eight-file
+Astra review, 811 local-link checks and staged whitespace verification. The next
+gate rebuilds the 30-export bridge and compiles/links artifact-local unsigned
+Mac, iOS and simulator apps. The currently selected older package is preserved
+until these checks pass. Rebuildable Cargo incremental cache was cleared to
+restore the prospective disk reserve; retained evidence and models are intact.
+
+The current bridge now passes all 30 build/link checks: fresh Mac, iOS and
+simulator archives each match all 30 header exports, and complete apps link
+against those coherent slices with the expected arm64 platform/minimum OS.
+Astra audits 2,413 inputs, 77 outputs and all closed groups. After exact guards,
+the checkout selects that verified framework while preserving its older
+package. There was no explicit codesign/provisioning stage; Mac/simulator
+linker-produced signature load commands are recorded honestly. No app, model,
+GPU or phone runtime qualification is inferred from build/link success.
