@@ -11,10 +11,7 @@ struct FriendlyModelPreference: Equatable {
     let wholeBudget: UInt64
 
     static func checkNamespace(_ value: NativeAcceptedIdentity.Namespace) throws {
-        guard value.version == 1, value.manifestAlgorithm == "toklet-full-manifest-v1",
-              value.manifestSHA256 == NativeAcceptedIdentity.manifestSHA256,
-              value.backend == "metal_native_dense_v1", value.load == "qwen3_audited_v1",
-              value.text == "qwen3-plain-nonthinking-v1", value.planning == "native_mlx_planning_v1" else {
+        guard NativeAcceptedIdentity.Profile.matching(value) != nil else {
             throw NativeContextFailure("Saved settings use an unsupported model policy.")
         }
     }

@@ -8826,3 +8826,62 @@ completed compiled assertions, not an independent reconstruction of native state
 FailedV1 remains preserved and selected Apple35 stays unchanged. Final publication
 review/commit precedes shared Swift identity/preference integration and package36;
 Smol numerical preview/Apply remains a separate explicit contract.
+
+Complete native Smol identity is committed as `14f1001` after exact20-file Astra
+publication review and all12+1checks. Only preserved Apple DSStore remained.
+The next private C4b work shares Swift identity/routing/preference validation
+between Qwen3 and Smol while preserving Qwen keys and Smol's metadata-only
+preview. A separate native36 component owner prepares coherent default and
+Mac/iOS/simulator libraries; execution and selection still require checks/review.
+
+A fresh computer-use inventory still reports a locked Mac and no native apps.
+No app was selected/launched and no UI input was sent. Rendered checks remain
+pending while independent Swift/native-package work continues; no new UI or
+physical-device qualification follows from the build/controller results.
+
+C4b early review finds no blocker in the shared five-production-file Swift
+integration and65wire/64routing/68preference authored controls. The native36
+builder's independent review requests the actual Xcode executable pin alongside
+the launcher. Its metadata-only successor preserves the exact25-job runner;
+no build was invoked from the earlier draft. Final source/component pins remain
+to be reviewed before application and execution.
+
+Astra approves the exact nine-file Swift integration after59pin/baseline/draft
+checks. Guarded application and whitespace pass; changed Swift paths have no
+overlap with the active native36 builder's input guards. The independently
+approved25-job component build is running with current package35 preserved.
+Swift65wire/64routing/68preference controls and the one-load controller remain
+prospective until actual native products and subsequent checks pass.
+
+All25native36 component jobs pass with candidate unselected and selected35
+unchanged. After all groups close, only ignored, unbound debug incremental cache
+is removed under exclusive Cargo lock; observed free space rises1,836,847,104bytes
+and retained products rehash identically. Models/logs/evidence are retained.
+One Astra worker encounters transient model capacity during audit/Swift-owner
+preparation; the same worker is retried, preserving existing results and private
+files without repeating builds or tests.
+
+The retried Astra worker completes the native36 saved audit:3798inputs,69outputs,
+50logs and25closed process groups match, with all three Metal slices and the
+default library exporting exactly36 APIs. Candidate remains unselected. Early
+Swift-owner review finds no command/parser blocker in25cold jobs and the two
+later Mac checks; final metadata and actual Swift/controller results remain open.
+
+All25fresh Swift compile/CPU/app jobs pass:65strict wire controls,68preferences,
+64routing/six stale actions,28Apply,57planning, current worker/configuration and
+CPU preview regressions, and all three app builds. All owned groups close without
+endpoint errors. Eleven actual products are retained for Astra review before the
+tiny Metal regression and one cached Smol restore/reply-save/lifecycle controller;
+no rendered/device or real-model generation outcome is claimed.
+
+Both C4b Mac checks pass. One audited Smol load restores512→256/chunk16/reply64
+with zero preference writes; fresh incremental94199068bytes fits observed process
+policy headroom6234701056. Reply128 saves once, unavailable512 rejects without
+changes, Qwen bytes remain exact, and suspend/replay creates session4 without
+another restore. Owning close clears identity. Astra authenticates5979bindings,
+11products,54logs and27closed groups, then approves atomic package35→36 adoption.
+All10candidate files rehash before/after selection and package35 remains preserved.
+The [shared Smol settings report](smol-managed-preferences.md) keeps metadata-only
+preview/Apply limits and UI/phone/generation/quality/performance gaps explicit.
+Final publication review/commit is next; the later advisory-preview draft remains
+private and does not change this result.

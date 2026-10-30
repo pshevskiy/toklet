@@ -31,7 +31,7 @@ struct FriendlyPlanningLoad {
         guard worker == self.worker, modelInstance == instance, instance > 0,
               !loadedKey.isEmpty, loadedKey == selectedKey else { return nil }
         return FriendlyPlanningTarget(worker:worker,modelInstance:instance,conversation:conversation,
-            modelKey:loadedKey,directory:settings.directory,profile:.ordinary,
+            modelKey:loadedKey,directory:settings.directory,profile:settings.loadIdentity == .managedSmol ? .smolAudited : .ordinary,
             wholeBudget:configuration?.wholeSessionBudget ?? settings.numericalBudget,textBudget:settings.textBudget,
             configuration:configuration,coexistenceBudget:coexistenceBudget)
     }

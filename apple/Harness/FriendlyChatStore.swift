@@ -19,7 +19,15 @@ struct FriendlyLoadRequest: Equatable, Sendable {
     }
     static func managedMode(_ profile: HubProfile) throws -> NativeLoadIdentity {
         guard HubProfile.catalog.contains(profile) else { throw HubFailure("Unknown managed model profile") }
-        return profile == .qwen3 ? .managedQwen3 : .ordinary
+        switch profile {
+        case .qwen3: return .managedQwen3
+        case .smol: return .managedSmol
+        default: return .ordinary
+        }
+    }
+    static func matches(_ mode: NativeLoadIdentity, profile: HubProfile) -> Bool {
+        guard let expected = mode.identityProfile else { return true }
+        return (expected == .qwen3 && profile == .qwen3) || (expected == .smol && profile == .smol)
     }
 }
 
@@ -347,7 +355,7 @@ final class FriendlyChatStore: ObservableObject {
             let scoped = folder.startAccessingSecurityScopedResource()
             defer { if scoped { folder.stopAccessingSecurityScopedResource() } }
             let profile = try HubProfile.identify(folder)
-            guard mode != .managedQwen3 || profile == .qwen3 else { throw HubFailure("The selected folder does not match the requested managed profile") }
+            guard FriendlyLoadRequest.matches(mode,profile:profile) else { throw HubFailure("The selected folder does not match the requested managed profile") }
             if hasChatModel && loadedKey == key(folder) && planningLoad?.settings.loadIdentity == mode { notice = "This model is already open."; return }
             if workspace.current.modelKey != key(folder), !workspace.current.messages.isEmpty { try workspace.newChat(modelKey:key(folder)) }
             workspace.conversations[workspace.selectedIndex].modelKey = key(folder)
@@ -382,7 +390,7 @@ final class FriendlyChatStore: ObservableObject {
         let profile: HubProfile
         do {
             profile = try HubProfile.identify(folder)
-            guard request.mode != .managedQwen3 || profile == .qwen3 else { throw HubFailure("The managed profile changed before loading") }
+            guard FriendlyLoadRequest.matches(request.mode,profile:profile) else { throw HubFailure("The managed profile changed before loading") }
             try admission().check(profile)
         } catch {
             loadingModel = false
@@ -426,7 +434,8 @@ final class FriendlyChatStore: ObservableObject {
         let currentIdentity = currentWorker.map { ObjectIdentifier($0) }
         if planningLoad?.worker != currentIdentity { planningLoad = nil }
         if let context = actual.modelContext, let identity = actual.acceptedIdentity,
-           planningLoad?.settings.loadIdentity == .managedQwen3,
+           planningLoad?.settings.loadIdentity.identityProfile == identity.profile,
+           identity.profile != nil,
            planningLoad?.settings.loadRequestID == actual.acceptedLoadRequestID,
            context.modelInstance == loadedModelInstance, actual.hasModel, actual.chatEnabled,
            !actual.closed, identity.matches(context) {
@@ -591,7 +600,7 @@ final class FriendlyChatStore: ObservableObject {
               actual.acceptedLoadRequestID == planningLoad?.settings.loadRequestID,
               let context = actual.modelContext, identity.matches(context), let live = actual.liveContext,
               let accepted = planningLoad, accepted.worker == ObjectIdentifier(worker),
-              accepted.settings.loadIdentity == .managedQwen3,
+              accepted.settings.loadIdentity.identityProfile == identity.profile, identity.profile != nil,
               let loadID = actual.acceptedLoadRequestID, loadID == accepted.settings.loadRequestID else { return }
         do {
             guard let value = try preferences.load(identity.namespace) else { return }

@@ -28,7 +28,8 @@ struct FriendlyIdentityMain {
         let folder = URL(fileURLWithPath:"/never-opened/Qwen3-0.6B-8bit")
         try require(NativeSettings(directory:folder.path).loadIdentity == .ordinary,"Path recognition selected audited routing")
         try require(try FriendlyLoadRequest.managedMode(.qwen3) == .managedQwen3,"Explicit managed Qwen routing missing")
-        for profile in [HubProfile.smol,.qwen,.mistral] {
+        try require(try FriendlyLoadRequest.managedMode(.smol) == .managedSmol,"Explicit managed Smol routing missing")
+        for profile in [HubProfile.qwen,.mistral] {
             try require(try FriendlyLoadRequest.managedMode(profile) == .ordinary,"Other profile admission changed")
         }
         let modified = HubProfile(repository:HubProfile.qwen3.repository,revision:HubProfile.qwen3.revision,files:[])
@@ -44,6 +45,13 @@ struct FriendlyIdentityMain {
         try require(request.isCurrent(in:workspace),"Original conversation correlation failed")
         workspace.conversations.removeAll { $0.id == request.conversation }
         try require(!request.isCurrent(in:workspace),"Removed conversation retained delayed request")
+        let smolRequest = FriendlyLoadRequest(folder:folder,mode:.managedSmol,conversation:request.conversation)
+        try require(FriendlyLoadRequest.matches(.managedSmol,profile:.smol),"Exact Smol route rejected")
+        try require(!FriendlyLoadRequest.matches(.managedSmol,profile:.qwen3),"Smol route accepted Qwen metadata")
+        try require(!FriendlyLoadRequest.matches(.managedQwen3,profile:.smol),"Qwen route accepted Smol metadata")
+        try require(FriendlyLoadRequest.matches(.ordinary,profile:.smol),"External ordinary route changed")
+        let fakeSmol = HubProfile(repository:HubProfile.smol.repository,revision:HubProfile.smol.revision,files:[])
+        try require(!FriendlyLoadRequest.matches(.managedSmol,profile:fakeSmol),"Partial Smol catalog recognized")
         let first = NSObject(), second = NSObject()
         let accepting = FriendlyAcceptingLoad(request:request,worker:ObjectIdentifier(first))
         var originalWorkspace = ChatWorkspace()
@@ -57,19 +65,31 @@ struct FriendlyIdentityMain {
         try require(!accepting.matches(worker:ObjectIdentifier(first),snapshot:snapshot),"Same worker's later request accepted stale completion")
         snapshot.acceptedLoadRequestID = nil
         try require(!accepting.matches(worker:ObjectIdentifier(first),snapshot:snapshot),"Missing accepted request promoted")
+        let smolAccepting = FriendlyAcceptingLoad(request:smolRequest,worker:ObjectIdentifier(first))
+        snapshot.acceptedLoadRequestID = smolRequest.id
+        try require(smolAccepting.matches(worker:ObjectIdentifier(first),snapshot:snapshot),"Smol completion lost captured request")
+        try require(!smolAccepting.matches(worker:ObjectIdentifier(second),snapshot:snapshot),"Smol completion redirected to another worker")
+        snapshot.acceptedLoadRequestID = request.id
+        try require(!smolAccepting.matches(worker:ObjectIdentifier(first),snapshot:snapshot),"Other profile request accepted as Smol")
+        var smolSettings = NativeSettings(directory:folder.path); smolSettings.loadIdentity = .managedSmol
+        var smolLoad = FriendlyPlanningLoad(worker:ObjectIdentifier(first),settings:smolSettings)
+        smolLoad.complete(worker:ObjectIdentifier(first),instance:7,chatEnabled:true)
+        try require(smolLoad.target(worker:ObjectIdentifier(first),instance:7,conversation:request.conversation,
+            loadedKey:"same",selectedKey:"same")?.profile == .smolAudited,"Smol preview promoted to ordinary numerical authority")
         // Existing queue hook blocks before dispatch. Each lifecycle operation
         // supersedes an audited request before any path, model or codec read.
-        for action in 0..<3 {
+        for (action,mode) in [(0,NativeLoadIdentity.managedQwen3),(1,.managedQwen3),(2,.managedQwen3),
+                              (0,.managedSmol),(1,.managedSmol),(2,.managedSmol)] {
             let gate = IdentityDequeueGate()
             let worker = try NativeWorker(beforeCommandDequeue:{ gate.pause($0) })
             var settings = NativeSettings(directory:folder.path)
             settings.metal = true; settings.mlx = true; settings.chat = true
-            settings.loadIdentity = request.mode; settings.loadRequestID = request.id
+            settings.loadIdentity = mode; settings.loadRequestID = request.id
             var failure: Error?
             do {
                 try require(worker.submit(.load(settings)),"Queued routed load rejected")
                 try require(gate.wait(),"Load dequeue gate deadline")
-                try require(gate.settings?.loadIdentity == .managedQwen3 && gate.settings?.loadRequestID == request.id,
+                try require(gate.settings?.loadIdentity == mode && gate.settings?.loadRequestID == request.id,
                             "Captured audited intent changed before dequeue")
                 if action == 2 { worker.close() } else { worker.interrupt(unload:action == 0) }
                 gate.resume()
@@ -94,6 +114,7 @@ struct FriendlyIdentityMain {
         } catch { failure = error }
         worker.close(); try require(worker.waitUntilClosed(seconds:30),"Rejected-route worker did not close")
         if let failure { throw failure }
-        FileHandle.standardOutput.write(try JSONSerialization.data(withJSONObject:["checks":checks,"passed":true,"model_loads":0,"stale_queue_actions":3],options:[.sortedKeys]) + Data([10]))
+        guard checks == 64 else { throw NativeContextFailure("Control inventory changed") }
+        FileHandle.standardOutput.write(try JSONSerialization.data(withJSONObject:["checks":checks,"passed":true,"model_loads":0,"stale_queue_actions":6],options:[.sortedKeys]) + Data([10]))
     }
 }

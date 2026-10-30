@@ -1,0 +1,553 @@
+{
+  "base_revision": "14f10017876cad3703aee384ec6c03350363ca80",
+  "checks": {
+    "apply_controls": 28,
+    "apps_built": 3,
+    "astra_saved_audit_passed": true,
+    "configuration_pure": 11,
+    "cpu_preview_barriers": 16,
+    "fresh_swift_compile_cpu_app_jobs": 25,
+    "inherited_default_rust_tests": 510,
+    "inherited_metal_rust_tests": 618,
+    "mac_jobs": 2,
+    "mac_sources": 36,
+    "native_component_jobs": 25,
+    "native_exports": 36,
+    "planning_controls": 57,
+    "preference_controls": 68,
+    "project_sources": 35,
+    "routing_controls": 64,
+    "stale_queue_actions": 6,
+    "strict_wire_controls": 65,
+    "swift_mac_process_groups_closed": 27,
+    "tiny_metal_preview_barriers": 21,
+    "worker_barriers": 15,
+    "worker_dependencies": 11,
+    "worker_pure": 37,
+    "worker_retirement_cases": 2
+  },
+  "date": "2026-10-30",
+  "evidence": [
+    {
+      "bytes": 15906,
+      "path": "artifacts/new-goal-b5d5g-smol-swift-integration-proposal-v1/manifest.json",
+      "sha256": "6f997c426f4ef38367e45582acdbc05a45ca019d23daf71e8f3513a24ed28bbb"
+    },
+    {
+      "bytes": 17676,
+      "path": "artifacts/new-goal-b5d5g-smol-swift-integration-independent-review-v1/prospective-review.json",
+      "sha256": "031c47e4df38f75f03f5eed1ecadf67d330ca54dfaa42c35bce70daadb055b73"
+    },
+    {
+      "bytes": 3897,
+      "path": "artifacts/new-goal-b5d5g-native36-component-v2/manifest.json",
+      "sha256": "225cf9e708425dfedad07e3276e5e3d475c8ca0f9905ca475b184fd0126b18a7"
+    },
+    {
+      "bytes": 3054,
+      "path": "artifacts/new-goal-b5d5g-native36-component-independent-review-v1/prospective-v2-review.json",
+      "sha256": "ffb00763c72718a19e2b42c8b4628cc86c0b7de694ed900935755523dd98c172"
+    },
+    {
+      "bytes": 882989,
+      "path": "artifacts/new-goal-b5d5g-native36-component-v2/run-v1/checks.json",
+      "sha256": "be2d5adb0510257b9bc3f7b5ebb413ec95bb172c23114f90e68831b0e7289ace"
+    },
+    {
+      "bytes": 6573,
+      "path": "artifacts/new-goal-b5d5g-native36-component-independent-review-v1/saved-review.json",
+      "sha256": "b04be64aa55dedf41f5ab5a121c8bc68f0759ef26df5f41ec2821ca40a879708"
+    },
+    {
+      "bytes": 5741,
+      "path": "artifacts/new-goal-b5d5g-smol-swift-verification-owner-v1/manifest.json",
+      "sha256": "7d509565ef357cfedb6d928a1843a354048fce1c3eff4a14c4a6b1e7c96af15a"
+    },
+    {
+      "bytes": 8924,
+      "path": "artifacts/new-goal-b5d5g-smol-swift-verification-independent-review-v1/prospective-review.json",
+      "sha256": "a248f8c3e52c2c871406e4995b5f73b63bfaaa35563572026909e7d63adf89e5"
+    },
+    {
+      "bytes": 1794602,
+      "path": "artifacts/new-goal-b5d5g-smol-swift-verification-owner-v1/cold-v1/checks.json",
+      "sha256": "713cfc162336320309b0a22afd0a7ed5a34d3adc9b66d88baa87f48c2a43a9f4"
+    },
+    {
+      "bytes": 1902133,
+      "path": "artifacts/new-goal-b5d5g-smol-swift-verification-owner-v1/package.json",
+      "sha256": "2eeecdf3c19a150d359109e9028dd9e60175500eb3b01ee6c6bdd1e77f393392"
+    },
+    {
+      "bytes": 7871,
+      "path": "artifacts/new-goal-b5d5g-smol-swift-verification-owner-v1/launch-review.json",
+      "sha256": "2c4cb7e9c07b2a2913a12ed2aef8e5a07b819248ebf4fd2480cf6d7d2c13935f"
+    },
+    {
+      "bytes": 1354068,
+      "path": "artifacts/new-goal-b5d5g-smol-swift-verification-owner-v1/hardware-v1/checks.json",
+      "sha256": "81cd7425602cd6ada46399ad5a9df2d36013c556f153091e8ab6c2c22afaa455"
+    },
+    {
+      "bytes": 27314,
+      "path": "artifacts/new-goal-b5d5g-smol-swift-verification-independent-review-v1/saved-review.json",
+      "sha256": "0d2a4f0f1b072fde2778ec7d981b4c5de14e89b679c9eb1bab42bb218c09279e"
+    },
+    {
+      "bytes": 865,
+      "path": "artifacts/new-goal-b5d5g-smol-auxiliary-metadata-v1/metadata.json",
+      "sha256": "da3b4e5db4547e385a3c8c1d060d18b436611e7945d274afed0165d0b9bb536e"
+    },
+    {
+      "bytes": 951,
+      "path": "artifacts/new-goal-b5d5g-build-cache-cleanup-v1/cleanup.json",
+      "sha256": "5dfe83c408f49906eba4bec64383e0812e55a21f8afaee652bc68ec6c00ba207"
+    },
+    {
+      "bytes": 2714,
+      "path": "artifacts/new-goal-b5d5g-native36-adoption-v1/adoption.json",
+      "sha256": "1a617794a0c61fdb9eb9cb7c619ee37c90115e272a4b6d7efda635fec38b579b"
+    }
+  ],
+  "format": "toklet-smol-managed-preferences-result-v1",
+  "limitations": [
+    "Qwen3 and Smol managed identity/preferences only; Qwen2.5, Mistral, external folders and Expert remain outside these settings records.",
+    "Smol audited preview remains metadata-only, with numerical preview/Apply still a separate explicit contract.",
+    "Seeded records/reconstructed workspace followed by explicit managed Use; no automatic model reopen or full process-restart qualification.",
+    "One Smol model and one restore; getter count follows source flow rather than an independent native counter. No successful real-model generation or repeated Qwen load.",
+    "Workspace equality is scoped after explicit accepted reply save; initial Use/restored reply perform normal workspace saves.",
+    "No rendered UI, iPhone runtime, new context/quality, performance or whole-app/device-fit qualification. Mac inventory remains locked.",
+    "Headroom is configured process policy minus footprint, not free RAM or a reservation; sparse samples are not aggregate peaks.",
+    "Generated framework selection is Git-ignored and changes no app install/launch or explicit signing/account/provisioning."
+  ],
+  "loaded_records": [
+    {
+      "committed": 0,
+      "configuration": {
+        "accepted_request": null,
+        "capacity": 512,
+        "chunk": 32,
+        "model": 1,
+        "session": 2,
+        "whole_budget": 536870912
+      },
+      "draft": "Keep this Smol unsent draft.",
+      "event": "restore-before-acceptance",
+      "file_sha256": "b24349cf5fec6f55ddfbf307308408bc924519afb8ff52014e0cc872cc2a7bf9",
+      "generated": 0,
+      "history": 0,
+      "load_policy": "smol_witness_audited_v1",
+      "manifest": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+      "messages": 0,
+      "model": 1,
+      "model_roles": [
+        "source_bytes_delivered_to_assembled_model",
+        "reference_container_digest_anchor"
+      ],
+      "pending": 0,
+      "preference_message": "Checking saved settings against the current model and memory\u2026",
+      "preference_writes": 0,
+      "qwen_sha256": "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+      "ready": false,
+      "reply": 128,
+      "restoring": true,
+      "smol_record": {
+        "capacity": 256,
+        "chunk": 16,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "smol_witness_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+          "planning": "native_mlx_planning_v1",
+          "text": "smol-chatml-v1",
+          "version": 1
+        },
+        "reply": 64,
+        "schema": 1,
+        "whole_budget": 536870912
+      },
+      "smol_sha256": "34f220448a1f21d6f70e27e1e0a003e234b89c907b77b55e8077b5f83ec7e707",
+      "source_ranges": 694,
+      "source_reads": 694,
+      "text_policy": "smol-chatml-v1",
+      "workspace_sha256": "c20a0d9a7cff3d591ec199ce63bd169ee609b97f0c5a868727d76a10d3d4bb99"
+    },
+    {
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "941A17D3-9620-42AA-AB30-BFCED01AEFA7",
+        "capacity": 256,
+        "chunk": 16,
+        "model": 1,
+        "session": 3,
+        "whole_budget": 536870912
+      },
+      "draft": "Keep this Smol unsent draft.",
+      "event": "restored",
+      "file_sha256": "18b138f7e1976dc4e3ca5a13650069f287a3bc7435e17e4632f416dd682efd49",
+      "generated": 0,
+      "headroom": {
+        "available": 6234701056,
+        "fits": true,
+        "instrument": "Configured Mac process allowance min(RAM/2,6GiB) minus TASK_VM_INFO footprint; not free system RAM",
+        "required": 94199068
+      },
+      "history": 0,
+      "load_policy": "smol_witness_audited_v1",
+      "manifest": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+      "messages": 0,
+      "model": 1,
+      "model_roles": [
+        "source_bytes_delivered_to_assembled_model",
+        "reference_container_digest_anchor"
+      ],
+      "pending": 0,
+      "preference_message": "Saved settings restored. The next Send checks the rendered conversation and reply together.",
+      "preference_writes": 0,
+      "qwen_sha256": "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+      "ready": true,
+      "reply": 64,
+      "restoring": false,
+      "smol_record": {
+        "capacity": 256,
+        "chunk": 16,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "smol_witness_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+          "planning": "native_mlx_planning_v1",
+          "text": "smol-chatml-v1",
+          "version": 1
+        },
+        "reply": 64,
+        "schema": 1,
+        "whole_budget": 536870912
+      },
+      "smol_sha256": "34f220448a1f21d6f70e27e1e0a003e234b89c907b77b55e8077b5f83ec7e707",
+      "source_ranges": 694,
+      "source_reads": 694,
+      "text_policy": "smol-chatml-v1",
+      "workspace_sha256": "d4703c802c201279b96a712dcb01410a8c40fc0af281479f50ac254f191d7262"
+    },
+    {
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "941A17D3-9620-42AA-AB30-BFCED01AEFA7",
+        "capacity": 256,
+        "chunk": 16,
+        "model": 1,
+        "session": 3,
+        "whole_budget": 536870912
+      },
+      "draft": "Keep this Smol unsent draft.",
+      "event": "reply-saved",
+      "file_sha256": "4c307a4d8540f9773df392a3a62c1a4b60da1ae2fe683d1bcf0f6745070957bf",
+      "generated": 0,
+      "history": 0,
+      "load_policy": "smol_witness_audited_v1",
+      "manifest": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+      "messages": 0,
+      "model": 1,
+      "model_roles": [
+        "source_bytes_delivered_to_assembled_model",
+        "reference_container_digest_anchor"
+      ],
+      "pending": 0,
+      "preference_message": "Current chat settings saved for this managed model.",
+      "preference_writes": 1,
+      "qwen_sha256": "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+      "ready": true,
+      "reply": 128,
+      "restoring": false,
+      "smol_record": {
+        "capacity": 256,
+        "chunk": 16,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "smol_witness_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+          "planning": "native_mlx_planning_v1",
+          "text": "smol-chatml-v1",
+          "version": 1
+        },
+        "reply": 128,
+        "schema": 1,
+        "whole_budget": 536870912
+      },
+      "smol_sha256": "db29c5d1e0898905272e47877362bfb47e7416da5ab06c85f7e93bb09c5d8cbc",
+      "source_ranges": 694,
+      "source_reads": 694,
+      "text_policy": "smol-chatml-v1",
+      "workspace_sha256": "c20a0d9a7cff3d591ec199ce63bd169ee609b97f0c5a868727d76a10d3d4bb99"
+    },
+    {
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "941A17D3-9620-42AA-AB30-BFCED01AEFA7",
+        "capacity": 256,
+        "chunk": 16,
+        "model": 1,
+        "session": 3,
+        "whole_budget": 536870912
+      },
+      "draft": "Keep this Smol unsent draft.",
+      "event": "metadata-only-preview",
+      "file_sha256": "4c307a4d8540f9773df392a3a62c1a4b60da1ae2fe683d1bcf0f6745070957bf",
+      "generated": 0,
+      "history": 0,
+      "load_policy": "smol_witness_audited_v1",
+      "manifest": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+      "messages": 0,
+      "model": 1,
+      "model_roles": [
+        "source_bytes_delivered_to_assembled_model",
+        "reference_container_digest_anchor"
+      ],
+      "pending": 0,
+      "preference_message": "Unsupported reply limit. Your previous choice is kept.",
+      "preference_writes": 1,
+      "qwen_sha256": "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+      "ready": true,
+      "reply": 128,
+      "restoring": false,
+      "smol_record": {
+        "capacity": 256,
+        "chunk": 16,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "smol_witness_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+          "planning": "native_mlx_planning_v1",
+          "text": "smol-chatml-v1",
+          "version": 1
+        },
+        "reply": 128,
+        "schema": 1,
+        "whole_budget": 536870912
+      },
+      "smol_sha256": "db29c5d1e0898905272e47877362bfb47e7416da5ab06c85f7e93bb09c5d8cbc",
+      "source_ranges": 694,
+      "source_reads": 694,
+      "text_policy": "smol-chatml-v1",
+      "workspace_sha256": "c20a0d9a7cff3d591ec199ce63bd169ee609b97f0c5a868727d76a10d3d4bb99"
+    },
+    {
+      "committed": 0,
+      "draft": "Keep this Smol unsent draft.",
+      "event": "suspended",
+      "file_sha256": "4c307a4d8540f9773df392a3a62c1a4b60da1ae2fe683d1bcf0f6745070957bf",
+      "generated": 0,
+      "history": 0,
+      "load_policy": "smol_witness_audited_v1",
+      "manifest": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+      "messages": 0,
+      "model": 1,
+      "model_roles": [
+        "source_bytes_delivered_to_assembled_model",
+        "reference_container_digest_anchor"
+      ],
+      "pending": 0,
+      "preference_message": "Unsupported reply limit. Your previous choice is kept.",
+      "preference_writes": 1,
+      "qwen_sha256": "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+      "ready": true,
+      "reply": 128,
+      "restoring": false,
+      "smol_record": {
+        "capacity": 256,
+        "chunk": 16,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "smol_witness_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+          "planning": "native_mlx_planning_v1",
+          "text": "smol-chatml-v1",
+          "version": 1
+        },
+        "reply": 128,
+        "schema": 1,
+        "whole_budget": 536870912
+      },
+      "smol_sha256": "db29c5d1e0898905272e47877362bfb47e7416da5ab06c85f7e93bb09c5d8cbc",
+      "source_ranges": 694,
+      "source_reads": 694,
+      "text_policy": "smol-chatml-v1",
+      "workspace_sha256": "c20a0d9a7cff3d591ec199ce63bd169ee609b97f0c5a868727d76a10d3d4bb99"
+    },
+    {
+      "committed": 0,
+      "configuration": {
+        "accepted_request": null,
+        "capacity": 256,
+        "chunk": 16,
+        "model": 1,
+        "session": 4,
+        "whole_budget": 536870912
+      },
+      "draft": "Keep this Smol unsent draft.",
+      "event": "replayed",
+      "file_sha256": "4c307a4d8540f9773df392a3a62c1a4b60da1ae2fe683d1bcf0f6745070957bf",
+      "generated": 0,
+      "history": 0,
+      "load_policy": "smol_witness_audited_v1",
+      "manifest": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+      "messages": 0,
+      "model": 1,
+      "model_roles": [
+        "source_bytes_delivered_to_assembled_model",
+        "reference_container_digest_anchor"
+      ],
+      "pending": 0,
+      "preference_message": "Unsupported reply limit. Your previous choice is kept.",
+      "preference_writes": 1,
+      "qwen_sha256": "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+      "ready": true,
+      "reply": 128,
+      "restoring": false,
+      "smol_record": {
+        "capacity": 256,
+        "chunk": 16,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "smol_witness_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+          "planning": "native_mlx_planning_v1",
+          "text": "smol-chatml-v1",
+          "version": 1
+        },
+        "reply": 128,
+        "schema": 1,
+        "whole_budget": 536870912
+      },
+      "smol_sha256": "db29c5d1e0898905272e47877362bfb47e7416da5ab06c85f7e93bb09c5d8cbc",
+      "source_ranges": 694,
+      "source_reads": 694,
+      "text_policy": "smol-chatml-v1",
+      "workspace_sha256": "c20a0d9a7cff3d591ec199ce63bd169ee609b97f0c5a868727d76a10d3d4bb99"
+    },
+    {
+      "committed": 0,
+      "draft": "Keep this Smol unsent draft.",
+      "event": "closed",
+      "file_sha256": "4c307a4d8540f9773df392a3a62c1a4b60da1ae2fe683d1bcf0f6745070957bf",
+      "generated": 0,
+      "history": 0,
+      "messages": 0,
+      "pending": 0,
+      "preference_message": "Unsupported reply limit. Your previous choice is kept.",
+      "preference_writes": 1,
+      "qwen_sha256": "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+      "ready": false,
+      "reply": 128,
+      "restoring": false,
+      "smol_record": {
+        "capacity": 256,
+        "chunk": 16,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "smol_witness_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+          "planning": "native_mlx_planning_v1",
+          "text": "smol-chatml-v1",
+          "version": 1
+        },
+        "reply": 128,
+        "schema": 1,
+        "whole_budget": 536870912
+      },
+      "smol_sha256": "db29c5d1e0898905272e47877362bfb47e7416da5ab06c85f7e93bb09c5d8cbc",
+      "workspace_sha256": "c20a0d9a7cff3d591ec199ce63bd169ee609b97f0c5a868727d76a10d3d4bb99"
+    }
+  ],
+  "loaded_summary": {
+    "accepted_replacements": 1,
+    "closed": true,
+    "model_loads": 1,
+    "passed": true,
+    "phone_checked": false,
+    "preference_writes": 1,
+    "prepared_candidates": 1,
+    "qwen_record_unchanged": true,
+    "real_generation_tokens": 0,
+    "rendered_ui_checked": false,
+    "smol_preview_metadata_only": true
+  },
+  "passed": true,
+  "pre_execution_corrections": [
+    "Native builder metadata successor adds actual selected Xcode binary/alias without changing runner or workload."
+  ],
+  "selection": {
+    "adopted": true,
+    "app_or_model_rerun": false,
+    "candidate_files_reauthenticated": {
+      "artifacts/new-goal-b5d5g-native36-component-v2/run-v1/native/Toklet.xcframework/Info.plist": "f9ce2f5bf3fad89f1c9a30ada11f8384bd2879decf12376e0da617c246de3d09",
+      "artifacts/new-goal-b5d5g-native36-component-v2/run-v1/native/Toklet.xcframework/ios-arm64-simulator/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+      "artifacts/new-goal-b5d5g-native36-component-v2/run-v1/native/Toklet.xcframework/ios-arm64-simulator/Headers/toklet.h": "39d806e89a04610ecb0eb87e90ea57a0e002315bbb397ae75edc6b978e27f623",
+      "artifacts/new-goal-b5d5g-native36-component-v2/run-v1/native/Toklet.xcframework/ios-arm64-simulator/libtoklet.a": "b534cffe32979cfd67a2c4031866a415a54d52753fc6e62034c9fd6dd06d2764",
+      "artifacts/new-goal-b5d5g-native36-component-v2/run-v1/native/Toklet.xcframework/ios-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+      "artifacts/new-goal-b5d5g-native36-component-v2/run-v1/native/Toklet.xcframework/ios-arm64/Headers/toklet.h": "39d806e89a04610ecb0eb87e90ea57a0e002315bbb397ae75edc6b978e27f623",
+      "artifacts/new-goal-b5d5g-native36-component-v2/run-v1/native/Toklet.xcframework/ios-arm64/libtoklet.a": "5291af70688bd0195d4c4e8152e416e4c01ac2aa69962c1162de2ac2466802b3",
+      "artifacts/new-goal-b5d5g-native36-component-v2/run-v1/native/Toklet.xcframework/macos-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+      "artifacts/new-goal-b5d5g-native36-component-v2/run-v1/native/Toklet.xcframework/macos-arm64/Headers/toklet.h": "39d806e89a04610ecb0eb87e90ea57a0e002315bbb397ae75edc6b978e27f623",
+      "artifacts/new-goal-b5d5g-native36-component-v2/run-v1/native/Toklet.xcframework/macos-arm64/libtoklet.a": "361783422546d4a52f0d94e561099f3e1849cf3c3402ba8e2a012b5fc5ca4d58"
+    },
+    "explicit_signing_or_device_install": false,
+    "format": "toklet-native36-selection-v1",
+    "new_target": "../../artifacts/new-goal-b5d5g-native36-component-v2/run-v1/native/Toklet.xcframework",
+    "old_preserved": true,
+    "old_target": "../../artifacts/new-goal-b5d5d-native35-build-v1/Toklet.xcframework",
+    "saved_review": {
+      "bytes": 27314,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5g-smol-swift-verification-independent-review-v1/saved-review.json",
+      "sha256": "0d2a4f0f1b072fde2778ec7d981b4c5de14e89b679c9eb1bab42bb218c09279e"
+    },
+    "scope": "Only generated framework symlink replaced atomically after27closed Swift/Mac groups and current bindings authenticated.",
+    "source_revision": "14f10017876cad3703aee384ec6c03350363ca80"
+  },
+  "service_recovery": "One Astra model-capacity failure retried with existing private work/results; no build/test repeated.",
+  "source_files": {
+    "apple/Harness/FriendlyChatStore.swift": {
+      "bytes": 38795,
+      "sha256": "f020f508244b4066590d4040749068491fcc6eae1b4387b4c66c0e5632f4ee54"
+    },
+    "apple/Harness/FriendlyModelPreference.swift": {
+      "bytes": 10884,
+      "sha256": "b5539fb0561c2d53748f729b77a2cd46648cf2c892aeab97779016855d5229ec"
+    },
+    "apple/Harness/FriendlyPlanningDraft.swift": {
+      "bytes": 12023,
+      "sha256": "724e24d5893e39781b1436e466c029118c35012a9eddaf18b7e4ddcace4cf60c"
+    },
+    "apple/Harness/NativeAcceptedIdentity.swift": {
+      "bytes": 11466,
+      "sha256": "754c66f4b268a8e79622320f00ac66c5e1b688424401b713bd598562a62ace4b"
+    },
+    "apple/Harness/NativeWorker.swift": {
+      "bytes": 63348,
+      "sha256": "ca7b61a25fa472544f0dbc577ef6f1e412f3012ea8c944da5d25dc1e42da4ee3"
+    },
+    "apple/tests/swift/AcceptedIdentityMain.swift": {
+      "bytes": 11667,
+      "sha256": "9a695c6320e2772499650f72b7eafc4e1d6a4cd25aea122c00026b72e8aa4306"
+    },
+    "apple/tests/swift/FriendlyIdentityMain.swift": {
+      "bytes": 9184,
+      "sha256": "42c12a382fc5fb0d350e6dd0bb1a550418df24a949d957e8ad6eed905c08433e"
+    },
+    "apple/tests/swift/FriendlyPreferenceMain.swift": {
+      "bytes": 14441,
+      "sha256": "029d5ab5c815ebb47f5a2dd7ddc2748bd84b768af95f5f5fe649a19416a9d0b2"
+    },
+    "apple/tests/swift/FriendlySmolPreferenceLoadedMain.swift": {
+      "bytes": 13414,
+      "sha256": "201472c9ae862e86380479d25ecbc1e7af8c9785b76d1e19417bd7a5d12e4c3b"
+    }
+  }
+}

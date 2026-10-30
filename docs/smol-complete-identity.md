@@ -62,3 +62,8 @@ requires a coherent later package and consumer check. Smol's audited app preview
 currently reports metadata only; numerical-capacity preview and Apply UI remain
 separate work. Rendered UI, iPhone runtime, generation, quality and performance
 are outside this identity task.
+
+The subsequent [Swift preference integration](smol-managed-preferences.md) adopts
+the coherent36 package and enables that managed route, with separate actual
+restore/controller evidence. This native-only report and its original selected35
+scope remain unchanged.

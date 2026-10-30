@@ -37,6 +37,17 @@ struct FriendlyPreferenceMain {
         try check("budget-includes-bridge-once",try FriendlyModelPreference.decode(bytes,namespace:n).wholeBudget == budget)
         try check("key-stable",try FriendlyModelPreference.filename(n) == FriendlyModelPreference.filename(namespace()))
         try check("filename-bounded",try FriendlyModelPreference.filename(n).utf8.count == 69)
+        try check("qwen-key-golden-unchanged",try FriendlyModelPreference.filename(n) == "76000af6228a780641701064c74675be166531ffa2fb6221f132027df7d6bc73.json")
+        let smolNamespace = NativeAcceptedIdentity.Profile.smol.namespace
+        let smolValue = FriendlyModelPreference(namespace:smolNamespace,capacity:256,chunk:16,reply:64,wholeBudget:512*1024*1024)
+        let smolBytes = try smolValue.encoded()
+        try check("smol-record-roundtrip",try FriendlyModelPreference.decode(smolBytes,namespace:smolNamespace) == smolValue)
+        try check("profiles-have-distinct-keys",try FriendlyModelPreference.filename(smolNamespace) != FriendlyModelPreference.filename(n))
+        try rejects("qwen-record-cannot-restore-as-smol") { _ = try FriendlyModelPreference.decode(bytes,namespace:smolNamespace) }
+        try rejects("smol-record-cannot-restore-as-qwen") { _ = try FriendlyModelPreference.decode(smolBytes,namespace:n) }
+        let mixed = NativeAcceptedIdentity.Namespace(version:1,manifestAlgorithm:n.manifestAlgorithm,
+            manifestSHA256:smolNamespace.manifestSHA256,backend:n.backend,load:n.load,text:smolNamespace.text,planning:n.planning)
+        try rejects("mixed-profile-key-rejected") { _ = try FriendlyModelPreference.filename(mixed) }
         let object = try JSONSerialization.jsonObject(with:bytes) as! [String:Any]
         for (key,bad) in [("schema",2),("capacity",0),("capacity",32769),("chunk",0),("chunk",257),
                           ("chunk",1025),("reply",256),("reply",31),("whole_budget",TOKLET_MODEL_SESSION_BRIDGE_BYTES),
@@ -67,6 +78,11 @@ struct FriendlyPreferenceMain {
         try store.save(value); try check("identical-no-write",writes == 1)
         let reopened = FriendlyPreferenceStore(directory:directory)
         try check("reopened-record",try reopened.load(n) == value)
+        // A separate injected store writes Smol without changing this test's
+        // original Qwen write counter or bytes. Both use the same file protocol.
+        try reopened.save(smolValue)
+        try check("shared-store-keeps-qwen",try Data(contentsOf:path) == original && reopened.load(n) == value)
+        try check("shared-store-loads-smol",try reopened.load(smolNamespace) == smolValue)
         let failure = FriendlyPreferenceStore(directory:directory,persist:{ _,_ in throw NativeContextFailure("Injected atomic write failure") })
         let other = FriendlyModelPreference(namespace:n,capacity:256,chunk:8,reply:64,wholeBudget:budget)
         try rejects("write-failure") { try failure.save(other) }
@@ -138,7 +154,7 @@ struct FriendlyPreferenceMain {
         try check("ordinary-no-identity-no-record-save",chat.workspace.outputLimit == 64 && chat.acceptedIdentity == nil && writes == 1 && (try Data(contentsOf:path)) == original)
         chat.setReplyLimit(31)
         try check("rejected-reply-keeps-workspace-record",chat.workspace.outputLimit == 64 && (try Data(contentsOf:workspaceFile)) == workspaceBytes && writes == 1 && (try Data(contentsOf:path)) == original)
-        guard names.count == 60 else { throw NativeContextFailure("Preference control inventory changed") }
+        guard names.count == 68 else { throw NativeContextFailure("Preference control inventory changed") }
         FileHandle.standardOutput.write(try JSONSerialization.data(withJSONObject:["passed":true,"controls":names,
             "count":names.count,"model_loaded":false,"rendered_admission_tested":false],options:[.sortedKeys]) + Data([10]))
     }

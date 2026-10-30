@@ -7,6 +7,10 @@ import CToklet
 enum NativeLoadIdentity: String, Sendable, Equatable {
     case ordinary
     case managedQwen3 = "managed_qwen3_audited_v1"
+    case managedSmol = "managed_smol_audited_v1"
+    var identityProfile: NativeAcceptedIdentity.Profile? {
+        switch self { case .ordinary: nil; case .managedQwen3: .qwen3; case .managedSmol: .smol }
+    }
 }
 
 // Historical immutable model/codec evidence; not session/history or disk authority.
@@ -21,10 +25,42 @@ struct NativeAcceptedIdentity: Equatable, Sendable {
         let sha256: String
         let roles: [String]
     }
-    static let repository = "mlx-community/Qwen3-0.6B-8bit"
-    static let revision = "11de96878523501bcaa86104e3c186de07ff9068"
-    static let manifestSHA256 = "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51"
+    // A concrete engine-policy allowlist, shared by wire decoding and preferences.
+    // Profile recognition selects a route; only the native report proves pairing.
+    enum Profile: CaseIterable, Equatable, Sendable {
+        case qwen3, smol
+        var repository: String {
+            switch self { case .qwen3: "mlx-community/Qwen3-0.6B-8bit"; case .smol: "mlx-community/SmolLM2-135M-Instruct-8bit" }
+        }
+        var revision: String {
+            switch self { case .qwen3: "11de96878523501bcaa86104e3c186de07ff9068"; case .smol: "0f0d9b8218915bc34d401e1a340b8c049d300d5e" }
+        }
+        var manifestSHA256: String {
+            switch self { case .qwen3: "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51"; case .smol: "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce" }
+        }
+        var namespace: Namespace {
+            Namespace(version:1,manifestAlgorithm:"toklet-full-manifest-v1",manifestSHA256:manifestSHA256,
+                backend:"metal_native_dense_v1",load:self == .qwen3 ? "qwen3_audited_v1" : "smol_witness_audited_v1",
+                text:self == .qwen3 ? "qwen3-plain-nonthinking-v1" : "smol-chatml-v1",planning:"native_mlx_planning_v1")
+        }
+        var modelRoles: [String] {
+            self == .qwen3 ? ["source_bytes_delivered_to_assembled_model"]
+                : ["source_bytes_delivered_to_assembled_model","reference_container_digest_anchor"]
+        }
+        func admits(loaded: UInt64, ranges: UInt64, reads: UInt64) -> Bool {
+            // Both existing native policies currently cap these profiles at512:
+            // Qwen3's exact tuple and Smol's Llama graph policy respectively.
+            (1...512).contains(loaded) && reads >= ranges
+                && (self == .smol ? ranges == 694 : (3...4096).contains(ranges))
+        }
+        static func matching(_ namespace: Namespace) -> Self? { allCases.first { $0.namespace == namespace } }
+    }
+    // Keep the original Qwen constants for existing witnesses/key regressions.
+    static let repository = Profile.qwen3.repository
+    static let revision = Profile.qwen3.revision
+    static let manifestSHA256 = Profile.qwen3.manifestSHA256
     static let requiredApplicationAllowance = UInt64(TOKLET_COMPATIBILITY_JSON_ALLOWANCE_BYTES)
+    var profile: Profile? { Profile.matching(namespace) }
     let namespace: Namespace
     let assets: [Asset]
     let modelInstance, loadedLimit, sourceRanges, sourceReads: UInt64
@@ -37,11 +73,11 @@ struct NativeAcceptedIdentity: Equatable, Sendable {
     private static func failure(_ message: String, code: UInt32 = TOKLET_INVALID) -> NSError {
         NSError(domain:"TokletAcceptedIdentity",code:Int(code),userInfo:[NSLocalizedDescriptionKey:message])
     }
-    private static func canonical(_ assets: [Asset]) throws -> String {
+    private static func canonical(_ assets: [Asset], profile: Profile) throws -> String {
         var data = Data("toklet-full-manifest-v1\0".utf8)
         func integer(_ value: UInt64) { var value = value.littleEndian; withUnsafeBytes(of:&value) { data.append(contentsOf:$0) } }
         func text(_ value: String) { integer(UInt64(value.utf8.count)); data.append(contentsOf:value.utf8) }
-        text(repository); text(revision); integer(UInt64(assets.count))
+        text(profile.repository); text(profile.revision); integer(UInt64(assets.count))
         for asset in assets.sorted(by:{ $0.name.utf8.lexicographicallyPrecedes($1.name.utf8) }) {
             text(asset.name); integer(asset.bytes)
             let bytes = Array(asset.sha256.utf8)
@@ -58,9 +94,12 @@ struct NativeAcceptedIdentity: Equatable, Sendable {
             "current_disk_identity_evaluated","resident_buffer_identity_evaluated","qualification_evaluated",
             "whole_app_device_fit_evaluated","preferences_require_fresh_admission"])
         guard try GenerationJSON.integer(object["schema_version"]) == 1,
-              try GenerationJSON.string(object["report_kind"],maximumBytes:64) == "accepted_model_chat_identity",
-              try GenerationJSON.string(object["repository"],maximumBytes:128) == repository,
-              try GenerationJSON.string(object["revision"],maximumBytes:40) == revision else { throw failure("Unsupported accepted identity schema or artifact") }
+              try GenerationJSON.string(object["report_kind"],maximumBytes:64) == "accepted_model_chat_identity" else { throw failure("Unsupported accepted identity schema") }
+        let repository = try GenerationJSON.string(object["repository"],maximumBytes:128)
+        let revision = try GenerationJSON.string(object["revision"],maximumBytes:40)
+        guard let profile = Profile.allCases.first(where:{ $0.repository == repository && $0.revision == revision }) else {
+            throw failure("Unsupported accepted identity artifact")
+        }
         for key in ["model_assembled","codec_constructed","exact_model_pair","source_receipts_equal","historical_evidence","preferences_require_fresh_admission"] {
             guard try GenerationJSON.boolean(object[key]) else { throw failure("Incomplete accepted identity evidence") }
         }
@@ -74,12 +113,9 @@ struct NativeAcceptedIdentity: Equatable, Sendable {
             manifestSHA256:GenerationJSON.hex(policy["manifest_sha256"],count:64),
             backend:GenerationJSON.string(policy["backend"],maximumBytes:64),load:GenerationJSON.string(policy["load"],maximumBytes:64),
             text:GenerationJSON.string(policy["text"],maximumBytes:64),planning:GenerationJSON.string(policy["planning"],maximumBytes:64))
-        guard namespace.version == 1, namespace.manifestAlgorithm == "toklet-full-manifest-v1",
-              namespace.manifestSHA256 == manifestSHA256, namespace.backend == "metal_native_dense_v1",
-              namespace.load == "qwen3_audited_v1", namespace.text == "qwen3-plain-nonthinking-v1",
-              namespace.planning == "native_mlx_planning_v1" else { throw failure("Unsupported identity policy") }
+        guard namespace == profile.namespace else { throw failure("Unsupported identity policy") }
         let roles: [String:[String]] = ["config.json":["source_metadata_consumed","codec_config_verified"],
-            "model.safetensors":["source_bytes_delivered_to_assembled_model"],
+            "model.safetensors":profile.modelRoles,
             "model.safetensors.index.json":["source_metadata_consumed"],"tokenizer.json":["tokenizer_parser_consumed"],
             "tokenizer_config.json":["fixed_text_policy_verified"],"special_tokens_map.json":["ancillary_verified"]]
         guard let rows = object["assets"] as? [Any], rows.count == 6 else { throw failure("Incomplete identity asset table") }
@@ -95,11 +131,11 @@ struct NativeAcceptedIdentity: Equatable, Sendable {
             guard !sum.overflow, sum.partialValue <= 6 * 1024 * 1024 * 1024 else { throw failure("Identity inventory exceeds bounds") }; total = sum.partialValue
             assets.append(Asset(name:name,bytes:bytes,sha256:digest,roles:actualRoles))
         }
-        guard names == Set(roles.keys), try canonical(assets) == manifestSHA256 else { throw failure("Complete consumed manifest differs") }
+        guard names == Set(roles.keys), try canonical(assets,profile:profile) == profile.manifestSHA256 else { throw failure("Complete consumed manifest differs") }
         let result = try Self(namespace:namespace,assets:assets.sorted(by:{ $0.name < $1.name }),
             modelInstance:GenerationJSON.positive(object["model_instance"]),loadedLimit:GenerationJSON.positive(object["loaded_position_limit"]),
             sourceRanges:GenerationJSON.integer(object["source_container_physical_ranges"]),sourceReads:GenerationJSON.integer(object["source_container_verified_reads"]))
-        guard (1...512).contains(result.loadedLimit), (3...4096).contains(result.sourceRanges), result.sourceReads >= result.sourceRanges,
+        guard profile.admits(loaded:result.loadedLimit,ranges:result.sourceRanges,reads:result.sourceReads),
               result.matches(context) else { throw failure("Identity does not match the accepted model owner") }
         return result
     }

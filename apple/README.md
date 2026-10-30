@@ -28,18 +28,19 @@ Destinations must be new. The builder verifies exact archive/source/header pins,
 creates `apple/Binaries/Toklet.xcframework` and `apple/Generated/Tiny`, then builds
 release simulator and unsigned device apps. It refuses foreign or differently
 linked generated inputs. The current generated library link selects
-`artifacts/new-goal-b5d5d-native35-build-v1/Toklet.xcframework`, with all 35 C
+`artifacts/new-goal-b5d5g-native36-component-v2/run-v1/native/Toklet.xcframework`, with all 36 C
 exports and complete Mac/iOS/simulator app compile/link evidence. Its native
 build receipt SHA256 is
-`7a8ff65a04d9b26934fc50aec3c9f9382f83e91d9246e1fcc6ff8bf95fb8962e`.
-The [Swift identity/bridge report](../docs/swift-accepted-identity.md) records
-strict decoding, explicit managed-Qwen audited loading, one actual Mac getter
-and guarded selection. Friendly [session Apply](../docs/friendly-chat-apply.md)
-is available within the loaded bound. [Managed Qwen3 settings](../docs/managed-model-preferences.md)
-save accepted context/chunk/budget/reply choices and restore them after fresh
-model and memory admission. Other profiles and external folders remain ephemeral
-for these engine settings.
-The previous 32 [session-transition package](../docs/apple-session-transition-package.md),
+`2e81807368a97db17d3ee177741aae832bb73e7f231477a2641421d4ec2feb53`.
+The [shared Smol/Qwen3 integration](../docs/smol-managed-preferences.md) records
+strict decoding, explicit audited loading, actual Mac restore and guarded
+selection. [Managed settings](../docs/managed-model-preferences.md) save accepted
+context/chunk/budget/reply choices and restore them after fresh model and memory
+admission. Smol numerical preview/Apply remains separate; the existing
+[session Apply](../docs/friendly-chat-apply.md) routes retain their loaded bounds.
+Other profiles and external folders remain ephemeral for these engine settings.
+The previous 35 [identity package](../docs/swift-accepted-identity.md),
+32 [session-transition package](../docs/apple-session-transition-package.md),
 30-export [planning package](../docs/apple-planning-package.md) and older 28 package
 are preserved. Package selection does not install or launch an app or increase
 context limits.

@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5d5c4b — shared Swift Smol identity and preference integration**.
+Next implementation task: **B5d5c4c — bound Smol advisory numerical preview and Apply**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -387,9 +387,11 @@ separate requirements below. Further model admissions require their own scope.
         native/C jobs (510default/618Metal,36exports) and one cached seven-frame
         model/codec/getter lifetime probe pass with Astra saved audit. Failed
         test-oracleV1 remains preserved; no Swift/package/preference activation.
-      - [ ] C4b: consume the Smol identity in the existing Swift preference path,
-        with a coherent native package and fresh model/controller checks.
-      - [ ] Define and validate Smol numerical-capacity preview/Apply separately
+      - [x] C4b: [shared Swift Smol identity/preferences](docs/smol-managed-preferences.md)
+        passes25native component jobs,25Swift/CPU/app and2Mac checks with Astra
+        saved audit. Actual fresh256/chunk16 restore writes zero, reply save writes
+        once, Qwen record/replay/closure pass. Package36 selected with35 retained.
+      - [ ] C4c: define and validate Smol numerical-capacity preview/Apply separately
         from its current audited metadata-only preview. Identity and fresh
         model-bound restoration alone do not complete its context controls.
       - [ ] Reuse concrete consumed-source/codec mechanisms for Qwen2.5 and
@@ -755,3 +757,11 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | C4a native/C checks pass | All12fresh V2 jobs pass:fmt/bothstrict Clippy,510default/618Metal tests,36exports/C ABI and both release products. FailedV1 stays retained; all12groups close without endpoint errors. | Freeze actual three products for Astra review before one cached Smol model/codec/getter lifetime probe. Selected Apple35 and app sources remain unchanged. |
 | 2026-10-30 | C4a Smol cached probe passes | One audited model load,694ranges/694reads and seven identity/lifetime frames pass. Missing ancillary rejects without ownership growth; legacy codec remains incomplete; complete codec/getter succeed and captured JSON survives released model/codec owners. | Astra saved audit and exact publication review precede commit. No session/generation, Swift activation, app/device, quality or performance claim. |
 | 2026-10-30 | C4a saved audit passes | Astra authenticates3817inputs/26logs/3retainedproducts/current15source,13current+5prior closed groups,7frames and canonical manifest. Lifetime/stop/snapshot checks are completed source assertions, not independent binary-state reconstruction. | [Report](docs/smol-complete-identity.md); final review/commit next, then shared Swift descriptor/routing/preference integration and coherent36 package. |
+| 2026-10-30 | C4a committed / C4b begins | Complete Smol native identity committed as `14f1001` after exact20file Astra review and all12+1checks. Only preservedDSStore remained. | Private shared Swift descriptor/routing/preference implementation and independent native36 component owner start on the exact committed base. No new build, app/model execution or package selection yet; numerical preview/Apply remains separate. |
+| 2026-10-30 | Rendered Mac check remains unavailable | Fresh computer-use inventory again reports the Mac locked, with no native apps available. No app selection, launch or UI input occurs. | Keep rendered UI pending and continue independent C4b code/build work; no new unlock request or UI qualification. |
+| 2026-10-30 | C4b pre-execution reviews | Astra's early nine-file Swift review finds no blocker; shared identity/store keeps Qwen key and Smol metadata-only planning. Independent native36 review requests the actual Xcode binary pin in addition to its launcher; metadata-onlyV2 keeps the25-job runner identical. | Final frozen-source/component review before application/build. No app/model/package selection yet. |
+| 2026-10-30 | C4b Swift source applied / native36 builds | Astra authenticates all59pins and approves9source paths; guarded application/whitespace pass with no overlap in running native-build inputs. Approved25-job native36 build runs separately; the selected35 package remains unchanged. | Current Swift65wire/64routing/68preference controls and loaded controller remain prospective. Wait for actual native products, then compile/CPU/app and separately reviewed Mac checks. |
+| 2026-10-30 | C4b native36 component passes | All25serial native/default build/link jobs pass; candidate36 remains unselected and selected35 intact. After closure, only unbound ignored debug incremental cache is removed under Cargo lock, freeing1,836,847,104observed bytes; retained products rehash unchanged. | Actual component audit/Swift owner next. One Astra worker hits transient model capacity and is retried with existing work preserved; no tests or builds repeated. |
+| 2026-10-30 | C4b component audit passes | Retried Astra worker authenticates3798inputs/69outputs/50logs/25closed groups and exact36exports for three Metal slices/default library. Candidate remains unselected; early Swift-owner25-job/parser review finds no blocker. | Final owner/model-metadata pins, then fresh Swift compile/CPU/app checks. No native build or suite repeated; actual Smol app-controller execution remains pending. |
+| 2026-10-30 | C4b Swift build/CPU checks pass | All25fresh jobs pass:65strict identity/68preference/64routing controls (six stale actions),28Apply/57planning/current worker/preview and all3app builds. All groups close without endpoint errors. | Freeze11actual products for Astra review before tiny Metal and one cached Smol restore/reply-save/lifecycle controller. No Mac-controller or rendered/device result yet. |
+| 2026-10-30 | C4b Mac/audit and package adoption pass | Both Mac jobs pass. One Smol load restores512→256/chunk16/reply64 with zero preference writes; reply128 saves once and Qwen bytes remain exact. Replay creates session4 without restoring again; close clears identity. Astra audits5979bindings/11products/54logs/27closed groups and approves guarded35→36 selection; all10candidate files rehash and35 remains. | [Report](docs/smol-managed-preferences.md); final publication review/commit next. Smol numerical preview/Apply private draft remains separate; no generation, UI/phone, new quality/window or performance claim. |

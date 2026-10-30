@@ -88,6 +88,49 @@ struct AcceptedIdentityMain {
             try rejected { _ = try NativeAcceptedIdentity.decode(Data(altered.utf8),context:model) }
         }
         try rejected { _ = try NativeAcceptedIdentity.decode(Data(repeating:32,count:65537),context:model) }
+        // Independent Smol wire data; the required reference-anchor role is
+        // deliberately different from Qwen's whole-file authenticated source.
+        let smolAssets: [[String:Any]] = [
+            ["name":"config.json","bytes":1097,"sha256":"5da91905efdfde905f566d76d4031e6ca7c4cb2a01dc4e3812a70b855188fc73","roles":["source_metadata_consumed","codec_config_verified"]],
+            ["name":"model.safetensors","bytes":143030401,"sha256":"ec569c771e56424636be99625aba9031abc525a68a5f4ab16d678eca96fef12c","roles":["source_bytes_delivered_to_assembled_model","reference_container_digest_anchor"]],
+            ["name":"model.safetensors.index.json","bytes":48979,"sha256":"d016e7514e8bfed162eb9d0716c73244c1b73792db3143e92e54138c1772db44","roles":["source_metadata_consumed"]],
+            ["name":"tokenizer.json","bytes":3522656,"sha256":"7d27c493c729a66ecefc837280b05d948b1ed50d130eebdbf911b1b36cf38ed7","roles":["tokenizer_parser_consumed"]],
+            ["name":"tokenizer_config.json","bytes":3764,"sha256":"a27f638bd2831f5c3dea654a75838930f2b11fbe550c4d4e1d5d7bd07157b2ee","roles":["fixed_text_policy_verified"]],
+            ["name":"special_tokens_map.json","bytes":655,"sha256":"2b7379f3ae813529281a5c602bc5a11c1d4e0a99107aaa597fe936c1e813ca52","roles":["ancillary_verified"]]
+        ]
+        var smol = wire, smolNamespace = namespace
+        smol["repository"] = "mlx-community/SmolLM2-135M-Instruct-8bit"
+        smol["revision"] = "0f0d9b8218915bc34d401e1a340b8c049d300d5e"
+        smolNamespace["manifest_sha256"] = "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce"
+        smolNamespace["load"] = "smol_witness_audited_v1"; smolNamespace["text"] = "smol-chatml-v1"
+        smol["preference_namespace"] = smolNamespace; smol["assets"] = smolAssets
+        smol["source_container_physical_ranges"] = 694; smol["source_container_verified_reads"] = 694
+        let completeSmol = try decode(smol)
+        try require(completeSmol.profile == .smol && accepted.profile == .qwen3,"Descriptor selection mixed profiles")
+        var reorderedSmol = smol; reorderedSmol["assets"] = Array(smolAssets.reversed())
+        try require(try decode(reorderedSmol) == completeSmol,"Smol canonical identity depends on asset ordering")
+        for badRoles in [["source_bytes_delivered_to_assembled_model"],["reference_container_digest_anchor"],
+                         ["reference_container_digest_anchor","source_bytes_delivered_to_assembled_model"]] {
+            var wrong = smol, rows = smolAssets; rows[1]["roles"] = badRoles; wrong["assets"] = rows
+            try rejected { _ = try decode(wrong) }
+        }
+        for key in ["manifest_sha256","load","text"] {
+            var wrong = smol, mixed = smolNamespace; mixed[key] = namespace[key]; wrong["preference_namespace"] = mixed
+            try rejected { _ = try decode(wrong) }
+        }
+        for count in [693,695] {
+            var wrong = smol; wrong["source_container_physical_ranges"] = count
+            try rejected { _ = try decode(wrong) }
+        }
+        var unreadSmol = smol; unreadSmol["source_container_verified_reads"] = 693
+        try rejected { _ = try decode(unreadSmol) }
+        var mixedAssets = smol; mixedAssets["assets"] = assets
+        try rejected { _ = try decode(mixedAssets) }
+        var wrongRevision = smol; wrongRevision["revision"] = namespace["manifest_sha256"]
+        try rejected { _ = try decode(wrongRevision) }
+        try require(NativeLoadIdentity.managedSmol.identityProfile == completeSmol.profile
+            && NativeLoadIdentity.managedQwen3.identityProfile != completeSmol.profile,"Managed route can accept the wrong descriptor")
+        guard checks == 65 else { throw NativeContextFailure("Control inventory changed") }
         FileHandle.standardOutput.write(try JSONSerialization.data(withJSONObject:["checks":checks,"passed":true,"actual_model_getter":false],options:[.sortedKeys]) + Data([10]))
     }
 }

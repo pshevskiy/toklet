@@ -1058,6 +1058,8 @@ private final class Engine {
                 guard metadata.mayAttemptLoad else {
                     throw NSError(domain:"TokletCompatibility",code:Int(metadata.rejectionCode),userInfo:[NSLocalizedDescriptionKey:metadata.summary])
                 }
+                // Ordinary numerical metadata only, including for audited Smol.
+                // Actual audited source/model/session admission remains final.
                 let plan = try NativeResourcePlan.inspect(directory:requested.directory,capacity:requested.capacity,chunk:requested.chunk,budget:budget)
                 runtimePlan = plan
                 guard plan.fitsRequestedBudgets else {
@@ -1070,7 +1072,8 @@ private final class Engine {
             var options = requested.options(); var error = TokletError()
             let code = path.withUnsafeBufferPointer { path in
                 packed.withUnsafeBufferPointer { packed in
-                    requested.loadIdentity == .managedQwen3 ? toklet_model_load_mlx_qwen3_audited(path.baseAddress,path.count,&options,&model,&error)
+                    requested.loadIdentity == .managedSmol ? toklet_model_load_mlx_smol_audited(path.baseAddress,path.count,&options,&model,&error)
+                    : requested.loadIdentity == .managedQwen3 ? toklet_model_load_mlx_qwen3_audited(path.baseAddress,path.count,&options,&model,&error)
                     : requested.mlx ? toklet_model_load_mlx(path.baseAddress,path.count,&options,&model,&error)
                     : requested.metal ? toklet_model_load_metal(path.baseAddress,path.count,packed.baseAddress,packed.count,&options,&model,&error)
                                     : toklet_model_load(path.baseAddress,path.count,&options,&model,&error)
@@ -1082,8 +1085,9 @@ private final class Engine {
             do {
                 try createSession()
                 if requested.chat {
-                    let chatCode = requested.loadIdentity == .managedQwen3
-                        ? toklet_chat_create_qwen3_audited(model,requested.textBudget,&chat,&error)
+                    let chatCode = requested.loadIdentity == .managedSmol
+                        ? toklet_chat_create_complete_audited(model,requested.textBudget,&chat,&error)
+                        : requested.loadIdentity == .managedQwen3 ? toklet_chat_create_qwen3_audited(model,requested.textBudget,&chat,&error)
                         : toklet_chat_create(model,requested.textBudget,&chat,&error)
                     try requireOK(chatCode,&error)
                     var stops = [UInt32](repeating:0,count:8); var count = 0
@@ -1095,11 +1099,13 @@ private final class Engine {
                     chatStops = Array(stops.prefix(count))
                 }
                 try requireOK(toklet_session_state(session,&report,&error),&error)
-                if requested.loadIdentity == .managedQwen3 {
+                if let profile = requested.loadIdentity.identityProfile {
                     guard let model, let chat, let modelContext else { throw invalid("Audited model setup is incomplete") }
                     // Publish only after every model/session/codec/stop/state setup
                     // step succeeds. Any query failure unwinds the whole new load.
-                    acceptedIdentity = try NativeAcceptedIdentity.inspect(model:model,chat:chat,context:modelContext)
+                    let identity = try NativeAcceptedIdentity.inspect(model:model,chat:chat,context:modelContext)
+                    guard identity.profile == profile else { throw invalid("Accepted identity differs from requested managed profile") }
+                    acceptedIdentity = identity
                 }
                 acceptedLoadRequestID = requested.loadRequestID
             } catch { try? unload(); throw error }
