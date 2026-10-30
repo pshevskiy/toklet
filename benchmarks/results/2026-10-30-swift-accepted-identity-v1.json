@@ -1,0 +1,1310 @@
+{
+  "format": "toklet-swift-accepted-identity-result-v1",
+  "date": "2026-10-30",
+  "base_revision": "a07416fa0b00ebb82cffe6c14f175e44c673613a",
+  "passed": true,
+  "source_files": {
+    "apple/Harness/FriendlyChatStore.swift": {
+      "after": {
+        "bytes": 28701,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/proposed/apple/Harness/FriendlyChatStore.swift",
+        "sha256": "f232a0d1145ea90e6904955c5bdbb08a4e45656200cc24f8c0a5b344b000023a"
+      },
+      "before": {
+        "bytes": 28701,
+        "path": "/Users/coloner/work/rust/toklet/apple/Harness/FriendlyChatStore.swift",
+        "sha256": "f232a0d1145ea90e6904955c5bdbb08a4e45656200cc24f8c0a5b344b000023a"
+      },
+      "before_copy": {
+        "bytes": 28701,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/before/apple/Harness/FriendlyChatStore.swift",
+        "sha256": "f232a0d1145ea90e6904955c5bdbb08a4e45656200cc24f8c0a5b344b000023a"
+      },
+      "original_before": {
+        "bytes": 23910,
+        "path": "/Users/coloner/work/rust/toklet/apple/Harness/FriendlyChatStore.swift",
+        "sha256": "d5082bd695161ea9aa5a73da020fbade48a00ed3b2872b1828c942448e339cd9"
+      }
+    },
+    "apple/Harness/FriendlyHarness.swift": {
+      "after": {
+        "bytes": 38416,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/proposed/apple/Harness/FriendlyHarness.swift",
+        "sha256": "ee2bbcf0c8fb53d89cfd34d71cd05eb70a69ad2b10c58a1e36a14ef0839399bb"
+      },
+      "before": {
+        "bytes": 38416,
+        "path": "/Users/coloner/work/rust/toklet/apple/Harness/FriendlyHarness.swift",
+        "sha256": "ee2bbcf0c8fb53d89cfd34d71cd05eb70a69ad2b10c58a1e36a14ef0839399bb"
+      },
+      "before_copy": {
+        "bytes": 38416,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/before/apple/Harness/FriendlyHarness.swift",
+        "sha256": "ee2bbcf0c8fb53d89cfd34d71cd05eb70a69ad2b10c58a1e36a14ef0839399bb"
+      },
+      "original_before": {
+        "bytes": 38393,
+        "path": "/Users/coloner/work/rust/toklet/apple/Harness/FriendlyHarness.swift",
+        "sha256": "35d516e9dd92dbe39595538cc2cc682d4c352b32a3690d03af8a68dfb73d90b7"
+      }
+    },
+    "apple/Harness/NativeAcceptedIdentity.swift": {
+      "after": {
+        "bytes": 9366,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/proposed/apple/Harness/NativeAcceptedIdentity.swift",
+        "sha256": "5a44c08f272cd1ecc364fdf9063f3b2e1042ae6ec692e9feae76898d4fa63dfa"
+      },
+      "before": {
+        "bytes": 9366,
+        "path": "/Users/coloner/work/rust/toklet/apple/Harness/NativeAcceptedIdentity.swift",
+        "sha256": "5a44c08f272cd1ecc364fdf9063f3b2e1042ae6ec692e9feae76898d4fa63dfa"
+      },
+      "before_copy": {
+        "bytes": 9366,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/before/apple/Harness/NativeAcceptedIdentity.swift",
+        "sha256": "5a44c08f272cd1ecc364fdf9063f3b2e1042ae6ec692e9feae76898d4fa63dfa"
+      },
+      "original_before": null
+    },
+    "apple/Harness/NativeWorker.swift": {
+      "after": {
+        "bytes": 62632,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/proposed/apple/Harness/NativeWorker.swift",
+        "sha256": "968f1828ccc8312e99c17602d4041d1e57269e64e28da18db938342d539af242"
+      },
+      "before": {
+        "bytes": 62624,
+        "path": "/Users/coloner/work/rust/toklet/apple/Harness/NativeWorker.swift",
+        "sha256": "456e69aaf9da659e925973db6e7045fd4464e35fe1c22b2505ce851c88520d00"
+      },
+      "before_copy": {
+        "bytes": 62624,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/before/apple/Harness/NativeWorker.swift",
+        "sha256": "456e69aaf9da659e925973db6e7045fd4464e35fe1c22b2505ce851c88520d00"
+      },
+      "original_before": {
+        "bytes": 60096,
+        "path": "/Users/coloner/work/rust/toklet/apple/Harness/NativeWorker.swift",
+        "sha256": "db21bba96f0dd326b2e78913f237601e025fa110421e50813bd7732626feae9a"
+      }
+    },
+    "apple/TokletHarness.xcodeproj/project.pbxproj": {
+      "after": {
+        "bytes": 14952,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/proposed/apple/TokletHarness.xcodeproj/project.pbxproj",
+        "sha256": "b2d03f51eb45a17f418b9ce863e02d1e7139cf176d324d8a13be86d284a26685"
+      },
+      "before": {
+        "bytes": 14952,
+        "path": "/Users/coloner/work/rust/toklet/apple/TokletHarness.xcodeproj/project.pbxproj",
+        "sha256": "b2d03f51eb45a17f418b9ce863e02d1e7139cf176d324d8a13be86d284a26685"
+      },
+      "before_copy": {
+        "bytes": 14952,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/before/apple/TokletHarness.xcodeproj/project.pbxproj",
+        "sha256": "b2d03f51eb45a17f418b9ce863e02d1e7139cf176d324d8a13be86d284a26685"
+      },
+      "original_before": {
+        "bytes": 14334,
+        "path": "/Users/coloner/work/rust/toklet/apple/TokletHarness.xcodeproj/project.pbxproj",
+        "sha256": "05df8cca62e5bfa3d650555c54d1e347097db0ad8090b841e9605d21a2505e0a"
+      }
+    },
+    "apple/tests/swift/AcceptedIdentityMain.swift": {
+      "after": {
+        "bytes": 7895,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/proposed/apple/tests/swift/AcceptedIdentityMain.swift",
+        "sha256": "3c51b06bad95c62aedb12f12c7f22e8e8a410a0cbd1c8ec8176bd97c7135fb45"
+      },
+      "before": {
+        "bytes": 7895,
+        "path": "/Users/coloner/work/rust/toklet/apple/tests/swift/AcceptedIdentityMain.swift",
+        "sha256": "3c51b06bad95c62aedb12f12c7f22e8e8a410a0cbd1c8ec8176bd97c7135fb45"
+      },
+      "before_copy": {
+        "bytes": 7895,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/before/apple/tests/swift/AcceptedIdentityMain.swift",
+        "sha256": "3c51b06bad95c62aedb12f12c7f22e8e8a410a0cbd1c8ec8176bd97c7135fb45"
+      },
+      "original_before": null
+    },
+    "apple/tests/swift/FriendlyIdentityLoadedMain.swift": {
+      "after": {
+        "bytes": 12640,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/proposed/apple/tests/swift/FriendlyIdentityLoadedMain.swift",
+        "sha256": "eaca22638073d0c2ba7011f85d674e74501c2b8d2101b57502446477b3824b3b"
+      },
+      "before": {
+        "bytes": 12640,
+        "path": "/Users/coloner/work/rust/toklet/apple/tests/swift/FriendlyIdentityLoadedMain.swift",
+        "sha256": "eaca22638073d0c2ba7011f85d674e74501c2b8d2101b57502446477b3824b3b"
+      },
+      "before_copy": {
+        "bytes": 12640,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/before/apple/tests/swift/FriendlyIdentityLoadedMain.swift",
+        "sha256": "eaca22638073d0c2ba7011f85d674e74501c2b8d2101b57502446477b3824b3b"
+      },
+      "original_before": null
+    },
+    "apple/tests/swift/FriendlyIdentityMain.swift": {
+      "after": {
+        "bytes": 6896,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/proposed/apple/tests/swift/FriendlyIdentityMain.swift",
+        "sha256": "5b1c9d93d6d9f1b5d0a81b597c2cf6a37cfe816f38b1708126d8c16fb8ce0965"
+      },
+      "before": {
+        "bytes": 6896,
+        "path": "/Users/coloner/work/rust/toklet/apple/tests/swift/FriendlyIdentityMain.swift",
+        "sha256": "5b1c9d93d6d9f1b5d0a81b597c2cf6a37cfe816f38b1708126d8c16fb8ce0965"
+      },
+      "before_copy": {
+        "bytes": 6896,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/before/apple/tests/swift/FriendlyIdentityMain.swift",
+        "sha256": "5b1c9d93d6d9f1b5d0a81b597c2cf6a37cfe816f38b1708126d8c16fb8ce0965"
+      },
+      "original_before": null
+    },
+    "tools/experiments/m7_swift_sources.py": {
+      "after": {
+        "bytes": 897,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/proposed/tools/experiments/m7_swift_sources.py",
+        "sha256": "8763b6105f4c50c79e747b0e3f22dfe8849414bbd62a516e9902a543a16a8831"
+      },
+      "before": {
+        "bytes": 897,
+        "path": "/Users/coloner/work/rust/toklet/tools/experiments/m7_swift_sources.py",
+        "sha256": "8763b6105f4c50c79e747b0e3f22dfe8849414bbd62a516e9902a543a16a8831"
+      },
+      "before_copy": {
+        "bytes": 897,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/before/tools/experiments/m7_swift_sources.py",
+        "sha256": "8763b6105f4c50c79e747b0e3f22dfe8849414bbd62a516e9902a543a16a8831"
+      },
+      "original_before": {
+        "bytes": 829,
+        "path": "/Users/coloner/work/rust/toklet/tools/experiments/m7_swift_sources.py",
+        "sha256": "6556fd7fb991c1585cdae4e1ec98ce6914ae284992c238b06014a191fc30af98"
+      }
+    }
+  },
+  "checks": {
+    "native_metal_build_link_jobs": 21,
+    "default_library_build_link_jobs": 4,
+    "swift_logical_cold_jobs": 19,
+    "inherited_typed_compiles": 1,
+    "fresh_swift_cold_jobs": 18,
+    "wire_controls": 51,
+    "routing_controls": 37,
+    "artifact_local_apps": 3,
+    "project_sources": 34,
+    "mac_sources": 35,
+    "worker_dependencies": 11,
+    "mac_jobs": 2,
+    "tiny_metal_barriers": 21,
+    "inherited_default_rust_tests": 501,
+    "inherited_metal_rust_tests": 609,
+    "all_successful_groups_closed": true,
+    "prior_failed_groups_closed": true
+  },
+  "loaded_records": [
+    {
+      "configuration": {
+        "capacity": 512,
+        "chunk": 32,
+        "model_instance": 1,
+        "session_instance": 2,
+        "whole_budget": 1610612736
+      },
+      "event": "loaded",
+      "file_sha256": "1aa2096525d52f96a77ce816d9a9e3dde512c9f361538596b286febbdccc31e3",
+      "friendly_identity": {
+        "assets": [
+          {
+            "bytes": 937,
+            "name": "config.json",
+            "roles": [
+              "source_metadata_consumed",
+              "codec_config_verified"
+            ],
+            "sha256": "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240"
+          },
+          {
+            "bytes": 633442994,
+            "name": "model.safetensors",
+            "roles": [
+              "source_bytes_delivered_to_assembled_model"
+            ],
+            "sha256": "3ad5c96e0a476d4eee48e9f525d0ee0a3f1830b3e5b8e17b441de0661e921397"
+          },
+          {
+            "bytes": 49731,
+            "name": "model.safetensors.index.json",
+            "roles": [
+              "source_metadata_consumed"
+            ],
+            "sha256": "45addf7779cdbd5af18d92f9f7b79c188f6ebbf32cff7b4ae7dbe68a91340ebc"
+          },
+          {
+            "bytes": 613,
+            "name": "special_tokens_map.json",
+            "roles": [
+              "ancillary_verified"
+            ],
+            "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+          },
+          {
+            "bytes": 11422654,
+            "name": "tokenizer.json",
+            "roles": [
+              "tokenizer_parser_consumed"
+            ],
+            "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+          },
+          {
+            "bytes": 10219,
+            "name": "tokenizer_config.json",
+            "roles": [
+              "fixed_text_policy_verified"
+            ],
+            "sha256": "8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6"
+          }
+        ],
+        "loaded_limit": 512,
+        "model_instance": 1,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "source_ranges": 706,
+        "source_reads": 706
+      },
+      "identity": {
+        "assets": [
+          {
+            "bytes": 937,
+            "name": "config.json",
+            "roles": [
+              "source_metadata_consumed",
+              "codec_config_verified"
+            ],
+            "sha256": "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240"
+          },
+          {
+            "bytes": 633442994,
+            "name": "model.safetensors",
+            "roles": [
+              "source_bytes_delivered_to_assembled_model"
+            ],
+            "sha256": "3ad5c96e0a476d4eee48e9f525d0ee0a3f1830b3e5b8e17b441de0661e921397"
+          },
+          {
+            "bytes": 49731,
+            "name": "model.safetensors.index.json",
+            "roles": [
+              "source_metadata_consumed"
+            ],
+            "sha256": "45addf7779cdbd5af18d92f9f7b79c188f6ebbf32cff7b4ae7dbe68a91340ebc"
+          },
+          {
+            "bytes": 613,
+            "name": "special_tokens_map.json",
+            "roles": [
+              "ancillary_verified"
+            ],
+            "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+          },
+          {
+            "bytes": 11422654,
+            "name": "tokenizer.json",
+            "roles": [
+              "tokenizer_parser_consumed"
+            ],
+            "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+          },
+          {
+            "bytes": 10219,
+            "name": "tokenizer_config.json",
+            "roles": [
+              "fixed_text_policy_verified"
+            ],
+            "sha256": "8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6"
+          }
+        ],
+        "loaded_limit": 512,
+        "model_instance": 1,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "source_ranges": 706,
+        "source_reads": 706
+      },
+      "load_request_id": "8CDBC82B-D1C6-4DA5-802F-2596B7D23028",
+      "message": "",
+      "model_context": {
+        "backend": 1,
+        "configured_capacity": 512,
+        "loaded_limit": 512,
+        "model_instance": 1
+      },
+      "status": 0,
+      "workspace_sha256": "fe32089c25dcd05bfb771bf669db1ab9f96673e2d1dba832a8ac15dd8542d37d",
+      "writes": 1
+    },
+    {
+      "configuration": {
+        "capacity": 512,
+        "chunk": 32,
+        "model_instance": 1,
+        "session_instance": 2,
+        "whole_budget": 1610612736
+      },
+      "event": "baseline",
+      "file_sha256": "dafb9c153c1849522987b67de3f4d540725305d503846c96388c8fb4c74c3e0c",
+      "friendly_identity": {
+        "assets": [
+          {
+            "bytes": 937,
+            "name": "config.json",
+            "roles": [
+              "source_metadata_consumed",
+              "codec_config_verified"
+            ],
+            "sha256": "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240"
+          },
+          {
+            "bytes": 633442994,
+            "name": "model.safetensors",
+            "roles": [
+              "source_bytes_delivered_to_assembled_model"
+            ],
+            "sha256": "3ad5c96e0a476d4eee48e9f525d0ee0a3f1830b3e5b8e17b441de0661e921397"
+          },
+          {
+            "bytes": 49731,
+            "name": "model.safetensors.index.json",
+            "roles": [
+              "source_metadata_consumed"
+            ],
+            "sha256": "45addf7779cdbd5af18d92f9f7b79c188f6ebbf32cff7b4ae7dbe68a91340ebc"
+          },
+          {
+            "bytes": 613,
+            "name": "special_tokens_map.json",
+            "roles": [
+              "ancillary_verified"
+            ],
+            "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+          },
+          {
+            "bytes": 11422654,
+            "name": "tokenizer.json",
+            "roles": [
+              "tokenizer_parser_consumed"
+            ],
+            "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+          },
+          {
+            "bytes": 10219,
+            "name": "tokenizer_config.json",
+            "roles": [
+              "fixed_text_policy_verified"
+            ],
+            "sha256": "8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6"
+          }
+        ],
+        "loaded_limit": 512,
+        "model_instance": 1,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "source_ranges": 706,
+        "source_reads": 706
+      },
+      "identity": {
+        "assets": [
+          {
+            "bytes": 937,
+            "name": "config.json",
+            "roles": [
+              "source_metadata_consumed",
+              "codec_config_verified"
+            ],
+            "sha256": "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240"
+          },
+          {
+            "bytes": 633442994,
+            "name": "model.safetensors",
+            "roles": [
+              "source_bytes_delivered_to_assembled_model"
+            ],
+            "sha256": "3ad5c96e0a476d4eee48e9f525d0ee0a3f1830b3e5b8e17b441de0661e921397"
+          },
+          {
+            "bytes": 49731,
+            "name": "model.safetensors.index.json",
+            "roles": [
+              "source_metadata_consumed"
+            ],
+            "sha256": "45addf7779cdbd5af18d92f9f7b79c188f6ebbf32cff7b4ae7dbe68a91340ebc"
+          },
+          {
+            "bytes": 613,
+            "name": "special_tokens_map.json",
+            "roles": [
+              "ancillary_verified"
+            ],
+            "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+          },
+          {
+            "bytes": 11422654,
+            "name": "tokenizer.json",
+            "roles": [
+              "tokenizer_parser_consumed"
+            ],
+            "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+          },
+          {
+            "bytes": 10219,
+            "name": "tokenizer_config.json",
+            "roles": [
+              "fixed_text_policy_verified"
+            ],
+            "sha256": "8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6"
+          }
+        ],
+        "loaded_limit": 512,
+        "model_instance": 1,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "source_ranges": 706,
+        "source_reads": 706
+      },
+      "load_request_id": "8CDBC82B-D1C6-4DA5-802F-2596B7D23028",
+      "message": "",
+      "model_context": {
+        "backend": 1,
+        "configured_capacity": 512,
+        "loaded_limit": 512,
+        "model_instance": 1
+      },
+      "status": 0,
+      "workspace_sha256": "1bc1a1bb2d54f83cae0519ff62fa59d8eb2622e9f95afe79602e556041198fe8",
+      "writes": 2
+    },
+    {
+      "configuration": {
+        "capacity": 512,
+        "chunk": 32,
+        "model_instance": 1,
+        "session_instance": 2,
+        "whole_budget": 1610612736
+      },
+      "event": "preview-cancel-preserved",
+      "file_sha256": "dafb9c153c1849522987b67de3f4d540725305d503846c96388c8fb4c74c3e0c",
+      "friendly_identity": {
+        "assets": [
+          {
+            "bytes": 937,
+            "name": "config.json",
+            "roles": [
+              "source_metadata_consumed",
+              "codec_config_verified"
+            ],
+            "sha256": "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240"
+          },
+          {
+            "bytes": 633442994,
+            "name": "model.safetensors",
+            "roles": [
+              "source_bytes_delivered_to_assembled_model"
+            ],
+            "sha256": "3ad5c96e0a476d4eee48e9f525d0ee0a3f1830b3e5b8e17b441de0661e921397"
+          },
+          {
+            "bytes": 49731,
+            "name": "model.safetensors.index.json",
+            "roles": [
+              "source_metadata_consumed"
+            ],
+            "sha256": "45addf7779cdbd5af18d92f9f7b79c188f6ebbf32cff7b4ae7dbe68a91340ebc"
+          },
+          {
+            "bytes": 613,
+            "name": "special_tokens_map.json",
+            "roles": [
+              "ancillary_verified"
+            ],
+            "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+          },
+          {
+            "bytes": 11422654,
+            "name": "tokenizer.json",
+            "roles": [
+              "tokenizer_parser_consumed"
+            ],
+            "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+          },
+          {
+            "bytes": 10219,
+            "name": "tokenizer_config.json",
+            "roles": [
+              "fixed_text_policy_verified"
+            ],
+            "sha256": "8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6"
+          }
+        ],
+        "loaded_limit": 512,
+        "model_instance": 1,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "source_ranges": 706,
+        "source_reads": 706
+      },
+      "identity": {
+        "assets": [
+          {
+            "bytes": 937,
+            "name": "config.json",
+            "roles": [
+              "source_metadata_consumed",
+              "codec_config_verified"
+            ],
+            "sha256": "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240"
+          },
+          {
+            "bytes": 633442994,
+            "name": "model.safetensors",
+            "roles": [
+              "source_bytes_delivered_to_assembled_model"
+            ],
+            "sha256": "3ad5c96e0a476d4eee48e9f525d0ee0a3f1830b3e5b8e17b441de0661e921397"
+          },
+          {
+            "bytes": 49731,
+            "name": "model.safetensors.index.json",
+            "roles": [
+              "source_metadata_consumed"
+            ],
+            "sha256": "45addf7779cdbd5af18d92f9f7b79c188f6ebbf32cff7b4ae7dbe68a91340ebc"
+          },
+          {
+            "bytes": 613,
+            "name": "special_tokens_map.json",
+            "roles": [
+              "ancillary_verified"
+            ],
+            "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+          },
+          {
+            "bytes": 11422654,
+            "name": "tokenizer.json",
+            "roles": [
+              "tokenizer_parser_consumed"
+            ],
+            "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+          },
+          {
+            "bytes": 10219,
+            "name": "tokenizer_config.json",
+            "roles": [
+              "fixed_text_policy_verified"
+            ],
+            "sha256": "8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6"
+          }
+        ],
+        "loaded_limit": 512,
+        "model_instance": 1,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "source_ranges": 706,
+        "source_reads": 706
+      },
+      "load_request_id": "8CDBC82B-D1C6-4DA5-802F-2596B7D23028",
+      "message": "",
+      "model_context": {
+        "backend": 1,
+        "configured_capacity": 512,
+        "loaded_limit": 512,
+        "model_instance": 1
+      },
+      "status": 0,
+      "workspace_sha256": "1bc1a1bb2d54f83cae0519ff62fa59d8eb2622e9f95afe79602e556041198fe8",
+      "writes": 2
+    },
+    {
+      "event": "suspended",
+      "file_sha256": "dafb9c153c1849522987b67de3f4d540725305d503846c96388c8fb4c74c3e0c",
+      "friendly_identity": {
+        "assets": [
+          {
+            "bytes": 937,
+            "name": "config.json",
+            "roles": [
+              "source_metadata_consumed",
+              "codec_config_verified"
+            ],
+            "sha256": "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240"
+          },
+          {
+            "bytes": 633442994,
+            "name": "model.safetensors",
+            "roles": [
+              "source_bytes_delivered_to_assembled_model"
+            ],
+            "sha256": "3ad5c96e0a476d4eee48e9f525d0ee0a3f1830b3e5b8e17b441de0661e921397"
+          },
+          {
+            "bytes": 49731,
+            "name": "model.safetensors.index.json",
+            "roles": [
+              "source_metadata_consumed"
+            ],
+            "sha256": "45addf7779cdbd5af18d92f9f7b79c188f6ebbf32cff7b4ae7dbe68a91340ebc"
+          },
+          {
+            "bytes": 613,
+            "name": "special_tokens_map.json",
+            "roles": [
+              "ancillary_verified"
+            ],
+            "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+          },
+          {
+            "bytes": 11422654,
+            "name": "tokenizer.json",
+            "roles": [
+              "tokenizer_parser_consumed"
+            ],
+            "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+          },
+          {
+            "bytes": 10219,
+            "name": "tokenizer_config.json",
+            "roles": [
+              "fixed_text_policy_verified"
+            ],
+            "sha256": "8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6"
+          }
+        ],
+        "loaded_limit": 512,
+        "model_instance": 1,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "source_ranges": 706,
+        "source_reads": 706
+      },
+      "identity": {
+        "assets": [
+          {
+            "bytes": 937,
+            "name": "config.json",
+            "roles": [
+              "source_metadata_consumed",
+              "codec_config_verified"
+            ],
+            "sha256": "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240"
+          },
+          {
+            "bytes": 633442994,
+            "name": "model.safetensors",
+            "roles": [
+              "source_bytes_delivered_to_assembled_model"
+            ],
+            "sha256": "3ad5c96e0a476d4eee48e9f525d0ee0a3f1830b3e5b8e17b441de0661e921397"
+          },
+          {
+            "bytes": 49731,
+            "name": "model.safetensors.index.json",
+            "roles": [
+              "source_metadata_consumed"
+            ],
+            "sha256": "45addf7779cdbd5af18d92f9f7b79c188f6ebbf32cff7b4ae7dbe68a91340ebc"
+          },
+          {
+            "bytes": 613,
+            "name": "special_tokens_map.json",
+            "roles": [
+              "ancillary_verified"
+            ],
+            "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+          },
+          {
+            "bytes": 11422654,
+            "name": "tokenizer.json",
+            "roles": [
+              "tokenizer_parser_consumed"
+            ],
+            "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+          },
+          {
+            "bytes": 10219,
+            "name": "tokenizer_config.json",
+            "roles": [
+              "fixed_text_policy_verified"
+            ],
+            "sha256": "8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6"
+          }
+        ],
+        "loaded_limit": 512,
+        "model_instance": 1,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "source_ranges": 706,
+        "source_reads": 706
+      },
+      "load_request_id": "8CDBC82B-D1C6-4DA5-802F-2596B7D23028",
+      "message": "",
+      "model_context": {
+        "backend": 1,
+        "configured_capacity": 512,
+        "loaded_limit": 512,
+        "model_instance": 1
+      },
+      "status": 0,
+      "workspace_sha256": "1bc1a1bb2d54f83cae0519ff62fa59d8eb2622e9f95afe79602e556041198fe8",
+      "writes": 2
+    },
+    {
+      "configuration": {
+        "capacity": 512,
+        "chunk": 32,
+        "model_instance": 1,
+        "session_instance": 3,
+        "whole_budget": 1610612736
+      },
+      "event": "replayed",
+      "file_sha256": "dafb9c153c1849522987b67de3f4d540725305d503846c96388c8fb4c74c3e0c",
+      "friendly_identity": {
+        "assets": [
+          {
+            "bytes": 937,
+            "name": "config.json",
+            "roles": [
+              "source_metadata_consumed",
+              "codec_config_verified"
+            ],
+            "sha256": "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240"
+          },
+          {
+            "bytes": 633442994,
+            "name": "model.safetensors",
+            "roles": [
+              "source_bytes_delivered_to_assembled_model"
+            ],
+            "sha256": "3ad5c96e0a476d4eee48e9f525d0ee0a3f1830b3e5b8e17b441de0661e921397"
+          },
+          {
+            "bytes": 49731,
+            "name": "model.safetensors.index.json",
+            "roles": [
+              "source_metadata_consumed"
+            ],
+            "sha256": "45addf7779cdbd5af18d92f9f7b79c188f6ebbf32cff7b4ae7dbe68a91340ebc"
+          },
+          {
+            "bytes": 613,
+            "name": "special_tokens_map.json",
+            "roles": [
+              "ancillary_verified"
+            ],
+            "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+          },
+          {
+            "bytes": 11422654,
+            "name": "tokenizer.json",
+            "roles": [
+              "tokenizer_parser_consumed"
+            ],
+            "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+          },
+          {
+            "bytes": 10219,
+            "name": "tokenizer_config.json",
+            "roles": [
+              "fixed_text_policy_verified"
+            ],
+            "sha256": "8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6"
+          }
+        ],
+        "loaded_limit": 512,
+        "model_instance": 1,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "source_ranges": 706,
+        "source_reads": 706
+      },
+      "identity": {
+        "assets": [
+          {
+            "bytes": 937,
+            "name": "config.json",
+            "roles": [
+              "source_metadata_consumed",
+              "codec_config_verified"
+            ],
+            "sha256": "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240"
+          },
+          {
+            "bytes": 633442994,
+            "name": "model.safetensors",
+            "roles": [
+              "source_bytes_delivered_to_assembled_model"
+            ],
+            "sha256": "3ad5c96e0a476d4eee48e9f525d0ee0a3f1830b3e5b8e17b441de0661e921397"
+          },
+          {
+            "bytes": 49731,
+            "name": "model.safetensors.index.json",
+            "roles": [
+              "source_metadata_consumed"
+            ],
+            "sha256": "45addf7779cdbd5af18d92f9f7b79c188f6ebbf32cff7b4ae7dbe68a91340ebc"
+          },
+          {
+            "bytes": 613,
+            "name": "special_tokens_map.json",
+            "roles": [
+              "ancillary_verified"
+            ],
+            "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+          },
+          {
+            "bytes": 11422654,
+            "name": "tokenizer.json",
+            "roles": [
+              "tokenizer_parser_consumed"
+            ],
+            "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+          },
+          {
+            "bytes": 10219,
+            "name": "tokenizer_config.json",
+            "roles": [
+              "fixed_text_policy_verified"
+            ],
+            "sha256": "8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6"
+          }
+        ],
+        "loaded_limit": 512,
+        "model_instance": 1,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "source_ranges": 706,
+        "source_reads": 706
+      },
+      "load_request_id": "8CDBC82B-D1C6-4DA5-802F-2596B7D23028",
+      "message": "",
+      "model_context": {
+        "backend": 1,
+        "configured_capacity": 512,
+        "loaded_limit": 512,
+        "model_instance": 1
+      },
+      "status": 0,
+      "workspace_sha256": "1bc1a1bb2d54f83cae0519ff62fa59d8eb2622e9f95afe79602e556041198fe8",
+      "writes": 2
+    },
+    {
+      "aggregate_required_bytes": 1446751542,
+      "configuration": {
+        "capacity": 256,
+        "chunk": 16,
+        "model_instance": 1,
+        "session_instance": 4,
+        "whole_budget": 1610612736
+      },
+      "event": "replaced",
+      "file_sha256": "dafb9c153c1849522987b67de3f4d540725305d503846c96388c8fb4c74c3e0c",
+      "friendly_identity": {
+        "assets": [
+          {
+            "bytes": 937,
+            "name": "config.json",
+            "roles": [
+              "source_metadata_consumed",
+              "codec_config_verified"
+            ],
+            "sha256": "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240"
+          },
+          {
+            "bytes": 633442994,
+            "name": "model.safetensors",
+            "roles": [
+              "source_bytes_delivered_to_assembled_model"
+            ],
+            "sha256": "3ad5c96e0a476d4eee48e9f525d0ee0a3f1830b3e5b8e17b441de0661e921397"
+          },
+          {
+            "bytes": 49731,
+            "name": "model.safetensors.index.json",
+            "roles": [
+              "source_metadata_consumed"
+            ],
+            "sha256": "45addf7779cdbd5af18d92f9f7b79c188f6ebbf32cff7b4ae7dbe68a91340ebc"
+          },
+          {
+            "bytes": 613,
+            "name": "special_tokens_map.json",
+            "roles": [
+              "ancillary_verified"
+            ],
+            "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+          },
+          {
+            "bytes": 11422654,
+            "name": "tokenizer.json",
+            "roles": [
+              "tokenizer_parser_consumed"
+            ],
+            "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+          },
+          {
+            "bytes": 10219,
+            "name": "tokenizer_config.json",
+            "roles": [
+              "fixed_text_policy_verified"
+            ],
+            "sha256": "8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6"
+          }
+        ],
+        "loaded_limit": 512,
+        "model_instance": 1,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "source_ranges": 706,
+        "source_reads": 706
+      },
+      "headroom": {
+        "available": 5589007112,
+        "fits": true,
+        "instrument": "Configured Mac process allowance min(RAM/2,6GiB) minus TASK_VM_INFO footprint; not free system RAM",
+        "required": 125957028
+      },
+      "identity": {
+        "assets": [
+          {
+            "bytes": 937,
+            "name": "config.json",
+            "roles": [
+              "source_metadata_consumed",
+              "codec_config_verified"
+            ],
+            "sha256": "9f387dcb1bf045cadb34a36e67569abd73c00e5322603df2b19d0c0f8cc9d240"
+          },
+          {
+            "bytes": 633442994,
+            "name": "model.safetensors",
+            "roles": [
+              "source_bytes_delivered_to_assembled_model"
+            ],
+            "sha256": "3ad5c96e0a476d4eee48e9f525d0ee0a3f1830b3e5b8e17b441de0661e921397"
+          },
+          {
+            "bytes": 49731,
+            "name": "model.safetensors.index.json",
+            "roles": [
+              "source_metadata_consumed"
+            ],
+            "sha256": "45addf7779cdbd5af18d92f9f7b79c188f6ebbf32cff7b4ae7dbe68a91340ebc"
+          },
+          {
+            "bytes": 613,
+            "name": "special_tokens_map.json",
+            "roles": [
+              "ancillary_verified"
+            ],
+            "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+          },
+          {
+            "bytes": 11422654,
+            "name": "tokenizer.json",
+            "roles": [
+              "tokenizer_parser_consumed"
+            ],
+            "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+          },
+          {
+            "bytes": 10219,
+            "name": "tokenizer_config.json",
+            "roles": [
+              "fixed_text_policy_verified"
+            ],
+            "sha256": "8e7dd4250db58b2a29792562d727b2715dc0fe79a94b446caa4c07db39eceba6"
+          }
+        ],
+        "loaded_limit": 512,
+        "model_instance": 1,
+        "namespace": {
+          "backend": "metal_native_dense_v1",
+          "load": "qwen3_audited_v1",
+          "manifest_algorithm": "toklet-full-manifest-v1",
+          "manifest_sha256": "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51",
+          "planning": "native_mlx_planning_v1",
+          "text": "qwen3-plain-nonthinking-v1",
+          "version": 1
+        },
+        "source_ranges": 706,
+        "source_reads": 706
+      },
+      "load_request_id": "8CDBC82B-D1C6-4DA5-802F-2596B7D23028",
+      "message": "",
+      "model_context": {
+        "backend": 1,
+        "configured_capacity": 256,
+        "loaded_limit": 512,
+        "model_instance": 1
+      },
+      "status": 0,
+      "workspace_sha256": "1bc1a1bb2d54f83cae0519ff62fa59d8eb2622e9f95afe79602e556041198fe8",
+      "writes": 2
+    },
+    {
+      "event": "stale-pending-discarded",
+      "file_sha256": "6a9b347c76bae4d5073bd3bda2687348a6d48d5915694c492e52d8c5a2dc929a",
+      "friendly_identity": null,
+      "identity": null,
+      "load_request_id": null,
+      "message": "",
+      "status": 0,
+      "workspace_sha256": "599ef1424c2338df48a8aa7e05063a7b769c479b557282d1f7a4bfc743845b67",
+      "writes": 3
+    },
+    {
+      "event": "closed",
+      "file_sha256": "6a9b347c76bae4d5073bd3bda2687348a6d48d5915694c492e52d8c5a2dc929a",
+      "friendly_identity": null,
+      "identity": null,
+      "load_request_id": null,
+      "message": "",
+      "status": 0,
+      "workspace_sha256": "599ef1424c2338df48a8aa7e05063a7b769c479b557282d1f7a4bfc743845b67",
+      "writes": 3
+    }
+  ],
+  "loaded_summary": {
+    "actual_getter_queries": 1,
+    "actual_model_loads": 1,
+    "closed": true,
+    "empty_session_replacements": 1,
+    "generated_tokens": 0,
+    "passed": true,
+    "preferences_written": false,
+    "rendered_ui_checked": false
+  },
+  "selection": {
+    "format": "toklet-native35-selection-v1",
+    "adopted": true,
+    "old_target": "../../artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/build-v1/native/Toklet.xcframework",
+    "new_target": "../../artifacts/new-goal-b5d5d-native35-build-v1/Toklet.xcframework",
+    "old_preserved": true,
+    "new_bundle_reauthenticated": {
+      "artifacts/new-goal-b5d5d-native35-build-v1/Toklet.xcframework/Info.plist": "633211f967103db0d3f98ce66b533ddd0cdab7005e4e0f3c5c48df02242ca2b8",
+      "artifacts/new-goal-b5d5d-native35-build-v1/Toklet.xcframework/ios-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+      "artifacts/new-goal-b5d5d-native35-build-v1/Toklet.xcframework/ios-arm64/Headers/toklet.h": "2ed90cb29ff852cd0f838d36775b99d63475bbc1607ab653ea78544cae7e4601",
+      "artifacts/new-goal-b5d5d-native35-build-v1/Toklet.xcframework/ios-arm64/libtoklet.a": "2d194837a256f5e8b5d07da419bf15d4615d4d39753f51ccf114fc873cec087a",
+      "artifacts/new-goal-b5d5d-native35-build-v1/Toklet.xcframework/ios-arm64-simulator/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+      "artifacts/new-goal-b5d5d-native35-build-v1/Toklet.xcframework/ios-arm64-simulator/Headers/toklet.h": "2ed90cb29ff852cd0f838d36775b99d63475bbc1607ab653ea78544cae7e4601",
+      "artifacts/new-goal-b5d5d-native35-build-v1/Toklet.xcframework/ios-arm64-simulator/libtoklet.a": "11b2c551ef27a72b288d978aee8da58c801bc743657057a7916fa84c29c1deac",
+      "artifacts/new-goal-b5d5d-native35-build-v1/Toklet.xcframework/macos-arm64/Headers/module.modulemap": "469863dcfe6fa30c948010fcc9504e4d965a16390ed1ee89f82e82b16b1a74af",
+      "artifacts/new-goal-b5d5d-native35-build-v1/Toklet.xcframework/macos-arm64/Headers/toklet.h": "2ed90cb29ff852cd0f838d36775b99d63475bbc1607ab653ea78544cae7e4601",
+      "artifacts/new-goal-b5d5d-native35-build-v1/Toklet.xcframework/macos-arm64/libtoklet.a": "990e52beec2c6c3f6efbdb6a915aa4833fb9f0661eebc1947564633dd38b84b2"
+    },
+    "approved_package": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-verification-owner-v2/package.json",
+      "bytes": 1908411,
+      "sha256": "e4e792f203c9565312148745ce484d4fe09281c7f305d833154ca7bd80fc5af0"
+    },
+    "saved_review": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5d5d-swift-accepted-identity-verification-independent-review-v1/saved-review.json",
+      "bytes": 17172,
+      "sha256": "fcc1f4c7b605d33ca6716cda4551fa37dd19146a3f892db58d5db1cf7b261675"
+    },
+    "native_source_commit": "a07416fa0b00ebb82cffe6c14f175e44c673613a",
+    "app_or_model_rerun": false,
+    "explicit_signing_or_device_install": false
+  },
+  "evidence": [
+    {
+      "path": "artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/manifest.json",
+      "bytes": 16247,
+      "sha256": "f6ee6c3b83bccccb40e72e2db21e362690f7a96bb0da71e14dfb7e2263aab097"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5d-swift-accepted-identity-proposal-v2/README.md",
+      "bytes": 1024,
+      "sha256": "29635b08b51c507ed9a9121573ac2bd0a4c5c58990f0118f7d42ef8a296e6f66"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5d-swift-accepted-identity-independent-review-v1/prospective-v2-review.json",
+      "bytes": 11960,
+      "sha256": "457cf6e0accd338fbb94c27e3d91cbbc0d02b6f4e9d7fe7df4514c3dace4fb2a"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5d-swift-accepted-identity-verification-independent-review-v1/prospective-v2-review.json",
+      "bytes": 5370,
+      "sha256": "c04f4bea069127a50a7b2b14285034cff080940c843ab1f008f4ccb970d9941f"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5d-swift-accepted-identity-verification-independent-review-v1/failed-cold-v1-review.json",
+      "bytes": 5312,
+      "sha256": "93af24dc7696881372871670497b3bc7e819c862b2b292eb028c24b9bf51d71d"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5d-swift-accepted-identity-verification-owner-v2/launch-review.json",
+      "bytes": 9270,
+      "sha256": "428056b9234c545cd0047bbbdd481c8ce85a8323c9117763954f3e3545566e5a"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5d-swift-accepted-identity-verification-independent-review-v1/saved-review.json",
+      "bytes": 17172,
+      "sha256": "fcc1f4c7b605d33ca6716cda4551fa37dd19146a3f892db58d5db1cf7b261675"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5d-swift-accepted-identity-verification-owner-v2/manifest.json",
+      "bytes": 10247,
+      "sha256": "124468c90549d3065a3cbf82ac02c71f93ed5c1142d9b5525aab7d3ed2d41494"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5d-swift-accepted-identity-verification-owner-v2/cold-v1/checks.json",
+      "bytes": 1782093,
+      "sha256": "3488a798982da893f8d7168bcbe89b1e2d0b1717ece942f1c9c09fb753ced6dc"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5d-swift-accepted-identity-verification-owner-v2/package.json",
+      "bytes": 1908411,
+      "sha256": "e4e792f203c9565312148745ce484d4fe09281c7f305d833154ca7bd80fc5af0"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5d-swift-accepted-identity-verification-owner-v2/hardware-v1/checks.json",
+      "bytes": 1369260,
+      "sha256": "31c0a45cca4f165b52a776c34d45bf2b0c172573bd4fc0e2e9f52b4a9b71b93c"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5d-swift-accepted-identity-verification-owner-v1/cold-v1/checks.json",
+      "bytes": 1689076,
+      "sha256": "9793c81c711fbeaa2a3a1600bcd80f28dde407dd08f912b5a8516d8f317bd7fa"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5d-native35-build-v1/build.json",
+      "bytes": 49751,
+      "sha256": "7a8ff65a04d9b26934fc50aec3c9f9382f83e91d9246e1fcc6ff8bf95fb8962e"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5d-default35-build-v1/run-v1/checks.json",
+      "bytes": 56381,
+      "sha256": "835cc3c9bf8241fbb8f215b29ee0c105d23f49c36e5652377418833574a13b08"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5d-native35-independent-review-v1/saved-native-component-review.json",
+      "bytes": 18997,
+      "sha256": "2f66f59a6526ce58776af10bccc16fb47b30530147154160531b9e18711b4e7b"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5d-native35-independent-review-v1/saved-default-component-review.json",
+      "bytes": 3125,
+      "sha256": "eac5520d1d549c0b4d1db1724e6924e7e37535701ed55d6cecc0efb6fc168c12"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5d-build-cache-cleanup-v1/cleanup.json",
+      "bytes": 560,
+      "sha256": "6bfcdc8cadeff618bfe4e762ba459a4588d54da1352b5c6337846e4c1367bb48"
+    },
+    {
+      "path": "artifacts/new-goal-b5d5d-native35-adoption-v1/adoption.json",
+      "bytes": 2683,
+      "sha256": "d817b5cb0e19344fa185e4767861125a86b8068832cfa5c46c0d871da9768baa"
+    }
+  ],
+  "limitations": [
+    "Preferences are not stored or restored yet.",
+    "Source/controller/build scope and successful Mac getter; rendered UI/iPhone runtime remain unqualified.",
+    "Real-model controller generated no tokens; separate tiny regression generated fixture tokens.",
+    "No new model/window accuracy, speed or whole-app/device-fit qualification.",
+    "Headroom is configured process policy, not free RAM or reservation; sparse samples are not aggregate peaks.",
+    "Getter/model counts follow reviewed source and records, not independent native-call instrumentation or full reflected-state reconstruction.",
+    "Selected library link is generated and Git-ignored; guarded adoption/preserved prior package recorded.",
+    "No explicit signing/account/provisioning/device installation stage; implicit Mac/simulator load signatures may be present."
+  ],
+  "preserved_failure": {
+    "kind": "Swift duplicate local status name",
+    "receipt": {
+      "path": "artifacts/new-goal-b5d5d-swift-accepted-identity-verification-owner-v1/cold-v1/checks.json",
+      "bytes": 1689076,
+      "sha256": "9793c81c711fbeaa2a3a1600bcd80f28dde407dd08f912b5a8516d8f317bd7fa"
+    },
+    "fix": "Two identifier replacements in NativeWorker; eight other files/assertions unchanged; unaffected typed compile reused."
+  }
+}

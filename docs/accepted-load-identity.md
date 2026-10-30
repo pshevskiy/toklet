@@ -4,7 +4,8 @@
 exact audited Qwen3 model and chat owner pair. It reuses the existing
 `toklet_mlx_inspect_json` and `toklet_mlx_inspect_release` functions for bounded
 JSON copying and release. [Cold/API verification](../benchmarks/results/2026-10-30-accepted-load-identity-v1.json)
-passes; successful use with an assembled model remains a later integration check.
+passes. Subsequent [Swift/controller integration](swift-accepted-identity.md)
+exercises successful use with an assembled model on Mac.
 
 The getter checks both creating threads, exact retained model `Rc`, eligible
 native execution modes and complete model/codec source-receipt equality before
@@ -35,8 +36,9 @@ Both compiled products are preserved as byte-identical owner-local copies.
 
 Astra independently checks the saved source, logs, products and closed groups.
 Pure report-builder success and public CPU/mismatch rejection are distinct from
-successful getter use with an assembled model: **that positive getter gate is
-still open**. The next coherent Swift controller check will exercise it once.
-No numerical kernel, context policy, app preferences or selected Apple package
-changes; the selected bridge remains at 32 exports. Fresh default and three
-Metal slices plus strict Swift report consumption precede adoption of 35 exports.
+successful getter use with an assembled model. The subsequent
+[Swift controller check](swift-accepted-identity.md) closes that positive Mac
+getter gate once, preserving the original cold-only result scope.
+This original cold-only task changed no numerical kernel, context policy, app
+preferences or selected package. The subsequent coherent Swift integration
+selects 35 exports after fresh default/three-Metal builds and consumer checks.

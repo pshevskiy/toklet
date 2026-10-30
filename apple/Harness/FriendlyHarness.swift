@@ -445,7 +445,7 @@ struct FriendlyHarnessView: View {
         let conversation = chat.workspace.selected
         let opened: @MainActor (URL) -> Void = { folder in
             guard unlocked, !store.expert, !store.state.closed else { return }
-            chat.open(folder,ifSelected:conversation)
+            chat.openManaged(folder,profile:profile,ifSelected:conversation)
         }
         if download { hub.downloadAndUse(profile,opened:opened) }
         else { hub.use(profile,replacingLoadedModel:store.state.hasModel,opened:opened) }

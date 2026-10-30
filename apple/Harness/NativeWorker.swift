@@ -5,6 +5,8 @@ struct NativeSettings: Sendable {
     static let maximumChatOutputTokens: UInt32 = TOKLET_MAX_CHAT_OUTPUT_TOKENS
     static let chatContextPositions: UInt32 = 512
     var directory: String
+    var loadIdentity: NativeLoadIdentity = .ordinary
+    var loadRequestID: UUID? // Correlation only; never content identity.
     var packedDirectory = ""
     var metal = false
     var mlx = false
@@ -92,6 +94,8 @@ struct NativeSnapshot: Sendable {
     var modelContext: NativeModelContext?
     var liveContext: NativeContextFacts?
     var sessionConfiguration: NativeSessionConfiguration?
+    var acceptedIdentity: NativeAcceptedIdentity?
+    var acceptedLoadRequestID: UUID?
     var requestBudget: NativeRequestBudget?
     var chatEnabled = false
     // Retained across queued lifecycle cleanup until the next text request.
@@ -242,8 +246,8 @@ final class NativeWorker: @unchecked Sendable {
         }
         view.requestCompletedUptimeNanoseconds = nil
         if case .chat = command { view.chatResult = nil }
-        if case .load = command { view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = "" }
-        if case .unload = command { view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = "" }
+        if case .load = command { view.acceptedIdentity = nil; view.acceptedLoadRequestID = nil; view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = "" }
+        if case .unload = command { view.acceptedIdentity = nil; view.acceptedLoadRequestID = nil; view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = "" }
         if case .suspend = command { view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = "" }
         switch command {
         case .load, .unload, .suspend:
@@ -475,6 +479,7 @@ final class NativeWorker: @unchecked Sendable {
         view.busy = true
         view.modelContext = nil; view.liveContext = nil; view.requestBudget = nil
         view.sessionConfiguration = nil
+        view.acceptedIdentity = nil; view.acceptedLoadRequestID = nil // Retained Engine facts republish only after safe completion.
         view.phase = "Cancelling for lifecycle cleanup"
         view.score = nil
         view.savedPrefix = nil
@@ -489,6 +494,7 @@ final class NativeWorker: @unchecked Sendable {
         invalidateTransition()
         cancelQueuedChat()
         closing = true; queued = nil
+        view.acceptedIdentity = nil; view.acceptedLoadRequestID = nil
         view.modelContext = nil; view.liveContext = nil; view.requestBudget = nil
         view.sessionConfiguration = nil
         view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = ""
@@ -592,6 +598,10 @@ final class NativeWorker: @unchecked Sendable {
             view.modelContext = !closing && queued == nil ? engine.modelContext : nil
             view.liveContext = !closing && queued == nil ? engine.liveContext : nil
             view.sessionConfiguration = !closing && queued == nil ? engine.sessionConfiguration : nil
+            view.acceptedIdentity = !closing && queued == nil && engine.model != nil && engine.chat != nil
+                ? engine.acceptedIdentity : nil
+            view.acceptedLoadRequestID = !closing && queued == nil && engine.model != nil && engine.chat != nil
+                ? engine.acceptedLoadRequestID : nil
             view.requestBudget = !closing && queued == nil ? engine.requestBudget : nil
             view.chatEnabled = engine.chat != nil
             if case .chat = command { view.chatResult = engine.chatResult }
@@ -632,7 +642,7 @@ final class NativeWorker: @unchecked Sendable {
             cancelFlag = nil
         }
         view.hasModel = false; view.hasSession = false
-        view.chatEnabled = false
+        view.chatEnabled = false; view.acceptedIdentity = nil; view.acceptedLoadRequestID = nil
         view.modelContext = nil; view.liveContext = nil; view.requestBudget = nil
         view.sessionConfiguration = nil
         view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = ""
@@ -717,6 +727,8 @@ private final class Engine {
     var modelContext: NativeModelContext?
     var liveContext: NativeContextFacts?
     var sessionConfiguration: NativeSessionConfiguration?
+    var acceptedIdentity: NativeAcceptedIdentity?
+    var acceptedLoadRequestID: UUID?
     var requestBudget: NativeRequestBudget?
     // Only BUSY/WRONG_THREAD prove a failed release did not consume the pointer.
     // At most one retained owner; no automatic retry loop or reuse for inference.
@@ -822,8 +834,9 @@ private final class Engine {
             let configuration = try NativeSessionConfiguration(context:fresh,capacity:settings.capacity,
                 chunk:settings.chunk,wholeSessionBudget:settings.numericalBudget,acceptedRequestID:prior?.acceptedRequestID)
             guard prior == nil || prior == configuration else { throw invalid("Accepted session configuration changed") }
+            guard acceptedIdentity == nil || acceptedIdentity?.matches(retained) == true else { throw invalid("Accepted identity does not match the retained model") }
             modelContext = retained; liveContext = fresh; sessionConfiguration = configuration
-        } catch { modelContext = nil; requestBudget = nil; throw error }
+        } catch { modelContext = nil; acceptedIdentity = nil; acceptedLoadRequestID = nil; requestBudget = nil; throw error }
     }
 
     func decodeChat(_ ids: [UInt32]) throws -> String {
@@ -889,6 +902,7 @@ private final class Engine {
         report = TokletReport()
     }
     func unload() throws {
+        acceptedIdentity = nil; acceptedLoadRequestID = nil
         var retiredError: NSError?
         if let retired = retiredSession {
             retiredSession = nil
@@ -1022,9 +1036,13 @@ private final class Engine {
         case .load(let requested):
             compatibility = nil; runtimePlan = nil; compatibilityDirectory = ""
             guard model == nil else { throw invalid("Unload the current model first") }
+            acceptedIdentity = nil; acceptedLoadRequestID = nil
             guard requested.packedDirectory.isEmpty || requested.metal,
                   !requested.mlx || (requested.metal && requested.packedDirectory.isEmpty) else {
                 throw invalid("MLX requires Metal and no separate Q4 folder; packed Q4 requires Metal")
+            }
+            guard requested.loadIdentity == .ordinary || (requested.metal && requested.mlx && requested.chat && requested.packedDirectory.isEmpty) else {
+                throw invalid("Audited managed identity requires native MLX Chat loading")
             }
             guard (1...32768).contains(requested.capacity), requested.chunk > 0 else { throw invalid("Invalid capacity/chunk") }
             guard requested.directory.utf8.count <= 16384, requested.packedDirectory.utf8.count <= 16384 else {
@@ -1052,7 +1070,8 @@ private final class Engine {
             var options = requested.options(); var error = TokletError()
             let code = path.withUnsafeBufferPointer { path in
                 packed.withUnsafeBufferPointer { packed in
-                    requested.mlx ? toklet_model_load_mlx(path.baseAddress,path.count,&options,&model,&error)
+                    requested.loadIdentity == .managedQwen3 ? toklet_model_load_mlx_qwen3_audited(path.baseAddress,path.count,&options,&model,&error)
+                    : requested.mlx ? toklet_model_load_mlx(path.baseAddress,path.count,&options,&model,&error)
                     : requested.metal ? toklet_model_load_metal(path.baseAddress,path.count,packed.baseAddress,packed.count,&options,&model,&error)
                                     : toklet_model_load(path.baseAddress,path.count,&options,&model,&error)
                 }
@@ -1063,7 +1082,10 @@ private final class Engine {
             do {
                 try createSession()
                 if requested.chat {
-                    try requireOK(toklet_chat_create(model,requested.textBudget,&chat,&error),&error)
+                    let chatCode = requested.loadIdentity == .managedQwen3
+                        ? toklet_chat_create_qwen3_audited(model,requested.textBudget,&chat,&error)
+                        : toklet_chat_create(model,requested.textBudget,&chat,&error)
+                    try requireOK(chatCode,&error)
                     var stops = [UInt32](repeating:0,count:8); var count = 0
                     let code = stops.withUnsafeMutableBufferPointer { buffer in
                         toklet_chat_stop_ids(chat,buffer.baseAddress,buffer.count,&count,&error)
@@ -1072,8 +1094,15 @@ private final class Engine {
                     guard (1...stops.count).contains(count), Set(stops.prefix(count)).count == count else { throw invalid("Invalid chat stop set") }
                     chatStops = Array(stops.prefix(count))
                 }
+                try requireOK(toklet_session_state(session,&report,&error),&error)
+                if requested.loadIdentity == .managedQwen3 {
+                    guard let model, let chat, let modelContext else { throw invalid("Audited model setup is incomplete") }
+                    // Publish only after every model/session/codec/stop/state setup
+                    // step succeeds. Any query failure unwinds the whole new load.
+                    acceptedIdentity = try NativeAcceptedIdentity.inspect(model:model,chat:chat,context:modelContext)
+                }
+                acceptedLoadRequestID = requested.loadRequestID
             } catch { try? unload(); throw error }
-            try requireOK(toklet_session_state(session,&report,&error),&error)
             phase = "Ready"
         case .generate(let operation,let tokens,let maximum,let stops,let autoCancel):
             try generate(operation,tokens,maximum,stops,autoCancel,flag,worker)

@@ -8658,3 +8658,54 @@ Positive pure report construction and public unsupported/mismatch rejection
 remain separate from successful getter use with an assembled model. That gate
 stays open for the next coherent Swift controller. The selected package remains
 32 exports; no app preference or numerical/context policy change is claimed.
+
+The accepted-load report is committed as `a07416f` after exact ten-file Astra
+review. C2 now integrates strict Swift decoding and explicit managed-Qwen routing
+with one coherent 35-export package and an actual getter/controller check.
+Preference restoration still follows that accepted-load integration.
+
+C2 native compilation runs independently from the private Swift draft, using
+the existing isolated three-slice builder on committed `a07416f`. To restore
+the prospective disk reserve, the Cargo debug lock was acquired and only the
+ignored, unbound regenerated incremental compiler cache was removed, freeing
+2,716,065,792 bytes. Models, logs, compiled products and selected framework are
+preserved. A fresh default35 library follows the three Metal slices; Cargo
+compilers are not run concurrently. The one-load controller will also check
+identity preservation across one actual empty-session replacement.
+
+Astra approved the nine-file strict Swift integration, including immutable
+managed intent across unload and exact worker/request/model correlation. Private
+review moved final state setup inside the cleanup transaction before identity
+publication and corrected stale-worker completion handling. Both corrections
+preceded live application and runtime tests. Guarded application passes; 51 wire
+and 37 routing controls plus the one-load/getter/replay/replacement controller
+await the bounded 19-cold/two-Mac verification. Native/default35 products are
+already audited and reused. The selected bridge remains32 and prefs are absent.
+
+The C2 owner review was idle because an informational handoff did not restart
+a completed adviser. Root detected this with the agent-state query and issued
+an explicit followup; no verification command had run or failed. Every ready
+proposal/owner now requires a root-issued followup and state check, rather than
+assuming an adviser-to-adviser message has restarted the checker.
+
+The first C2 cold attempt stops at full worker/store compilation: new chat
+creation and existing stop-ID setup both declare local `code`. Strict Swift6
+identity compilation had passed. The failed receipt and both closed groups are
+preserved; no runtime, app or model check was reached. A minimal status-name
+correction and exact-input reuse of the independent typed executable are being
+reviewed. No assertion, acceptance policy or native implementation changes.
+
+The [coherent Swift identity integration](swift-accepted-identity.md) now passes
+18 fresh plus one inherited cold jobs, 51 wire/37 routing controls, all three
+app build/link checks and both Mac jobs. Actual model1 identity remains exact
+through session2→3→4 and loaded512/selected256/chunk16. Fresh headroom and
+coexistence gates pass; workspace/file hashes and writes2→2 remain exact through
+replacement. The later stale-conversation phase intentionally writes3, dispatches
+no second model and clears identity. The actual getter path is now exercised;
+no real-model generation, rendered UI, phone or performance claim is added.
+
+After Astra saved audit, the exact35-export XCFramework is selected atomically
+with all candidate files freshly checked and the old32 package retained. The
+failed duplicate-name compile, corrected source and inherited typed product
+remain auditable. Next is bounded namespace-keyed settings save/restore with
+fresh admission, rejected-record preservation and reply/late-commit handling.

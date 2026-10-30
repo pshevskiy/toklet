@@ -28,17 +28,18 @@ Destinations must be new. The builder verifies exact archive/source/header pins,
 creates `apple/Binaries/Toklet.xcframework` and `apple/Generated/Tiny`, then builds
 release simulator and unsigned device apps. It refuses foreign or differently
 linked generated inputs. The current generated library link selects
-`artifacts/new-goal-b5d3a-bridge32-owner-proposal-v1/build-v1/native`, with all
-32 current C exports and complete Mac/iOS/simulator app compile/link evidence.
-Its native build receipt SHA256 is
-`fa072baca8fdb8931eda5e76feb28d4f765e9a22cf137525ae549b50aa6bc247`.
-The [session-transition package report](../docs/apple-session-transition-package.md)
-binds the independent audit and exact guarded link replacement. The preceding
-30-export [planning package](../docs/apple-planning-package.md) is preserved,
-as is the older 28-export package. The two newly available native APIs inspect
-same-model transition memory and prepare an empty candidate; the current app
-does not yet adopt that candidate or apply different Chat settings. Selecting
-this package does not install or run any app or change context admission.
+`artifacts/new-goal-b5d5d-native35-build-v1/Toklet.xcframework`, with all 35 C
+exports and complete Mac/iOS/simulator app compile/link evidence. Its native
+build receipt SHA256 is
+`7a8ff65a04d9b26934fc50aec3c9f9382f83e91d9246e1fcc6ff8bf95fb8962e`.
+The [Swift identity/bridge report](../docs/swift-accepted-identity.md) records
+strict decoding, explicit managed-Qwen audited loading, one actual Mac getter
+and guarded selection. Friendly [session Apply](../docs/friendly-chat-apply.md)
+is available within the loaded bound; preferences remain subsequent work.
+The previous 32 [session-transition package](../docs/apple-session-transition-package.md),
+30-export [planning package](../docs/apple-planning-package.md) and older 28 package
+are preserved. Package selection does not install or launch an app or increase
+context limits.
 
 The [text profile](../docs/app-chat-profile.md),
 [interface guide](../docs/app-interface.md) and

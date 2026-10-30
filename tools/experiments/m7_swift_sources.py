@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parents[2]
 WORKER_NAMES = (
     'NativeWorker.swift', 'NativeCompatibility.swift', 'NativeResourcePlan.swift',
     'NativeContext.swift', 'NativeContextLimits.swift', 'NativeCapacityPlan.swift',
+    'NativeAcceptedIdentity.swift', 'GenerationCapabilities.swift',
     'NativePlanningPreview.swift', 'NativeSessionTransition.swift', 'NativeProcessMemory.swift',
 )
 

@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5d5c2 — strict Swift consumer and coherent 35-export bridge**.
+Next implementation task: **B5d5c3 — managed preference save/restore with fresh admission**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -369,8 +369,11 @@ separate requirements below. Further model admissions require their own scope.
       implements exact owner/source checks and engine-owned semantic namespace.
       Eleven checks, 501 default/609 Metal tests, 35 exports/C ABI and Astra saved
       audit pass. Positive assembled getter remains a distinct C2 integration gate.
-    - [ ] C2: strict Swift report consumption and coherent package adoption,
-      followed by one actual audited-load controller check.
+    - [x] C2: [strict Swift consumer and coherent35 bridge](docs/swift-accepted-identity.md)
+      pass51wire/37routing controls,18 fresh plus1 inherited cold jobs, all three
+      app builds and two Mac jobs. Actual getter/model1 identity survives replay
+      and256/chunk16 replacement; prior compile failure preserved. Package35 is
+      selected with32 retained; no real-model generation or rendered/device claim.
     - [ ] C3: managed preference save/restore with fresh admission; keep external
       or unauthenticated selections ephemeral and rejected settings preserved.
 
@@ -713,3 +716,9 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | B5d5b commit | Exact fifteen-file task passes Astra final review and is committed as `567d8ad`; all twelve cold checks and the one cached probe pass. | C1 accepted-load identity report; private draft awaits rebased freeze. Selected Apple package remains32exports. |
 | 2026-10-30 | B5d5c1 report applied | Astra approves six frozen paths, exact owner/thread/source checks, engine-owned policy versions and six-file historical role report using the existing JSON handle. Seven portable controls and no-model ABI probe authored; guarded application/whitespace pass. | Standard Rust/C/export checks running; successful assembled getter remains explicit in the later coherent Swift consumer, not claimed by synthetic positives. |
 | 2026-10-30 | B5d5c1 cold/API checks pass | All eleven commands and Astra saved audit pass: 501 default/609 Metal tests, seven new portable controls, exact35exports/C ABI and two retained products; all groups closed. | [Report](docs/accepted-load-identity.md); task commit next. Pure builder/API rejection coverage does not qualify a successful assembled getter; C2 retains that gate. |
+| 2026-10-30 | B5d5c1 commit | Exact ten-file cold/API task passes Astra final review and is committed as `a07416f`. All eleven checks and retained products pass. | C2 strict Swift consumer plus coherent default/Metal35 package and one actual getter/controller check; preferences remain subsequent. |
+| 2026-10-30 | C2 independent native build starts | Astra confirms committed native sources can build independently of private Swift. Cargo debug lock acquired and only ignored, unbound regenerated incremental cache removed, freeing 2,716,065,792 bytes; models/logs/products retained. Isolated three-slice native35 build starts with framework unselected. | Private strict Swift/routing code and one-load lifecycle controls continue with Astra; default35 archive follows without concurrent Cargo oversubscription. |
+| 2026-10-30 | C2 Swift source applied | Astra approves nine frozen paths, 51 strict wire/37 routing controls and the one-load controller. Guarded application/whitespace pass; project has34 sources and shared worker inventory11 dependencies. Native35 three-slice/default components pass separate audits. | Bounded19cold+2Mac owner in preparation; one actual getter/replay/replacement check remains pending. Selected bridge still32; no preference store yet. |
+| 2026-10-30 | C2 verification handoff restarted | The owner-ready message did not restart a completed Astra reviewer; root detected the idle state and issued an explicit followup. No verification command had run or failed, and all source/product pins stayed unchanged. | Root now explicitly dispatches every ready-owner review with followup and checks agent state instead of waiting on an informational message. |
+| 2026-10-30 | C2 first compile failure | Strict Swift6 identity executable compiled. The next full store/worker compile rejects a duplicate local `code` binding in chat creation versus stop-ID setup. Both groups close with no endpoint errors; runtime/app/model jobs were not reached. Failed receipt retained. | Minimal status-name correction and reviewed continuation; reuse the unaffected typed product where its exact closure permits. No assertions or native gates change. |
+| 2026-10-30 | C2 reviewed integration and selection | Astra audits18fresh+1inherited cold jobs and both Mac jobs; actual model1 identity survives session2→3→4, loaded512/selected256, hashes/writes2→2 through replacement. Guarded atomic selection adopts exact35 candidate, preserving32. Prior duplicate-name compile failure and handoff correction remain recorded. | [Report](docs/swift-accepted-identity.md); final task publication/commit, then freshly admitted managed prefs. No real-model generation/rendered UI/phone/performance claim. |

@@ -7,6 +7,33 @@ struct LocalBenchmarkSample: Identifiable, Sendable {
     let stopReason: UInt32
 }
 
+// Captured routing intent across unload, never artifact identity. Only a
+// successful native model+codec getter supplies consumed-byte evidence.
+struct FriendlyLoadRequest: Equatable, Sendable {
+    let id = UUID()
+    let folder: URL
+    let mode: NativeLoadIdentity
+    let conversation: UUID
+    func isCurrent(in workspace: ChatWorkspace) -> Bool {
+        workspace.selected == conversation && workspace.conversations.contains { $0.id == conversation }
+    }
+    static func managedMode(_ profile: HubProfile) throws -> NativeLoadIdentity {
+        guard HubProfile.catalog.contains(profile) else { throw HubFailure("Unknown managed model profile") }
+        return profile == .qwen3 ? .managedQwen3 : .ordinary
+    }
+}
+
+struct FriendlyAcceptingLoad {
+    let request: FriendlyLoadRequest
+    let worker: ObjectIdentifier
+    func isCurrent(worker current: ObjectIdentifier, workspace: ChatWorkspace) -> Bool {
+        current == worker && request.isCurrent(in:workspace)
+    }
+    func matches(worker current: ObjectIdentifier, snapshot: NativeSnapshot) -> Bool {
+        current == worker && snapshot.acceptedLoadRequestID == request.id
+    }
+}
+
 @MainActor
 final class FriendlyChatStore: ObservableObject {
     @Published var workspace = ChatWorkspace()
@@ -30,8 +57,10 @@ final class FriendlyChatStore: ObservableObject {
     private var request: UUID?
     private var draftEdit = UUID()
     private var requestDraftEdit: UUID?
-    private var pendingFolder: URL?
+    private var pendingLoad: FriendlyAcceptingLoad?
+    private var acceptingLoad: FriendlyAcceptingLoad?
     private var scopedFolder: URL?
+    private var scopedWorker: NativeWorker?
     private var loadedKey = ""
     private var loadedModelInstance: UInt64?
     // Exact accepted load input, separate from catalog/path guesses or security scope.
@@ -40,6 +69,7 @@ final class FriendlyChatStore: ObservableObject {
     private weak var planningWorker: NativeWorker?
     @Published private(set) var planning = FriendlyPlanningState()
     @Published private(set) var applying = FriendlyApplyState()
+    @Published private(set) var acceptedIdentity: NativeAcceptedIdentity?
     @Published private(set) var currentSessionConfiguration: NativeSessionConfiguration?
     private var saving: Task<Void,Never>?
     private var storageBlocked = false
@@ -226,18 +256,37 @@ final class FriendlyChatStore: ObservableObject {
             request = pending.0; requestDraftEdit = draftEdit; notice = ""; save(); harness.poll()
         } catch { notice = error.localizedDescription }
     }
+    private func releaseUnusedScope() {
+        guard let folder = scopedFolder, let owner = scopedWorker else { return }
+        let state = owner.snapshot()
+        guard state.closed || (!state.busy && !state.hasModel) else { return }
+        folder.stopAccessingSecurityScopedResource(); scopedFolder = nil; scopedWorker = nil
+    }
     func observe(_ state: NativeSnapshot) {
+        releaseUnusedScope()
         observePlanning(state)
         observeBenchmark(state)
-        if loadingModel && !state.busy && pendingFolder == nil {
+        if loadingModel && !state.busy && pendingLoad == nil {
             loadingModel = false
-            loadedModelInstance = state.chatEnabled ? state.modelContext?.modelInstance : nil
-            if let worker = harness?.worker {
-                planningLoad?.complete(worker:ObjectIdentifier(worker),instance:loadedModelInstance,chatEnabled:state.chatEnabled)
-            } else { planningLoad = nil }
-            if !state.chatEnabled { planningLoad = nil }
-            observePlanning(state)
-            if !state.chatEnabled { notice = state.message.isEmpty ? "The model could not be opened. Choose a model to try again." : state.message }
+            let accepted = acceptingLoad
+            acceptingLoad = nil
+            guard let accepted, let worker = harness?.worker, accepted.worker == ObjectIdentifier(worker) else {
+                // Do not cancel an unrelated replacement worker.
+                planningLoad = nil; acceptedIdentity = nil; loadedModelInstance = nil; return
+            }
+            let actual = worker.snapshot()
+            guard !actual.busy else { acceptingLoad = accepted; loadingModel = true; return }
+            guard accepted.request.isCurrent(in:workspace), harness?.expert == false else {
+                planningLoad = nil; acceptedIdentity = nil; loadedModelInstance = nil
+                if accepted.matches(worker:ObjectIdentifier(worker),snapshot:actual) { worker.interrupt(unload:true); harness?.poll() }
+                return
+            }
+            let matched = accepted.matches(worker:ObjectIdentifier(worker),snapshot:actual)
+            loadedModelInstance = matched && actual.chatEnabled ? actual.modelContext?.modelInstance : nil
+            planningLoad?.complete(worker:ObjectIdentifier(worker),instance:loadedModelInstance,chatEnabled:matched && actual.chatEnabled)
+            if !matched || !actual.chatEnabled { planningLoad = nil }
+            observePlanning(actual)
+            if !matched || !actual.chatEnabled { notice = actual.message.isEmpty ? "The model could not be opened. Choose a model to try again." : actual.message }
         }
         if let result = state.chatResult, result.id == request {
             workspace.finish(result,restoreRejectedDraft:requestDraftEdit == draftEdit)
@@ -249,10 +298,13 @@ final class FriendlyChatStore: ObservableObject {
             request = nil; requestDraftEdit = nil; save()
         }
         if !state.busy && !state.hasModel {
-            scopedFolder?.stopAccessingSecurityScopedResource(); scopedFolder = nil; loadedKey = ""; loadedModelInstance = nil; planningLoad = nil
+            releaseUnusedScope(); loadedKey = ""; loadedModelInstance = nil; planningLoad = nil
             if modelName != "Toklet" { modelName = "Toklet" }
-            if let folder = pendingFolder, harness?.expert == false {
-                pendingFolder = nil; beginLoad(folder)
+            if let pending = pendingLoad {
+                pendingLoad = nil
+                if let worker = harness?.worker, pending.isCurrent(worker:ObjectIdentifier(worker),workspace:workspace),
+                   harness?.expert == false, !state.closed { beginLoad(pending.request) }
+                else { loadingModel = false; acceptingLoad = nil }
             }
         }
     }
@@ -261,12 +313,20 @@ final class FriendlyChatStore: ObservableObject {
         guard workspace.selected == conversation else { return }
         open(folder)
     }
-    func open(_ folder: URL) {
+    func openManaged(_ folder: URL, profile: HubProfile, ifSelected conversation: UUID) {
+        guard workspace.selected == conversation else { return }
+        do { open(folder,mode:try FriendlyLoadRequest.managedMode(profile)) }
+        catch { notice = error.localizedDescription }
+    }
+    func open(_ folder: URL) { open(folder,mode:.ordinary) }
+    private func open(_ folder: URL, mode: NativeLoadIdentity) {
         guard !storageBlocked, !running, !loadingModel, let harness, !harness.state.busy, !harness.state.closed else { return }
         invalidatePlanning()
         notice = ""
         do {
-            guard let actual = harness.worker?.snapshot(), !actual.busy, !actual.closed,
+            guard let worker = harness.worker else { throw HubFailure("The engine is unavailable") }
+            let actual = worker.snapshot()
+            guard !actual.busy, !actual.closed,
                   actual.hasModel == harness.state.hasModel,
                   actual.modelContext?.modelInstance == harness.state.modelContext?.modelInstance else {
                 harness.poll()
@@ -278,50 +338,64 @@ final class FriendlyChatStore: ObservableObject {
             let scoped = folder.startAccessingSecurityScopedResource()
             defer { if scoped { folder.stopAccessingSecurityScopedResource() } }
             let profile = try HubProfile.identify(folder)
-            if hasChatModel && loadedKey == key(folder) { notice = "This model is already open."; return }
+            guard mode != .managedQwen3 || profile == .qwen3 else { throw HubFailure("The selected folder does not match the requested managed profile") }
+            if hasChatModel && loadedKey == key(folder) && planningLoad?.settings.loadIdentity == mode { notice = "This model is already open."; return }
             if workspace.current.modelKey != key(folder), !workspace.current.messages.isEmpty { try workspace.newChat(modelKey:key(folder)) }
             workspace.conversations[workspace.selectedIndex].modelKey = key(folder)
             save()
+            let request = FriendlyLoadRequest(folder:folder,mode:mode,conversation:workspace.selected)
+            acceptedIdentity = nil
             if harness.state.hasModel {
-                loadingName = profile.name; loadingModel = true; pendingFolder = folder; harness.worker?.interrupt(unload:true); harness.poll()
-            } else { beginLoad(folder) }
+                loadingName = profile.name; loadingModel = true; pendingLoad = FriendlyAcceptingLoad(request:request,worker:ObjectIdentifier(worker)); worker.interrupt(unload:true); harness.poll()
+            } else { beginLoad(request) }
         } catch { notice = error.localizedDescription }
     }
-    private func beginLoad(_ folder: URL) {
-        guard let harness, let worker = harness.worker else { return }
+    private func beginLoad(_ request: FriendlyLoadRequest) {
+        guard request.isCurrent(in:workspace), let harness, !harness.expert, let worker = harness.worker else {
+            loadingModel = false; acceptingLoad = nil; return
+        }
+        let folder = request.folder
         let actual = worker.snapshot()
         guard !actual.busy, !actual.closed, !actual.hasModel else {
             loadingModel = false
             notice = "The engine is busy. Wait for it to finish before opening another model."
             return
         }
-        scopedFolder?.stopAccessingSecurityScopedResource(); scopedFolder = nil
-        if folder.startAccessingSecurityScopedResource() { scopedFolder = folder }
+        releaseUnusedScope()
+        guard scopedFolder == nil else {
+            loadingModel = false
+            notice = "The previous model is still releasing its folder. Wait before opening another model."
+            return
+        }
+        if folder.startAccessingSecurityScopedResource() { scopedFolder = folder; scopedWorker = worker }
         let profile: HubProfile
         do {
             profile = try HubProfile.identify(folder)
+            guard request.mode != .managedQwen3 || profile == .qwen3 else { throw HubFailure("The managed profile changed before loading") }
             try admission().check(profile)
         } catch {
             loadingModel = false
-            scopedFolder?.stopAccessingSecurityScopedResource(); scopedFolder = nil
+            releaseUnusedScope()
             notice = error.localizedDescription; return
         }
         var settings = NativeSettings(directory:folder.path)
+        settings.loadIdentity = request.mode; settings.loadRequestID = request.id
         settings.metal = true; settings.mlx = true; settings.chat = true
         settings.capacity = NativeSettings.chatContextPositions; settings.chunk = 32
         settings.numericalBudget = profile.numericalBudget; settings.textBudget = profile.textBudget
         if worker.submit(.load(settings)) {
+            acceptingLoad = FriendlyAcceptingLoad(request:request,worker:ObjectIdentifier(worker))
             planningLoad = FriendlyPlanningLoad(worker:ObjectIdentifier(worker),settings:settings,coexistenceBudget:profile.processAllowance)
             loadingName = profile.name; loadingModel = true; loadedKey = key(folder); modelName = profile.name
             harness.poll()
         } else {
             loadingModel = false
-            scopedFolder?.stopAccessingSecurityScopedResource(); scopedFolder = nil
+            releaseUnusedScope()
             notice = "The engine is busy. Your model selection was not loaded."
         }
     }
-    func unload() { invalidatePlanning(); pendingFolder = nil; loadingModel = false; harness?.worker?.interrupt(unload:true); harness?.poll() }
-    func enterExpert() { invalidatePlanning(); pendingFolder = nil; loadingModel = false; save(); harness?.setExpert(true) }
+    func unload() { invalidatePlanning(); pendingLoad = nil; acceptingLoad = nil; acceptedIdentity = nil; loadingModel = false; harness?.worker?.interrupt(unload:true); harness?.poll() }
+    func enterExpert() { invalidatePlanning(); pendingLoad = nil; acceptingLoad = nil; acceptedIdentity = nil; loadingModel = false; save(); harness?.setExpert(true) }
     // Preview is never serialized into ChatWorkspace or used by beginLoad.
     private func planningTarget(_ state: NativeSnapshot, requireVisible: Bool = true) -> FriendlyPlanningTarget? {
         guard (!requireVisible || planningVisible), let harness, !harness.expert, !loadingModel,
@@ -340,6 +414,13 @@ final class FriendlyChatStore: ObservableObject {
         let currentWorker = harness?.worker
         let currentIdentity = currentWorker.map { ObjectIdentifier($0) }
         if planningLoad?.worker != currentIdentity { planningLoad = nil }
+        if let context = actual.modelContext, let identity = actual.acceptedIdentity,
+           planningLoad?.settings.loadIdentity == .managedQwen3,
+           planningLoad?.settings.loadRequestID == actual.acceptedLoadRequestID,
+           context.modelInstance == loadedModelInstance, actual.hasModel, actual.chatEnabled,
+           !actual.closed, identity.matches(context) {
+            acceptedIdentity = identity
+        } else { acceptedIdentity = nil }
         let active = planningTarget(actual,requireVisible:false)
         if let prior = planning.target,
            active?.worker != prior.worker || active?.modelInstance != prior.modelInstance
