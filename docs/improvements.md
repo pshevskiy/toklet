@@ -8219,3 +8219,38 @@ keeps compiled-assertion and standalone scope explicit. This task neither
 changes worker/UI/project membership nor infers payload identity or audited
 capacity authentication. B5c2 next separates preview results/identities from
 active model/session/chat and generation evidence.
+
+Typed consumers are committed as `5118327`. B5c2's independently reviewed
+preview command and request/selection-keyed result are applied to the existing
+single worker queue. The preview branch bypasses ordinary generation/score/
+budget clearing, checks identities before planning/publication and suppresses
+stale successes and errors on selection or lifecycle changes. Audited-Smol
+previews remain metadata-only because capacity inspection has no profile
+selector. New default/Metal controls and project/typecheck verification remain
+pending; UI/settings and coherent current-bridge app linking are not yet
+qualified.
+
+The first preview verification passes strict type/source checks, then catches a
+missing closing brace in the standalone test harness during default compilation.
+No runtime or Metal controls are reached. The failed logs and clean closure are
+retained; the next reviewed correction is restricted to test syntax, preserving
+worker/preview/project behavior and every prospective control.
+
+The syntax-only retry passes all compile/type checks, then fails its first CPU
+preview runtime test. Astra identifies a test setup error: the selected tiny
+reference directory contains arrays, not a loadable checkpoint. The failed
+receipt is preserved. A narrow test/owner fixture correction will use the
+existing proven loadable CPU artifact and old worker oracle-compatible MLX
+fixture; the new preview Metal fixture, production code and gates stay fixed.
+
+Worker previews now pass all twelve compile/CPU and three explicit Mac Metal
+checks. Sixteen default and twenty-one Metal preview cases cover stale queued/
+in-flight success and error, cancellation, lifecycle changes, source metadata
+changes and actual generation/score/error preservation. Unchanged old resource
+checks retain 25 wire mutations per mode, three Metal cleanup paths and source
+revalidation; old worker checks retain their original token/state/timing oracle.
+Astra independently authenticates the saved checks, current four-file source,
+eight retained products, inherited engine inputs, runtime and closed groups.
+Both failed harness attempts stay preserved. This closes standalone worker
+sequencing; rebuilt current bridge/app linking, UI controls, persistence and
+safe session reconfiguration remain separate tasks.

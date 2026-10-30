@@ -1,0 +1,213 @@
+{
+  "actual_products": {
+    "default_library": {
+      "bytes": 24454128,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-verification-owner-v3/retained/default_library.a",
+      "sha256": "7d6003e581dbb5e24678ff34c572b7566c6b7685d78af1a1699dbbfacf688e1a"
+    },
+    "legacy-default": {
+      "bytes": 11040128,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-verification-owner-v3/retained/legacy-default",
+      "sha256": "95acb18e2dfc2019f4a0f5c19be6d007bad80500abd1f3a02339eb35363beae2"
+    },
+    "legacy-metal": {
+      "bytes": 12512272,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-verification-owner-v3/retained/legacy-metal",
+      "sha256": "f88e78afa8599132cf770e4ccbb37ebaff8ff3f47db3f4d8c53ec8bdf375e482"
+    },
+    "metal_library": {
+      "bytes": 26962624,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-verification-owner-v3/retained/metal_library.a",
+      "sha256": "7960620117b9e41966a99ea75a534b95d206485343c80aba040f419344ea358f"
+    },
+    "preview-default": {
+      "bytes": 11041632,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-verification-owner-v3/retained/preview-default",
+      "sha256": "9a1dee8b60ba1e66cb0e307eb055138208008af110c907fdfb140be7b83cc50e"
+    },
+    "preview-metal": {
+      "bytes": 12513776,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-verification-owner-v3/retained/preview-metal",
+      "sha256": "1ac5bc9d730678ba2f177d5ec3a326db3dfc980d02e4407055ef1bd33f5e2872"
+    },
+    "worker-default": {
+      "bytes": 11063520,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-verification-owner-v3/retained/worker-default",
+      "sha256": "8d8b8b204b5ea9bff84cddad736edcd1bb6fb35b47d8759517fc02735927c0a6"
+    },
+    "worker-metal": {
+      "bytes": 12535632,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-verification-owner-v3/retained/worker-metal",
+      "sha256": "49e283bc6a3e0f282ba24cad9cc9b4696b5b3dc0f5d81d111d39bb5cc318604b"
+    }
+  },
+  "actual_verification": {
+    "app_linkage_checked": false,
+    "closed_process_groups": 15,
+    "compile_cpu_jobs": 12,
+    "endpoint_errors": [],
+    "ios_source_typecheck": true,
+    "legacy_cleanup_cases_metal": 3,
+    "legacy_source_revalidation_metal": true,
+    "legacy_wire_mutations_each_mode": 25,
+    "legacy_worker_token_oracle": [
+      47,
+      47,
+      47,
+      47
+    ],
+    "metal_jobs": 3,
+    "new_types_swift_version": 6,
+    "preview_barriers_default": 16,
+    "preview_barriers_metal": 21,
+    "project_membership": true,
+    "reused_libraries": true,
+    "reused_rust_checks": true,
+    "tiny_generation_controls": true,
+    "worker_swift_version": 5
+  },
+  "app_packaging_gate": {
+    "app_linkage_checked": false,
+    "current30_export_xcframework_required": true,
+    "phone_qualified": false
+  },
+  "bounded_worker_preview_qualified": true,
+  "contracts": {
+    "audited_capacity_unavailable": true,
+    "checked_absolute_context_relative_capacity": true,
+    "idle_only_preview": true,
+    "load_revalidation_unchanged": true,
+    "payload_identity_inferred": false,
+    "preserves_active_engine_and_generation_state": true,
+    "separate_request_and_selection_identity": true,
+    "single_existing_worker_queue": true,
+    "stale_success_and_error_suppression": true,
+    "ui_or_persistence": false
+  },
+  "date": "2026-10-30",
+  "evidence": {
+    "cold": {
+      "bytes": 1282933,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-verification-owner-v3/cold-v1/checks.json",
+      "sha256": "c4f6514bb272ff9bcbdf1e60dbbae248f0ed71a0d5f568c9355fea3055e5789b"
+    },
+    "failed_v1": {
+      "bytes": 1254464,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-verification-owner-v1/cold-v1/checks.json",
+      "sha256": "8c13ba14273c641bc7f7c678633b0f835351a7c2b66f9e2d7ea7971d3f7d0c0a"
+    },
+    "failed_v1_stderr": {
+      "bytes": 465,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-verification-owner-v1/cold-v1/preview-default-compile.stderr",
+      "sha256": "69366f45a0f1d1ef589e89aef9a83d0c37d18979d4f2523e025b65c36fb6b68c"
+    },
+    "failed_v2": {
+      "bytes": 1274980,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-verification-owner-v2/cold-v1/checks.json",
+      "sha256": "73287596a604da2bafa0c5a4c2efcbd7ecabe4064d6578e3d0d670dc1891bba2"
+    },
+    "failed_v2_stderr": {
+      "bytes": 139,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-verification-owner-v2/cold-v1/preview-cpu.stderr",
+      "sha256": "bef2c770d86087449565cf31bba63593cdb8c769820b405092f3d547792be7ca"
+    },
+    "fixture_routing": {
+      "bytes": 1728,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-verification-owner-v3/fixture-routing.json",
+      "sha256": "d1609fa70e53020611d1abd0391933f5de61653bde43523db84f55b351a6e736"
+    },
+    "hardware": {
+      "bytes": 1261954,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-verification-owner-v3/hardware-v1/checks.json",
+      "sha256": "80f3f3765b81559154ba9c3191c2fde3aa540ccd283c08397d8a60d3483ba666"
+    },
+    "inherited_verification": {
+      "bytes": 26197,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c1-swift-planning-verification-independent-review-v1/saved-review.json",
+      "sha256": "1cc8d3b3b8ceabbec56fae722d978c3d3081a7759e7d45de04dfe2af94f9e515"
+    },
+    "owner_proposal": {
+      "bytes": 5662,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-verification-owner-v3/manifest.json",
+      "sha256": "7981e91619d19334f94f34a40fe7e5f41e34107ceb7443983b1548cc75aa4721"
+    },
+    "owner_review": {
+      "bytes": 2476,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-verification-independent-review-v1/prospective-v3-review.json",
+      "sha256": "db738c9b05d302b0bf83ee5f02325352b3c6fd8c1208dcfbb40af8fb7b0a62b1"
+    },
+    "package": {
+      "bytes": 1450553,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-verification-owner-v3/package.json",
+      "sha256": "a0bb9eadacf6df76305a53fca72cc7737dfca00605e393dabd51ec2fbddefc2b"
+    },
+    "source_proposal": {
+      "bytes": 5043,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-proposal-v3/manifest.json",
+      "sha256": "82a0732437f172a1b4ff9e2bfb2852ed781b7e5158aa64fdcf68d5396ce57f78"
+    },
+    "source_review": {
+      "bytes": 2442,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-independent-review-v1/prospective-v3-review.json",
+      "sha256": "2942737d9d02e8b94ac2be6ebc23d8c684b576c29278f059c9815b9723d8c2f8"
+    }
+  },
+  "failed_attempts": [
+    {
+      "closed_process_groups": 4,
+      "correction": "V2 one-brace test-only insertion",
+      "endpoint_errors": [],
+      "failed_job": "preview-default-compile",
+      "metal_jobs_reached": false,
+      "passed": false,
+      "reason": "Missing closing brace in test action switch",
+      "runtime_tests_reached": false,
+      "successful_preceding_jobs": 3,
+      "version": 1
+    },
+    {
+      "closed_process_groups": 10,
+      "correction": "V3 fixture routing plus native load failure status/message; legacy Metal worker restored to original Qwen fixture",
+      "endpoint_errors": [],
+      "failed_job": "preview-cpu",
+      "metal_jobs_reached": false,
+      "passed": false,
+      "reason": "Numerical-array fixture selected instead of loadable model directory",
+      "successful_preceding_jobs": 9,
+      "version": 2
+    }
+  ],
+  "format": "toklet-worker-planning-preview-result-v1",
+  "independent_saved_review": {
+    "bytes": 18376,
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c2-worker-preview-verification-independent-review-v1/saved-review.json",
+    "sha256": "6594b4949837dd8aa8a1eb5779321c090ca09cd605a516de8c11ae4b5b67060c"
+  },
+  "performance_qualified": false,
+  "publication_ready": true,
+  "qualified": false,
+  "real_model_qualified": false,
+  "source_files": [
+    {
+      "bytes": 3195,
+      "path": "apple/Harness/NativePlanningPreview.swift",
+      "sha256": "407f793c524f65e481659279b8224aa85497f7662c09fb86e7d24635ced40205"
+    },
+    {
+      "bytes": 43324,
+      "path": "apple/Harness/NativeWorker.swift",
+      "sha256": "c90f87353995b893f2c224e8e653cf08ebf37c0f007ec2943cd2e6ef5d1427cf"
+    },
+    {
+      "bytes": 13098,
+      "path": "apple/TokletHarness.xcodeproj/project.pbxproj",
+      "sha256": "36fa580d7ea1e471ae90cee4d0df50c1a3a2e74ca282f8bd34c5b27e425adefa"
+    },
+    {
+      "bytes": 15755,
+      "path": "apple/tests/swift/PlanningPreviewMain.swift",
+      "sha256": "4523d4e7449ecbea31398b485df4c2e1ff0a0b1d80f828d4111e68b87a6063ba"
+    }
+  ],
+  "status": "bounded_worker_preview_verification_passed"
+}

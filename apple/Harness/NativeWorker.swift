@@ -22,6 +22,7 @@ struct NativeSettings: Sendable {
 }
 
 enum NativeCommand: Sendable {
+    case preview(NativePreviewRequest)
     case load(NativeSettings)
     case chat(id: UUID, conversation: Data, maximum: UInt32, autoCancelAfter: Int = 0)
     // Raw IDs only. autoCancelAfter is a deterministic diagnostic interruption.
@@ -80,6 +81,8 @@ struct NativeSnapshot: Sendable {
     // Last attempted MLX artifact, never a runtime/text qualification label.
     var compatibility: NativeCompatibility?
     var runtimePlan: NativeResourcePlan?
+    // Independent historical preview; does not replace the last load plan.
+    var preview: NativePreviewResult?
     var compatibilityDirectory = ""
     var workerFinished = false
     var modelContext: NativeModelContext?
@@ -123,6 +126,9 @@ final class NativeWorker: @unchecked Sendable {
     private let condition = NSCondition()
     private var queued: NativeCommand?
     private var closing = false
+    private var previewSelection: NativePreviewSelection?
+    private var previewRequest: NativePreviewRequest?
+    private var previewPriorPhase = "Idle"
     private var snapshotRevision: UInt64 = 0
     // All view mutations hold condition. Avoid retaining oldValue here: it
     // would force callback arrays to copy on every append. Observer self-writes
@@ -144,15 +150,22 @@ final class NativeWorker: @unchecked Sendable {
     // Cold test gate after C inspection ownership was released, outside the lock.
     private let afterRuntimeInspection: (@Sendable (NativeResourcePlan) -> Void)?
 
+    private let afterPreviewLimits: (@Sendable (NativePreviewRequest, NativeContextLimits) -> Void)?
+    private let beforePreviewPublication: (@Sendable (NativePreviewResult) -> Void)?
+
     init(captureSavedPrefix: Bool = false, beforeScorePublication: (@Sendable () -> Void)? = nil,
          afterScorePublication: (@Sendable (Bool) -> Void)? = nil,
          beforeCommandDequeue: (@Sendable (NativeCommand) -> Void)? = nil,
-         afterRuntimeInspection: (@Sendable (NativeResourcePlan) -> Void)? = nil) throws {
+         afterRuntimeInspection: (@Sendable (NativeResourcePlan) -> Void)? = nil,
+         afterPreviewLimits: (@Sendable (NativePreviewRequest, NativeContextLimits) -> Void)? = nil,
+         beforePreviewPublication: (@Sendable (NativePreviewResult) -> Void)? = nil) throws {
         self.captureSavedPrefix = captureSavedPrefix
         self.beforeScorePublication = beforeScorePublication
         self.afterScorePublication = afterScorePublication
         self.beforeCommandDequeue = beforeCommandDequeue
         self.afterRuntimeInspection = afterRuntimeInspection
+        self.afterPreviewLimits = afterPreviewLimits
+        self.beforePreviewPublication = beforePreviewPublication
         var error = TokletError()
         try requireOK(toklet_cancel_create(&cancelFlag, &error), &error)
         view.ids.reserveCapacity(Int(NativeSettings.maximumChatOutputTokens))
@@ -172,6 +185,15 @@ final class NativeWorker: @unchecked Sendable {
     func submit(_ command: NativeCommand, initiallyCancelled: Bool = false) -> Bool {
         condition.lock(); defer { condition.unlock() }
         guard !closing, !view.closed, !view.busy, let flag = cancelFlag else { return false }
+        if case .preview(let request) = command {
+            guard !initiallyCancelled, previewSelection == request.selection else { return false }
+            do { try request.validate() } catch { return false }
+            previewRequest = request; view.preview = nil; previewPriorPhase = view.phase
+            queued = command; view.busy = true; view.phase = "Planning preview"
+            condition.signal()
+            return true
+        }
+        invalidatePreview()
         // Clear only while idle, under the same lock as cancel/enqueue. A cancel
         // arriving after this point survives until the request observes it.
         _ = toklet_cancel_set(flag, initiallyCancelled ? 1 : 0, nil)
@@ -207,6 +229,81 @@ final class NativeWorker: @unchecked Sendable {
         return true
     }
 
+    // Selection changes can invalidate a synchronous inspection while it runs.
+    // They never mutate/cancel Engine. A fresh UUID for the same path is a new
+    // selection; UUID/path equality is not payload authentication.
+    @discardableResult
+    func selectPreview(_ selection: NativePreviewSelection?) -> Bool {
+        condition.lock(); defer { condition.unlock() }
+        guard !closing, !view.closed else { return false }
+        if let selection {
+            guard !selection.directory.isEmpty, selection.directory.utf8.count <= 16384,
+                  !selection.directory.utf8.contains(0) else { return false }
+        }
+        previewSelection = selection
+        invalidatePreview()
+        return true
+    }
+
+    // Caller holds condition. Suppress both late success and late error.
+    private func invalidatePreview() {
+        previewRequest = nil; view.preview = nil
+    }
+
+    private func previewCurrent(_ request: NativePreviewRequest) -> Bool {
+        !closing && queued == nil && previewRequest == request && previewSelection == request.selection
+    }
+
+    private func previewStillCurrent(_ request: NativePreviewRequest) -> Bool {
+        condition.lock(); defer { condition.unlock() }
+        return previewCurrent(request)
+    }
+
+    // Entirely separate from Engine.perform and its ordinary state publisher.
+    // All C handles are copied/released on this same thread by the inspectors.
+    private func performPreview(_ request: NativePreviewRequest) {
+        var result: NativePreviewResult?
+        var limits: NativeContextLimits?
+        var derived: NativeCapacityPlan.Request?
+        if previewStillCurrent(request) {
+            do { try autoreleasepool {
+                try request.validate()
+                let metadata = try NativeContextLimits.inspect(directory:request.selection.directory,profile:request.selection.profile)
+                limits = metadata
+                afterPreviewLimits?(request,metadata) // after C handle release; no lock
+                guard previewStillCurrent(request) else { return }
+                if request.selection.profile == .smolAudited {
+                    result = NativePreviewResult(request:request,outcome:.metadataOnly,limits:metadata,
+                        capacityRequest:nil,capacity:nil,limitation:.auditedProfileHasNoCapacityAPI,status:0,message:"")
+                } else if let upper = metadata.planningUpper {
+                    let planRequest = try request.capacityRequest(planningUpper:upper)
+                    derived = planRequest
+                    guard previewStillCurrent(request) else { return }
+                    let plan = try NativeCapacityPlan.inspect(directory:request.selection.directory,request:planRequest)
+                    result = NativePreviewResult(request:request,outcome:.planned,limits:metadata,
+                        capacityRequest:planRequest,capacity:plan,limitation:nil,status:0,message:"")
+                } else {
+                    let limitation: NativePreviewResult.Limitation = metadata.status == .compatibleUntested
+                        ? .backendUnavailable : .metadataUnsupported
+                    result = NativePreviewResult(request:request,outcome:.metadataOnly,limits:metadata,
+                        capacityRequest:nil,capacity:nil,limitation:limitation,status:0,message:"")
+                }
+            } } catch {
+                let error = error as NSError
+                result = NativePreviewResult(request:request,outcome:.failed,limits:limits,
+                    capacityRequest:derived,capacity:nil,limitation:nil,status:UInt32(clamping:error.code),
+                    message:String(error.localizedDescription.prefix(512)))
+            }
+        }
+        if let result { beforePreviewPublication?(result) } // no handles or lock
+        condition.lock()
+        if previewCurrent(request) { view.preview = result }
+        previewRequest = nil
+        view.busy = closing || queued != nil
+        view.phase = view.busy ? "Cleanup queued" : previewPriorPhase
+        condition.broadcast(); condition.unlock()
+    }
+
     // Non-UI diagnostics can wait for command/queued-cleanup completion without
     // retaining repeated snapshots or estimating completion from a polling tick.
     // NSCondition uses a wall-clock deadline; event timestamps stay monotonic.
@@ -222,6 +319,7 @@ final class NativeWorker: @unchecked Sendable {
 
     func cancel() {
         condition.lock(); defer { condition.unlock() }
+        invalidatePreview()
         if let flag = cancelFlag { _ = toklet_cancel_set(flag, 1, nil) }
     }
 
@@ -230,6 +328,7 @@ final class NativeWorker: @unchecked Sendable {
     func interrupt(unload: Bool) {
         condition.lock(); defer { condition.unlock() }
         guard !closing, !view.closed else { return }
+        invalidatePreview()
         if let flag = cancelFlag { _ = toklet_cancel_set(flag, 1, nil) }
         cancelQueuedChat()
         view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = ""
@@ -247,6 +346,7 @@ final class NativeWorker: @unchecked Sendable {
     func close() {
         condition.lock(); defer { condition.unlock() }
         guard !view.closed else { return }
+        invalidatePreview()
         cancelQueuedChat()
         closing = true; queued = nil
         view.modelContext = nil; view.liveContext = nil; view.requestBudget = nil
@@ -311,6 +411,11 @@ final class NativeWorker: @unchecked Sendable {
             }
             let command = queued!
             queued = nil
+            if case .preview(let request) = command {
+                condition.unlock()
+                performPreview(request)
+                continue
+            }
             let flag = cancelFlag!
             view.phase = "Running"
             condition.unlock()
@@ -611,6 +716,8 @@ private final class Engine {
         score = nil
         requestBudget = nil
         switch command {
+        case .preview:
+            throw invalid("Planning previews must use the independent worker branch")
         case .chat(let id,let conversation,let maximum,let autoCancel):
             try generateChat(id,conversation,maximum,autoCancel,flag,worker)
         case .score(let target):

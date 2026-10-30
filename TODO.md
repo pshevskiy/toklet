@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5c2 — isolated worker previews and stale-result handling**.
+Next implementation task: **B5c3 — coherent Apple bridge and app compile/link checks**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -307,8 +307,15 @@ separate requirements below. Further model admissions require their own scope.
   - [x] B5c1: [typed Swift limits/capacity consumers](docs/swift-planning-consumers.md)
     preserve the old decoder and pass 75 new rejection controls, default/Metal
     producer checks and unchanged decoder/worker regressions with Astra audit.
-  - [ ] B5c2: dedicated-worker preview sequencing and explicit request/artifact
+  - [x] B5c2: [dedicated-worker preview sequencing](docs/worker-planning-preview.md) and explicit request/artifact
     selection identity, stale results and safe teardown before user controls.
+    Twelve compile/CPU and three Mac Metal jobs pass, including 16/21 preview
+    cases, actual generation-state preservation and unchanged legacy checks.
+    Astra independently audits all saved results; both failed harness attempts
+    remain recorded. This is standalone worker qualification.
+  - [ ] B5c3: rebuild a coherent current 30-export XCFramework and compile/link
+    artifact-local Mac, iOS and simulator apps. The selected old bridge has 28
+    exports; preserve it until fresh package/app checks pass.
 - [ ] Report declared context, implemented backend range, budget/device fit,
   validation scope and app/text limits separately for each model.
 - [ ] Include actual weights, KV owners, scratch, loading peaks and application
@@ -582,3 +589,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | B5b limits API checked | Four new integration tests and one native ABI control pass with all14freshcoldjobs/default462/Metal569 tests (20/184 ignored). Five exactMacplanning/newC/oldSwift jobs pass, all30exports match, and Astra audits unchanged admission/currentsource/products/runtime/closure. | [Limits report](docs/native-context-limits.md); exact staged task review/commit next. B5c1 typed Swift consumers are prepared privately; worker/UI/settings remain open. |
 | 2026-10-30 | B5b committed / B5c1 typed consumers applied | Shared limits API committed as `c900d2a` after exact twelve-file Astra review. Five-file Swift limits/capacity consumers and controls pass independent static review and guarded application; old resource decoder guard is preserved under its original arguments. | Separate owned Swift synthetic/actual-producer and unchanged decoder/worker regressions next. No request-worker, UI, settings, source identity or cross-profile authorization is introduced. |
 | 2026-10-30 | B5c1 typed consumers checked | Nine build/CPU jobs and two Mac jobs pass; new Swift6 consumers reject75malformed/boundary controls, actual default/Metal producer checks pass, and oldSwift5regressions preserve25wire controls plus3Metalcleanup cases/source revalidation. Exact333engine/header inputs justify inheritedRust checks/Metalarchive. | [Consumer report](docs/swift-planning-consumers.md); exact staged review/taskcommit next, then separate preview command/request-selection identity in B5c2. No worker/UI/source-identity qualification yet. |
+| 2026-10-30 | B5c1 committed / B5c2 worker preview applied | Typed consumers committed as `5118327` after exact ten-file Astra review. Independently reviewed four-file preview/types/controls/project membership is applied; it bypasses ordinary generation-state clearing and keeps request/selection-keyed results separate. | Default/Metal preservation, stale/lifecycle/changed-source controls and source/project checks next. Rebuilt current bridge/app linking remains explicit; no UI/settings or active-session reconfiguration yet. |
+| 2026-10-30 | C2 compile catches test syntax error | Strict preview-type and iOS worker-source checks pass. Compiling the new standalone default preview harness stops at a missing closing brace; no runtime controls or Metal jobs are reached. Owner endpoints/groups close cleanly. | Preserve failed receipt; Astra prepares a test-only syntax correction with all prospective controls/core/project bytes preserved before a fresh checked attempt. |
+| 2026-10-30 | C2 retry reaches runtime controls | Reviewed test-only brace correction passes all compile/type checks. The first default preview runtime test stops at tiny CPU loading; Astra confirms it selected reference-only arrays rather than the proven loadable tiny artifact. | Preserve failed V2 receipt and closed groups. Correct test/owner fixture inputs and diagnostic messages only; fresh full controls remain required before commit. |
+| 2026-10-30 | B5c2 worker previews checked | Fresh twelve compile/CPU and three Mac Metal jobs pass after reviewed test-only syntax/fixture corrections. All16default/21Metal preview cases, actual generation-state preservation and legacy worker/resource checks pass; Astra audits source/products/runtime/closed groups. | Standalone preview task ready for exact staged review/commit. Both failed attempts remain failed; coherent30-export bridge/app linking is next. |
