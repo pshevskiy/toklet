@@ -20,11 +20,13 @@ Smol has a separate key; mixed namespaces and cross-profile records reject.
 The existing terminal resolver, edit-generation checks, quarantine no-write
 policy and actual D1/headroom/D2 admission are shared without another store.
 
-Smol's current preview remains audited metadata only. An ordinary numerical
+At this integration stage, Smol's Friendly preview remained audited metadata only. An ordinary numerical
 resource preflight is an additional estimate before actual loading, not source
 authentication or final allocation authority. This task enables identity and
 fresh model-bound restoration, not Smol numerical preview or context Apply UI.
 That remaining feature has a separate explicit advisory-estimator contract.
+The subsequent [bound advisory task](smol-advisory-preview.md) implements that
+Friendly preview/Apply contract while preserving the default metadata-only API.
 
 The native component passes 25 build/link/C jobs: three Metal slices and a fresh
 default library each export 36 APIs. It reuses C4a's exact 510 default/618 Metal

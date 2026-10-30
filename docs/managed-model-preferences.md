@@ -5,8 +5,9 @@ budget and reply limit for authenticated managed Qwen3 and Smol profiles. Choose
 model through Models → Use; after the audited model and tokenizer open, Toklet
 checks saved settings against the current loaded limit and fresh memory facts.
 Startup restores conversation history without automatically loading a model.
-The [shared Smol integration](smol-managed-preferences.md) has separate evidence
-and retains its current metadata-only preview/Apply limitation. Other managed
+The [shared Smol integration](smol-managed-preferences.md) has separate evidence;
+the later [bound advisory preview](smol-advisory-preview.md) enables its Friendly
+window estimates and Apply with actual native admission. Other managed
 profiles, external folders and Expert remain separate persistence
 work; this change does not grant arbitrary Hugging Face model support.
 

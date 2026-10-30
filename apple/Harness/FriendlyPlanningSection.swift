@@ -15,7 +15,7 @@ struct FriendlyPlanningSection: View {
     }
     var body: some View {
         Section("Chat window and memory") {
-            Text("Preview an estimate first. Applying uses the opened model and resets its cached tokens; your conversation and draft are kept. These settings are not saved for the next launch.")
+            Text("Preview an estimate first. Applying uses the opened model and resets its cached tokens; your conversation and draft are kept. Accepted settings are saved for supported managed models with verified identity; other models keep them only while open.")
                 .font(.footnote).foregroundStyle(.secondary)
             if let target = planning.target {
                 input("Window to estimate (tokens)",.upper,planning.draft.upper)
@@ -86,6 +86,11 @@ struct FriendlyPlanningSection: View {
             LabeledContent("Model window",value:positions(limits.declaredTotalPositions))
             LabeledContent("Engine planning limit",value:positions(limits.factoryPositionUpper))
         }
+        if value.isResidentAdvisoryEstimate {
+            Text("Advisory estimate from model files. Applying checks the opened model and current memory; this estimate does not identify its loaded weights or allocate a replacement.")
+                .font(.footnote).foregroundStyle(.secondary)
+            if let resident = value.request.resident { LabeledContent("Opened model limit",value:resident.loadedUpper.formatted()) }
+        }
         LabeledContent("Requested window",value:value.request.upper.formatted())
         if let request = value.capacityRequest {
             LabeledContent("Effective search upper",value:request.upper.formatted())
@@ -113,6 +118,7 @@ struct FriendlyPlanningSection: View {
                     // selected lower point, which has only its total footprint.
                     LabeledContent("KV at search upper",value:bytes(plan.resources.sessionMemory.kvBytes))
                     LabeledContent("Search-upper engine fit",value:plan.resources.fitsRequestedBudgets ? "Fits" : "Does not fit")
+                    if value.isResidentAdvisoryEstimate { Text("Loading-fit details describe the reopened files. They are not a requirement for replacing a session on already loaded weights.") }
                     LabeledContent("Source loading fit",value:plan.resources.fitsSourceLoadBudget ? "Fits" : "Does not fit")
                     LabeledContent("Resident loading fit",value:plan.resources.fitsResidentLoadBudget ? "Fits" : "Does not fit")
                 }.font(.footnote)

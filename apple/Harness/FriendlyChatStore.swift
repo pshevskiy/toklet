@@ -424,7 +424,7 @@ final class FriendlyChatStore: ObservableObject {
               instance == loadedModelInstance, !loadedKey.isEmpty, loadedKey == workspace.current.modelKey else { return nil }
         return accepted.target(worker:ObjectIdentifier(worker),instance:instance,
             conversation:workspace.selected,loadedKey:loadedKey,selectedKey:workspace.current.modelKey,
-            configuration:state.sessionConfiguration)
+            configuration:state.sessionConfiguration,residentUpper:state.modelContext.flatMap { UInt32(exactly:$0.loadedLimit) })
     }
     private func observePlanning(_ state: NativeSnapshot) {
         // Polling revisions are not authority: reconcile against the actual

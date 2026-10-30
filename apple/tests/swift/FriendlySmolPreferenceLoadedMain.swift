@@ -133,10 +133,21 @@ struct FriendlySmolPreferenceLoadedMain {
             try require(chat.workspace.outputLimit == 128 && writes == 1 && (try Data(contentsOf:record)) == acceptedBytes
                 && (try Data(contentsOf:workspaceFile)) == savedWorkspace,"Rejected reply changed accepted record/workspace")
             chat.showPlanning(); chat.previewPlanning(); try settle(harness,chat,worker)
-            try frame("metadata-only-preview",worker,chat,record,qwenRecord,workspaceFile,writes)
-            try require(chat.planning.target?.profile == .smolAudited && chat.planning.result?.outcome == .metadataOnly
-                && chat.planning.result?.limitation == .auditedProfileHasNoCapacityAPI && chat.planning.result?.capacity == nil
-                && chat.planningApplyUnavailableReason != nil,"Smol was given unimplemented numerical Apply authority")
+            try frame("advisory-preview",worker,chat,record,qwenRecord,workspaceFile,writes)
+            guard let preview = chat.planning.result, let estimate = preview.capacity else {
+                throw NativeContextFailure("Missing explicit Smol resident advisory estimate")
+            }
+            try require(chat.planning.target?.profile == .smolAudited && preview.outcome == .planned
+                && preview.request.estimator == .residentAdvisory && preview.request.selection.profile == .smolAudited
+                && preview.request.resident?.modelInstance == identity.modelInstance
+                && preview.request.resident?.sessionInstance == configuration.sessionInstance
+                && preview.request.resident?.loadedUpper == 512 && preview.request.upper == 256
+                && preview.capacityRequest?.context == 512 && preview.capacityRequest?.upper == 256
+                && estimate.capacity.selected?.capacity == 256 && estimate.resources.attention == .reference
+                && !estimate.resources.numericalBuffersAllocated && chat.planningApplyUnavailableReason == nil
+                && worker.snapshot().sessionConfiguration == configuration && writes == 1
+                && (try Data(contentsOf:record)) == acceptedBytes && (try Data(contentsOf:workspaceFile)) == savedWorkspace,
+                "Smol advisory estimate lost resident correlation or implicitly replaced the session")
             chat.hidePlanning(); try preserved()
             worker.interrupt(unload:false); try settle(harness,chat,worker)
             try frame("suspended",worker,chat,record,qwenRecord,workspaceFile,writes)
@@ -162,6 +173,6 @@ struct FriendlySmolPreferenceLoadedMain {
             && worker.snapshot().acceptedIdentity == nil && chat.acceptedIdentity == nil,"Unexpected load/restore/save count or retained identity")
         FileHandle.standardOutput.write(try JSONSerialization.data(withJSONObject:["passed":true,"closed":true,"model_loads":counts.0,
             "prepared_candidates":counts.1,"accepted_replacements":counts.2,"preference_writes":writes,"real_generation_tokens":0,
-            "qwen_record_unchanged":true,"smol_preview_metadata_only":true,"rendered_ui_checked":false,"phone_checked":false],options:[.sortedKeys]) + Data([10]))
+            "qwen_record_unchanged":true,"smol_preview_resident_advisory":true,"rendered_ui_checked":false,"phone_checked":false],options:[.sortedKeys]) + Data([10]))
     }
 }

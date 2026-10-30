@@ -225,7 +225,7 @@ final class NativeWorker: @unchecked Sendable {
             return true
         }
         if case .preview(let request) = command {
-            guard !initiallyCancelled, previewSelection == request.selection else { return false }
+            guard !initiallyCancelled, previewSelection == request.selection, request.matchesResident(view) else { return false }
             do { try request.validate() } catch { return false }
             previewRequest = request; view.preview = nil; previewPriorPhase = view.phase
             queued = command; view.busy = true; view.phase = "Planning preview"
@@ -292,6 +292,7 @@ final class NativeWorker: @unchecked Sendable {
 
     private func previewCurrent(_ request: NativePreviewRequest) -> Bool {
         !closing && queued == nil && previewRequest == request && previewSelection == request.selection
+            && request.matchesResident(view)
     }
 
     private func previewStillCurrent(_ request: NativePreviewRequest) -> Bool {
@@ -312,7 +313,7 @@ final class NativeWorker: @unchecked Sendable {
                 limits = metadata
                 afterPreviewLimits?(request,metadata) // after C handle release; no lock
                 guard previewStillCurrent(request) else { return }
-                if request.selection.profile == .smolAudited {
+                if request.selection.profile == .smolAudited && request.estimator == .sourceProfile {
                     result = NativePreviewResult(request:request,outcome:.metadataOnly,limits:metadata,
                         capacityRequest:nil,capacity:nil,limitation:.auditedProfileHasNoCapacityAPI,status:0,message:"")
                 } else if let upper = metadata.planningUpper {
@@ -320,6 +321,9 @@ final class NativeWorker: @unchecked Sendable {
                     derived = planRequest
                     guard previewStillCurrent(request) else { return }
                     let plan = try NativeCapacityPlan.inspect(directory:request.selection.directory,request:planRequest)
+                    if request.estimator == .residentAdvisory {
+                        guard plan.resources.attention == .reference else { throw NativeContextFailure("Advisory estimator mode differs from the resident factory") }
+                    }
                     result = NativePreviewResult(request:request,outcome:.planned,limits:metadata,
                         capacityRequest:planRequest,capacity:plan,limitation:nil,status:0,message:"")
                 } else {

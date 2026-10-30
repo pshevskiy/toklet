@@ -67,3 +67,5 @@ The subsequent [Swift preference integration](smol-managed-preferences.md) adopt
 the coherent36 package and enables that managed route, with separate actual
 restore/controller evidence. This native-only report and its original selected35
 scope remain unchanged.
+The later [bound advisory task](smol-advisory-preview.md) enables Friendly
+preview/Apply separately; the default source-profile API stays metadata-only.

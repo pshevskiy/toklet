@@ -11,6 +11,7 @@ struct FriendlyPlanningTarget: Equatable {
     let wholeBudget, textBudget: UInt64
     var configuration: NativeSessionConfiguration? = nil
     var coexistenceBudget: UInt64 = 0
+    var residentUpper: UInt32? = nil
 }
 
 // Created only after accepted load enqueue, promoted only at its completed
@@ -27,13 +28,13 @@ struct FriendlyPlanningLoad {
         modelInstance = instance
     }
     func target(worker: ObjectIdentifier, instance: UInt64, conversation: UUID,
-                loadedKey: String, selectedKey: String, configuration: NativeSessionConfiguration? = nil) -> FriendlyPlanningTarget? {
+                loadedKey: String, selectedKey: String, configuration: NativeSessionConfiguration? = nil, residentUpper: UInt32? = nil) -> FriendlyPlanningTarget? {
         guard worker == self.worker, modelInstance == instance, instance > 0,
               !loadedKey.isEmpty, loadedKey == selectedKey else { return nil }
         return FriendlyPlanningTarget(worker:worker,modelInstance:instance,conversation:conversation,
             modelKey:loadedKey,directory:settings.directory,profile:settings.loadIdentity == .managedSmol ? .smolAudited : .ordinary,
             wholeBudget:configuration?.wholeSessionBudget ?? settings.numericalBudget,textBudget:settings.textBudget,
-            configuration:configuration,coexistenceBudget:coexistenceBudget)
+            configuration:configuration,coexistenceBudget:coexistenceBudget,residentUpper:residentUpper)
     }
 }
 
@@ -101,8 +102,14 @@ struct FriendlyPlanningState {
     mutating func begin() throws -> NativePreviewRequest {
         invalidate()
         do {
-            guard let selection, target != nil else { throw NativeContextFailure("Open this conversation’s model before previewing.") }
-            let next = try draft.request(selection:selection); request = next
+            guard let selection, let target else { throw NativeContextFailure("Open this conversation’s model before previewing.") }
+            var next = try draft.request(selection:selection)
+            if target.profile == .smolAudited, let configuration = target.configuration, let upper = target.residentUpper {
+                next.estimator = .residentAdvisory
+                next.resident = .init(modelInstance:target.modelInstance,sessionInstance:configuration.sessionInstance,loadedUpper:upper)
+                try next.validate()
+            }
+            request = next
             return next
         } catch { message = error.localizedDescription; throw error }
     }
@@ -135,7 +142,7 @@ struct FriendlyApplyState {
         guard !current.busy, !current.closed, !current.restartRequired, current.hasSession,
               let configuration = current.sessionConfiguration, let live = current.liveContext,
               configuration == target.configuration,
-              configuration.modelInstance == target.modelInstance, target.profile == .ordinary,
+              configuration.modelInstance == target.modelInstance,
               live.modelInstance == configuration.modelInstance, live.sessionInstance == configuration.sessionInstance,
               planning.target == target, let selection = planning.selection, let requested = planning.request,
               let result = planning.result, result.request == requested, result.request.selection == selection,
@@ -147,6 +154,18 @@ struct FriendlyApplyState {
               plan.capacity.limits.budgetBytes == capacityRequest.sessionBudget,
               target.coexistenceBudget > 0 else {
             throw NativeContextFailure("Preview again for this idle, active chat session before applying.")
+        }
+        let ordinary = target.profile == .ordinary && requested.estimator == .sourceProfile && requested.resident == nil
+        let advisory = target.profile == .smolAudited && requested.estimator == .residentAdvisory
+            && requested.matchesResident(current) && target.residentUpper == requested.resident?.loadedUpper
+            && plan.resources.attention == .reference
+        guard ordinary || advisory else { throw NativeContextFailure("Preview again using the current model’s supported estimator.") }
+        try requested.validate()
+        if advisory {
+            guard let resident = requested.resident, capacityRequest.context <= resident.loadedUpper,
+                  capacityRequest.upper <= resident.loadedUpper,
+                  capacityRequest.normalization == .compensated, capacityRequest.readback == .fullLogits,
+                  capacityRequest.attention == .nativeFactory else { throw NativeContextFailure("Advisory estimate exceeds the resident request") }
         }
         guard UInt64(selected.capacity) <= live.loadedLimit else {
             throw NativeContextFailure("This estimate exceeds the opened model’s limit. Reloading with a larger limit is a separate action.")

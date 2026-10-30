@@ -9,11 +9,20 @@ struct NativePreviewSelection: Sendable, Equatable {
 }
 
 struct NativePreviewRequest: Sendable, Equatable {
+    // Profile metadata and numerical estimator provenance are independent.
+    // An advisory estimate never proves that reopened files are resident bytes.
+    enum Estimator: String, Sendable { case sourceProfile, residentAdvisory }
+    struct Resident: Sendable, Equatable {
+        let modelInstance, sessionInstance: UInt64
+        let loadedUpper: UInt32
+    }
     let id: UUID
     let selection: NativePreviewSelection
     let upper, chunk, offset: UInt32
     let contextCeiling: UInt32?
     let loadBudget, sessionBudget: UInt64
+    var estimator: Estimator = .sourceProfile
+    var resident: Resident? = nil
     var normalization: NativeCapacityPlan.Normalization = .compensated
     var readback: NativeCapacityPlan.Readback = .fullLogits
     var attention: NativeCapacityPlan.AttentionPolicy = .nativeFactory
@@ -27,6 +36,34 @@ struct NativePreviewRequest: Sendable, Equatable {
               sessionBudget <= 6 * 1024 * 1024 * 1024 else {
             throw NativeContextFailure("Invalid planning preview request")
         }
+        switch estimator {
+        case .sourceProfile:
+            guard resident == nil else { throw NativeContextFailure("Profile preview cannot claim a resident owner") }
+        case .residentAdvisory:
+            guard selection.profile == .smolAudited, let resident,
+                  resident.modelInstance > 0, resident.sessionInstance > 0,
+                  resident.modelInstance != resident.sessionInstance,
+                  (1...512).contains(resident.loadedUpper), offset == 0,
+                  normalization == .compensated, readback == .fullLogits, attention == .nativeFactory else {
+                throw NativeContextFailure("Invalid resident advisory estimate")
+            }
+        }
+    }
+
+    // Called under the worker condition at enqueue/inspection/publication. Busy
+    // is intentionally not tested here: this preview itself owns the busy slot.
+    func matchesResident(_ state: NativeSnapshot) -> Bool {
+        if estimator == .sourceProfile { return resident == nil }
+        guard selection.profile == .smolAudited, let resident,
+              !state.closed, !state.restartRequired, state.hasModel, state.hasSession, state.chatEnabled,
+              let model = state.modelContext, let live = state.liveContext,
+              let configuration = state.sessionConfiguration, let identity = state.acceptedIdentity,
+              identity.profile == .smol, identity.matches(model) else { return false }
+        return model.modelInstance == resident.modelInstance && model.loadedLimit == UInt64(resident.loadedUpper)
+            && live.modelInstance == resident.modelInstance && live.sessionInstance == resident.sessionInstance
+            && live.loadedLimit == UInt64(resident.loadedUpper)
+            && configuration.modelInstance == resident.modelInstance && configuration.sessionInstance == resident.sessionInstance
+            && UInt64(configuration.capacity) == live.capacity
     }
 
     // The upper is relative capacity; context and offset are absolute positions.
@@ -34,7 +71,8 @@ struct NativePreviewRequest: Sendable, Equatable {
     func capacityRequest(planningUpper: UInt32) throws -> NativeCapacityPlan.Request {
         try validate()
         guard planningUpper > 0, planningUpper <= 32768 else { throw NativeContextFailure("Invalid planning upper") }
-        let context = min(planningUpper,contextCeiling ?? planningUpper)
+        let sourceUpper = min(planningUpper,contextCeiling ?? planningUpper)
+        let context = min(sourceUpper,resident?.loadedUpper ?? sourceUpper)
         let (remaining,underflow) = context.subtractingReportingOverflow(offset)
         guard !underflow, remaining > 0 else { throw NativeContextFailure("Offset leaves no planning capacity") }
         let capacity = min(upper,remaining)
@@ -57,6 +95,7 @@ struct NativePreviewResult: Sendable {
     let limitation: Limitation?
     let status: UInt32
     let message: String
+    var isResidentAdvisoryEstimate: Bool { request.estimator == .residentAdvisory }
     // A bounded planning/application reservation, separate from numerical fit.
     // One current result only; no history. Does not include an existing model's
     // coexistence cost, tokenizer or a whole-app/device qualification.

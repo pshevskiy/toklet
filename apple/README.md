@@ -36,7 +36,8 @@ The [shared Smol/Qwen3 integration](../docs/smol-managed-preferences.md) records
 strict decoding, explicit audited loading, actual Mac restore and guarded
 selection. [Managed settings](../docs/managed-model-preferences.md) save accepted
 context/chunk/budget/reply choices and restore them after fresh model and memory
-admission. Smol numerical preview/Apply remains separate; the existing
+admission. Smol [bound advisory preview/Apply](../docs/smol-advisory-preview.md)
+also uses actual loaded-owner admission; all existing
 [session Apply](../docs/friendly-chat-apply.md) routes retain their loaded bounds.
 Other profiles and external folders remain ephemeral for these engine settings.
 The previous 35 [identity package](../docs/swift-accepted-identity.md),

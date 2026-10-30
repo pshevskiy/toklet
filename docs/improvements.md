@@ -8885,3 +8885,122 @@ The [shared Smol settings report](smol-managed-preferences.md) keeps metadata-on
 preview/Apply limits and UI/phone/generation/quality/performance gaps explicit.
 Final publication review/commit is next; the later advisory-preview draft remains
 private and does not change this result.
+
+Shared Smol/Qwen identity and settings are committed as `7ccadf9` after exact16-file
+Astra final review and all25native+25Swift+2Mac checks. Only the unrelated DSStore
+remained. Next is the explicit resident-bound Smol advisory estimator and Apply,
+reusing selected package36 and the existing native transition/admission path;
+its private draft is frozen only against this actual committed base.
+
+Astra approves the exact seven-file bound Smol advisory-preview proposal after
+49pin/baseline/draft checks. An explicit resident mode correlates model/session/
+loaded-upper at worker checkpoints and publication, while shared Apply retains
+actual D1/headroom/D2 authority. Default audited metadata-only behavior remains.
+Guarded application/whitespace pass;33controls and one-load stale/underestimate/
+actual Apply checks remain prospective. Native36 source/package are unchanged.
+
+Pre-execution review catches a maintained-controller regression: the old Smol
+preference entry still asserts metadata-only after calling the Friendly API that
+now explicitly opts into advisory estimates. Astra confirms it and holds owner
+approval. A narrow test successor and compile-only check preserve that entry
+without another model load; C4b archived source/results remain intact and default
+source-profile metadata-only behavior stays separately covered. No check ran or
+failed in this iteration.
+
+Astra approves the one maintained-controller test correction; the original seven
+paths are unchanged. Updated assertions require bound advisory/Reference behavior,
+no numerical preview allocation, and preserved session/workspace/preferences with
+truthful output labels. Guarded application/whitespace pass. The successor adds
+one compile-only job (26cold/12products), retaining the same two Mac jobs and one
+real Smol load. Archived C4b source/results remain intact.
+
+Root's first delta guard treated V2 as a full reapplication and stopped without
+writes: its prior seven before-pins deliberately retain the original Git base.
+The corrected narrow guard verifies those live paths against both reviewed after
+copies, then applies only the maintained test against its before-copy. All eight
+after-pins and whitespace now pass; no source semantics, gate or execution changed.
+
+The first C4c compile fails in the new synthetic test's dictionary/NSNull
+ternaries, before any executable or runtime result. One process group closes
+without endpoint errors; Astra authenticates inputs/logs and retains failedV2.
+Static follow-up also finds an unreached member-path typo in the maintained
+controller (`request.profile` versus `request.selection.profile`). V3 corrects
+only those two test files, with production values/behavior and gates unchanged.
+CPU/app/Metal/model checks were not reached.
+
+Astra approves exact test-only Any casts and the maintained selection.profile
+member path. Guarded two-file application and whitespace pass; six other files,
+production, values/assertions and workload are unchanged. The26+2retry retains
+the observed compiler failure separately from the statically found member typo,
+without reusing failed-attempt outcomes.
+
+For the next shared-source task, bounded root metadata reads inspect no payload:
+Qwen2 has68998header bytes/628tensor ranges; Mistral84239/743. Both are contiguous,
+index-consistent and within existing128KiB header/4096range/4GiB file caps. Astra
+selects one source-only Qwen2 opener over shared FileAudit orchestration, retaining
+Qwen3 accessor filtering, tied-head/bias semantics and later Qwen2 Online versus
+Mistral/Qwen3 Reference policies. Mistral's138039-byte policy file needs its
+existing256KiB cap later. Implementation remains private while C4c checks run;
+there is no payload authentication, assembly or new admission from this metadata.
+
+All26fresh C4c cold jobs now pass:33advisory,68preference,64routing controls,
+the maintained-controller compile, existing Apply/planning/worker/preview cases
+and all three apps. Unchanged65wire evidence is authenticated and inherited;
+the original compile failure remains preserved. Twelve actual products await
+Astra review before tiny Metal and the one-load Smol advisory/Apply controller.
+
+The first C4c Mac run passes tinyMetal and reaches Smol's two stale previews,
+bounded estimate and actual D1 rejection of the explicit synthetic underestimate.
+Its final Apply assertion fails after preference write1; owning close and both
+process groups complete without endpoint errors. Six raw frames and failed
+receipt are preserved. No accepted-time pre-close snapshot exists, so full Apply
+success is not inferred from the write alone. Astra investigates transient-result
+clearing against durable configuration before any correction/retry; production
+behavior and gates are not changed to satisfy the test.
+
+Astra confirms the evidence-lifetime issue: UI target reconciliation can clear
+the transient transition after durable adoption. Test-onlyV4 will record terminal
+worker evidence before that observation, correlate submitted request/old plan/new
+candidate/configuration, then independently check final durable UI/save state.
+The retry is limited to the changed controller compile and loaded job, with
+unaffected cold products and passed tinyMetal inherited through exact closures.
+A second transient Astra capacity failure is retried on the same worker; no
+production change or successful-check rerun is required by that service event.
+
+Astra approves the one loaded-controller evidence correction; seven other files
+and production stay byte-identical. Raw terminal data is emitted before UI
+reconciliation and assertions, with exact submitted request/oldplan/newcandidate/
+configuration/headroom correlation, then final durable/save state is asserted
+separately. Guarded application/whitespace pass. The lean one-compile/one-loaded
+continuation still needs review; the six-frame failure remains failed and retained.
+
+Continuation preflight catches a bookkeeping mismatch before execution: the old
+failed loaded row records tool exit-5, while its validator expected nil primary
+errors for both old jobs. An immutable successor requires the exact known exit/
+error sequence and unchanged closure/cleanup guards. The failure is not promoted
+to a pass and no target command was invoked from that draft.
+
+The lean continuation compiles the corrected loaded controller successfully in
+one fresh command. Twenty-five unaffected cold outcomes, eleven products and
+the passed tinyMetal21 result are authenticated and inherited. Current eight
+source pins match V4 with no production changes. The corrected actual product
+awaits review before one loaded Mac retry; both earlier failures stay preserved.
+
+The corrected C4c loaded Mac run passes eight raw frames plus summary. Loaded
+upper512 bounds requested1024; actual D1 rejects the explicit synthetic1MiB
+underestimate without replacing user state. The real256/chunk16 transition has
+aggregate660314446 within805306368, and planned constructor220246514 equals
+actual candidate admission. Fresh incremental94199068 fits the configured
+process-policy headroom6230342936. Terminal request/configuration/plan evidence
+is captured before UI reconciliation; durable settings and one preference save
+remain after transient evidence clears. Owning close succeeds.
+
+Astra's independent saved audit passes raw correlation, arithmetic, exact
+inherited checks/products and31current/historical process closures. The logical
+current set is26cold checks (25unchanged plus1corrected compile) and2Mac jobs
+(unchanged tiny21 plus1corrected loaded run). Both observed failures remain
+preserved. No native rebuild, larger context, generated text, rendered UI,
+iPhone, quality or performance qualification is claimed. See
+[bound Smol advisory preview](smol-advisory-preview.md) and its public result.
+Next is shared Qwen2.5 consumed-source verification, then complete pairing and
+Swift/preferences; all-model persistence remains open.

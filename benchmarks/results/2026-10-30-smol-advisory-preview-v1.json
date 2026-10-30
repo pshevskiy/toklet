@@ -1,0 +1,518 @@
+{
+  "base_revision": "7ccadf9bdff676db27378e010de33c6747234fcf",
+  "checks": {
+    "advisory_controls": 33,
+    "app_builds_inherited": 3,
+    "apply_controls": 28,
+    "astra_saved_audit_passed": true,
+    "configuration_pure": 11,
+    "cpu_preview_barriers": 16,
+    "current_and_historical_groups_closed": 31,
+    "current_logical_cold_jobs": 26,
+    "fresh_corrected_loaded_compiles": 1,
+    "fresh_corrected_loaded_mac_jobs": 1,
+    "inherited_default_rust_tests": 510,
+    "inherited_metal_rust_tests": 618,
+    "inherited_tiny_metal_preview_barriers": 21,
+    "inherited_wire_controls": 65,
+    "logical_mac_jobs": 2,
+    "maintained_controller_compile_only": true,
+    "native_builds": 0,
+    "original_passing_cold_commands": 26,
+    "planning_controls": 57,
+    "preference_controls": 68,
+    "retained_products": 12,
+    "routing_controls": 64,
+    "stale_queue_actions": 6,
+    "unaffected_cold_jobs_inherited": 25,
+    "worker_barriers": 15,
+    "worker_pure": 37,
+    "worker_retirement_cases": 2
+  },
+  "date": "2026-10-30",
+  "evidence": [
+    {
+      "bytes": 16737,
+      "path": "artifacts/new-goal-b5d5h-smol-advisory-proposal-v4/manifest.json",
+      "sha256": "4c7c8bf024525d718b80f581a2dba7e10eb13449c950764086f90c1aa0ec6c61"
+    },
+    {
+      "bytes": 5362,
+      "path": "artifacts/new-goal-b5d5h-smol-advisory-independent-review-v1/prospective-v4-review.json",
+      "sha256": "4aa73a474bd934d8caec28f3523bc150837fb9e9dc0b667aeb2f1b10b88c42c4"
+    },
+    {
+      "bytes": 1696471,
+      "path": "artifacts/new-goal-b5d5h-smol-advisory-verification-owner-v2/cold-v1/checks.json",
+      "sha256": "649c612ead5618503dd3fcd8f3a2b26a17c909c397bc478e3612416cdb757043"
+    },
+    {
+      "bytes": 6649,
+      "path": "artifacts/new-goal-b5d5h-smol-advisory-verification-independent-review-v1/saved-failure-v2-review.json",
+      "sha256": "b0e1a5f3d607e7d857b52ebf4d8eccf61c11dc3ce0f0a10d7e6dc6f754eb5e2b"
+    },
+    {
+      "bytes": 7723,
+      "path": "artifacts/new-goal-b5d5h-smol-advisory-verification-owner-v3/manifest.json",
+      "sha256": "ab2b1d33f96ab238d43b090752178f33c178dbedb2f3624dd99c6ab3202be568"
+    },
+    {
+      "bytes": 1815759,
+      "path": "artifacts/new-goal-b5d5h-smol-advisory-verification-owner-v3/cold-v1/checks.json",
+      "sha256": "e4870d01e6809040e69dfd1c4fb5959421779f95c7625c2f3362aa8783693a6d"
+    },
+    {
+      "bytes": 1312342,
+      "path": "artifacts/new-goal-b5d5h-smol-advisory-verification-owner-v3/hardware-v1/checks.json",
+      "sha256": "e64d3ae4ed9168ee126110dc2ba4fa0a1b54a544d1b03c82484c82a07a0ff7e8"
+    },
+    {
+      "bytes": 11820,
+      "path": "artifacts/new-goal-b5d5h-smol-advisory-verification-independent-review-v1/saved-hardware-failure-v3-review.json",
+      "sha256": "4946df8e4809934c80dd43861775b7d4a682428b029e8648a2e49239ca077a72"
+    },
+    {
+      "bytes": 7254,
+      "path": "artifacts/new-goal-b5d5h-smol-advisory-verification-independent-review-v1/v4-findings.json",
+      "sha256": "a07c73e99f8ced6f7a8f36d01dccda15f6e022953c54c2bfea8ce6a57288e8fa"
+    },
+    {
+      "bytes": 7013,
+      "path": "artifacts/new-goal-b5d5h-smol-advisory-verification-owner-v5/manifest.json",
+      "sha256": "28d68136701dd55fe41df896f2b48949918b22583e3add11e3b5b0c3f5e73487"
+    },
+    {
+      "bytes": 10927,
+      "path": "artifacts/new-goal-b5d5h-smol-advisory-verification-independent-review-v1/prospective-v5-review.json",
+      "sha256": "7d9c85d77d421ac59cfd0c2c130e00924c2058e98c764d91cb513e97a3b7bd99"
+    },
+    {
+      "bytes": 1748292,
+      "path": "artifacts/new-goal-b5d5h-smol-advisory-verification-owner-v5/cold-v1/checks.json",
+      "sha256": "34e7825646df03a4977dd665108237a4c52750c4e98d396c667a2d61a42e4bca"
+    },
+    {
+      "bytes": 1941166,
+      "path": "artifacts/new-goal-b5d5h-smol-advisory-verification-owner-v5/package.json",
+      "sha256": "b97b74a928b7bb666da7225d85ff8ddec023cc624e486e8fea7adcf362e581c7"
+    },
+    {
+      "bytes": 26209,
+      "path": "artifacts/new-goal-b5d5h-smol-advisory-verification-owner-v5/launch-review.json",
+      "sha256": "c4d95baeac5ae33ef5bf4db083b386fd33391b77206e9b85fee8c8aaa749bbfc"
+    },
+    {
+      "bytes": 1379150,
+      "path": "artifacts/new-goal-b5d5h-smol-advisory-verification-owner-v5/hardware-v1/checks.json",
+      "sha256": "aeee48cb8cdb16b236f8f29b4ffbdef6facb310e12ce6387f48a2f96baa789dc"
+    },
+    {
+      "bytes": 48730,
+      "path": "artifacts/new-goal-b5d5h-smol-advisory-verification-independent-review-v1/saved-review.json",
+      "sha256": "ddfb4a8c56451aface2e26c5c111527607325d7c1c2017933bb35b0d9534db58"
+    }
+  ],
+  "format": "toklet-smol-advisory-preview-result-v1",
+  "limitations": [
+    "Managed Smol resident-bound advisory preview/Apply only. Default source-profile Smol API remains metadata-only; ordinary semantics preserved.",
+    "File estimate does not authenticate reopened files as current model weights, provide actual coexistence ledger or authorize allocation. Actual D1/headroom/D2 remain required.",
+    "Opened upper512 is retained; requested1024\u2192effective512 is explicit estimate bounding, not a native context expansion.",
+    "Underestimated1MiB report is explicitly synthetic and not attributed to the native estimator. Earlier changed-file pure witness is synthetic; existing tiny mutation regression remains separate.",
+    "One successful corrected Smol model load, four previews/two stale, one D1 rejection/one Apply/save. No real generation, Qwen reload, rendered UI, iPhone runtime, wider quality or performance qualification.",
+    "Native planning figures are admission accounting; configured headroom is not free RAM or reservation and sparse samples are not complete process peaks.",
+    "Logical26 cold current coverage inherits25 exact unaffected outcomes and replaces the changed controller compile; tinyMetal is inherited, not rerun. Earlier failed outcomes are not promoted.",
+    "No Rust/native package change; selected36 remains the C4b-qualified component."
+  ],
+  "loaded_records": [
+    {
+      "committed": 0,
+      "configuration": {
+        "accepted_request": null,
+        "capacity": 512,
+        "chunk": 32,
+        "model": 1,
+        "session": 2,
+        "whole_budget": 536870912
+      },
+      "draft": "Keep this Smol advisory draft.",
+      "event": "loaded",
+      "file_sha256": "8688ddd8cd64fe6099e28a3af0eb3dec3010d83885ee479d98cca1f607591a71",
+      "generated": 0,
+      "history": 0,
+      "loaded_limit": 512,
+      "manifest": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+      "messages": 0,
+      "model": 1,
+      "pending": 0,
+      "preference_writes": 0,
+      "qwen_sha256": "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+      "reply": 128,
+      "workspace_sha256": "81a33025acc9900ce6b9f9302d0e7e9e3ac072e3449c296d02b9a846ee7e64a1"
+    },
+    {
+      "committed": 0,
+      "configuration": {
+        "accepted_request": null,
+        "capacity": 512,
+        "chunk": 32,
+        "model": 1,
+        "session": 2,
+        "whole_budget": 536870912
+      },
+      "draft": "Keep this Smol advisory draft.",
+      "event": "stale-after-limits",
+      "file_sha256": "8688ddd8cd64fe6099e28a3af0eb3dec3010d83885ee479d98cca1f607591a71",
+      "generated": 0,
+      "history": 0,
+      "loaded_limit": 512,
+      "manifest": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+      "messages": 0,
+      "model": 1,
+      "pending": 0,
+      "preference_writes": 0,
+      "qwen_sha256": "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+      "reply": 128,
+      "workspace_sha256": "81a33025acc9900ce6b9f9302d0e7e9e3ac072e3449c296d02b9a846ee7e64a1"
+    },
+    {
+      "committed": 0,
+      "configuration": {
+        "accepted_request": null,
+        "capacity": 512,
+        "chunk": 32,
+        "model": 1,
+        "session": 2,
+        "whole_budget": 536870912
+      },
+      "draft": "Keep this Smol advisory draft.",
+      "event": "stale-before-publication",
+      "file_sha256": "8688ddd8cd64fe6099e28a3af0eb3dec3010d83885ee479d98cca1f607591a71",
+      "generated": 0,
+      "history": 0,
+      "loaded_limit": 512,
+      "manifest": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+      "messages": 0,
+      "model": 1,
+      "pending": 0,
+      "preference_writes": 0,
+      "qwen_sha256": "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+      "reply": 128,
+      "workspace_sha256": "81a33025acc9900ce6b9f9302d0e7e9e3ac072e3449c296d02b9a846ee7e64a1"
+    },
+    {
+      "committed": 0,
+      "configuration": {
+        "accepted_request": null,
+        "capacity": 512,
+        "chunk": 32,
+        "model": 1,
+        "session": 2,
+        "whole_budget": 536870912
+      },
+      "draft": "Keep this Smol advisory draft.",
+      "effective_upper": 512,
+      "estimator": "residentAdvisory",
+      "event": "bounded-advisory",
+      "file_sha256": "8688ddd8cd64fe6099e28a3af0eb3dec3010d83885ee479d98cca1f607591a71",
+      "generated": 0,
+      "history": 0,
+      "loaded_limit": 512,
+      "manifest": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+      "messages": 0,
+      "model": 1,
+      "pending": 0,
+      "preference_writes": 0,
+      "preview_allocated": false,
+      "preview_identity_authority": false,
+      "profile": "smol_audited",
+      "qwen_sha256": "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+      "reply": 128,
+      "requested_upper": 1024,
+      "selected": 512,
+      "workspace_sha256": "81a33025acc9900ce6b9f9302d0e7e9e3ac072e3449c296d02b9a846ee7e64a1"
+    },
+    {
+      "committed": 0,
+      "configuration": {
+        "accepted_request": null,
+        "capacity": 512,
+        "chunk": 32,
+        "model": 1,
+        "session": 2,
+        "whole_budget": 536870912
+      },
+      "draft": "Keep this Smol advisory draft.",
+      "effective_upper": 256,
+      "estimator": "residentAdvisory",
+      "event": "underestimate-rejected",
+      "file_sha256": "8688ddd8cd64fe6099e28a3af0eb3dec3010d83885ee479d98cca1f607591a71",
+      "generated": 0,
+      "history": 0,
+      "loaded_limit": 512,
+      "manifest": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+      "messages": 0,
+      "model": 1,
+      "pending": 0,
+      "preference_writes": 0,
+      "preview_allocated": false,
+      "preview_identity_authority": false,
+      "profile": "smol_audited",
+      "qwen_sha256": "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+      "reply": 128,
+      "requested_upper": 256,
+      "selected": 256,
+      "transition": {
+        "committed": false,
+        "message": "Transition memory budget does not fit",
+        "outcome": "rejected",
+        "status": 1
+      },
+      "transition_request": {
+        "application_reserve": 285212672,
+        "capacity": 256,
+        "chunk": 16,
+        "coexistence_budget": 805306368,
+        "id": "DB0943D5-89B6-4D8C-AF3C-24F591036356",
+        "model": 1,
+        "old_session": 2,
+        "replay_reserve": 0,
+        "selection": "23183EBF-1F00-463A-97D7-AF2ABC940DCB",
+        "text_reserve": 67108864,
+        "whole_budget": 1048576
+      },
+      "workspace_sha256": "81a33025acc9900ce6b9f9302d0e7e9e3ac072e3449c296d02b9a846ee7e64a1"
+    },
+    {
+      "actual_candidate": {
+        "capacity": 256,
+        "loaded_limit": 512,
+        "model": 1,
+        "offset": 0,
+        "session": 3
+      },
+      "actual_candidate_admission": 220246514,
+      "actual_plan": {
+        "aggregate": 660314446,
+        "application": 285212672,
+        "candidate_allocated_in_plan": false,
+        "candidate_allowance": 67108864,
+        "candidate_bridge": 20480,
+        "candidate_budget": 536870912,
+        "candidate_constructor": 220246514,
+        "candidate_planned": 10161180,
+        "current_allowance": 67108864,
+        "current_bridge": 20480,
+        "current_owned": 20418524,
+        "fits_aggregate": true,
+        "fits_individual": true,
+        "json": 131328,
+        "learned": 142955990,
+        "loaded_limit": 512,
+        "model": 1,
+        "model_table": 67200,
+        "positional": 0,
+        "replay": 0,
+        "reserves": 486711552,
+        "session": 2,
+        "shared": 143023190,
+        "text": 67108864,
+        "transition_budget": 805306368
+      },
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "034BF7B0-EC1F-4B99-9955-C4484F9327FF",
+        "capacity": 256,
+        "chunk": 16,
+        "model": 1,
+        "session": 3,
+        "whole_budget": 536870912
+      },
+      "draft": "Keep this Smol advisory draft.",
+      "effective_upper": 256,
+      "estimator": "residentAdvisory",
+      "event": "accepted-before-reconcile",
+      "file_sha256": "8688ddd8cd64fe6099e28a3af0eb3dec3010d83885ee479d98cca1f607591a71",
+      "generated": 0,
+      "headroom": {
+        "available": 6230342936,
+        "fits": true,
+        "instrument": "Configured Mac process allowance min(RAM/2,6GiB) minus TASK_VM_INFO footprint; not free system RAM",
+        "required": 94199068
+      },
+      "history": 0,
+      "loaded_limit": 512,
+      "manifest": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+      "messages": 0,
+      "model": 1,
+      "pending": 0,
+      "preference_writes": 0,
+      "preview_allocated": false,
+      "preview_identity_authority": false,
+      "profile": "smol_audited",
+      "qwen_sha256": "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+      "reply": 128,
+      "requested_upper": 256,
+      "selected": 256,
+      "submitted_request": {
+        "application_reserve": 285212672,
+        "capacity": 256,
+        "chunk": 16,
+        "coexistence_budget": 805306368,
+        "id": "034BF7B0-EC1F-4B99-9955-C4484F9327FF",
+        "model": 1,
+        "old_session": 2,
+        "replay_reserve": 0,
+        "selection": "E0A8C79D-F743-4474-86BE-EF864E74FE69",
+        "text_reserve": 67108864,
+        "whole_budget": 536870912
+      },
+      "transition": {
+        "committed": true,
+        "message": "",
+        "outcome": "committed",
+        "status": 0
+      },
+      "transition_request": {
+        "application_reserve": 285212672,
+        "capacity": 256,
+        "chunk": 16,
+        "coexistence_budget": 805306368,
+        "id": "034BF7B0-EC1F-4B99-9955-C4484F9327FF",
+        "model": 1,
+        "old_session": 2,
+        "replay_reserve": 0,
+        "selection": "E0A8C79D-F743-4474-86BE-EF864E74FE69",
+        "text_reserve": 67108864,
+        "whole_budget": 536870912
+      },
+      "workspace_sha256": "81a33025acc9900ce6b9f9302d0e7e9e3ac072e3449c296d02b9a846ee7e64a1"
+    },
+    {
+      "committed": 0,
+      "configuration": {
+        "accepted_request": "034BF7B0-EC1F-4B99-9955-C4484F9327FF",
+        "capacity": 256,
+        "chunk": 16,
+        "model": 1,
+        "session": 3,
+        "whole_budget": 536870912
+      },
+      "draft": "Keep this Smol advisory draft.",
+      "effective_upper": 256,
+      "estimator": "residentAdvisory",
+      "event": "applied",
+      "file_sha256": "8688ddd8cd64fe6099e28a3af0eb3dec3010d83885ee479d98cca1f607591a71",
+      "generated": 0,
+      "history": 0,
+      "loaded_limit": 512,
+      "manifest": "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce",
+      "messages": 0,
+      "model": 1,
+      "pending": 0,
+      "preference_writes": 1,
+      "preview_allocated": false,
+      "preview_identity_authority": false,
+      "profile": "smol_audited",
+      "qwen_sha256": "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+      "reply": 128,
+      "requested_upper": 256,
+      "selected": 256,
+      "submitted_request": {
+        "application_reserve": 285212672,
+        "capacity": 256,
+        "chunk": 16,
+        "coexistence_budget": 805306368,
+        "id": "034BF7B0-EC1F-4B99-9955-C4484F9327FF",
+        "model": 1,
+        "old_session": 2,
+        "replay_reserve": 0,
+        "selection": "E0A8C79D-F743-4474-86BE-EF864E74FE69",
+        "text_reserve": 67108864,
+        "whole_budget": 536870912
+      },
+      "workspace_sha256": "81a33025acc9900ce6b9f9302d0e7e9e3ac072e3449c296d02b9a846ee7e64a1"
+    },
+    {
+      "committed": 0,
+      "draft": "Keep this Smol advisory draft.",
+      "event": "closed",
+      "file_sha256": "8688ddd8cd64fe6099e28a3af0eb3dec3010d83885ee479d98cca1f607591a71",
+      "generated": 0,
+      "history": 0,
+      "messages": 0,
+      "pending": 0,
+      "preference_writes": 1,
+      "qwen_sha256": "1989113c92e5268504095ab34f35a3c4c5ccb828092e0bbed7a6daff5259ff8d",
+      "reply": 128,
+      "workspace_sha256": "81a33025acc9900ce6b9f9302d0e7e9e3ac072e3449c296d02b9a846ee7e64a1"
+    }
+  ],
+  "loaded_summary": {
+    "accepted_replacements": 1,
+    "advisory_previews": 4,
+    "closed": true,
+    "model_loads": 1,
+    "passed": true,
+    "phone": false,
+    "preference_writes": 1,
+    "real_generation_tokens": 0,
+    "rendered_UI": false,
+    "stale_previews": 2,
+    "synthetic_underestimate_rejections": 1
+  },
+  "passed": true,
+  "pre_execution_findings": [
+    "Maintained old Friendly controller updated for explicit advisory behavior and compile-only coverage added; C4b archived source/results kept.",
+    "Continuation validator corrected to require exact preserved failed exit/error rather than nil; no target command executed from that draft."
+  ],
+  "preserved_failures": [
+    {
+      "also_found_before_reached": "Maintained test request.profile typo corrected to request.selection.profile.",
+      "cause": "Dictionary/NSNull branches require explicit Any boxing.",
+      "correction": "Two test-only lines; production and values/gates unchanged.",
+      "phase": "First advisory test compile",
+      "runtime_reached": false
+    },
+    {
+      "cause": "Final assertion read transient transition after UI reconciliation could clear it.",
+      "correction": "One test-only capture before UI reconciliation, then independent final durable/UI/save checks. Both old failure and absence of accepted-time evidence retained.",
+      "full_apply_success_qualified": false,
+      "phase": "First loaded Mac controller",
+      "raw_frames": 6
+    }
+  ],
+  "source_files": {
+    "apple/Harness/FriendlyChatStore.swift": {
+      "bytes": 38871,
+      "sha256": "81e0269e99de0fe62f8bf6ed92a84cf63b5c5c1fca9e2fa230c7adfd6043545b"
+    },
+    "apple/Harness/FriendlyPlanningDraft.swift": {
+      "bytes": 13465,
+      "sha256": "2593e51ab0705e79fac27fcb67fe9573a336ee941bedc73a6f4e19e70f5f930b"
+    },
+    "apple/Harness/FriendlyPlanningSection.swift": {
+      "bytes": 9486,
+      "sha256": "fd80e4f1ddd3a876fab832bf439a6db415024bc98fdf61e9440a7a8686cc0002"
+    },
+    "apple/Harness/NativePlanningPreview.swift": {
+      "bytes": 5724,
+      "sha256": "3b54ad707c9154d4d4341643d7834eb3e3891b5941386db92d6592d0958defbf"
+    },
+    "apple/Harness/NativeWorker.swift": {
+      "bytes": 63715,
+      "sha256": "e696ee7d18a4262b27fbacca5c7261ec13566ead9ccbee77e5728393c4da1bf6"
+    },
+    "apple/tests/swift/FriendlySmolPreferenceLoadedMain.swift": {
+      "bytes": 14380,
+      "sha256": "da4496046ecfd51d32dafbbfd89344de634c3c52a2400160acc2115184f42034"
+    },
+    "apple/tests/swift/SmolAdvisoryLoadedMain.swift": {
+      "bytes": 19052,
+      "sha256": "33bdb83546d529f82da9ea810f433780f876069712adb51788bbe0e8c5b52a3e"
+    },
+    "apple/tests/swift/SmolAdvisoryMain.swift": {
+      "bytes": 10567,
+      "sha256": "c28ecad37b9fa94f406fbce199439431915ce94138cb939dca11644bea906c4b"
+    }
+  }
+}
