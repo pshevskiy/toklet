@@ -133,9 +133,9 @@ struct FriendlyHarnessView: View {
         .onChange(of:chat.loadingModel) { _,loading in
             if !loading && chat.ready && sheet == .models { sheet = nil }
         }
-        .onChange(of:store.expert) { _,value in if value { hub.cancel() } }
+        .onChange(of:store.expert) { _,value in if value { chat.hidePlanning(); hub.cancel() } }
         .onChange(of:phase) { _, value in
-            if value != .active { chat.save() }
+            if value != .active { chat.invalidatePlanning(); chat.save() }
             #if os(iOS)
             if value != .active { chat.stopBenchmark() }
             if value == .background { hub.cancel() }
@@ -593,6 +593,7 @@ struct FriendlyHarnessView: View {
                     Text("Open this conversation’s model to check its declared and currently usable window.").font(.footnote).foregroundStyle(.secondary)
                 }
             }
+            FriendlyPlanningSection(chat:chat,store:store)
             Section("Expert") {
                 Button("Expert mode",systemImage:"slider.horizontal.3") { hub.modelChoiceChanged(); sheet = nil; chat.enterExpert() }
                     .accessibilityIdentifier("expert-mode")
@@ -600,5 +601,7 @@ struct FriendlyHarnessView: View {
                     .font(.footnote).foregroundStyle(.secondary)
             }
         }.navigationTitle("Settings")
+            .onAppear { chat.showPlanning() }
+            .onDisappear { chat.hidePlanning() }
     }
 }

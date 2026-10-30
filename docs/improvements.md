@@ -8270,3 +8270,43 @@ the checkout selects that verified framework while preserving its older
 package. There was no explicit codesign/provisioning stage; Mac/simulator
 linker-produced signature load commands are recorded honestly. No app, model,
 GPU or phone runtime qualification is inferred from build/link success.
+
+The coherent bridge/app build record is committed as `694063a` after exact
+five-file Astra review and 828 local-link checks. The next reviewed seven-file
+change adds preview-only Settings inputs and plain capacity/memory estimates,
+with detailed allocation accounting expandable. Accepted load/worker/model/
+conversation correlation and bounded edits invalidate stale results. Actual
+Chat settings and persistence stay unchanged. Synthetic controls, a separately
+bounded loaded-Qwen3 preservation test, a current-bridge tiny regression and
+complete app compilation remain required before this UI task can commit.
+
+The first C4 compile is blocked by the sandbox preventing Xcode’s SwiftUI
+macro-plugin service from starting. No runtime controls run; the failed logs
+and clean closure are preserved. The retry keeps the exact source, assertions
+and 13-command protocol, using the execution context already used for the
+successful C3 whole-app builds. No source fix is inferred from the cascading
+macro diagnostics.
+
+The escalated C4 retry compiles all three test executables. Its synthetic run
+then fails the unloaded-worker snapshot preservation assertion before full app
+builds or model execution. The failed result and four cleanly closed groups are
+retained. Astra is checking the exact difference; this test includes polling
+revision, whereas the existing worker preservation oracle excludes it.
+
+The reviewed C4 test-only correction now passes all 57 synthetic controls and
+all 13 compile/CPU/app-link jobs. Raw before/after snapshots show revision
+0→3 with every other reflected field unchanged; an injected functional
+mutation is rejected by the comparator. Mac, iOS and simulator app builds pass
+and every process group closes. Actual binaries are retained for the separate
+loaded-Qwen3 and tiny Metal checks; runtime and final audit remain pending.
+
+The two C4 Mac checks pass and Astra audits their raw results. Cached Qwen3
+returns fitting 512/256 estimates with accounted footprints 783,840,402 /
+753,430,674 bytes and KV 58,721,040 / 29,360,912 bytes. Active capacity512,
+chunk32, model/session IDs and full ordinary state remain unchanged. Workspace
+and disk hashes plus persistence counts remain exact after baseline setup.
+The existing 21-case tiny Metal regression and generation witness also pass
+against the selected bridge. These are estimates and controller checks, not
+performance or whole-device-fit measurements. The attempted rendered Mac check
+finds a locked Mac, launches no app and remains pending; phone evidence is
+separate. Transition accounting is the next independent implementation task.

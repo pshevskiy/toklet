@@ -1,14 +1,15 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5c4 — preview-only context and memory controls in Settings**.
+Next implementation task: **B5d1 — model-bound session-transition memory accounting**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
 trajectory diagnostics have 3/8 failing coordinates. The original quality,
 ordinary app integration, full declared window, phone and performance scopes
 remain open. See [the bounded report](docs/lfm2-real-native.md).
-No implementation task is currently blocked on user input.
+Independent implementation can continue. The rendered Mac Settings check awaits
+an unlocked Mac; no app was launched during the locked-screen attempt.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
 Both historical coupled-intermediate rejections remain failed; all selected
@@ -317,10 +318,18 @@ separate requirements below. Further model admissions require their own scope.
     iOS and simulator apps pass all 30 build/link checks. Astra independently
     audits the saved results and guarded selection of the verified candidate;
     the old package is preserved. No app/phone runtime qualification follows.
-- [ ] B5c4: nonpersistent planning draft and preview display in shared Settings,
-  keyed to the active model/worker/conversation. Show requested/effective and
-  selected planning capacities separately from current Chat settings; edits
-  invalidate old results. Applying/persisting settings remains separate.
+- [x] B5c4: [nonpersistent Settings preview and loaded-controller integration](docs/friendly-planning-preview.md)
+  pass57synthetic controls,13compile/CPU/app jobs and2Mac checks. Real Qwen3
+  estimates512/256 fit while active512/chunk32, owner IDs and saved workspace
+  stay exact. Source/controller/build scope only; rendered UI remains pending.
+- [ ] Check rendered Mac Settings when the Mac is unlocked; record separate
+  iPhone runtime evidence. The attempted computer-use inventory was locked.
+- [ ] B5d1: model-bound transition accounting for one shared immutable model
+  and current plus proposed sessions. Count actual current owners and planned
+  candidate storage, both bridge/driver allowances and explicit caller reserves;
+  preserve existing one-session admission and numerical behavior. Candidate
+  creation, atomic replacement, Apply/persistence and Chat limit reconciliation
+  follow as separate reviewed tasks.
 - [ ] Report declared context, implemented backend range, budget/device fit,
   validation scope and app/text limits separately for each model.
 - [ ] Include actual weights, KV owners, scratch, loading peaks and application
@@ -600,3 +609,8 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | B5c2 worker previews checked | Fresh twelve compile/CPU and three Mac Metal jobs pass after reviewed test-only syntax/fixture corrections. All16default/21Metal preview cases, actual generation-state preservation and legacy worker/resource checks pass; Astra audits source/products/runtime/closed groups. | Standalone preview task ready for exact staged review/commit. Both failed attempts remain failed; coherent30-export bridge/app linking is next. |
 | 2026-10-30 | B5c2 committed / bridge gate starts | Exact eight-file Astra review and all checks pass; isolated worker previews committed as `9419617`. Current bridge metadata freeze begins under independently reviewed three-platform/30-export/unsigned-app protocol. | Build/link results remain pending. Existing selected bridge and user app data stay preserved; nonpersistent planning UI is prepared privately. |
 | 2026-10-30 | B5c3 bridge and app linkage checked | All30jobs pass: three fresh native slices with exact30exports, complete Mac/iOS/simulator app builds and arm64/platform/minimum-OS checks. Astra authenticates2413inputs/77outputs/30closedgroups and approves guarded candidate selection; oldbundle preserved. | Publish exact build/link evidence and commit; no app/model/phone execution. Preview-only Settings controls are next. |
+| 2026-10-30 | B5c3 committed / C4 Settings preview applied | Bridge/app evidence committed as `694063a` after exact five-file Astra review and828local-link checks. Reviewed seven-file C4 Settings draft/display and separate loaded-Qwen3 test harness are applied with actual Chat settings/persistence unchanged. | Run57synthetic controls, current-bridge tiny regression, loaded-store512→256 preview preservation and full app builds under the separately reviewed owner before commit. |
+| 2026-10-30 | C4 compiler service sandbox failure | First full SwiftUI test compilation stops because sandbox_apply denies Xcode’s macro-plugin service. The diagnostic occurs in existing ChatContent @State macros; no runtime tests begin and the single process group closes cleanly. | Preserve failed receipt/logs; retry the identical source/13-command protocol with a fresh owner outside that sandbox restriction. No source, assertion or acceptance change is made for this environment failure. |
+| 2026-10-30 | C4 retry compiles; preservation control fails | Escalated retry compiles all three test executables, then stops at the unloaded-worker full-snapshot equality assertion. All four process groups close with no endpoint errors; apps/real-model jobs are not reached. | Preserve failed result. Astra investigates the precise field difference; polling revision is included in this test unlike the existing worker-state oracle. No production fix or functional gate change is assumed. |
+| 2026-10-30 | C4 compile/CPU/app phase passes | Reviewed test-only oracle correction preserves all functional fields and57controls. Fresh13jobs pass, including all three app builds; retained raw snapshots independently show revision0→3 with every other reflected field exact. All13groupsclose/endpoints[]. | Exact actual binaries retained for separate two-job Mac phase: loadedQwen3 previews512/256 and tiny Metal regression. Runtime/saved audit/commit remain pending; both failed attempts preserved. |
+| 2026-10-30 | C4 loaded controller checked; visual gate pending | Both Mac jobs pass with Astra saved audit: realQwen3estimates512/256 andallfitflags, exactactive512/chunk32/IDs/workspace/filehashes, plus21tinyMetal cases. All15successfulgroupsclosed; both failed attempts preserved. Mac computer-use inventory reportslocked, no app launched. | Publish selected source/controller/build evidence and commit; renderedMac/phonechecks stayopen. ContinueB5d1transitionaccounting independently. |

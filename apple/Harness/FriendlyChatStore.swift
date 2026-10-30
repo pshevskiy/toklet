@@ -34,6 +34,11 @@ final class FriendlyChatStore: ObservableObject {
     private var scopedFolder: URL?
     private var loadedKey = ""
     private var loadedModelInstance: UInt64?
+    // Exact accepted load input, separate from catalog/path guesses or security scope.
+    private var planningLoad: FriendlyPlanningLoad?
+    private var planningVisible = false
+    private weak var planningWorker: NativeWorker?
+    @Published private(set) var planning = FriendlyPlanningState()
     private var saving: Task<Void,Never>?
     private var storageBlocked = false
     private let file: URL
@@ -120,12 +125,12 @@ final class FriendlyChatStore: ObservableObject {
     }
     func newChat() {
         guard !storageBlocked, !running, !loadingModel, harness?.state.busy == false else { return }
-        do { try workspace.newChat(modelKey:activeModelKey); notice = ""; save() }
+        do { try workspace.newChat(modelKey:activeModelKey); invalidatePlanning(); refreshPlanning(); notice = ""; save() }
         catch { notice = error.localizedDescription }
     }
     func select(_ id: UUID) {
         guard !storageBlocked, !running, !loadingModel, harness?.state.busy == false, workspace.conversations.contains(where: { $0.id == id }) else { return }
-        workspace.selected = id; notice = ""; save()
+        workspace.selected = id; invalidatePlanning(); refreshPlanning(); notice = ""; save()
     }
     func remove(_ id: UUID) {
         guard !storageBlocked, !running, !loadingModel, harness?.state.busy == false else { return }
@@ -141,11 +146,13 @@ final class FriendlyChatStore: ObservableObject {
         workspace.removeAll(modelKey:activeModelKey); finishDeletion(previous)
     }
     private func finishDeletion(_ previous: ChatWorkspace) {
+        invalidatePlanning()
         if save() { notice = "" }
         else {
             workspace = previous
             notice = "Your conversations were kept because saving failed. Please try deleting again."
         }
+        refreshPlanning()
     }
     func startBenchmark() {
         guard ready, let harness else { return }
@@ -162,6 +169,7 @@ final class FriendlyChatStore: ObservableObject {
         do {
             let bytes = try JSONSerialization.data(withJSONObject:[["role":"user","content":Self.benchmarkPrompt]],options:[.sortedKeys])
             let id = UUID()
+            invalidatePlanning()
             guard harness.worker?.submit(.chat(id:id,conversation:bytes,maximum:Self.benchmarkMaximum)) == true else {
                 throw HubFailure("The engine is busy. Try the benchmark again when it is ready.")
             }
@@ -208,6 +216,7 @@ final class FriendlyChatStore: ObservableObject {
         do {
             let previous = workspace
             let pending = try workspace.begin()
+            invalidatePlanning()
             guard harness.worker?.submit(.chat(id:pending.0,conversation:pending.1,maximum:workspace.outputLimit)) == true else {
                 workspace = previous; notice = "The engine is busy. Your draft is kept; please try again."
                 save(); return
@@ -216,10 +225,16 @@ final class FriendlyChatStore: ObservableObject {
         } catch { notice = error.localizedDescription }
     }
     func observe(_ state: NativeSnapshot) {
+        observePlanning(state)
         observeBenchmark(state)
         if loadingModel && !state.busy && pendingFolder == nil {
             loadingModel = false
             loadedModelInstance = state.chatEnabled ? state.modelContext?.modelInstance : nil
+            if let worker = harness?.worker {
+                planningLoad?.complete(worker:ObjectIdentifier(worker),instance:loadedModelInstance,chatEnabled:state.chatEnabled)
+            } else { planningLoad = nil }
+            if !state.chatEnabled { planningLoad = nil }
+            observePlanning(state)
             if !state.chatEnabled { notice = state.message.isEmpty ? "The model could not be opened. Choose a model to try again." : state.message }
         }
         if let result = state.chatResult, result.id == request {
@@ -232,7 +247,7 @@ final class FriendlyChatStore: ObservableObject {
             request = nil; requestDraftEdit = nil; save()
         }
         if !state.busy && !state.hasModel {
-            scopedFolder?.stopAccessingSecurityScopedResource(); scopedFolder = nil; loadedKey = ""; loadedModelInstance = nil
+            scopedFolder?.stopAccessingSecurityScopedResource(); scopedFolder = nil; loadedKey = ""; loadedModelInstance = nil; planningLoad = nil
             if modelName != "Toklet" { modelName = "Toklet" }
             if let folder = pendingFolder, harness?.expert == false {
                 pendingFolder = nil; beginLoad(folder)
@@ -246,6 +261,7 @@ final class FriendlyChatStore: ObservableObject {
     }
     func open(_ folder: URL) {
         guard !storageBlocked, !running, !loadingModel, let harness, !harness.state.busy, !harness.state.closed else { return }
+        invalidatePlanning()
         notice = ""
         do {
             guard let actual = harness.worker?.snapshot(), !actual.busy, !actual.closed,
@@ -293,6 +309,7 @@ final class FriendlyChatStore: ObservableObject {
         settings.capacity = NativeSettings.chatContextPositions; settings.chunk = 32
         settings.numericalBudget = profile.numericalBudget; settings.textBudget = profile.textBudget
         if worker.submit(.load(settings)) {
+            planningLoad = FriendlyPlanningLoad(worker:ObjectIdentifier(worker),settings:settings)
             loadingName = profile.name; loadingModel = true; loadedKey = key(folder); modelName = profile.name
             harness.poll()
         } else {
@@ -301,8 +318,61 @@ final class FriendlyChatStore: ObservableObject {
             notice = "The engine is busy. Your model selection was not loaded."
         }
     }
-    func unload() { pendingFolder = nil; loadingModel = false; harness?.worker?.interrupt(unload:true); harness?.poll() }
-    func enterExpert() { pendingFolder = nil; loadingModel = false; save(); harness?.setExpert(true) }
+    func unload() { invalidatePlanning(); pendingFolder = nil; loadingModel = false; harness?.worker?.interrupt(unload:true); harness?.poll() }
+    func enterExpert() { invalidatePlanning(); pendingFolder = nil; loadingModel = false; save(); harness?.setExpert(true) }
+    // Preview is never serialized into ChatWorkspace or used by beginLoad.
+    private func planningTarget(_ state: NativeSnapshot) -> FriendlyPlanningTarget? {
+        guard planningVisible, let harness, !harness.expert, !loadingModel,
+              let worker = harness.worker, let accepted = planningLoad,
+              accepted.worker == ObjectIdentifier(worker), state.hasModel, state.chatEnabled, !state.closed,
+              let instance = state.modelContext?.modelInstance, instance > 0,
+              instance == loadedModelInstance, !loadedKey.isEmpty, loadedKey == workspace.current.modelKey else { return nil }
+        return accepted.target(worker:ObjectIdentifier(worker),instance:instance,
+            conversation:workspace.selected,loadedKey:loadedKey,selectedKey:workspace.current.modelKey)
+    }
+    private func observePlanning(_ state: NativeSnapshot) {
+        // Polling revisions are not authority: reconcile against the actual
+        // owning worker again before making a result visible.
+        let actual = harness?.worker?.snapshot() ?? state
+        let currentWorker = harness?.worker
+        let currentIdentity = currentWorker.map { ObjectIdentifier($0) }
+        if planningLoad?.worker != currentIdentity { planningLoad = nil }
+        if planning.select(planningTarget(actual)) {
+            planningWorker?.selectPreview(nil)
+            planningWorker = harness?.worker
+            planningWorker?.selectPreview(nil)
+        }
+        planning.observe(actual.preview,busy:actual.busy)
+    }
+    private func refreshPlanning() {
+        if let state = harness?.worker?.snapshot() { observePlanning(state) }
+        else { _ = planning.select(nil) }
+    }
+    func showPlanning() { planningVisible = true; refreshPlanning() }
+    func hidePlanning() { planningVisible = false; invalidatePlanning(); _ = planning.select(nil) }
+    func invalidatePlanning() {
+        planning.invalidate()
+        // Invalidate an inspection without cancelling any unrelated chat work.
+        planningWorker?.selectPreview(nil)
+        if planningWorker !== harness?.worker { harness?.worker?.selectPreview(nil) }
+    }
+    func editPlanning(_ field: FriendlyPlanningDraft.Field, _ text: String) {
+        invalidatePlanning(); planning.edit(field,text)
+    }
+    func previewPlanning() {
+        guard let harness, let worker = harness.worker else { planning.reject("The engine is unavailable."); return }
+        let actual = worker.snapshot()
+        observePlanning(actual)
+        guard planningVisible, !actual.busy, !actual.closed, !running, !loadingModel,
+              planning.target != nil else { planning.reject("Wait for an idle loaded chat model before previewing."); return }
+        do {
+            let request = try planning.begin()
+            guard worker.selectPreview(request.selection), worker.submit(.preview(request)) else {
+                worker.selectPreview(nil); planning.reject("The engine changed or is busy. Try Preview again."); return
+            }
+            harness.poll()
+        } catch { worker.selectPreview(nil) }
+    }
     func refreshFolders() {
         let candidates = [documents.appendingPathComponent("M8Inputs/smollm/Model"),documents.appendingPathComponent("Model")]
         folders = candidates.filter { FileManager.default.fileExists(atPath:$0.appendingPathComponent("config.json").path) }

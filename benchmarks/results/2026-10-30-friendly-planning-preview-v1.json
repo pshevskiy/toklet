@@ -1,0 +1,579 @@
+{
+  "actual_hardware_observations": [
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/retained/loaded-metal",
+        "/Users/coloner/work/rust/toklet/models/MLX-Qwen3-0.6B-8bit-11de968",
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/hardware-v1/loaded-workspace"
+      ],
+      "pid": 18417,
+      "samples": 32,
+      "sparse_direct_process_maxima": {
+        "lifetime_max_phys_footprint": 898958560,
+        "phys_footprint": 833160416,
+        "resident_size": 903380992
+      }
+    },
+    {
+      "command": [
+        "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/retained/preview-metal",
+        "/Users/coloner/work/rust/toklet",
+        "metal"
+      ],
+      "pid": 18469,
+      "samples": 10,
+      "sparse_direct_process_maxima": {
+        "lifetime_max_phys_footprint": 8471128,
+        "phys_footprint": 8471128,
+        "resident_size": 21331968
+      }
+    }
+  ],
+  "actual_verification": {
+    "app_platforms": [
+      "MacOSX arm64 min15.0",
+      "iPhoneSimulator arm64 min18.0",
+      "iPhoneOS arm64 min18.0"
+    ],
+    "apps_executed": false,
+    "closed_successful_process_groups": 15,
+    "compile_cpu_app_link_commands": 13,
+    "endpoint_errors": [],
+    "explicit_codesign": false,
+    "implicit_linker_adhoc_signature_not_excluded": true,
+    "legacy_tiny_metal_barriers": 21,
+    "loaded_store": {
+      "active_capacity": 512,
+      "active_chunk": 32,
+      "all_source_resident_session_fit_flags": true,
+      "closed": true,
+      "completed_previews": 2,
+      "effective_uppers": [
+        512,
+        256
+      ],
+      "estimated_capacities": [
+        512,
+        256
+      ],
+      "generation_executed": false,
+      "model_directory": "/Users/coloner/work/rust/toklet/models/MLX-Qwen3-0.6B-8bit-11de968",
+      "model_instance": 1,
+      "ordinary_engine_snapshot_unchanged_except_revision_and_preview": true,
+      "persisted_after_sha256": "58bd49285c5eeeff5b4ba809bb84b51c4d3bb4e8653249ebf15f885076fbbe61",
+      "persisted_before_sha256": "58bd49285c5eeeff5b4ba809bb84b51c4d3bb4e8653249ebf15f885076fbbe61",
+      "persistence_calls_after": 2,
+      "persistence_calls_before": 2,
+      "requested_uppers": [
+        512,
+        256
+      ],
+      "selected_admitted_bytes": [
+        783840402,
+        753430674
+      ],
+      "selected_kv_bytes": [
+        58721040,
+        29360912
+      ],
+      "session_instance": 2,
+      "workspace_after_sha256": "b169d452aed3d12006356e36426907c6c8c31da9659d14c61c39fbe79307a2bf",
+      "workspace_before_sha256": "b169d452aed3d12006356e36426907c6c8c31da9659d14c61c39fbe79307a2bf"
+    },
+    "mac_integration_commands": 2,
+    "source_only_rust_checks_reused_by_exact_identity": true,
+    "strict_concurrency": "complete",
+    "swift_language_version": 5,
+    "synthetic_controls": 57,
+    "tiny_metal_generation_witness": true,
+    "unloaded_witness": {
+      "after_revision": 3,
+      "all_other_reflected_fields_exact": true,
+      "before_revision": 0,
+      "raw": {
+        "bytes": 1281,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/synthetic-cpu.stderr",
+        "sha256": "cd77206a31029bcd79a12d47a0c6acf5738f7251ff6d12e3c033b46dc85d2a18"
+      }
+    },
+    "warnings_as_errors": true
+  },
+  "date": "2026-10-30",
+  "decision": "bounded_friendly_store_preview_integration_and_app_build_verified",
+  "evidence": [
+    {
+      "bytes": 11771,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-proposal-v5/manifest.json",
+      "sha256": "cb2d23c506aa609d588ba929a3ecd1e1ca1ffa6526c6abfa0d2b7c2c0d5ed444"
+    },
+    {
+      "bytes": 10935,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-independent-review-v1/saved-review.json",
+      "sha256": "717c8d751e32db2cf0d382f5e5f460ed7f574936fcbbe39e3c527d41715ce6e9"
+    },
+    {
+      "bytes": 10978,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/manifest.json",
+      "sha256": "e130b8ff46b8c7d75c4e7219bd148be7645b642c3dafcded75841310661ad276"
+    },
+    {
+      "bytes": 1895232,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/package.json",
+      "sha256": "d579f0daf50bf8e308b55a2df43bd42e961e6b41cb3c34232583bf5155016dfc"
+    },
+    {
+      "bytes": 4204,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/launch-review.json",
+      "sha256": "e89b8533e1d18a26458f318ef9f3306afede1b298df9c4ea17e5d5e872251159"
+    },
+    {
+      "bytes": 1747334,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/checks.json",
+      "sha256": "349197d85f08e5f13bb5bb0fc67d362fdee8925ce0ea1925c39598a4c02dc983"
+    },
+    {
+      "bytes": 1303298,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/hardware-v1/checks.json",
+      "sha256": "6aef990f6dd7af9781134d04e71c25c26447fdc2366e087edc186c213ec6e134"
+    },
+    {
+      "bytes": 2356,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-independent-review-v1/prospective-v5-review.json",
+      "sha256": "1e2a2c0958ce7d97830bcbe9ee02a551a1f91ec7784930f78a9578f0ae10cf15"
+    },
+    {
+      "bytes": 1679,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-independent-review-v1/prospective-v4-review.json",
+      "sha256": "299c1f7b05dab5c67934fbb772706578bd931e4701bb9c2051ae673877651693"
+    },
+    {
+      "bytes": 2086,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-independent-review-v1/prospective-v3-review.json",
+      "sha256": "e47b17d8a557ad2a3d9f95a70061cdad424088f5b719bd49cd7b375d0c6132ba"
+    },
+    {
+      "bytes": 507,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/visual-check.json",
+      "sha256": "01fc5b6fe4ecbdbec38020b4ee52c409850dd1960bb5b419c0cef3d83a698830"
+    }
+  ],
+  "failed_attempts": [
+    {
+      "closed_process_groups": 1,
+      "outcome": "failed_preserved",
+      "outputs": [
+        {
+          "bytes": 6188,
+          "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v1/cold-v1/synthetic-default-compile.stderr",
+          "sha256": "8b6f9105ba6853ee177041750a211a8b45abf4d16972be87f0485d42758cf550"
+        },
+        {
+          "bytes": 0,
+          "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v1/cold-v1/synthetic-default-compile.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "reason": "SwiftUI macro-server sandbox creation denied; first compile failed, no test execution",
+      "receipt": {
+        "bytes": 1687104,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v1/cold-v1/checks.json",
+        "sha256": "2dd22e71ad9dfc6717f918ba599e09d347588b1885e14c8dbd66da75b93fdccc"
+      }
+    },
+    {
+      "closed_process_groups": 4,
+      "outcome": "failed_preserved",
+      "outputs": [
+        {
+          "bytes": 0,
+          "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v2/cold-v1/loaded-metal-compile.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "bytes": 0,
+          "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v2/cold-v1/loaded-metal-compile.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "bytes": 0,
+          "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v2/cold-v1/preview-metal-compile.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "bytes": 0,
+          "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v2/cold-v1/preview-metal-compile.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "bytes": 158,
+          "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v2/cold-v1/synthetic-cpu.stderr",
+          "sha256": "88eeeb6da9763adad94861427fd05d400e0354d2b04d5a94892d3afb6cba701a"
+        },
+        {
+          "bytes": 0,
+          "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v2/cold-v1/synthetic-cpu.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "bytes": 0,
+          "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v2/cold-v1/synthetic-default-compile.stderr",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        {
+          "bytes": 0,
+          "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v2/cold-v1/synthetic-default-compile.stdout",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ],
+      "reason": "Three compiles passed; unloaded synthetic oracle included polling revision; no app/Metal execution reached",
+      "receipt": {
+        "bytes": 1695999,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v2/cold-v1/checks.json",
+        "sha256": "d06e473cd628d97c2d8a95976743f620c31df900de1bd312b1a96a41769bc9a8"
+      }
+    }
+  ],
+  "format": "toklet-friendly-planning-preview-v1",
+  "library_inheritance": {
+    "bytes": 63389,
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/inheritance.json",
+    "sha256": "09d2ef76a41132bf0e64910b019e03928655f79348d9605e295660a0d227d7df"
+  },
+  "limits": {
+    "cleanup_seconds": 30,
+    "free_space_reserve_before_compile_bytes": 8589934592,
+    "observed_direct_process_bytes": 6442450944,
+    "seconds_per_job": 600,
+    "stdout_stderr_each_bytes": 16777216
+  },
+  "measurement_scope": "Memory observations are sparse direct-process samples, not aggregate compiler-tree or whole-device peaks. No elapsed-time result retained or performance claim.",
+  "model_authority": {
+    "bytes": 1960,
+    "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/model.json",
+    "sha256": "714bc1723797209247b32cd02010029f5ef799c22f2669f490260212aef9ed7c"
+  },
+  "products": {
+    "default_library": {
+      "bytes": 24454128,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/retained/default_library.a",
+      "sha256": "7d6003e581dbb5e24678ff34c572b7566c6b7685d78af1a1699dbbfacf688e1a"
+    },
+    "loaded-metal": {
+      "bytes": 16000032,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/retained/loaded-metal",
+      "sha256": "cad3ebea99e57a5022c377ceadc80c7f3fe47f056dcd974ca9e78e7d390fbf89"
+    },
+    "metal_library": {
+      "bytes": 35051704,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/retained/metal_library.a",
+      "sha256": "b9874577d10b6ed6c83e8fd2ea47c4048ef90fdcd3ac3b1c1e6b79dbeb4508be"
+    },
+    "preview-metal": {
+      "bytes": 12537952,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/retained/preview-metal",
+      "sha256": "e9fe40b18fbde5d13e292a8b776738fa6a7463b274ed29dd462c40dffcef983e"
+    },
+    "synthetic-default": {
+      "bytes": 14486928,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/retained/synthetic-default",
+      "sha256": "a927c5875a71fb5fe8ee43cc038b88ce3ba3d39fcae2c5033e07ffb4dfdd4e6c"
+    }
+  },
+  "qualification": {
+    "loaded_store_preview_integration": true,
+    "new_context_or_text_limit": false,
+    "performance": false,
+    "physical_phone": false,
+    "rendered_ios_ui": false,
+    "rendered_mac_ui": false,
+    "three_platform_app_compile_link": true,
+    "whole_device_memory_fit": false
+  },
+  "raw_outputs": {
+    "cold": [
+      {
+        "bytes": 588,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/Toklet.app/Contents/Info.plist",
+        "sha256": "747b4ca09c66043df397f42c7b1dc59a6b982bef206451b7b81203c240840afe"
+      },
+      {
+        "bytes": 16088136,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/Toklet.app/Contents/MacOS/Toklet",
+        "sha256": "51181e3679ba6aab9aed84b62df97bd9d13a6a7e9417ed73df071f470c09e7af"
+      },
+      {
+        "bytes": 357,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/Toklet.app/Contents/Resources/Tiny/config.json",
+        "sha256": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+      },
+      {
+        "bytes": 85640,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/Toklet.app/Contents/Resources/Tiny/model.safetensors",
+        "sha256": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+      },
+      {
+        "bytes": 1165,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Info.plist",
+        "sha256": "fc49399c14b63239ca6c4dfa2529a5d76dbeff12da89dc2a5f767bc12ba5be47"
+      },
+      {
+        "bytes": 357,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/config.json",
+        "sha256": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+      },
+      {
+        "bytes": 85640,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/Tiny/model.safetensors",
+        "sha256": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+      },
+      {
+        "bytes": 10361752,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/derived-iphoneos/Build/Products/Release-iphoneos/TokletHarness.app/TokletHarness",
+        "sha256": "872924fa5eaea1f9a8366699da89c14e299f721a3465ff73a51ecbffa038467a"
+      },
+      {
+        "bytes": 1145,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Info.plist",
+        "sha256": "128687f70cd7b314576a92777a9343d73aefbc7cbe2b44ed332100849be84d36"
+      },
+      {
+        "bytes": 357,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/config.json",
+        "sha256": "84b6e6078f35006f49ae2e2a8663093cdc8d2813e2b7f28ebfa6142113e9c1d9"
+      },
+      {
+        "bytes": 85640,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/Tiny/model.safetensors",
+        "sha256": "b01a114bf2d44f0c6cb438035e85535b658e803c76691729facd78b15eefbce2"
+      },
+      {
+        "bytes": 10380752,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/derived-iphonesimulator/Build/Products/Release-iphonesimulator/TokletHarness.app/TokletHarness",
+        "sha256": "de72520a48f045e70518e4111fc235a2e167d7bdbbc87f4007fbe1e9aec3b13b"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/iphoneos-arch.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 6,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/iphoneos-arch.stdout",
+        "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/iphoneos-build.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 105642,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/iphoneos-build.stdout",
+        "sha256": "78ce1751b1352eb5504e483f2e438dfec9d5f97d4327cfd2fb77571e34601cd4"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/iphoneos-load.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 20267,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/iphoneos-load.stdout",
+        "sha256": "f3dae691f34be2bb908233343a37dfadaf45a7d78ef9fbc597392835c7f1e7b1"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/iphonesimulator-arch.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 6,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/iphonesimulator-arch.stdout",
+        "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/iphonesimulator-build.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 109879,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/iphonesimulator-build.stdout",
+        "sha256": "845f6d4e31bc3b7df964b23b149defb44929f4227d9b484aaf611d47f0fb5d23"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/iphonesimulator-load.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 20225,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/iphonesimulator-load.stdout",
+        "sha256": "ece69cad4434124ef49f63fdb4e96302432acf15e81a107813c1350a5a26218c"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/loaded-metal-compile.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/loaded-metal-compile.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/mac-arch.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 6,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/mac-arch.stdout",
+        "sha256": "c1669e1d8edca98769c37d494b76442a1d6e5ffffd7b4da1fb63aef8ebaf6f01"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/mac-build.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/mac-build.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/mac-load.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 20280,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/mac-load.stdout",
+        "sha256": "222615bb81497215410c10457468de8193b8b4cff7478175f74e26a36e0fc213"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/preview-metal-compile.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/preview-metal-compile.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 1281,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/synthetic-cpu.stderr",
+        "sha256": "cd77206a31029bcd79a12d47a0c6acf5738f7251ff6d12e3c033b46dc85d2a18"
+      },
+      {
+        "bytes": 116,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/synthetic-cpu.stdout",
+        "sha256": "0cc002d868bf6dca88a9a243ced25aa44e9fe0b5f741e3b734716c519612c41a"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/synthetic-default-compile.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/cold-v1/synthetic-default-compile.stdout",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "hardware": [
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/hardware-v1/loaded-preview.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 30070,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/hardware-v1/loaded-preview.stdout",
+        "sha256": "97210b719c1233b665497671389739e91dd6eba0dde411b3b4c99204aefd4ded"
+      },
+      {
+        "bytes": 288,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/hardware-v1/loaded-workspace/history.json",
+        "sha256": "58bd49285c5eeeff5b4ba809bb84b51c4d3bb4e8653249ebf15f885076fbbe61"
+      },
+      {
+        "bytes": 0,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/hardware-v1/tiny-preview-regression.stderr",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "bytes": 137,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/hardware-v1/tiny-preview-regression.stdout",
+        "sha256": "13f601027fe7ca72c6722a41a8b80779d7647364152d297527991df9e4492b91"
+      }
+    ]
+  },
+  "remaining": {
+    "future": "Model-bound transition accounting, transactional session replacement, Apply/persistence and checked Chat text/session limit reconciliation are separate tasks.",
+    "phone": "No rendered simulator or physical-phone observation.",
+    "rendered_mac_ui": "Pending physical access: root inventory attempt reported Mac locked; no app was controlled or launched."
+  },
+  "scope": {
+    "accepted_load_model_and_worker_identity": true,
+    "actual_chat_capacity": 512,
+    "actual_chat_chunk": 32,
+    "factory_bound_preview_without_extra512_ceiling": true,
+    "nonpersistent_preview_only": true,
+    "ordinary_loaded_profile": true,
+    "planning_draft_persistence": false,
+    "request_and_selection_scoped": true,
+    "session_replacement": false,
+    "settings_apply": false
+  },
+  "source_files": {
+    "apple/Harness/FriendlyChatStore.swift": {
+      "bytes": 20639,
+      "path": "/Users/coloner/work/rust/toklet/apple/Harness/FriendlyChatStore.swift",
+      "sha256": "387f41fb7b6f7c9daee2ed15e685c3488e342fd34dc1ad87c9525a6b30aad79f"
+    },
+    "apple/Harness/FriendlyHarness.swift": {
+      "bytes": 38393,
+      "path": "/Users/coloner/work/rust/toklet/apple/Harness/FriendlyHarness.swift",
+      "sha256": "35d516e9dd92dbe39595538cc2cc682d4c352b32a3690d03af8a68dfb73d90b7"
+    },
+    "apple/Harness/FriendlyPlanningDraft.swift": {
+      "bytes": 5123,
+      "path": "/Users/coloner/work/rust/toklet/apple/Harness/FriendlyPlanningDraft.swift",
+      "sha256": "c5172da12f468880894bc2cf0ab936448ad05ac89b30016afd91c826fdad469c"
+    },
+    "apple/Harness/FriendlyPlanningSection.swift": {
+      "bytes": 7213,
+      "path": "/Users/coloner/work/rust/toklet/apple/Harness/FriendlyPlanningSection.swift",
+      "sha256": "92dadfc87be23a8dcbdef34e0d5879d1d8311f7e9713e8123212a35ece07e01a"
+    },
+    "apple/TokletHarness.xcodeproj/project.pbxproj": {
+      "bytes": 13716,
+      "path": "/Users/coloner/work/rust/toklet/apple/TokletHarness.xcodeproj/project.pbxproj",
+      "sha256": "83390e7dc93cb6d50c731bf5d626d0860d3020ac3d43dde8b8850054d8f01880"
+    },
+    "apple/tests/swift/FriendlyPlanningLoadedMain.swift": {
+      "bytes": 8693,
+      "path": "/Users/coloner/work/rust/toklet/apple/tests/swift/FriendlyPlanningLoadedMain.swift",
+      "sha256": "aa11048f618f0945357bd1cfaefecf1ed576bffdf84172b60d94df49f4d7cdd6"
+    },
+    "apple/tests/swift/FriendlyPlanningMain.swift": {
+      "bytes": 11361,
+      "path": "/Users/coloner/work/rust/toklet/apple/tests/swift/FriendlyPlanningMain.swift",
+      "sha256": "a52f7dcb04817edc1762b7ad2e5fd0af6bfba711155feb72c79c4788cfecb102"
+    }
+  },
+  "visual_attempt": {
+    "app_controlled": false,
+    "app_launched": false,
+    "counts_as_passing_check": false,
+    "outcome": "blocked_by_locked_mac",
+    "record": {
+      "bytes": 507,
+      "path": "/Users/coloner/work/rust/toklet/artifacts/new-goal-b5c4-friendly-preview-verification-owner-v3/visual-check.json",
+      "sha256": "01fc5b6fe4ecbdbec38020b4ee52c409850dd1960bb5b419c0cef3d83a698830"
+    },
+    "rendered_ui_checked": false
+  }
+}
