@@ -165,6 +165,7 @@ final class NativeWorker: @unchecked Sendable {
     private let beforeTransitionRejection: (@Sendable (NativeTransitionRequest, UInt32) -> Void)?
     private let afterTransitionAcceptance: (@Sendable (NativeTransitionResult) -> Void)?
     private let transitionRetirementFault: (@Sendable () -> NativeTransitionRetirementFault?)?
+    private let readTransitionHeadroom: @Sendable () throws -> (availableBytes: UInt64, instrument: String)
 
     init(captureSavedPrefix: Bool = false, beforeScorePublication: (@Sendable () -> Void)? = nil,
          afterScorePublication: (@Sendable (Bool) -> Void)? = nil,
@@ -175,7 +176,8 @@ final class NativeWorker: @unchecked Sendable {
          beforeTransitionAcceptance: (@Sendable (NativeTransitionRequest, NativeContextFacts) -> Void)? = nil,
          beforeTransitionRejection: (@Sendable (NativeTransitionRequest, UInt32) -> Void)? = nil,
          afterTransitionAcceptance: (@Sendable (NativeTransitionResult) -> Void)? = nil,
-         transitionRetirementFault: (@Sendable () -> NativeTransitionRetirementFault?)? = nil) throws {
+         transitionRetirementFault: (@Sendable () -> NativeTransitionRetirementFault?)? = nil,
+         readTransitionHeadroom: @escaping @Sendable () throws -> (availableBytes: UInt64, instrument: String) = { try NativeFootprint.readHeadroom() }) throws {
         self.captureSavedPrefix = captureSavedPrefix
         self.beforeScorePublication = beforeScorePublication
         self.afterScorePublication = afterScorePublication
@@ -187,6 +189,7 @@ final class NativeWorker: @unchecked Sendable {
         self.beforeTransitionRejection = beforeTransitionRejection
         self.afterTransitionAcceptance = afterTransitionAcceptance
         self.transitionRetirementFault = transitionRetirementFault
+        self.readTransitionHeadroom = readTransitionHeadroom
         var error = TokletError()
         try requireOK(toklet_cancel_create(&cancelFlag, &error), &error)
         view.ids.reserveCapacity(Int(NativeSettings.maximumChatOutputTokens))
@@ -366,10 +369,12 @@ final class NativeWorker: @unchecked Sendable {
         var prepared: PreparedTransition?
         var failure: NSError?
         var plan: NativeTransitionPlan?
+        var headroom: NativeTransitionHeadroomCheck?
         condition.lock(); let start = transitionCurrent(request); condition.unlock()
         if start {
             do { try autoreleasepool {
-                let value = try engine.prepareEmpty(request,flag:flag,captureSavedPrefix:captureSavedPrefix)
+                let value = try engine.prepareEmpty(request,flag:flag,captureSavedPrefix:captureSavedPrefix,
+                    readHeadroom:readTransitionHeadroom,headroom:&headroom)
                 prepared = value; plan = value.plan
             } } catch { failure = error as NSError }
         }
@@ -379,11 +384,11 @@ final class NativeWorker: @unchecked Sendable {
         var result: NativeTransitionResult?
         let acceptedResult = prepared.map {
             NativeTransitionResult(request:request,outcome:.committed,committed:true,
-                plan:$0.plan,candidate:$0.context,status:0,message:"")
+                plan:$0.plan,candidate:$0.context,status:0,message:"",headroom:headroom)
         }
         let rejectedResult = NativeTransitionResult(request:request,outcome:.rejected,committed:false,
             plan:plan,candidate:nil,status:UInt32(clamping:failure?.code ?? Int(TOKLET_CANCELLED)),
-            message:String((failure?.localizedDescription ?? "Transition cancelled").prefix(512)))
+            message:String((failure?.localizedDescription ?? "Transition cancelled").prefix(512)),headroom:headroom)
         condition.lock()
         if transitionCurrent(request), let value = prepared, let handle = value.handle {
             retired = engine.session
@@ -423,7 +428,7 @@ final class NativeWorker: @unchecked Sendable {
         let cleanupResult = cleanup.map {
             NativeTransitionResult(request:request,outcome:.cleanupFailed,committed:retired != nil,
                 plan:plan,candidate:retired == nil ? nil : prepared?.context,
-                status:UInt32(clamping:$0.code),message:$0.localizedDescription)
+                status:UInt32(clamping:$0.code),message:$0.localizedDescription,headroom:headroom)
         }
         condition.lock()
         if let cleanupResult {
@@ -734,7 +739,9 @@ private final class Engine {
     }
 
     func prepareEmpty(_ request: NativeTransitionRequest, flag: OpaquePointer,
-                      captureSavedPrefix: Bool) throws -> PreparedTransition {
+                      captureSavedPrefix: Bool,
+                      readHeadroom: () throws -> (availableBytes: UInt64, instrument: String),
+                      headroom: inout NativeTransitionHeadroomCheck?) throws -> PreparedTransition {
         try request.validate()
         guard let model, let session, let settings, let old = liveContext,
               old.modelInstance == request.selection.modelInstance,
@@ -750,6 +757,22 @@ private final class Engine {
         let plan = try NativeTransitionPlan.inspect(model:model,session:session,request:request,
             current:old,chunk:settings.chunk,wholeBudget:settings.numericalBudget)
         guard plan.fitsTransitionBudget, plan.fitsCandidateIndividualBudget else { throw invalid("Transition memory budget does not fit") }
+        if request.memoryPolicy == .friendly {
+            let required = try NativeTransitionHeadroomCheck.requiredIncrementalBytes(
+                candidateOwned:plan.candidatePlanned.totalBytes,
+                candidateAllowance:plan.reserves.candidateMetadataDriverBytes,
+                bridge:plan.reserves.candidateBridgeBytes,json:plan.reserves.jsonSnapshotBytes)
+            let observed = try readHeadroom()
+            guard !observed.instrument.isEmpty, observed.instrument.utf8.count <= 512 else {
+                throw invalid("Process-headroom observation is invalid")
+            }
+            let check = NativeTransitionHeadroomCheck(requiredBytes:required,
+                availableBytes:observed.availableBytes,instrument:observed.instrument)
+            headroom = check
+            guard check.fits else {
+                throw invalid("Replacement needs \(required) additional accounted bytes; process headroom is \(observed.availableBytes) bytes")
+            }
+        }
         var options = request.options(), accounting = request.accounting(), error = TokletError()
         var pointer: OpaquePointer?
         try requireOK(toklet_session_prepare_empty(model,session,&options,&accounting,flag,&pointer,&error),&error)

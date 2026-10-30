@@ -8492,3 +8492,44 @@ cancellation and generation, reset it on a new replay session and clear the
 descriptor on cancelled replay and shutdown. Configuration remains metadata,
 with no token-history, artifact identity or restart authority. UI Apply,
 persistence and real-model/device transition checks remain separate.
+
+Durable configuration is committed as `f7872c3` after exact seven-file review.
+Friendly Apply implementation starts from that verified boundary, with private
+source isolation while current session values, memory gates and controller
+rollback behavior are composed. No settings persistence is added by this step.
+
+### 2026-10-30 — Explicit Friendly Apply source applied; checks pending
+
+The reviewed twelve-file composition adds one explicit Apply action for exact
+preview-selected values within the loaded bound, preserving reply preference,
+conversation, draft and persistence. Resident-model D1 accounting and a fresh
+worker-side process-headroom check precede native construction. The declared
+application allowance is 272 MiB, including 16 MiB incremental staging; it is
+a policy reserve, not measured heap ownership or a reservation. A small shared
+process-memory module preserves the existing footprint and platform headroom
+semantics without pulling the full measurement module into standalone workers.
+
+Pre-execution review corrected the loaded test’s wrapped-error expectation,
+cleared a stale Applied notice after new edits and removed one terminal blank
+line found by strict patch checking. Source review passes; compile, CPU, Metal
+and cached-model controller checks are pending. Legacy M7 standalone wrappers
+already omit newer dependencies; their inventory repair is tracked explicitly
+and is not claimed by this task’s new complete compiler lists.
+
+The [Friendly Apply implementation](friendly-chat-apply.md) passes all 22
+compile/CPU/app jobs and four Mac jobs with independent Astra saved audit.
+Three actual Qwen3 replacements share one loaded model and select capacity 256,
+chunk 16 and the retained 1.5 GiB session budget. Each fresh incremental memory
+requirement is 125,957,028 bytes; these are policy checks, not OS reservations.
+Conversation/draft/workspace/file hashes stay exact and writes remain 2→2
+through Apply and committed-notice edits. The later Send correctly rejects a
+281-token combined request against 256 without generation, restores messages
+and preserves a newer draft edit; its ordinary saves have a separate scope.
+
+Existing 57 planning, 28 Apply, headroom boundary, transaction/configuration and
+21-case preview/generation controls pass. Source, controller and app-build
+qualification remain distinct from rendered UI: the Mac is still locked and
+no app was selected or launched. Physical phone, successful real-model
+generation after resizing, full artifact identity and persisted preferences
+remain open. All pre-execution review corrections are retained separately from
+runtime outcomes; no numerical policy or native budget was relaxed.

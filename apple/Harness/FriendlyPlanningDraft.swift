@@ -1,4 +1,5 @@
 import Foundation
+import CToklet
 
 // Correlation with an already loaded chat, never file authentication.
 struct FriendlyPlanningTarget: Equatable {
@@ -8,6 +9,8 @@ struct FriendlyPlanningTarget: Equatable {
     let modelKey, directory: String
     let profile: NativeContextLimits.LoadProfile
     let wholeBudget, textBudget: UInt64
+    var configuration: NativeSessionConfiguration? = nil
+    var coexistenceBudget: UInt64 = 0
 }
 
 // Created only after accepted load enqueue, promoted only at its completed
@@ -15,6 +18,7 @@ struct FriendlyPlanningTarget: Equatable {
 struct FriendlyPlanningLoad {
     let worker: ObjectIdentifier
     let settings: NativeSettings
+    var coexistenceBudget: UInt64 = 0
     private(set) var modelInstance: UInt64? = nil
     mutating func complete(worker: ObjectIdentifier, instance: UInt64?, chatEnabled: Bool) {
         guard worker == self.worker, chatEnabled, let instance, instance > 0 else {
@@ -23,12 +27,13 @@ struct FriendlyPlanningLoad {
         modelInstance = instance
     }
     func target(worker: ObjectIdentifier, instance: UInt64, conversation: UUID,
-                loadedKey: String, selectedKey: String) -> FriendlyPlanningTarget? {
+                loadedKey: String, selectedKey: String, configuration: NativeSessionConfiguration? = nil) -> FriendlyPlanningTarget? {
         guard worker == self.worker, modelInstance == instance, instance > 0,
               !loadedKey.isEmpty, loadedKey == selectedKey else { return nil }
         return FriendlyPlanningTarget(worker:worker,modelInstance:instance,conversation:conversation,
             modelKey:loadedKey,directory:settings.directory,profile:.ordinary,
-            wholeBudget:settings.numericalBudget,textBudget:settings.textBudget)
+            wholeBudget:configuration?.wholeSessionBudget ?? settings.numericalBudget,textBudget:settings.textBudget,
+            configuration:configuration,coexistenceBudget:coexistenceBudget)
     }
 }
 
@@ -76,7 +81,10 @@ struct FriendlyPlanningState {
         invalidate(); target = next
         selection = next.map { NativePreviewSelection(id:UUID(),directory:$0.directory,profile:$0.profile) }
         draft = FriendlyPlanningDraft()
-        if let next { draft.budgetMiB = String(next.wholeBudget / (1024 * 1024)) }
+        if let next {
+            draft.budgetMiB = String(next.wholeBudget / (1024 * 1024))
+            if let current = next.configuration { draft.upper = String(current.capacity); draft.chunk = String(current.chunk) }
+        }
         return true
     }
     mutating func invalidate() { request = nil; result = nil; message = "" }
@@ -104,5 +112,95 @@ struct FriendlyPlanningState {
         if let value, value.request == request, value.request.selection == selection {
             result = value
         } else if result != nil || !busy { invalidate() }
+    }
+}
+
+// One ephemeral application. Native IDs correlate a resident owner; preview
+// files and saved paths never authorize replacement. No workspace is retained.
+struct FriendlyApplyRequest {
+    let target: FriendlyPlanningTarget
+    let previewID: UUID
+    let transition: NativeTransitionRequest
+}
+
+struct FriendlyApplyState {
+    private(set) var request: FriendlyApplyRequest?
+    private var ownerTarget: FriendlyPlanningTarget?
+    private(set) var message = ""
+    private(set) var committed = false
+    var pending: Bool { request != nil }
+
+    static func prepare(planning: FriendlyPlanningState, current: NativeSnapshot,
+                        target: FriendlyPlanningTarget, reply: UInt32) throws -> FriendlyApplyRequest {
+        guard !current.busy, !current.closed, !current.restartRequired, current.hasSession,
+              let configuration = current.sessionConfiguration, let live = current.liveContext,
+              configuration == target.configuration,
+              configuration.modelInstance == target.modelInstance, target.profile == .ordinary,
+              live.modelInstance == configuration.modelInstance, live.sessionInstance == configuration.sessionInstance,
+              planning.target == target, let selection = planning.selection, let requested = planning.request,
+              let result = planning.result, result.request == requested, result.request.selection == selection,
+              result.outcome == .planned, result.status == 0,
+              let capacityRequest = result.capacityRequest, let plan = result.capacity,
+              let selected = plan.capacity.selected, selected.fitsBudget, selected.fitsBuffer,
+              capacityRequest.chunk == requested.chunk, capacityRequest.sessionBudget == requested.sessionBudget,
+              capacityRequest.offset == 0, requested.offset == 0,
+              plan.capacity.limits.budgetBytes == capacityRequest.sessionBudget,
+              target.coexistenceBudget > 0 else {
+            throw NativeContextFailure("Preview again for this idle, active chat session before applying.")
+        }
+        guard UInt64(selected.capacity) <= live.loadedLimit else {
+            throw NativeContextFailure("This estimate exceeds the opened model’s limit. Reloading with a larger limit is a separate action.")
+        }
+        guard reply > 0, reply < selected.capacity else {
+            throw NativeContextFailure("Choose a shorter reply limit before applying this window. Your current preference is kept.")
+        }
+        let whole = try NativeTransitionPlan.sum([capacityRequest.sessionBudget,UInt64(TOKLET_MODEL_SESSION_BRIDGE_BYTES)])
+        let draftRequest = try planning.draft.request(selection:selection)
+        guard draftRequest.upper == requested.upper, draftRequest.chunk == requested.chunk,
+              draftRequest.sessionBudget == requested.sessionBudget, draftRequest.loadBudget == requested.loadBudget else {
+            throw NativeContextFailure("The displayed estimate no longer matches your edited values. Preview again.")
+        }
+        let owner = NativeTransitionSelection(id:UUID(),modelInstance:configuration.modelInstance,
+            sessionInstance:configuration.sessionInstance)
+        var transition = NativeTransitionRequest(id:UUID(),selection:owner,capacity:selected.capacity,
+            chunk:capacityRequest.chunk,wholeSessionBudget:whole,coexistenceBudget:target.coexistenceBudget,
+            replayReserve:0,textReserve:target.textBudget,applicationReserve:NativeTransitionHeadroomCheck.applicationReserve)
+        transition.memoryPolicy = .friendly
+        try transition.validate()
+        return FriendlyApplyRequest(target:target,previewID:result.request.id,transition:transition)
+    }
+    mutating func begin(_ value: FriendlyApplyRequest) { request = value; ownerTarget = value.target; message = ""; committed = false }
+    mutating func reject(_ text: String) { request = nil; message = text; committed = false }
+    mutating func invalidate() { request = nil; ownerTarget = nil; message = ""; committed = false }
+    mutating func observe(target: FriendlyPlanningTarget?, snapshot: NativeSnapshot) {
+        if let owner = ownerTarget {
+            guard let target, target.worker == owner.worker, target.modelInstance == owner.modelInstance,
+                  target.conversation == owner.conversation, target.modelKey == owner.modelKey,
+                  target.directory == owner.directory else { invalidate(); return }
+        }
+        guard let pending = request else { return }
+        guard let target, target.worker == pending.target.worker,
+              target.modelInstance == pending.target.modelInstance,
+              target.conversation == pending.target.conversation, target.modelKey == pending.target.modelKey,
+              target.directory == pending.target.directory else { invalidate(); return }
+        let expected = pending.transition
+        if let configuration = snapshot.sessionConfiguration,
+           configuration.acceptedRequestID == expected.id,
+           configuration.modelInstance == expected.selection.modelInstance,
+           configuration.sessionInstance != expected.selection.sessionInstance,
+           configuration.capacity == expected.capacity, configuration.chunk == expected.chunk,
+           configuration.wholeSessionBudget == expected.wholeSessionBudget {
+            request = nil; committed = true
+            message = snapshot.restartRequired
+                ? "Settings were applied, but cleanup failed. Restart before continuing. Your conversation and draft are kept."
+                : "Applied. Cached tokens were reset; your conversation and draft are kept. The next Send re-encodes the conversation."
+        } else if let result = snapshot.transition, result.request == expected, !result.committed {
+            reject(result.message.isEmpty ? "The settings were not applied. Your current chat and edited values are kept." : result.message)
+        } else if !snapshot.busy {
+            request = nil; committed = false
+            message = snapshot.sessionConfiguration == pending.target.configuration
+                ? "Application cancelled. Current chat settings and your edited values are unchanged."
+                : "Application ended without an active confirmation. Check the current chat settings before continuing."
+        }
     }
 }

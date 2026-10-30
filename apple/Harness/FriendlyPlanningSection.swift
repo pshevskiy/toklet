@@ -14,8 +14,8 @@ struct FriendlyPlanningSection: View {
         }
     }
     var body: some View {
-        Section("Preview only") {
-            Text("Estimate a window and memory budget. This does not change Chat or load a model. There is nothing to apply or save.")
+        Section("Chat window and memory") {
+            Text("Preview an estimate first. Applying uses the opened model and resets its cached tokens; your conversation and draft are kept. These settings are not saved for the next launch.")
                 .font(.footnote).foregroundStyle(.secondary)
             if let target = planning.target {
                 input("Window to estimate (tokens)",.upper,planning.draft.upper)
@@ -27,6 +27,7 @@ struct FriendlyPlanningSection: View {
                 if planning.pending { ProgressView("Preparing estimate…") }
                 DisclosureGroup("Budget details") {
                     Text("The engine bridge allowance is subtracted once from this budget. The separate text allowance is \(bytes(target.textBudget)).")
+                    Text("Replacement policy reserves 272 MiB for app work, including 16 MiB for staging. This is an allowance, not a measurement of allocated memory.")
                     Text("Preview working allowance: \(bytes(UInt64(NativePreviewResult.requiredApplicationAllowance))). This is outside the engine estimate.")
                 }.font(.footnote).foregroundStyle(.secondary)
             } else {
@@ -34,7 +35,19 @@ struct FriendlyPlanningSection: View {
                     .font(.footnote).foregroundStyle(.secondary)
             }
             if !planning.message.isEmpty { Text(planning.message).foregroundStyle(.red) }
-            if let value = planning.result { result(value) }
+            if let value = planning.result {
+                result(value)
+                Button("Apply to current chat",systemImage:"checkmark.circle") { chat.applyPlanning() }
+                    .disabled(chat.planningApplyUnavailableReason != nil)
+                    .accessibilityIdentifier("planning-apply")
+                if let reason = chat.planningApplyUnavailableReason {
+                    Text(reason).font(.footnote).foregroundStyle(.secondary)
+                }
+                Text("Applying resets cached tokens. The next Send re-encodes this conversation and checks the prompt plus reply against the new window. Your reply preference is kept.")
+                    .font(.footnote).foregroundStyle(.secondary)
+            }
+            if chat.applying.pending { ProgressView("Applying settings…") }
+            if !chat.applying.message.isEmpty { Text(chat.applying.message).font(.footnote) }
             current
             Text("Estimates cover inference memory. App/tokenizer memory and the currently loaded model are separate. Opening a model checks its files and memory again.")
                 .font(.footnote).foregroundStyle(.secondary)
@@ -42,24 +55,29 @@ struct FriendlyPlanningSection: View {
     }
     @ViewBuilder private var current: some View {
         if let context = store.state.modelContext, chat.hasChatModel {
-            LabeledContent("Active chat window",value:context.configuredCapacity.formatted())
-            Text("Chat still uses 512 positions and chunk 32. This preview does not change those settings.")
-                .font(.footnote).foregroundStyle(.secondary)
+            if let configuration = chat.currentSessionConfiguration {
+                LabeledContent("Active chat window",value:configuration.capacity.formatted())
+                LabeledContent("Active chunk size",value:configuration.chunk.formatted())
+                LabeledContent("Active engine budget",value:bytes(configuration.wholeSessionBudget))
+            } else {
+                Text("No active session. Sending resumes the retained chat settings.")
+                    .font(.footnote).foregroundStyle(.secondary)
+            }
             DisclosureGroup("Active chat details") {
                 LabeledContent("Loaded model window",value:positions(context.declaredTotal))
                 LabeledContent("Loaded engine limit",value:context.loadedLimit.formatted())
                 if let plan = store.state.runtimePlan {
-                    LabeledContent("Fixed KV allocation",value:bytes(plan.sessionMemory.kvBytes))
+                    LabeledContent("KV estimate when model opened",value:bytes(plan.sessionMemory.kvBytes))
                     LabeledContent("Engine fit when opened",value:plan.fitsRequestedBudgets ? "Fit at load" : "Did not fit")
                 } else { Text("The memory report from opening this model is unavailable.") }
                 if let live = store.state.liveContext {
                     LabeledContent("Engine and bridge accounted memory",value:bytes(live.numericalAdmission))
                 }
                 if let target = planning.target {
-                    LabeledContent("Current engine memory budget",value:bytes(target.wholeBudget))
+                    LabeledContent("Replacement coexistence limit",value:bytes(target.coexistenceBudget))
                     LabeledContent("Separate text allowance",value:bytes(target.textBudget))
                 }
-                Text("More history uses the same reserved KV space. Current app memory and OS headroom are separate measurements.")
+                Text("The load report is historical and does not describe a replacement session. Current app memory and process headroom are separate measurements.")
             }.font(.footnote)
         }
     }
@@ -83,7 +101,9 @@ struct FriendlyPlanningSection: View {
                     LabeledContent("Estimated capacity",value:selected.capacity.formatted())
                     LabeledContent("Estimated engine memory",value:bytes(selected.footprint.admittedBytes))
                 } else { Text("No capacity fits this engine budget and buffer limit.") }
-                Text(plan.selectedFitsNumericalBudgets ? "This estimate fits the engine memory checks only." : "No estimate satisfies all engine loading and session checks.")
+                Text(plan.capacity.selected.map { $0.fitsBudget && $0.fitsBuffer } == true
+                    ? "The selected estimate fits its session budget and buffer limit. Applying checks the resident model and current memory again."
+                    : "No estimate fits the session budget and buffer limit.")
                     .font(.footnote).foregroundStyle(.secondary)
                 DisclosureGroup("Estimate details") {
                     if let request = value.capacityRequest {

@@ -39,6 +39,8 @@ final class FriendlyChatStore: ObservableObject {
     private var planningVisible = false
     private weak var planningWorker: NativeWorker?
     @Published private(set) var planning = FriendlyPlanningState()
+    @Published private(set) var applying = FriendlyApplyState()
+    @Published private(set) var currentSessionConfiguration: NativeSessionConfiguration?
     private var saving: Task<Void,Never>?
     private var storageBlocked = false
     private let file: URL
@@ -70,7 +72,7 @@ final class FriendlyChatStore: ObservableObject {
     }
     var ready: Bool {
         guard let harness else { return false }
-        return hasChatModel && harness.state.modelContext != nil && !loadingModel && !harness.state.closed && !harness.state.busy && !running
+        return hasChatModel && harness.state.modelContext != nil && !loadingModel && !harness.state.closed && !harness.state.restartRequired && !harness.state.busy && !running
     }
     var availableOutputLimits: [UInt32] {
         // Before choosing/opening this conversation's model these are saved
@@ -309,7 +311,7 @@ final class FriendlyChatStore: ObservableObject {
         settings.capacity = NativeSettings.chatContextPositions; settings.chunk = 32
         settings.numericalBudget = profile.numericalBudget; settings.textBudget = profile.textBudget
         if worker.submit(.load(settings)) {
-            planningLoad = FriendlyPlanningLoad(worker:ObjectIdentifier(worker),settings:settings)
+            planningLoad = FriendlyPlanningLoad(worker:ObjectIdentifier(worker),settings:settings,coexistenceBudget:profile.processAllowance)
             loadingName = profile.name; loadingModel = true; loadedKey = key(folder); modelName = profile.name
             harness.poll()
         } else {
@@ -321,14 +323,15 @@ final class FriendlyChatStore: ObservableObject {
     func unload() { invalidatePlanning(); pendingFolder = nil; loadingModel = false; harness?.worker?.interrupt(unload:true); harness?.poll() }
     func enterExpert() { invalidatePlanning(); pendingFolder = nil; loadingModel = false; save(); harness?.setExpert(true) }
     // Preview is never serialized into ChatWorkspace or used by beginLoad.
-    private func planningTarget(_ state: NativeSnapshot) -> FriendlyPlanningTarget? {
-        guard planningVisible, let harness, !harness.expert, !loadingModel,
+    private func planningTarget(_ state: NativeSnapshot, requireVisible: Bool = true) -> FriendlyPlanningTarget? {
+        guard (!requireVisible || planningVisible), let harness, !harness.expert, !loadingModel,
               let worker = harness.worker, let accepted = planningLoad,
               accepted.worker == ObjectIdentifier(worker), state.hasModel, state.chatEnabled, !state.closed,
               let instance = state.modelContext?.modelInstance, instance > 0,
               instance == loadedModelInstance, !loadedKey.isEmpty, loadedKey == workspace.current.modelKey else { return nil }
         return accepted.target(worker:ObjectIdentifier(worker),instance:instance,
-            conversation:workspace.selected,loadedKey:loadedKey,selectedKey:workspace.current.modelKey)
+            conversation:workspace.selected,loadedKey:loadedKey,selectedKey:workspace.current.modelKey,
+            configuration:state.sessionConfiguration)
     }
     private func observePlanning(_ state: NativeSnapshot) {
         // Polling revisions are not authority: reconcile against the actual
@@ -337,27 +340,45 @@ final class FriendlyChatStore: ObservableObject {
         let currentWorker = harness?.worker
         let currentIdentity = currentWorker.map { ObjectIdentifier($0) }
         if planningLoad?.worker != currentIdentity { planningLoad = nil }
-        if planning.select(planningTarget(actual)) {
-            planningWorker?.selectPreview(nil)
+        let active = planningTarget(actual,requireVisible:false)
+        if let prior = planning.target,
+           active?.worker != prior.worker || active?.modelInstance != prior.modelInstance
+            || active?.conversation != prior.conversation || active?.modelKey != prior.modelKey {
+            applying.invalidate()
+        }
+        // Accepted configuration is durable even when cancellation erased the
+        // transient result. Reconcile it before retiring the old preview.
+        applying.observe(target:active,snapshot:actual)
+        currentSessionConfiguration = active?.configuration
+        if planning.select(planningVisible ? active : nil) {
+            planningWorker?.selectPreview(nil); planningWorker?.selectTransition(nil)
             planningWorker = harness?.worker
-            planningWorker?.selectPreview(nil)
+            planningWorker?.selectPreview(nil); planningWorker?.selectTransition(nil)
         }
         planning.observe(actual.preview,busy:actual.busy)
     }
     private func refreshPlanning() {
         if let state = harness?.worker?.snapshot() { observePlanning(state) }
-        else { _ = planning.select(nil) }
+        else { _ = planning.select(nil); applying.invalidate(); currentSessionConfiguration = nil }
     }
     func showPlanning() { planningVisible = true; refreshPlanning() }
     func hidePlanning() { planningVisible = false; invalidatePlanning(); _ = planning.select(nil) }
     func invalidatePlanning() {
+        // Serialize invalidation against acceptance, then observe any commit
+        // which won the race. Never cancel unrelated generation.
+        planningWorker?.selectTransition(nil)
+        if planningWorker !== harness?.worker { harness?.worker?.selectTransition(nil) }
+        if let actual = harness?.worker?.snapshot() {
+            applying.observe(target:planningTarget(actual,requireVisible:false),snapshot:actual)
+            currentSessionConfiguration = planningTarget(actual,requireVisible:false)?.configuration
+        }
+        if !applying.committed { applying.invalidate() }
         planning.invalidate()
-        // Invalidate an inspection without cancelling any unrelated chat work.
         planningWorker?.selectPreview(nil)
         if planningWorker !== harness?.worker { harness?.worker?.selectPreview(nil) }
     }
     func editPlanning(_ field: FriendlyPlanningDraft.Field, _ text: String) {
-        invalidatePlanning(); planning.edit(field,text)
+        invalidatePlanning(); applying.invalidate(); planning.edit(field,text)
     }
     func previewPlanning() {
         guard let harness, let worker = harness.worker else { planning.reject("The engine is unavailable."); return }
@@ -373,6 +394,35 @@ final class FriendlyChatStore: ObservableObject {
             harness.poll()
         } catch { worker.selectPreview(nil) }
     }
+    var planningApplyUnavailableReason: String? {
+        guard let worker = harness?.worker else { return "The engine is unavailable." }
+        let actual = worker.snapshot()
+        guard planningVisible, !running, !loadingModel, !applying.pending,
+              let target = planningTarget(actual) else { return "Open an idle chat session before applying." }
+        do {
+            _ = try FriendlyApplyState.prepare(planning:planning,current:actual,target:target,reply:workspace.outputLimit)
+            return nil
+        } catch { return error.localizedDescription }
+    }
+    func applyPlanning() {
+        guard let harness, let worker = harness.worker else { applying.reject("The engine is unavailable."); return }
+        let actual = worker.snapshot()
+        observePlanning(actual)
+        guard planningVisible, !running, !loadingModel, !applying.pending,
+              let target = planningTarget(actual) else { applying.reject("Wait for an idle active chat session before applying."); return }
+        do {
+            let request = try FriendlyApplyState.prepare(planning:planning,current:actual,target:target,reply:workspace.outputLimit)
+            applying.begin(request)
+            guard worker.selectTransition(request.transition.selection),
+                  worker.submit(.replaceWithEmptySession(request.transition)) else {
+                worker.selectTransition(nil)
+                applying.reject("The engine changed or is busy. Your current chat and edited values are kept.")
+                return
+            }
+            harness.poll()
+        } catch { applying.reject(error.localizedDescription) }
+    }
+
     func refreshFolders() {
         let candidates = [documents.appendingPathComponent("M8Inputs/smollm/Model"),documents.appendingPathComponent("Model")]
         folders = candidates.filter { FileManager.default.fileExists(atPath:$0.appendingPathComponent("config.json").path) }

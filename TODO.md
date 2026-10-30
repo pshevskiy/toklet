@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **30 October 2026**. Active milestone: **M8**.
-Next implementation task: **B5d4b — explicit nonpersistent Friendly Apply**.
+Next implementation task: **B5d5 — consumed artifact/codec identity before persistence**.
 B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
 capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
 ordinary checks and independent Astra approval. The retained MAIN/WIDE
@@ -344,10 +344,13 @@ separate requirements below. Further model admissions require their own scope.
   recreated sessions clear request correlation and retirement clears the descriptor.
   Both backends pass 37 transition + 11 configuration controls, 15 barriers and two
   retirement cases; this metadata cannot authorize token-history reuse.
-- [ ] B5d4b: wire explicit nonpersistent Friendly Apply within the loaded bound,
-  with separate aggregate/headroom admission and accurate caller reserves.
-  Preserve conversation, draft and rejected fields; explain empty cache recreation.
-  Next Send must check the actual full rendered prompt plus reply, without trimming.
+- [x] B5d4b: [explicit nonpersistent Friendly Apply](docs/friendly-chat-apply.md)
+  passes 22 compile/CPU/app jobs and four Mac checks with Astra saved audit.
+  Actual D1 coexistence and fresh incremental headroom gates precede replacement;
+  cached Qwen3 applies 256/chunk16 three times with workspace/file hashes and
+  writes unchanged. A rendered request needing 281 tokens is rejected against
+  256 before generation, retaining a newer draft. Rendered UI/phone and successful
+  real-model generation after resizing remain separate open checks.
 - [ ] B5d5: persist settings by authenticated full-artifact manifest and plan
   identity. Path keys or config-only recognition do not authenticate an artifact.
   Preserve rejected settings and handle stale/replaced artifacts explicitly.
@@ -379,6 +382,10 @@ uses the existing full saved-conversation reset+prompt path on Send.
 
 - [ ] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation.
+- [ ] Repair already-stale legacy standalone Swift check source inventories.
+  Several public M7 wrappers omit newer worker/context dependencies; current
+  app and new task controls use complete inventories, but those old wrappers
+  must not be described as verified or runnable until updated.
 - [ ] Complete required full adoption quality for newly adopted artifacts,
   including Llama3's original unquantized 10,000-target / 100-task gates. The
   1,024-target same-artifact screen is not a substitute or app qualification.
@@ -667,3 +674,8 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | B5d4a verification handoff corrected | A follow-up was initially sent as a message after the author task had completed, so no verification owner preparation started. Root restarts it explicitly. No build/test ran and live source remains the reviewed proposal. A separate future Apply memory-gate prototype is private and unexecuted. | Prepare/review the D4a owner now; keep subsequent prototype outside live source and validation claims. |
 | 2026-10-30 | B5d4a compile/CPU/app phase passes | All 14 fresh jobs pass, including strict Swift checks, all three app builds and CPU 37 transition + 11 configuration controls, 15 stale barriers, two retirement cases and lifecycle witnesses. Groups close with no endpoint errors; actual products are frozen. | Astra actual-package review precedes two tiny Metal jobs. No UI Apply or persistence claim. |
 | 2026-10-30 | B5d4a verification complete | All 14 compile/CPU/app jobs and two Metal jobs pass with Astra saved audit; 12 records per backend retain accepted configuration across late cancellation/generation, recreated sessions have nil request UUID, and cancelled replay/close have no live descriptor. Existing 21-case preview/generation regression passes. | Publish bounded evidence and commit after exact staged review. Next explicit Friendly Apply uses actual D1 coexistence and fresh incremental-headroom checks; persistence remains separate. |
+| 2026-10-30 | B5d4a committed / Friendly Apply implementation starts | Durable configuration committed as `f7872c3` after exact seven-file Astra review and all 14+2 checks. Only preserved DSStore remained. | Implement B5d4b in isolated private source first: actual loaded-session identity, displayed selected values, memory coexistence/headroom gates and honest current-state UI. Persistence remains separate. |
+| 2026-10-30 | B5d4b combined Friendly Apply source applied | Astra approves the twelve-file composition after pre-execution review fixes: wrapped error oracle, stale Applied notice after edits and one EOF blank line. Exact source is applied; native/API/limits/persistence remain unchanged. Actual-model D1 and fresh worker headroom gate use the declared 272 MiB application reserve; current values come from durable configuration. | Prepare/review 22 cold/CPU/app jobs and four actual-product Mac jobs. No compile/runtime/real-model Apply outcome yet; old standalone wrapper inventory repair is explicit M8 follow-up. |
+| 2026-10-30 | B5d4b compile/CPU/app phase passes | All 22 jobs pass: strict Swift checks, eight standalone compiles, four CPU control programs and all three app builds. New memory boundary and Apply controls pass with existing transaction/configuration and 57 planning regressions. Ten actual products are frozen; groups close without endpoint errors. | Astra actual-product review precedes four Mac jobs, including one cached Qwen3 controller load with three replacements. No real-model Apply or rendered UI outcome yet. |
+| 2026-10-30 | B5d4b four Mac jobs pass; visual check blocked | Tiny headroom/transaction/preview regressions and cached Qwen3 controller all pass. One model load supports three replacements at 256/chunk16; workspace/file hashes and two writes stay exact; actual 281-token request is rejected against 256 before generation with newer draft retained. Computer-use inventory still reports a locked Mac; no app selected/launched or UI input sent. | Independent saved audit/publication/commit next. Rendered Mac/iPhone checks remain open; successful real-model generation after resizing is not claimed by this controller test. |
+| 2026-10-30 | B5d4b verification complete | Astra independently audits all 22+4 closed jobs, current source/products and raw records. Three Qwen3 replacements retain model1, use sessions3/4/5 at 256/chunk16, and keep Apply/edit workspace/file hashes plus writes2→2. Fresh incremental requirement125957028 fits observed policy headroom; later request281>256 rejects without generation and preserves the newer draft. | Publish bounded feature evidence and commit after exact staged review. Mac remains locked; visible UI, phone and post-resize successful real generation stay open. Next persistence first needs actual consumed artifact/codec identity, not paths or pre-open receipts. |

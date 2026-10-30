@@ -38,40 +38,6 @@ struct NativeFilesystemAvailability: Encodable, Sendable {
     }
 }
 
-struct NativeFootprint: Codable, Sendable {
-    let physicalBytes: UInt64
-    let lifetimePeakPhysicalBytes: UInt64
-    let returnedNaturalCount: UInt32
-
-    static func read() throws -> NativeFootprint {
-        var info = task_vm_info_data_t()
-        let capacity = MemoryLayout<task_vm_info_data_t>.size / MemoryLayout<integer_t>.size
-        var count = mach_msg_type_number_t(capacity)
-        // The initialized C record owns capacity integer_t slots. task_info
-        // writes at most the supplied count for this task, during this rebound
-        // lifetime only. No Swift access aliases that storage during the call.
-        let status = withUnsafeMutablePointer(to:&info) { pointer in
-            pointer.withMemoryRebound(to:integer_t.self,capacity:capacity) {
-                task_info(mach_task_self_,task_flavor_t(TASK_VM_INFO),$0,&count)
-            }
-        }
-        // SDK revision macros containing sizeof are not imported into Swift.
-        // Derive byte coverage from this SDK's actual C layout instead of a
-        // hardcoded revision/count. Both physical fields precede peakEnd.
-        guard let offset = MemoryLayout<task_vm_info_data_t>.offset(of:\.ledger_phys_footprint_peak) else {
-            throw measurementError("Unavailable task memory layout")
-        }
-        let peakEnd = offset + MemoryLayout<Int64>.size
-        guard status == KERN_SUCCESS, count <= capacity,
-              Int(count) * MemoryLayout<integer_t>.size >= peakEnd,
-              info.ledger_phys_footprint_peak >= 0 else {
-            throw measurementError("TASK_VM_INFO physical peak unavailable: status \(status), count \(count)")
-        }
-        return NativeFootprint(physicalBytes:info.phys_footprint,
-                               lifetimePeakPhysicalBytes:UInt64(info.ledger_phys_footprint_peak),
-                               returnedNaturalCount:count)
-    }
-}
 
 struct NativeEnvironment: Codable, Sendable {
     let thermalState: Int

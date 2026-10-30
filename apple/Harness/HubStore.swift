@@ -15,16 +15,9 @@ struct HubDeviceSnapshot: Codable, Sendable {
     static func current() throws -> HubDeviceSnapshot {
         let unified = MTLCreateSystemDefaultDevice()?.hasUnifiedMemory == true
         let physical = ProcessInfo.processInfo.physicalMemory
-        #if os(iOS)
-        let available = UInt64(os_proc_available_memory())
-        let instrument = "os_proc_available_memory: current process dirty-memory allowance"
-        #else
-        let budget = min(physical / 2,6 * 1024 * 1024 * 1024)
-        let footprint = try NativeFootprint.read().physicalBytes
-        let available = budget > footprint ? budget - footprint : 0
-        let instrument = "Configured Mac process allowance min(RAM/2,6GiB) minus TASK_VM_INFO footprint; not free system RAM"
-        #endif
-        return HubDeviceSnapshot(unifiedGPU:unified,physicalMemory:physical,availableMemory:available,instrument:instrument)
+        let headroom = try NativeFootprint.readHeadroom()
+        return HubDeviceSnapshot(unifiedGPU:unified,physicalMemory:physical,
+            availableMemory:headroom.availableBytes,instrument:headroom.instrument)
     }
 }
 

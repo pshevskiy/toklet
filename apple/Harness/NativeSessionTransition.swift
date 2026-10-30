@@ -1,6 +1,25 @@
 import Foundation
 import CToklet
 
+enum NativeTransitionMemoryPolicy: Equatable, Sendable {
+    case diagnostic, friendly
+}
+
+// Explicit caller allowances, not measurements of Swift heap ownership.
+struct NativeTransitionHeadroomCheck: Equatable, Sendable {
+    static let retainedApplicationReserve: UInt64 = 256 * 1024 * 1024
+    static let stagingReserve: UInt64 = 16 * 1024 * 1024
+    static let applicationReserve = retainedApplicationReserve + stagingReserve
+    let requiredBytes, availableBytes: UInt64
+    let instrument: String
+    var fits: Bool { requiredBytes <= availableBytes }
+
+    static func requiredIncrementalBytes(candidateOwned: UInt64, candidateAllowance: UInt64,
+                         bridge: UInt64, json: UInt64) throws -> UInt64 {
+        try NativeTransitionPlan.sum([candidateOwned,candidateAllowance,bridge,json,stagingReserve])
+    }
+}
+
 // Caller correlation, not a path-based authorization. Native IDs are checked
 // again against the actual owners on their thread and at locked publication.
 struct NativeTransitionSelection: Equatable, Sendable {
@@ -13,6 +32,7 @@ struct NativeTransitionRequest: Equatable, Sendable {
     let capacity, chunk: UInt32
     let wholeSessionBudget, coexistenceBudget: UInt64
     let replayReserve, textReserve, applicationReserve: UInt64
+    var memoryPolicy: NativeTransitionMemoryPolicy = .diagnostic
     func validate() throws {
         guard selection.modelInstance > 0, selection.sessionInstance > 0,
               selection.modelInstance != selection.sessionInstance,
@@ -21,6 +41,11 @@ struct NativeTransitionRequest: Equatable, Sendable {
               [wholeSessionBudget,coexistenceBudget,replayReserve,textReserve,applicationReserve]
                 .allSatisfy({ $0 <= 6 * 1024 * 1024 * 1024 }) else {
             throw NativeContextFailure("Invalid empty-session transition request")
+        }
+        if memoryPolicy == .friendly {
+            guard applicationReserve >= NativeTransitionHeadroomCheck.applicationReserve else {
+                throw NativeContextFailure("Friendly transition omits its application and staging reserve")
+            }
         }
     }
     func options() -> TokletOptions {
@@ -195,6 +220,14 @@ struct NativeTransitionResult: Sendable {
     let candidate: NativeContextFacts?
     let status: UInt32
     let message: String
+    let headroom: NativeTransitionHeadroomCheck?
+    init(request: NativeTransitionRequest, outcome: Outcome, committed: Bool,
+         plan: NativeTransitionPlan?, candidate: NativeContextFacts?, status: UInt32,
+         message: String, headroom: NativeTransitionHeadroomCheck? = nil) {
+        self.request = request; self.outcome = outcome; self.committed = committed
+        self.plan = plan; self.candidate = candidate; self.status = status
+        self.message = message; self.headroom = headroom
+    }
 }
 
 // Diagnostic-only retirement controls. Production leaves this nil; the panic
