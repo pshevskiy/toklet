@@ -56,3 +56,64 @@ struct NativeFootprint: Codable, Sendable {
                                returnedNaturalCount:count)
     }
 }
+
+// Two read-only checkpoints, not a timer or an admission mechanism. A strictly
+// increased lifetime high-water mark proves that a process peak was established
+// between the reads. Equal/decreasing/inconsistent counters cannot isolate it.
+enum NativeMemoryObservation: Sendable {
+    case available(NativeFootprint)
+    case unavailable(String)
+    static func capture(read: () throws -> NativeFootprint = NativeFootprint.read) -> Self {
+        do { return .available(try read()) }
+        catch { return .unavailable(String(error.localizedDescription.prefix(256))) }
+    }
+}
+
+struct NativeLoadMemorySnapshot: Sendable {
+    let attemptID: UUID
+    let loadRequestID: UUID?
+    let requestedCapacity, requestedLoadUpper: UInt32
+    let completed: Bool
+    let modelInstance, initialSessionInstance: UInt64?
+    let before, after: NativeMemoryObservation
+    var establishedProcessPeakBytes: UInt64? {
+        guard case .available(let start) = before, case .available(let end) = after,
+              start.lifetimePeakPhysicalBytes >= start.physicalBytes,
+              end.lifetimePeakPhysicalBytes >= end.physicalBytes,
+              end.lifetimePeakPhysicalBytes > start.lifetimePeakPhysicalBytes else { return nil }
+        return end.lifetimePeakPhysicalBytes
+    }
+    func matches(model: NativeModelContext?, loadRequestID current: UUID?) -> Bool {
+        guard completed, let model, let modelInstance, modelInstance > 0,
+              let initialSessionInstance, initialSessionInstance > 0 else { return false }
+        return model.modelInstance == modelInstance && current == loadRequestID
+    }
+    var peakExplanation: String {
+        guard case .available(let start) = before, case .available(let end) = after else {
+            return "Process memory reading unavailable; loading still uses normal admission checks."
+        }
+        guard start.lifetimePeakPhysicalBytes >= start.physicalBytes,
+              end.lifetimePeakPhysicalBytes >= end.physicalBytes,
+              end.lifetimePeakPhysicalBytes >= start.lifetimePeakPhysicalBytes else {
+            return "Inconsistent memory counters; load-interval peak is undetermined."
+        }
+        return establishedProcessPeakBytes == nil
+            ? "Load-interval peak undetermined; the prior process peak was not exceeded."
+            : "The process established this physical peak during the load attempt. Other process activity contributes."
+    }
+}
+
+struct NativeLoadMemoryProbe {
+    let attemptID = UUID()
+    let before: NativeMemoryObservation
+    static func begin(enabled: Bool, read: () throws -> NativeFootprint = NativeFootprint.read) -> Self? {
+        guard enabled else { return nil }
+        return Self(before:.capture(read:read))
+    }
+    func finish(loadRequestID: UUID?, capacity: UInt32, upper: UInt32, completed: Bool,
+                model: UInt64?, session: UInt64?, read: () throws -> NativeFootprint = NativeFootprint.read) -> NativeLoadMemorySnapshot {
+        NativeLoadMemorySnapshot(attemptID:attemptID,loadRequestID:loadRequestID,requestedCapacity:capacity,
+            requestedLoadUpper:upper,completed:completed,modelInstance:completed ? model : nil,
+            initialSessionInstance:completed ? session : nil,before:before,after:.capture(read:read))
+    }
+}

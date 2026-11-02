@@ -1,7 +1,8 @@
 # Toklet progress checklist
 
 Last updated: **3 November 2026**. Active milestone: **M8**.
-Current task: **loading-memory measurement and remaining per-model qualification audit**.
+Current task: **remaining model/app qualification and rendered Settings audit**.
+Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
 Completed B5f1: owner snapshot and explicit context/text facts; [evidence](benchmarks/results/2026-11-02-session-owner-memory-v1.json).
 Completed B5e2 (`c346382`): admitted-window Chat, including real Mac Qwen2 growth/boundaries.
@@ -445,6 +446,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
   validation scope and app/text limits separately for each model.
 - [x] B5f1: session-bound creation/replacement owner snapshot, optional failure,
   stale binding, resize/rejection/suspend/resume and3platform checks; Astra approved.
+- [x] B5h1: opt-in load-command physical checkpoints, conditional new-peak
+  inference, failure/disabled/binding checks and Astra approval. Prior higher
+  lifetime peaks leave the load-only peak unknown.
 - [ ] Include actual weights, KV owners, scratch, loading peaks and application
   allowances; distinguish numerical fit from whole-process fit.
 - [x] B5g1: common/native physical KV-byte constraint; C ABI/legacy JSON
@@ -873,3 +877,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-02 | B5g1 implementation | Optional physical KV-byte ceiling participates in capacity search, independent fit flag, legacy JSON omits new fields. Additive C entrypoint keeps existing56-byte options layout; zero is explicit. | Default542 tests and strict Clippy pass. Metal compilation caught an optional-pattern typo; corrected only the Metal branch. Final Metal650 tests/strict Clippy and Astra review pass. Swift Preview/Apply enforcement follows. |
 
 | 2026-11-03 | B5g2 integration in progress |39-export three-slice package passes. Blank/zero/bounded KV draft, strict fit decoding and resident pre-/post-preparation checks implemented. Controls and legacy Mac chat pass. New KV run reaches682-token Apply/683 rejection, then its unlimited assertion needed explicit upper1024 after Apply reset the draft. | Targeted retry, final3app builds, CPU+Metal transition regressions and Astra review pass; pinned39adoption preserves prior package. [Evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json). |
+
+| 2026-11-03 | B5h1 implementation | Astra prefers two kernel high-water checkpoints over a timer. A strictly new lifetime peak establishes a process peak inside the load-command interval; otherwise peak is unknown. Opt-in, nonfatal observations bind attempt/model/initial setup and perform no reads when disabled. | Strict controls, actual Mac load, CPU+Metal transitions,3app builds,3final-wording SDK checks and Astra review pass. [Evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json). |

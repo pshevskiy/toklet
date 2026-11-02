@@ -11,6 +11,7 @@ struct NativeSettings: Sendable {
     var metal = false
     var mlx = false
     var chat = false
+    var measureLoadingMemory = false
     var textBudget: UInt64 = 64 * 1024 * 1024
     var capacity: UInt32 = 32
     // Cold, immutable model limit; capacity remains the current session size.
@@ -112,6 +113,7 @@ struct NativeSnapshot: Sendable {
     var modelContext: NativeModelContext?
     var liveContext: NativeContextFacts?
     var sessionConfiguration: NativeSessionConfiguration?
+    var loadMemory: NativeLoadMemorySnapshot?
     var sessionMemory: NativeSessionMemorySnapshot?
     var acceptedIdentity: NativeAcceptedIdentity?
     var acceptedLoadRequestID: UUID?
@@ -270,7 +272,7 @@ final class NativeWorker: @unchecked Sendable {
         if case .suspend = command { view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = "" }
         switch command {
         case .load, .unload, .suspend:
-            view.modelContext = nil; view.liveContext = nil; view.sessionConfiguration = nil; view.sessionMemory = nil
+            view.modelContext = nil; view.liveContext = nil; view.sessionConfiguration = nil; view.sessionMemory = nil; view.loadMemory = nil
         case .chat, .generate, .reset, .replay:
             view.liveContext = nil
         default: break
@@ -501,7 +503,7 @@ final class NativeWorker: @unchecked Sendable {
         if case .unload? = queued {} else { queued = unload ? .unload : .suspend }
         view.busy = true
         view.modelContext = nil; view.liveContext = nil; view.requestBudget = nil
-        view.sessionConfiguration = nil; view.sessionMemory = nil
+        view.sessionConfiguration = nil; view.sessionMemory = nil; view.loadMemory = nil
         view.acceptedIdentity = nil; view.acceptedLoadRequestID = nil // Retained Engine facts republish only after safe completion.
         view.phase = "Cancelling for lifecycle cleanup"
         view.score = nil
@@ -519,7 +521,7 @@ final class NativeWorker: @unchecked Sendable {
         closing = true; queued = nil
         view.acceptedIdentity = nil; view.acceptedLoadRequestID = nil
         view.modelContext = nil; view.liveContext = nil; view.requestBudget = nil
-        view.sessionConfiguration = nil; view.sessionMemory = nil
+        view.sessionConfiguration = nil; view.sessionMemory = nil; view.loadMemory = nil
         view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = ""
         view.score = nil
         view.savedPrefix = nil
@@ -598,6 +600,9 @@ final class NativeWorker: @unchecked Sendable {
             let flag = cancelFlag!
             view.phase = "Running"
             condition.unlock()
+            var loadSettings: NativeSettings?
+            if case .load(let requested) = command { loadSettings = requested }
+            let memoryProbe = NativeLoadMemoryProbe.begin(enabled:loadSettings?.measureLoadingMemory == true)
             var failure: NSError?
             do { try autoreleasepool {
                 try engine.perform(command, flag: flag, worker: self)
@@ -608,6 +613,12 @@ final class NativeWorker: @unchecked Sendable {
                 // Preserve the original command error while suppressing any
                 // invalid live facts. No old session snapshot authorizes replay.
                 try? engine.refreshContext()
+            }
+            if let requested = loadSettings {
+                let completed = failure == nil && engine.model != nil && engine.session != nil
+                engine.loadMemory = memoryProbe?.finish(loadRequestID:requested.loadRequestID,capacity:requested.capacity,
+                    upper:requested.loadUpper ?? requested.capacity,completed:completed,
+                    model:engine.modelContext?.modelInstance,session:engine.liveContext?.sessionInstance)
             }
             if case .score = command { beforeScorePublication?() }
             condition.lock()
@@ -621,6 +632,7 @@ final class NativeWorker: @unchecked Sendable {
             view.modelContext = !closing && queued == nil ? engine.modelContext : nil
             view.liveContext = !closing && queued == nil ? engine.liveContext : nil
             view.sessionConfiguration = !closing && queued == nil ? engine.sessionConfiguration : nil
+            view.loadMemory = !closing && queued == nil ? engine.loadMemory : nil
             view.sessionMemory = !closing && queued == nil && engine.sessionMemory?.matches(engine.liveContext,configuration:engine.sessionConfiguration) == true ? engine.sessionMemory : nil
             view.acceptedIdentity = !closing && queued == nil && engine.model != nil && engine.chat != nil
                 ? engine.acceptedIdentity : nil
@@ -668,7 +680,7 @@ final class NativeWorker: @unchecked Sendable {
         view.hasModel = false; view.hasSession = false
         view.chatEnabled = false; view.acceptedIdentity = nil; view.acceptedLoadRequestID = nil
         view.modelContext = nil; view.liveContext = nil; view.requestBudget = nil
-        view.sessionConfiguration = nil; view.sessionMemory = nil
+        view.sessionConfiguration = nil; view.sessionMemory = nil; view.loadMemory = nil
         view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = ""
         // Closed means there is no active numerical prefix. Do not retain the
         // last command's counts when close supersedes an in-flight operation.
@@ -752,6 +764,7 @@ private final class Engine {
     var modelContext: NativeModelContext?
     var liveContext: NativeContextFacts?
     var sessionConfiguration: NativeSessionConfiguration?
+    var loadMemory: NativeLoadMemorySnapshot?
     var sessionMemory: NativeSessionMemorySnapshot?
     var acceptedIdentity: NativeAcceptedIdentity?
     var acceptedLoadRequestID: UUID?
@@ -933,6 +946,7 @@ private final class Engine {
         report = TokletReport()
     }
     func unload() throws {
+        loadMemory = nil
         acceptedIdentity = nil; acceptedLoadRequestID = nil
         var retiredError: NSError?
         if let retired = retiredSession {

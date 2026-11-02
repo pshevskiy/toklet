@@ -9378,3 +9378,21 @@ Zero has no fit; blank restores the requested1024 window. The test-only draft-
 reset assumption failure is retained. [Evidence](../benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
 Pinned atomic adoption preserves the prior package. No phone runtime, rendered
 UI, whole-device fit or new quality/performance qualification is claimed.
+
+## 3 November 2026 — Opt-in load-memory checkpoints (B5h1)
+
+Two nonfatal physical-footprint observations bracket the load command, including
+validation, initial session/text setup and synchronous cleanup. A consistent new
+process-lifetime high-water mark establishes a process peak in this interval;
+equal/decreasing/inconsistent/unavailable readings never become a loading-peak
+claim. The opt-in defaults off and performs no new observation reads while off.
+Attempt/model/request binding keeps initial-load facts separate from later
+resizing/generation. No timers, native ABI changes or model-only attribution.
+
+Astra approves; synthetic counter/failure/disabled/binding controls, actual Mac
+loading/KV/chat, CPU+Metal transitions and3unsigned app builds pass. The fresh Mac
+controller observed4801088→675644544physical bytes and a new675644544peak.
+[Evidence](../benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
+Final toggle wording passes3SDK source checks. This does not qualify a rendered app,
+physical phone, whole-device fit or performance, and prior higher peaks can
+leave load-only peaks unknown.

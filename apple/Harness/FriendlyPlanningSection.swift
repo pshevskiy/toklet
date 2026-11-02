@@ -61,6 +61,11 @@ struct FriendlyPlanningSection: View {
                 Text("For the managed Qwen2 model only. Choose Reopen with new limit in Models to unload and reopen it. Editing this choice does not change the open model or saved preferences. The initial session is still 512 tokens; Preview and Apply can change its KV capacity within the admitted model limit.")
                 Text("Input and reply share the active chat window. Replies remain limited to 256 tokens. Text and message limits still apply; allocating a larger window does not establish full-window quality.")
             }.font(.footnote)
+            DisclosureGroup("Loading-memory observation") {
+                Toggle("Measure model loads while enabled",isOn:Binding(get:{ chat.measureLoadingMemory },set:{ chat.setMeasureLoadingMemory($0) }))
+                    .disabled(chat.loadingModel || chat.running || store.state.busy)
+                Text("Opt-in process-footprint checkpoints around loading and initial setup. To measure an open model, unload it in Models and open it again. No model-only attribution or device-fit guarantee.")
+            }.font(.footnote)
             Text("Estimates cover inference memory. App/tokenizer memory and the currently loaded model are separate. Opening a model checks its files and memory again.")
                 .font(.footnote).foregroundStyle(.secondary)
         }
@@ -94,6 +99,24 @@ struct FriendlyPlanningSection: View {
                 }
                 if let memory = store.state.sessionMemory,
                    memory.matches(store.state.liveContext,configuration:store.state.sessionConfiguration) { ownerMemory(memory) }
+                if let load = store.state.loadMemory,
+                   load.matches(model:context,loadRequestID:store.state.acceptedLoadRequestID) {
+                    Text("Process footprint around load and initial setup").font(.footnote.weight(.semibold))
+                    LabeledContent("Initial session window",value:load.requestedCapacity.formatted())
+                    if case .available(let before) = load.before {
+                        LabeledContent("Physical footprint before load",value:bytes(before.physicalBytes))
+                        LabeledContent("Lifetime peak before load",value:bytes(before.lifetimePeakPhysicalBytes))
+                    }
+                    if case .available(let after) = load.after {
+                        LabeledContent("Physical footprint after load",value:bytes(after.physicalBytes))
+                        LabeledContent("Lifetime peak after load",value:bytes(after.lifetimePeakPhysicalBytes))
+                    }
+                    if let peak = load.establishedProcessPeakBytes {
+                        LabeledContent("Process peak established during load",value:bytes(peak))
+                    }
+                    Text(load.peakExplanation)
+                    Text("Includes validation, compatibility inspection, initial session/text setup and synchronous cleanup. It excludes later resizing and generation. Footprints and owner counts must not be added together.")
+                }
                 if let target = planning.target {
                     LabeledContent("Replacement coexistence limit",value:bytes(target.coexistenceBudget))
                     LabeledContent("Separate text allowance",value:bytes(target.textBudget))

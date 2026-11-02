@@ -113,9 +113,17 @@ struct KVLimitMain {
             harness.poll(); chat.observe(harness.state); return state
         }
         do {
-            chat.setQwen2LoadUpper(1024); chat.openManaged(model,profile:.qwen,ifSelected:chat.workspace.selected)
+            chat.setMeasureLoadingMemory(true); chat.setQwen2LoadUpper(1024); chat.openManaged(model,profile:.qwen,ifSelected:chat.workspace.selected)
             let loaded = try wait(); try check(loaded.status == 0,"Load failed: \(loaded.message)")
-            guard let identity = loaded.acceptedIdentity else { throw NativeContextFailure("Missing identity") }
+            guard let identity = loaded.acceptedIdentity, let loadMemory = loaded.loadMemory,
+                  case .available(let before) = loadMemory.before, case .available(let after) = loadMemory.after else {
+                throw NativeContextFailure("Missing model/load-memory observations")
+            }
+            try check(loadMemory.completed && loadMemory.matches(model:loaded.modelContext,loadRequestID:loaded.acceptedLoadRequestID)
+                && loadMemory.requestedCapacity == 512 && loadMemory.requestedLoadUpper == 1024
+                && before.physicalBytes <= before.lifetimePeakPhysicalBytes && after.physicalBytes <= after.lifetimePeakPhysicalBytes,
+                "Load memory is inconsistent or incorrectly bound")
+            print("LOAD_MEMORY_MAC before=\(before.physicalBytes) after=\(after.physicalBytes) prior_peak=\(before.lifetimePeakPhysicalBytes) later_peak=\(after.lifetimePeakPhysicalBytes) established=\(loadMemory.establishedProcessPeakBytes.map(String.init) ?? "unknown")")
             chat.showPlanning(); chat.editPlanning(.upper,"1024"); chat.editPlanning(.kvBudgetMiB,"8"); chat.previewPlanning()
             _ = try wait()
             guard let preview = chat.planning.result, let plan = preview.capacity else { throw NativeContextFailure("Missing constrained preview") }
@@ -128,6 +136,9 @@ struct KVLimitMain {
             try check(applied.transition?.committed == true && applied.transition?.request.kvBudgetBytes == 8388608
                 && owned.kvBytes == 8381088 && configuration.capacity == 682 && applied.acceptedIdentity == identity
                 && counter.count == 1,"Actual accepted KV does not obey ceiling")
+            try check(applied.loadMemory?.attemptID == loadMemory.attemptID
+                && applied.loadMemory?.matches(model:applied.modelContext,loadRequestID:applied.acceptedLoadRequestID) == true,
+                "Session replacement lost model-bound initial-load observation")
             let record = try preferences.url(identity.namespace), saved = try Data(contentsOf:record)
             let json = try JSONSerialization.jsonObject(with:saved) as! [String:Any]
             try check(json["schema"] as? Int == 1 && json["kv_budget_bytes"] == nil,"Ephemeral KV ceiling changed saved schema")
@@ -150,6 +161,7 @@ struct KVLimitMain {
             print("KV_LIMIT_MAC passed ceiling=8388608 selected=682 actual_kv=8381088 excluded=683 preparation_callback_unchanged_on_rejection=true zero_and_unlimited=true")
         } catch { failure = error }
         worker.close(); try check(worker.waitUntilClosed(seconds:60),"KV worker close timeout")
+        try check(worker.snapshot().loadMemory == nil,"Closed worker retained load observation")
         if let failure { throw failure }
     }
 }

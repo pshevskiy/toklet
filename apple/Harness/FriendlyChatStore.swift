@@ -14,6 +14,7 @@ struct FriendlyLoadRequest: Equatable, Sendable {
     let folder: URL
     let mode: NativeLoadIdentity
     let conversation: UUID
+    var measureLoadingMemory = false
     var loadUpper: UInt32? = nil // Captured next-load choice, never preference identity.
     func isCurrent(in workspace: ChatWorkspace) -> Bool {
         workspace.selected == conversation && workspace.conversations.contains { $0.id == conversation }
@@ -52,6 +53,7 @@ final class FriendlyChatStore: ObservableObject {
     @Published private(set) var loadingModel = false
     @Published private(set) var loadingName = ""
     @Published private(set) var qwen2LoadUpper: UInt32 = 512
+    @Published private(set) var measureLoadingMemory = false
     @Published var notice = ""
     @Published var storageError = ""
     @Published var folders: [URL] = []
@@ -345,6 +347,10 @@ final class FriendlyChatStore: ObservableObject {
         guard !loadingModel, !running else { return }
         qwen2LoadUpper = upper
     }
+    func setMeasureLoadingMemory(_ enabled: Bool) {
+        guard !loadingModel, !running else { return }
+        measureLoadingMemory = enabled
+    }
     var qwen2ReloadPending: Bool {
         hasChatModel && planningLoad?.settings.loadIdentity == .managedQwen2
             && planningLoad?.settings.loadUpper != qwen2LoadUpper
@@ -383,7 +389,7 @@ final class FriendlyChatStore: ObservableObject {
             save()
             loadPreferenceEdit = preferenceEdit
             preferenceMessage = ""
-            let request = FriendlyLoadRequest(folder:folder,mode:mode,conversation:workspace.selected,loadUpper:loadUpper)
+            let request = FriendlyLoadRequest(folder:folder,mode:mode,conversation:workspace.selected,measureLoadingMemory:measureLoadingMemory,loadUpper:loadUpper)
             acceptedIdentity = nil
             if harness.state.hasModel {
                 loadingName = profile.name; loadingModel = true; pendingLoad = FriendlyAcceptingLoad(request:request,worker:ObjectIdentifier(worker)); worker.interrupt(unload:true); harness.poll()
@@ -420,6 +426,7 @@ final class FriendlyChatStore: ObservableObject {
         }
         var settings = NativeSettings(directory:folder.path)
         settings.loadIdentity = request.mode; settings.loadRequestID = request.id
+        settings.measureLoadingMemory = request.measureLoadingMemory
         settings.metal = true; settings.mlx = true; settings.chat = true
         settings.capacity = NativeSettings.chatContextPositions; settings.chunk = 32; settings.loadUpper = request.loadUpper
         settings.numericalBudget = profile.numericalBudget; settings.textBudget = profile.textBudget

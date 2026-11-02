@@ -1,0 +1,67 @@
+{
+  "task": "B5h1",
+  "date": "2026-11-03",
+  "status": "complete; checks and Astra review passed",
+  "behavior": "Opt-in two physical-footprint checkpoints around the dequeued load command including validation, compatibility inspection, initial session/text/identity setup and synchronous cleanup",
+  "peak_inference": "Only consistent strictly increased kernel lifetime peak establishes a process peak during this interval; otherwise unknown. Whole process, not model-only. No sampling timer.",
+  "binding": [
+    "attempt ID",
+    "load request ID",
+    "completion outcome",
+    "requested initial capacity/load upper",
+    "accepted model and initial session IDs on success"
+  ],
+  "mac_controller_process": {
+    "before": 4801088,
+    "after": 675644544,
+    "prior_peak": 4801088,
+    "later_peak": 675644544,
+    "established": 675644544
+  },
+  "checks": {
+    "disabled_probe_reads": 0,
+    "increasing_equal_decreasing_inconsistent_unavailable_counter_cases": true,
+    "failed_load_not_attributed_to_model": true,
+    "disabled_next_load_clears_previous_attempt": true,
+    "model_request_binding": true,
+    "same_model_replacement_retains_initial_observation": true,
+    "legacy_chat_and_kv_regressions": true,
+    "cpu_metal_transition_suites": true,
+    "unsigned_app_builds": 3,
+    "arch_platform_inspections": 6,
+    "unchanged_rust_checks_reused": [
+      542,
+      650
+    ],
+    "final_wording_strict_sdk_checks": 3
+  },
+  "limits": [
+    "Two checkpoints do not isolate a loading peak if a prior process high-water mark dominates",
+    "Helper controller process measured; no rendered full-app memory qualification",
+    "No model-only attribution, physical phone, device-fit or performance qualification",
+    "NativeFootprint legacy wire behavior and native39 package remain unchanged"
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/load-memory-2026-11-03/checks.json",
+      "sha256": "2d7bea591640cf09343d1677f8e91a39ec7af2f9b530b0ecee72d999cef77a91"
+    },
+    {
+      "path": "artifacts/load-memory-2026-11-03/apps.json",
+      "sha256": "2932693b4709105b592b6da352e1755a59991a304aa0797960d33e7a8c2ec12f"
+    },
+    {
+      "path": "artifacts/load-memory-2026-11-03/transitions.json",
+      "sha256": "79679d68110d6de3cb9e395ca223243bd2c4906d822dcb404284f97eb2bdde65"
+    },
+    {
+      "path": "artifacts/load-memory-2026-11-03/kv-loaded-run.log",
+      "sha256": "4f9ac087ca8e3ca5b74c9236f93eee7c916d263d27cf5210f02c59c47de19029"
+    },
+    {
+      "path": "artifacts/load-memory-2026-11-03/copy-checks.json",
+      "sha256": "3d450aa239cffeda17e18be8ffc08646488dd0bf3bd284d911c926a14bbe5a02"
+    }
+  ],
+  "astra": "Approved, no blocking findings; persistent-toggle wording corrected"
+}
