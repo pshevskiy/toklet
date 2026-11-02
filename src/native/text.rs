@@ -212,7 +212,7 @@ pub unsafe extern "C" fn toklet_chat_encode(
             let chat = &*chat;
             owner(chat.owner)?;
             if capacity > MAX_TOKENS {
-                return Err(fail(INVALID, "text token capacity exceeds 512"));
+                return Err(fail(INVALID, "text token capacity exceeds engine ceiling"));
             }
             let ids = chat
                 .codec
@@ -304,6 +304,94 @@ pub unsafe extern "C" fn toklet_chat_release(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn rendered_encode_ceiling_preserves_query_copy_and_rejection_contracts() {
+        let chat = Box::into_raw(Box::new(ChatHandle {
+            owner: thread::current().id(),
+            codec: crate::app_chat::encode_boundary_fixture(),
+            _model: None,
+        }));
+        unsafe {
+            for total in [513, 1024, 32768] {
+                let (json, expected) = crate::app_chat::encode_boundary_case(total);
+                let mut count = 0;
+                assert_eq!(
+                    toklet_chat_encode(
+                        chat,
+                        json.as_ptr(),
+                        json.len(),
+                        ptr::null_mut(),
+                        0,
+                        &mut count,
+                        ptr::null_mut()
+                    ),
+                    OK
+                );
+                assert_eq!(count, total);
+                let mut output = vec![u32::MAX; total];
+                assert_eq!(
+                    toklet_chat_encode(
+                        chat,
+                        json.as_ptr(),
+                        json.len(),
+                        output.as_mut_ptr(),
+                        total - 1,
+                        &mut count,
+                        ptr::null_mut()
+                    ),
+                    INVALID
+                );
+                assert_eq!(count, total);
+                assert!(output.iter().all(|&id| id == u32::MAX));
+                assert_eq!(
+                    toklet_chat_encode(
+                        chat,
+                        json.as_ptr(),
+                        json.len(),
+                        output.as_mut_ptr(),
+                        total,
+                        &mut count,
+                        ptr::null_mut()
+                    ),
+                    OK
+                );
+                assert_eq!(output, expected);
+            }
+            let (json, _) = crate::app_chat::encode_boundary_case(32769);
+            let mut output = vec![u32::MAX; 32769];
+            let mut count = 777;
+            assert_eq!(
+                toklet_chat_encode(
+                    chat,
+                    json.as_ptr(),
+                    json.len(),
+                    output.as_mut_ptr(),
+                    32768,
+                    &mut count,
+                    ptr::null_mut()
+                ),
+                INVALID
+            );
+            assert_eq!(count, 777);
+            assert!(output.iter().all(|&id| id == u32::MAX));
+            let (json, _) = crate::app_chat::encode_boundary_case(513);
+            assert_eq!(
+                toklet_chat_encode(
+                    chat,
+                    json.as_ptr(),
+                    json.len(),
+                    output.as_mut_ptr(),
+                    32769,
+                    &mut count,
+                    ptr::null_mut()
+                ),
+                INVALID
+            );
+            assert_eq!(count, 777);
+            assert!(output.iter().all(|&id| id == u32::MAX));
+            assert_eq!(toklet_chat_release(chat, ptr::null_mut()), OK);
+        }
+    }
     #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
     use crate::app_chat::TOKENIZER_ALLOWANCE;
     #[test]

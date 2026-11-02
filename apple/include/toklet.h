@@ -320,7 +320,9 @@ uint32_t toklet_chat_create_complete_audited(const TokletModel *, uint64_t allow
 uint32_t toklet_model_chat_identity_create(const TokletModel *, const TokletChat *,
                                          TokletCompatibility **, TokletError *);
 /* JSON array of alternating {role,content} messages, starting/ending user.
-   Max63 messages/64KiB UTF-8, no template control tokens; output max512 IDs.
+   Max63 messages/64KiB UTF-8, no template control tokens; output max32768 IDs.
+   This is a codec safety ceiling; numerical prompt+reply admission against the
+   actual model/session remains required before generation.
    NULL+0 queries required count. Small output returns INVALID, sets required
    count, and leaves elements untouched. Outputs/count/inputs must be disjoint. */
 uint32_t toklet_chat_encode(const TokletChat *, const uint8_t *, size_t, uint32_t *, size_t, size_t *, TokletError *);

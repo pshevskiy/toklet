@@ -17,7 +17,8 @@ mod qwen_content;
 pub mod stream;
 
 pub const MAX_TEXT: usize = 64 * 1024;
-pub const MAX_TOKENS: usize = 512;
+/// Rendered-token safety ceiling, not model/session admission or output capacity.
+pub const MAX_TOKENS: usize = crate::weights::MAX_CONTEXT_LIMIT;
 /// Maximum visible output prefix, separate from the whole conversation limit.
 pub const MAX_RESPONSE_TOKENS: usize = 256;
 pub const TOKENIZER_ALLOWANCE: usize = 64 * 1024 * 1024;
@@ -293,19 +294,18 @@ impl Codec {
         self.profile.stop_ids()
     }
     pub fn encode(&self, json: &[u8]) -> io::Result<Vec<u32>> {
-        let ids = self
+        let encoding = self
             .tokenizer
             .encode(
                 render_profile(self.profile, json, &self.special_literals)?,
                 false,
             )
-            .map_err(invalid)?
-            .get_ids()
-            .to_vec();
+            .map_err(invalid)?;
+        let ids = encoding.get_ids();
         if ids.len() > MAX_TOKENS {
             return Err(invalid("Conversation is full; start a new chat"));
         }
-        Ok(ids)
+        Ok(ids.to_vec())
     }
     // Decode the entire bounded visible prefix. Callers replace the displayed
     // response; they never concatenate independently decoded token strings.
@@ -338,9 +338,62 @@ pub(crate) fn decode_fixture() -> Codec {
     }
 }
 
+// No merges: each ASCII payload byte has a known ByteLevel vocabulary ID.
+// Production assets and the existing decode fixture remain unchanged.
+#[cfg(test)]
+pub(crate) fn encode_boundary_fixture() -> Codec {
+    let mut codec = decode_fixture();
+    let mut definition: serde_json::Value =
+        serde_json::from_slice(include_bytes!("../tests/fixtures/chat-v1/tokenizer.json")).unwrap();
+    definition["model"]["merges"] = serde_json::json!([]);
+    codec.tokenizer = Tokenizer::from_bytes(serde_json::to_vec(&definition).unwrap()).unwrap();
+    codec
+}
+
+// Independent fixed Qwen template oracle. ASCII !..~ maps to byte-33;
+// newline=198, space=220, start/end=151644/151645. Fixed overhead is97 IDs.
+#[cfg(test)]
+pub(crate) fn encode_boundary_case(total: usize) -> (Vec<u8>, Vec<u32>) {
+    fn ascii(text: &str, ids: &mut Vec<u32>) {
+        ids.extend(text.bytes().map(|byte| match byte {
+            b'\n' => 198,
+            b' ' => 220,
+            33..=126 => u32::from(byte - 33),
+            _ => panic!("non-ASCII boundary oracle"),
+        }));
+    }
+    let payload = total.checked_sub(97).unwrap();
+    let json =
+        serde_json::to_vec(&serde_json::json!([{"role":"user","content":"1".repeat(payload)}]))
+            .unwrap();
+    let mut ids = vec![151644];
+    ascii(
+        "system\nYou are Qwen, created by Alibaba Cloud. You are a helpful assistant.",
+        &mut ids,
+    );
+    ids.extend([151645, 198, 151644]);
+    ascii("user\n", &mut ids);
+    ids.extend(std::iter::repeat_n(16, payload));
+    ids.extend([151645, 198, 151644]);
+    ascii("assistant\n", &mut ids);
+    assert_eq!(ids.len(), total);
+    (json, ids)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn rendered_input_uses_engine_ceiling_without_relaxing_output_or_byte_limits() {
+        let codec = encode_boundary_fixture();
+        for count in [513, 1024, 32768] {
+            let (json, expected) = encode_boundary_case(count);
+            assert_eq!(codec.encode(&json).unwrap(), expected);
+        }
+        assert!(codec.encode(&encode_boundary_case(32769).0).is_err());
+        assert!(codec.encode(&vec![b' '; MAX_TEXT + 1]).is_err());
+        assert_eq!(MAX_RESPONSE_TOKENS, 256);
+    }
     #[test]
     fn visible_response_bounds_preserve_exact_output_and_reject_overflow() {
         let codec = decode_fixture();
@@ -610,7 +663,7 @@ mod tests {
                 .is_err()
         );
         let long = serde_json::json!([{"role":"user","content":" hello".repeat(600)}]);
-        assert!(codec.encode(&serde_json::to_vec(&long).unwrap()).is_err());
+        assert!(codec.encode(&serde_json::to_vec(&long).unwrap()).is_ok());
     }
     #[test]
     fn invalid_conversations_are_rejected() {

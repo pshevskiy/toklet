@@ -1,0 +1,34 @@
+{
+  "task": "B5e2a",
+  "status": "complete; checks and Astra review passed",
+  "date": "2026-11-02",
+  "change": "Rendered codec safety ceiling follows engine32768; model/session prompt+reply admission remains required",
+  "bounds_kept": {
+    "text_bytes": 65536,
+    "messages": 63,
+    "output_tokens": 256
+  },
+  "tests": {
+    "default_passed": 539,
+    "default_ignored": 23,
+    "metal_passed": 647,
+    "metal_ignored": 193,
+    "strict_clippy_both": true,
+    "fmt": true,
+    "independent_token_id_boundaries": [
+      513,
+      1024,
+      32768
+    ],
+    "rejected_boundary": 32769,
+    "native_query_exact_copy_and_unchanged_rejection_buffers": true
+  },
+  "evidence": "artifacts/b5e2a-2026-11-02/checks.json",
+  "evidence_sha256": "b2ff92dacba5fb7da232ce0382a5029ab6e04cf0af5e7027c76397e470a88d9e",
+  "not_qualified": [
+    "App integration/native bundle update pending",
+    "No longer-context numerical quality or performance claim",
+    "No phone execution"
+  ],
+  "astra": "Approved B5e2a, no blocking findings; native package and Swift integration separate"
+}

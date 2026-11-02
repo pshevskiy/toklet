@@ -9294,3 +9294,15 @@ retains setup interruptions/fixes and both corrected test assumptions. Astra
 final review approves the bounded change. No longer Chat input, rendered UI, phone, full-window
 quality or performance claim. Workflow combines controls, reuses unchanged
 native checks and keeps one compact task record plus full external logs.
+
+## 2 November 2026 — Bounded rendered-token codec support (B5e2a)
+
+The Rust/native codec accepts rendered input up to the engine32768 ceiling,
+independently of actual model/session admission. It checks length before cloning
+IDs;64KiB text,63messages and256output limits remain. Independent byte-token
+fixtures check full IDs at513/1024/32768, reject32769 and preserve native query,
+exact/undersized copy and rejection-buffer contracts. The old Mistral600-token
+rejection now correctly accepts. Formatting, strict Clippy and539default/647Metal
+tests pass;23/193hardware/model tests remain ignored. [Evidence](../benchmarks/results/2026-11-02-rendered-codec-ceiling-v1.json).
+Astra approves with no blockers. App bridge/Swift integration and actual longer
+Chat generation remain B5e2b; no numerical or phone qualification follows.

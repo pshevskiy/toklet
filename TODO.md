@@ -1,8 +1,8 @@
 # Toklet progress checklist
 
 Last updated: **2 November 2026**. Active milestone: **M8**.
-Current task: **B5e2 — rendered prompt/context policy**.
-Completed: **B5e1**, checks and Astra review pass; [evidence](benchmarks/results/2026-11-02-context-load-upper-v1.json).
+Current task: **B5e2b — rebuilt Apple bridge, Swift admission and longer Mac Chat witness**.
+Completed: **B5e1** (`69ebeb0`), checks and Astra review pass; [evidence](benchmarks/results/2026-11-02-context-load-upper-v1.json).
 Implementation resumed with compact task records, focused checks and one combined
 Astra diff/results review before commit. Next: B5e2 rendered prompt/context policy.
 No new larger-window quality, rendered UI or iPhone qualification is claimed.
@@ -431,6 +431,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] B5e1: separate explicit Qwen2 next-load upper512/1024 from initialKV512;
   validate before unload, reuse model/session planners and D1/headroom/D2, test
   stable-model growth and beyond-upper rejection. Current text caps stay separate.
+- [x] B5e2a: Rust/native codec ceiling32768;539default/647Metal tests, strict
+  Clippy, formatting and Astra review pass. [Evidence](benchmarks/results/2026-11-02-rendered-codec-ceiling-v1.json).
 - [ ] B5e2: reconcile Rust/native/Swift prompt512 limits, actual rendered
   prompt+reply admission and resized successful generation before longer Chat
   claims; output256 and byte/event limits remain until deliberately qualified.
@@ -847,3 +849,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | C6c saved audit and38adoption pass / pause next | Astra verifies30current closures, exact products and raw Reference restore/Apply ledger/headroom/save/preservation. Full prechecks and ten candidate hashes before/after pass; atomic38selection preserves37. | [Report](docs/mistral-managed-preferences.md); final publication review/commit only, then pause. B5e1/B5e2 adviser recommendation recorded as pending, with private draft stopped and no future task resumed. |
 
 | 2026-11-02 | B5e1 / compact workflow | Qwen2 load upper and initialKV separated; explicit reopen route added. Swift controls116/90/57/28 and new policy controls pass; iOS/simulator typechecks pass. Preserved interrupted setup run, SDK/helper fixes and test-only status assertion failure. | Cached-Mac growth/rejection/deferred reopen and Astra review pass; [evidence](benchmarks/results/2026-11-02-context-load-upper-v1.json). Next B5e2. |
+
+| 2026-11-02 | B5e2a in progress | Rust/native codec ceiling follows engine32768; output256/64KiB/63messages stay bounded. Independent byte-token fixture covers513/1024/32768 and rejection32769, exact/undersized C copies. | All6jobs and Astra review pass:539default/647Metal,23/193ignored. [Evidence](benchmarks/results/2026-11-02-rendered-codec-ceiling-v1.json). Swift/package/generation integration next. |
