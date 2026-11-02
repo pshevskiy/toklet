@@ -1,0 +1,84 @@
+{
+  "task": "B5g2",
+  "date": "2026-11-03",
+  "status": "complete; checks and Astra review passed",
+  "base_core_commit": "fcc53e6",
+  "native": {
+    "slices": 3,
+    "exports": 39,
+    "build_link_jobs": 21,
+    "previous_package_preserved": true
+  },
+  "behavior": {
+    "blank_unlimited": true,
+    "zero_explicit": true,
+    "ceiling_units": "MiB",
+    "maximum_ceiling_mib": 6144,
+    "draft_request_equality_and_binding": true,
+    "independent_kv_fit_and_adjacent_witness_validation": true,
+    "resident_planned_check_before_preparation": true,
+    "actual_candidate_kv_check_before_acceptance": true,
+    "unavailable_actual_accounting_fails_closed": true,
+    "saved_schema": 1,
+    "ceiling_persisted": false
+  },
+  "mac": {
+    "model": "Qwen2.5-0.5B-Instruct-8bit-6474d4c",
+    "ceiling_bytes": 8388608,
+    "selected_capacity": 682,
+    "actual_candidate_kv_bytes": 8381088,
+    "excluded_capacity": 683,
+    "rejected_owner_and_record_unchanged": true,
+    "accepted_preparation_callback_count_unchanged_on_rejection": true,
+    "zero_has_no_fit": true,
+    "blank_with_upper1024_restores_unlimited": true,
+    "legacy_chat_629_and_exact1024_boundary_regression": true
+  },
+  "checks": {
+    "routing": 116,
+    "preferences": 90,
+    "planning": 57,
+    "apply": 28,
+    "new_kv_controls": true,
+    "cpu_and_metal_transition_suites": true,
+    "unsigned_final_app_builds": 3,
+    "arch_platform_inspections": 6
+  },
+  "astra": "Approved, no blocking findings; conditional pinned atomic framework adoption passed",
+  "retained_failure": "KV-only unlimited test initially reused the682-token draft reset by Apply; test explicitly requests1024 for its unlimited comparison. Production policy unchanged by retry.",
+  "limits": [
+    "Ceiling applies to this Preview/Apply only; accepted window/budget use existing persistence",
+    "No physical iPhone execution, rendered UI, full-window quality or performance qualification",
+    "C ABI and legacy JSON compatible; native/core Rust struct literals require added fields"
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/kv-ceiling-native-2026-11-03/build.json",
+      "sha256": "ee2c733878c4f64c8b236a13d1288d4daaa50f31b461f350012a7897a1764964"
+    },
+    {
+      "path": "artifacts/kv-ceiling-app-2026-11-03/checks.json",
+      "sha256": "44a59507af90136cd2bb98ad90f27f50ac194d81b8324d4d20d6e94e6d50ec2c"
+    },
+    {
+      "path": "artifacts/kv-ceiling-app-2026-11-03/kv-retry.json",
+      "sha256": "9b99d4f9c1a2d9c269859323578f39c30e4fa250002412a39f0e4ca2b5033d06"
+    },
+    {
+      "path": "artifacts/kv-ceiling-app-2026-11-03/kv-retry-run.stdout",
+      "sha256": "52603a42e060cb14b5c066cf9906fe3683074b7e49c1fe1a40e9a94c1cb24c88"
+    },
+    {
+      "path": "artifacts/kv-ceiling-app-2026-11-03/transitions.json",
+      "sha256": "d74bccada5240344889056eeb32b9dd7f0c5c4183e88fab64bd681874470a84b"
+    },
+    {
+      "path": "artifacts/kv-ceiling-app-2026-11-03/final-apps/apps.json",
+      "sha256": "f557d0ded2142c0a990432c5c01f64dd5db0fa850d781b682ceef6773a3317c9"
+    },
+    {
+      "path": "artifacts/kv-ceiling-app-2026-11-03/adoption.json",
+      "sha256": "7fa7b3fd586cd86b5944b06e8683c9e72fad8789b1b94fcb6ae368d2b74c860e"
+    }
+  ]
+}

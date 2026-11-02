@@ -28,7 +28,7 @@ Destinations must be new. The builder verifies exact archive/source/header pins,
 creates `apple/Binaries/Toklet.xcframework` and `apple/Generated/Tiny`, then builds
 release simulator and unsigned device apps. It refuses foreign or differently
 linked generated inputs. The current generated library link selects
-`artifacts/b5e2b-native-2026-11-02/Toklet.xcframework`, with all 38 C
+`artifacts/kv-ceiling-native-2026-11-03/Toklet.xcframework`, with all 39 C
 exports and complete Mac/iOS/simulator app compile/link evidence. Its native
 build receipt SHA256 is
 `2a069edf753d1eb82c1e3018a9686b41764858e54d4f973cd236b39806e2e3a2`.
@@ -197,3 +197,9 @@ limit and starts with512-token KV before saved settings/Preview/Apply.
 [Mac boundary evidence](../benchmarks/results/2026-11-02-session-window-chat-v1.json)
 covers successful longer Chat and overflow preservation, not full-window
 quality, rendered UI or physical-phone qualification.
+
+Advanced window planning supports an optional KV ceiling in MiB. Blank means
+unlimited; zero is explicit. Preview counts physical cache buffers, and Apply
+checks both resident planned and actual candidate KV before committing. The
+ceiling itself is not saved; accepted window settings use the existing record.
+[KV-ceiling evidence](../benchmarks/results/2026-11-03-kv-preview-apply-v1.json).

@@ -795,6 +795,7 @@ private final class Engine {
         let plan = try NativeTransitionPlan.inspect(model:model,session:session,request:request,
             current:old,chunk:settings.chunk,wholeBudget:settings.numericalBudget)
         guard plan.fitsTransitionBudget, plan.fitsCandidateIndividualBudget else { throw invalid("Transition memory budget does not fit") }
+        try request.validateKV(bytes:plan.candidatePlanned.kvBytes)
         if request.memoryPolicy == .friendly {
             let required = try NativeTransitionHeadroomCheck.requiredIncrementalBytes(
                 candidateOwned:plan.candidatePlanned.totalBytes,
@@ -835,9 +836,10 @@ private final class Engine {
             nextSettings.numericalBudget = request.wholeSessionBudget
             let configuration = try NativeSessionConfiguration(context:next,capacity:nextSettings.capacity,
                 chunk:nextSettings.chunk,wholeSessionBudget:nextSettings.numericalBudget,acceptedRequestID:request.id)
+            let memory = NativeSessionMemorySnapshot.inspect(model:model,session:pointer,context:next,configuration:configuration)
+            try request.validateCandidateKV(memory)
             return PreparedTransition(handle:pointer,plan:plan,settings:nextSettings,
-                context:next,configuration:configuration,
-                memory:NativeSessionMemorySnapshot.inspect(model:model,session:pointer,context:next,configuration:configuration),
+                context:next,configuration:configuration,memory:memory,
                 report:report,captureSavedPrefix:captureSavedPrefix)
         } catch {
             if let cleanup = retire(pointer,fault:nil) { throw cleanup }

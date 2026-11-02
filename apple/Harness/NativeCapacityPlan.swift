@@ -16,6 +16,7 @@ struct NativeCapacityPlan: Decodable, Sendable {
     struct Request: Sendable, Equatable {
         let context, upper, chunk, offset: UInt32
         let loadBudget, sessionBudget: UInt64
+        var kvBudgetBytes: UInt64? = nil
         var normalization: Normalization = .compensated
         var readback: Readback = .fullLogits
         var attention: AttentionPolicy = .nativeFactory
@@ -24,18 +25,25 @@ struct NativeCapacityPlan: Decodable, Sendable {
             guard (1...32768).contains(context), upper > 0,
                   chunk > 0, chunk <= 1024, chunk <= upper, !overflow, end <= context,
                   loadBudget > 0, loadBudget <= 6 * 1024 * 1024 * 1024,
-                  sessionBudget <= 6 * 1024 * 1024 * 1024 else { throw NativeCapacityPlan.failure("Invalid capacity request") }
+                  sessionBudget <= 6 * 1024 * 1024 * 1024,
+                  kvBudgetBytes.map({ $0 <= 6 * 1024 * 1024 * 1024 }) ?? true else { throw NativeCapacityPlan.failure("Invalid capacity request") }
         }
     }
     struct Footprint: Decodable, Sendable {
         let admittedBytes, largestBufferBytes: UInt64
+        var kvBytes: UInt64? = nil
     }
     struct Point: Decodable, Sendable {
         let capacity: UInt32
         let footprint: Footprint
         let fitsBudget, fitsBuffer: Bool
+        var fitsKvBudget: Bool? = nil
+        var fits: Bool { fitsBudget && fitsBuffer && (fitsKvBudget ?? true) }
     }
-    struct Limits: Decodable, Sendable { let budgetBytes, maximumBufferBytes: UInt64 }
+    struct Limits: Decodable, Sendable {
+        let budgetBytes, maximumBufferBytes: UInt64
+        var kvBudgetBytes: UInt64? = nil
+    }
     struct Range: Decodable, Sendable {
         let minimum, maximum: UInt32
         let limits: Limits
@@ -61,6 +69,7 @@ struct NativeCapacityPlan: Decodable, Sendable {
         let range = value.capacity, resources = value.resources
         guard range.minimum == request.chunk, range.maximum == request.upper,
               range.limits.budgetBytes == request.sessionBudget,
+              range.limits.kvBudgetBytes == request.kvBudgetBytes,
               range.limits.maximumBufferBytes == resources.maximumBufferBytes else { throw failure("Capacity interval or limits differ from request") }
         let (resident,overflow) = resources.residentWeightsBytes.addingReportingOverflow(resources.positionalResidentBytes ?? 0)
         guard !overflow else { throw failure("Resident accounting overflow") }
@@ -72,6 +81,15 @@ struct NativeCapacityPlan: Decodable, Sendable {
                   footprint.largestBufferBytes > 0, footprint.largestBufferBytes <= footprint.admittedBytes,
                   point.fitsBudget == (footprint.admittedBytes <= range.limits.budgetBytes),
                   point.fitsBuffer == (footprint.largestBufferBytes <= range.limits.maximumBufferBytes && footprint.largestBufferBytes <= UInt64(Int.max)) else { throw failure("Invalid capacity point accounting or fit flags") }
+            if let limit = request.kvBudgetBytes {
+                guard let kv = footprint.kvBytes, kv <= footprint.admittedBytes, kv <= resources.sessionMemory.kvBytes,
+                      point.fitsKvBudget == (kv <= limit) else { throw failure("Invalid KV footprint or fit flag") }
+                if point.capacity == range.maximum {
+                    guard kv == resources.sessionMemory.kvBytes else { throw failure("Upper KV differs from resource ledger") }
+                }
+            } else {
+                guard footprint.kvBytes == nil, point.fitsKvBudget == nil else { throw failure("Unexpected KV constraint in unlimited report") }
+            }
             if point.capacity == range.maximum {
                 guard footprint.admittedBytes == resources.sessionMemory.admittedBytes else { throw failure("Upper footprint differs from resource ledger") }
             }
@@ -80,13 +98,14 @@ struct NativeCapacityPlan: Decodable, Sendable {
         if let excluded = range.firstExcluded { try point(excluded) }
         switch (range.selected,range.firstExcluded) {
         case (let selected?,nil):
-            guard selected.capacity == range.maximum, selected.fitsBudget, selected.fitsBuffer else { throw failure("Missing adjacent exclusion or nonfitting selection") }
+            guard selected.capacity == range.maximum, selected.fits else { throw failure("Missing adjacent exclusion or nonfitting selection") }
         case (nil,let excluded?):
-            guard excluded.capacity == range.minimum, !excluded.fitsBudget || !excluded.fitsBuffer else { throw failure("Invalid empty capacity result") }
+            guard excluded.capacity == range.minimum, !excluded.fits else { throw failure("Invalid empty capacity result") }
         case (let selected?,let excluded?):
             let (next,overflow) = selected.capacity.addingReportingOverflow(1)
             guard !overflow, next == excluded.capacity,
-                  selected.fitsBudget, selected.fitsBuffer, !excluded.fitsBudget || !excluded.fitsBuffer,
+                  selected.fits, !excluded.fits,
+                  (selected.footprint.kvBytes ?? 0) <= (excluded.footprint.kvBytes ?? 0),
                   selected.footprint.admittedBytes <= excluded.footprint.admittedBytes,
                   selected.footprint.largestBufferBytes <= excluded.footprint.largestBufferBytes else { throw failure("Invalid adjacent capacity witnesses") }
         case (nil,nil): throw failure("Capacity search has no witnesses")
@@ -115,7 +134,11 @@ struct NativeCapacityPlan: Decodable, Sendable {
                 throw failure(message.isEmpty ? "Capacity inspection failed" : message,code:code)
             }
         }
-        try path.withUnsafeBufferPointer { try checked(toklet_mlx_capacity_plan_create($0.baseAddress,$0.count,&options,&owner,&error)) }
+        try path.withUnsafeBufferPointer {
+            if let limit = request.kvBudgetBytes {
+                try checked(toklet_mlx_capacity_plan_create_with_kv_limit($0.baseAddress,$0.count,&options,limit,&owner,&error))
+            } else { try checked(toklet_mlx_capacity_plan_create($0.baseAddress,$0.count,&options,&owner,&error)) }
+        }
         guard let owner else { throw failure("Missing capacity report") }
         defer { _ = toklet_mlx_inspect_release(owner,nil) }
         var count = 0

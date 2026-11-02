@@ -21,6 +21,10 @@ struct FriendlyPlanningSection: View {
                 input("Window to estimate (tokens)",.upper,planning.draft.upper)
                 input("Chunk size (tokens)",.chunk,planning.draft.chunk)
                 input("Engine memory budget (MiB)",.budgetMiB,planning.draft.budgetMiB)
+                DisclosureGroup("Advanced KV ceiling") {
+                    input("KV ceiling (MiB; blank is unlimited)",.kvBudgetMiB,planning.draft.kvBudgetMiB)
+                    Text("Limits cache buffers including overhead, alongside the engine budget. Zero permits no KV. This ceiling applies only to this Preview and Apply; it is not saved.")
+                }.font(.footnote)
                 Button("Preview only",systemImage:"magnifyingglass") { chat.previewPlanning() }
                     .disabled(store.state.busy || chat.running || chat.loadingModel || store.state.closed)
                     .accessibilityIdentifier("planning-preview")
@@ -133,6 +137,7 @@ struct FriendlyPlanningSection: View {
         if let request = value.capacityRequest {
             LabeledContent("Effective search upper",value:request.upper.formatted())
         }
+        if let ceiling = value.request.kvBudgetBytes { LabeledContent("KV ceiling",value:bytes(ceiling)) }
         switch value.outcome {
         case .failed:
             Text("Preview failed (\(value.status)): \(value.message)").foregroundStyle(.red)
@@ -142,20 +147,25 @@ struct FriendlyPlanningSection: View {
             if let plan = value.capacity {
                 if let selected = plan.capacity.selected {
                     LabeledContent("Estimated capacity",value:selected.capacity.formatted())
+                    if let kv = selected.footprint.kvBytes { LabeledContent("Estimated KV buffers",value:bytes(kv)) }
                     LabeledContent("Estimated engine memory",value:bytes(selected.footprint.admittedBytes))
-                } else { Text("No capacity fits this engine budget and buffer limit.") }
-                Text(plan.capacity.selected.map { $0.fitsBudget && $0.fitsBuffer } == true
-                    ? "The selected estimate fits its session budget and buffer limit. Applying checks the resident model and current memory again."
-                    : "No estimate fits the session budget and buffer limit.")
+                } else { Text("No capacity fits the configured limits.") }
+                Text(plan.capacity.selected.map { $0.fits } == true
+                    ? "The selected estimate fits the configured limits. Applying checks the resident model and current memory again."
+                    : "No estimate fits the configured limits.")
                     .font(.footnote).foregroundStyle(.secondary)
+                if let excluded = plan.capacity.firstExcluded, excluded.fitsKvBudget == false {
+                    LabeledContent("First window excluded by KV ceiling",value:excluded.capacity.formatted() + " tokens")
+                    if let kv = excluded.footprint.kvBytes { LabeledContent("KV at excluded window",value:bytes(kv)) }
+                }
                 DisclosureGroup("Estimate details") {
                     if let request = value.capacityRequest {
                         LabeledContent("Budget after bridge allowance",value:bytes(request.sessionBudget))
                     }
                     // Resources describe the effective requested upper, not the
-                    // selected lower point, which has only its total footprint.
+                    // selected lower point, whose KV footprint is optional.
                     LabeledContent("KV at search upper",value:bytes(plan.resources.sessionMemory.kvBytes))
-                    LabeledContent("Search-upper engine fit",value:plan.resources.fitsRequestedBudgets ? "Fits" : "Does not fit")
+                    LabeledContent("Search-upper numerical budget fit",value:plan.resources.fitsRequestedBudgets ? "Fits" : "Does not fit")
                     if value.isResidentAdvisoryEstimate { Text("Loading-fit details describe the reopened files. They are not a requirement for replacing a session on already loaded weights.") }
                     LabeledContent("Source loading fit",value:plan.resources.fitsSourceLoadBudget ? "Fits" : "Does not fit")
                     LabeledContent("Resident loading fit",value:plan.resources.fitsResidentLoadBudget ? "Fits" : "Does not fit")

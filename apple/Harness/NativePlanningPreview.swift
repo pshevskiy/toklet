@@ -21,6 +21,7 @@ struct NativePreviewRequest: Sendable, Equatable {
     let upper, chunk, offset: UInt32
     let contextCeiling: UInt32?
     let loadBudget, sessionBudget: UInt64
+    var kvBudgetBytes: UInt64? = nil
     var estimator: Estimator = .sourceProfile
     var resident: Resident? = nil
     var normalization: NativeCapacityPlan.Normalization = .compensated
@@ -33,7 +34,8 @@ struct NativePreviewRequest: Sendable, Equatable {
               (1...1024).contains(chunk), chunk <= upper, offset < 32768,
               contextCeiling.map({ (1...32768).contains($0) }) ?? true,
               loadBudget > 0, loadBudget <= 6 * 1024 * 1024 * 1024,
-              sessionBudget <= 6 * 1024 * 1024 * 1024 else {
+              sessionBudget <= 6 * 1024 * 1024 * 1024,
+              kvBudgetBytes.map({ $0 <= 6 * 1024 * 1024 * 1024 }) ?? true else {
             throw NativeContextFailure("Invalid planning preview request")
         }
         switch estimator {
@@ -78,6 +80,7 @@ struct NativePreviewRequest: Sendable, Equatable {
         let capacity = min(upper,remaining)
         var request = NativeCapacityPlan.Request(context:context,upper:capacity,chunk:chunk,offset:offset,
             loadBudget:loadBudget,sessionBudget:sessionBudget)
+        request.kvBudgetBytes = kvBudgetBytes
         request.normalization = normalization; request.readback = readback; request.attention = attention
         try request.validate()
         return request

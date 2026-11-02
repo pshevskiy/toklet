@@ -32,11 +32,13 @@ struct NativeTransitionRequest: Equatable, Sendable {
     let capacity, chunk: UInt32
     let wholeSessionBudget, coexistenceBudget: UInt64
     let replayReserve, textReserve, applicationReserve: UInt64
+    var kvBudgetBytes: UInt64? = nil
     var memoryPolicy: NativeTransitionMemoryPolicy = .diagnostic
     func validate() throws {
         guard selection.modelInstance > 0, selection.sessionInstance > 0,
               selection.modelInstance != selection.sessionInstance,
               (1...32768).contains(capacity), (1...1024).contains(chunk), chunk <= capacity,
+              kvBudgetBytes.map({ $0 <= 6 * 1024 * 1024 * 1024 }) ?? true,
               wholeSessionBudget > UInt64(TOKLET_MODEL_SESSION_BRIDGE_BYTES),
               [wholeSessionBudget,coexistenceBudget,replayReserve,textReserve,applicationReserve]
                 .allSatisfy({ $0 <= 6 * 1024 * 1024 * 1024 }) else {
@@ -47,6 +49,18 @@ struct NativeTransitionRequest: Equatable, Sendable {
                 throw NativeContextFailure("Friendly transition omits its application and staging reserve")
             }
         }
+    }
+    func validateKV(bytes: UInt64) throws {
+        if let limit = kvBudgetBytes, bytes > limit {
+            throw NativeContextFailure("Candidate KV exceeds the requested ceiling.")
+        }
+    }
+    func validateCandidateKV(_ memory: NativeSessionMemorySnapshot) throws {
+        guard kvBudgetBytes != nil else { return }
+        guard case .available(_,let owned,_,_,_) = memory.reading else {
+            throw NativeContextFailure("Candidate KV accounting is unavailable; current session is kept.")
+        }
+        try validateKV(bytes:owned.kvBytes)
     }
     func options() -> TokletOptions {
         TokletOptions(abi_version:TOKLET_ABI_VERSION,struct_size:UInt32(MemoryLayout<TokletOptions>.size),

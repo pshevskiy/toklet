@@ -39,10 +39,11 @@ struct FriendlyPlanningLoad {
 }
 
 struct FriendlyPlanningDraft: Equatable {
-    enum Field: Equatable { case upper, chunk, budgetMiB }
+    enum Field: Equatable { case upper, chunk, budgetMiB, kvBudgetMiB }
     var upper = "512"
     var chunk = "32"
     var budgetMiB = "512"
+    var kvBudgetMiB = ""
 
     private func decimal(_ text: String, name: String) throws -> UInt64 {
         guard !text.isEmpty, text.utf8.count <= 20,
@@ -59,8 +60,13 @@ struct FriendlyPlanningDraft: Equatable {
             throw NativeContextFailure("Planning values exceed their supported range.")
         }
         let numerical = try NativeResourcePlan.numericalBudget(wholeBudget:whole)
-        let request = NativePreviewRequest(id:UUID(),selection:selection,upper:upper,chunk:chunk,offset:0,
+        var request = NativePreviewRequest(id:UUID(),selection:selection,upper:upper,chunk:chunk,offset:0,
             contextCeiling:nil,loadBudget:numerical,sessionBudget:numerical)
+        if !kvBudgetMiB.isEmpty {
+            let mib = try decimal(kvBudgetMiB,name:"KV ceiling")
+            guard mib <= 6144 else { throw NativeContextFailure("KV ceiling must be at most 6144 MiB.") }
+            request.kvBudgetBytes = mib * 1024 * 1024
+        }
         try request.validate()
         return request
     }
@@ -97,6 +103,7 @@ struct FriendlyPlanningState {
         case .upper: draft.upper = bounded
         case .chunk: draft.chunk = bounded
         case .budgetMiB: draft.budgetMiB = bounded
+        case .kvBudgetMiB: draft.kvBudgetMiB = bounded
         }
     }
     mutating func begin() throws -> NativePreviewRequest {
@@ -148,7 +155,9 @@ struct FriendlyApplyState {
               let result = planning.result, result.request == requested, result.request.selection == selection,
               result.outcome == .planned, result.status == 0,
               let capacityRequest = result.capacityRequest, let plan = result.capacity,
-              let selected = plan.capacity.selected, selected.fitsBudget, selected.fitsBuffer,
+              let selected = plan.capacity.selected, selected.fits,
+              capacityRequest.kvBudgetBytes == requested.kvBudgetBytes,
+              plan.capacity.limits.kvBudgetBytes == requested.kvBudgetBytes,
               capacityRequest.chunk == requested.chunk, capacityRequest.sessionBudget == requested.sessionBudget,
               capacityRequest.offset == 0, requested.offset == 0,
               plan.capacity.limits.budgetBytes == capacityRequest.sessionBudget,
@@ -175,6 +184,7 @@ struct FriendlyApplyState {
         let whole = try NativeTransitionPlan.sum([capacityRequest.sessionBudget,UInt64(TOKLET_MODEL_SESSION_BRIDGE_BYTES)])
         let draftRequest = try planning.draft.request(selection:selection)
         guard draftRequest.upper == requested.upper, draftRequest.chunk == requested.chunk,
+              draftRequest.kvBudgetBytes == requested.kvBudgetBytes,
               draftRequest.sessionBudget == requested.sessionBudget, draftRequest.loadBudget == requested.loadBudget else {
             throw NativeContextFailure("The displayed estimate no longer matches your edited values. Preview again.")
         }
@@ -183,6 +193,7 @@ struct FriendlyApplyState {
         var transition = NativeTransitionRequest(id:UUID(),selection:owner,capacity:selected.capacity,
             chunk:capacityRequest.chunk,wholeSessionBudget:whole,coexistenceBudget:target.coexistenceBudget,
             replayReserve:0,textReserve:target.textBudget,applicationReserve:NativeTransitionHeadroomCheck.applicationReserve)
+        transition.kvBudgetBytes = requested.kvBudgetBytes
         transition.memoryPolicy = .friendly
         try transition.validate()
         return FriendlyApplyRequest(target:target,previewID:result.request.id,transition:transition)

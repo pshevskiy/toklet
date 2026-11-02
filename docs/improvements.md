@@ -9362,3 +9362,19 @@ Astra approves the scoped change. Compatibility covers C ABI and legacy JSON;
 Rust struct-literal callers require the added fields. Device API execution,
 rebuilt packaging and app Apply
 enforcement remain separate. Planning does not qualify model/device fit.
+
+## 3 November 2026 — KV ceiling Preview/Apply integration (B5g2)
+
+Advanced Preview/Apply accepts a blank/unlimited or explicit0..6144MiB KV ceiling.
+Strict decoding checks independent KV fit and adjacent exclusion; edited request
+values invalidate old estimates. Apply checks resident planned KV before
+preparation and actual candidate owner KV before acceptance, failing closed if
+accounting is unavailable. The limit is ephemeral; saved schema1 stays unchanged.
+
+Astra approves. The39-export/3slice package, strict controls, legacy Mac Chat,
+CPU+Metal transition suites and3unsigned final app builds pass. Mac8MiB selects
+682tokens with8381088actual KV bytes;683 rejects while preserving owner/record.
+Zero has no fit; blank restores the requested1024 window. The test-only draft-
+reset assumption failure is retained. [Evidence](../benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
+Pinned atomic adoption preserves the prior package. No phone runtime, rendered
+UI, whole-device fit or new quality/performance qualification is claimed.
