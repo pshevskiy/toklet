@@ -1,0 +1,71 @@
+{
+  "task": "B5e2b",
+  "date": "2026-11-02",
+  "status": "complete; checks and Astra review passed",
+  "base_engine_commit": "fc7cbfe",
+  "native": {
+    "slices": 3,
+    "exports_per_slice": 38,
+    "build_link_jobs": 21,
+    "selected_framework": "artifacts/b5e2b-native-2026-11-02/Toklet.xcframework",
+    "previous_framework_preserved": true
+  },
+  "checks": {
+    "routing": 116,
+    "preferences": 90,
+    "planning": 57,
+    "apply": 28,
+    "context_policy_and_load_upper_controls": true,
+    "unsigned_app_builds": 3,
+    "app_arch_platform_checks": 6
+  },
+  "mac_chat": {
+    "model": "Qwen2.5-0.5B-Instruct-8bit-6474d4c",
+    "initial512_rejection_preserves_draft": true,
+    "grown_capacity": 1024,
+    "longer_rendered_input": 629,
+    "longer_output": 32,
+    "exact_rendered_input": 992,
+    "exact_reply": 32,
+    "exact_required": 1024,
+    "exact_output": 32,
+    "overflow_required": 1025,
+    "overflow_preserves_prefix_owners_preferences_draft": true
+  },
+  "policy": {
+    "prompt_ceiling": 32768,
+    "effective_prompt": "min(active shared window, declared input if known, codec ceiling)",
+    "reply_ceiling": 256,
+    "conversation_bytes": 65536,
+    "draft_bytes": 16384,
+    "messages": 63
+  },
+  "astra": "Approved with no blocking findings; guarded atomic link adoption approved and passed",
+  "limits": [
+    "No rendered UI or physical phone execution",
+    "No full-window quality, whole-device memory peak or performance qualification",
+    "Larger model-load choice remains bounded Qwen2 512/1024; other profiles retain existing bounds"
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/b5e2b-native-2026-11-02/build.json",
+      "sha256": "e9de72fd4c9451e60497fa6a06cea96b40bd9eca9b748c9e347a2cf99723d9a2"
+    },
+    {
+      "path": "artifacts/b5e2b-app-2026-11-02/checks.json",
+      "sha256": "5b946dc6fcefb7aa12a565b370d8d0814b451f5219a9ca903106ea3dff1ff472"
+    },
+    {
+      "path": "artifacts/b5e2b-app-2026-11-02/apps.json",
+      "sha256": "0d839ce68d4b1976d075e76519d760df612d00f7d82ca2076a0ae7948e7effec"
+    },
+    {
+      "path": "artifacts/b5e2b-app-2026-11-02/chat-window-mac.log",
+      "sha256": "f14ef012c55ff782f4b331b4569e342dceed1ad94e4a5404c6b210a7e32fc1b7"
+    },
+    {
+      "path": "artifacts/b5e2b-app-2026-11-02/adoption.json",
+      "sha256": "fc817f3a2a1f463dd25be8b31ef869d86eb31e4c113792b47c07eec8262cef68"
+    }
+  ]
+}

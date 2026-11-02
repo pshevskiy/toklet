@@ -9306,3 +9306,17 @@ rejection now correctly accepts. Formatting, strict Clippy and539default/647Meta
 tests pass;23/193hardware/model tests remain ignored. [Evidence](../benchmarks/results/2026-11-02-rendered-codec-ceiling-v1.json).
 Astra approves with no blockers. App bridge/Swift integration and actual longer
 Chat generation remain B5e2b; no numerical or phone qualification follows.
+
+## 2 November 2026 — Chat uses the admitted session window (B5e2b)
+
+Swift input admission now follows the active window and declared input cap,
+up to the codec32768 ceiling; reply256 and text/message bounds remain. Updated
+UI wording distinguishes the default512 window from the active setting.
+Astra-approved checks cover21native jobs/3slices/38exports, existing strict
+Swift controls and3unsigned app builds with6arch/platform inspections. Mac
+Qwen2 generates32tokens from629rendered input after growth;992+32 exactly fits
+1024, while1025 rejects with the full prefix, owners, preferences and draft
+unchanged. [Evidence](../benchmarks/results/2026-11-02-session-window-chat-v1.json).
+Guarded atomic adoption selects the rebuilt package and preserves native38's
+previous package. No rendered UI, physical phone, full-window quality or
+performance qualification is claimed. Core change committed as `fc7cbfe`.

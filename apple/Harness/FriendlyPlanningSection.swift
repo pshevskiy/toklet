@@ -55,7 +55,7 @@ struct FriendlyPlanningSection: View {
                     Text("1024").tag(UInt32(1024))
                 }.disabled(chat.loadingModel || chat.running || store.state.busy)
                 Text("For the managed Qwen2 model only. Choose Reopen with new limit in Models to unload and reopen it. Editing this choice does not change the open model or saved preferences. The initial session is still 512 tokens; Preview and Apply can change its KV capacity within the admitted model limit.")
-                Text("Chat input is still limited to 512 encoded tokens and replies to 256 tokens. A larger allocated window does not yet enable a longer chat prompt or establish full-window quality.")
+                Text("Input and reply share the active chat window. Replies remain limited to 256 tokens. Text and message limits still apply; allocating a larger window does not establish full-window quality.")
             }.font(.footnote)
             Text("Estimates cover inference memory. App/tokenizer memory and the currently loaded model are separate. Opening a model checks its files and memory again.")
                 .font(.footnote).foregroundStyle(.secondary)

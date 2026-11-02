@@ -51,6 +51,12 @@ struct ContextPolicyMain {
         try require(NativeModelContext(next) == model && next != facts,"retained model excludes live session/history")
         let chat = NativeGenerationPolicy.limits(.chat,model:model), raw = NativeGenerationPolicy.limits(.raw,model:model)
         try require(chat.maximumPrompt == 512 && chat.maximumOutput == 256 && raw.maximumOutput == 128,"existing mode limits remain explicit")
+        var wide = value; wide.loaded_position_limit = 1024; wide.session_capacity = 1024
+        let wideLimits = NativeGenerationPolicy.limits(.chat,model:NativeModelContext(try NativeContextFacts(wide)))
+        try require(wideLimits.maximumPrompt == 1024 && wideLimits.maximumOutput == 256,"Chat prompt follows active KV window")
+        wide.loaded_position_limit = 32768; wide.session_capacity = 32768
+        let ceiling = NativeGenerationPolicy.limits(.chat,model:NativeModelContext(try NativeContextFacts(wide)))
+        try require(ceiling.maximumPrompt == 32768 && ceiling.maximumOutput == 256,"Codec ceiling and reply bound remain separate")
         try require(chat.maximumInputTextBytes == 65536 && raw.maximumInputTextBytes == 262144 && NativeGenerationPolicy.maximumDraftBytes == 16384,"mode-specific byte limits")
         try require(NativeGenerationPolicy.limits(.chat,model:NativeModelContext(next)) == chat,"reply choices do not consume old native history twice")
         var bounded = value; bounded.known_fields |= UInt32(TOKLET_CONTEXT_DECLARED_INPUT_KNOWN | TOKLET_CONTEXT_DECLARED_OUTPUT_KNOWN)

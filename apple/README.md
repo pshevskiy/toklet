@@ -28,7 +28,7 @@ Destinations must be new. The builder verifies exact archive/source/header pins,
 creates `apple/Binaries/Toklet.xcframework` and `apple/Generated/Tiny`, then builds
 release simulator and unsigned device apps. It refuses foreign or differently
 linked generated inputs. The current generated library link selects
-`artifacts/new-goal-b5d5n-native38-component-v1/run-v1/native/Toklet.xcframework`, with all 38 C
+`artifacts/b5e2b-native-2026-11-02/Toklet.xcframework`, with all 38 C
 exports and complete Mac/iOS/simulator app compile/link evidence. Its native
 build receipt SHA256 is
 `2a069edf753d1eb82c1e3018a9686b41764858e54d4f973cd236b39806e2e3a2`.
@@ -189,3 +189,11 @@ python3 tools/experiments/m7_native_measurement_check.py artifacts/m7-apple-pack
 
 This compiles the Swift checker with the reviewed Mac archive and runs the tiny
 fixture; it does not install a phone app or qualify phone memory/performance.
+
+Chat input follows the admitted active session window and model input cap,
+with a32768-token codec ceiling. Prompt plus reply must fit together; reply
+output remains capped at256. Managed Qwen2 offers an explicit512/1024 next-load
+limit and starts with512-token KV before saved settings/Preview/Apply.
+[Mac boundary evidence](../benchmarks/results/2026-11-02-session-window-chat-v1.json)
+covers successful longer Chat and overflow preservation, not full-window
+quality, rendered UI or physical-phone qualification.

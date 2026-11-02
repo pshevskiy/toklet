@@ -341,7 +341,7 @@ struct FriendlyHarnessView: View {
                     Text(hub.recommendationMessage).font(.callout).foregroundStyle(.secondary)
                     Text("Estimated scores, not quality tests or measured speed. Loading checks compatibility and memory again.")
                         .font(.caption).foregroundStyle(.secondary).accessibilityIdentifier("hub-ranking-confidence")
-                    Text("Current chat limits: \(NativeSettings.chatContextPositions) total tokens · up to \(NativeSettings.maximumChatOutputTokens) reply tokens.")
+                    Text("Default chat window: \(NativeSettings.chatContextPositions) tokens · up to \(NativeSettings.maximumChatOutputTokens) reply tokens. Settings shows the active window.")
                         .font(.caption).foregroundStyle(.secondary).accessibilityIdentifier("hub-ranking-context")
                     ForEach(Array(hub.recommendations.enumerated()),id:\.element.id) { index,recommendation in
                         VStack(alignment:.leading,spacing:6) {

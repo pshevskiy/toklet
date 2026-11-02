@@ -1,7 +1,8 @@
 # Toklet progress checklist
 
 Last updated: **2 November 2026**. Active milestone: **M8**.
-Current task: **B5e2b — rebuilt Apple bridge, Swift admission and longer Mac Chat witness**.
+Current task: **audit per-model context/KV reporting and remaining app controls**.
+Completed B5e2: admitted-window Chat, including real Mac Qwen2 growth/boundaries.
 Completed: **B5e1** (`69ebeb0`), checks and Astra review pass; [evidence](benchmarks/results/2026-11-02-context-load-upper-v1.json).
 Implementation resumed with compact task records, focused checks and one combined
 Astra diff/results review before commit. Next: B5e2 rendered prompt/context policy.
@@ -433,7 +434,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
   stable-model growth and beyond-upper rejection. Current text caps stay separate.
 - [x] B5e2a: Rust/native codec ceiling32768;539default/647Metal tests, strict
   Clippy, formatting and Astra review pass. [Evidence](benchmarks/results/2026-11-02-rendered-codec-ceiling-v1.json).
-- [ ] B5e2: reconcile Rust/native/Swift prompt512 limits, actual rendered
+- [x] B5e2: reconcile Rust/native/Swift prompt512 limits, actual rendered
   prompt+reply admission and resized successful generation before longer Chat
   claims; output256 and byte/event limits remain until deliberately qualified.
 - [ ] Report declared context, implemented backend range, budget/device fit,
@@ -851,3 +852,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-02 | B5e1 / compact workflow | Qwen2 load upper and initialKV separated; explicit reopen route added. Swift controls116/90/57/28 and new policy controls pass; iOS/simulator typechecks pass. Preserved interrupted setup run, SDK/helper fixes and test-only status assertion failure. | Cached-Mac growth/rejection/deferred reopen and Astra review pass; [evidence](benchmarks/results/2026-11-02-context-load-upper-v1.json). Next B5e2. |
 
 | 2026-11-02 | B5e2a in progress | Rust/native codec ceiling follows engine32768; output256/64KiB/63messages stay bounded. Independent byte-token fixture covers513/1024/32768 and rejection32769, exact/undersized C copies. | All6jobs and Astra review pass:539default/647Metal,23/193ignored. [Evidence](benchmarks/results/2026-11-02-rendered-codec-ceiling-v1.json). Swift/package/generation integration next. |
+
+| 2026-11-02 | B5e2b complete |21native/3app builds pass; strict Swift controls and real Mac Qwen2 input629/output32, exact992+32=1024 and overflow1025 with full prefix/draft preservation pass. Astra approves; atomic candidate adoption preserves prior package. | [Evidence](benchmarks/results/2026-11-02-session-window-chat-v1.json). Next per-model reporting/control audit. No UI rendering/phone/quality/performance claim. |

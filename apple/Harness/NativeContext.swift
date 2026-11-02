@@ -137,7 +137,7 @@ struct NativeModeLimits: Equatable, Sendable {
 enum NativeGenerationPolicy {
     static let maximumRawOutput: UInt32 = 128
     static let maximumChatOutput = UInt32(TOKLET_MAX_CHAT_OUTPUT_TOKENS)
-    static let maximumChatPrompt: UInt64 = 512
+    static let maximumChatPrompt: UInt64 = 32768
     static let maximumRawPrompt: UInt64 = 32768
     static let maximumConversationBytes = 64 * 1024
     static let maximumDraftBytes = 16 * 1024
