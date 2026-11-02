@@ -1,0 +1,64 @@
+{
+  "task": "B5e1",
+  "date": "2026-11-02",
+  "status": "complete; checks and Astra review passed",
+  "scope": "Managed Qwen2 next-load upper512/1024; initialKV512; checked growth, rejection and deferred reopen",
+  "checks": {
+    "routing": 116,
+    "preferences": 90,
+    "planning": 57,
+    "apply": 28,
+    "new_policy_controls": true,
+    "strict_ios_and_simulator_typechecks": true,
+    "cached_mac_integration": true,
+    "rust_abi_checks_reused_unchanged": true
+  },
+  "mac": {
+    "initial_capacity": 512,
+    "admitted_load_upper": 1024,
+    "grown_capacity": 1024,
+    "current_kv_bytes": 6292128,
+    "candidate_kv_bytes": 12583584,
+    "transition_aggregate_bytes": 1142906774,
+    "candidate_admission_bytes": 627281690,
+    "same_model_growth": true,
+    "beyond_upper_rejection_preserves_state": true,
+    "deferred_reopen_512_preserves_record_and_conversation": true
+  },
+  "limits": [
+    "Chat input512/output256 unchanged",
+    "Empty session transitions; no numerical full-window or performance qualification",
+    "No rendered UI or physical phone test",
+    "Pre-unload domain/profile checks; native numerical admission remains final"
+  ],
+  "retained_failures": [
+    "Initial compilation run interrupted to include reopen route",
+    "SDK selection and missing WorkerChecks source corrected",
+    "Worker-status assertion corrected to transition status",
+    "KV exact-doubling assumption replaced by independent shape plus fixed guards oracle"
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/b5e1-2026-11-02/v2/checks.json",
+      "sha256": "ae854c0dc4777a0607cabc497aa8f998910f63922459cb773a90825506f34d74"
+    },
+    {
+      "path": "artifacts/b5e1-2026-11-02/v2/finish-retry.json",
+      "sha256": "b77f7ae70606072cf333162be13d0148bfea963c93cf50a0c544e318f601d6a8"
+    },
+    {
+      "path": "artifacts/b5e1-2026-11-02/v2/loaded-v3.json",
+      "sha256": "62473f63c0d6ee24225ed9fc03b8861dca52482c7666797e99355333df6cbf5f"
+    },
+    {
+      "path": "artifacts/b5e1-2026-11-02/v2/loaded-v3-run.log",
+      "sha256": "a6b845007e3754b3b1eee9598b3d4ae0e1b7b6afef327e2a9ad70bf1835dd6a7"
+    },
+    {
+      "path": "artifacts/b5e1-2026-11-02/v2/reuse.json",
+      "sha256": "775bb57115acdea6a78f009d142b4307e6e5c99ffa55cc5e65bcea30d943fa2f"
+    }
+  ],
+  "delta_since_ios_typecheck": "UI string only; final text compiled by Mac test; Mac-only test strengthened",
+  "astra_review": "artifacts/b5e1-2026-11-02/v2/astra-review.md"
+}

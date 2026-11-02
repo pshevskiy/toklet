@@ -1,16 +1,11 @@
 # Toklet progress checklist
 
-Last updated: **30 October 2026**. Active milestone: **M8**.
-**Paused after completing C6c, at the user’s request.**
-Next task when resumed: **B5e1 — separate admitted model upper from initial KV capacity**.
-B4's pinned LFM2 Mac conformance is complete: 64 trajectory positions with
-capacity 512, all 6,440 local and 303 strict groups passing, full recovery/codec/
-ordinary checks and independent Astra approval. The retained MAIN/WIDE
-trajectory diagnostics have 3/8 failing coordinates. The original quality,
-ordinary app integration, full declared window, phone and performance scopes
-remain open. See [the bounded report](docs/lfm2-real-native.md).
-Implementation is paused after the current task. The rendered Mac Settings check awaits
-an unlocked Mac; no app was launched during the locked-screen attempt.
+Last updated: **2 November 2026**. Active milestone: **M8**.
+Current task: **B5e2 — rendered prompt/context policy**.
+Completed: **B5e1**, checks and Astra review pass; [evidence](benchmarks/results/2026-11-02-context-load-upper-v1.json).
+Implementation resumed with compact task records, focused checks and one combined
+Astra diff/results review before commit. Next: B5e2 rendered prompt/context policy.
+No new larger-window quality, rendered UI or iPhone qualification is claimed.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
 Both historical coupled-intermediate rejections remain failed; all selected
@@ -433,7 +428,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
   passes all30 build/link jobs and independent Astra audit for Mac/iOS/simulator.
   Current app sources compile; the new candidate is selected with the old C3
   bundle preserved. No app launch, model execution or new Swift consumer yet.
-- [ ] B5e1: separate explicit Qwen2 next-load upper512/1024 from initialKV512;
+- [x] B5e1: separate explicit Qwen2 next-load upper512/1024 from initialKV512;
   validate before unload, reuse model/session planners and D1/headroom/D2, test
   stable-model growth and beyond-upper rejection. Current text caps stay separate.
 - [ ] B5e2: reconcile Rust/native/Swift prompt512 limits, actual rendered
@@ -850,3 +845,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-10-30 | C6c app checks start with scoped model guards | Astra approves immutable ownerV2 before execution:28cold jobs bind true compile/CPU inputs and model expectations; unused4GBcached bytes move to freeze, with complete6+2 inventory and unchanged full hardware guards/partial-set rejection. Native38saved audit passes25closedgroups. |28Swift/CPU/3app checks now run; no test/source/product/fixture gate removed. Actual model controller remains separately gated. |
 | 2026-10-30 | C6c cold checks pass / finish-current then pause | All28jobs pass:100wire/116routing with12stale actions/90preferences/33advisory, existing controls and3apps. Freeze authenticates complete6+2cached model inventory and13retainedproducts; all groups close/no endpoints. User requests finish only this current task, then pause. | Astra actual-package approval,2Macjobs, saved/adoption/finalreview and commit only. B5e1 private draft/research stopped; no next task will start. |
 | 2026-10-30 | C6c saved audit and38adoption pass / pause next | Astra verifies30current closures, exact products and raw Reference restore/Apply ledger/headroom/save/preservation. Full prechecks and ten candidate hashes before/after pass; atomic38selection preserves37. | [Report](docs/mistral-managed-preferences.md); final publication review/commit only, then pause. B5e1/B5e2 adviser recommendation recorded as pending, with private draft stopped and no future task resumed. |
+
+| 2026-11-02 | B5e1 / compact workflow | Qwen2 load upper and initialKV separated; explicit reopen route added. Swift controls116/90/57/28 and new policy controls pass; iOS/simulator typechecks pass. Preserved interrupted setup run, SDK/helper fixes and test-only status assertion failure. | Cached-Mac growth/rejection/deferred reopen and Astra review pass; [evidence](benchmarks/results/2026-11-02-context-load-upper-v1.json). Next B5e2. |

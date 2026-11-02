@@ -452,6 +452,7 @@ struct FriendlyHarnessView: View {
     }
     private func modelRow(_ profile: HubProfile) -> some View {
         let active = chat.hasChatModel && chat.modelName == profile.name
+        let reload = active && profile == .qwen && chat.qwen2ReloadPending
         let saved = active || hub.savedProfiles.contains(profile.repository)
         let checking = hub.opening && hub.profile == profile
         let loading = chat.loadingModel && chat.loadingName == profile.name
@@ -471,8 +472,8 @@ struct FriendlyHarnessView: View {
             if hub.discoveredModels.contains(where:{ $0.id == profile.repository }) {
                 Text("Found on Hugging Face").font(.caption).foregroundStyle(.secondary)
             }
-            Button(active ? "Return to chat" : (saved ? "Use model" : "Download and use"),systemImage:active ? "bubble.left.and.bubble.right" : "arrow.right.circle") {
-                if active { hub.cancel(); sheet = nil }
+            Button(reload ? "Reopen with new limit" : (active ? "Return to chat" : (saved ? "Use model" : "Download and use")),systemImage:active && !reload ? "bubble.left.and.bubble.right" : "arrow.right.circle") {
+                if active && !reload { hub.cancel(); sheet = nil }
                 else { useModel(profile,download:!saved) }
             }.buttonStyle(.borderedProminent).frame(minHeight:44)
                 .disabled(!unlocked || hub.blocksSelection || checking || store.state.closed)

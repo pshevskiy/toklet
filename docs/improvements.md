@@ -9276,3 +9276,21 @@ by adoption. [Mistral shared settings](mistral-managed-preferences.md) records
 the bounded completion. Final publication review/commit is the last work before
 the requested pause. Astra's next-load-upper then text-policy recommendation is
 recorded only as pending B5e1/B5e2; private future work is stopped.
+
+## 2 November 2026 — Separate Qwen2 load limit and current KV (B5e1)
+
+The managed Qwen2 next-load choice512/1024 is captured before teardown;
+initial KV stays512. An explicit Models reopen action applies changed load
+limits. Preview/Apply growth retains the model, rejects beyond-upper requests
+without changing owners/history/preferences, and preserves an incompatible
+saved1024 record when explicitly reopening at512.
+
+Checks:116 routing,90 preference,57 planning,28 Apply and new policy controls;
+strict iOS/simulator source checks; cached Mac growth/rejection/reopen pass.
+Actual current/candidate KV is6292128/12583584 bytes (fixed guards included).
+Transition aggregate1142906774 and candidate admission627281690 are accounting,
+not process peaks. [Evidence](../benchmarks/results/2026-11-02-context-load-upper-v1.json)
+retains setup interruptions/fixes and both corrected test assumptions. Astra
+final review approves the bounded change. No longer Chat input, rendered UI, phone, full-window
+quality or performance claim. Workflow combines controls, reuses unchanged
+native checks and keeps one compact task record plus full external logs.

@@ -46,14 +46,17 @@ struct NativeResourcePlan: Decodable, Sendable {
         guard wholeBudget > bridge, wholeBudget <= 6 * 1024 * 1024 * 1024 else { throw failure("Native budget must be above its owner allowance and at most 6 GiB",code:TOKLET_INVALID) }
         return wholeBudget - bridge
     }
-    static func decode(_ data: Data, capacity: UInt32, chunk: UInt32, budget: UInt64) throws -> Self {
+    static func decode(_ data: Data, capacity: UInt32, chunk: UInt32, budget: UInt64, context: UInt32? = nil) throws -> Self {
+        let context = context ?? capacity
+        guard (1...32768).contains(context), capacity > 0, capacity <= context else { throw failure("Invalid load context or session capacity") }
         guard !data.isEmpty, data.count <= Int(TOKLET_MAX_COMPATIBILITY_JSON_BYTES) else { throw failure("Invalid runtime report length") }
         let decoder = JSONDecoder(); decoder.keyDecodingStrategy = .convertFromSnakeCase
         let value = try decoder.decode(Self.self,from:data)
-        return try value.validated(context:capacity,capacity:capacity,chunk:chunk,offset:0,
+        return try value.validated(context:context,capacity:capacity,chunk:chunk,offset:0,
                                    loadBudget:budget,sessionBudget:budget,
                                    normalization:"Compensated",readback:"FullLogits",expectedAttention:nil)
     }
+    // Context owns model positional resources; capacity owns session KV/scratch.
     // Same accounting guard used by the old single-capacity decoder. Request
     // domain validation belongs to each caller; the legacy decoder is unchanged.
     func validated(context: UInt32, capacity: UInt32, chunk: UInt32, offset: UInt32,
@@ -87,13 +90,14 @@ struct NativeResourcePlan: Decodable, Sendable {
     }
     // Exact numerical budget, after the native owner allowance. Native policy2
     // resolves attention; the app does not interpret architecture names.
-    static func inspect(directory: String, capacity: UInt32, chunk: UInt32, budget: UInt64) throws -> Self {
+    static func inspect(directory: String, capacity: UInt32, chunk: UInt32, budget: UInt64, context: UInt32? = nil) throws -> Self {
+        let context = context ?? capacity
         let path = Array(directory.utf8)
         guard !path.isEmpty, path.count <= 16384, !path.contains(0),
-              (1...32768).contains(capacity), chunk > 0, chunk <= 1024, chunk <= capacity,
+              (1...32768).contains(context), capacity > 0, capacity <= context, chunk > 0, chunk <= 1024, chunk <= capacity,
               budget > 0, budget <= 6 * 1024 * 1024 * 1024 else { throw failure("Invalid runtime inspection request") }
         var options = TokletRuntimePlanningOptions(abi_version:TOKLET_ABI_VERSION,
-            struct_size:UInt32(MemoryLayout<TokletRuntimePlanningOptions>.size),context_limit:capacity,
+            struct_size:UInt32(MemoryLayout<TokletRuntimePlanningOptions>.size),context_limit:context,
             capacity:capacity,chunk:chunk,position_offset:0,normalization:1,readback:0,attention:2,reserved:0,
             load_memory_limit_bytes:budget,session_memory_limit_bytes:budget)
         var owner: OpaquePointer?; var error = TokletError()
@@ -112,6 +116,6 @@ struct NativeResourcePlan: Decodable, Sendable {
         var bytes = [UInt8](repeating:0,count:count)
         try bytes.withUnsafeMutableBufferPointer { try checked(toklet_mlx_inspect_json(owner,$0.baseAddress,$0.count,&count,&error)) }
         guard count == bytes.count else { throw failure("Runtime report size changed") }
-        return try decode(Data(bytes),capacity:capacity,chunk:chunk,budget:budget)
+        return try decode(Data(bytes),capacity:capacity,chunk:chunk,budget:budget,context:context)
     }
 }

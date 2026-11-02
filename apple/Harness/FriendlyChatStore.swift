@@ -14,6 +14,7 @@ struct FriendlyLoadRequest: Equatable, Sendable {
     let folder: URL
     let mode: NativeLoadIdentity
     let conversation: UUID
+    var loadUpper: UInt32? = nil // Captured next-load choice, never preference identity.
     func isCurrent(in workspace: ChatWorkspace) -> Bool {
         workspace.selected == conversation && workspace.conversations.contains { $0.id == conversation }
     }
@@ -50,6 +51,7 @@ final class FriendlyChatStore: ObservableObject {
     @Published private(set) var modelName = "Toklet"
     @Published private(set) var loadingModel = false
     @Published private(set) var loadingName = ""
+    @Published private(set) var qwen2LoadUpper: UInt32 = 512
     @Published var notice = ""
     @Published var storageError = ""
     @Published var folders: [URL] = []
@@ -337,6 +339,16 @@ final class FriendlyChatStore: ObservableObject {
         do { open(folder,mode:try FriendlyLoadRequest.managedMode(profile)) }
         catch { notice = error.localizedDescription }
     }
+    // Ephemeral explicit intent. This never edits a live owner or saved preference.
+    func setQwen2LoadUpper(_ upper: UInt32) {
+        guard upper == 512 || upper == 1024 else { notice = "Choose a Qwen2 model limit of 512 or 1024."; return }
+        guard !loadingModel, !running else { return }
+        qwen2LoadUpper = upper
+    }
+    var qwen2ReloadPending: Bool {
+        hasChatModel && planningLoad?.settings.loadIdentity == .managedQwen2
+            && planningLoad?.settings.loadUpper != qwen2LoadUpper
+    }
     func open(_ folder: URL) { open(folder,mode:.ordinary) }
     private func open(_ folder: URL, mode: NativeLoadIdentity) {
         guard !storageBlocked, !running, !loadingModel, let harness, !harness.state.busy, !harness.state.closed else { return }
@@ -358,13 +370,20 @@ final class FriendlyChatStore: ObservableObject {
             defer { if scoped { folder.stopAccessingSecurityScopedResource() } }
             let profile = try HubProfile.identify(folder)
             guard FriendlyLoadRequest.matches(mode,profile:profile) else { throw HubFailure("The selected folder does not match the requested managed profile") }
-            if hasChatModel && loadedKey == key(folder) && planningLoad?.settings.loadIdentity == mode { notice = "This model is already open."; return }
+            let loadUpper = mode == .managedQwen2 ? qwen2LoadUpper : nil
+            // Validate the captured choice before workspace saves or old-owner teardown.
+            var initial = NativeSettings(directory:folder.path)
+            initial.loadIdentity = mode; initial.metal = true; initial.mlx = true; initial.chat = true
+            initial.capacity = NativeSettings.chatContextPositions; initial.loadUpper = loadUpper
+            _ = try initial.admittedLoadUpper()
+            if hasChatModel && loadedKey == key(folder) && planningLoad?.settings.loadIdentity == mode
+                && planningLoad?.settings.loadUpper == loadUpper { notice = "This model is already open."; return }
             if workspace.current.modelKey != key(folder), !workspace.current.messages.isEmpty { try workspace.newChat(modelKey:key(folder)) }
             workspace.conversations[workspace.selectedIndex].modelKey = key(folder)
             save()
             loadPreferenceEdit = preferenceEdit
             preferenceMessage = ""
-            let request = FriendlyLoadRequest(folder:folder,mode:mode,conversation:workspace.selected)
+            let request = FriendlyLoadRequest(folder:folder,mode:mode,conversation:workspace.selected,loadUpper:loadUpper)
             acceptedIdentity = nil
             if harness.state.hasModel {
                 loadingName = profile.name; loadingModel = true; pendingLoad = FriendlyAcceptingLoad(request:request,worker:ObjectIdentifier(worker)); worker.interrupt(unload:true); harness.poll()
@@ -402,7 +421,7 @@ final class FriendlyChatStore: ObservableObject {
         var settings = NativeSettings(directory:folder.path)
         settings.loadIdentity = request.mode; settings.loadRequestID = request.id
         settings.metal = true; settings.mlx = true; settings.chat = true
-        settings.capacity = NativeSettings.chatContextPositions; settings.chunk = 32
+        settings.capacity = NativeSettings.chatContextPositions; settings.chunk = 32; settings.loadUpper = request.loadUpper
         settings.numericalBudget = profile.numericalBudget; settings.textBudget = profile.textBudget
         if worker.submit(.load(settings)) {
             acceptingLoad = FriendlyAcceptingLoad(request:request,worker:ObjectIdentifier(worker))

@@ -13,8 +13,26 @@ struct NativeSettings: Sendable {
     var chat = false
     var textBudget: UInt64 = 64 * 1024 * 1024
     var capacity: UInt32 = 32
+    // Cold, immutable model limit; capacity remains the current session size.
+    // Explicitly supported only for managed Qwen2 in this bounded integration.
+    var loadUpper: UInt32? = nil
     var chunk: UInt32 = 3
     var numericalBudget: UInt64 = 128 * 1024 * 1024
+
+    func admittedLoadUpper() throws -> UInt32 {
+        guard let loadUpper else { return capacity }
+        guard loadIdentity == .managedQwen2, metal, mlx, chat, packedDirectory.isEmpty,
+              (loadUpper == 512 || loadUpper == 1024), capacity > 0, capacity <= loadUpper else {
+            throw NativeContextFailure("The separate model limit requires managed Qwen2, 512 or 1024 positions, and an initial window within that limit.")
+        }
+        return loadUpper
+    }
+
+    func loadOptions() throws -> TokletOptions {
+        var result = options()
+        result.capacity = try admittedLoadUpper()
+        return result
+    }
 
     func options() -> TokletOptions {
         TokletOptions(abi_version: TOKLET_ABI_VERSION,
@@ -832,6 +850,7 @@ private final class Engine {
             let retained = NativeModelContext(fresh)
             guard let settings, fresh.capacity == UInt64(settings.capacity),
                   fresh.offset == 0, fresh.backend == (settings.metal ? TOKLET_CONTEXT_METAL : TOKLET_CONTEXT_CPU),
+                  settings.loadUpper.map({ fresh.loadedLimit == UInt64($0) }) ?? true,
                   modelContext == nil || modelContext == retained else {
                 throw invalid("Native context does not match the loaded model/settings")
             }
@@ -1049,6 +1068,7 @@ private final class Engine {
                 throw invalid("Audited managed identity requires native MLX Chat loading")
             }
             guard (1...32768).contains(requested.capacity), requested.chunk > 0 else { throw invalid("Invalid capacity/chunk") }
+            let loadUpper = try requested.admittedLoadUpper()
             guard requested.directory.utf8.count <= 16384, requested.packedDirectory.utf8.count <= 16384 else {
                 throw invalid("Artifact path exceeds 16 KiB")
             }
@@ -1057,14 +1077,14 @@ private final class Engine {
                   !path.contains(0), !packed.contains(0) else { throw invalid("Invalid artifact path") }
             if requested.mlx {
                 let budget = try NativeResourcePlan.numericalBudget(wholeBudget:requested.numericalBudget)
-                let metadata = try NativeCompatibility.inspect(directory:requested.directory,context:requested.capacity,budget:requested.numericalBudget)
+                let metadata = try NativeCompatibility.inspect(directory:requested.directory,context:loadUpper,budget:requested.numericalBudget)
                 compatibility = metadata; compatibilityDirectory = requested.directory
                 guard metadata.mayAttemptLoad else {
                     throw NSError(domain:"TokletCompatibility",code:Int(metadata.rejectionCode),userInfo:[NSLocalizedDescriptionKey:metadata.summary])
                 }
                 // Ordinary numerical metadata only, including for audited Smol.
                 // Actual audited source/model/session admission remains final.
-                let plan = try NativeResourcePlan.inspect(directory:requested.directory,capacity:requested.capacity,chunk:requested.chunk,budget:budget)
+                let plan = try NativeResourcePlan.inspect(directory:requested.directory,capacity:requested.capacity,chunk:requested.chunk,budget:budget,context:loadUpper)
                 runtimePlan = plan
                 guard plan.fitsRequestedBudgets else {
                     throw NSError(domain:"TokletResourcePlan",code:Int(TOKLET_LOAD_ERROR),userInfo:[NSLocalizedDescriptionKey:plan.summary])
@@ -1073,7 +1093,7 @@ private final class Engine {
             }
             // The real loader reopens and validates all payload/device/session
             // requirements; captured metadata is never authority to skip them.
-            var options = requested.options(); var error = TokletError()
+            var options = try requested.loadOptions(); var error = TokletError()
             let code = path.withUnsafeBufferPointer { path in
                 packed.withUnsafeBufferPointer { packed in
                     requested.loadIdentity == .managedSmol ? toklet_model_load_mlx_smol_audited(path.baseAddress,path.count,&options,&model,&error)
