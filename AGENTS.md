@@ -12,6 +12,17 @@ commit completed tasks and keep [docs/improvements.md](docs/improvements.md) cur
 
 ## Architecture and working method
 
+- Keep implementation context compact: read the current TODO task, relevant plan
+  criteria and targeted code/diffs; link completed history rather than repeating it.
+- Submit each code task to Astra with its diff, invariants and check results in
+  one review request. Follow up for fixes or unresolved findings; avoid separate
+  routine source, runner and publication review rounds.
+- Keep full check logs in artifacts and report counts, failures and evidence paths.
+  Reuse checks only when their relevant source/dependency inputs are unchanged;
+  retain the required checks below for code that changes those inputs.
+- Keep TODO's current/next task and each improvement entry concise: behavior,
+  checks/review, limitations and commit/evidence references. Avoid duplicating logs.
+
 - Start with one package and ordinary functions over slices. Add modules when their implementation exists. Introduce abstractions only when concrete use cases justify them.
 - Preserve the readable scalar CPU implementation and independent numerical fixtures as correctness references while optimizing other paths.
 - Separate immutable model weights from session-owned KV state and scratch. Keep tokenization, chat formatting, UI, downloads, and tool execution outside numerical kernels.

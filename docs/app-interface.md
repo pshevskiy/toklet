@@ -59,12 +59,18 @@ unsupported status. Supported results use the same Use model action as the
 saved-model list. Opening Models reads a lightweight presence inventory; Use
 checks full snapshot integrity. A newer Use can replace pending verification;
 stale results cannot open the previous selection. Downloads keep their model
-selection fixed until completion or cancellation. Opening the already active model preserves its session. The
+selection fixed until completion or cancellation. Opening the already active model preserves its session,
+except an explicit Qwen2 “Reopen with new limit” action. The
 Models sheet closes after a successful load and remains open on failure. Wider downloadable/text profiles remain open in
 [M8.4](mlx-implementation-plan.md). Downloaded snapshots additionally authenticate
 the six required file hashes, including weights, before publication and opening.
 
-All three selected chat profiles admit 512 total token positions and chunk32. SmolLM2 reserves
+Managed profiles initially open with512 token positions and chunk32; accepted
+saved settings or Preview/Apply can replace the session within its loaded limit.
+Qwen2 offers a512/1024 next-load upper, independent of initialKV512. Chat input
+follows the active window and declared cap, with a32768 codec ceiling and256
+reply cap. [Current Mac evidence](../benchmarks/results/2026-11-02-session-window-chat-v1.json)
+does not qualify full-window quality or physical-phone execution. SmolLM2 reserves
 512 MiB numerical plus 64 MiB text; Qwen reserves 1 GiB numerical plus 128 MiB
 text. Mistral reserves 5 GiB numerical plus 64 MiB text, with a separate
 5.5 GiB current-process admission threshold; see [Mistral integration](mlx-mistral-app.md).

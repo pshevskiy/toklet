@@ -27,7 +27,10 @@ formatting behavior. The additive C text handle is immutable and thread-affine.
 It loads from the model's frozen absolute originating directory, owns no model
 borrow and can outlive model release. Query calls return required counts;
 undersized buffers copy no elements. JSON is limited to64KiB/63 alternating
-user/assistant messages and encoded input to512 IDs. The later
+user/assistant messages. The original encoded-input limit was512 IDs; the
+[current codec ceiling](../benchmarks/results/2026-11-02-rendered-codec-ceiling-v1.json)
+is32768, with actual rendered prompt plus reply still admitted against the
+loaded model and active session before generation. The later
 [bounded output extension](chat-output-limit.md) raises visible Chat output
 from128 to256 IDs; the original receipt below retains its original128-ID scope.
 Chat control delimiters in message content reject instead of creating roles.

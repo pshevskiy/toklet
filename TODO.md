@@ -1,8 +1,10 @@
 # Toklet progress checklist
 
 Last updated: **2 November 2026**. Active milestone: **M8**.
-Current task: **audit per-model context/KV reporting and remaining app controls**.
-Completed B5e2: admitted-window Chat, including real Mac Qwen2 growth/boundaries.
+Next task: **session-bound owner-memory snapshot and explicit context/text facts**.
+Completed B5e2 (`c346382`): admitted-window Chat, including real Mac Qwen2 growth/boundaries.
+Reporting audit complete: reuse existing facts; add owner snapshots without
+claiming load estimates/admission are current allocations or loading peaks.
 Completed: **B5e1** (`69ebeb0`), checks and Astra review pass; [evidence](benchmarks/results/2026-11-02-context-load-upper-v1.json).
 Implementation resumed with compact task records, focused checks and one combined
 Astra diff/results review before commit. Next: B5e2 rendered prompt/context policy.
@@ -854,3 +856,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-02 | B5e2a in progress | Rust/native codec ceiling follows engine32768; output256/64KiB/63messages stay bounded. Independent byte-token fixture covers513/1024/32768 and rejection32769, exact/undersized C copies. | All6jobs and Astra review pass:539default/647Metal,23/193ignored. [Evidence](benchmarks/results/2026-11-02-rendered-codec-ceiling-v1.json). Swift/package/generation integration next. |
 
 | 2026-11-02 | B5e2b complete |21native/3app builds pass; strict Swift controls and real Mac Qwen2 input629/output32, exact992+32=1024 and overflow1025 with full prefix/draft preservation pass. Astra approves; atomic candidate adoption preserves prior package. | [Evidence](benchmarks/results/2026-11-02-session-window-chat-v1.json). Next per-model reporting/control audit. No UI rendering/phone/quality/performance claim. |
+
+| 2026-11-02 | Reporting/workflow audit | Existing declared/load/session reports retained. Astra recommends session-bound actual owner snapshots via read-only D1, labelled at creation/replacement unless refreshed; unsupported reporting must not fail valid sessions. Corrected stale512-policy docs and saved compact workflow in AGENTS.md. | Next owner-memory snapshot, stale-binding/resize/suspend checks; loading peaks and whole-app fit remain open. Completed code commits `69ebeb0`, `fc7cbfe`, `c346382`. |

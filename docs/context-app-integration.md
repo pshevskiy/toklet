@@ -1,5 +1,12 @@
 # Context facts and shared-window admission in the app
 
+Current update (2 November 2026): Chat input follows the admitted active window
+and known model input cap, up to the codec32768 ceiling; replies remain capped
+at256. Managed Qwen2 has a512/1024 next-load choice with initialKV512. The
+[new Mac witness](../benchmarks/results/2026-11-02-session-window-chat-v1.json)
+checks actual longer generation and shared-window boundaries. The original
+512-token policy, package and qualification below are historical evidence.
+
 Chat and Expert now consume the fixed native context and request records from
 [L3.1](context-admission.md). This connects the existing runtime contract to the
 app; it does not raise the current engine, codec, text or output limits.
@@ -31,7 +38,7 @@ configuration after suspend is not presented as a live-session capacity claim.
 Unknown declaration remains unknown. Qualification and whole-app/device fit are
 not granted by these records.
 
-Mode policy preserves current constraints: Chat input512 rendered tokens,
+The original mode policy preserved these constraints: Chat input512 rendered tokens,
 output256 tokens, conversation/decoded text64KiB and draft16KiB; Expert diagnostic
 output128 tokens and token-ID text256KiB. Limits are intersected with selected
 capacity and any known separate model input/output caps. Saved unsupported reply

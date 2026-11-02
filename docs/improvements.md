@@ -9320,3 +9320,13 @@ unchanged. [Evidence](../benchmarks/results/2026-11-02-session-window-chat-v1.js
 Guarded atomic adoption selects the rebuilt package and preserves native38's
 previous package. No rendered UI, physical phone, full-window quality or
 performance qualification is claimed. Core change committed as `fc7cbfe`.
+
+## 2 November 2026 — Compact workflow and reporting audit
+
+Saved the compact task/diff/review/log workflow in AGENTS.md and corrected three
+stale512-policy documents. Astra's reporting audit identifies the next concrete
+gap: session-bound actual owner buffers, refreshed or explicitly labelled at
+creation/replacement, with unsupported inspection leaving valid sessions usable.
+Historical load estimates and admission totals remain separate from allocations,
+loading peaks and whole-device fit. Today's reviewed code commits: `69ebeb0`,
+`fc7cbfe`, `c346382`; all completed tasks have check evidence linked above.
