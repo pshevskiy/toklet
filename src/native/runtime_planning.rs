@@ -100,13 +100,51 @@ pub unsafe extern "C" fn toklet_mlx_capacity_plan_create(
     out: *mut *mut CompatibilityHandle,
     error: *mut NativeError,
 ) -> u32 {
-    unsafe { plan_create(path, len, opts, out, error, ReportKind::Capacity) }
+    unsafe { plan_create(path, len, opts, out, error, ReportKind::Capacity(None)) }
+}
+
+/// Same capacity report with a physical KV-byte ceiling. The original options
+/// layout and entrypoint remain unchanged. Zero means zero KV bytes, not unlimited.
+/// # Safety
+/// Same pointer, ownership and disjointness contract as toklet_mlx_plan_create.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_mlx_capacity_plan_create_with_kv_limit(
+    path: *const u8,
+    len: usize,
+    opts: *const RuntimePlanningOptions,
+    kv_budget_bytes: u64,
+    out: *mut *mut CompatibilityHandle,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe {
+        plan_create(
+            path,
+            len,
+            opts,
+            out,
+            error,
+            ReportKind::Capacity(Some(kv_budget_bytes)),
+        )
+    }
 }
 
 #[derive(Clone, Copy)]
 enum ReportKind {
     Resources,
-    Capacity,
+    Capacity(Option<u64>),
+}
+impl ReportKind {
+    fn kv_budget(self) -> Result<Option<usize>> {
+        match self {
+            Self::Capacity(Some(bytes)) if bytes <= weights::INITIAL_MEMORY_LIMIT_BYTES as u64 => {
+                usize::try_from(bytes)
+                    .map(Some)
+                    .map_err(|_| fail(INVALID, "KV ceiling exceeds address width"))
+            }
+            Self::Capacity(Some(_)) => Err(fail(INVALID, "KV ceiling exceeds 6 GiB")),
+            _ => Ok(None),
+        }
+    }
 }
 
 #[cfg(all(
@@ -143,6 +181,7 @@ unsafe fn plan_create(
             pointer(opts)?;
             let raw = *opts;
             let (load, options) = raw.validate()?;
+            let kv_budget = kind.kv_budget()?;
             let path = local_path(path, len)?;
             #[cfg(all(
                 feature = "metal",
@@ -189,8 +228,18 @@ unsafe fn plan_create(
                         .map_err(planning_error)?;
                         compatibility::capture(&report)?
                     }
-                    ReportKind::Capacity => {
-                        let report = if raw.attention == 2 {
+                    ReportKind::Capacity(_) => {
+                        let report = if let Some(limit) = kv_budget {
+                            metal::planning::inspect_mlx_capacity_with_kv_limit(
+                                path,
+                                load,
+                                options,
+                                normalization,
+                                readback,
+                                (raw.attention != 2).then_some(attention),
+                                limit,
+                            )
+                        } else if raw.attention == 2 {
                             metal::planning::inspect_mlx_capacity_with_native_attention(
                                 path,
                                 load,
@@ -221,7 +270,7 @@ unsafe fn plan_create(
                 target_arch = "aarch64"
             )))]
             {
-                let _ = (load, options, path, kind);
+                let _ = (load, options, path, kind, kv_budget);
                 Err(fail(
                     UNSUPPORTED,
                     "Runtime Metal planning unavailable in this build/platform",
@@ -248,6 +297,34 @@ mod tests {
             reserved: 0,
             load_memory_limit_bytes: 256 * 1024 * 1024,
             session_memory_limit_bytes: 256 * 1024 * 1024,
+        }
+    }
+    #[test]
+    fn kv_capacity_ceiling_is_additive_zero_is_explicit_and_invalid_clears_output() {
+        assert_eq!(ReportKind::Capacity(None).kv_budget().unwrap(), None);
+        assert_eq!(ReportKind::Capacity(Some(0)).kv_budget().unwrap(), Some(0));
+        assert_eq!(
+            ReportKind::Capacity(Some(weights::INITIAL_MEMORY_LIMIT_BYTES as u64))
+                .kv_budget()
+                .unwrap(),
+            Some(weights::INITIAL_MEMORY_LIMIT_BYTES)
+        );
+        for ceiling in [weights::INITIAL_MEMORY_LIMIT_BYTES as u64 + 1, u64::MAX] {
+            let mut out = ptr::dangling_mut();
+            assert_eq!(
+                unsafe {
+                    toklet_mlx_capacity_plan_create_with_kv_limit(
+                        b"/not-opened".as_ptr(),
+                        11,
+                        &options(),
+                        ceiling,
+                        &mut out,
+                        ptr::null_mut(),
+                    )
+                },
+                INVALID
+            );
+            assert!(out.is_null());
         }
     }
     type Create = unsafe extern "C" fn(

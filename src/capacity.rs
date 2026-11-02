@@ -84,11 +84,17 @@ impl KvOwner {
 pub struct Footprint {
     pub admitted_bytes: usize,
     pub largest_buffer_bytes: usize,
+    /// Required when a KV ceiling is supplied; omitted for legacy reports.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub kv_bytes: Option<usize>,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize)]
 pub struct Limits {
     pub budget_bytes: usize,
     pub maximum_buffer_bytes: usize,
+    /// None is unlimited. Some(0) is an explicit zero-byte ceiling.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub kv_budget_bytes: Option<usize>,
 }
 #[derive(Clone, Copy, Debug, PartialEq, Eq, serde::Serialize)]
 pub struct Point {
@@ -96,10 +102,12 @@ pub struct Point {
     pub footprint: Footprint,
     pub fits_budget: bool,
     pub fits_buffer: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub fits_kv_budget: Option<bool>,
 }
 impl Point {
     fn fits(self) -> bool {
-        self.fits_budget && self.fits_buffer
+        self.fits_budget && self.fits_buffer && self.fits_kv_budget.unwrap_or(true)
     }
 }
 #[derive(Debug, PartialEq, Eq, serde::Serialize)]
@@ -114,11 +122,12 @@ pub struct Report {
 #[derive(Debug, PartialEq, Eq)]
 pub enum SearchError<E> {
     InvalidBounds,
+    MissingKvFootprint,
     Planner(E),
 }
 
 /// Search only an already implemented/admitted interval with fixed modes,
-/// chunk, offset and layouts. Both footprint fields MUST be nondecreasing in
+/// chunk, offset and layouts. All constrained footprint fields MUST be nondecreasing in
 /// capacity. Current full/ring caches and fixed dense scratch satisfy this;
 /// a future nonmonotone allocator must supply a different search procedure.
 /// Planner failures (including overflow) are errors, never interpreted as OOM.
@@ -134,9 +143,16 @@ pub fn search<E>(
     }
     let mut evaluate = |capacity| -> Result<Point, SearchError<E>> {
         let footprint = plan(capacity).map_err(SearchError::Planner)?;
+        let fits_kv_budget = match limits.kv_budget_bytes {
+            Some(limit) => {
+                Some(footprint.kv_bytes.ok_or(SearchError::MissingKvFootprint)? <= limit)
+            }
+            None => None,
+        };
         Ok(Point {
             capacity,
             footprint,
+            fits_kv_budget,
             fits_budget: footprint.admitted_bytes <= limits.budget_bytes,
             fits_buffer: footprint.largest_buffer_bytes <= limits.maximum_buffer_bytes
                 && footprint.largest_buffer_bytes <= isize::MAX as usize,
@@ -241,6 +257,154 @@ mod tests {
     }
 
     #[test]
+    fn kv_ceiling_matches_independent_full_and_ring_owner_enumeration() {
+        let owners = [
+            KvOwner {
+                heads: 2,
+                head_dim: 3,
+                storage: KvStorage::F16,
+                retention: Retention::Full,
+                guard_elements: 1,
+                copies: 2,
+            },
+            KvOwner {
+                heads: 1,
+                head_dim: 2,
+                storage: KvStorage::F32,
+                retention: Retention::Sliding { window: 3 },
+                guard_elements: 0,
+                copies: 1,
+            },
+        ];
+        for budget in [0, 80, 300, 2000] {
+            for buffer in [0, 64, 128, 4096] {
+                for ceiling in (0..1100).step_by(7) {
+                    let report = search(
+                        3,
+                        16,
+                        Limits {
+                            budget_bytes: budget,
+                            maximum_buffer_bytes: buffer,
+                            kv_budget_bytes: Some(ceiling),
+                        },
+                        |n| {
+                            let kv = owners.iter().try_fold(0usize, |sum, owner| {
+                                sum.checked_add(owner.at_capacity(n)?.total_bytes)
+                                    .ok_or(cpu::Error::SizeOverflow)
+                            })?;
+                            Ok::<_, cpu::Error>(Footprint {
+                                admitted_bytes: 10 + kv + 3 * n,
+                                largest_buffer_bytes: 64.max(12 * n + 2),
+                                kv_bytes: Some(kv),
+                            })
+                        },
+                    )
+                    .unwrap();
+                    let expected = (3..=16)
+                        .filter(|&n| {
+                            let kv = 48 * n + 8 + 16 * n.min(3);
+                            kv <= ceiling
+                                && 10 + kv + 3 * n <= budget
+                                && 64.max(12 * n + 2) <= buffer
+                        })
+                        .next_back();
+                    assert_eq!(report.selected.map(|p| p.capacity), expected);
+                    assert_eq!(
+                        report.first_excluded.map(|p| p.capacity),
+                        match expected {
+                            Some(16) => None,
+                            Some(n) => Some(n + 1),
+                            None => Some(3),
+                        }
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn kv_ceiling_exact_boundary_zero_plateau_and_missing_accounting() {
+        let limits = Limits {
+            budget_bytes: 1000,
+            maximum_buffer_bytes: 1000,
+            kv_budget_bytes: Some(24),
+        };
+        let plan = |n: usize| {
+            Ok::<_, ()>(Footprint {
+                admitted_bytes: 100 + n,
+                largest_buffer_bytes: 10,
+                kv_bytes: Some(8 * n.min(3)),
+            })
+        };
+        assert_eq!(
+            search(1, 32, limits, plan)
+                .unwrap()
+                .selected
+                .unwrap()
+                .capacity,
+            32
+        );
+        let below = search(
+            1,
+            32,
+            Limits {
+                kv_budget_bytes: Some(23),
+                ..limits
+            },
+            plan,
+        )
+        .unwrap();
+        assert_eq!(below.selected.unwrap().capacity, 2);
+        assert_eq!(below.first_excluded.unwrap().fits_kv_budget, Some(false));
+        assert!(
+            search(
+                1,
+                32,
+                Limits {
+                    kv_budget_bytes: Some(0),
+                    ..limits
+                },
+                plan
+            )
+            .unwrap()
+            .selected
+            .is_none()
+        );
+        assert_eq!(
+            search(1, 32, limits, |_| Ok::<_, ()>(Footprint {
+                admitted_bytes: 1,
+                largest_buffer_bytes: 1,
+                kv_bytes: None
+            })),
+            Err(SearchError::MissingKvFootprint)
+        );
+        assert_eq!(
+            search(1, 32, limits, |_| Err::<Footprint, _>("size overflow")),
+            Err(SearchError::Planner("size overflow"))
+        );
+        let unlimited = search(
+            1,
+            32,
+            Limits {
+                kv_budget_bytes: None,
+                ..limits
+            },
+            |_| {
+                Ok::<_, ()>(Footprint {
+                    admitted_bytes: 1,
+                    largest_buffer_bytes: 1,
+                    kv_bytes: None,
+                })
+            },
+        )
+        .unwrap();
+        let json = serde_json::to_value(&unlimited).unwrap();
+        assert!(json["limits"].get("kv_budget_bytes").is_none());
+        assert!(json["selected"].get("fits_kv_budget").is_none());
+        assert!(json["selected"]["footprint"].get("kv_bytes").is_none());
+    }
+
+    #[test]
     fn existing_dense_and_shared_planners_use_unique_storage() {
         use crate::model::shared_kv::{KvKind, LayerKvGeometry, SharedKvPlan};
         use crate::model::window_cache::WindowKvCache;
@@ -303,11 +467,13 @@ mod tests {
                 let limits = Limits {
                     budget_bytes: budget,
                     maximum_buffer_bytes: buffer,
+                    kv_budget_bytes: None,
                 };
                 let report = search(1, 32, limits, |n| {
                     Ok::<_, ()>(Footprint {
                         admitted_bytes: 10 + 3 * n,
                         largest_buffer_bytes: 2 * n,
+                        kv_bytes: None,
                     })
                 })
                 .unwrap();
@@ -331,11 +497,13 @@ mod tests {
                 1,
                 Limits {
                     budget_bytes: 1,
-                    maximum_buffer_bytes: 1
+                    maximum_buffer_bytes: 1,
+                    kv_budget_bytes: None,
                 },
                 |_| Ok::<_, ()>(Footprint {
                     admitted_bytes: 0,
-                    largest_buffer_bytes: 0
+                    largest_buffer_bytes: 0,
+                    kv_bytes: None,
                 })
             ),
             Err(SearchError::InvalidBounds)
@@ -346,7 +514,8 @@ mod tests {
                 10,
                 Limits {
                     budget_bytes: 1,
-                    maximum_buffer_bytes: 1
+                    maximum_buffer_bytes: 1,
+                    kv_budget_bytes: None,
                 },
                 |_| Err::<Footprint, _>("overflow")
             ),
@@ -358,11 +527,13 @@ mod tests {
             Limits {
                 budget_bytes: usize::MAX,
                 maximum_buffer_bytes: usize::MAX,
+                kv_budget_bytes: None,
             },
             |_| {
                 Ok::<_, ()>(Footprint {
                     admitted_bytes: 1,
                     largest_buffer_bytes: isize::MAX as usize + 1,
+                    kv_bytes: None,
                 })
             },
         )

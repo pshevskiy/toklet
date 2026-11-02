@@ -9347,3 +9347,18 @@ retains the synthetic-fixture setup failure and correction; no numerical gate
 changed. Snapshots are explicitly historical, not per-token memory readings.
 Loading peaks, whole-device fit, advanced KV-byte controls, rendered UI and phone
 checks remain separate. No Rust/ABI/native-package changes or new performance claim.
+
+## 3 November 2026 — KV-constrained capacity search (B5g1)
+
+Common capacity search now accepts an optional physical KV-byte ceiling and
+reports independent KV fit. Legacy reports omit all new optional fields; the
+old entrypoint and56-byte options remain unchanged. The additive C function
+uses exact existing owner accounting; zero is explicit, not unlimited.
+Independent mixed full/ring enumeration and exact/one-byte-below/no-fit/overflow
+checks pass. Formatting, strict Clippy and542default/650Metal tests pass;23/193
+hardware/model tests remain ignored. A Metal-only optional-pattern compile
+failure is preserved and corrected. [Evidence](../benchmarks/results/2026-11-03-kv-capacity-core-v1.json).
+Astra approves the scoped change. Compatibility covers C ABI and legacy JSON;
+Rust struct-literal callers require the added fields. Device API execution,
+rebuilt packaging and app Apply
+enforcement remain separate. Planning does not qualify model/device fit.

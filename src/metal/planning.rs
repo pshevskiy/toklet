@@ -479,10 +479,19 @@ impl<'a> ResolvedSessionPlan<'a> {
         }
         .with_positional_bytes(positional_bytes)
     }
+    #[cfg(test)]
     fn capacity_report(
         &self,
         maximum_buffer_bytes: usize,
         weight_buffer_bytes: usize,
+    ) -> Result<capacity::Report> {
+        self.capacity_report_with_kv_limit(maximum_buffer_bytes, weight_buffer_bytes, None)
+    }
+    fn capacity_report_with_kv_limit(
+        &self,
+        maximum_buffer_bytes: usize,
+        weight_buffer_bytes: usize,
+        kv_budget_bytes: Option<usize>,
     ) -> Result<capacity::Report> {
         capacity::search(
             self.options.prefill_chunk_size,
@@ -490,10 +499,12 @@ impl<'a> ResolvedSessionPlan<'a> {
             capacity::Limits {
                 budget_bytes: self.options.memory_limit_bytes,
                 maximum_buffer_bytes,
+                kv_budget_bytes,
             },
             |capacity| -> Result<capacity::Footprint> {
                 let plan = self.at_capacity(capacity)?;
                 Ok(capacity::Footprint {
+                    kv_bytes: kv_budget_bytes.map(|_| plan.memory.kv_bytes),
                     admitted_bytes: plan.memory.admitted_bytes,
                     largest_buffer_bytes: plan.largest_buffer_bytes()?.max(weight_buffer_bytes),
                 })
@@ -502,6 +513,9 @@ impl<'a> ResolvedSessionPlan<'a> {
         .map_err(|error| match error {
             capacity::SearchError::InvalidBounds => {
                 Error::Options("invalid capacity search bounds")
+            }
+            capacity::SearchError::MissingKvFootprint => {
+                Error::Options("KV-constrained search requires KV accounting")
             }
             capacity::SearchError::Planner(error) => error,
         })
@@ -570,7 +584,7 @@ pub fn inspect_mlx(
         normalization,
         readback,
         AttentionPolicy::Explicit(attention),
-        false,
+        CapacityRequest::None,
     )
     .map(|inspection| inspection.resources)
 }
@@ -592,7 +606,7 @@ pub fn inspect_mlx_with_native_attention(
         normalization,
         readback,
         AttentionPolicy::NativeModel,
-        false,
+        CapacityRequest::None,
     )
     .map(|inspection| inspection.resources)
 }
@@ -623,7 +637,7 @@ pub fn inspect_mlx_capacity(
         normalization,
         readback,
         AttentionPolicy::Explicit(attention),
-        true,
+        CapacityRequest::Unlimited,
     )
 }
 
@@ -644,8 +658,37 @@ pub fn inspect_mlx_capacity_with_native_attention(
         normalization,
         readback,
         AttentionPolicy::NativeModel,
-        true,
+        CapacityRequest::Unlimited,
     )
+}
+
+/// Same read-only capacity inspection, with a physical KV-byte ceiling.
+/// None attention selects the native factory policy; Some selects an explicit
+/// qualified mode. Zero bytes is an explicit constraint, not unlimited.
+pub fn inspect_mlx_capacity_with_kv_limit(
+    directory: &Path,
+    load: weights::LoadOptions,
+    options: session::Options,
+    normalization: NormalizationMode,
+    readback: ReadbackMode,
+    attention: Option<AttentionMode>,
+    kv_budget_bytes: usize,
+) -> Result<CapacityInspection> {
+    inspect_with_policy(
+        directory,
+        load,
+        options,
+        normalization,
+        readback,
+        attention.map_or(AttentionPolicy::NativeModel, AttentionPolicy::Explicit),
+        CapacityRequest::KvBudget(kv_budget_bytes),
+    )
+}
+
+enum CapacityRequest {
+    None,
+    Unlimited,
+    KvBudget(usize),
 }
 
 enum AttentionPolicy {
@@ -659,7 +702,7 @@ fn inspect_with_policy(
     normalization: NormalizationMode,
     readback: ReadbackMode,
     policy: AttentionPolicy,
-    search_capacity: bool,
+    search_capacity: CapacityRequest,
 ) -> Result<CapacityInspection> {
     autoreleasepool(|_| {
         if load.memory_limit_bytes == 0
@@ -704,11 +747,19 @@ fn inspect_with_policy(
         validate_attention_device(&gpu, attention)?;
         let maximum = gpu.device.maxBufferLength();
         let weight_buffer_bytes = weights.validate_buffers(maximum)?;
-        let capacity = if search_capacity {
-            Some(resolved.capacity_report(maximum, weight_buffer_bytes)?)
-        } else {
-            session.validate_buffers(maximum)?;
-            None
+        let capacity = match search_capacity {
+            CapacityRequest::None => {
+                session.validate_buffers(maximum)?;
+                None
+            }
+            CapacityRequest::Unlimited => {
+                Some(resolved.capacity_report_with_kv_limit(maximum, weight_buffer_bytes, None)?)
+            }
+            CapacityRequest::KvBudget(limit) => Some(resolved.capacity_report_with_kv_limit(
+                maximum,
+                weight_buffer_bytes,
+                Some(limit),
+            )?),
         };
         let fits_source_load_budget = source.admitted_load_bytes() <= load.memory_limit_bytes;
         let fits_resident_load_budget = weights.admitted <= load.memory_limit_bytes;
@@ -940,6 +991,24 @@ mod tests {
                 assert_eq!(report.first_excluded.unwrap().capacity, 258);
                 assert!(!report.first_excluded.unwrap().fits_budget);
                 resolved.options.memory_limit_bytes = weights::INITIAL_MEMORY_LIMIT_BYTES;
+                let kv = boundary.memory.kv_bytes;
+                let exact_kv = resolved
+                    .capacity_report_with_kv_limit(isize::MAX as usize, 1024, Some(kv))
+                    .unwrap();
+                assert_eq!(exact_kv.selected.unwrap().capacity, 257);
+                assert_eq!(exact_kv.selected.unwrap().footprint.kv_bytes, Some(kv));
+                assert_eq!(exact_kv.first_excluded.unwrap().fits_kv_budget, Some(false));
+                let below_kv = resolved
+                    .capacity_report_with_kv_limit(isize::MAX as usize, 1024, Some(kv - 1))
+                    .unwrap();
+                assert_eq!(below_kv.selected.unwrap().capacity, 256);
+                assert!(
+                    resolved
+                        .capacity_report_with_kv_limit(isize::MAX as usize, 1024, Some(0))
+                        .unwrap()
+                        .selected
+                        .is_none()
+                );
                 let buffer_edge = boundary.largest_buffer_bytes().unwrap();
                 let report = resolved.capacity_report(buffer_edge, 1024).unwrap();
                 let expected = (32..=512)

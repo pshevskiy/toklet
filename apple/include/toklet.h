@@ -166,6 +166,15 @@ uint32_t toklet_mlx_plan_create(const uint8_t *, size_t,
    Current allocations and all limits are revalidated at actual construction. */
 uint32_t toklet_mlx_capacity_plan_create(const uint8_t *, size_t,
     const TokletRuntimePlanningOptions *, TokletCompatibility **, TokletError *);
+/* Additive KV-constrained search. Options and legacy reports are unchanged.
+   Ceiling is physical KV bytes including all owners/guards, within0..6GiB;
+   zero means zero bytes. Constrained points add footprint.kv_bytes and
+   fits_kv_budget; limits adds kv_budget_bytes. Resource fit flags retain their
+   existing numerical-budget meaning; KV fit is independent on capacity points.
+   No numerical buffers are allocated.
+   A selected estimate never authorizes Apply without resident re-admission. */
+uint32_t toklet_mlx_capacity_plan_create_with_kv_limit(const uint8_t *, size_t,
+    const TokletRuntimePlanningOptions *, uint64_t, TokletCompatibility **, TokletError *);
 /* UTF-8 bytes, no NUL, <=65536 bytes. NULL+0 queries required byte count. Short
    buffers return INVALID, set required count and leave output untouched. Other
    failures clear a valid count. Capacity >65536 rejects before copying.

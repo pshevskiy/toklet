@@ -1,0 +1,43 @@
+{
+  "task": "B5g1",
+  "date": "2026-11-03",
+  "status": "complete; checks and Astra review passed",
+  "change": "Optional exact physical KV-byte constraint participates in common capacity search and an additive C entrypoint",
+  "compatibility": {
+    "runtime_options_bytes": 56,
+    "legacy_entrypoint_preserved": true,
+    "legacy_json_omits_new_optional_fields": true,
+    "zero_means_zero_bytes": true,
+    "maximum_ceiling_bytes": 6442450944,
+    "rust_struct_literals": "Existing in-repository callers updated; added public Rust fields are not downstream source compatible"
+  },
+  "checks": {
+    "fmt": true,
+    "strict_clippy_default_and_metal": true,
+    "default_passed": 542,
+    "metal_passed": 650,
+    "default_ignored": 23,
+    "metal_ignored": 193,
+    "independent_full_ring_enumeration": true,
+    "exact_below_zero_plateau_and_missing_accounting": true,
+    "planner_overflow_not_treated_as_oom": true,
+    "existing_attention_readback_modes_exact_kv_boundary": true
+  },
+  "retained_failure": "Metal-only optional-binding typo found by compiler and corrected. Default-feature implementation unchanged after its passing checks.",
+  "scope_limits": [
+    "No device execution of the new exported function yet",
+    "No app enforcement or new package selection yet",
+    "No model/device/quality/performance qualification from planning"
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/kv-ceiling-core-2026-11-02/checks.json",
+      "sha256": "77158b1fcd81636fc81833028d9dff7b655725fdc80af1ec8e8c79110e252bce"
+    },
+    {
+      "path": "artifacts/kv-ceiling-core-2026-11-02/metal-retry/checks.json",
+      "sha256": "0cf5bd8d5420ea878c90bcb9190cc01bebbedb81e8a4af1fe1f6bc96e3cf7248"
+    }
+  ],
+  "astra": "Approved native/core scope; C ABI and legacy JSON compatibility only; app resident enforcement remains next"
+}

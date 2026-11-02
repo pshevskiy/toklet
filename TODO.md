@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
-Last updated: **2 November 2026**. Active milestone: **M8**.
-Next task: **advanced KV-byte controls and loading-peak accounting audit**.
+Last updated: **3 November 2026**. Active milestone: **M8**.
+Current task: **B5g2 — coherent39-export package and KV ceiling Preview/Apply enforcement**.
 Completed B5f1: owner snapshot and explicit context/text facts; [evidence](benchmarks/results/2026-11-02-session-owner-memory-v1.json).
 Completed B5e2 (`c346382`): admitted-window Chat, including real Mac Qwen2 growth/boundaries.
 Reporting audit complete: reuse existing facts; add owner snapshots without
@@ -446,6 +446,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
   stale binding, resize/rejection/suspend/resume and3platform checks; Astra approved.
 - [ ] Include actual weights, KV owners, scratch, loading peaks and application
   allowances; distinguish numerical fit from whole-process fit.
+- [x] B5g1: common/native physical KV-byte constraint; C ABI/legacy JSON
+  compatibility,542default/650Metal checks and Astra review pass.
+  [Evidence](benchmarks/results/2026-11-03-kv-capacity-core-v1.json).
 - [ ] Expose supported context, reply limit, memory budget and advanced chunk/
   KV-byte ceilings in the existing app; show current fixed KV storage honestly.
 - [ ] Persist by artifact/plan identity; apply changes atomically with safe
@@ -863,3 +866,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-02 | Reporting/workflow audit | Existing declared/load/session reports retained. Astra recommends session-bound actual owner snapshots via read-only D1, labelled at creation/replacement unless refreshed; unsupported reporting must not fail valid sessions. Corrected stale512-policy docs and saved compact workflow in AGENTS.md. | Next owner-memory snapshot, stale-binding/resize/suspend checks; loading peaks and whole-app fit remain open. Completed code commits `69ebeb0`, `fc7cbfe`, `c346382`. |
 
 | 2026-11-02 | Owner-memory snapshot in progress | Cold D1 capture at creation/replacement, session/config binding, optional unavailable report, explicit historical owner/allowance labels. No Rust/ABI change. | New controls/CPU fallback and Mac lifecycle pass. First unsupported-case setup failed on the original32-position fixture; adviser-reviewed temporary copy fixes setup while executing only3positions. CPU+Metal transition regressions,3app builds,3final-copy SDK checks and Astra review pass. [Evidence](benchmarks/results/2026-11-02-session-owner-memory-v1.json). |
+
+| 2026-11-02 | B5g1 implementation | Optional physical KV-byte ceiling participates in capacity search, independent fit flag, legacy JSON omits new fields. Additive C entrypoint keeps existing56-byte options layout; zero is explicit. | Default542 tests and strict Clippy pass. Metal compilation caught an optional-pattern typo; corrected only the Metal branch. Final Metal650 tests/strict Clippy and Astra review pass. Swift Preview/Apply enforcement follows. |
