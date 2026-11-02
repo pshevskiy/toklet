@@ -1,0 +1,75 @@
+{
+  "task": "B5f1",
+  "date": "2026-11-02",
+  "status": "complete; checks and Astra review passed",
+  "change": "Optional model/session/configuration-bound owner-memory snapshot at creation/replacement, cleared on release and recaptured on resume",
+  "reported": [
+    "shared learned weights",
+    "shared positional buffers and model tables",
+    "KV, scratch, history, logits, session tables",
+    "driver and bridge allowances separately",
+    "declared limits, global engine ceiling, loaded limit, active input/reply ceilings"
+  ],
+  "snapshot_semantics": "Historical creation/replacement accounting, not refreshed per token; no candidate totals, synthetic fit flags, loading-peak or device-fit claim",
+  "checks": {
+    "new_binding_and_failure_controls": true,
+    "cpu_unavailable_reporting_preserves_load_generation": true,
+    "routing": 116,
+    "preferences": 90,
+    "planning": 57,
+    "apply": 28,
+    "cpu_and_metal_transition_regressions": {
+      "pure_each": 37,
+      "configuration_each": 11,
+      "stale_each": 15,
+      "retirement_each": 2
+    },
+    "unsigned_app_builds": 3,
+    "arch_platform_inspections": 6,
+    "final_copy_strict_platform_typechecks": 3,
+    "rust_abi_changes": false,
+    "unchanged_rust_checks_reused": {
+      "default": 539,
+      "metal": 647
+    }
+  },
+  "mac": {
+    "model": "Qwen2.5-0.5B-Instruct-8bit-6474d4c",
+    "initial_kv_bytes": 6292128,
+    "replacement_kv_bytes": 12583584,
+    "shared_model_unchanged": true,
+    "creation_snapshot_retained_through_generation": true,
+    "rejection_preserves_snapshot_prefix_draft": true,
+    "suspend_clears_and_replay_refreshes": true,
+    "close_clears": true
+  },
+  "retained_failure": "Original tiny fixture declares32 positions; unsupported chunk1025 setup failed. Exclusive synthetic copy declares2048; only3positions executed; original unchanged. No quality gate relaxed.",
+  "astra": "Approved, no blocking code findings; request-vs-stored-message wording corrected and checked on all3SDKs",
+  "limits": [
+    "App builds precede final wording-only correction; final source typechecked on all3platforms",
+    "No rendered UI, physical phone, numerical full-window quality or performance qualification",
+    "Actual loading peaks, whole-process/device fit and advanced KV-byte controls remain open"
+  ],
+  "evidence": [
+    {
+      "path": "artifacts/session-memory-2026-11-02/v2/checks.json",
+      "sha256": "a6b0b053d8c8ae2c65308fd38e7724a4a7debddcf9342ef8851dc51d99c2777a"
+    },
+    {
+      "path": "artifacts/session-memory-2026-11-02/v2/apps.json",
+      "sha256": "7ac846a633e90284f6e4e37b8c8f0a398845335cef26b8fc0c1943cedb07523c"
+    },
+    {
+      "path": "artifacts/session-memory-2026-11-02/v2/transitions.json",
+      "sha256": "d2e2caad20dace4d4db34aead038ba48476a06dbd1b2cf4508b9343fb5d28c0c"
+    },
+    {
+      "path": "artifacts/session-memory-2026-11-02/v2/copy-checks.json",
+      "sha256": "26737d39de8949ede3017aab514e8895798d2c93feea7209830794e97aaa7edd"
+    },
+    {
+      "path": "artifacts/session-memory-2026-11-02/v2/chat-window-mac.log",
+      "sha256": "f14ef012c55ff782f4b331b4569e342dceed1ad94e4a5404c6b210a7e32fc1b7"
+    }
+  ]
+}

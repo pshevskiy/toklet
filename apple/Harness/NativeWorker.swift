@@ -112,6 +112,7 @@ struct NativeSnapshot: Sendable {
     var modelContext: NativeModelContext?
     var liveContext: NativeContextFacts?
     var sessionConfiguration: NativeSessionConfiguration?
+    var sessionMemory: NativeSessionMemorySnapshot?
     var acceptedIdentity: NativeAcceptedIdentity?
     var acceptedLoadRequestID: UUID?
     var requestBudget: NativeRequestBudget?
@@ -269,7 +270,7 @@ final class NativeWorker: @unchecked Sendable {
         if case .suspend = command { view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = "" }
         switch command {
         case .load, .unload, .suspend:
-            view.modelContext = nil; view.liveContext = nil; view.sessionConfiguration = nil
+            view.modelContext = nil; view.liveContext = nil; view.sessionConfiguration = nil; view.sessionMemory = nil
         case .chat, .generate, .reset, .replay:
             view.liveContext = nil
         default: break
@@ -422,12 +423,12 @@ final class NativeWorker: @unchecked Sendable {
             engine.settings = value.settings; engine.saved = value.saved; engine.savedCount = 0
             engine.report = value.report; engine.lastEmitted = 0
             engine.modelContext = value.modelContext; engine.liveContext = value.context
-            engine.sessionConfiguration = value.configuration
+            engine.sessionConfiguration = value.configuration; engine.sessionMemory = value.memory
             engine.requestBudget = nil; engine.score = nil
             engine.admissionUpperBound = value.context.numericalAdmission
             engine.phase = "Ready; native cache reset"
             view.modelContext = value.modelContext; view.liveContext = value.context
-            view.sessionConfiguration = value.configuration
+            view.sessionConfiguration = value.configuration; view.sessionMemory = value.memory
             view.requestBudget = nil; view.score = nil; view.savedPrefix = value.emptyPrefix
             view.preview = nil
             view.savedHistory = 0; view.history = 0; view.evaluated = 0; view.pending = 0
@@ -500,7 +501,7 @@ final class NativeWorker: @unchecked Sendable {
         if case .unload? = queued {} else { queued = unload ? .unload : .suspend }
         view.busy = true
         view.modelContext = nil; view.liveContext = nil; view.requestBudget = nil
-        view.sessionConfiguration = nil
+        view.sessionConfiguration = nil; view.sessionMemory = nil
         view.acceptedIdentity = nil; view.acceptedLoadRequestID = nil // Retained Engine facts republish only after safe completion.
         view.phase = "Cancelling for lifecycle cleanup"
         view.score = nil
@@ -518,7 +519,7 @@ final class NativeWorker: @unchecked Sendable {
         closing = true; queued = nil
         view.acceptedIdentity = nil; view.acceptedLoadRequestID = nil
         view.modelContext = nil; view.liveContext = nil; view.requestBudget = nil
-        view.sessionConfiguration = nil
+        view.sessionConfiguration = nil; view.sessionMemory = nil
         view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = ""
         view.score = nil
         view.savedPrefix = nil
@@ -620,6 +621,7 @@ final class NativeWorker: @unchecked Sendable {
             view.modelContext = !closing && queued == nil ? engine.modelContext : nil
             view.liveContext = !closing && queued == nil ? engine.liveContext : nil
             view.sessionConfiguration = !closing && queued == nil ? engine.sessionConfiguration : nil
+            view.sessionMemory = !closing && queued == nil && engine.sessionMemory?.matches(engine.liveContext,configuration:engine.sessionConfiguration) == true ? engine.sessionMemory : nil
             view.acceptedIdentity = !closing && queued == nil && engine.model != nil && engine.chat != nil
                 ? engine.acceptedIdentity : nil
             view.acceptedLoadRequestID = !closing && queued == nil && engine.model != nil && engine.chat != nil
@@ -666,7 +668,7 @@ final class NativeWorker: @unchecked Sendable {
         view.hasModel = false; view.hasSession = false
         view.chatEnabled = false; view.acceptedIdentity = nil; view.acceptedLoadRequestID = nil
         view.modelContext = nil; view.liveContext = nil; view.requestBudget = nil
-        view.sessionConfiguration = nil
+        view.sessionConfiguration = nil; view.sessionMemory = nil
         view.compatibility = nil; view.runtimePlan = nil; view.compatibilityDirectory = ""
         // Closed means there is no active numerical prefix. Do not retain the
         // last command's counts when close supersedes an in-flight operation.
@@ -712,16 +714,17 @@ private final class PreparedTransition {
     let configuration: NativeSessionConfiguration
     let modelContext: NativeModelContext
     let report: TokletReport
+    let memory: NativeSessionMemorySnapshot
     let saved: [UInt32]
     let emptyPrefix: [UInt32]?
     var emptyIDs: [UInt32] = []
     var emptyTimings: [NativeTokenTiming] = []
     init(handle: OpaquePointer, plan: NativeTransitionPlan, settings: NativeSettings,
          context: NativeContextFacts, configuration: NativeSessionConfiguration,
-         report: TokletReport, captureSavedPrefix: Bool) {
+         memory: NativeSessionMemorySnapshot, report: TokletReport, captureSavedPrefix: Bool) {
         self.handle = handle; self.plan = plan; self.settings = settings
         self.context = context; self.configuration = configuration
-        modelContext = NativeModelContext(context); self.report = report
+        modelContext = NativeModelContext(context); self.report = report; self.memory = memory
         saved = Array(repeating:0,count:Int(settings.capacity))
         emptyPrefix = captureSavedPrefix ? [] : nil
         emptyIDs.reserveCapacity(Int(NativeSettings.maximumChatOutputTokens))
@@ -749,6 +752,7 @@ private final class Engine {
     var modelContext: NativeModelContext?
     var liveContext: NativeContextFacts?
     var sessionConfiguration: NativeSessionConfiguration?
+    var sessionMemory: NativeSessionMemorySnapshot?
     var acceptedIdentity: NativeAcceptedIdentity?
     var acceptedLoadRequestID: UUID?
     var requestBudget: NativeRequestBudget?
@@ -832,7 +836,9 @@ private final class Engine {
             let configuration = try NativeSessionConfiguration(context:next,capacity:nextSettings.capacity,
                 chunk:nextSettings.chunk,wholeSessionBudget:nextSettings.numericalBudget,acceptedRequestID:request.id)
             return PreparedTransition(handle:pointer,plan:plan,settings:nextSettings,
-                context:next,configuration:configuration,report:report,captureSavedPrefix:captureSavedPrefix)
+                context:next,configuration:configuration,
+                memory:NativeSessionMemorySnapshot.inspect(model:model,session:pointer,context:next,configuration:configuration),
+                report:report,captureSavedPrefix:captureSavedPrefix)
         } catch {
             if let cleanup = retire(pointer,fault:nil) { throw cleanup }
             throw error
@@ -859,7 +865,7 @@ private final class Engine {
             guard prior == nil || prior == configuration else { throw invalid("Accepted session configuration changed") }
             guard acceptedIdentity == nil || acceptedIdentity?.matches(retained) == true else { throw invalid("Accepted identity does not match the retained model") }
             modelContext = retained; liveContext = fresh; sessionConfiguration = configuration
-        } catch { modelContext = nil; acceptedIdentity = nil; acceptedLoadRequestID = nil; requestBudget = nil; throw error }
+        } catch { sessionMemory = nil; modelContext = nil; acceptedIdentity = nil; acceptedLoadRequestID = nil; requestBudget = nil; throw error }
     }
 
     func decodeChat(_ ids: [UInt32]) throws -> String {
@@ -915,7 +921,7 @@ private final class Engine {
     }
 
     func releaseSession() throws {
-        liveContext = nil; sessionConfiguration = nil; requestBudget = nil
+        liveContext = nil; sessionConfiguration = nil; sessionMemory = nil; requestBudget = nil
         score = nil
         if let value = session {
             session = nil
@@ -952,12 +958,15 @@ private final class Engine {
     func createSession() throws {
         guard let model, let settings else { throw invalid("Load a model first") }
         // Retained settings are resume policy, not a live accepted request.
-        sessionConfiguration = nil
+        sessionConfiguration = nil; sessionMemory = nil
         var options = settings.options(); var error = TokletError()
         try requireOK(toklet_session_create(model, &options, &session, &error), &error)
         try requireOK(toklet_session_state(session, &report, &error), &error)
         admissionUpperBound = max(admissionUpperBound,report.admitted_bytes)
         try refreshContext()
+        if let session, let context = liveContext, let configuration = sessionConfiguration {
+            sessionMemory = NativeSessionMemorySnapshot.inspect(model:model,session:session,context:context,configuration:configuration)
+        }
     }
     func refreshHistory() throws {
         guard let session else { return }

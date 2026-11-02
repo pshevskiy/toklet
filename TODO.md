@@ -1,13 +1,14 @@
 # Toklet progress checklist
 
 Last updated: **2 November 2026**. Active milestone: **M8**.
-Next task: **session-bound owner-memory snapshot and explicit context/text facts**.
+Next task: **advanced KV-byte controls and loading-peak accounting audit**.
+Completed B5f1: owner snapshot and explicit context/text facts; [evidence](benchmarks/results/2026-11-02-session-owner-memory-v1.json).
 Completed B5e2 (`c346382`): admitted-window Chat, including real Mac Qwen2 growth/boundaries.
 Reporting audit complete: reuse existing facts; add owner snapshots without
 claiming load estimates/admission are current allocations or loading peaks.
 Completed: **B5e1** (`69ebeb0`), checks and Astra review pass; [evidence](benchmarks/results/2026-11-02-context-load-upper-v1.json).
-Implementation resumed with compact task records, focused checks and one combined
-Astra diff/results review before commit. Next: B5e2 rendered prompt/context policy.
+Workflow: compact task records, focused checks and one combined Astra
+diff/results review before commit; current/next work is recorded above.
 No new larger-window quality, rendered UI or iPhone qualification is claimed.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
@@ -441,6 +442,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
   claims; output256 and byte/event limits remain until deliberately qualified.
 - [ ] Report declared context, implemented backend range, budget/device fit,
   validation scope and app/text limits separately for each model.
+- [x] B5f1: session-bound creation/replacement owner snapshot, optional failure,
+  stale binding, resize/rejection/suspend/resume and3platform checks; Astra approved.
 - [ ] Include actual weights, KV owners, scratch, loading peaks and application
   allowances; distinguish numerical fit from whole-process fit.
 - [ ] Expose supported context, reply limit, memory budget and advanced chunk/
@@ -858,3 +861,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-02 | B5e2b complete |21native/3app builds pass; strict Swift controls and real Mac Qwen2 input629/output32, exact992+32=1024 and overflow1025 with full prefix/draft preservation pass. Astra approves; atomic candidate adoption preserves prior package. | [Evidence](benchmarks/results/2026-11-02-session-window-chat-v1.json). Next per-model reporting/control audit. No UI rendering/phone/quality/performance claim. |
 
 | 2026-11-02 | Reporting/workflow audit | Existing declared/load/session reports retained. Astra recommends session-bound actual owner snapshots via read-only D1, labelled at creation/replacement unless refreshed; unsupported reporting must not fail valid sessions. Corrected stale512-policy docs and saved compact workflow in AGENTS.md. | Next owner-memory snapshot, stale-binding/resize/suspend checks; loading peaks and whole-app fit remain open. Completed code commits `69ebeb0`, `fc7cbfe`, `c346382`. |
+
+| 2026-11-02 | Owner-memory snapshot in progress | Cold D1 capture at creation/replacement, session/config binding, optional unavailable report, explicit historical owner/allowance labels. No Rust/ABI change. | New controls/CPU fallback and Mac lifecycle pass. First unsupported-case setup failed on the original32-position fixture; adviser-reviewed temporary copy fixes setup while executing only3positions. CPU+Metal transition regressions,3app builds,3final-copy SDK checks and Astra review pass. [Evidence](benchmarks/results/2026-11-02-session-owner-memory-v1.json). |

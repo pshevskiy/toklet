@@ -73,20 +73,50 @@ struct FriendlyPlanningSection: View {
             }
             DisclosureGroup("Active chat details") {
                 LabeledContent("Loaded model window",value:positions(context.declaredTotal))
+                LabeledContent("Declared input limit",value:positions(context.declaredInput))
+                LabeledContent("Declared output limit",value:positions(context.declaredOutput))
+                LabeledContent("Global engine ceiling",value:context.engineGlobalCeiling.formatted())
                 LabeledContent("Loaded engine limit",value:context.loadedLimit.formatted())
+                let limits = NativeGenerationPolicy.limits(.chat,model:context)
+                LabeledContent("Active input ceiling",value:limits.maximumPrompt.formatted())
+                LabeledContent("Reply ceiling",value:limits.maximumOutput.formatted())
+                Text("Prompt and reply must fit together. Each request allows up to 63 messages and 64 KiB of serialized conversation; drafts allow 16 KiB.")
                 if let plan = store.state.runtimePlan {
                     LabeledContent("KV estimate when model opened",value:bytes(plan.sessionMemory.kvBytes))
                     LabeledContent("Engine fit when opened",value:plan.fitsRequestedBudgets ? "Fit at load" : "Did not fit")
                 } else { Text("The memory report from opening this model is unavailable.") }
                 if let live = store.state.liveContext {
-                    LabeledContent("Engine and bridge accounted memory",value:bytes(live.numericalAdmission))
+                    LabeledContent("Current admission with allowances",value:bytes(live.numericalAdmission))
                 }
+                if let memory = store.state.sessionMemory,
+                   memory.matches(store.state.liveContext,configuration:store.state.sessionConfiguration) { ownerMemory(memory) }
                 if let target = planning.target {
                     LabeledContent("Replacement coexistence limit",value:bytes(target.coexistenceBudget))
                     LabeledContent("Separate text allowance",value:bytes(target.textBudget))
                 }
                 Text("The load report is historical and does not describe a replacement session. Current app memory and process headroom are separate measurements.")
+                Text("Full-window quality and whole-device fit are not evaluated by these reports.")
             }.font(.footnote)
+        }
+    }
+    @ViewBuilder private func ownerMemory(_ memory: NativeSessionMemorySnapshot) -> some View {
+        switch memory.reading {
+        case .available(let shared,let owned,let driver,let bridge,let storage):
+            Text("Owner bytes at session creation or replacement").font(.footnote.weight(.semibold))
+            LabeledContent("Shared learned weights",value:bytes(shared.learnedBytes))
+            LabeledContent("Shared position buffers",value:bytes(shared.positionalBytes))
+            LabeledContent("Shared model tables",value:bytes(shared.modelTableBytes))
+            LabeledContent("KV storage",value:storage)
+            LabeledContent("KV buffers",value:bytes(owned.kvBytes))
+            LabeledContent("Scratch buffers",value:bytes(owned.scratchBytes))
+            LabeledContent("History storage",value:bytes(owned.historyBytes))
+            LabeledContent("Logits storage",value:bytes(owned.logitsBytes))
+            LabeledContent("Session tables",value:bytes(owned.sessionTableBytes))
+            LabeledContent("Separate driver allowance",value:bytes(driver))
+            LabeledContent("Separate bridge allowance",value:bytes(bridge))
+            Text("Shared weights are counted once. This snapshot is not refreshed per token; history storage may grow. It excludes loading peaks and app/process memory.")
+        case .unavailable(let reason):
+            Text("Owner memory report unavailable: " + reason)
         }
     }
     @ViewBuilder private func result(_ value: NativePreviewResult) -> some View {

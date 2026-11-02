@@ -211,6 +211,52 @@ struct NativeTransitionPlan: Decodable, Sendable {
     }
 }
 
+// Cold owner accounting at creation/replacement, not a live heap/peak reading.
+// History capacities can grow later. No candidate totals or fit claims escape.
+struct NativeSessionMemorySnapshot: Sendable {
+    enum Reading: Sendable {
+        case available(shared: NativeTransitionPlan.Shared, owned: NativeTransitionPlan.Owned,
+                       driverAllowance: UInt64, bridgeAllowance: UInt64, storage: String)
+        case unavailable(String)
+    }
+    let configuration: NativeSessionConfiguration
+    let reading: Reading
+
+    func matches(_ context: NativeContextFacts?, configuration current: NativeSessionConfiguration?) -> Bool {
+        guard let context, current == configuration else { return false }
+        return context.modelInstance == configuration.modelInstance && context.sessionInstance == configuration.sessionInstance
+            && context.capacity == UInt64(configuration.capacity) && context.offset == 0
+    }
+    static func capture(configuration: NativeSessionConfiguration,
+                        inspect: () throws -> NativeTransitionPlan) -> Self {
+        do {
+            let plan = try inspect()
+            guard plan.modelInstance == configuration.modelInstance, plan.sessionInstance == configuration.sessionInstance,
+                  plan.current.capacity == UInt64(configuration.capacity), plan.current.chunk == UInt64(configuration.chunk),
+                  plan.current.positionOffset == 0,
+                  plan.current.individualNumericalBudgetBytes == configuration.wholeSessionBudget - UInt64(TOKLET_MODEL_SESSION_BRIDGE_BYTES) else {
+                throw NativeContextFailure("Memory snapshot differs from its session configuration")
+            }
+            return Self(configuration:configuration,reading:.available(shared:plan.sharedModel,owned:plan.currentAllocated,
+                driverAllowance:plan.reserves.currentMetadataDriverBytes,bridgeAllowance:plan.reserves.currentBridgeBytes,
+                storage:plan.backend == "metal" ? "Fixed FP16" : "Fixed FP32"))
+        } catch {
+            return Self(configuration:configuration,reading:.unavailable(String(error.localizedDescription.prefix(256))))
+        }
+    }
+    static func inspect(model: OpaquePointer, session: OpaquePointer, context: NativeContextFacts,
+                        configuration: NativeSessionConfiguration) -> Self {
+        capture(configuration:configuration) {
+            let selection = NativeTransitionSelection(id:UUID(),modelInstance:context.modelInstance,sessionInstance:context.sessionInstance)
+            let request = NativeTransitionRequest(id:UUID(),selection:selection,capacity:configuration.capacity,chunk:configuration.chunk,
+                wholeSessionBudget:configuration.wholeSessionBudget,coexistenceBudget:6 * 1024 * 1024 * 1024,
+                replayReserve:0,textReserve:0,applicationReserve:0)
+            return try NativeTransitionPlan.inspect(model:model,session:session,request:request,current:context,
+                chunk:configuration.chunk,wholeBudget:configuration.wholeSessionBudget)
+        }
+    }
+}
+
 struct NativeTransitionResult: Sendable {
     enum Outcome: String, Sendable { case rejected, committed, cleanupFailed }
     let request: NativeTransitionRequest

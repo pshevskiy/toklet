@@ -9330,3 +9330,20 @@ creation/replacement, with unsupported inspection leaving valid sessions usable.
 Historical load estimates and admission totals remain separate from allocations,
 loading peaks and whole-device fit. Today's reviewed code commits: `69ebeb0`,
 `fc7cbfe`, `c346382`; all completed tasks have check evidence linked above.
+
+## 2 November 2026 — Session-bound owner reporting (B5f1)
+
+The app now separates actual shared/session owner bytes at creation/replacement
+from historical load estimates and driver/bridge/text allowances. Model/session/
+configuration binding hides stale snapshots; suspend/close clear them and resume
+refreshes them. Unsupported inspection leaves valid loading/generation usable.
+Declared/global/loaded/active input and reply limits are shown separately.
+
+Astra approves. Strict Swift controls, CPU fallback, real Mac resize/generation/
+rejection/replay, CPU+Metal transition regressions and3unsigned app builds pass.
+The final request-limit wording correction passes3SDK source checks. Mac KV
+changes6292128→12583584bytes with shared weights unchanged. [Evidence](../benchmarks/results/2026-11-02-session-owner-memory-v1.json)
+retains the synthetic-fixture setup failure and correction; no numerical gate
+changed. Snapshots are explicitly historical, not per-token memory readings.
+Loading peaks, whole-device fit, advanced KV-byte controls, rendered UI and phone
+checks remain separate. No Rust/ABI/native-package changes or new performance claim.
