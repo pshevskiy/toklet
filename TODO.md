@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **3 November 2026**. Active milestone: **M8**.
-Current task: **Llama full task grading final review, then combined quality/adoption decision**.
+Current task: **Llama fresh Mac ranged-download/offline journey, then bounded catalog adoption**.
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Query](artifacts/m8-phone-availability-2026-11-03/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
@@ -491,8 +491,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
   - [x] Original FP32 long-row alignment and independent replay before full collection. [Evidence](benchmarks/results/2026-11-03-llama3-original-long-v1.json).
   - [x] Original 10,000-target loss gate: delta0.0000197305 ≤0.05, all targets and prior alignment checks pass. [Report](docs/llama3-original-loss.md).
   - [x] Incremental original FP32 reference through566, 22-row replay/state/greedy checks. [Report](docs/llama3-original-incremental.md).
-  - [ ] Reference profiling/cache decision and frozen100-task collection/replay/grading. The
-  1,024-target same-artifact screen is not a substitute or app qualification.
+  - [x] Reference profiling/cache decision and frozen100-task collection/replay/grading. [Report](docs/llama3-task-quality.md), commit `bc7a704`.
+  - [x] Join both original-quality gates for the pinned numerical/text configuration; [decision](docs/llama3-quality-qualification.md). App/device adoption remains separate.
 - [ ] Publish supported context/KV settings, evidence and remaining limitations;
   make explicit decisions on open/conditional admissions before milestone closure.
 - [ ] Confirm required checks/reviews/commits and update this checklist and
@@ -1001,3 +1001,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-03 | Grading timezone retry | First isolated attempt runs zero programs and restores the VM. Exact version admission differs only in timezone-rendered BuiltTime; epochs and every other field match. Astra verifies Moscow reproduces the qualified timestamps. | Pin supervised child TZ=Europe/Moscow, record it in the sealed plan, retain exact version equality and retry using completed collections. |
 
 | 2026-11-03 | All task outcomes resolved | Original22/100, native23/100; unchanged ≤2pp gate passes. All80 isolated programs and120 text outcomes replay, with outer stopped-VM/group-exit verification. Exact timezone-pinned version check passes. Nineteen controls pass; no numerical source changes. | Astra approves code/results/recovery for commit; combined loss/task qualification and app/device decisions remain separate. [Report](docs/llama3-task-quality.md). |
+
+| 2026-11-03 | Pinned Llama quality joined | Loss+task identities, profiles, complete counts and receipt hashes match. Both gates pass; Astra approves scoped closure. Historical stage flags remain unchanged. | Documentation/content/link checks pass. Next fresh Mac ranged-download/offline journey and reviewed512-position catalog adoption; phone remains open. |

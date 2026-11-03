@@ -1,0 +1,50 @@
+{
+  "passed": true,
+  "scope": "pinned original-vs-native loss and task quality only",
+  "models": {
+    "original": {
+      "repository": "meta-llama/Llama-3.2-1B-Instruct",
+      "revision": "9213176726f574b556790deb65791e0c5aa438b6",
+      "weight_sha256": "1ff795ff6a07e6a68085d206fb84417da2f083f68391c2843cd2b8ac6df8538f"
+    },
+    "native": {
+      "repository": "mlx-community/Llama-3.2-1B-Instruct-8bit",
+      "revision": "d48cdf0a4ea22d893b7c63a99d6a693e24822795",
+      "weight_sha256": "cd3582a78766654e3e2107e3b4d51d9cb18e6754b659bfb44a34328ef9d7fa52"
+    }
+  },
+  "profile": {
+    "projection": "MlxAffine",
+    "normalization": "Compensated",
+    "attention": "Reference",
+    "readback": "FullLogits",
+    "chunk": 32
+  },
+  "loss": {
+    "targets": 10000,
+    "delta": 1.973052521009322e-05,
+    "limit": 0.05
+  },
+  "tasks": {
+    "cases": 100,
+    "original_passed": 22,
+    "native_passed": 23,
+    "loss_percentage_points": -1,
+    "limit": 2
+  },
+  "original_quality_gates_passed": true,
+  "app_adopted": false,
+  "phone_qualified": false,
+  "model_declared_context_qualified": false,
+  "receipts_sha256": {
+    "benchmarks/results/2026-11-03-llama3-original-loss-v1.json": "4c4bc45b481af66c5f3602d52b546b3012994e08ddde0e46de23855121a6b675",
+    "benchmarks/results/2026-11-03-llama3-task-quality-v1.json": "5bf7a770bb3123e49371546f4ed6f9264cbc25f9f75113701cc50a19d0ac8617"
+  },
+  "format": "toklet-llama3-quality-qualification-v1",
+  "base_revision": "bc7a704",
+  "astra_review": "approved scoped quality closure and separate Mac ranged-download adoption task",
+  "join_sha256": {
+    "artifacts/llama3-quality-join-2026-11-03/join.py": "db65b2d482833dcb5ad7f11eb09808baa3b84aed17c1a1fb602461f97f8ed8bc",
+    "artifacts/llama3-quality-join-2026-11-03/result.json": "fbab408035ec462879ed220fe4393beef7b162a75cb4cbe3441a56d8390a6429"
+  }
+}

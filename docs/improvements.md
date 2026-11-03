@@ -9592,3 +9592,12 @@ remain recorded; completed model outputs are reused. This closes the task gate
 for the pinned diagnostic configuration, with app/device adoption still separate.
 [Report](llama3-task-quality.md),
 [evidence](../benchmarks/results/2026-11-03-llama3-task-quality-v1.json).
+
+## 3 November 2026 — Pinned Llama quality qualification joined
+
+The original10k-target loss and100-task gates now have one scoped decision:
++0.0000197305nats/token and−1percentage-point task loss both pass. Receipt hashes,
+model identities and numerical profiles match. Astra approves closure for this
+configuration; Mac512 catalog adoption still requires a fresh ranged-download
+journey, and iPhone qualification remains open.
+[Decision](llama3-quality-qualification.md).
