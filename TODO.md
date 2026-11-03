@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **3 November 2026**. Active milestone: **M8**.
-Current task: **audited Llama3 native model/codec pair**, then managed app integration.
+Current task: **native40 package and developer-scoped managed Llama3 Mac route**.
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
 Completed B5f1: owner snapshot and explicit context/text facts; [evidence](benchmarks/results/2026-11-02-session-owner-memory-v1.json).
@@ -470,7 +470,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
   rendered prompt/reply boundaries. Independent fixtures alone do not enable Chat.
   - [x] Source codec: exact asset pins, independent rendered bytes and cached tokenizer comparison; [report](docs/llama3-plain-codec.md). Checks544default/652Metal and Astra review pass.
   - [x] Real native Mac512 session boundary, cancellation/replay and observed stop evidence; [report](docs/llama3-native-chat-boundary.md).
-  - [ ] Audited owner pairing and ordinary app activation/journey.
+  - [x] Audited native owner pairing; [report](docs/llama3-audited-pair.md).
+  - [ ] Coherent native40 package and managed Mac developer route/journey; ordinary discovery still requires adoption gates.
 
 ### M8 closure
 
@@ -896,3 +897,13 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-03 | Llama native session test starts | Source codec committed `16b5594`. Applied Astra-reviewed explicit cached Mac512 test using existing native APIs; callback records cancellation failures without unwinding and checks both hidden-stop contracts. | Cold compiler/checks then one actual cached GPU run. No factory/package/app activation change. |
 
 | 2026-11-03 | Llama native checks | Cold544default/652Metal and strict Clippy pass. Real Mac run reaches measured511+1=512, overflow preservation, emitted-token cancellation/pending1 and replay IDs8586/596; neither request generates a stop. | Final artifact rehash/clean exit and Astra result review pass; no app activation or full quality claim. |
+
+| 2026-11-03 | Audited Llama pair implementation | Reused dense delivery/assembly and shared Codec; direct wrapper shares parsing and legacy config allowlist stays closed. Added bounded loader export, complete factory/identity route and source/text/identity controls. | Cold compile/review then both generic-rejection and audited512 real-session checks. Native39 package remains selected; app route/full adoption remain open. |
+
+| 2026-11-03 | Audited pair first compile | Compiler caught the new profile missing from existing streaming decoder selection. Exact pinned decoder is ByteLevel; added that coarse branch and cached Unicode chunk-parity checks. | Preserve failed receipt; corrected checks/review continue. |
+
+| 2026-11-03 | Audited pair review corrections | Full regression retry passes. Astra requests C/Rust docs, actual C-ID/stop generation, identity-field checks, private same-length tokenizer mutation rejection and generic-factory rejection. Applied test/doc corrections plus additive C ABI smoke. | Reuse unchanged production Rust regression results; strict final compile/lint, targeted cold controls, C link and both explicit Mac modes next. |
+
+| 2026-11-03 | Audited test compile correction | Astra and Metal compiler catch extra references introduced while switching preflight to C-returned stops. Removed those references; production behavior unchanged. | Preserve final/checks.json failure; corrected final2 cold/link checks precede hardware run. |
+
+| 2026-11-03 | Audited pair Mac results / build reserve | Audited identity reports pinned Llama/512 and374verified container reads. Audited and generic modes both reach511+1 admission, overflow preservation and cancel/replay8586/596; generic Chat rejects. Reviewed cache-only cleanup restores8823074816free bytes (>8GiB), preserving models/products/receipts. | Final post-release hash/clean exit and Astra review pass; pair commit and native40/app route. |

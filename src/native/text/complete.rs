@@ -8,6 +8,7 @@ pub(super) enum SourceReceipt {
     Qwen2(DenseSourceContentIdentity),
     Qwen3(DenseSourceContentIdentity),
     Mistral(DenseSourceContentIdentity),
+    Llama3(DenseSourceContentIdentity),
 }
 impl SourceReceipt {
     pub(super) fn profile(self) -> Profile {
@@ -16,6 +17,7 @@ impl SourceReceipt {
             Self::Qwen2(_) => Profile::Qwen,
             Self::Qwen3(_) => Profile::Qwen3,
             Self::Mistral(_) => Profile::Mistral,
+            Self::Llama3(_) => Profile::Llama3,
         }
     }
     pub(super) fn model(model: &ModelHandle) -> Result<(Self, usize)> {
@@ -58,8 +60,10 @@ impl SourceReceipt {
                 Self::Qwen2(_) => crate::mlx::dense::Architecture::Qwen2,
                 Self::Qwen3(_) => crate::mlx::dense::Architecture::Qwen3,
                 Self::Mistral(_) => crate::mlx::dense::Architecture::Mistral,
+                Self::Llama3(_) => crate::mlx::dense::Architecture::Llama,
             };
-            if !source.profile().supports(value.config())
+            if (matches!(source, Self::Llama3(_)) && loaded > 512)
+                || !source.profile().supports(value.config())
                 || value.native_session_modes()
                     != (ProjectionMode::MlxAffine, NormalizationMode::Compensated)
                 || value.native_attention_mode()
@@ -85,6 +89,7 @@ impl SourceReceipt {
             DenseProfile::Qwen(QwenProfile::Qwen2),
             DenseProfile::Qwen(QwenProfile::Qwen3),
             DenseProfile::Mistral,
+            DenseProfile::Llama3,
         ] {
             let manifest = profile
                 .manifest()
@@ -94,6 +99,7 @@ impl SourceReceipt {
                     DenseProfile::Qwen(QwenProfile::Qwen2) => Self::Qwen2(source),
                     DenseProfile::Qwen(QwenProfile::Qwen3) => Self::Qwen3(source),
                     DenseProfile::Mistral => Self::Mistral(source),
+                    DenseProfile::Llama3 => Self::Llama3(source),
                 });
             }
         }
@@ -108,15 +114,16 @@ impl SourceReceipt {
             Self::Qwen2(s) => Codec::load_qwen2_audited(directory, &s, allowance),
             Self::Qwen3(s) => Codec::load_qwen3_audited(directory, &s, allowance),
             Self::Mistral(s) => Codec::load_mistral_audited(directory, &s, allowance),
+            Self::Llama3(s) => Codec::load_llama3_audited(directory, &s, allowance),
         }
         .map_err(|e| fail(LOAD_ERROR, e.to_string()))
     }
 }
 
-/// Construct a complete audited codec from the actual attached Smol/Qwen2/Qwen3/Mistral
+/// Construct a complete audited codec from the actual attached Smol/Qwen2/Qwen3/Mistral/Llama3
 /// model evidence. No caller-selected profile/path is authority. Reserve a
 /// separate profile text allowance before loading the model (Smol/Mistral64 MiB,
-/// Qwen2 128 MiB, Qwen3 256 MiB; at most6 GiB); combined process/device fit stays separate.
+/// Qwen2 128 MiB, Qwen3/Llama3 256 MiB; at most6 GiB); combined process/device fit stays separate.
 /// Legacy factories retain their existing contracts. A missing ancillary asset
 /// fails this new route, and no partial codec or additional Rc is published.
 /// # Safety

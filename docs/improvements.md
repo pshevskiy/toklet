@@ -9430,3 +9430,18 @@ checks544/652, cached Metal execution and Astra review pass.
 [Evidence](../benchmarks/results/2026-11-03-llama3-native-chat-v1.json),
 [scope](llama3-native-chat-boundary.md). Generic loading here grants no audited
 Chat/app identity, full-adoption quality, phone or performance qualification.
+
+## 3 November 2026 — Audited Llama3 native pair
+
+A bounded loader and complete codec reuse the dense consumed-source pipeline,
+shared tokenizer implementation and owner-bound identity report. Generic Llama
+imports stay outside Chat. Actual Mac tests cover C-returned IDs/stops, identity,
+mutated tokenizer and allowance rejection, owner lifetime,511+1 admission,
+overflow preservation and cancel/replay.548default/656Metal, final strict lint,
+13cold controls, cached tokenizer,40-export C linkage and Astra review pass. Failed compile
+attempts remain recorded.
+[Report](llama3-audited-pair.md),
+[evidence](../benchmarks/results/2026-11-03-llama3-audited-pair-v1.json).
+The selected39-export framework and app remain unchanged. Full adoption quality,
+app activation, phone, larger contexts and speed remain separate gates. Reviewed
+compiler-cache cleanup restores the8GiB reserve for the next package build.

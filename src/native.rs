@@ -595,12 +595,26 @@ pub unsafe extern "C" fn toklet_model_load_mlx_mistral_audited(
 ) -> u32 {
     unsafe { load_mlx(path, len, opts, out, error, MlxLoadProfile::MistralAudited) }
 }
+/// Audited pinned Llama3 import through the existing512-position Reference graph.
+/// # Safety
+/// Follow parent foreign pointer/thread/disjoint-output contracts.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_model_load_mlx_llama3_audited(
+    path: *const u8,
+    len: usize,
+    opts: *const Options,
+    out: *mut *mut ModelHandle,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe { load_mlx(path, len, opts, out, error, MlxLoadProfile::Llama3Audited) }
+}
 #[derive(Clone, Copy)]
 enum MlxLoadProfile {
     Ordinary,
     SmolAudited,
     Qwen2Audited,
     MistralAudited,
+    Llama3Audited,
     Qwen3Audited,
 }
 // Select the loader once at this cold boundary; publication and ABI checks are
@@ -633,6 +647,9 @@ unsafe fn load_mlx(
                     MlxLoadProfile::Ordinary => crate::metal::Model::load_mlx(&path, options),
                     MlxLoadProfile::SmolAudited => {
                         crate::metal::Model::load_mlx_smol_audited(&path, options)
+                    }
+                    MlxLoadProfile::Llama3Audited => {
+                        crate::metal::Model::load_mlx_llama3_audited(&path, options)
                     }
                     MlxLoadProfile::MistralAudited => {
                         crate::metal::Model::load_mlx_mistral_audited(&path, options)

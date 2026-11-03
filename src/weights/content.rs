@@ -391,6 +391,8 @@ pub use qwen::QwenSourceContentIdentity;
 mod dense;
 pub use dense::DenseSourceContentIdentity;
 pub(crate) use dense::{DenseAudit, DenseProfile};
+mod llama3;
+pub(crate) use llama3::llama3_manifest;
 mod mistral;
 pub(crate) use mistral::mistral_manifest;
 pub(crate) use qwen3::qwen3_manifest;

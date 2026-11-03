@@ -32,6 +32,7 @@ pub enum Profile {
     Qwen,
     Qwen3,
     Mistral,
+    Llama3,
 }
 impl Profile {
     pub fn load(directory: &Path) -> io::Result<Self> {
@@ -52,6 +53,7 @@ impl Profile {
             Self::Qwen => ((151936, 896, 4864, 24, 14, 2, 64), 1000000.0, 1e-6),
             Self::Qwen3 => ((151936, 1024, 3072, 28, 16, 8, 128), 1000000.0, 1e-6),
             Self::Mistral => ((32768, 4096, 14336, 32, 32, 8, 128), 1000000.0, 1e-5),
+            Self::Llama3 => ((128256, 2048, 8192, 16, 32, 8, 64), 500000.0, 1e-5),
         };
         (
             config.vocab_size,
@@ -69,7 +71,7 @@ impl Profile {
         match self {
             Self::Smol | Self::Mistral => TOKENIZER_ALLOWANCE,
             Self::Qwen => 128 * 1024 * 1024,
-            Self::Qwen3 => 256 * 1024 * 1024,
+            Self::Qwen3 | Self::Llama3 => 256 * 1024 * 1024,
         }
     }
     pub fn stop_ids(self) -> &'static [u32] {
@@ -78,6 +80,7 @@ impl Profile {
             Self::Qwen => &[151643, 151645],
             Self::Qwen3 => &[151645],
             Self::Mistral => &[2],
+            Self::Llama3 => llama3::STOPS,
         }
     }
     fn special_ids(self) -> &'static [(&'static str, u32)] {
@@ -88,6 +91,7 @@ impl Profile {
                 ("<|im_start|>", 151644),
                 ("<|im_end|>", 151645),
             ],
+            Self::Llama3 => llama3::SPECIAL,
             Self::Mistral => &[
                 ("<unk>", 0),
                 ("<s>", 1),
@@ -102,6 +106,7 @@ impl Profile {
             Self::Smol => 49152,
             Self::Qwen | Self::Qwen3 => 151936,
             Self::Mistral => 32768,
+            Self::Llama3 => llama3::VOCAB,
         }
     }
     fn render(self, json: &[u8]) -> io::Result<String> {
@@ -145,6 +150,9 @@ fn render_profile(
     json: &[u8],
     special_literals: &[String],
 ) -> io::Result<String> {
+    if profile == Profile::Llama3 {
+        return llama3::render(json, special_literals);
+    }
     if json.len() > MAX_TEXT {
         return Err(invalid("Conversation exceeds 64 KiB"));
     }
@@ -155,7 +163,7 @@ fn render_profile(
     let system = match profile {
         Profile::Smol => "You are a helpful AI assistant named SmolLM, trained by Hugging Face",
         Profile::Qwen => "You are Qwen, created by Alibaba Cloud. You are a helpful assistant.",
-        Profile::Mistral | Profile::Qwen3 => "",
+        Profile::Mistral | Profile::Qwen3 | Profile::Llama3 => "",
     };
     let mut text = if profile == Profile::Mistral {
         "<s>".to_owned()
@@ -240,6 +248,11 @@ impl Codec {
                 16 * 1024 * 1024,
                 16 * 1024,
             ),
+            Profile::Llama3 => {
+                return Err(invalid(
+                    "Llama3 requires the direct pinned or audited constructor",
+                ));
+            }
             Profile::Mistral => (
                 "e8fbcfef34d855dba2c7f1d91a2c5470cf493d00ecfd06488ce21e45325bc8ae",
                 "e553af6fff7d7ad76e830608b218c5c0b0822998d5a1a96099a74cd3c1cb1a49",
@@ -271,18 +284,21 @@ impl Codec {
         {
             return Err(invalid("Unsupported special IDs or tokenizer policy"));
         }
-        let special_literals = if matches!(profile, Profile::Mistral | Profile::Qwen3) {
-            tokenizer
-                .get_added_tokens_decoder()
-                .into_values()
-                // Qwen3's 26 reserved input literals include 12 ordinary added
-                // tokens. Reject all on input; preserve original decode flags.
-                .filter(|token| profile == Profile::Qwen3 || token.special)
-                .map(|token| token.content)
-                .collect()
-        } else {
-            Vec::new()
-        };
+        let special_literals =
+            if matches!(profile, Profile::Mistral | Profile::Qwen3 | Profile::Llama3) {
+                tokenizer
+                    .get_added_tokens_decoder()
+                    .into_values()
+                    // Qwen3's 26 reserved input literals include 12 ordinary added
+                    // tokens. Reject all on input; preserve original decode flags.
+                    .filter(|token| {
+                        matches!(profile, Profile::Qwen3 | Profile::Llama3) || token.special
+                    })
+                    .map(|token| token.content)
+                    .collect()
+            } else {
+                Vec::new()
+            };
         Ok(Self {
             tokenizer,
             profile,

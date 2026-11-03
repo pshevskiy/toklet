@@ -260,6 +260,13 @@ impl Source {
     pub fn open_mistral_audited(directory: &Path, options: LoadOptions) -> Result<Self, Error> {
         Self::open_dense_audited(directory, options, weights::content::DenseProfile::Mistral)
     }
+    /// Pinned Llama3 audit through the qualified scaled-RoPE Mac512 graph.
+    pub fn open_llama3_audited(directory: &Path, options: LoadOptions) -> Result<Self, Error> {
+        if options.context_limit > 512 {
+            return Err(invalid("audited Llama3 requires context <=512"));
+        }
+        Self::open_dense_audited(directory, options, weights::content::DenseProfile::Llama3)
+    }
     fn open_dense_audited(
         directory: &Path,
         options: LoadOptions,
@@ -404,6 +411,7 @@ impl Source {
                     Architecture::Qwen3
                 }
                 weights::content::DenseProfile::Mistral => Architecture::Mistral,
+                weights::content::DenseProfile::Llama3 => Architecture::Llama,
             };
             if audit.is_some() || architecture != expected {
                 return Err(invalid("Dense source audit profile mismatch"));

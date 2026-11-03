@@ -248,6 +248,8 @@ uint32_t toklet_model_load_mlx_qwen3_audited(const uint8_t *, size_t, const Tokl
 uint32_t toklet_model_load_mlx_qwen2_audited(const uint8_t *, size_t, const TokletOptions *, TokletModel **, TokletError *);
 /* Pinned Mistral audited source import, ordinary Reference graph/bounds;
    text allowance remains separate and evidence publishes only after assembly. */
+/* Pinned Llama3 scaled-RoPE import; context must be <=512. */
+uint32_t toklet_model_load_mlx_llama3_audited(const uint8_t *, size_t, const TokletOptions *, TokletModel **, TokletError *);
 uint32_t toklet_model_load_mlx_mistral_audited(const uint8_t *, size_t, const TokletOptions *, TokletModel **, TokletError *);
 uint32_t toklet_model_release(TokletModel *, TokletError *);
 uint32_t toklet_session_create(const TokletModel *, const TokletOptions *, TokletSession **, TokletError *);
@@ -311,9 +313,9 @@ uint32_t toklet_chat_create_smol_audited(const TokletModel *, uint64_t allowance
    tokenizer_config is verified policy data; special_tokens_map is ancillary.
    Raw token APIs do not prevent IDs from being passed to another session. */
 uint32_t toklet_chat_create_qwen3_audited(const TokletModel *, uint64_t allowance, TokletChat **, TokletError *);
-/* Complete six-file audited codec for an actually attached Smol, Qwen2, Qwen3 or Mistral model.
+/* Complete six-file audited codec for an actually attached Smol, Qwen2, Qwen3, Mistral or Llama3 model.
    Selects from the assembled receipt, never a supplied name/path. Same owner,
-   memory and output rules: separate text reserve Smol/Mistral>=64MiB, Qwen2>=128MiB, Qwen3>=256MiB,
+   memory and output rules: separate text reserve Smol/Mistral>=64MiB, Qwen2>=128MiB, Qwen3/Llama3>=256MiB,
    <=6GiB. Verifies ancillary assets before publication and retains exact model.
    Existing audited factories are unchanged. Legacy Smol codecs lack complete
    identity; this new factory does not retroactively enrich old handles. */

@@ -68,7 +68,7 @@ impl Codec {
     pub fn response_stream(&self, limits: ResponseLimits) -> ResponseStream<'_> {
         // Selection and token inventory are cold. Numerical kernels see neither.
         let decoder = match self.profile {
-            Profile::Smol | Profile::Qwen | Profile::Qwen3 => Decoder::ByteLevel,
+            Profile::Smol | Profile::Qwen | Profile::Qwen3 | Profile::Llama3 => Decoder::ByteLevel,
             Profile::Mistral => Decoder::ByteFallback,
         };
         ResponseStream::new(&self.tokenizer, self.profile.vocab(), decoder, true, limits)

@@ -420,3 +420,37 @@ fn mistral_identity_rejects_cross_profile_and_every_mismatched_asset() {
     e.container_bytes -= 1;
     assert!(build(e, 1, 512).is_err());
 }
+
+#[test]
+fn llama3_identity_is_bounded_and_rejects_each_changed_asset() {
+    let manifest = llama3_manifest().unwrap();
+    let f = manifest.files();
+    let evidence = Evidence {
+        profile: IdentityProfile::Llama3,
+        manifest: manifest.identity(),
+        digests: std::array::from_fn(|i| f[i].sha256),
+        container_bytes: f[1].bytes,
+        ranges: 400,
+        reads: 400,
+        text_policy: "llama3-plain-20240726-v1",
+    };
+    let value = report(evidence.clone(), 7, 512);
+    assert_eq!(
+        value["repository"],
+        "mlx-community/Llama-3.2-1B-Instruct-8bit"
+    );
+    assert_eq!(value["preference_namespace"]["load"], "llama3_audited_v1");
+    assert_eq!(
+        value["preference_namespace"]["text"],
+        "llama3-plain-20240726-v1"
+    );
+    assert!(build(evidence.clone(), 7, 513).is_err());
+    for i in 0..6 {
+        let mut changed = evidence.clone();
+        changed.digests[i][0] ^= 1;
+        assert!(build(changed, 7, 512).is_err());
+    }
+    let mut changed = evidence;
+    changed.profile = IdentityProfile::Qwen3;
+    assert!(build(changed, 7, 512).is_err());
+}

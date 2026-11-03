@@ -2,12 +2,11 @@
 //!
 //! This cold text boundary does not activate a native model or qualify context.
 //! The frozen date is part of the independently checked prompt policy.
-use super::{MAX_RESPONSE_TOKENS, MAX_TEXT, MAX_TOKENS, Message, invalid, pinned};
+use super::{MAX_TEXT, Message, invalid, pinned};
 use std::{io, path::Path};
-use tokenizers::Tokenizer;
 
-const VOCAB: u32 = 128256;
-const SPECIAL: &[(&str, u32)] = &[
+pub(super) const VOCAB: u32 = 128256;
+pub(super) const SPECIAL: &[(&str, u32)] = &[
     ("<|begin_of_text|>", 128000),
     ("<|end_of_text|>", 128001),
     ("<|start_header_id|>", 128006),
@@ -15,7 +14,7 @@ const SPECIAL: &[(&str, u32)] = &[
     ("<|eom_id|>", 128008),
     ("<|eot_id|>", 128009),
 ];
-const STOPS: &[u32] = &[128001, 128008, 128009];
+pub(super) const STOPS: &[u32] = &[128001, 128008, 128009];
 const ASSETS: &[(&str, usize, &str)] = &[
     (
         "tokenizer.json",
@@ -39,7 +38,7 @@ fn python_space(c: char) -> bool {
     c.is_whitespace() || ('\u{1c}'..='\u{1f}').contains(&c)
 }
 
-fn render(json: &[u8], reserved: &[String]) -> io::Result<String> {
+pub(super) fn render(json: &[u8], reserved: &[String]) -> io::Result<String> {
     if json.len() > MAX_TEXT {
         return Err(invalid("Conversation exceeds 64 KiB"));
     }
@@ -74,67 +73,32 @@ fn render(json: &[u8], reserved: &[String]) -> io::Result<String> {
     Ok(text)
 }
 
-pub struct Codec {
-    tokenizer: Tokenizer,
-    reserved: Vec<String>,
-}
+/// Direct pinned entry point sharing the ordinary bounded text implementation.
+pub struct Codec(super::Codec);
 impl Codec {
-    /// Exact three text assets only; model/session pairing is a separate gate.
+    /// Exact text assets only; model/session pairing is a separate gate.
     pub fn load(directory: &Path) -> io::Result<Self> {
         let mut tokenizer = None;
         for &(name, limit, digest) in ASSETS {
             let bytes = pinned(&directory.join(name), limit, digest)?;
             if name == "tokenizer.json" {
-                tokenizer = Some(Tokenizer::from_bytes(bytes).map_err(invalid)?);
+                tokenizer = Some(bytes);
             }
         }
-        let tokenizer = tokenizer.ok_or_else(|| invalid("Missing tokenizer"))?;
-        tokenizers::utils::parallelism::set_parallelism(false);
-        if tokenizer.get_truncation().is_some()
-            || tokenizer.get_padding().is_some()
-            || tokenizer.get_vocab(true).values().any(|&id| id >= VOCAB)
-            || SPECIAL
-                .iter()
-                .any(|(text, id)| tokenizer.token_to_id(text) != Some(*id))
-        {
-            return Err(invalid("Unsupported Llama tokenizer policy"));
-        }
-        let reserved = tokenizer
-            .get_added_tokens_decoder()
-            .into_values()
-            .map(|t| t.content)
-            .collect();
-        Ok(Self {
-            tokenizer,
-            reserved,
-        })
+        let bytes = tokenizer.ok_or_else(|| invalid("Missing tokenizer"))?;
+        Ok(Self(super::Codec::from_tokenizer_bytes(
+            &bytes,
+            super::Profile::Llama3,
+        )?))
     }
     pub fn stop_ids(&self) -> &'static [u32] {
-        STOPS
+        self.0.stop_ids()
     }
     pub fn encode(&self, json: &[u8]) -> io::Result<Vec<u32>> {
-        // The renderer owns the single BOS. Automatic processing adds another.
-        let encoding = self
-            .tokenizer
-            .encode(render(json, &self.reserved)?, false)
-            .map_err(invalid)?;
-        let ids = encoding.get_ids();
-        if ids.len() > MAX_TOKENS {
-            return Err(invalid("Conversation is full; start a new chat"));
-        }
-        Ok(ids.to_vec())
+        self.0.encode(json)
     }
-    /// Replace the visible prefix; byte fragments may complete on a later ID.
-    /// Match the raw tokenizers reference: skip specials, no HF space cleanup.
     pub fn decode(&self, ids: &[u32]) -> io::Result<String> {
-        if ids.len() > MAX_RESPONSE_TOKENS || ids.iter().any(|&id| id >= VOCAB) {
-            return Err(invalid("Response exceeds supported token bounds"));
-        }
-        let text = self.tokenizer.decode(ids, true).map_err(invalid)?;
-        if text.len() > MAX_TEXT {
-            return Err(invalid("Decoded response exceeds 64 KiB"));
-        }
-        Ok(text)
+        self.0.decode(ids)
     }
 }
 
@@ -205,12 +169,16 @@ mod tests {
         for &stop in codec.stop_ids() {
             assert_eq!(codec.decode(&[stop]).unwrap(), "");
         }
-        for literal in &codec.reserved {
+        for literal in &codec.0.special_literals {
             let input = serde_json::to_vec(&serde_json::json!([{"role":"user","content":literal}]))
                 .unwrap();
             assert!(codec.encode(&input).is_err());
         }
         assert!(codec.decode(&[VOCAB]).is_err());
-        assert!(codec.decode(&vec![0; MAX_RESPONSE_TOKENS + 1]).is_err());
+        assert!(
+            codec
+                .decode(&vec![0; super::super::MAX_RESPONSE_TOKENS + 1])
+                .is_err()
+        );
     }
 }

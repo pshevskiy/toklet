@@ -42,6 +42,7 @@ impl DenseCodecContentIdentity {
             DenseProfile::Qwen(QwenProfile::Qwen2) => "qwen-chatml-v1",
             DenseProfile::Qwen(QwenProfile::Qwen3) => "qwen3-plain-nonthinking-v1",
             DenseProfile::Mistral => "mistral-instruct-v1",
+            DenseProfile::Llama3 => "llama3-plain-20240726-v1",
         }
     }
 }
@@ -50,6 +51,7 @@ fn text_profile(profile: DenseProfile) -> Profile {
         DenseProfile::Qwen(QwenProfile::Qwen2) => Profile::Qwen,
         DenseProfile::Qwen(QwenProfile::Qwen3) => Profile::Qwen3,
         DenseProfile::Mistral => Profile::Mistral,
+        DenseProfile::Llama3 => Profile::Llama3,
     }
 }
 fn tokenizer_cap(profile: DenseProfile) -> usize {
@@ -57,12 +59,14 @@ fn tokenizer_cap(profile: DenseProfile) -> usize {
         DenseProfile::Qwen(QwenProfile::Qwen2) => 8 * 1024 * 1024,
         DenseProfile::Qwen(QwenProfile::Qwen3) => 16 * 1024 * 1024,
         DenseProfile::Mistral => 4 * 1024 * 1024,
+        DenseProfile::Llama3 => 16 * 1024 * 1024,
     }
 }
 fn policy_cap(profile: DenseProfile) -> usize {
     match profile {
         DenseProfile::Qwen(_) => 16 * 1024,
         DenseProfile::Mistral => 256 * 1024,
+        DenseProfile::Llama3 => 64 * 1024,
     }
 }
 fn admit(
@@ -79,6 +83,9 @@ fn admit(
             }
             DenseProfile::Qwen(QwenProfile::Qwen3) => {
                 "Audited Qwen3 codec requires a separate 256 MiB..=6 GiB allowance"
+            }
+            DenseProfile::Llama3 => {
+                "Audited Llama3 codec requires a separate 256 MiB..=6 GiB allowance"
             }
             DenseProfile::Mistral => {
                 "Audited Mistral codec requires a separate 64 MiB..=6 GiB allowance"
@@ -104,6 +111,7 @@ fn admit(
                 "Unsupported authenticated source for Qwen3 codec"
             }
             DenseProfile::Mistral => "Unsupported authenticated source for Mistral codec",
+            DenseProfile::Llama3 => "Unsupported authenticated source for Llama3 codec",
         }));
     }
     Ok(())
@@ -192,6 +200,14 @@ impl Codec {
     ) -> io::Result<Self> {
         Self::load_dense_audited(DenseProfile::Mistral, directory, source, allowance)
     }
+    /// Consumed text buffers paired with the attached Llama3 source receipt.
+    pub fn load_llama3_audited(
+        directory: &Path,
+        source: &DenseSourceContentIdentity,
+        allowance: usize,
+    ) -> io::Result<Self> {
+        Self::load_dense_audited(DenseProfile::Llama3, directory, source, allowance)
+    }
     fn load_dense_audited(
         profile: DenseProfile,
         directory: &Path,
@@ -239,3 +255,6 @@ mod tests;
 #[cfg(test)]
 #[path = "dense_content/mistral_tests.rs"]
 mod mistral_tests;
+
+#[cfg(test)]
+mod llama3_tests;

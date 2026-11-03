@@ -5,7 +5,9 @@ use super::*;
 use crate::{
     app_chat::dense_content::DenseCodecContentIdentity,
     mlx::qwen::DenseSourceContentIdentity,
-    weights::content::{Manifest, mistral_manifest, qwen2_manifest, qwen3_manifest, smol_manifest},
+    weights::content::{
+        Manifest, llama3_manifest, mistral_manifest, qwen2_manifest, qwen3_manifest, smol_manifest,
+    },
 };
 use serde::Serialize;
 
@@ -23,6 +25,8 @@ enum BackendPolicy {
 }
 #[derive(Clone, Copy, Serialize)]
 enum LoadPolicy {
+    #[serde(rename = "llama3_audited_v1")]
+    Llama3,
     #[serde(rename = "mistral_audited_v1")]
     Mistral,
     #[serde(rename = "qwen2_audited_v1")]
@@ -34,6 +38,8 @@ enum LoadPolicy {
 }
 #[derive(Clone, Copy, Serialize)]
 enum TextPolicy {
+    #[serde(rename = "llama3-plain-20240726-v1")]
+    Llama3Plain,
     #[serde(rename = "mistral-instruct-v1")]
     MistralInstruct,
     #[serde(rename = "qwen-chatml-v1")]
@@ -103,6 +109,7 @@ struct IdentityReport {
 
 #[derive(Clone, Copy)]
 enum IdentityProfile {
+    Llama3,
     Mistral,
     Qwen2,
     Qwen3,
@@ -115,6 +122,7 @@ impl IdentityProfile {
             Self::Qwen3 => qwen3_manifest(),
             Self::Smol => smol_manifest(),
             Self::Mistral => mistral_manifest(),
+            Self::Llama3 => llama3_manifest(),
         }
         .map_err(|e| fail(ENGINE_ERROR, e.to_string()))
     }
@@ -124,6 +132,7 @@ impl IdentityProfile {
             Self::Qwen3 => REPOSITORY,
             Self::Smol => "mlx-community/SmolLM2-135M-Instruct-8bit",
             Self::Mistral => "mlx-community/Mistral-7B-Instruct-v0.3-4bit",
+            Self::Llama3 => "mlx-community/Llama-3.2-1B-Instruct-8bit",
         }
     }
     fn revision(self) -> &'static str {
@@ -132,6 +141,7 @@ impl IdentityProfile {
             Self::Qwen3 => REVISION,
             Self::Smol => "0f0d9b8218915bc34d401e1a340b8c049d300d5e",
             Self::Mistral => "a4b8f870474b0eb527f466a03fbc187830d271f5",
+            Self::Llama3 => "d48cdf0a4ea22d893b7c63a99d6a693e24822795",
         }
     }
     fn text(self) -> &'static str {
@@ -140,6 +150,7 @@ impl IdentityProfile {
             Self::Qwen3 => "qwen3-plain-nonthinking-v1",
             Self::Smol => "smol-chatml-v1",
             Self::Mistral => "mistral-instruct-v1",
+            Self::Llama3 => "llama3-plain-20240726-v1",
         }
     }
 }
@@ -247,7 +258,10 @@ fn build(evidence: Evidence, instance: u64, loaded: usize) -> Result<IdentityRep
         || instance == 0
         || loaded == 0
         || (matches!(profile, IdentityProfile::Qwen2) && loaded > crate::weights::MAX_CONTEXT_LIMIT)
-        || (matches!(profile, IdentityProfile::Qwen3 | IdentityProfile::Mistral) && loaded > 512)
+        || (matches!(
+            profile,
+            IdentityProfile::Qwen3 | IdentityProfile::Mistral | IdentityProfile::Llama3
+        ) && loaded > 512)
         || (matches!(profile, IdentityProfile::Smol) && evidence.ranges != 694)
     {
         return Err(fail(
@@ -256,9 +270,10 @@ fn build(evidence: Evidence, instance: u64, loaded: usize) -> Result<IdentityRep
         ));
     }
     let source_roles: &[Role] = match profile {
-        IdentityProfile::Qwen2 | IdentityProfile::Qwen3 | IdentityProfile::Mistral => {
-            &[Role::SourceBytesDeliveredToAssembledModel]
-        }
+        IdentityProfile::Qwen2
+        | IdentityProfile::Qwen3
+        | IdentityProfile::Mistral
+        | IdentityProfile::Llama3 => &[Role::SourceBytesDeliveredToAssembledModel],
         IdentityProfile::Smol => &[
             Role::SourceBytesDeliveredToAssembledModel,
             Role::ReferenceContainerDigestAnchor,
@@ -293,12 +308,14 @@ fn build(evidence: Evidence, instance: u64, loaded: usize) -> Result<IdentityRep
                 IdentityProfile::Qwen3 => LoadPolicy::Qwen3,
                 IdentityProfile::Smol => LoadPolicy::SmolWitness,
                 IdentityProfile::Mistral => LoadPolicy::Mistral,
+                IdentityProfile::Llama3 => LoadPolicy::Llama3,
             },
             text: match profile {
                 IdentityProfile::Qwen2 => TextPolicy::QwenChatml,
                 IdentityProfile::Qwen3 => TextPolicy::Qwen3PlainNonthinking,
                 IdentityProfile::Smol => TextPolicy::SmolChatml,
                 IdentityProfile::Mistral => TextPolicy::MistralInstruct,
+                IdentityProfile::Llama3 => TextPolicy::Llama3Plain,
             },
             planning: PlanningPolicy::NativeMlx,
         },
@@ -370,6 +387,14 @@ pub unsafe extern "C" fn toklet_model_chat_identity_create(
                     chat.codec
                         .qwen3_content_identity()
                         .ok_or_else(|| fail(UNSUPPORTED, "chat has no audited Qwen3 codec"))?,
+                )?,
+                SourceReceipt::Llama3(source) => evidence(
+                    IdentityProfile::Llama3,
+                    &source,
+                    chat.codec
+                        .dense_content_identity()
+                        .filter(|c| c.text_policy() == "llama3-plain-20240726-v1")
+                        .ok_or_else(|| fail(UNSUPPORTED, "chat has no audited Llama3 codec"))?,
                 )?,
                 SourceReceipt::Mistral(source) => evidence(
                     IdentityProfile::Mistral,

@@ -1,18 +1,20 @@
 //! Shared cold config/index/container delivery for engine-owned dense profiles.
 //! FileAudit and complete physical-range verification are unchanged.
-use super::{Manifest, QwenProfile, mistral_manifest};
+use super::{Manifest, QwenProfile, llama3_manifest, mistral_manifest};
 use crate::weights::Error;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub(crate) enum DenseProfile {
     Qwen(QwenProfile),
     Mistral,
+    Llama3,
 }
 impl DenseProfile {
     pub(crate) fn manifest(self) -> Result<Manifest<'static>, Error> {
         match self {
             Self::Qwen(profile) => profile.manifest(),
             Self::Mistral => mistral_manifest(),
+            Self::Llama3 => llama3_manifest(),
         }
     }
 }

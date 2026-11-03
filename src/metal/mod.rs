@@ -100,6 +100,7 @@ enum MlxImport {
     SmolAudited,
     Qwen2Audited,
     MistralAudited,
+    Llama3Audited,
     Qwen3Audited,
     Qwen3QualityDiagnostic,
     Qwen3ContextDiagnostic,
@@ -413,6 +414,13 @@ impl Model {
     ) -> Result<Self> {
         Self::load_mlx_impl(directory, options, MlxImport::MistralAudited)
     }
+    /// Pinned Llama3 audit, bounded to512 with existing scaled RoPE/Reference.
+    pub fn load_mlx_llama3_audited(
+        directory: &Path,
+        options: weights::LoadOptions,
+    ) -> Result<Self> {
+        Self::load_mlx_impl(directory, options, MlxImport::Llama3Audited)
+    }
     /// Experimental Qwen3 0.6B quality execution up to1025 positions. Uses the
     /// unchanged Half graph, packed weights and session planners. This does not
     /// qualify numerics/quality, increase app limits, or waive known C512 failures.
@@ -441,6 +449,8 @@ impl Model {
             let clock = Instant::now();
             let mut source = if matches!(import, MlxImport::SmolAudited) {
                 crate::mlx::qwen::Source::open_smol_audited(directory, options)?
+            } else if matches!(import, MlxImport::Llama3Audited) {
+                crate::mlx::qwen::Source::open_llama3_audited(directory, options)?
             } else if matches!(import, MlxImport::MistralAudited) {
                 crate::mlx::qwen::Source::open_mistral_audited(directory, options)?
             } else if matches!(import, MlxImport::Qwen2Audited) {
@@ -565,6 +575,7 @@ impl Model {
             let dense_identity = match import {
                 MlxImport::Qwen2Audited => Some(source.qwen2_content_identity()),
                 MlxImport::MistralAudited => Some(source.mistral_content_identity()),
+                MlxImport::Llama3Audited => Some(source.dense_content_identity()),
                 MlxImport::Qwen3Audited => Some(source.qwen3_content_identity()),
                 _ => None,
             };
