@@ -1,5 +1,6 @@
 import hashlib
 import json
+import math
 from pathlib import Path
 import tempfile
 import unittest
@@ -32,8 +33,8 @@ class IncrementalReplayTests(unittest.TestCase):
                         decode_probe=dict(warmups=3,repetitions=5,weight_cache=False,head_tile=256,publish_throughput_claim=False,
                                           samples=[dict(repetition=r,context_before=n,elapsed_ns=1)for r in range(5)for n in range(17,21)]))
             path=folder/'source.json'
-            def check():
-                path.write_text(json.dumps(report));return checker.check(folder,CONTRACT,SHA)
+            def check(profile='mapped-bf16'):
+                path.write_text(json.dumps(report));return checker.check(folder,CONTRACT,SHA,profile)
             self.assertEqual(check()['rows'],22)
             report['cases'][0]['consistency']['prefix_greedy_margin']=1.
             with self.assertRaises(ValueError):check()
@@ -43,3 +44,17 @@ class IncrementalReplayTests(unittest.TestCase):
             report['overflow_preserves_prefix']=True
             report['decode_probe']['samples'][-1]['context_before']=999
             with self.assertRaises(ValueError):check()
+
+            report['decode_probe']['samples'][-1]['context_before']=20
+            report['decode_probe']['weight_cache']=True;report['storage_profile']='streamed-fp32'
+            report['bf16_source_closed_before_execution']=True
+            report['cache_plan']=dict(weight_bytes=4943257600,kv_bytes=37093376,capacity=566,chunk_elements=1048576,
+                                      runtime_scratch_reserve_bytes=512*1024**2,conversion_reserve_bytes=64*1024**2,
+                                      admitted_bytes=4943257600+37093376+576*1024**2,memory_limit_bytes=6*1024**3)
+            report['cache_tensors']={n:dict(shape=dims,bytes=math.prod(dims)*4,fp32_sha256='0'*64)
+                                     for n,dims in producer.graph.expected_tensors(producer.graph.Shape()).items()}
+            report['maximum_task_replay_shape']=dict(input_tokens=566,prompt_tokens=310,visible_tokens=256,
+                                                     score_rows=[309,565],logits_bytes=131334144,task_outcomes_observed=False)
+            self.assertTrue(check('streamed-fp32')['passed'])
+            report['cache_plan']['admitted_bytes']-=1
+            with self.assertRaises(ValueError):check('streamed-fp32')

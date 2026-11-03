@@ -1,0 +1,147 @@
+{
+  "format": "toklet-llama3-original-cache-contract-v1",
+  "storage_profile": "streamed-fp32",
+  "base_contract_sha256": "ce258e569677d5a2814f8c96a8d07d68714ee6f4ae0b1368dc484b755273e3e4",
+  "mapped_source_report_sha256": "d741faafec09173ffb48dce9bee68da238c65e4954e10a4578bfe79ea28eb576",
+  "mapped_rows": [
+    {
+      "prefix_tokens": 17,
+      "label": "batch",
+      "sha256": "04a15882cae179ec029fcbfd95797c0015c48ebc6552b8d55354e228e8b3539b"
+    },
+    {
+      "prefix_tokens": 17,
+      "label": "prefix",
+      "sha256": "04a15882cae179ec029fcbfd95797c0015c48ebc6552b8d55354e228e8b3539b"
+    },
+    {
+      "prefix_tokens": 18,
+      "label": "batch",
+      "sha256": "813e717d6ffc0b6e1e4097e65a93be3635b138ccca9e452f3d9184ab3e91b43a"
+    },
+    {
+      "prefix_tokens": 18,
+      "label": "prefix",
+      "sha256": "ce94adc7df5db285fe7bdff1301ac7ed1251f2ac5ca911a0ea7657d64644afb9"
+    },
+    {
+      "prefix_tokens": 19,
+      "label": "batch",
+      "sha256": "e36d5711e4e4e22f3e32d2e8b1aa2e17474f703b36ecb01a86d4efefb7051e2c"
+    },
+    {
+      "prefix_tokens": 19,
+      "label": "prefix",
+      "sha256": "17ed2a859a32848f71d6b425afff4e994a583217499170b2c8d42225820ba08e"
+    },
+    {
+      "prefix_tokens": 20,
+      "label": "batch",
+      "sha256": "80f3ebbf9ff594aaf19347383ed6f4c0f58e0e16486443afba6ca07ee34f2dc8"
+    },
+    {
+      "prefix_tokens": 20,
+      "label": "prefix",
+      "sha256": "e8d9c029cbcb6828436ca14eb6d636a2239bdea097e5f1b932cc40fe2d341fcf"
+    },
+    {
+      "prefix_tokens": 21,
+      "label": "batch",
+      "sha256": "8f0f3bdd05ff1d817c68dd7395a6f335dc8145b8c8d02f677bcf52e09c93b565"
+    },
+    {
+      "prefix_tokens": 21,
+      "label": "prefix",
+      "sha256": "7b2cd57b47c54d5c8c452a5176ba05dc7b6b5f93f7e545dfee60068c60237995"
+    },
+    {
+      "prefix_tokens": 510,
+      "label": "batch",
+      "sha256": "9f4fac6923715b382d9a7482f08948e8e9bdd6734933105ecb2ed07d2b7470fa"
+    },
+    {
+      "prefix_tokens": 510,
+      "label": "prefix",
+      "sha256": "9f4fac6923715b382d9a7482f08948e8e9bdd6734933105ecb2ed07d2b7470fa"
+    },
+    {
+      "prefix_tokens": 511,
+      "label": "batch",
+      "sha256": "417783433efedabffe0252708a4ba0e7f248bad8f0def7a86a201e94f6af3713"
+    },
+    {
+      "prefix_tokens": 511,
+      "label": "prefix",
+      "sha256": "6bf727a5f543d762fc6aae53fea272a140212346ed4a1fbb66715b2c616e052a"
+    },
+    {
+      "prefix_tokens": 512,
+      "label": "batch",
+      "sha256": "235b3a113fa913770148ddf0f040b951815338267243c417172420854730d30c"
+    },
+    {
+      "prefix_tokens": 512,
+      "label": "prefix",
+      "sha256": "b49891b70e261ae42870ced0771dc8618d14edcdf2115c6cdbfc5289f5d2ca99"
+    },
+    {
+      "prefix_tokens": 513,
+      "label": "batch",
+      "sha256": "f80cf73533fa675b57c9b68fe1e84a92f30faea0a7dcdd059b4cc57cca1c8b26"
+    },
+    {
+      "prefix_tokens": 513,
+      "label": "prefix",
+      "sha256": "25e089a78ef89213ad9b353bc0002171c58fa283bd72558dbf9ca00e2fa359ef"
+    },
+    {
+      "prefix_tokens": 565,
+      "label": "batch",
+      "sha256": "fad66a49b4ac0f30e217f90a4831839e1bbbc3de0a526085fa4f386a02015588"
+    },
+    {
+      "prefix_tokens": 565,
+      "label": "prefix",
+      "sha256": "fad66a49b4ac0f30e217f90a4831839e1bbbc3de0a526085fa4f386a02015588"
+    },
+    {
+      "prefix_tokens": 566,
+      "label": "batch",
+      "sha256": "0cdaa2aed94e22e832af5f75c18c47230a46d59f747160568529519c90600719"
+    },
+    {
+      "prefix_tokens": 566,
+      "label": "prefix",
+      "sha256": "cb5985d9c9010bc643d737cd955fce2cb6691e92bab34808e60c5398ea194964"
+    }
+  ],
+  "capacity": 566,
+  "weight_bytes": 4943257600,
+  "kv_bytes": 37093376,
+  "memory_limit_bytes": 6442450944,
+  "runtime_scratch_reserve_bytes": 536870912,
+  "conversion_reserve_bytes": 67108864,
+  "maximum_replay": {
+    "inputs": 566,
+    "prompt": 310,
+    "visible": 256,
+    "score_rows": [
+      309,
+      565
+    ],
+    "logits_bytes": 131334144,
+    "input_source": "frozen corpus IDs; memory-shape test only"
+  },
+  "retention": {
+    "exact_raw_fp32_rows": 22,
+    "exact_greedy_checks": 11,
+    "unchanged_row_and_nll_gates": true,
+    "two_separate_cached_probe_runs": true,
+    "maximum_median_ratio_to_uncached": 0.9,
+    "uncached_median_ms": 827.9461670000001,
+    "source": "frozen reader-profile uninstrumented phase"
+  },
+  "model_executed": false,
+  "task_outcomes_observed": false,
+  "astra_direction": "full cache justified by measured layer/head widening; final retain/revert after checks"
+}

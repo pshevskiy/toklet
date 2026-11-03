@@ -9545,3 +9545,15 @@ not a native/app speed claim. A locked manifest cleanup removes 4,332 standalone
 compiler objects and preserves protected linked products; observed free space
 ends at 3,765,780,480 bytes. Astra approves the cleanup and research results.
 [Evidence](../benchmarks/results/2026-11-03-llama3-reference-profile-v1.json).
+
+## 3 November 2026 — Retained streamed FP32 reference cache
+
+Bounded conversion now builds one read-only FP32 model and closes the original
+BF16 descriptor/mmap before execution. Both isolated runs match all 22 mapped
+row hashes and greedy decisions. Median reference decode falls from 827.95 ms to
+172.68/169.40 ms, about 4.8× faster. Maximum measured RSS is 5,584,928,768 bytes,
+below 6 GiB; the separate admission estimate is 5,584,330,752 bytes. The largest
+planned replay shape, 24 controls and stdlib row replay pass. Astra approves
+retention. This improves reference preparation only; the 100-task gate is open.
+[Report](llama3-original-cache.md),
+[evidence](../benchmarks/results/2026-11-03-llama3-original-cache-v1.json).

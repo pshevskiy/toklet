@@ -1,0 +1,85 @@
+{
+  "format": "toklet-llama3-original-cache-evidence-v1",
+  "passed": true,
+  "base_revision": "14ba4ec",
+  "hardware": "Apple M1 Pro, macOS, CPU reference",
+  "decision": "retain streamed FP32 reference cache",
+  "weight_bytes": 4943257600,
+  "kv_bytes": 37093376,
+  "planned_admitted_bytes": 5584330752,
+  "maximum_observed_peak_rss_bytes": 5584928768,
+  "limit_bytes": 6442450944,
+  "uncached_median_decode_ms": 827.9461670000001,
+  "runs": [
+    {
+      "run": 1,
+      "raw_rows": 22,
+      "all_raw_rows_equal": true,
+      "median_decode_ms": 172.680854,
+      "ratio_to_uncached": 0.20856531605876738,
+      "peak_rss_bytes": 5399937024,
+      "maximum_replay": {
+        "input_tokens": 566,
+        "prompt_tokens": 310,
+        "visible_tokens": 256,
+        "score_rows": [
+          309,
+          565
+        ],
+        "logits_bytes": 131334144,
+        "logits_sha256": "efc69a03db63d29056e44c560a0105774aff2b6cfec4988455ed35a3ab073872",
+        "input_source": "frozen corpus IDs; memory-shape test only",
+        "task_outcomes_observed": false
+      }
+    },
+    {
+      "run": 2,
+      "raw_rows": 22,
+      "all_raw_rows_equal": true,
+      "median_decode_ms": 169.39875,
+      "ratio_to_uncached": 0.20460116460687713,
+      "peak_rss_bytes": 5584928768,
+      "maximum_replay": {
+        "input_tokens": 566,
+        "prompt_tokens": 310,
+        "visible_tokens": 256,
+        "score_rows": [
+          309,
+          565
+        ],
+        "logits_bytes": 131334144,
+        "logits_sha256": "efc69a03db63d29056e44c560a0105774aff2b6cfec4988455ed35a3ab073872",
+        "input_source": "frozen corpus IDs; memory-shape test only",
+        "task_outcomes_observed": false
+      }
+    }
+  ],
+  "checks": {
+    "cold_controls": 24,
+    "isolated_workers": 2,
+    "all_raw_rows_equal_per_worker": 22,
+    "exact_greedy_checks_per_worker": 11,
+    "independent_stdlib_replay": true,
+    "source_closed_before_execution": true,
+    "tied_table_single_owner": true
+  },
+  "full_quality_qualified": false,
+  "task_gate_pending": true,
+  "astra_review": "approved final source/check/two-run retention results",
+  "retained_failures": [
+    "initial wrapper control-log filename collision before any cache model load"
+  ],
+  "review_corrections": [
+    "tensor-entry validation matches metadata-stripped real Reader representation"
+  ],
+  "receipts_sha256": {
+    "artifacts/llama3-original-cache-2026-11-03/retry/run.json": "1bde30fe3fa5ae94084d9ec786096750346054f25e09d507efb71c5e845e8d4b",
+    "artifacts/llama3-original-cache-2026-11-03/retry/execution-plan.json": "c0871141d881080caf05456c0145b6b1b1db5450961f44e64fbb960a2b78c4f6",
+    "artifacts/llama3-original-cache-2026-11-03/retry/comparison-1.json": "fe8641388bd4179d5d39a436e196974b4cc0e1137785ee4a9fe05a592e4f26f2",
+    "artifacts/llama3-original-cache-2026-11-03/retry/comparison-2.json": "847ab5c2fbb1d72dbb79a35cb38318be3bc7d20bdb041689da7dcfd8bd941f8e",
+    "artifacts/llama3-original-cache-2026-11-03/retry/cache-v1/source.json": "b64bfb0e574afd449d6dbd3a5f7e477309eb766f5fab1607ff74b2575f799f44",
+    "artifacts/llama3-original-cache-2026-11-03/retry/cache-v2/source.json": "fbff90e686f9d8153086bfc25c7c4f0f7949bcd3f1c6d81ae0423c2b4540c809",
+    "artifacts/llama3-original-cache-2026-11-03/retry/cached-replay-1.log": "161ecad777bd5e7f6da3691b12421d9fc66233dced41dc79fb15d68d01b91b4a",
+    "artifacts/llama3-original-cache-2026-11-03/retry/cached-replay-2.log": "161ecad777bd5e7f6da3691b12421d9fc66233dced41dc79fb15d68d01b91b4a"
+  }
+}

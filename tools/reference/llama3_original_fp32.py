@@ -60,7 +60,14 @@ def unique(pairs):
 def validate_header(header, payload_bytes, shape):
     header = dict(header)
     metadata = header.pop('__metadata__', {})
-    if metadata != {'format': 'pt'} or set(header) != set(expected_tensors(shape)):
+    if metadata != {'format': 'pt'}:
+        raise ValueError('Original tensor inventory differs')
+    return validate_tensor_entries(header, payload_bytes, shape)
+
+
+def validate_tensor_entries(header, payload_bytes, shape):
+    """Validate the post-header tensor mapping shared by mapped/streamed readers."""
+    if set(header) != set(expected_tensors(shape)):
         raise ValueError('Original tensor inventory differs')
     intervals = []
     for name, dims in expected_tensors(shape).items():

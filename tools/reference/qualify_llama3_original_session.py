@@ -31,7 +31,7 @@ def kv_sha(session):
     return digest.hexdigest()
 
 
-def produce(model, contract_file, expected_sha, output):
+def produce(model, contract_file, expected_sha, output, storage_profile='mapped-bf16'):
     output=Path(output);output.mkdir()
     report=dict(format='toklet-llama3-original-incremental-source-v1',passed=False,
                 contract_sha256=expected_sha,full_quality_qualified=False,cases=[])
@@ -39,6 +39,9 @@ def produce(model, contract_file, expected_sha, output):
     try:
         if importlib.metadata.version('numpy')!='2.3.2' or sys.byteorder!='little':
             raise ValueError('Reference runtime differs')
+        if storage_profile not in ['mapped-bf16','streamed-fp32']:
+            raise ValueError('Unknown reference storage profile')
+        report['storage_profile']=storage_profile
         policy=contract(contract_file,expected_sha)
         quality=long.graph.ROOT/'benchmarks/llama3-original-quality-v1'
         manifest,ids=long.inputs.load(quality,policy['quality_manifest_sha256'])
@@ -46,6 +49,9 @@ def produce(model, contract_file, expected_sha, output):
         paths=[Path(__file__),Path(cached.__file__),Path(long.graph.__file__),Path(long.__file__),
                Path(long.short.__file__),Path(long.inputs.__file__),Path(long.inputs.parent.__file__),
                long.graph.ROOT/'tools/reference/llama3_loss1024.py',long.graph.ROOT/'tools/bench/acquire_llama3_original.py']
+        if storage_profile=='streamed-fp32':
+            import llama3_original_cache as float_cache
+            paths.append(Path(float_cache.__file__))
         report['source_sha256']={str(p):long.short.sha(p)for p in paths}
         provider={str(p):long.short.sha(p)for p in sorted(Path(long.np.__file__).resolve().parent.rglob('*'))
                   if p.is_file()and p.suffix in ['.py','.so','.dylib']and '__pycache__'not in p.parts}
@@ -53,7 +59,14 @@ def produce(model, contract_file, expected_sha, output):
         report['runtime_pins']=dict(file=pins.name,sha256=long.short.sha(pins),entries=len(provider))
         report['runtime']=dict(python=sys.version,numpy=long.np.__version__,threads={n:long.os.environ[n]for n in ['VECLIB_MAXIMUM_THREADS','OPENBLAS_NUM_THREADS','OMP_NUM_THREADS']})
         report['original_acquisition_sha256']=long.short.sha(Path(model)/'acquisition.json')
-        long.resource_gate(output);reader=long.graph.Reader(model);session=cached.Session(reader,566)
+        long.resource_gate(output)
+        reader=float_cache.Cache.load(model) if storage_profile=='streamed-fp32' else long.graph.Reader(model)
+        long.resource_gate(output)  # Includes the conversion lifetime high-water mark.
+        if storage_profile=='streamed-fp32':
+            report['cache_plan']=reader.plan
+            report['cache_tensors']=reader.tensor_records
+            report['bf16_source_closed_before_execution']=True
+        session=cached.Session(reader,566)
         report['kv_bytes']=session.kv_bytes
         if session.kv_bytes!=37093376:raise ValueError('Reference KV accounting differs')
         for case in policy['cases']:
@@ -92,7 +105,15 @@ def produce(model, contract_file, expected_sha, output):
                 started=time.perf_counter_ns();session.forward([ids[count-1]]);elapsed=time.perf_counter_ns()-started
                 if repetition>=3:samples.append(dict(repetition=repetition-3,context_before=count-1,elapsed_ns=elapsed))
             long.resource_gate(output)
-        report['decode_probe']=dict(warmups=3,repetitions=5,samples=samples,weight_cache=False,head_tile=256,publish_throughput_claim=False)
+        report['decode_probe']=dict(warmups=3,repetitions=5,samples=samples,weight_cache=storage_profile=='streamed-fp32',head_tile=256,publish_throughput_claim=False)
+        if storage_profile=='streamed-fp32':
+            replay=long.graph.quality_forward(reader,ids[:566],list(range(309,565)))
+            if replay.shape!=(256,128256):raise ValueError('Maximum task replay shape differs')
+            report['maximum_task_replay_shape']=dict(input_tokens=566,prompt_tokens=310,visible_tokens=256,
+                score_rows=[309,565],logits_bytes=replay.nbytes,
+                logits_sha256=hashlib.sha256(memoryview(replay).cast('B')).hexdigest(),
+                input_source='frozen corpus IDs; memory-shape test only',task_outcomes_observed=False)
+            long.resource_gate(output);del replay;gc.collect()
         reader.close();reader=None;gc.collect()
         if any(long.short.sha(Path(p))!=v for p,v in provider.items()):raise ValueError('Runtime changed')
         if any(long.short.sha(Path(p))!=v for p,v in report['source_sha256'].items()):raise ValueError('Source changed')
@@ -112,5 +133,6 @@ if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('model',type=Path);parser.add_argument('contract',type=Path)
     parser.add_argument('contract_sha');parser.add_argument('new_output',type=Path)
-    args=parser.parse_args();value=produce(args.model,args.contract,args.contract_sha,args.new_output)
+    parser.add_argument('--storage-profile',choices=['mapped-bf16','streamed-fp32'],default='mapped-bf16')
+    args=parser.parse_args();value=produce(args.model,args.contract,args.contract_sha,args.new_output,args.storage_profile)
     print(json.dumps(value,indent=2));raise SystemExit(0 if value['passed']else 1)

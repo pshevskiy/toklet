@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **3 November 2026**. Active milestone: **M8**.
-Current task: **bounded FP32 reference cache and qualification**, then frozen 100-task collection/replay/grading.
+Current task: **freeze Llama 100-task inputs and implement collection/replay/grading adapters**.
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Query](artifacts/m8-phone-availability-2026-11-03/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
@@ -979,3 +979,9 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-03 | Reference profiling/resource preparation | Incremental reference committed `d3de207`. The warmed mapped-reader decode median is856.68ms, so Astra recommends timing head versus layer widening before caching. A fresh object-only cleanup inventories inactive artifact-target *.o files under its Cargo lock; linked products and historical receipts are protected. | Review the concrete cleanup plan, recover reserve, then run sequential profiling. No task pass-rate outcomes yet. |
 
 | 2026-11-03 | Reference profiling/resource decision reviewed | Plain decode median827.95ms; attribution shows layer widening492.63ms and head widening121.72ms, roughly75% of total. All40 rows and428 provider files match qualification. Guarded cleanup removes4,332 objects; protected products remain unchanged and free space is3,765,780,480bytes. | Astra approves results and full-cache direction. Commit research evidence, then bounded verified-FD streaming into one read-only FP32 model; no live duplicate BF16 mapping. |
+
+| 2026-11-03 | FP32 cache review correction | Streamed cache and three cold controls are implemented. Astra catches a real-input mismatch hidden by the fixture: Reader strips raw header metadata before exposing tensors. Factored tensor-entry validation and made the fixture match that representation; added dtype/shape and bit-edge controls. | No real cache run started. Extend the shared qualifier with an explicit storage profile, then controls and separate-worker22-row/peak-memory/probe checks. |
+
+| 2026-11-03 | Cache execution wrapper retry | Twenty-four cold controls pass. The first wrapper stops before model loading because a prior control log already exists; retained the failure and moved the attempt into a fresh directory. | Cache contract and numerical sources are unchanged; two isolated real-cache runs are next. |
+
+| 2026-11-03 | FP32 reference cache retained | Both isolated runs match all22 mapped row hashes and11 greedy decisions. Decode medians172.68/169.40ms versus827.95ms uncached clear the frozen10% gain; max RSS5,584,928,768bytes stays below6GiB. Planned5,584,330,752bytes is recorded separately. Largest566-input/256-row memory replay and24 controls pass. | Astra approves retention and commit. Next shared100-task manifest, sequential cached-original/native workers, exact original trajectory replay, then unchanged isolated/text grading. |
