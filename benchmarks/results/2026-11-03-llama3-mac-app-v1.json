@@ -1,0 +1,32 @@
+{
+  "scope": "opt-in pinned Llama3 Mac app route; default/iOS catalog unchanged",
+  "native_build": "artifacts/llama3-native40-2026-11-03/build.json",
+  "controls": "artifacts/llama3-app-2026-11-03/checks.json",
+  "apps": "artifacts/llama3-app-2026-11-03/apps/apps.json",
+  "controller": "artifacts/llama3-app-2026-11-03/loaded-retry/loaded.json",
+  "visible": "artifacts/llama3-app-2026-11-03/visible.json",
+  "adoption": "artifacts/llama3-app-2026-11-03/adoption.json",
+  "observed": {
+    "default_catalog": 4,
+    "flagged_catalog": 5,
+    "new_catalog_controls_per_mode": 23,
+    "asynchronous_cancel": {
+      "status": 0,
+      "reason": 3,
+      "history": 47,
+      "evaluated": 47,
+      "pending": 0,
+      "emitted_ids": [
+        791
+      ]
+    },
+    "visible_reply": "Hello."
+  },
+  "failure_retained": "artifacts/llama3-app-2026-11-03/loaded.json",
+  "review": "Astra final code/results/adoption review approved",
+  "limitations": [
+    "Original 10000-target/100-task full adoption remains open",
+    "No fresh network download, physical phone runtime, larger window or speed qualification"
+  ],
+  "adoption_passed": true
+}

@@ -26,12 +26,13 @@ struct FriendlyLoadRequest: Equatable, Sendable {
         case .qwen3: return .managedQwen3
         case .smol: return .managedSmol
         case .mistral: return .managedMistral
+        case .llama3: return .managedLlama3
         default: return .ordinary
         }
     }
     static func matches(_ mode: NativeLoadIdentity, profile: HubProfile) -> Bool {
-        guard let expected = mode.identityProfile else { return true }
-        return (expected == .qwen2 && profile == .qwen) || (expected == .qwen3 && profile == .qwen3) || (expected == .smol && profile == .smol) || (expected == .mistral && profile == .mistral)
+        guard let expected = mode.identityProfile else { return profile != .llama3 }
+        return (expected == .qwen2 && profile == .qwen) || (expected == .qwen3 && profile == .qwen3) || (expected == .smol && profile == .smol) || (expected == .mistral && profile == .mistral) || (expected == .llama3 && profile == .llama3)
     }
 }
 
@@ -375,7 +376,7 @@ final class FriendlyChatStore: ObservableObject {
             let scoped = folder.startAccessingSecurityScopedResource()
             defer { if scoped { folder.stopAccessingSecurityScopedResource() } }
             let profile = try HubProfile.identify(folder)
-            guard FriendlyLoadRequest.matches(mode,profile:profile) else { throw HubFailure("The selected folder does not match the requested managed profile") }
+            guard FriendlyLoadRequest.matches(mode,profile:profile) else { throw HubFailure(profile == .llama3 && mode == .ordinary ? "Open experimental Llama from Models to use its validated setup." : "The selected folder does not match the requested managed profile") }
             let loadUpper = mode == .managedQwen2 ? qwen2LoadUpper : nil
             // Validate the captured choice before workspace saves or old-owner teardown.
             var initial = NativeSettings(directory:folder.path)

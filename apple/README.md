@@ -28,10 +28,10 @@ Destinations must be new. The builder verifies exact archive/source/header pins,
 creates `apple/Binaries/Toklet.xcframework` and `apple/Generated/Tiny`, then builds
 release simulator and unsigned device apps. It refuses foreign or differently
 linked generated inputs. The current generated library link selects
-`artifacts/kv-ceiling-native-2026-11-03/Toklet.xcframework`, with all 39 C
+`artifacts/llama3-native40-2026-11-03/Toklet.xcframework`, with all 40 C
 exports and complete Mac/iOS/simulator app compile/link evidence. Its native
 build receipt SHA256 is
-`ee2c733878c4f64c8b236a13d1288d4daaa50f31b461f350012a7897a1764964`.
+`ae536dded3bf393047a8cb322b078d60c570ed9f4568f3a254d97600727cc696`.
 The [shared Mistral integration](../docs/mistral-managed-preferences.md),
 [Qwen2.5 integration](../docs/qwen2-managed-preferences.md) and earlier
 [Smol/Qwen3 integration](../docs/smol-managed-preferences.md) record strict decoding,
@@ -203,3 +203,7 @@ unlimited; zero is explicit. Preview counts physical cache buffers, and Apply
 checks both resident planned and actual candidate KV before committing. The
 ceiling itself is not saved; accepted window settings use the existing record.
 [KV-ceiling evidence](../benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
+
+The [experimental Llama Mac route](../docs/llama3-mac-app.md) is opt-in with
+`--experimental-llama3`; it is absent from the default and iOS catalogs. Its
+512-token developer scope does not waive the original full-quality gates.

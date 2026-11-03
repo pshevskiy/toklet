@@ -9445,3 +9445,17 @@ attempts remain recorded.
 The selected39-export framework and app remain unchanged. Full adoption quality,
 app activation, phone, larger contexts and speed remain separate gates. Reviewed
 compiler-cache cleanup restores the8GiB reserve for the next package build.
+
+## 3 November 2026 — Opt-in Llama3 Mac app
+
+The Mac launch flag `--experimental-llama3` enables the exact pinned profile
+through the shared Models/search/download and audited Chat route. Default/iOS
+catalogs stay unchanged. Ordinary folder rejection preserves the existing chat
+and native session. Default/flag controls,3unsigned apps, actual Mac Send/Stop/
+recover/reopen/preferences and isolated visible Use/Send checks pass. The visible
+reply is “Hello.” UI cancellation correctly preserves a committed47-token prefix
+with pending0; the earlier callback-only test expectation remains recorded.
+[Report](llama3-mac-app.md),
+[evidence](../benchmarks/results/2026-11-03-llama3-mac-app-v1.json).
+Astra approves; guarded native40 adoption passes and preserves native39. Original full quality, fresh downloads,
+iPhone runtime, larger contexts and measured performance remain separate.

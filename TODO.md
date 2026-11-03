@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **3 November 2026**. Active milestone: **M8**.
-Current task: **native40 package and developer-scoped managed Llama3 Mac route**.
+Current task: **Smol download → verified cache → offline chat journey**.
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
 Completed B5f1: owner snapshot and explicit context/text facts; [evidence](benchmarks/results/2026-11-02-session-owner-memory-v1.json).
@@ -465,13 +465,13 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [ ] Finish Mac app checks and record separate iPhone 14 Pro validation or
   explicit remaining device gaps; Astra review and commit each code task.
 
-- [ ] Integrate the pinned Llama3 plain renderer/codec in the app path, checking
+- [x] Integrate the pinned Llama3 plain renderer/codec in the Mac developer app path, checking
   single BOS, all three hidden stops, trim/decoding, cancellation and actual
   rendered prompt/reply boundaries. Independent fixtures alone do not enable Chat.
   - [x] Source codec: exact asset pins, independent rendered bytes and cached tokenizer comparison; [report](docs/llama3-plain-codec.md). Checks544default/652Metal and Astra review pass.
   - [x] Real native Mac512 session boundary, cancellation/replay and observed stop evidence; [report](docs/llama3-native-chat-boundary.md).
   - [x] Audited native owner pairing; [report](docs/llama3-audited-pair.md).
-  - [ ] Coherent native40 package and managed Mac developer route/journey; ordinary discovery still requires adoption gates.
+  - [x] Coherent native40 package and managed Mac developer route/journey; [report](docs/llama3-mac-app.md). Ordinary discovery still requires adoption gates.
 
 ### M8 closure
 
@@ -907,3 +907,13 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-03 | Audited test compile correction | Astra and Metal compiler catch extra references introduced while switching preflight to C-returned stops. Removed those references; production behavior unchanged. | Preserve final/checks.json failure; corrected final2 cold/link checks precede hardware run. |
 
 | 2026-11-03 | Audited pair Mac results / build reserve | Audited identity reports pinned Llama/512 and374verified container reads. Audited and generic modes both reach511+1 admission, overflow preservation and cancel/replay8586/596; generic Chat rejects. Reviewed cache-only cleanup restores8823074816free bytes (>8GiB), preserving models/products/receipts. | Final post-release hash/clean exit and Astra review pass; pair commit and native40/app route. |
+
+| 2026-11-03 | Native40 / Mac experimental route starts | Audited pair committed `8e20aca`; unchanged package builder passes11controls and now builds3candidate slices. Added Mac-only `--experimental-llama3` process catalog gate, pinned profile, identity descriptor and shared audited worker routing. | Default catalog/iOS stay unchanged. Adviser review, strict SDK/control tests and actual cached app load/send/cancel/reopen/preferences follow; candidate remains unselected. |
+
+| 2026-11-03 | Mac route adviser correction | Candidate native40 passes3slices/40exports; first Swift3SDK check passes. Astra catches ordinary folder-open teardown risk. Shared route matcher now rejects ordinary Llama before workspace/owner changes and points to Models. | Add owner/workspace preservation to actual controller; final SDK/control/app checks and adoption review pending. |
+
+| 2026-11-03 | App cancellation expectation corrected | First real controller reaches interrupted output but test requires callback-style pending1. Generation checks after evaluation allow asynchronous UI Stop to leave0or1 pending. Astra approves stronger exact history/evaluated/pending and emitted-tail checks, both cancellation reasons and recovery. | Production unchanged; retain failed run and retry in fresh output. Synchronous native callback test remains exactpending1. |
+
+| 2026-11-03 | Llama Mac app journey passes | Default/flagged catalog and identity/preferences controls,3unsigned apps and corrected realcontroller pass. UIStop leaves valid committed47/pending0 with exact emitted tail; recovery/reopen/other preferences pass. Visible isolated app showsexperimentalrow, loads512 and replies “Hello.” throughSend. | Astra final review and guarded40selection pass, preserving39; full adoption quality and phone remain open. |
+
+| 2026-11-03 | Llama app scoped closure | Astra approves final code/results and guarded adoption; native40 is selected with all10package files checked before/after and native39 preserved. | Commit then close the shared ordinary-profile real download/verification/offline/rejected-cache journey with Smol. Full Llama adoption/device gates stay open. |

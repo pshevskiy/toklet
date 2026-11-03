@@ -55,9 +55,28 @@ struct HubProfile: Codable, Equatable, Sendable {
             HubFile(name:"tokenizer.json",bytes:1961548,sha256:"e553af6fff7d7ad76e830608b218c5c0b0822998d5a1a96099a74cd3c1cb1a49"),
             HubFile(name:"tokenizer_config.json",bytes:138039,sha256:"e8fbcfef34d855dba2c7f1d91a2c5470cf493d00ecfd06488ce21e45325bc8ae"),
             HubFile(name:"special_tokens_map.json",bytes:414,sha256:"6fa06efa2785e450051989a6f8fb4416b10149ded485ddd3f127a40734f5cfd0")])
-    static let catalog: [HubProfile] = [.smol,.qwen,.qwen3,.mistral]
+    static let llama3 = HubProfile(repository:"mlx-community/Llama-3.2-1B-Instruct-8bit",
+        revision:"d48cdf0a4ea22d893b7c63a99d6a693e24822795",files:[
+            HubFile(name:"config.json",bytes:1041,sha256:"847794a29e25927b4b98f35f5e66829e1b8bfd78f7743a9582780b4fd4a8ef9d"),
+            HubFile(name:"model.safetensors",bytes:1313157436,sha256:"cd3582a78766654e3e2107e3b4d51d9cb18e6754b659bfb44a34328ef9d7fa52"),
+            HubFile(name:"model.safetensors.index.json",bytes:26160,sha256:"c444df144fe9d86b42f8b1d797432c1f8379225316e41b1b9551e90d63136155"),
+            HubFile(name:"tokenizer.json",bytes:9085657,sha256:"79e3e522635f3171300913bb421464a87de6222182a0570b9b2ccba2a964b2b4"),
+            HubFile(name:"tokenizer_config.json",bytes:54528,sha256:"9823dcfdc1121869029da45192238e85cf44f0b232a6d9dc20e4fe6f4242a14e"),
+            HubFile(name:"special_tokens_map.json",bytes:296,sha256:"6f38c73729248f6c127296386e3cdde96e254636cc58b4169d3fd32328d9a8ec")])
+    // Resolve once per process; the experimental profile is never in iOS discovery.
+    static let catalog: [HubProfile] = {
+        var profiles: [HubProfile] = [.smol,.qwen,.qwen3,.mistral]
+        #if os(macOS)
+        if ProcessInfo.processInfo.arguments.contains("--experimental-llama3") { profiles.append(.llama3) }
+        #endif
+        return profiles
+    }()
     static let qwen3AccuracyNotice = "The pinned Qwen3-0.6B 8-bit profile is experimental and has not passed Toklet’s accuracy checks."
-    var supportNotice: String? { self == Self.qwen3 ? Self.qwen3AccuracyNotice : nil }
+    var supportNotice: String? {
+        if self == Self.qwen3 { return Self.qwen3AccuracyNotice }
+        if self == Self.llama3 { return "Experimental Mac profile. Full accuracy checks are incomplete; context is limited to 512 tokens." }
+        return nil
+    }
     static func matching(_ query: String) -> [HubProfile] {
         let words = query.split(whereSeparator:{ $0.isWhitespace }).map(String.init)
         return catalog.filter { profile in
@@ -69,6 +88,7 @@ struct HubProfile: Codable, Equatable, Sendable {
         case Self.qwen.repository: "Qwen2.5-0.5B · 8-bit"
         case Self.qwen3.repository: "Qwen3-0.6B · 8-bit · non-thinking"
         case Self.mistral.repository: "Mistral-7B-Instruct-v0.3 · 4-bit"
+        case Self.llama3.repository: "Llama-3.2-1B · 8-bit · experimental"
         default: "SmolLM2-135M · 8-bit (Llama family)"
         }
     }
@@ -77,13 +97,14 @@ struct HubProfile: Codable, Equatable, Sendable {
         case Self.qwen.repository: 1024 * 1024 * 1024
         case Self.qwen3.repository: 1536 * 1024 * 1024
         case Self.mistral.repository: 5 * 1024 * 1024 * 1024
+        case Self.llama3.repository: 2 * 1024 * 1024 * 1024
         default: 512 * 1024 * 1024
         }
     }
     var textBudget: UInt64 {
         switch repository {
         case Self.qwen.repository: 128 * 1024 * 1024
-        case Self.qwen3.repository: 256 * 1024 * 1024
+        case Self.qwen3.repository, Self.llama3.repository: 256 * 1024 * 1024
         default: 64 * 1024 * 1024
         }
     }
@@ -92,6 +113,7 @@ struct HubProfile: Codable, Equatable, Sendable {
         case Self.qwen.repository: 1536 * 1024 * 1024
         case Self.qwen3.repository: 2304 * 1024 * 1024
         case Self.mistral.repository: 5632 * 1024 * 1024
+        case Self.llama3.repository: 3 * 1024 * 1024 * 1024
         default: 768 * 1024 * 1024
         }
     }
@@ -100,6 +122,7 @@ struct HubProfile: Codable, Equatable, Sendable {
         case Self.qwen.repository: 151936
         case Self.qwen3.repository: 151936
         case Self.mistral.repository: 32768
+        case Self.llama3.repository: 128256
         default: 49152
         }
     }
@@ -108,6 +131,7 @@ struct HubProfile: Codable, Equatable, Sendable {
         case Self.qwen.repository: "qwen"
         case Self.qwen3.repository: "qwen3"
         case Self.mistral.repository: "mistral"
+        case Self.llama3.repository: "llama3"
         default: "smol"
         }
     }
@@ -116,6 +140,7 @@ struct HubProfile: Codable, Equatable, Sendable {
         case Self.qwen.repository: "Qwen2.5-0.5B"
         case Self.qwen3.repository: "Qwen3-0.6B-8bit"
         case Self.mistral.repository: "Mistral-7B-Instruct-v0.3-4bit"
+        case Self.llama3.repository: "Llama-3.2-1B-Instruct-8bit"
         default: "SmolLM2-135M"
         }
     }
