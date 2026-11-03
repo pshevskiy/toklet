@@ -70,6 +70,10 @@ name = "llama3_checkpoint"
 required-features = ["metal"]
 
 [[example]]
+name = "llama3_quality_tasks"
+required-features = ["metal"]
+
+[[example]]
 name = "llama3_quality_loss"
 required-features = ["metal"]
 

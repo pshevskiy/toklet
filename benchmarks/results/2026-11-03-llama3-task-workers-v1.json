@@ -1,0 +1,55 @@
+{
+  "format": "toklet-llama3-task-workers-evidence-v1",
+  "passed": true,
+  "base_revision": "4cfd0d1",
+  "hardware": "Apple M1 Pro, macOS",
+  "checks": {
+    "rust_input_controls": 3,
+    "original_generation_replay_controls": 3,
+    "journal_controls": 2,
+    "strict_metal_all_target_clippy": true,
+    "fmt": true,
+    "release_build": true,
+    "engine_source_hashes_unchanged_from549_default657_metal": true
+  },
+  "authored_probe": {
+    "prompt_ids": [
+      128000,
+      1,
+      7,
+      13
+    ],
+    "maximum_output": 4,
+    "original_ids": [
+      662,
+      662,
+      883,
+      1
+    ],
+    "native_ids": [
+      662,
+      662,
+      883,
+      1
+    ],
+    "reason": "output_limit",
+    "pending_tokens": 1,
+    "original_stateless_trajectory_verified": true,
+    "native_peak_rss_bytes": 1259601920,
+    "original_peak_rss_bytes": 5007360000,
+    "actual_hidden_stop_observed": false,
+    "synthetic_all_three_hidden_stops_checked": true
+  },
+  "full_task_outcomes_observed": false,
+  "full_quality_qualified": false,
+  "astra_review": "approved workers, structural verifier and authored probe results for commit",
+  "retained_failure": "initial Python conditional-spacing compile typo corrected before models",
+  "receipts_sha256": {
+    "artifacts/llama3-tasks-2026-11-03/workers-v1/checks.json": "5948a1437bfd81b123ea088bf14dff22b863f47d605d3ab00e207f50cb55c048",
+    "artifacts/llama3-tasks-2026-11-03/workers-v1/probe-v1/execution-plan.json": "0025b184a1363f3a4e6d219c52c3a9e2d43519f5b794ee5347759ae4322110a2",
+    "artifacts/llama3-tasks-2026-11-03/workers-v1/probe-v1/run.json": "3be077a457ee9e24e40b266e1f378184bfe0c26df04c814f96106248952a45a1",
+    "artifacts/llama3-tasks-2026-11-03/workers-v1/probe-v1/structural-replay.log": "8c25f8303e1b51663ccee991a4b2369f786bb5be780af0ced506f37858a09618",
+    "artifacts/llama3-tasks-2026-11-03/workers-v1/probe-v1/native/result.json": "26a5b3567db97aa24b8231f0af05d8908a441f35509949965a9fc9fa7d38ea2f",
+    "artifacts/llama3-tasks-2026-11-03/workers-v1/probe-v1/original/result.json": "66408753d8fb075b9603169115c2a768b7ca9a90271b945d9043fe7e4b8f9d4e"
+  }
+}

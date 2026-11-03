@@ -9568,3 +9568,14 @@ including HumanEval/32 at 310+256. Three controls, preparation/replay and Astra
 review pass. This freezes inputs only; no task outcomes are claimed.
 [Contract](llama3-task-contract.md),
 [evidence](../benchmarks/results/2026-11-03-llama3-task-inputs-v1.json).
+
+## 3 November 2026 — Llama task workers and authored probes
+
+The native worker uses existing generation; the cached original worker checks
+each trajectory against a stateless replay. Both preserve sampled versus
+committed state and reset between cases. The structural verifier rejects invalid
+stops, counters, case order or reported predictions. Eight controls, strict lint,
+formatting and release build pass. Separate authored probes emit identical four
+IDs and pass pending-state/replay checks; their real stop reason is output limit.
+Astra approves the code and probes. Full 100-case collection remains next.
+[Evidence](../benchmarks/results/2026-11-03-llama3-task-workers-v1.json).
