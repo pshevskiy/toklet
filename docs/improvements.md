@@ -9418,3 +9418,15 @@ explicit cached-tokenizer comparison pass. Strict default/Metal Clippy, fmt and
 544/652 tests and Astra review pass. [Report](llama3-plain-codec.md),
 [evidence](../benchmarks/results/2026-11-03-llama3-plain-codec-v1.json).
 Native pairing, app activation, full quality and phone remain open.
+
+## 3 November 2026 — Llama3 native session composition
+
+The pinned codec now has an explicit real Mac512 session test:511rendered prompt
+tokens plus one requested reply fit, another reply rejects without state loss,
+and cancellation retains one pending ID before reset/replay succeeds. Native
+callbacks report cancellation errors without unwinding. Counts/hidden-stop
+contracts are checked; no actual stop occurred in these requests. All cold
+checks544/652, cached Metal execution and Astra review pass.
+[Evidence](../benchmarks/results/2026-11-03-llama3-native-chat-v1.json),
+[scope](llama3-native-chat-boundary.md). Generic loading here grants no audited
+Chat/app identity, full-adoption quality, phone or performance qualification.

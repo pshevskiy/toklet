@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **3 November 2026**. Active milestone: **M8**.
-Current task: **pinned Llama3 plain chat renderer/codec**, then remaining model/app qualification.
+Current task: **audited Llama3 native model/codec pair**, then managed app integration.
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
 Completed B5f1: owner snapshot and explicit context/text facts; [evidence](benchmarks/results/2026-11-02-session-owner-memory-v1.json).
@@ -469,7 +469,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
   single BOS, all three hidden stops, trim/decoding, cancellation and actual
   rendered prompt/reply boundaries. Independent fixtures alone do not enable Chat.
   - [x] Source codec: exact asset pins, independent rendered bytes and cached tokenizer comparison; [report](docs/llama3-plain-codec.md). Checks544default/652Metal and Astra review pass.
-  - [ ] Real native Mac512 session boundary, cancellation/replay and observed stop evidence.
+  - [x] Real native Mac512 session boundary, cancellation/replay and observed stop evidence; [report](docs/llama3-native-chat-boundary.md).
   - [ ] Audited owner pairing and ordinary app activation/journey.
 
 ### M8 closure
@@ -892,3 +892,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-03 | Llama codec implementation | Astra recommends a direct pinned codec first, leaving native factory/profile activation for the integration task. Three assets, frozen date, Python trim, single BOS, reserved input rejection and hidden stops implemented against the independent fixture. | CPU/default+Metal checks and explicit cached tokenizer comparison next; no model/app activation or quality claim. Settings fix committed `8c6e321`. |
 
 | 2026-11-03 | Llama codec checks pass | Exact cached tokenizer fixture and all6checks pass:544default/652Metal tests, strict Clippy both and fmt. No model execution. | Astra final result review passes; next reviewed native512 test composes existing APIs without extending complete identity. |
+
+| 2026-11-03 | Llama native session test starts | Source codec committed `16b5594`. Applied Astra-reviewed explicit cached Mac512 test using existing native APIs; callback records cancellation failures without unwinding and checks both hidden-stop contracts. | Cold compiler/checks then one actual cached GPU run. No factory/package/app activation change. |
+
+| 2026-11-03 | Llama native checks | Cold544default/652Metal and strict Clippy pass. Real Mac run reaches measured511+1=512, overflow preservation, emitted-token cancellation/pending1 and replay IDs8586/596; neither request generates a stop. | Final artifact rehash/clean exit and Astra result review pass; no app activation or full quality claim. |

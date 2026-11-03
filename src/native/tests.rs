@@ -1551,3 +1551,6 @@ mod qwen2_pairing_tests;
 
 #[path = "mistral_pairing_tests.rs"]
 mod mistral_pairing_tests;
+
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+mod llama3_chat;

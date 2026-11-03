@@ -1,0 +1,48 @@
+{
+  "scope": "Pinned codec and existing generic native Mac512 session only",
+  "base_revision": "16b5594e72083742e7785ff7bb6bc4d49e62e462",
+  "checks": "artifacts/llama3-session-2026-11-03/checks.json",
+  "mac": "artifacts/llama3-session-2026-11-03/mac.json",
+  "counts": {
+    "test-default": {
+      "passed": 544,
+      "failed": 0,
+      "ignored": 24
+    },
+    "test-metal": {
+      "passed": 652,
+      "failed": 0,
+      "ignored": 195
+    }
+  },
+  "observed": {
+    "repository": "mlx-community/Llama-3.2-1B-Instruct-8bit",
+    "revision": "d48cdf0a4ea22d893b7c63a99d6a693e24822795",
+    "capacity": 512,
+    "boundary_prompt": 511,
+    "exact_required": 512,
+    "overflow_rejected": true,
+    "cancelled_pending": 1,
+    "recovered_ids": [
+      8586,
+      596
+    ],
+    "boundary_stop": null,
+    "recovery_stop": null,
+    "app_qualified": false,
+    "quality_qualified": false,
+    "phone_qualified": false
+  },
+  "sources": {
+    "src/native/tests.rs": "73c5d23152d8250a481b10e547bf6f3654e546ad71d132ae0a50129bcb0742ae",
+    "src/native/tests/llama3_chat.rs": "93faa2425e4c6fe73c2cee684b82637611c9f0140c46bd66e640788d49b5eeae",
+    "src/app_chat/llama3.rs": "78a10cce43409e58c3292e1705e9d0502d73ea99bbfa96e2eb89b0599d722ab6",
+    "examples/support/llama3_artifact.rs": "af73f4ff190e38f7adcd4213ba0d79ad894f1a451ec65a4980cf05f18f90298f"
+  },
+  "review": "Astra source and final result review approved",
+  "limitations": [
+    "No audited native chat factory/ordinary app discovery",
+    "No observed model stop; three-stop fixture coverage is separate",
+    "No full-adoption quality, phone or speed qualification"
+  ]
+}
