@@ -602,7 +602,7 @@ struct FriendlyHarnessView: View {
                 Text("Raw token generation, model paths, backend settings and engine diagnostics. Switching modes unloads the active model.")
                     .font(.footnote).foregroundStyle(.secondary)
             }
-        }.navigationTitle("Settings")
+        }.formStyle(.grouped).navigationTitle("Settings")
             .onAppear { chat.showPlanning() }
             .onDisappear { chat.hidePlanning() }
     }

@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **3 November 2026**. Active milestone: **M8**.
-Current task: **remaining model/app qualification and rendered Settings audit**.
+Current task: **pinned Llama3 plain chat renderer/codec**, then remaining model/app qualification.
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
 Completed B5f1: owner snapshot and explicit context/text facts; [evidence](benchmarks/results/2026-11-02-session-owner-memory-v1.json).
@@ -11,7 +11,7 @@ claiming load estimates/admission are current allocations or loading peaks.
 Completed: **B5e1** (`69ebeb0`), checks and Astra review pass; [evidence](benchmarks/results/2026-11-02-context-load-upper-v1.json).
 Workflow: compact task records, focused checks and one combined Astra
 diff/results review before commit; current/next work is recorded above.
-No new larger-window quality, rendered UI or iPhone qualification is claimed.
+Rendered Mac Settings is checked in an isolated fixture; no new larger-window quality or iPhone qualification is claimed.
 
 Current comparison policy: [Gemma3 native conformance](docs/gemma3-native-conformance.md).
 Both historical coupled-intermediate rejections remain failed; all selected
@@ -324,8 +324,8 @@ separate requirements below. Further model admissions require their own scope.
   pass57synthetic controls,13compile/CPU/app jobs and2Mac checks. Real Qwen3
   estimates512/256 fit while active512/chunk32, owner IDs and saved workspace
   stay exact. Source/controller/build scope only; rendered UI remains pending.
-- [ ] Check rendered Mac Settings when the Mac is unlocked; record separate
-  iPhone runtime evidence. The attempted computer-use inventory was locked.
+- [x] Check rendered Mac Settings: grouped scrolling, editable context/KV, Preview/Apply and dismissal pass in an isolated fixture; [evidence](benchmarks/results/2026-11-03-mac-settings-rendered-v1.json).
+- [ ] Record separate iPhone Settings runtime evidence.
 - [x] B5d1: [model-bound transition accounting](docs/native-session-transition-report.md) passes16inherited cold jobs,
   three fresh fixture-retry checks and both tinyMacchecks with Astra saved
   audit. Default466/Metal574 tests,31exports, C ABI, actual candidate ownership
@@ -879,3 +879,9 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-03 | B5g2 integration in progress |39-export three-slice package passes. Blank/zero/bounded KV draft, strict fit decoding and resident pre-/post-preparation checks implemented. Controls and legacy Mac chat pass. New KV run reaches682-token Apply/683 rejection, then its unlimited assertion needed explicit upper1024 after Apply reset the draft. | Targeted retry, final3app builds, CPU+Metal transition regressions and Astra review pass; pinned39adoption preserves prior package. [Evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json). |
 
 | 2026-11-03 | B5h1 implementation | Astra prefers two kernel high-water checkpoints over a timer. A strictly new lifetime peak establishes a process peak inside the load-command interval; otherwise peak is unknown. Opt-in, nonfatal observations bind attempt/model/initial setup and perform no reads when disabled. | Strict controls, actual Mac load, CPU+Metal transitions,3app builds,3final-wording SDK checks and Astra review pass. [Evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json). |
+
+| 2026-11-03 | Rendered Mac Settings audit started | Mac UI is available. Building a test-only app with unchanged production views and isolated chat/preferences/cache state; public cached Qwen files are copied into its verified snapshot layout. Corrected stale native-build receipt digest in Apple README. | Compile/pin fixture, adviser check, visible Settings checks; existing owner sessions/data remain separate. |
+
+| 2026-11-03 | Rendered Settings defect found | Isolated Mac app loads managedQwen upper1024/initial512 and shows owner/load metrics. Expanding Active details reveals default Mac Form overflow/clipped explanations and no scroll area. | Explicit grouped Form fix, rebuild and visible regression, strict platform checks and Astra review pending. |
+
+| 2026-11-03 | Rendered Settings regression passes | Grouped Form wraps expanded owner/load facts and scrolls first-to-last while Close stays reachable. Visible1024/8MiB Preview selects682; Apply and main session682 confirmed in isolated data. | V3 strict Mac build passes. First3SDK attempt blocked by compiler macro sandbox; retry passes all3SDKs and Astra approves. Next pinned Llama3 codec. |

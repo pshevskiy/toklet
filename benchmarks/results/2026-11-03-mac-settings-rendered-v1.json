@@ -1,0 +1,21 @@
+{
+  "scope": "Rendered Mac Settings only; isolated audit bundle/data root; production views",
+  "source_sha256": "2ea1bd8ea1314fee126c71f82f39f6c40d17e674098b73a97cd9ce2fe61d57cb",
+  "build": "artifacts/mac-settings-audit-2026-11-03/v3/apps.json",
+  "platform_checks": "artifacts/mac-settings-audit-2026-11-03/platform-retry/copy-checks.json",
+  "observations": [
+    "Default Form overflow reproduced with Active chat details expanded",
+    "Grouped Form exposes AX scroll area; first control and final Expert row reachable; explanations wrap; fixed Close reachable",
+    "Window field edited to1024; advanced KV8MiB Preview selected682; Apply active682 confirmed in Settings and main chat",
+    "Historical initial load512 remains distinct from replacement682; current owner snapshot updates",
+    "Close dismisses to chat; audit app quit requested; no normal app data used"
+  ],
+  "limitations": [
+    "Visual observations recorded through computer-use screenshots and AX in chat, not an automated screenshot assertion",
+    "No physical phone runtime, larger-window quality or speed qualification"
+  ],
+  "preserved_failures": [
+    "v1 unused fixture variable compile failure",
+    "platform macro-server sandbox denial; retry uses normal compiler access"
+  ]
+}

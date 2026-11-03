@@ -31,7 +31,7 @@ linked generated inputs. The current generated library link selects
 `artifacts/kv-ceiling-native-2026-11-03/Toklet.xcframework`, with all 39 C
 exports and complete Mac/iOS/simulator app compile/link evidence. Its native
 build receipt SHA256 is
-`2a069edf753d1eb82c1e3018a9686b41764858e54d4f973cd236b39806e2e3a2`.
+`ee2c733878c4f64c8b236a13d1288d4daaa50f31b461f350012a7897a1764964`.
 The [shared Mistral integration](../docs/mistral-managed-preferences.md),
 [Qwen2.5 integration](../docs/qwen2-managed-preferences.md) and earlier
 [Smol/Qwen3 integration](../docs/smol-managed-preferences.md) record strict decoding,

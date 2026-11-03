@@ -9396,3 +9396,15 @@ controller observed4801088→675644544physical bytes and a new675644544peak.
 Final toggle wording passes3SDK source checks. This does not qualify a rendered app,
 physical phone, whole-device fit or performance, and prior higher peaks can
 leave load-only peaks unknown.
+
+## 3 November 2026 — Scrollable Mac Settings
+
+The automatic Mac Form clipped expanded context and memory details. Explicit
+grouped styling makes the Settings content scroll and wrap while Close remains
+reachable. An isolated production-view Mac fixture verifies editable context,
+8 MiB KV Preview selecting682, Apply updating the active session and dismissal.
+Historical load512 stays distinct from replacement682.
+[Evidence](../benchmarks/results/2026-11-03-mac-settings-rendered-v1.json).
+Astra approves; strict macOS/iOS/simulator source checks and the Mac app build pass.
+The first fixture compile and compiler-sandbox failure are retained. Physical
+iPhone UI and broader quality/performance qualification remain separate.
