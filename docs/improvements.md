@@ -9579,3 +9579,16 @@ formatting and release build pass. Separate authored probes emit identical four
 IDs and pass pending-state/replay checks; their real stop reason is output limit.
 Astra approves the code and probes. Full 100-case collection remains next.
 [Evidence](../benchmarks/results/2026-11-03-llama3-task-workers-v1.json).
+
+## 3 November 2026 — Original Llama 100-task gate passed
+
+The shared isolated grading runner now serves model-specific Qwen and Llama
+adapters while preserving existing executor admission and restoration checks.
+All100 original trajectories pass replay. Native scores23/100 versus22/100
+original, passing the frozen two-point relative gate. All80 literal code records
+and120 text outcomes replay; the outer owner verifies VM shutdown and process
+exit. Nineteen controls and Astra review pass. Disk-reserve and timezone failures
+remain recorded; completed model outputs are reused. This closes the task gate
+for the pinned diagnostic configuration, with app/device adoption still separate.
+[Report](llama3-task-quality.md),
+[evidence](../benchmarks/results/2026-11-03-llama3-task-quality-v1.json).

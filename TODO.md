@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **3 November 2026**. Active milestone: **M8**.
-Current task: **Llama 100-task collection workers and shared isolated grading adapter**.
+Current task: **Llama full task grading final review, then combined quality/adoption decision**.
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Query](artifacts/m8-phone-availability-2026-11-03/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
@@ -993,3 +993,11 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-03 | Task workers implemented | Frozen inputs committed `4cfd0d1`. Native uses existing greedy generation and checks sampled/committed/pending/reset state; original uses the retained cache and exact per-case stateless replay, preserving both mismatch margins. Three sampler/replay controls pass; an initial conditional-spacing compile typo was corrected before model execution. | Astra source review passes with stop/count assertions added. Focused compile/schema checks and separate authored probes precede100-case collection. |
 
 | 2026-11-03 | Task workers/probes reviewed | Six check jobs pass, including eight controls and strict compile/release. Separate authored workers emit662,662,883,1 at output limit with one pending token; original stateless replay and both structural journals pass. Native RSS1,259,601,920bytes; original5,007,360,000bytes. No real hidden stop observed in this probe; three-stop semantics have synthetic controls. | Astra approves code and probes. Commit workers, then owned sequential100-case collection and shared isolated-grading adapter; no held-out task answers yet. |
+
+| 2026-11-03 | Full collection disk reserve stop | Native100 cases complete cleanly (1,756 visible tokens); original stops after11 verified cases when disk falls below1GiB. Its5,348,327,424-byte RSS stays within6GiB. No grading starts. All outputs and the failed collection receipt remain. | Astra finds51,304 complete hardlink groups inside the same inactive Cargo deps cache (~3.10GiB allocated). Fresh grouped cleanup plan is prepared for review; preserve native and retry only original after reserve recovers. |
+
+| 2026-11-03 | Full collections complete; grading review | Grouped cleanup preserves products and restores5,893,267,456free bytes. Native and fresh original each finish100cases; every original trajectory passes and both named processes/groups exit. Fourteen grader controls pass; exact tokenizer-buffer and sealed outer lifetime checks are implemented. Astra catches the outer8MiB receipt cap versus9.9MiB historical evidence; raised to a bounded64MiB with same-buffer hashing and a >8MiB control before VM start. | Retry focused controls, then qualified80-code-program/120-text-case grading; preserve failed first collection and all journals. |
+
+| 2026-11-03 | Grading timezone retry | First isolated attempt runs zero programs and restores the VM. Exact version admission differs only in timezone-rendered BuiltTime; epochs and every other field match. Astra verifies Moscow reproduces the qualified timestamps. | Pin supervised child TZ=Europe/Moscow, record it in the sealed plan, retain exact version equality and retry using completed collections. |
+
+| 2026-11-03 | All task outcomes resolved | Original22/100, native23/100; unchanged ≤2pp gate passes. All80 isolated programs and120 text outcomes replay, with outer stopped-VM/group-exit verification. Exact timezone-pinned version check passes. Nineteen controls pass; no numerical source changes. | Astra approves code/results/recovery for commit; combined loss/task qualification and app/device decisions remain separate. [Report](docs/llama3-task-quality.md). |

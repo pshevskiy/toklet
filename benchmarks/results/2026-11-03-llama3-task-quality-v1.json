@@ -1,0 +1,83 @@
+{
+  "format": "toklet-llama3-task-quality-evidence-v1",
+  "passed": true,
+  "base_revision": "af92ee8",
+  "hardware": "Apple M1 Pro, macOS",
+  "decision": {
+    "complete": true,
+    "baseline_tasks": {
+      "cases": 100,
+      "passed": 22,
+      "pass_rate": 0.22,
+      "aggregation": "100_equal_weight_binary_cases",
+      "categories": {
+        "code": {
+          "cases": 40,
+          "passed": 12
+        },
+        "prose": {
+          "cases": 30,
+          "passed": 9
+        },
+        "continuation": {
+          "cases": 30,
+          "passed": 1
+        }
+      }
+    },
+    "native_tasks": {
+      "cases": 100,
+      "passed": 23,
+      "pass_rate": 0.23,
+      "aggregation": "100_equal_weight_binary_cases",
+      "categories": {
+        "code": {
+          "cases": 40,
+          "passed": 14
+        },
+        "prose": {
+          "cases": 30,
+          "passed": 8
+        },
+        "continuation": {
+          "cases": 30,
+          "passed": 1
+        }
+      }
+    },
+    "task_pass_rate_loss_percentage_points": -1,
+    "task_limit_percentage_points": 2,
+    "task_gate_passed": true,
+    "full_quality_qualified": false,
+    "app_discovery_qualified": false,
+    "device_qualified": false
+  },
+  "original_all100_trajectories_verified": true,
+  "isolated_program_records": 80,
+  "text_cases": 120,
+  "generated_code_runs_on_host": false,
+  "independent_stopped_and_group_absence_verified": true,
+  "controls_passed": 19,
+  "numerical_engine_unchanged": true,
+  "peak_rss_bytes": {
+    "native": 1205125120,
+    "original": 5345181696
+  },
+  "qualification_scope": "literal source-test outcomes; no adversarial shared-interpreter attestation",
+  "astra_review": "approved code, controls, actual grading, replay and recovery provenance; no blocking findings",
+  "receipts_sha256": {
+    "artifacts/llama3-tasks-2026-11-03/grading-v1/actual-v2/execution-plan.json": "16ecf76b1461a870c64be2165f0f78f1297d927d5b511d04d5dcadb02a18ba30",
+    "artifacts/llama3-tasks-2026-11-03/grading-v1/actual-v2/result.json": "0552b24ec56ca9e5d7560d0a4f716b679fa1b545e7b73fcbcc98367de45fb1d3",
+    "artifacts/llama3-tasks-2026-11-03/grading-v1/actual-v2/inner/result.json": "6765731b61ad2a4317acb9b945b1c4619f74b0f3165493de54d27b513f694a00",
+    "artifacts/llama3-tasks-2026-11-03/grading-v1/actual-v2/inner/grading.jsonl": "67db738b70b1c13bd60b70af82660f4f75ea343b5919771e8013e8f940f51e6c",
+    "artifacts/llama3-tasks-2026-11-03/grading-v1/actual-v1/result.json": "26afc55282ac131695bbe5217a4184200a5cc404130f89c97ba7c992e626fe36",
+    "artifacts/llama3-tasks-2026-11-03/grading-v1/actual-v1/inner/result.json": "e724eff403b528f7892adb3c21f8f6580900f39417233e4ce414579d42ca90d7",
+    "artifacts/llama3-tasks-2026-11-03/grading-v1/replay.py": "054cfd3e7b22fbd862080f8feeb2caa0ba27a70994cccb77e35b87127179be25",
+    "artifacts/llama3-tasks-2026-11-03/grading-v1/replay.json": "13e0537484c828e51733b70adf0b0226b6bcb1adfc837b4f5987ec993444f026",
+    "artifacts/llama3-tasks-2026-11-03/grading-v1/timezone-controls.log": "0332c7e4872d7706d0642b45bc9c74ed52afa39c8328bab0f1665f774ba6759a",
+    "artifacts/llama3-tasks-2026-11-03/full-v1/collection.json": "88d2e0ab9348d875e053f6b43f5b43e008c9653e5461a4a18a9d59781bffb365",
+    "artifacts/llama3-tasks-2026-11-03/full-v2/collection.json": "44684564f485fc8e6eab25bd4e737c86c8c3e0eba1b42d854d1a38ad902cc8f8",
+    "artifacts/llama3-linked-object-cleanup-2026-11-03/plan-result.json": "7946e3693bd4aba57558214355c9aa34765497159487da3b8cbd4f493333dead",
+    "artifacts/llama3-linked-object-cleanup-2026-11-03/apply-result.json": "9a06af2f257724eee1b23c98e55a492ae07c2760c974d3dfdfa65e684bca26fc"
+  }
+}
