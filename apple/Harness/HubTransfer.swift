@@ -264,8 +264,13 @@ extension HubTransfer {
         }
     }
 
+    // Cold typed diagnostics without NSError userInfo or signed redirect URLs.
+    // Cleanup and HTTP/file failures deliberately do not become transport errors.
+    static func networkFailureCode(_ error: Error) -> URLError.Code? {
+        (error as? HubNetworkFailure)?.code ?? (error as? URLError)?.code
+    }
     private static func transient(_ error: Error) -> Bool {
-        let code = (error as? HubNetworkFailure)?.code ?? (error as? URLError)?.code
+        let code = networkFailureCode(error)
         guard let code else { return false }
         return [.timedOut,.networkConnectionLost,.cannotConnectToHost,.cannotFindHost,.dnsLookupFailed,.notConnectedToInternet].contains(code)
     }

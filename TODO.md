@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **3 November 2026**. Active milestone: **M8**.
-Current task: **Smol download → verified cache → offline chat journey**.
+Current task: **physical iPhone Settings/session journey**, or Llama original-reference qualification if the phone is unavailable.
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
 Completed B5f1: owner snapshot and explicit context/text facts; [evidence](benchmarks/results/2026-11-02-session-owner-memory-v1.json).
@@ -462,6 +462,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
   session recreation/replay and preserve rejected settings/drafts.
 - [ ] Check actual rendered prompt plus reply boundaries, stale reports,
   cancellation/recovery and supported search/download/load/offline chat journeys.
+  - [x] Ordinary Smol real download → verified cache → process-confined offline Chat; [report](docs/smol-download-offline.md).
 - [ ] Finish Mac app checks and record separate iPhone 14 Pro validation or
   explicit remaining device gaps; Astra review and commit each code task.
 
@@ -917,3 +918,15 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-03 | Llama Mac app journey passes | Default/flagged catalog and identity/preferences controls,3unsigned apps and corrected realcontroller pass. UIStop leaves valid committed47/pending0 with exact emitted tail; recovery/reopen/other preferences pass. Visible isolated app showsexperimentalrow, loads512 and replies “Hello.” throughSend. | Astra final review and guarded40selection pass, preserving39; full adoption quality and phone remain open. |
 
 | 2026-11-03 | Llama app scoped closure | Astra approves final code/results and guarded adoption; native40 is selected with all10package files checked before/after and native39 preserved. | Commit then close the shared ordinary-profile real download/verification/offline/rejected-cache journey with Smol. Full Llama adoption/device gates stay open. |
+
+| 2026-11-03 | Ordinary-profile network/offline journey starts | Mac route committed `ade5eb2`. Added explicit async Smol test: production live download into empty isolated cache, separate process network denial/probe, verified cached managed Chat, private missing/mutated cache rejection preserving current chat. | Adviser source review, strict compile and online/offline actual runs next; no production change proposed. |
+
+| 2026-11-03 | Offline journey review tightened | Astra requires transport-specific denial, precise inventory/SHA rejection and nonempty normal chat. Added cold typed network diagnostics shared with unchanged retry classification and3controls; source review approves. | Strict compile/Hub controls precede live transfer; no whole-Mac network setting changes. |
+
+| 2026-11-03 | Hub control compile correction | First strict compile catches a test passing HubFailure where the cleanup diagnostic expects a String. Corrected only the test argument. | Preserve first failed checks; retry controls/compile in a fresh artifact directory. Platform source check remains independent. |
+
+| 2026-11-03 | Live Smol download passes / offline probe rejected | Production transfer verifies6files/146607552bytes and auditedSmol replies “Hello!”. Network-denied child gets rawPOSIX EPERM, correctly rejected by the stricter URLError-only test before Metal/cache use. | Astra approves test-only exactEPERM acceptance paired with independent loopback socketEPERM and successful local write. Preserve first run; reuse verified cache, fresh probe names and targeted offline retry. Production retry unchanged. |
+
+| 2026-11-03 | Smol real offline journey passes | Fresh production download verifies6files/146607552bytes and repliesHello. Separate network-denied process proves connectEPERM + metadataEPERM with local writes, then cached auditedChat repliesHello. Missing/inventory and mutated/SHA copies reject withoutcallback or chat/session/prefix change; recovery succeeds. | Final Astra review and commit next. Strict3SDK/Hub controls pass; original failures and verified cache retained. |
+
+| 2026-11-03 | Smol shared journey reviewed | Astra approves code, strict Hub/3SDK checks and combined online/offline evidence. Original test failures remain documented; numerical/retry policy unchanged. | Commit, then inspect physical iPhone availability for shared Settings/replacement/suspend-resume. If unavailable, record access gap and proceed to original-reference Llama quality alignment. |

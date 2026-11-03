@@ -1,0 +1,36 @@
+{
+  "scope": "ordinary pinned Smol fresh download and separate process-confined offline chat on Mac",
+  "checks": "artifacts/smol-offline-journey-2026-11-03/offline-retry/checks.json",
+  "platforms": "artifacts/smol-offline-journey-2026-11-03/copy-checks.json",
+  "online_receipt": "artifacts/smol-offline-journey-2026-11-03/run.json",
+  "offline_receipt": "artifacts/smol-offline-journey-2026-11-03/offline-retry/run.json",
+  "online_exit": 0,
+  "initial_cache_absent": true,
+  "verified_files": 6,
+  "verified_bytes": 146607552,
+  "online_reply": "Hello!",
+  "offline_reply": "Hello!",
+  "socket_denial": {
+    "errno": 1,
+    "operation": "connect",
+    "result": -1,
+    "target": "127.0.0.1:9"
+  },
+  "offline_checks": {
+    "cache_unchanged": true,
+    "network_unavailable": true,
+    "owner_and_conversation_preserved": true,
+    "phone_qualified": false,
+    "recovery_emitted": 32,
+    "ui_rendered": false
+  },
+  "review": "Astra code and final result review approved",
+  "preserved_failures": [
+    "artifacts/smol-offline-journey-2026-11-03/checks.json",
+    "artifacts/smol-offline-journey-2026-11-03/run.json"
+  ],
+  "limitations": [
+    "No physical phone or rendered UI qualification from this controller test",
+    "No throughput or full model-quality qualification"
+  ]
+}

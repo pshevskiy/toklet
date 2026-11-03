@@ -17,6 +17,9 @@ struct HubIntegrationMain {
         guard condition() else { throw HubFailure("Controller check failed: " + label) }
     }
     static func controllerChecks() async throws {
+        try require(HubTransfer.networkFailureCode(URLError(.notConnectedToInternet)) == .notConnectedToInternet,"typed network diagnostics")
+        try require(HubTransfer.networkFailureCode(HubFailure("network wording is not transport evidence")) == nil,"file/HTTP failure is not network denial")
+        try require(HubTransfer.networkFailureCode(HubTransfer.metadataCleanupFailure(URLError(.cannotConnectToHost),"close failed")) == nil,"cleanup failure is not network denial")
         let budget = HubAdmission(unifiedGPU:true,physicalMemory:6 * 1024 * 1024 * 1024,availableMemory:1024 * 1024 * 1024)
         try budget.check(.smol)
         do { try budget.check(.qwen); throw HubFailure("Qwen admitted with Smol-only allowance") }

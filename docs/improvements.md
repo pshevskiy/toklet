@@ -9459,3 +9459,15 @@ with pending0; the earlier callback-only test expectation remains recorded.
 [evidence](../benchmarks/results/2026-11-03-llama3-mac-app-v1.json).
 Astra approves; guarded native40 adoption passes and preserves native39. Original full quality, fresh downloads,
 iPhone runtime, larger contexts and measured performance remain separate.
+
+## 3 November 2026 — Real download to offline Chat
+
+The ordinary Smol profile downloads 146,607,552 bytes into a fresh cache, verifies
+all six files and completes real Chat. A separate process with network denied
+proves socket/metadata rejection, opens that cache and replies “Hello!”. Missing
+and mutated private cache data fail the expected inventory/SHA checks without
+changing the existing chat; recovery succeeds. Strict three-SDK and Hub controls and Astra review pass.
+[Report](smol-download-offline.md),
+[evidence](../benchmarks/results/2026-11-03-smol-download-offline-v1.json).
+Failed test expectations remain recorded. Production retries, system networking
+and numerical kernels are unchanged. No new phone/UI/quality/speed claim.
