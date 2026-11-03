@@ -9521,3 +9521,15 @@ results; numerical workers and thresholds stayed unchanged. Failed orchestration
 and compatibility checks remain recorded. The 100-task gate is still open.
 [Report](llama3-original-loss.md),
 [evidence](../benchmarks/results/2026-11-03-llama3-original-loss-v1.json).
+
+## 3 November 2026 — Incremental original Llama reference
+
+A bounded FP32 KV reference now prefills once and decodes one token at a time.
+Its 566-position cache is 37,093,376 bytes. All 11 real-model prefix comparisons,
+22 saved-row replays, exact greedy choices, margins, overflow/reset checks and
+21 cold controls pass. Failed-layer and history-allocation cases preserve the
+valid prefix. Peak RSS is 3,058,221,056 bytes; Astra approves the code and results.
+The earlier default rotary remains bit-identical. A reference-only probe motivates
+profiling before any weight cache. The 100-task gate remains open.
+[Report](llama3-original-incremental.md),
+[evidence](../benchmarks/results/2026-11-03-llama3-original-incremental-v1.json).

@@ -1,0 +1,53 @@
+{
+  "format": "toklet-llama3-original-incremental-contract-v1",
+  "capacity": 566,
+  "quality_manifest_sha256": "2ed8cb7d5bf7f12770e58eda9c862b1f8cbe9da3c3d5b22ac693b2b1d9f190b3",
+  "tokens_sha256": "b53c665594635ef6328aead49ef9ff9918153d5e4b400a3ab3fc78f2ed3c713c",
+  "cases": [
+    {
+      "name": "short",
+      "prefill_tokens": 17,
+      "continuation_end": 21
+    },
+    {
+      "name": "boundary512",
+      "prefill_tokens": 510,
+      "continuation_end": 513
+    },
+    {
+      "name": "capacity566",
+      "prefill_tokens": 565,
+      "continuation_end": 566
+    }
+  ],
+  "tile": 256,
+  "consistency": {
+    "full_row_atol": 0.001,
+    "full_row_rtol": 0.0001,
+    "target_nll_absolute": 0.0001,
+    "exact_lowest_id_greedy": true,
+    "record_top_two_margin": true
+  },
+  "state_checks": [
+    "reject567_preserves_committed_history_logits_kv",
+    "reset_reused_matches_fresh",
+    "all_tied_row_lowest_id",
+    "failed_layer_preserves_valid_prefix_and_retries"
+  ],
+  "decode_probe": {
+    "warmups": 3,
+    "repetitions": 5,
+    "prefill_tokens": 17,
+    "continuation_end": 21,
+    "publish_throughput_claim": false
+  },
+  "task_trajectory_policy": {
+    "stateless_teacher_forced_replay_before_grading": true,
+    "exact_visible_token_predictions": true,
+    "check_terminal_hidden_stop": true,
+    "no_extra_prediction_at_output_limit": true
+  },
+  "model_executed": false,
+  "astra_contract_review": "approved before incremental or task outcomes",
+  "memory_budget_bytes": 6442450944
+}

@@ -170,8 +170,10 @@ def rms(x, weight):
     return (x * (np.float32(1) / np.sqrt(mean + np.float32(1e-5)))) * weight
 
 
-def rotary(x):
+def rotary(x, position_offset=0):
     # Original split-half convention and canonical Llama3 low/high wavelength mix.
+    if type(position_offset) is not int or position_offset < 0 or position_offset + x.shape[0] > 1025:
+        raise ValueError('Original rotary position exceeds diagnostic range')
     width = x.shape[-1]
     frequency = np.float32(1) / np.power(np.float32(500000), np.arange(0, width, 2, dtype=np.float32) / np.float32(width))
     wavelength = np.float32(2 * math.pi) / frequency
@@ -179,7 +181,7 @@ def rotary(x):
     mixed = (np.float32(1) - smooth) * frequency / np.float32(32) + smooth * frequency
     frequency = np.where(wavelength > np.float32(8192), frequency / np.float32(32),
                          np.where(wavelength < np.float32(2048), frequency, mixed))
-    angle = np.arange(x.shape[0], dtype=np.float32)[:, None] * frequency[None, :]
+    angle = np.arange(position_offset, position_offset+x.shape[0], dtype=np.float32)[:, None] * frequency[None, :]
     c, s = np.cos(angle)[:, None, :], np.sin(angle)[:, None, :]
     left, right = np.split(x, 2, axis=-1)
     return np.concatenate((left * c - right * s, right * c + left * s), axis=-1)

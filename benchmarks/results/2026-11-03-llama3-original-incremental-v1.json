@@ -1,0 +1,56 @@
+{
+  "format": "toklet-llama3-original-incremental-evidence-v1",
+  "passed": true,
+  "base_revision": "4c2be4c",
+  "hardware": "Apple M1 Pro, macOS, CPU reference",
+  "capacity": 566,
+  "kv_bytes": 37093376,
+  "layout": "separate FP32 K/V[layer,kv_head,capacity,head_dim]",
+  "checked_prefixes": [
+    17,
+    18,
+    19,
+    20,
+    21,
+    510,
+    511,
+    512,
+    513,
+    565,
+    566
+  ],
+  "maximum_logit_error": 3.886222839355469e-05,
+  "maximum_target_nll_difference": 6.803416185974243e-06,
+  "peak_rss_bytes": 3058221056,
+  "decode_probe": {
+    "warmups": 3,
+    "repetitions": 5,
+    "samples": 20,
+    "median_ms": 856.6773545000001,
+    "minimum_ms": 821.138875,
+    "maximum_ms": 1375.123458,
+    "weight_cache": false,
+    "scope": "CPU reference profiling only; no app or native throughput claim"
+  },
+  "checks": {
+    "cold_controls": 21,
+    "saved_rows_replayed": 22,
+    "exact_greedy_checks": 11,
+    "top_two_margins_replayed": true,
+    "overflow_preserves_history_logits_kv": true,
+    "reset_matches_fresh": true,
+    "tie_lowest_id": true,
+    "failed_layer_and_history_allocation_preserve_prefix": true,
+    "previous_rotary_default_exact_bits": true
+  },
+  "full_quality_qualified": false,
+  "task_gate_pending": true,
+  "astra_review": "approved final code/check/real-model results",
+  "receipts_sha256": {
+    "artifacts/llama3-original-incremental-2026-11-03/run.json": "b71e802c3fce11a161fb545a9e959074bf228d28769c25a252f2cf6d006d15c2",
+    "artifacts/llama3-original-incremental-2026-11-03/execution-plan.json": "1a6ead127ba52e31f2b10468cdc9b2a1a4b68f010f8b10b6df53dbedde4529f6",
+    "artifacts/llama3-original-incremental-2026-11-03/default-compatibility.json": "9622a264754359f747d34ff2889c63b94f171b2289abfb8eba27e45165eb5af1",
+    "artifacts/llama3-original-incremental-2026-11-03/source-v1/source.json": "d741faafec09173ffb48dce9bee68da238c65e4954e10a4578bfe79ea28eb576",
+    "artifacts/llama3-original-incremental-2026-11-03/independent-replay.log": "161ecad777bd5e7f6da3691b12421d9fc66233dced41dc79fb15d68d01b91b4a"
+  }
+}

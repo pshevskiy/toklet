@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **3 November 2026**. Active milestone: **M8**.
-Current task: **incremental original FP32 reference qualification**, then the frozen 100-task gate.
+Current task: **profile original reference decode and prepare the frozen 100-task evaluation**.
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Query](artifacts/m8-phone-availability-2026-11-03/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
@@ -490,7 +490,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
   - [x] Quality-only 1,025-position route, native long-row consistency/state boundaries; managed app stays at512. [Report](docs/llama3-quality-context.md).
   - [x] Original FP32 long-row alignment and independent replay before full collection. [Evidence](benchmarks/results/2026-11-03-llama3-original-long-v1.json).
   - [x] Original 10,000-target loss gate: delta0.0000197305 ≤0.05, all targets and prior alignment checks pass. [Report](docs/llama3-original-loss.md).
-  - [ ] Frozen 100-task outcomes, without dropping cases or reserves. The
+  - [x] Incremental original FP32 reference through566, 22-row replay/state/greedy checks. [Report](docs/llama3-original-incremental.md).
+  - [ ] Reference profiling/cache decision and frozen100-task collection/replay/grading. The
   1,024-target same-artifact screen is not a substitute or app qualification.
 - [ ] Publish supported context/KV settings, evidence and remaining limitations;
   make explicit decisions on open/conditional admissions before milestone closure.
@@ -970,3 +971,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-03 | Full loss passes; final review | Native mean2.7826524747 versus original2.7826327441 gives delta0.0000197305, below0.05. Exactly10,000 targets and all three prior-alignment checks pass. Final checker controls pass: three on system3.9, six on pinned3.12. Legacy same-artifact delta helper is3.10-only and is not called by this checker; its attempted3.9 test failure is retained. | Numerical workers unchanged; final Astra review and commit next. Original peakRSS3,589,652,480bytes; nativeRSS1,214,087,168bytes, admission1,543,629,376bytes. 100-task gate stays open. |
 
 | 2026-11-03 | Full loss reviewed | Astra approves final code, controls and all10,000 paired outcomes. Loss increase0.0000197305 passes the unchanged0.05 gate; no app, task or phone qualification is inferred. | Commit full loss task. Next incremental FP32 reference follows the frozen566-position contract before any100-task pass-rate outcome. |
+
+| 2026-11-03 | Incremental reference implementation/review | Session-owned FP32 KV uses the documented per-head layout; absolute RoPE offset and frozen cases are implemented. Sixteen cold controls pass. Astra catches allocation after position publication; history is now allocated before numerical work and state publishes only after success. Saved-row margin replay is also strengthened. | Retry affected controls, then pinned real-model conformance and decode probes. No task grading yet. |
+
+| 2026-11-03 | Incremental reference reviewed | All11 real prefixes,22 saved rows, greedy/margin/state checks and21 controls pass; source peakRSS3,058,221,056bytes. Previous default rotary is bit-identical. Astra approves final code and results. | Commit, then attribute856.68ms median reference decode before choosing a cache. Prepare new object-only Cargo cache cleanup; preserve all products, models and prior receipts. |
