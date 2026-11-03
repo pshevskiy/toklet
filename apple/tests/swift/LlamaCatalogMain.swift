@@ -15,21 +15,23 @@ struct LlamaCatalogMain {
             try check(failed,"Expected rejection")
         }
         #if os(macOS)
-        let enabled = ProcessInfo.processInfo.arguments.contains("--experimental-llama3")
+        let enabled = true
         #else
         let enabled = false
         #endif
-        try check(HubProfile.catalog.contains(.llama3) == enabled,"Experimental catalog gate")
-        try check(HubProfile.catalog.count == (enabled ? 5 : 4),"Ordinary catalog changed")
+        try check(HubProfile.catalog.contains(.llama3) == enabled,"Platform catalog admission")
+        try check(HubProfile.catalog.count == (enabled ? 5 : 4),"Platform catalog size")
         try check((HubProfile.named("llama3") != nil) == enabled,"Named lookup bypassed gate")
         try check(!HubProfile.matching("Llama-3.2-1B").isEmpty == enabled,"Search bypassed gate")
-        if enabled {
-            try check(try FriendlyLoadRequest.managedMode(.llama3) == .managedLlama3,"Audited route missing")
-        } else { try rejects { _ = try FriendlyLoadRequest.managedMode(.llama3) } }
+        #if os(macOS)
+        try check(try FriendlyLoadRequest.managedMode(.llama3) == .managedLlama3,"Audited route missing")
+        #else
+        try rejects { _ = try FriendlyLoadRequest.managedMode(.llama3) }
+        #endif
         try check(FriendlyLoadRequest.matches(.managedLlama3,profile:.llama3),"Exact route mismatch")
         try check(!FriendlyLoadRequest.matches(.ordinary,profile:.llama3),"Ordinary folder path admitted Llama")
         try check(!FriendlyLoadRequest.matches(.managedLlama3,profile:.smol),"Llama family confused with artifact")
-        try check(HubProfile.llama3.supportNotice != nil,"Experiment notice missing")
+        try check(HubProfile.llama3.supportNotice != nil,"Bounded-window notice missing")
         try HubProfile.llama3.validate()
         let profile = NativeAcceptedIdentity.Profile.llama3
         try check(profile.admits(loaded:512,ranges:374,reads:374),"512 identity rejected")

@@ -9611,3 +9611,13 @@ changing the accepted owner or conversation; recovery succeeds. Strict compile,
 existing Hub controls and Astra review pass. This closes the Mac transfer
 prerequisite; ordinary catalog adoption remains a separate task.
 [Report](llama3-download-offline.md).
+
+## 4 November 2026 — Default bounded Mac Llama support
+
+The pinned Llama3.2 1B eight-bit model is available in the default Mac catalog,
+with an explicit512-position window. iOS retains four profiles. Platform-specific
+discovery/ranking and3GiB admission checks pass, alongside strict Mac/iOS/simulator
+compilation. Unflagged controller and visible UI open/send/Stop/recovery/reopen
+checks pass; Astra approves. The historical opt-in report is labelled and linked
+to the current [adoption report](llama3-mac-adoption.md). No native package,
+larger-context, physical-phone or performance qualification changes.

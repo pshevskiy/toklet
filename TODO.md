@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
-Last updated: **3 November 2026**. Active milestone: **M8**.
-Current task: **Bounded Llama512 default Mac catalog adoption; preserve iOS qualification gap**.
+Last updated: **4 November 2026**. Active milestone: **M8**.
+Current task: **Reconcile M8 capability/adoption records and remaining context/application gaps**.
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Query](artifacts/m8-phone-availability-2026-11-03/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
@@ -1013,3 +1013,11 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-03 | Fresh ranged transfer started | Corrected strict journey compile and existing Hub controls pass; Astra approves source/runner. Actual remote exact-repository search and device inspection pass. Fresh production ranged weight transfer is active in isolated data. | Await full SHA verification, online Chat and separate network-denied reopen/bad-cache checks before adoption. |
 
 | 2026-11-03 | Fresh Llama journey passed | Remote search/admission, real1.31GB ranged weights, all6verified files, onlineHello and separately network-denied offlineHello pass. Same snapshot, missing/mutated cache rejections preserve owner/chat; recovery succeeds. Bothworkers exit0 and sourcehashguards pass. | Astra approves helper/checks/results for commit. Next separate Mac-only default catalog adoption. |
+
+| 2026-11-03 | Mac catalog adoption implementation | Fresh transfer committed `c05aa03`. Add Llama to default Mac catalog only, replace obsolete experiment warning with512-position label, preserve audited route/limits and iOS4. Tests distinguish Mac6/iOS5 discovery pages and Llama3GiB admission. | Astra source review, focused controls, unflagged cached controller and strict three-platform checks next. |
+
+| 2026-11-03 | Catalog check correction | Strict compile rejects unreachable test branch after replacing runtime flag with constant platform support. Use explicit platform conditional for managed-route expectation. Three-platform app checks continue independently; production code unchanged. | Preserve failed compile and rerun corrected focused controls. |
+
+| 2026-11-04 | Mac default catalog checks passed | Focused retry, strict Mac/iOS/simulator checks and unflagged cached open/send/Stop/recovery/reopen pass. Visible isolated fixture shows default Llama row and512-window, opens and repliesHello; fixture closed. Initial unreachable-test compile and transient UI transport error retained. | Astra approves code/checks/UI for commit; iOS catalog stays4 and physical14Pro remains unqualified. |
+
+| 2026-11-04 | Default bounded Mac Llama adopted | Code, default catalog, strict platform checks, unflagged controller and visible Chat all pass Astra review. Historical opt-in report labelled; README and improvement record updated. | Commit this task; reconcile broader M8 capabilities and remaining context/app/device requirements. [Report](docs/llama3-mac-adoption.md). |

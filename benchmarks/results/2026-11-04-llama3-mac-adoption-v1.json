@@ -1,0 +1,39 @@
+{
+  "format": "toklet-llama3-mac-adoption-v1",
+  "passed": true,
+  "base_revision": "c05aa03",
+  "hardware": "Apple M1 Pro, macOS",
+  "catalog": {
+    "mac_profiles": 5,
+    "ios_profiles": 4,
+    "launch_flag_required": false
+  },
+  "loaded_position_limit": 512,
+  "declared_model_window": 131072,
+  "mac_discovery_bounded_requests": 6,
+  "ios_discovery_bounded_requests": 5,
+  "strict_platform_checks": [
+    "macosx",
+    "iphoneos",
+    "iphonesimulator"
+  ],
+  "unflagged_controller_passed": true,
+  "visible_default_row_open_and_chat_passed": true,
+  "native_package_unchanged": true,
+  "iphone_qualified": false,
+  "larger_window_qualified": false,
+  "performance_claim": false,
+  "astra_review": "approved code, focused controls, unflagged controller, visible UI and three-platform checks; historical report and improvement record updated",
+  "receipts_sha256": {
+    "artifacts/llama3-mac-catalog-2026-11-03/retry/checks.json": "d67b923df9d2560997b07a211ebd6c426035dcb4851b79450808c874a1a55486",
+    "artifacts/llama3-mac-catalog-2026-11-03/checks.json": "29e6d4fa1b9dd92fa47ad5b93b9ad12fd83786f9bcfcecbf8bf6ce81181e5484",
+    "artifacts/llama3-mac-catalog-2026-11-03/copy-checks.json": "c31328be9af4e2e6e86754fd2b85328b8cee6c2171f038237abb890a90638702",
+    "artifacts/llama3-mac-catalog-2026-11-03/loaded.json": "937f919af33f060a837b8c22b1a246570934f9644299025ed51f952fa2705975",
+    "artifacts/llama3-mac-catalog-2026-11-03/loaded-run.log": "f6038b6bc0219863e956b2db0be188e4a614c0cb5d935ea42c76d321b8f31c9e",
+    "artifacts/llama3-mac-catalog-2026-11-03/ui/apps.json": "ce2344a6c2a8d645a969a5ca46c9ea44f8830d4257cdcfa1fad0e20bffe702c1",
+    "artifacts/llama3-mac-catalog-2026-11-03/ui/launcher.c": "37abd0ad6e1569c6bfab79030503358df29c1216833982927bf62cee941ae4d2",
+    "artifacts/llama3-mac-catalog-2026-11-03/visible.json": "859b56cb1e406c948f2864d0892815e3b2b9a80dbb28eacf456418d0b0de4f6e",
+    "benchmarks/results/2026-11-03-llama3-quality-qualification-v1.json": "e47233298aab4337cc133a64bd0cc006cf89734671a8b505077f98e4d001382b",
+    "benchmarks/results/2026-11-03-llama3-download-offline-v1.json": "253146e3df126c111023173888c51edb79b55c109b4edfddb0f53b8efeedace3"
+  }
+}

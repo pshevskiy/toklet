@@ -63,18 +63,18 @@ struct HubProfile: Codable, Equatable, Sendable {
             HubFile(name:"tokenizer.json",bytes:9085657,sha256:"79e3e522635f3171300913bb421464a87de6222182a0570b9b2ccba2a964b2b4"),
             HubFile(name:"tokenizer_config.json",bytes:54528,sha256:"9823dcfdc1121869029da45192238e85cf44f0b232a6d9dc20e4fe6f4242a14e"),
             HubFile(name:"special_tokens_map.json",bytes:296,sha256:"6f38c73729248f6c127296386e3cdde96e254636cc58b4169d3fd32328d9a8ec")])
-    // Resolve once per process; the experimental profile is never in iOS discovery.
+    // Mac qualification is bounded to512 positions; iOS awaits physical validation.
     static let catalog: [HubProfile] = {
         var profiles: [HubProfile] = [.smol,.qwen,.qwen3,.mistral]
         #if os(macOS)
-        if ProcessInfo.processInfo.arguments.contains("--experimental-llama3") { profiles.append(.llama3) }
+        profiles.append(.llama3)
         #endif
         return profiles
     }()
     static let qwen3AccuracyNotice = "The pinned Qwen3-0.6B 8-bit profile is experimental and has not passed Toklet’s accuracy checks."
     var supportNotice: String? {
         if self == Self.qwen3 { return Self.qwen3AccuracyNotice }
-        if self == Self.llama3 { return "Experimental Mac profile. Full accuracy checks are incomplete; context is limited to 512 tokens." }
+        if self == Self.llama3 { return "Mac chat window: 512 tokens." }
         return nil
     }
     static func matching(_ query: String) -> [HubProfile] {
@@ -88,7 +88,7 @@ struct HubProfile: Codable, Equatable, Sendable {
         case Self.qwen.repository: "Qwen2.5-0.5B · 8-bit"
         case Self.qwen3.repository: "Qwen3-0.6B · 8-bit · non-thinking"
         case Self.mistral.repository: "Mistral-7B-Instruct-v0.3 · 4-bit"
-        case Self.llama3.repository: "Llama-3.2-1B · 8-bit · experimental"
+        case Self.llama3.repository: "Llama-3.2-1B · 8-bit"
         default: "SmolLM2-135M · 8-bit (Llama family)"
         }
     }

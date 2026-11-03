@@ -1,4 +1,6 @@
-# Experimental Llama3 Mac app route
+# Historical experimental Llama3 Mac app route
+
+The opt-in route below was superseded by [default bounded Mac adoption](llama3-mac-adoption.md). Its historical evidence remains unchanged.
 
 Launch the Mac app with `--experimental-llama3` to add the pinned Llama3.2 1B
 profile to Models and Hugging Face matching for that process. The ordinary

@@ -376,7 +376,7 @@ final class FriendlyChatStore: ObservableObject {
             let scoped = folder.startAccessingSecurityScopedResource()
             defer { if scoped { folder.stopAccessingSecurityScopedResource() } }
             let profile = try HubProfile.identify(folder)
-            guard FriendlyLoadRequest.matches(mode,profile:profile) else { throw HubFailure(profile == .llama3 && mode == .ordinary ? "Open experimental Llama from Models to use its validated setup." : "The selected folder does not match the requested managed profile") }
+            guard FriendlyLoadRequest.matches(mode,profile:profile) else { throw HubFailure(profile == .llama3 && mode == .ordinary ? "Open Llama from Models to use its validated setup." : "The selected folder does not match the requested managed profile") }
             let loadUpper = mode == .managedQwen2 ? qwen2LoadUpper : nil
             // Validate the captured choice before workspace saves or old-owner teardown.
             var initial = NativeSettings(directory:folder.path)

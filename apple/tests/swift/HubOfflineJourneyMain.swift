@@ -36,7 +36,7 @@ struct HubOfflineJourneyMain {
         return try encoder.encode(chat.workspace)
     }
     static func main() async throws {
-        let arguments = CommandLine.arguments.filter { $0 != "--experimental-llama3" }
+        let arguments = CommandLine.arguments.filter { $0 != "--llama3" }
         guard arguments.count == 3, ["download","offline"].contains(arguments[1]) else {
             throw NativeContextFailure("Expected download/offline and isolated root")
         }
@@ -45,7 +45,7 @@ struct HubOfflineJourneyMain {
             try check(!FileManager.default.fileExists(atPath:root.path),"Fresh root required")
             try FileManager.default.createDirectory(at:root,withIntermediateDirectories:false)
         } else { try check(FileManager.default.fileExists(atPath:root.path),"Downloaded root required") }
-        let profile: HubProfile = CommandLine.arguments.contains("--experimental-llama3") ? .llama3 : .smol
+        let profile: HubProfile = CommandLine.arguments.contains("--llama3") ? .llama3 : .smol
         let models = root.appendingPathComponent("Models")
         let service = ModelHub(root:models), hub = HubStore(profile:profile,hub:service)
         let run = UUID().uuidString

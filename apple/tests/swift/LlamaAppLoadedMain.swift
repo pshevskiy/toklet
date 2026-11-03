@@ -8,8 +8,8 @@ struct LlamaAppLoadedMain {
         if !value { throw NativeContextFailure(message) }
     }
     static func main() throws {
-        guard CommandLine.arguments.count == 4, CommandLine.arguments[3] == "--experimental-llama3" else {
-            throw NativeContextFailure("Expected model, fresh output directory and experimental flag")
+        guard CommandLine.arguments.count == 3 else {
+            throw NativeContextFailure("Expected model and fresh output directory")
         }
         let folder = URL(fileURLWithPath:CommandLine.arguments[1]), output = URL(fileURLWithPath:CommandLine.arguments[2])
         try FileManager.default.createDirectory(at:output,withIntermediateDirectories:false)

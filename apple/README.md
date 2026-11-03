@@ -204,6 +204,8 @@ checks both resident planned and actual candidate KV before committing. The
 ceiling itself is not saved; accepted window settings use the existing record.
 [KV-ceiling evidence](../benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
 
-The [experimental Llama Mac route](../docs/llama3-mac-app.md) is opt-in with
-`--experimental-llama3`; it is absent from the default and iOS catalogs. Its
-512-token developer scope does not waive the original full-quality gates.
+The default Mac catalog includes the pinned Llama3.2 1B eight-bit profile at512
+positions; iOS retains four profiles pending physical qualification. The original
+[quality gates](../docs/llama3-quality-qualification.md) and fresh
+[ranged-download/offline journey](../docs/llama3-download-offline.md) pass.
+Open Llama through Models to use its audited loader and text policy.
