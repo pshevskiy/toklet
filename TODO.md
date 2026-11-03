@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **3 November 2026**. Active milestone: **M8**.
-Current task: **profile original reference decode and prepare the frozen 100-task evaluation**.
+Current task: **bounded FP32 reference cache and qualification**, then frozen 100-task collection/replay/grading.
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Query](artifacts/m8-phone-availability-2026-11-03/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
@@ -975,3 +975,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-03 | Incremental reference implementation/review | Session-owned FP32 KV uses the documented per-head layout; absolute RoPE offset and frozen cases are implemented. Sixteen cold controls pass. Astra catches allocation after position publication; history is now allocated before numerical work and state publishes only after success. Saved-row margin replay is also strengthened. | Retry affected controls, then pinned real-model conformance and decode probes. No task grading yet. |
 
 | 2026-11-03 | Incremental reference reviewed | All11 real prefixes,22 saved rows, greedy/margin/state checks and21 controls pass; source peakRSS3,058,221,056bytes. Previous default rotary is bit-identical. Astra approves final code and results. | Commit, then attribute856.68ms median reference decode before choosing a cache. Prepare new object-only Cargo cache cleanup; preserve all products, models and prior receipts. |
+
+| 2026-11-03 | Reference profiling/resource preparation | Incremental reference committed `d3de207`. The warmed mapped-reader decode median is856.68ms, so Astra recommends timing head versus layer widening before caching. A fresh object-only cleanup inventories inactive artifact-target *.o files under its Cargo lock; linked products and historical receipts are protected. | Review the concrete cleanup plan, recover reserve, then run sequential profiling. No task pass-rate outcomes yet. |
+
+| 2026-11-03 | Reference profiling/resource decision reviewed | Plain decode median827.95ms; attribution shows layer widening492.63ms and head widening121.72ms, roughly75% of total. All40 rows and428 provider files match qualification. Guarded cleanup removes4,332 objects; protected products remain unchanged and free space is3,765,780,480bytes. | Astra approves results and full-cache direction. Commit research evidence, then bounded verified-FD streaming into one read-only FP32 model; no live duplicate BF16 mapping. |

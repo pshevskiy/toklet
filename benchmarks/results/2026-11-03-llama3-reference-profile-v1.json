@@ -1,0 +1,51 @@
+{
+  "format": "toklet-llama3-reference-profile-v1",
+  "passed": true,
+  "hardware": "Apple M1 Pro, macOS, CPU reference",
+  "base_revision": "d3de207",
+  "profile": {
+    "plain": {
+      "median_total_ms": 827.9461670000001
+    },
+    "attribution": {
+      "median_total_ms": 815.359563,
+      "median_head_ms": 121.7220285,
+      "median_layer_ms": 492.6287495,
+      "median_lookup_ms": 0.0217085,
+      "median_residual_ms": 198.3362325
+    }
+  },
+  "samples_per_phase": 20,
+  "warmups": 3,
+  "repetitions": 5,
+  "provider_provenance": {
+    "passed": true,
+    "python": "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
+    "numpy": "2.3.2",
+    "numpy_root": "/Library/Frameworks/Python.framework/Versions/3.12/lib/python3.12/site-packages/numpy",
+    "provider_files_compared_to_qualified_venv": 428,
+    "provider_differences": [],
+    "all40_profile_rows_match_prior_qualified_raw_arrays": true
+  },
+  "peak_rss_bytes": 2672541696,
+  "cleanup": {
+    "removed_standalone_objects": 4332,
+    "logical_bytes": 1336542120,
+    "before_free_bytes": 2413817856,
+    "after_free_bytes": 3765780480,
+    "protected_product_hashes_unchanged": true,
+    "cargo_lock_held": true
+  },
+  "decision": "Implement bounded streaming full FP32 reference cache, separately qualify storage/arithmetic/memory and repeat fixed probe before retaining. No native/app optimization claim.",
+  "astra_review": "approved cleanup results, profile provenance and full-cache direction",
+  "full_quality_qualified": false,
+  "receipts_sha256": {
+    "artifacts/llama3-original-incremental-2026-11-03/profile-plan.json": "43847bbac144adc48e24dde1954b0f536aa602fae535668c565c1677886f409d",
+    "artifacts/llama3-original-incremental-2026-11-03/reader-profile.json": "e23061fa3876908fd5c1889eb55bdcdc771e22c6e6126b911844f2d1f8b51c29",
+    "artifacts/llama3-original-incremental-2026-11-03/profile-provenance.json": "cf60b94260d486b3dc6abfbfb40b026e9c3f7c26398224c1fced29a4ba86c9f3",
+    "artifacts/llama3-object-cache-cleanup-2026-11-03/cleanup.py": "4a95e82206d81e3e117b1b9cfb942b1abb5e0ed7b6bcbd6ad1e7aa837507f3fc",
+    "artifacts/llama3-object-cache-cleanup-2026-11-03/plan.json": "52e1911ff494e30a4ec30b784c369c18d8796e081589e7461caf19bf98592b54",
+    "artifacts/llama3-object-cache-cleanup-2026-11-03/objects.jsonl.gz": "b5dfe4965feaa2b811a8423e22dd02e44b355ca5bc5833160eba3ac0959f86e6",
+    "artifacts/llama3-object-cache-cleanup-2026-11-03/apply-result.json": "3c1bd9881140842367f8457635b5c577c3a83456c96356bf06cf2986a3b0d665"
+  }
+}

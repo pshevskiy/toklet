@@ -9533,3 +9533,15 @@ The earlier default rotary remains bit-identical. A reference-only probe motivat
 profiling before any weight cache. The 100-task gate remains open.
 [Report](llama3-original-incremental.md),
 [evidence](../benchmarks/results/2026-11-03-llama3-original-incremental-v1.json).
+
+## 3 November 2026 — Reference cost attribution and cache recovery
+
+A fixed warmed CPU probe attributes roughly three quarters of reference decode
+time to BF16 widening: about 493 ms for layer weights and 122 ms for the tied
+head, against an 828 ms uninstrumented median. All 40 profiled rows and 428 NumPy
+provider files match qualification. Astra recommends a separately qualified,
+bounded full FP32 cache before task collection. This is reference preparation,
+not a native/app speed claim. A locked manifest cleanup removes 4,332 standalone
+compiler objects and preserves protected linked products; observed free space
+ends at 3,765,780,480 bytes. Astra approves the cleanup and research results.
+[Evidence](../benchmarks/results/2026-11-03-llama3-reference-profile-v1.json).
