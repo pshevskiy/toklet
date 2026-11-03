@@ -1,0 +1,41 @@
+{
+  "format": "toklet-llama3-task-inputs-evidence-v1",
+  "passed": true,
+  "base_revision": "5dce003",
+  "cases": 100,
+  "categories": {
+    "code": 40,
+    "prose": 30,
+    "continuation": 30
+  },
+  "output_reserves": {
+    "code": 256,
+    "prose": 32,
+    "continuation": 16
+  },
+  "maximum_required_capacity": 566,
+  "human_eval_32": {
+    "prompt_tokens": 310,
+    "output_reserve": 256,
+    "required_capacity": 566
+  },
+  "manifest_sha256": "12851c7f443ec3a22d2f89e029b2ac471b89621e538672a08c15bc50372b2e69",
+  "source_grading_payload_sha256": "b096b8eb40960f38ae0e9f3268484eed10bf2a6bebbc981a45a061ee461aab7c",
+  "checks": {
+    "cold_controls": 3,
+    "manual_vs_offline_jinja_rendered_prompts_and_ids": 70,
+    "unchanged_raw_continuations": 30,
+    "per_id_category_and_integer_reserve": true,
+    "swapped_case_rejected": true,
+    "sampling_and_payload_tampering_rejected": true
+  },
+  "model_executed": false,
+  "task_outcomes_observed": false,
+  "astra_review": "approved inputs/source/independent replay for commit",
+  "receipts_sha256": {
+    "artifacts/llama3-tasks-2026-11-03/preparation-v1/run.json": "0582958509a1bff3a57ae8fccfa81f8fb4ba72bc161b9ce0d62e7daa1205bfc4",
+    "artifacts/llama3-tasks-2026-11-03/preparation-v1/validation.json": "6c3621b5e741357955910ff6ce597372bc11e5f5d560dca85b9c47260cde72d2",
+    "artifacts/llama3-tasks-2026-11-03/preparation-v1/independent-jinja-replay.log": "51bee2d18ebf29f130d4724ad9e0a52a6db1a9a43343efe0928c6394c7dddf6f",
+    "artifacts/llama3-tasks-2026-11-03/preparation-v1/final-tampering-controls.log": "869ea8047d0ae89dddb808470175fa3bdce5d6007a92e195f2d7e7e762e1f49f"
+  }
+}

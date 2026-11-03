@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **3 November 2026**. Active milestone: **M8**.
-Current task: **freeze Llama 100-task inputs and implement collection/replay/grading adapters**.
+Current task: **Llama 100-task collection workers and shared isolated grading adapter**.
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Query](artifacts/m8-phone-availability-2026-11-03/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
@@ -985,3 +985,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-03 | Cache execution wrapper retry | Twenty-four cold controls pass. The first wrapper stops before model loading because a prior control log already exists; retained the failure and moved the attempt into a fresh directory. | Cache contract and numerical sources are unchanged; two isolated real-cache runs are next. |
 
 | 2026-11-03 | FP32 reference cache retained | Both isolated runs match all22 mapped row hashes and11 greedy decisions. Decode medians172.68/169.40ms versus827.95ms uncached clear the frozen10% gain; max RSS5,584,928,768bytes stays below6GiB. Planned5,584,330,752bytes is recorded separately. Largest566-input/256-row memory replay and24 controls pass. | Astra approves retention and commit. Next shared100-task manifest, sequential cached-original/native workers, exact original trajectory replay, then unchanged isolated/text grading. |
+
+| 2026-11-03 | Llama task inputs frozen | All100 original cases retain reserves and grading payload. Manual formatting and independent pinned offline Jinja match all70 instructed prompts;30 continuations stay raw. Per-ID category/reserve guards and explicit lowest-ID greedy policy are frozen. HumanEval/32 remains310+256=566. | Preparation and replay pass; final tampering controls/review before committing inputs and implementing workers. No task generation yet. |
+
+| 2026-11-03 | Task input contract reviewed | Shared manifest12851c7f binds all100 prompt IDs/reserves/stops and original grading payload. Three controls, manual/offline-Jinja replay and per-ID admission checks pass; Astra approves. | Commit frozen inputs, then native/cached-original collection and exact original trajectory replay before shared isolated/text grading. |

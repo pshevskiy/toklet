@@ -9557,3 +9557,14 @@ planned replay shape, 24 controls and stdlib row replay pass. Astra approves
 retention. This improves reference preparation only; the 100-task gate is open.
 [Report](llama3-original-cache.md),
 [evidence](../benchmarks/results/2026-11-03-llama3-original-cache-v1.json).
+
+## 3 November 2026 — Frozen shared Llama task inputs
+
+Both forthcoming workers now share all 100 prompt IDs, reserves, stop IDs and
+model identities. Independent offline Jinja reproduces the 70 instructed prompts;
+30 raw continuations and the original grading payload stay unchanged. Per-ID
+category/reserve checks reject swapped cases. All tasks fit 566 positions,
+including HumanEval/32 at 310+256. Three controls, preparation/replay and Astra
+review pass. This freezes inputs only; no task outcomes are claimed.
+[Contract](llama3-task-contract.md),
+[evidence](../benchmarks/results/2026-11-03-llama3-task-inputs-v1.json).
