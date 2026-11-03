@@ -9484,3 +9484,15 @@ compilation and Astra review pass. [Report](llama3-original-reference.md),
 All 100 task budgets are retained: one requires 566 positions; the frozen full-loss
 blocks require 1025. iPhone 14 Pro remains unavailable, and full quality stays open
 until a bounded larger diagnostic range and unchanged full gates pass.
+
+## 3 November 2026 — Bounded Llama quality execution
+
+A Rust-only authenticated Llama diagnostic admits 1,025 positions without granting
+the app identity or increasing its512 ceiling. Shared frequency/index checks and
+validated per-dispatch rotary bounds remain. MacM1Pro15full-row comparisons,
+independent prefixes and overflow preservation pass; peakRSS1,271,480,320bytes,
+maximum admission with diagnostics/app1,727,887,552bytes. Default549/Metal657,
+strict lint/fmt/release and Astra review pass. Failed cold checks remain recorded.
+[Report](llama3-quality-context.md),
+[evidence](../benchmarks/results/2026-11-03-llama3-quality-context-v1.json).
+Original long-reference alignment and full10k/100 adoption gates remain open.

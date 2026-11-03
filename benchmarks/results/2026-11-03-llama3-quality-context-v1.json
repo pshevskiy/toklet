@@ -1,0 +1,36 @@
+{
+  "format": "toklet-llama3-quality-context-evidence-v1",
+  "passed": true,
+  "base_revision": "9039251",
+  "hardware": "Apple M1 Pro, macOS, Metal",
+  "capacity": 1025,
+  "ordinary_app_capacity": 512,
+  "model": "mlx-community/Llama-3.2-1B-Instruct-8bit",
+  "revision": "d48cdf0a4ea22d893b7c63a99d6a693e24822795",
+  "full_quality_qualified": false,
+  "checks": {
+    "default_tests": 549,
+    "metal_tests": 657,
+    "fmt": true,
+    "strict_clippy_default_and_metal": true,
+    "release_build": true,
+    "actual_mac_exit": 0,
+    "full_row_comparisons": 15,
+    "overflow_preserves_prefix": true,
+    "diagnostic_does_not_attach_app_identity": true
+  },
+  "peak_rss_bytes": 1271480320,
+  "maximum_admitted_bytes_including_app": 1727887552,
+  "failed_checks_retained": [
+    "initial default Clippy unused helper",
+    "retry Metal compiler duplicate test initializer"
+  ],
+  "receipts_sha256": {
+    "artifacts/llama3-quality-context-2026-11-03/final/checks.json": "a1c13b471f09c8d59c04af5cb2b81954dbb3cbd5388e017096810b69c5605b09",
+    "artifacts/llama3-quality-context-2026-11-03/retry/checks.json": "e9c5dea928adb1f412d401b458847e8ee0cb01cf9b0639cd2239f244073e2e63",
+    "artifacts/llama3-quality-context-2026-11-03/run.json": "385ffcaa81b1bbe8ba2b8f2c743ef703a0de0ad33837f98c05983b3acd45886b",
+    "artifacts/llama3-quality-context-2026-11-03/probe-v1/result.json": "2a0db16cd023e65600a442b620d266968bca5bdce16d53e8fc66ce9f70f87279",
+    "artifacts/llama3-quality-context-2026-11-03/probe.log": "b052e0ea3791de97e55fd556a889f4898273c266fff60468101422aa7345eea8"
+  },
+  "astra_review": "approved final source/check/Mac results by Astra"
+}

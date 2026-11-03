@@ -36,6 +36,36 @@ pub(crate) struct NativePositionLimits {
 pub(crate) fn metal_source_position_limits(
     source: &crate::mlx::qwen::Source,
 ) -> Result<NativePositionLimits, GeometryError> {
+    source_position_limits(source, None)
+}
+
+/// Only the authenticated Llama quality loader uses this cold admission path.
+/// Preserve all ordinary frequency and tensor-index checks; widen no app policy.
+#[cfg(any(
+    test,
+    all(
+        feature = "metal",
+        any(target_os = "macos", target_os = "ios"),
+        target_arch = "aarch64"
+    )
+))]
+pub(crate) fn llama3_quality_geometry(
+    source: &crate::mlx::qwen::Source,
+) -> Result<(), GeometryError> {
+    if source.architecture() != crate::mlx::dense::Architecture::Llama
+        || source.config().max_positions > 1025
+    {
+        return Err(GeometryError::Unsupported(
+            "Llama quality diagnostic requires at most1025 positions",
+        ));
+    }
+    source_position_limits(source, Some(1025)).map(|_| ())
+}
+
+fn source_position_limits(
+    source: &crate::mlx::qwen::Source,
+    diagnostic_cap: Option<usize>,
+) -> Result<NativePositionLimits, GeometryError> {
     use crate::mlx::{dense::Architecture, qwen::Storage};
     if source.position_plan() != model::PositionPlan::Ordinary
         && source.architecture() != Architecture::Llama
@@ -44,8 +74,13 @@ pub(crate) fn metal_source_position_limits(
             "scaled positions require the implemented Llama block composition",
         ));
     }
-    metal_geometry(source.config(), source.architecture())?;
-    let cap = metal_geometry_context_cap(source.config(), source.architecture())?;
+    let ordinary_cap = metal_geometry_context_cap(source.config(), source.architecture())?;
+    let cap = diagnostic_cap.or(ordinary_cap);
+    if diagnostic_cap.is_some() {
+        check_context(source.config(), source.architecture(), cap)?;
+    } else {
+        metal_geometry(source.config(), source.architecture())?;
+    }
     if matches!(
         source.architecture(),
         Architecture::Llama | Architecture::Phi3

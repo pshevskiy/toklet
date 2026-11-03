@@ -178,6 +178,7 @@ impl Operation {
             invocation.heads,
             self.dimension,
             invocation.offset,
+            invocation.position_limit,
         )?;
         if invocation.input.len < n + GUARD
             || invocation.output.len < n + GUARD
@@ -250,16 +251,28 @@ pub(super) struct Invocation<'a> {
     pub(super) rows: usize,
     pub(super) heads: usize,
     pub(super) offset: usize,
+    /// Validated model ceiling; primitive callers retain512.
+    pub(super) position_limit: usize,
 }
-fn extent(rows: usize, heads: usize, dimension: usize, offset: usize) -> Result<usize> {
+fn extent(
+    rows: usize,
+    heads: usize,
+    dimension: usize,
+    offset: usize,
+    position_limit: usize,
+) -> Result<usize> {
     if rows == 0
         || heads == 0
         || dimension == 0
         || !dimension.is_multiple_of(2)
-        || offset.checked_add(rows).is_none_or(|end| end > 512)
+        || position_limit == 0
+        || position_limit > 1025
+        || offset
+            .checked_add(rows)
+            .is_none_or(|end| end > position_limit)
     {
         return Err(Error::Options(
-            "scaled rotary requires absolute positions0..511",
+            "scaled rotary exceeds validated position limit",
         ));
     }
     rows.checked_mul(heads)

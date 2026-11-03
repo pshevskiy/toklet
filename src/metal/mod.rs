@@ -101,6 +101,7 @@ enum MlxImport {
     Qwen2Audited,
     MistralAudited,
     Llama3Audited,
+    Llama3QualityDiagnostic,
     Qwen3Audited,
     Qwen3QualityDiagnostic,
     Qwen3ContextDiagnostic,
@@ -421,6 +422,15 @@ impl Model {
     ) -> Result<Self> {
         Self::load_mlx_impl(directory, options, MlxImport::Llama3Audited)
     }
+    /// Pinned Llama3 quality diagnostic through1025 positions. Retains scaled
+    /// RoPE and Reference execution; grants no audited app identity or quality
+    /// qualification. Ordinary and audited app loading remain bounded to512.
+    pub fn load_mlx_llama3_quality_diagnostic(
+        directory: &Path,
+        options: weights::LoadOptions,
+    ) -> Result<Self> {
+        Self::load_mlx_impl(directory, options, MlxImport::Llama3QualityDiagnostic)
+    }
     /// Experimental Qwen3 0.6B quality execution up to1025 positions. Uses the
     /// unchanged Half graph, packed weights and session planners. This does not
     /// qualify numerics/quality, increase app limits, or waive known C512 failures.
@@ -451,6 +461,8 @@ impl Model {
                 crate::mlx::qwen::Source::open_smol_audited(directory, options)?
             } else if matches!(import, MlxImport::Llama3Audited) {
                 crate::mlx::qwen::Source::open_llama3_audited(directory, options)?
+            } else if matches!(import, MlxImport::Llama3QualityDiagnostic) {
+                crate::mlx::qwen::Source::open_llama3_quality_diagnostic(directory, options)?
             } else if matches!(import, MlxImport::MistralAudited) {
                 crate::mlx::qwen::Source::open_mistral_audited(directory, options)?
             } else if matches!(import, MlxImport::Qwen2Audited) {
@@ -465,7 +477,10 @@ impl Model {
             let config = source.config().clone();
             let bias_free = !source.architecture().has_projection_bias();
             let untied_output = !source.tied_output();
-            if matches!(import, MlxImport::Qwen3QualityDiagnostic) {
+            if matches!(import, MlxImport::Llama3QualityDiagnostic) {
+                crate::mlx::execution::llama3_quality_geometry(&source)
+                    .map_err(|error| Error::Unsupported(error.message()))?;
+            } else if matches!(import, MlxImport::Qwen3QualityDiagnostic) {
                 use crate::mlx::execution::GeometryError;
                 crate::mlx::execution::qwen3_quality_geometry(&config, source.architecture())
                     .map_err(|error| match error {
@@ -566,6 +581,13 @@ impl Model {
             model.positional = positional;
             model.qwen3_context_diagnostic = matches!(import, MlxImport::Qwen3ContextDiagnostic);
             model.mlx_declared_positions = Some(source.declared_positions());
+            if matches!(import, MlxImport::Llama3QualityDiagnostic) {
+                // Prove complete authenticated delivery, but never grant the
+                // app's audited512 identity to this experimental model.
+                source.dense_content_identity().ok_or(Error::Options(
+                    "Llama quality source incomplete after model assembly",
+                ))?;
+            }
             if matches!(import, MlxImport::SmolAudited) {
                 let identity = source.content_identity().ok_or(Error::Options(
                     "audited source incomplete after model assembly",
@@ -1521,6 +1543,7 @@ impl<'m> Session<'m> {
                         rows: n,
                         heads: c.query_heads,
                         offset: position,
+                        position_limit: c.max_positions,
                     },
                 )?;
             } else {
@@ -1550,6 +1573,7 @@ impl<'m> Session<'m> {
                         rows: n,
                         heads: c.kv_heads,
                         offset: position,
+                        position_limit: c.max_positions,
                     },
                 )?;
             } else {

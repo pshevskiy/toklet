@@ -57,9 +57,22 @@ fn allocation_frequency_and_uint_bounds_are_cold_checked() {
         (1, usize::MAX, 64, 0),
         (1, 2, u32::MAX as usize - 1, 0),
     ] {
-        assert!(extent(args.0, args.1, args.2, args.3).is_err(), "{args:?}");
+        assert!(
+            extent(args.0, args.1, args.2, args.3, 512).is_err(),
+            "{args:?}"
+        );
     }
-    assert_eq!(extent(3, 32, 64, 509).unwrap(), 6144);
+    assert_eq!(extent(3, 32, 64, 509, 512).unwrap(), 6144);
+    assert_eq!(extent(1, 32, 64, 1024, 1025).unwrap(), 2048);
+    for (offset, limit) in [
+        (512, 512),
+        (1025, 1025),
+        (0, 1026),
+        (0, 0),
+        (usize::MAX, 1025),
+    ] {
+        assert!(extent(1, 1, 64, offset, limit).is_err());
+    }
     assert!(frequency(f32::NAN, 64, 1, s).is_err());
     assert!(frequency(f32::INFINITY, 64, 1, s).is_err());
     assert!(
@@ -92,7 +105,7 @@ fn run(
     offset: usize,
 ) -> Vec<u16> {
     let n = input.len();
-    assert_eq!(extent(rows, heads, op.dimension, offset).unwrap(), n);
+    assert_eq!(extent(rows, heads, op.dimension, offset, 512).unwrap(), n);
     let mut x = Buffer::<u16>::new(gpu, n + GUARD).unwrap();
     x.with_mut(|out| {
         out.fill(0x5a17);
@@ -124,6 +137,7 @@ fn run(
             rows,
             heads,
             offset,
+            position_limit: 512,
         },
     )
     .unwrap();
@@ -283,7 +297,8 @@ fn isolated_half_rotary_matches_prospective_dual_gates_and_guards() {
                     status: &status,
                     rows: 2,
                     heads: 1,
-                    offset: 511
+                    offset: 511,
+                    position_limit: 512
                 }
             )
             .is_err()
@@ -300,7 +315,8 @@ fn isolated_half_rotary_matches_prospective_dual_gates_and_guards() {
                     status: &status,
                     rows: 1,
                     heads: 1,
-                    offset: 1
+                    offset: 1,
+                    position_limit: 512,
                 }
             )
             .is_err()
@@ -317,6 +333,7 @@ fn isolated_half_rotary_matches_prospective_dual_gates_and_guards() {
                 rows: 1,
                 heads: 1,
                 offset: 1,
+                position_limit: 512,
             },
         )
         .unwrap();

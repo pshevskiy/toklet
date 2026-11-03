@@ -267,6 +267,30 @@ impl Source {
         }
         Self::open_dense_audited(directory, options, weights::content::DenseProfile::Llama3)
     }
+    /// Authenticated numerical diagnostic only; no complete app/codec identity.
+    #[cfg(any(
+        test,
+        all(
+            feature = "metal",
+            any(target_os = "macos", target_os = "ios"),
+            target_arch = "aarch64"
+        )
+    ))]
+    pub(crate) fn open_llama3_quality_diagnostic(
+        directory: &Path,
+        options: LoadOptions,
+    ) -> Result<Self, Error> {
+        if options.context_limit == 0 || options.context_limit > 1025 {
+            return Err(invalid(
+                "Llama quality diagnostic requires1..=1025 positions",
+            ));
+        }
+        let source =
+            Self::open_dense_audited(directory, options, weights::content::DenseProfile::Llama3)?;
+        super::execution::llama3_quality_geometry(&source)
+            .map_err(|error| invalid(error.message()))?;
+        Ok(source)
+    }
     fn open_dense_audited(
         directory: &Path,
         options: LoadOptions,
@@ -952,6 +976,26 @@ pub(crate) fn parse_json(data: &[u8]) -> Result<Value, Error> {
 #[cfg(test)]
 mod context_diagnostic_tests {
     use super::*;
+    #[test]
+    fn llama_quality_rejects_invalid_capacity_before_opening_source() {
+        for context_limit in [0, 1026, usize::MAX] {
+            let result = Source::open_llama3_quality_diagnostic(
+                Path::new("/nonexistent-llama-quality"),
+                LoadOptions {
+                    context_limit,
+                    memory_limit_bytes: usize::MAX,
+                },
+            );
+            assert!(
+                matches!(result, Err(Error::Invalid(ref message)) if message == "Llama quality diagnostic requires1..=1025 positions")
+            );
+        }
+        assert!(
+            matches!(Source::open_llama3_audited(Path::new("/nonexistent-llama-quality"),
+            LoadOptions { context_limit: 513, memory_limit_bytes: usize::MAX }),
+            Err(Error::Invalid(ref message)) if message == "audited Llama3 requires context <=512")
+        );
+    }
     #[cfg(unix)]
     #[test]
     #[ignore = "Explicit authenticated pinned Qwen3 source40960 metadata probe; no GPU/upload"]

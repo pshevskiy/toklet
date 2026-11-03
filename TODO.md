@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **3 November 2026**. Active milestone: **M8**.
-Current task: **bounded Llama quality diagnostic through 1,025 positions**, then original 10,000-target/100-task qualification.
+Current task: **original Llama long-row alignment**, then frozen 10,000-target/100-task qualification.
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Query](artifacts/m8-phone-availability-2026-11-03/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
@@ -487,7 +487,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [ ] Complete required full adoption quality for newly adopted artifacts,
   including Llama3's original unquantized 10,000-target / 100-task gates.
   - [x] Genuine original BF16 acquisition, bounded FP32 reference and four-prefix native alignment; [report](docs/llama3-original-reference.md).
-  - [ ] Quality-only 1,025-position route, long-row consistency/state boundaries; managed app stays at512.
+  - [x] Quality-only 1,025-position route, native long-row consistency/state boundaries; managed app stays at512. [Report](docs/llama3-quality-context.md).
+  - [ ] Original FP32 long-row alignment and independent replay before full collection.
   - [ ] All frozen original loss/task outcomes, without dropping cases or reserves. The
   1,024-target same-artifact screen is not a substitute or app qualification.
 - [ ] Publish supported context/KV settings, evidence and remaining limitations;
@@ -942,3 +943,15 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-03 | Original short alignment passes | GenuineBF16payloadSHAverified; originalFP32 batch/prefix all128256logits at1/4/8/17 pass frozen gates, independent byte-row replay passes and native4scores align. SourcepeakRSS2670002176, nativephysicalpeak1520928520; descriptive4case meanNLLdelta−0.01427516 is notfullquality. | Finalchecker scalar-link controls/replay/review beforecommit. All100unchangedtask budgets measured: onlyHumanEval/32needs566; frozenlossblocksneed1025, so boundedqualityrange workprecedesfullgates. |
 
 | 2026-11-03 | Original short qualification reviewed | Astra approves originalsource acquisition,12coldcontrols, strictnative scorer, eight-rowfinalreplay and4native targets. Fullquality remainsopen; one100taskcase needs566 andfrozenloss needs1025. | Committhen boundedquality-only1025 route with below512parity, longrowprefix/chunk consistency and1026 overflow preservation; ordinaryapp/identity remain512. |
+
+| 2026-11-03 | Llama1025 diagnostic implementation | Authenticated Rust-only loader preserves source frequency/index checks and excludes app identity. Astra found the dispatch512guard; invocation now carries validated ceiling without growing resident owner. Frozen17/512/513/1024/1025 probe compares two chunk schedules, independent prefixes and overflow preservation. | Source review and required cold/release checks running; ordinary app/audited512 unchanged. Original long-reference alignment follows. |
+
+| 2026-11-03 | Llama diagnostic review corrections | Astra requires complete authenticated delivery before discarding diagnostic identity and admission after snapshot allocation; both fixed. Default Clippy finds an ordinary helper unused after refactor; retained the ordinary geometry path. | First failed receipt preserved; corrected default/Metal checks and release probe build running in retry/. |
+
+| 2026-11-03 | Llama diagnostic cold-check correction | Default strict Clippy and549tests pass. Metal compiler catches a duplicated position_limit initializer in a primitive test; removed the duplicate only. | Preserve retry failure; reuse unaffected default results and run final fmt/Metal lint/tests/release build before Mac probe. |
+
+| 2026-11-03 | Long-reference inputs prepared in code | While Metal regression runs, Astra approves freezing10001IDs once with a separate1026prefix hash and unchanged1024-target block/reset schedule. Added prospective preparation and selected-row FP32 quality entry point; short entry stays512. | No long-model inference yet. Input replay/controls and separate Astra review follow diagnostic-route commit. |
+
+| 2026-11-03 | Long input/replay controls | Frozen10001IDs and independent input replay pass; first1025 bytes match the existing corpus. Selected-row graph controls pass. First combined checker refactor controls catch a missing folder argument; corrected shared replay signature. | Preserve failed controls; retry before original long inference and review. Native1025 probe remains running independently. |
+
+| 2026-11-03 | Llama1025 diagnostic reviewed | MacM1Pro15full-row comparisons, loader/state boundaries and no-app-identity pass; peakRSS1271480320bytes, maxadmission1727887552bytes. Default549/Metal657, strict lint/fmt/release pass, earlier check failures preserved. | Astra final code/results approval; commit Rust diagnostic task separately. Next original long run uses frozen10001IDs/held-out1026th token; managed app remains512. |
