@@ -9621,3 +9621,13 @@ compilation. Unflagged controller and visible UI open/send/Stop/recovery/reopen
 checks pass; Astra approves. The historical opt-in report is labelled and linked
 to the current [adoption report](llama3-mac-adoption.md). No native package,
 larger-context, physical-phone or performance qualification changes.
+
+## 4 November 2026 — Exact coverage and scoped Mac checklist
+
+One [coverage table](model-coverage.md) separates nine pinned artifacts, backend
+routes, declarations, tested positions, app limits and device evidence. Completed
+Mac settings/persistence/Apply/memory rollups are reconciled against their child
+receipts. Qwen3's passed relative quality remains distinct from rejected C512
+numerical fidelity. KV-byte limits stay per-Apply and load-only peaks conditional.
+Astra approves; content/link/whitespace checks pass. M8 remains open for Gemma
+state/numerical work, unreconciled journeys and physical-phone validation.

@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Reconcile M8 capability/adoption records and remaining context/application gaps**.
+Current task: **Gemma4 real32-position hybrid state/schedule boundary with separate numerical replay**.
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Query](artifacts/m8-phone-availability-2026-11-03/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
@@ -354,7 +354,7 @@ separate requirements below. Further model admissions require their own scope.
   writes unchanged. A rendered request needing 281 tokens is rejected against
   256 before generation, retaining a newer draft. Rendered UI/phone and successful
   real-model generation after resizing remain separate open checks.
-- [ ] B5d5: persist settings by authenticated full-artifact manifest and plan
+- [x] B5d5 (adopted Mac managed profiles): persist settings by authenticated full-artifact manifest and plan
   identity. Path keys or config-only recognition do not authenticate an artifact.
   Preserve rejected settings and handle stale/replaced artifacts explicitly.
   - [x] B5d5a: [concrete audited Qwen3 Source reader](docs/qwen3-consumed-source.md)
@@ -366,7 +366,7 @@ separate requirements below. Further model admissions require their own scope.
     passes 12 cold checks, 494 default/602 Metal tests, 34 exports/C ABI and
     one cached Metal ownership/text probe with Astra saved audit. Complete six-file
     historical roles and exact Rc lifetime pass; no generation or app adoption.
-  - [ ] B5d5c: persist and restore untrusted settings by accepted artifact/backend/
+  - [x] B5d5c (adopted Mac profiles): persist and restore untrusted settings by accepted artifact/backend/
     load/planning-policy/schema identity with fresh admission and stale handling.
     - [x] C1: [cold accepted-load identity report](docs/accepted-load-identity.md)
       implements exact owner/source checks and engine-owned semantic namespace.
@@ -382,7 +382,7 @@ separate requirements below. Further model admissions require their own scope.
       reply/edit/late-commit reconciliation, actual45>33 rendered rejection and
       no-save quarantine pass; other routes remain ephemeral and rejected records
       stay preserved. Rendered UI/phone and resized real generation stay open.
-    - [ ] Extend accepted identity and persisted settings to other adopted managed
+    - [x] Extend accepted identity and persisted settings to other adopted Mac managed
       profiles before closing all-model persistence; the first Qwen3 route does
       not qualify SmolLM2, Qwen2.5, Mistral or later app adapters automatically.
       - [x] C4a: [complete SmolLM2 codec/shared native identity](docs/smol-complete-identity.md)
@@ -399,7 +399,7 @@ separate requirements below. Further model admissions require their own scope.
         Astra saved audit. ActualD1/headroom/D2 accept256/chunk16 and save once;
         request1024 remains bounded by loaded512. Both test failures preserved;
         no larger-window, generation, rendered UI, phone or performance claim.
-      - [ ] Reuse concrete consumed-source/codec mechanisms for Qwen2.5 and
+      - [x] Reuse concrete consumed-source/codec mechanisms for Qwen2.5 and
         Mistral, checking each profile's actual layouts, bounds and text policy.
         - [x] C5a: [shared Qwen2.5 source-only verification](docs/qwen2-consumed-source.md)
           passes516default/624Metal tests, six new controls and one cached
@@ -443,27 +443,28 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] B5e2: reconcile Rust/native/Swift prompt512 limits, actual rendered
   prompt+reply admission and resized successful generation before longer Chat
   claims; output256 and byte/event limits remain until deliberately qualified.
-- [ ] Report declared context, implemented backend range, budget/device fit,
-  validation scope and app/text limits separately for each model.
+- [x] Report declared context, implemented backend range, budget/device fit,
+  validation scope and app/text limits separately for each recorded artifact; [coverage](docs/model-coverage.md).
 - [x] B5f1: session-bound creation/replacement owner snapshot, optional failure,
   stale binding, resize/rejection/suspend/resume and3platform checks; Astra approved.
 - [x] B5h1: opt-in load-command physical checkpoints, conditional new-peak
   inference, failure/disabled/binding checks and Astra approval. Prior higher
   lifetime peaks leave the load-only peak unknown.
-- [ ] Include actual weights, KV owners, scratch, loading peaks and application
+- [x] Mac reporting: include actual weights, KV owners, scratch, conditional loading peaks and application
   allowances; distinguish numerical fit from whole-process fit.
 - [x] B5g1: common/native physical KV-byte constraint; C ABI/legacy JSON
   compatibility,542default/650Metal checks and Astra review pass.
   [Evidence](benchmarks/results/2026-11-03-kv-capacity-core-v1.json).
 - [x] B5g2: ephemeral KV-byte ceiling in Preview/Apply, resident planned/actual
   enforcement, strict checks and Astra approval. [Evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
-- [ ] Expose supported context, reply limit, memory budget and advanced chunk/
+- [x] Mac: expose supported context, reply limit, memory budget and advanced chunk/
   KV-byte ceilings in the existing app; show current fixed KV storage honestly.
-- [ ] Persist by artifact/plan identity; apply changes atomically with safe
+- [x] Adopted Mac profiles: persist by artifact/plan identity; apply changes atomically with safe
   session recreation/replay and preserve rejected settings/drafts.
-- [ ] Check actual rendered prompt plus reply boundaries, stale reports,
-  cancellation/recovery and supported search/download/load/offline chat journeys.
+- [x] Recorded Mac rendered prompt/reply boundaries and stale/cancel/recovery checks; see linked B5 receipts.
+- [ ] Reconcile remaining per-artifact search/download/load/offline journeys; do not infer them from shared controllers.
   - [x] Ordinary Smol real download → verified cache → process-confined offline Chat; [report](docs/smol-download-offline.md).
+  - [x] Llama fresh ranged download → verified cache → offline Chat and default Mac adoption; [report](docs/llama3-mac-adoption.md).
 - [ ] Finish Mac app checks and record separate iPhone 14 Pro validation or
   explicit remaining device gaps; Astra review and commit each code task.
 
@@ -473,12 +474,12 @@ uses the existing full saved-conversation reset+prompt path on Send.
   - [x] Source codec: exact asset pins, independent rendered bytes and cached tokenizer comparison; [report](docs/llama3-plain-codec.md). Checks544default/652Metal and Astra review pass.
   - [x] Real native Mac512 session boundary, cancellation/replay and observed stop evidence; [report](docs/llama3-native-chat-boundary.md).
   - [x] Audited native owner pairing; [report](docs/llama3-audited-pair.md).
-  - [x] Coherent native40 package and managed Mac developer route/journey; [report](docs/llama3-mac-app.md). Ordinary discovery still requires adoption gates.
+  - [x] Coherent native40 package and managed Mac developer route/journey; [report](docs/llama3-mac-app.md). Default bounded Mac discovery is now adopted; [report](docs/llama3-mac-adoption.md).
 
 ### M8 closure
 
-- [ ] Reconcile completed adapters and exact supported configurations with the
-  capability report, app discovery and documentation.
+- [x] Reconcile completed adapters and exact supported configurations with the
+  capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
 - [x] Repair legacy standalone Swift check source inventories. Ten wrappers
   share current worker dependencies and bind the helper in their receipts;
   89 Python controls, 11 Mac compile/link groups and six mobile compiler checks
@@ -1021,3 +1022,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Mac default catalog checks passed | Focused retry, strict Mac/iOS/simulator checks and unflagged cached open/send/Stop/recovery/reopen pass. Visible isolated fixture shows default Llama row and512-window, opens and repliesHello; fixture closed. Initial unreachable-test compile and transient UI transport error retained. | Astra approves code/checks/UI for commit; iOS catalog stays4 and physical14Pro remains unqualified. |
 
 | 2026-11-04 | Default bounded Mac Llama adopted | Code, default catalog, strict platform checks, unflagged controller and visible Chat all pass Astra review. Historical opt-in report labelled; README and improvement record updated. | Commit this task; reconcile broader M8 capabilities and remaining context/app/device requirements. [Report](docs/llama3-mac-adoption.md). |
+
+| 2026-11-04 | Mac capability/checklist reconciliation | Astra identifies completed B5 rollups: authenticated persistence, atomic Apply, settings and conditional memory reporting. Mark only adopted Mac scopes complete; publish exact9-artifact route/window/device table. New phone and unreconciled per-artifact journeys remain open. | Link/content/whitespace checks and Astra documentation review; next Gemma4 real32-position boundary, preserving precision/quality failures. |
+
+| 2026-11-04 | Coverage review correction | Astra separates Qwen3 accepted original relative quality from its rejected C512 numerical fidelity gate. Correct the new coverage table and link both scopes; experimental app label remains unchanged. | Astra approves corrected scoped reconciliation; commit documentation, then Gemma4 real32 boundary. |
