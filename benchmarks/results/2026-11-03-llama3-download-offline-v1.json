@@ -1,0 +1,27 @@
+{
+  "format": "toklet-llama3-download-offline-evidence-v1",
+  "passed": true,
+  "base_revision": "5f5e846",
+  "hardware": "Apple M1 Pro, macOS",
+  "total_verified_bytes": 1322325118,
+  "weight_bytes": 1313157436,
+  "ranged_assembly": true,
+  "verified_cache_sha256": "4bb21b9e6b94ff2911fa9a4ced41ef3c50ee617eabdf04c6aed04484c809553e",
+  "online_chat": true,
+  "network_denied_offline_chat": true,
+  "both_bad_cache_rejections_preserve_owner_and_chat": true,
+  "managed_window": 512,
+  "ordinary_catalog_promoted": false,
+  "phone_qualified": false,
+  "rendered_ui_qualified": false,
+  "astra_review": "approved helper, strict checks, fresh ranged transfer, offline/rejection/recovery evidence",
+  "receipts_sha256": {
+    "artifacts/llama3-download-offline-2026-11-03/run.json": "ee0ac765f2708628dd44a2d8b9a549ae5e1bd2b6e246d06f24442f7445c899b5",
+    "artifacts/llama3-download-offline-2026-11-03/run.py": "5a89f25beae0b66b52002591001348e8ab05923433d857fccb262ceb60e9613c",
+    "artifacts/llama3-download-offline-2026-11-03/reviewed/checks.json": "a172afa3fa9645062c5752f8c834e91026c3269d3dbb671bbf8f17d83db43e36",
+    "artifacts/llama3-download-offline-2026-11-03/retry/checks.json": "bbef87420c85babe6bf89df567c0b4a0f826d037d94cd81d03a41f01c3acf307",
+    "artifacts/llama3-download-offline-2026-11-03/checks.json": "7003e14f4e1327f5f405bea8b0f46ada49a38c36a6232519b7775f28ee58e766",
+    "artifacts/llama3-download-offline-2026-11-03/download.log": "5452c6ab2cf14bd00a414fcd2058460bb3beb604f56547430133d699cf7aa023",
+    "artifacts/llama3-download-offline-2026-11-03/offline.log": "e396355e74660385efc7b0a488720aa59591d4f5212a95e0303ee4d42c0fd99c"
+  }
+}

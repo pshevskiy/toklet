@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **3 November 2026**. Active milestone: **M8**.
-Current task: **Llama fresh Mac ranged-download/offline journey, then bounded catalog adoption**.
+Current task: **Bounded Llama512 default Mac catalog adoption; preserve iOS qualification gap**.
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Query](artifacts/m8-phone-availability-2026-11-03/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
@@ -1003,3 +1003,13 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-03 | All task outcomes resolved | Original22/100, native23/100; unchanged ≤2pp gate passes. All80 isolated programs and120 text outcomes replay, with outer stopped-VM/group-exit verification. Exact timezone-pinned version check passes. Nineteen controls pass; no numerical source changes. | Astra approves code/results/recovery for commit; combined loss/task qualification and app/device decisions remain separate. [Report](docs/llama3-task-quality.md). |
 
 | 2026-11-03 | Pinned Llama quality joined | Loss+task identities, profiles, complete counts and receipt hashes match. Both gates pass; Astra approves scoped closure. Historical stage flags remain unchanged. | Documentation/content/link checks pass. Next fresh Mac ranged-download/offline journey and reviewed512-position catalog adoption; phone remains open. |
+
+| 2026-11-03 | Fresh Llama journey implementation | Generalize existing isolated Smol journey to explicitly flagged Llama, adding production search and inventory/device inspection before transfer. Retain independent network denial, exact cache verification and bad-cache owner preservation. | Compile and Astra review before fresh1.31GB ranged transfer; ordinary catalog remains unchanged. |
+
+| 2026-11-03 | Journey compile sandbox retry | Initial strict Swift compile cannot launch macro plugins inside the nested sandbox. No app or download starts; failed log retained. | Retry the same source inventory with required tool access in a fresh directory. |
+
+| 2026-11-03 | Journey review corrections | Astra identifies that inventory alone does not check device admission and search includes local seeded rows. Add refresh/device admission, require empty search error and independently verify remote rows. First strict escalated compile/Hub controls pass but do not validate corrected source. | Fresh compile of corrected journey, then online/offline workers. |
+
+| 2026-11-03 | Fresh ranged transfer started | Corrected strict journey compile and existing Hub controls pass; Astra approves source/runner. Actual remote exact-repository search and device inspection pass. Fresh production ranged weight transfer is active in isolated data. | Await full SHA verification, online Chat and separate network-denied reopen/bad-cache checks before adoption. |
+
+| 2026-11-03 | Fresh Llama journey passed | Remote search/admission, real1.31GB ranged weights, all6verified files, onlineHello and separately network-denied offlineHello pass. Same snapshot, missing/mutated cache rejections preserve owner/chat; recovery succeeds. Bothworkers exit0 and sourcehashguards pass. | Astra approves helper/checks/results for commit. Next separate Mac-only default catalog adoption. |

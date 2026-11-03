@@ -2,7 +2,7 @@ import Foundation
 import CryptoKit
 import Darwin
 
-// Explicit ordinary-profile network/cache/controller qualification, isolated data.
+// Explicit pinned-profile network/cache/controller qualification, isolated data.
 @main
 @MainActor
 struct HubOfflineJourneyMain {
@@ -36,15 +36,17 @@ struct HubOfflineJourneyMain {
         return try encoder.encode(chat.workspace)
     }
     static func main() async throws {
-        guard CommandLine.arguments.count == 3, ["download","offline"].contains(CommandLine.arguments[1]) else {
+        let arguments = CommandLine.arguments.filter { $0 != "--experimental-llama3" }
+        guard arguments.count == 3, ["download","offline"].contains(arguments[1]) else {
             throw NativeContextFailure("Expected download/offline and isolated root")
         }
-        let online = CommandLine.arguments[1] == "download", root = URL(fileURLWithPath:CommandLine.arguments[2])
+        let online = arguments[1] == "download", root = URL(fileURLWithPath:arguments[2])
         if online {
             try check(!FileManager.default.fileExists(atPath:root.path),"Fresh root required")
             try FileManager.default.createDirectory(at:root,withIntermediateDirectories:false)
         } else { try check(FileManager.default.fileExists(atPath:root.path),"Downloaded root required") }
-        let profile = HubProfile.smol, models = root.appendingPathComponent("Models")
+        let profile: HubProfile = CommandLine.arguments.contains("--experimental-llama3") ? .llama3 : .smol
+        let models = root.appendingPathComponent("Models")
         let service = ModelHub(root:models), hub = HubStore(profile:profile,hub:service)
         let run = UUID().uuidString
         let probe = root.appendingPathComponent((online ? "online-probe-" : "offline-probe-") + run + ".json")
@@ -62,6 +64,14 @@ struct HubOfflineJourneyMain {
         var opened: URL?
         if online {
             try check(!FileManager.default.fileExists(atPath:models.path),"Cache not empty")
+            let remote = try await service.search(profile.repository)
+            try check(remote.contains(where:{ $0.id == profile.repository }),"Remote search omitted pinned model")
+            hub.query = profile.repository; hub.search(); await hub.waitForIdle()
+            try check(hub.results.contains(where:{ $0.id == profile.repository && $0.profile == profile }) && hub.message.isEmpty,"Pinned search failed: \(hub.message)")
+            hub.inventory(); await hub.waitForIdle()
+            hub.refresh(); await hub.waitForIdle()
+            try check(hub.localURL == nil && hub.deviceAllowed,"Inventory/device inspection failed: \(hub.message)")
+            try record("discovery-inspection",["repository":profile.repository,"supported":true,"device_allowed":hub.deviceAllowed,"message":hub.message])
             hub.downloadAndUse(profile) { opened = $0 }
         } else { hub.use(profile) { opened = $0 } }
         await hub.waitForIdle()
@@ -92,8 +102,8 @@ struct HubOfflineJourneyMain {
         do {
             chat.openManaged(folder,profile:profile,ifSelected:chat.workspace.selected)
             let loaded = try wait()
-            guard let identity = loaded.acceptedIdentity else { throw NativeContextFailure("No accepted Smol identity: \(loaded.message)") }
-            try check(identity.profile == .smol && identity.loadedLimit == 512 && chat.ready,"Wrong opened identity")
+            guard let identity = loaded.acceptedIdentity else { throw NativeContextFailure("No accepted pinned identity: \(loaded.message)") }
+            try check(identity.profile == (profile == .llama3 ? .llama3 : .smol) && identity.loadedLimit == 512 && chat.ready,"Wrong opened identity")
             chat.setReplyLimit(32)
             let response = try send("Say hello in one short sentence.")
             try check(response.status == 0 && response.emitted > 0 && response.chatResult?.rejected == false

@@ -9601,3 +9601,13 @@ model identities and numerical profiles match. Astra approves closure for this
 configuration; Mac512 catalog adoption still requires a fresh ranged-download
 journey, and iPhone qualification remains open.
 [Decision](llama3-quality-qualification.md).
+
+## 3 November 2026 — Fresh Llama ranged download and offline Chat
+
+The pinned Mac Llama profile now completes real remote search, device admission,
+fresh ranged download and verification of1,322,325,118bytes. Online and separate
+network-denied Chat both succeed. Damaged private caches are rejected without
+changing the accepted owner or conversation; recovery succeeds. Strict compile,
+existing Hub controls and Astra review pass. This closes the Mac transfer
+prerequisite; ordinary catalog adoption remains a separate task.
+[Report](llama3-download-offline.md).
