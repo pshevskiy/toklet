@@ -1,0 +1,211 @@
+{
+  "format": "toklet-llama3-original-quality-inputs-v1",
+  "dataset": {
+    "path": "artifacts/datasets/wikitext-2-raw-test.parquet",
+    "bytes": 732610,
+    "sha256": "5f1bea067869d04849c0f975a2b29c4ff47d867f484f5010ea5e861eab246d91",
+    "revision": "b08601e04326c79dfdd32d625aee71d232d685c3",
+    "split": "test",
+    "configuration": "wikitext-2-raw-v1"
+  },
+  "tokenizer": {
+    "path": "models/MLX-Llama-3.2-1B-Instruct-8bit-d48cdf0/tokenizer.json",
+    "bytes": 9085657,
+    "sha256": "79e3e522635f3171300913bb421464a87de6222182a0570b9b2ccba2a964b2b4"
+  },
+  "corpus": {
+    "utf8_bytes": 1290546,
+    "sha256": "430983e5a711fbc4c6576edffecacf47ff23d58f62f3923d2386d798e0a794c9",
+    "recipe": "text column, original row order, newline join rows if truthy; no stripping"
+  },
+  "parents": {
+    "benchmarks/sources.json": {
+      "bytes": 5858,
+      "sha256": "dc2f82fb50b3f1f763c4757a992429b9122f3628c049709bdd7cb2252c69ea28"
+    },
+    "benchmarks/contract-v1/manifest.json": {
+      "bytes": 6490,
+      "sha256": "3f09dcf70f6d9620ce5172dcbaa6428f3487a3edf412f2bfce57937faab72c66"
+    },
+    "benchmarks/qwen3-context4096-v1/manifest.json": {
+      "bytes": 2143,
+      "sha256": "710054f18fe9a983399c230d7c31c7e99ddcff24f0748498dc3ce4a8b917c7c9"
+    }
+  },
+  "blocks": [
+    {
+      "block": 0,
+      "input_start": 0,
+      "input_end": 1025,
+      "score_rows": [
+        0,
+        1024
+      ],
+      "global_target_indices": [
+        1,
+        1025
+      ],
+      "reset_position": 0
+    },
+    {
+      "block": 1,
+      "input_start": 1024,
+      "input_end": 2049,
+      "score_rows": [
+        0,
+        1024
+      ],
+      "global_target_indices": [
+        1025,
+        2049
+      ],
+      "reset_position": 0
+    },
+    {
+      "block": 2,
+      "input_start": 2048,
+      "input_end": 3073,
+      "score_rows": [
+        0,
+        1024
+      ],
+      "global_target_indices": [
+        2049,
+        3073
+      ],
+      "reset_position": 0
+    },
+    {
+      "block": 3,
+      "input_start": 3072,
+      "input_end": 4097,
+      "score_rows": [
+        0,
+        1024
+      ],
+      "global_target_indices": [
+        3073,
+        4097
+      ],
+      "reset_position": 0
+    },
+    {
+      "block": 4,
+      "input_start": 4096,
+      "input_end": 5121,
+      "score_rows": [
+        0,
+        1024
+      ],
+      "global_target_indices": [
+        4097,
+        5121
+      ],
+      "reset_position": 0
+    },
+    {
+      "block": 5,
+      "input_start": 5120,
+      "input_end": 6145,
+      "score_rows": [
+        0,
+        1024
+      ],
+      "global_target_indices": [
+        5121,
+        6145
+      ],
+      "reset_position": 0
+    },
+    {
+      "block": 6,
+      "input_start": 6144,
+      "input_end": 7169,
+      "score_rows": [
+        0,
+        1024
+      ],
+      "global_target_indices": [
+        6145,
+        7169
+      ],
+      "reset_position": 0
+    },
+    {
+      "block": 7,
+      "input_start": 7168,
+      "input_end": 8193,
+      "score_rows": [
+        0,
+        1024
+      ],
+      "global_target_indices": [
+        7169,
+        8193
+      ],
+      "reset_position": 0
+    },
+    {
+      "block": 8,
+      "input_start": 8192,
+      "input_end": 9217,
+      "score_rows": [
+        0,
+        1024
+      ],
+      "global_target_indices": [
+        8193,
+        9217
+      ],
+      "reset_position": 0
+    },
+    {
+      "block": 9,
+      "input_start": 9216,
+      "input_end": 10001,
+      "score_rows": [
+        0,
+        784
+      ],
+      "global_target_indices": [
+        9217,
+        10001
+      ],
+      "reset_position": 0
+    }
+  ],
+  "policy": {
+    "targets": 10000,
+    "maximum_input_positions": 1025,
+    "add_special_tokens": false,
+    "chat_rendering": false,
+    "stop_on_eos": false,
+    "reset_each_block": true,
+    "mean_nll_increase_limit": 0.05,
+    "consistency_prefixes": [
+      512,
+      513,
+      1024,
+      1025
+    ],
+    "full_row_atol": 0.001,
+    "full_row_rtol": 0.0001,
+    "target_nll_absolute": 0.0001
+  },
+  "complete_corpus_tokens": 288936,
+  "tokens": {
+    "file": "tokens.u32le",
+    "dtype": "u32le",
+    "count": 10001,
+    "bytes": 40004,
+    "sha256": "b53c665594635ef6328aead49ef9ff9918153d5e4b400a3ab3fc78f2ed3c713c"
+  },
+  "long_probe_prefix": {
+    "file": "tokens.u32le",
+    "dtype": "u32le",
+    "count": 1026,
+    "bytes": 4104,
+    "sha256": "b62bc352ae9637788f4b369a75c2b13e0281ec7666a8ae23917dd16dc48d1d3c"
+  },
+  "model_executed": false
+}

@@ -9496,3 +9496,14 @@ strict lint/fmt/release and Astra review pass. Failed cold checks remain recorde
 [Report](llama3-quality-context.md),
 [evidence](../benchmarks/results/2026-11-03-llama3-quality-context-v1.json).
 Original long-reference alignment and full10k/100 adoption gates remain open.
+
+## 3 November 2026 — Original Llama long alignment
+
+Frozen10,001 corpus IDs retain every original loss target and block/reset rule;
+a separate1,026-ID prefix supplies the long probe’s held-out target. Selected-row
+FP32 execution preserves the short512 entry point and bounds the quality route
+to1,025. Four original boundary prefixes and eight saved-row replays pass frozen
+gates; source peakRSS is3,181,379,584bytes. Fifteen focused controls, the previous
+short replay and Astra review pass. The four-case native NLL delta0.02133 is
+descriptive; full10k/100 quality remains open. Earlier failed controls are retained.
+[Evidence](../benchmarks/results/2026-11-03-llama3-original-long-v1.json).

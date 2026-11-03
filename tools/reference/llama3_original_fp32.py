@@ -201,9 +201,23 @@ def attention(q, k, v):
 
 
 def forward(reader, ids, tile=256):
+    """Original short entry point; its 512-position contract is unchanged."""
+    return _forward(reader, ids, tile, 512, None)
+
+
+def quality_forward(reader, ids, output_rows, tile=256):
+    """Explicit <=1025 diagnostic; project only selected hidden rows to logits."""
+    if (not isinstance(output_rows, list) or not output_rows
+            or any(type(row) is not int or not 0 <= row < len(ids) for row in output_rows)
+            or output_rows != sorted(set(output_rows))):
+        raise ValueError('Quality output rows must be ordered unique input positions')
+    return _forward(reader, ids, tile, 1025, output_rows)
+
+
+def _forward(reader, ids, tile, limit, output_rows):
     shape = reader.shape
-    if not ids or len(ids) > 512 or any(type(i) is not int or not 0 <= i < shape.vocab for i in ids) or not 1 <= tile <= 4096:
-        raise ValueError('Short reference input exceeds bounds')
+    if not ids or len(ids) > limit or any(type(i) is not int or not 0 <= i < shape.vocab for i in ids) or not 1 <= tile <= 4096:
+        raise ValueError('Reference input exceeds bounds')
     x = reader.embedding(ids)
     def linear(hidden, name):
         return hidden @ reader.weight(name).T
@@ -220,7 +234,9 @@ def forward(reader, ids, tile=256):
         activated = (gate / (np.float32(1) + np.exp(-gate))) * up
         x = x + linear(activated, base + 'mlp.down_proj.weight')
     hidden = rms(x, reader.weight('model.norm.weight'))
-    logits = np.empty((len(ids), shape.vocab), dtype=np.float32)
+    if output_rows is not None:
+        hidden = hidden[output_rows]
+    logits = np.empty((len(hidden), shape.vocab), dtype=np.float32)
     for start in range(0, shape.vocab, tile):
         stop = min(start + tile, shape.vocab)
         logits[:, start:stop] = hidden @ reader.weight('model.embed_tokens.weight', start, stop).T

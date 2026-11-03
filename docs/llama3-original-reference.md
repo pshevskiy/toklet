@@ -45,3 +45,23 @@ point thresholds remain unchanged.
 [frozen short inputs](../benchmarks/llama3-original-short-v1/manifest.json).
 The physical iPhone 14 Pro is unavailable; the available Pro Max is not substituted.
 Phone Settings/session qualification remains open while Mac work proceeds.
+
+## Long-row alignment
+
+The explicit quality reference projects selected hidden rows through the tiled
+tied head, capped at1,025 input positions. Its ordinary entry point stays capped
+at512. The pinned corpus preparation now freezes10,001IDs once, checks the
+previous1,025 IDs byte-for-byte and separately hashes the first1,026 IDs. The last
+ID supplies the held-out target after a1,025-token input. Ten unchanged blocks
+cover targets1–10,000 exactly once with position resets and one-token overlaps.
+
+At prefixes512/513/1,024/1,025, all eight saved original rows pass independent
+stdlib replay. Maximum logit discrepancy is3.9101e-5 and maximum target-NLL
+discrepancy is1.9024e-5, within the previously frozen gates. PeakRSS is
+3,181,379,584bytes. The native report digest was pinned before inference; its
+four-case mean NLL difference0.02133 is descriptive. Fifteen focused controls,
+prior short-row regression and Astra review pass. The initial checker argument
+failure is retained. [Evidence](../benchmarks/results/2026-11-03-llama3-original-long-v1.json).
+
+Full10,000-target loss and100-task adoption outcomes remain open. No app or
+physical-phone qualification follows from these alignment checks.

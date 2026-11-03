@@ -30,7 +30,12 @@ def check(folder, input_folder, manifest_sha):
         raise ValueError('Source report has different inputs')
     if report['format'] != 'toklet-llama3-original-short-source-v1' or report['full_quality_qualified'] or not report['passed'] or [c['prefix_tokens'] for c in report['cases']] != [1,4,8,17]:
         raise ValueError('Incomplete source report')
-    for case in report['cases']:
+    replay_rows(folder, report['cases'], ids)
+    return {'passed': True, 'rows': 8, 'vocabulary': 128256, 'full_quality_qualified': False}
+
+
+def replay_rows(folder, cases, ids):
+    for case in cases:
         n = case['prefix_tokens']
         if case['target_id'] != ids[n] or case['target_position'] != n or case['logit_row'] != n-1 or not case['consistency']['passed']:
             raise ValueError('Source target alignment differs')
@@ -55,7 +60,6 @@ def check(folder, input_folder, manifest_sha):
             raise ValueError('Saved row consistency fails')
         if abs(stats(rows['batch'],case['target_id'])[0]-stats(rows['prefix'],case['target_id'])[0]) > 1e-4:
             raise ValueError('Saved target NLL consistency fails')
-    return {'passed': True, 'rows': 8, 'vocabulary': 128256, 'full_quality_qualified': False}
 
 
 def compare_native(folder, input_folder, manifest_sha, native_file):

@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **3 November 2026**. Active milestone: **M8**.
-Current task: **original Llama long-row alignment**, then frozen 10,000-target/100-task qualification.
+Current task: **original Llama 10,000-target loss qualification**, then the frozen 100-task gate.
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Query](artifacts/m8-phone-availability-2026-11-03/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
@@ -488,7 +488,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
   including Llama3's original unquantized 10,000-target / 100-task gates.
   - [x] Genuine original BF16 acquisition, bounded FP32 reference and four-prefix native alignment; [report](docs/llama3-original-reference.md).
   - [x] Quality-only 1,025-position route, native long-row consistency/state boundaries; managed app stays at512. [Report](docs/llama3-quality-context.md).
-  - [ ] Original FP32 long-row alignment and independent replay before full collection.
+  - [x] Original FP32 long-row alignment and independent replay before full collection. [Evidence](benchmarks/results/2026-11-03-llama3-original-long-v1.json).
   - [ ] All frozen original loss/task outcomes, without dropping cases or reserves. The
   1,024-target same-artifact screen is not a substitute or app qualification.
 - [ ] Publish supported context/KV settings, evidence and remaining limitations;
@@ -955,3 +955,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-03 | Long input/replay controls | Frozen10001IDs and independent input replay pass; first1025 bytes match the existing corpus. Selected-row graph controls pass. First combined checker refactor controls catch a missing folder argument; corrected shared replay signature. | Preserve failed controls; retry before original long inference and review. Native1025 probe remains running independently. |
 
 | 2026-11-03 | Llama1025 diagnostic reviewed | MacM1Pro15full-row comparisons, loader/state boundaries and no-app-identity pass; peakRSS1271480320bytes, maxadmission1727887552bytes. Default549/Metal657, strict lint/fmt/release pass, earlier check failures preserved. | Astra final code/results approval; commit Rust diagnostic task separately. Next original long run uses frozen10001IDs/held-out1026th token; managed app remains512. |
+
+| 2026-11-03 | Original long alignment reviewed | Four boundary prefixes pass frozen source consistency; eight saved rows independently replay. Max logit error3.91e-5, max target-NLL difference1.90e-5; peakRSS3,181,379,584bytes. Fifteen controls and prior short replay pass. | Astra final approval. Diagnostic committed `efe843d`; commit reference task, then full10k loss with unchanged blocks/threshold. Four-case delta0.02133 remains descriptive; 100 tasks stay open. |

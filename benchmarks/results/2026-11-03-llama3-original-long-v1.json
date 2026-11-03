@@ -1,0 +1,50 @@
+{
+  "format": "toklet-llama3-original-long-evidence-v1",
+  "passed": true,
+  "base_revision": "efe843d",
+  "hardware": "Apple M1 Pro, macOS",
+  "input_manifest_sha256": "2ed8cb7d5bf7f12770e58eda9c862b1f8cbe9da3c3d5b22ac693b2b1d9f190b3",
+  "frozen_input_ids": 10001,
+  "frozen_loss_targets": 10000,
+  "long_probe_heldout_prefix_ids": 1026,
+  "probe_prefixes": [
+    512,
+    513,
+    1024,
+    1025
+  ],
+  "consistency": {
+    "saved_full_vocabulary_rows": 8,
+    "maximum_logit_error": 3.910064697265625e-05,
+    "maximum_target_nll_difference": 1.9023665851491955e-05,
+    "full_row_atol": 0.001,
+    "full_row_rtol": 0.0001,
+    "target_nll_absolute": 0.0001
+  },
+  "peak_rss_bytes": 3181379584,
+  "native_comparison": {
+    "cases": 4,
+    "mean_nll_difference": 0.021329522309884053,
+    "descriptive_only": true
+  },
+  "full_quality_qualified": false,
+  "checks": {
+    "reference_controls": 12,
+    "input_controls": 3,
+    "independent_input_replay": true,
+    "previous_short_replay": true,
+    "independent_long_replay": true,
+    "original_and_native_alignment": true
+  },
+  "astra_review": "approved source/check/original results",
+  "failed_checks_retained": [
+    "initial shared replay helper missing folder argument"
+  ],
+  "receipts_sha256": {
+    "artifacts/llama3-original-long-2026-11-03/run.json": "8a60fc337212fce0f6f64696b109de0239b3d1a12fbdcd3f578f81b3190e6634",
+    "artifacts/llama3-original-long-2026-11-03/preparation.json": "96f52a9d2625026ab67a21dceff4545ef8044d675b02724633c780ef600d6006",
+    "artifacts/llama3-original-long-2026-11-03/execution-plan.json": "214d777d254cae1fc148b25702d3f3ba94df3289722e27c86f0b8a2703de868e",
+    "artifacts/llama3-original-long-2026-11-03/source-v1/source.json": "c88e31ebb952d70d8ff982130d9b4e800ca7377996a67e05626aa69789d63b12",
+    "artifacts/llama3-original-long-2026-11-03/independent-replay.log": "4038d10ce86df9dd749c94a4454f0b0e00ac22bb5b5895d7098a5e0854d6df95"
+  }
+}

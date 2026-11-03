@@ -56,6 +56,27 @@ class OriginalTests(unittest.TestCase):
         np.testing.assert_allclose(batch[:3], changed[:3], atol=1e-6, rtol=1e-6)
         self.assertGreater(float(np.max(np.abs(batch[-1] - changed[-1]))), 1e-4)
 
+    def test_quality_selected_rows_preserve_short_math_and_validate_before_embedding(self):
+        reader = TinyReader(); ids = [1, 2, 3, 4]
+        actual = subject.quality_forward(reader, ids, [0, 3], tile=3)
+        np.testing.assert_array_equal(actual, subject.forward(reader, ids, tile=3)[[0, 3]])
+        for rows in [[], [4], [-1], [True], [3, 0], [0, 0]]:
+            with self.assertRaises(ValueError):
+                subject.quality_forward(reader, ids, rows)
+        for ids in [[], [1]*1026, [reader.shape.vocab]]:
+            with self.assertRaises(ValueError):
+                subject.quality_forward(reader, ids, [0])
+        with self.assertRaises(ValueError):
+            subject.forward(reader, [1]*513)
+
+    def test_quality_last_position_and_causal_prefix(self):
+        reader = TinyReader(); ids = [i % reader.shape.vocab for i in range(1025)]
+        selected = subject.quality_forward(reader, ids, [511, 512, 1023, 1024], tile=3)
+        self.assertEqual(selected.shape, (4, reader.shape.vocab))
+        for row, count in enumerate([512, 513, 1024, 1025]):
+            prefix = subject.quality_forward(reader, ids[:count], [count-1], tile=11)[0]
+            np.testing.assert_allclose(selected[row], prefix, atol=1e-5, rtol=1e-5)
+
     def test_rotary_matches_independent_decimal_oracle_at_nonzero_positions(self):
         import llama3_rotary
         case = next(c for c in llama3_rotary.export()['cases'] if c['name'] == 'actual_short')
