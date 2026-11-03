@@ -1,7 +1,8 @@
 # Toklet progress checklist
 
 Last updated: **3 November 2026**. Active milestone: **M8**.
-Current task: **physical iPhone Settings/session journey**, or Llama original-reference qualification if the phone is unavailable.
+Current task: **bounded Llama quality diagnostic through 1,025 positions**, then original 10,000-target/100-task qualification.
+Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Query](artifacts/m8-phone-availability-2026-11-03/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
 Completed B5f1: owner snapshot and explicit context/text facts; [evidence](benchmarks/results/2026-11-02-session-owner-memory-v1.json).
@@ -484,7 +485,10 @@ uses the existing full saved-conversation reset+prompt path on Send.
   pass. [Evidence](benchmarks/results/2026-10-30-standalone-swift-inventories-v1.json).
   Full nested wrapper execution and package-admission requirements are separate.
 - [ ] Complete required full adoption quality for newly adopted artifacts,
-  including Llama3's original unquantized 10,000-target / 100-task gates. The
+  including Llama3's original unquantized 10,000-target / 100-task gates.
+  - [x] Genuine original BF16 acquisition, bounded FP32 reference and four-prefix native alignment; [report](docs/llama3-original-reference.md).
+  - [ ] Quality-only 1,025-position route, long-row consistency/state boundaries; managed app stays at512.
+  - [ ] All frozen original loss/task outcomes, without dropping cases or reserves. The
   1,024-target same-artifact screen is not a substitute or app qualification.
 - [ ] Publish supported context/KV settings, evidence and remaining limitations;
   make explicit decisions on open/conditional admissions before milestone closure.
@@ -930,3 +934,11 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-03 | Smol real offline journey passes | Fresh production download verifies6files/146607552bytes and repliesHello. Separate network-denied process proves connectEPERM + metadataEPERM with local writes, then cached auditedChat repliesHello. Missing/inventory and mutated/SHA copies reject withoutcallback or chat/session/prefix change; recovery succeeds. | Final Astra review and commit next. Strict3SDK/Hub controls pass; original failures and verified cache retained. |
 
 | 2026-11-03 | Smol shared journey reviewed | Astra approves code, strict Hub/3SDK checks and combined online/offline evidence. Original test failures remain documented; numerical/retry policy unchanged. | Commit, then inspect physical iPhone availability for shared Settings/replacement/suspend-resume. If unavailable, record access gap and proceed to original-reference Llama quality alignment. |
+
+| 2026-11-03 | Physical target unavailable / Mac quality continues | FullXcode device query succeeds after defaultxcrun missesdevicectl. Required physical14Pro is unavailable; available14ProMax is a distinct device, not qualification. No install/launch attempted. | KeepphoneSettingsgapopen; Astra researches genuine unquantized Llama source/pins and bounded short scoring before frozen10k/100 gates. |
+
+| 2026-11-03 | Original Llama source/policy frozen | Astra verifies publicBF16mirror f92201d matchesMeta9213176 forcheckpointSHA and4Gitblobs. Boundedacquirer/4coldcontrols ready; trustedCAverification staysenabled, diskreserve rechecks remainingpayload+1GiB. First18frozencorpusIDs define1/4/8/17 prefixes and unchangedfullgates; Astra freezesFP32self-consistency beforeoutcomes. | Acquireoriginal2.47GB while implementingboundedFP32graph/rowrescore; noqualityoutcomesyet. |
+
+| 2026-11-03 | Original short alignment passes | GenuineBF16payloadSHAverified; originalFP32 batch/prefix all128256logits at1/4/8/17 pass frozen gates, independent byte-row replay passes and native4scores align. SourcepeakRSS2670002176, nativephysicalpeak1520928520; descriptive4case meanNLLdelta−0.01427516 is notfullquality. | Finalchecker scalar-link controls/replay/review beforecommit. All100unchangedtask budgets measured: onlyHumanEval/32needs566; frozenlossblocksneed1025, so boundedqualityrange workprecedesfullgates. |
+
+| 2026-11-03 | Original short qualification reviewed | Astra approves originalsource acquisition,12coldcontrols, strictnative scorer, eight-rowfinalreplay and4native targets. Fullquality remainsopen; one100taskcase needs566 andfrozenloss needs1025. | Committhen boundedquality-only1025 route with below512parity, longrowprefix/chunk consistency and1026 overflow preservation; ordinaryapp/identity remain512. |

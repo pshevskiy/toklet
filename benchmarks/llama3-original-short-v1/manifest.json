@@ -1,0 +1,52 @@
+{
+  "format": "toklet-llama3-original-short-v1",
+  "input_source": "benchmarks/llama3-loss1024-v1/tokens.u32le",
+  "input_source_sha256": "e4086f7621d9d781f5487db05f17df63e9693d0d2788d43a69c8108fc28aa493",
+  "token_bytes": 72,
+  "tokens_sha256": "5f39183f5887584dc70f6b7191581388356aad9129f085ee85d87f158fa0da69",
+  "add_special_tokens": false,
+  "chat_rendering": false,
+  "position_offset": 0,
+  "cases": [
+    {
+      "prefix_tokens": 1,
+      "logit_row": 0,
+      "target_position": 1,
+      "target_id": 8563
+    },
+    {
+      "prefix_tokens": 4,
+      "logit_row": 3,
+      "target_position": 4,
+      "target_id": 466
+    },
+    {
+      "prefix_tokens": 8,
+      "logit_row": 7,
+      "target_position": 8,
+      "target_id": 426
+    },
+    {
+      "prefix_tokens": 17,
+      "logit_row": 16,
+      "target_position": 17,
+      "target_id": 323
+    }
+  ],
+  "reference": "original BF16 weights widened exactly; FP32 activations/accumulation; split-half Llama3 scaled RoPE; causal GQA; tiled tied output",
+  "consistency": {
+    "policy_pending_astra": false,
+    "full_row_atol": 0.001,
+    "full_row_rtol": 0.0001,
+    "target_nll_absolute": 0.0001,
+    "denominator": "independent prefix row",
+    "review": "Astra approved before observing logits"
+  },
+  "native_comparison": "descriptive short alignment only; full adoption gates unchanged",
+  "full_adoption": {
+    "targets": 10000,
+    "mean_nll_increase_max": 0.05,
+    "tasks": 100,
+    "task_loss_percentage_points_max": 2
+  }
+}

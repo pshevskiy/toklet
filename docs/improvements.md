@@ -7,7 +7,7 @@ qualified scopes: M5 selects the small compensated Half and frozen larger group8
 Q4 v2 configurations with full quality, repeated workload/application, sustained
 and memory evidence. M6 adds explicit Online attention, qualified4K/8K/16K/32K
 context cases and final FP16 KV retention. M7 is complete for the amended
-iPhone14Pro target and selected trials. CPU/scalar and the existing GPU/readback/
+iiPhone 14 Pro target and selected trials. CPU/scalar and the existing GPU/readback/
 chunk defaults stay unchanged. Speedups below apply to the named workload and
 comparison, and cannot be added together. See the [M5 release decision](experiments/2026-10-15-m5-release.md).
 
@@ -667,7 +667,7 @@ helper checks, final UI/lifecycle wording and redacted device status.
 M7.3 and overall M7 remain pending physical qualification.
 
 The [physical setup follow-up](../benchmarks/results/2026-10-19-m7-physical-setup-v1.json)
-distinguishes the newly connected physical iPhone14Pro from the earlier
+distinguishes the newly connected physical iiPhone 14 Pro from the earlier
 wireless ProMax and all simulators. The wired Pro's Developer Mode and developer
 services are ready; owner account sign-in and Personal Team availability are
 verified, while development signing remains open. The harness
@@ -688,7 +688,7 @@ cleanup. Preparation and exact-install reuse avoid rebuilding while waiting for
 owner trust/unlock. Failed cleanup and nested private identifiers cannot be
 hidden by a later successful command. Sixteen targeted and52 related isolated
 checks pass; both SDK Release builds pass strict Swift checks (inherited Xcode
-orientation/AppIntents warnings remain). Actual iPhone14Pro CPU and Metal checks
+orientation/AppIntents warnings remain). Actual iiPhone 14 Pro CPU and Metal checks
 pass exact initial IDs, ten states, replay/cancel/resume, unload, close and weak
 owner release, with matching before/after file proofs and verified process absence.
 Earlier failed attempts and intermittent host timeout-probe failures remain
@@ -748,7 +748,7 @@ The [filesystem observation](experiments/2026-10-21-m7-filesystem-observation.md
 adds a read-only own-filesystem free-byte report before loading, with checked
 Foundation numeric conversion and an explicit instrument/monotonic window.
 Forty-five portable checks,16 actual Mac cases and both SDK builds pass; Astra
-cleared source. Actual iPhone14Pro observation reports32,768,000,000bytes before
+cleared source. Actual iiPhone 14 Pro observation reports32,768,000,000bytes before
 13 exact tiny requests, with matching artifact proofs and clean close/release/
 process absence. The earlier Locked failure remains recorded. Astra accepted261 bound paths,
 38 exact staged copies, independent phone replay, privacy, links and whitespace.
@@ -962,13 +962,13 @@ The [activation boundary fix](experiments/2026-10-21-m7-lifecycle-cli-fix.md) co
 
 ### M7 phone state and actual scene replay — 21 October2026
 
-The [physical state/lifecycle report](experiments/2026-10-21-m7-phone-state-lifecycle.md) passes both selected models against exact cached/changed-prefix, pending append, actual partial-prefill cancellation, full1152-position commitment and overflow-preservation oracles. Actual Settings/return callbacks interrupt generation in the same process; retained-prefix replay matches uninterrupted continuation.13accepted stages and all sealed sources/raw endpoints replay, with two failed attempts retained and two owned preflight resets disclosed. Synthetic warning-handler coverage stays separate from actual UIKit warning delivery/jetsam. Retain bounded mechanism evidence on iPhone14Pro; base-device scope, energy/limit synthesis and M7.3 remain open.
+The [physical state/lifecycle report](experiments/2026-10-21-m7-phone-state-lifecycle.md) passes both selected models against exact cached/changed-prefix, pending append, actual partial-prefill cancellation, full1152-position commitment and overflow-preservation oracles. Actual Settings/return callbacks interrupt generation in the same process; retained-prefix replay matches uninterrupted continuation.13accepted stages and all sealed sources/raw endpoints replay, with two failed attempts retained and two owned preflight resets disclosed. Synthetic warning-handler coverage stays separate from actual UIKit warning delivery/jetsam. Retain bounded mechanism evidence on iiPhone 14 Pro; base-device scope, energy/limit synthesis and M7.3 remain open.
 
 ### M7 bounded energy instrumentation observation — 21 October2026
 
 The [energy availability report](experiments/2026-10-21-m7-phone-energy.md) records two bounded actual PowerProfiler attempts against the exact owned process, using PID then guarded-name selection. The instruments fail with exits21/19 without a trace; energy stays null/unqualified. Both separate native diagnostics pass with independent natural release. Source reviews close parent-cleanup and evidence-binding gaps;11regressions per version cover threaded failure cleanup and exact byte/hash capture. Retain reproducible availability evidence without joules/efficiency claims or production changes.
 
-### M7 joined iPhone14Pro trial limits — 21 October2026
+### M7 joined iiPhone 14 Pro trial limits — 21 October2026
 
 The [device report](experiments/2026-10-21-m7-iphone14pro.md) joins six accepted evidence components with exact quality policies, immutable model identities and33unchanged numerical-source files. Both selected paths retain full loss/task quality; named repeated contexts and sustained sequences fit explicit mobile trial budgets. The largest joined uninstrumented peak is1,944,701,920bytes; state/replay passes through1,152committed positions. Energy remains unset after both bounded instrument failures. Full-loss/task capacities stay distinct from context/state limits. Pro qualification does not silently replace the original base-device M7 requirement; Astra accepted the final Pro-only synthesis with no findings.
 
@@ -1305,7 +1305,7 @@ a rejected load cannot label an already loaded model as another selection.
 The final strict Swift6 Mac runner passes all six commands: SDK query, compile,
 workspace/controller regressions, real SmolLM2 text and original raw CPU/Metal
 checks. Both SDK app builds pass; final development signing/install passes on
-iPhone14Pro. An earlier exact-source physical smoke matches Mac text/token IDs
+iiPhone 14 Pro. An earlier exact-source physical smoke matches Mac text/token IDs
 for first/second turns and explicit session recreation, with native cancellation,
 context rejection, release, signed correspondence and natural process absence.
 Original physical CPU/Metal worker checks pass. Historical source differences
@@ -1579,7 +1579,7 @@ The CPU reference export has started with the accepted acquisition SHA and
 unchanged reviewed numerical policy. The separate app-core URLSession transfer
 is still running. No Mistral native execution, app catalog support, physical fit,
 performance or quality is claimed by acquisition alone. The record's heading
-now reflects M7's completed amended iPhone14Pro scope, and the Apple guide names
+now reflects M7's completed amended iiPhone 14 Pro scope, and the Apple guide names
 the current Qwen-capable native package. Phone work stays paused.
 
 ### Frozen independent Mistral numerical reference — 23 October 2026
@@ -2226,7 +2226,7 @@ after old-owner release, with initial-load/download gates preserved. Mac Finder
 recovery remains reachable.
 
 Strict Swift6/controller/callback/revision, real Smol→Qwen→Smol post-release
-admission and both SDK/Release builds pass. Physical iPhone14Pro checks repeat
+admission and both SDK/Release builds pass. Physical iiPhone 14 Pro checks repeat
 Smol↔Qwen with actual replies and no earlier60-second animation-idle wait, select
 256-token Chat replies, inspect highlighted code/visible Copy controls, run
 Expert47,47 and return to Chat. Copy visibility/enabled state was checked; no
@@ -2783,7 +2783,7 @@ removal cleanup causes through cancellation. Focused regressions cover those
 paths; an interrupted phone attempt is retained without passing credit.
 
 Eight local checks, transport checks, real68-model discovery, signed build and
-strict signatures pass. The final six physical iPhone14Pro tests pass, including
+strict signatures pass. The final six physical iiPhone 14 Pro tests pass, including
 ordinary/edge/repeated taps, live links/results, resident Qwen and keyboard/draft
 preservation plus prior controls. Owner chat bytes remain exact; the updated
 app normally launches and a verified rollback is saved. Astra accepted the
@@ -3373,7 +3373,7 @@ acceptance remains false; no precision/quality gate is waived.
 
 Model accounting including its store is2,671,706,548 bytes and actual session
 capacity93,555,912 bytes. The owned Mac process reports2,174,353,408 bytes maximum
-resident memory and2,717,239,840 bytes peak physical footprint, below6GiB. Its
+resident memory and2,717,239,840 bytes peak physical footprint, below 6 GiB. Its
 67.96-second combined load/three-schedule/output observation is not a latency
 benchmark. Diagnostic copies/output are outside numerical accounting and inside
 the process measurement.
@@ -3481,7 +3481,7 @@ offsets, prewrite limits and an actual read-only-file write error. Required
 formatting/strict checks,302 CPU/324 Metal-feature tests, both iOS targets,
 release example and five release state methods pass. Numerical admission is
 2,765,262,700 bytes. The actual process reports2,143,485,952 bytes maximum
-resident memory and2,710,440,456 bytes peak physical footprint, below6GiB.
+resident memory and2,710,440,456 bytes peak physical footprint, below 6 GiB.
 Its138.13-second combined diagnostic observation is not a performance benchmark.
 
 See [scenarios, ownership and remaining gates](gemma4-raw-generation.md) and the
@@ -3642,7 +3642,7 @@ Actual Mac uninterrupted and split runs match all11 frozen sampled IDs, emit
 All22 full rows match bitwise across schedules;44 unchanged reference gates
 pass over11,534,336 pairs (max FP640.46041798867955425/FP320.0013559174399768907).
 Combined admission is3,855,781,740 bytes; resident/physical process peaks are
-2,273,132,544/2,900,626,216 below6GiB. The188.52-second combined diagnostic is
+2,273,132,544/2,900,626,216 below 6 GiB. The188.52-second combined diagnostic is
 not a representative latency benchmark.
 
 See [workload, ownership and checks](gemma4-basic-chat-generation.md) and the
@@ -4803,7 +4803,7 @@ Passing these sampled-prefix rows does not resolve the full-prefill failures.
 Actual generation admission is2862709528 bytes, with specific minus1 rejection
 and identical exact-budget Memory in each profile. Physical process peaks are
 2899692064 raw,2970880856 formatted and2981284696 streamed bytes, independently
-below6GiB; raw ownership/policy sum is not a physical-footprint predictor.
+below 6 GiB; raw ownership/policy sum is not a physical-footprint predictor.
 Single functional request timings, including full-logit diagnostic writes,
 are retained in the report; there is no benchmark/sustained speed claim.
 
@@ -5883,7 +5883,7 @@ probe catches a loader callback keyword mismatch before model construction;
 its failed evidence remains and the corrected two probes precede full scoring.
 
 Native loss/tasks peak physical1032733896/864453760 bytes; source2257569544/
-1681360816 bytes, all below6GiB. All seven model groups exit before grading.
+1681360816 bytes, all below 6 GiB. All seven model groups exit before grading.
 The2GiB VM returns to stopped, all80 containers are removed, and both worker
 helper lifetime and independent outer restoration checks complete. A TERM-only
 supervisor retains the owner through timeout/interruption; no forced drain can
@@ -5966,7 +5966,7 @@ error while a valid retry streams, then completes128 outputs. Qwen3→local Smol
 →saved Qwen3 switching succeeds; the profile-specific notice disappears and
 returns correctly. Human input during the audit is preserved and excluded from
 controlled response results. The app subsequently quits normally with checked
-source/bundle endpoints; lifetime physical peak952174128 bytes is below6GiB.
+source/bundle endpoints; lifetime physical peak952174128 bytes is below 6 GiB.
 
 Expert completes384 authored inputs+128 outputs with no hidden stops, reaching
 history512/committed511/pending1. Position513 rejects; Continue(0) commits the
@@ -6239,7 +6239,7 @@ and no median regression in either run. Minimum primary gain82.08996% exceeds
 the unchanged5% gate and maximum between-run primary variation0.04164%.
 No whole4096-prefill or uninstrumented-app throughput claim follows.
 
-Maximum lifetime physical footprint1669318336 bytes stays below6GiB; shared
+Maximum lifetime physical footprint1669318336 bytes stays below 6 GiB; shared
 weights and both session plans plus256MiB application reserve are independently
 accounted. AC power/80% battery/AC low-power-off, hardware/OS/power settings and
 all four raw no-recorded-warning thermal endpoints stay unchanged. This is
@@ -6515,7 +6515,7 @@ consistency without imposing source-profile hash or greedy equality.
 
 Both native chunks32/128 pass: mean2.9947039894934804, paired wide-reference
 delta−0.00004411466914202308. All1,028 rows/schedule agree numerically. Native
-observed lifetime physical peak is1,587,906,168B, source1,247,431,464B, below6GiB.
+observed lifetime physical peak is1,587,906,168B, source1,247,431,464B, below 6 GiB.
 Formatting, strict default/Metal Clippy,384 default /265 Metal-library /15 targeted
 example tests (overlap) and nine Python controls pass. An initial Metal lint
 failure in a legacy include is fixed with an equivalent type alias; no math or
@@ -6669,7 +6669,7 @@ The plain-text fixture covers16 rendered cases, exact template/tokenizer replay,
 source stop union, added-token/metaspace/byte fallback and rejection of all53
 unmapped head slots. Ten synthetic reader/graph and five text controls pass.
 Five owned source/verify/text groups close without endpoint errors. OS peak RSS
-is2,846,588,928 bytes and lifetime physical footprint522,881,880 bytes, below6GiB.
+is2,846,588,928 bytes and lifetime physical footprint522,881,880 bytes, below 6 GiB.
 This closes source preparation only: no real native execution, canonical runtime
 parity, production Chat, phone, full-window, adoption quality or speed claim.
 See [report](phi3-real-reference.md),
@@ -6705,7 +6705,7 @@ Queried plans agree with real resident weights and four exact session budgets;
 model/session one-byte-under controls reject precisely. Weights are2,149,645,198
 bytes including910 norm guards. Maximum diagnostic admission plus extra reserve
 is2,698,625,144 bytes; observed lifetime physical maximum2,517,715,224 bytes stays
-below6GiB. Source and native runs are sequential. Formatting, strict checks,
+below 6 GiB. Source and native runs are sequential. Formatting, strict checks,
 410 default /288 Metal-library /3 runner /4 checker controls pass.
 
 Astra independently rescores every native comparison and source envelope,
@@ -7292,7 +7292,7 @@ outcomes; all numerical tolerances and absolute-column semantics remain fixed.
 The first bounded real native Gemma3 capture completes both544-token partitions
 and its public state/codec/replay controls:6,400 stage records,2,351 committed
 tokens and187 forward calls. The closed process records a lifetime physical
-maximum812,025,152 bytes across693 observations, below6GiB. The141,258,016 raw
+maximum812,025,152 bytes across693 observations, below 6 GiB. The141,258,016 raw
 bytes are preserved. Source comparison remains an independent next gate; this
 structural result does not yet qualify numerical execution, Chat or performance.
 
@@ -9471,3 +9471,16 @@ changing the existing chat; recovery succeeds. Strict three-SDK and Hub controls
 [evidence](../benchmarks/results/2026-11-03-smol-download-offline-v1.json).
 Failed test expectations remain recorded. Production retries, system networking
 and numerical kernels are unchanged. No new phone/UI/quality/speed claim.
+
+## 3 November 2026 — Genuine original Llama reference
+
+Acquired and verified the 2.47 GB original BF16 checkpoint through a public mirror
+matching Meta’s immutable inventory. A bounded independent FP32 graph and
+stdlib row replay pass four frozen raw-prefix consistency checks and native
+target alignment. Memory stays below 6 GiB; short mean NLL difference −0.01427516
+is descriptive, not full adoption. Twelve cold controls and strict native-driver
+compilation and Astra review pass. [Report](llama3-original-reference.md),
+[evidence](../benchmarks/results/2026-11-03-llama3-original-short-v1.json).
+All 100 task budgets are retained: one requires 566 positions; the frozen full-loss
+blocks require 1025. iPhone 14 Pro remains unavailable, and full quality stays open
+until a bounded larger diagnostic range and unchanged full gates pass.

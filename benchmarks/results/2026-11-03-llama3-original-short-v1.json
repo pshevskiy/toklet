@@ -1,0 +1,26 @@
+{
+  "scope": "genuine original BF16 acquisition and four-prefix FP32/native alignment only",
+  "acquisition": "models/Llama-3.2-1B-Instruct-original-f92201d/acquisition.json",
+  "checks": "artifacts/llama3-original-2026-11-03/checks.json",
+  "run": "artifacts/llama3-original-2026-11-03/run.json",
+  "final_checker_replay": "artifacts/llama3-original-2026-11-03/final-replay.json",
+  "task_capacity": "artifacts/llama3-original-2026-11-03/task-eligibility.json",
+  "source_peak_resident_bytes": 2670002176,
+  "native_peak_physical_bytes": 1520928520,
+  "source_max_logit_batch_prefix_difference": 5.817413330078125e-05,
+  "source_max_target_nll_batch_prefix_difference": 2.4152110652764236e-05,
+  "short_native_mean_nll_difference_descriptive": -0.01427515953635267,
+  "full_quality_qualified": false,
+  "tasks_above512": [
+    {
+      "id": "HumanEval/32",
+      "category": "code",
+      "prompt_tokens": 310,
+      "output_reserve": 256,
+      "required_capacity": 566
+    }
+  ],
+  "loss_required_capacity": 1025,
+  "review": "Astra code and final saved-row/native result review approved",
+  "phone_gap": "artifacts/m8-phone-availability-2026-11-03/availability.json"
+}
