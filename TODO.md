@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **3 November 2026**. Active milestone: **M8**.
-Current task: **original Llama 10,000-target loss qualification**, then the frozen 100-task gate.
+Current task: **incremental original FP32 reference qualification**, then the frozen 100-task gate.
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Query](artifacts/m8-phone-availability-2026-11-03/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
@@ -489,7 +489,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
   - [x] Genuine original BF16 acquisition, bounded FP32 reference and four-prefix native alignment; [report](docs/llama3-original-reference.md).
   - [x] Quality-only 1,025-position route, native long-row consistency/state boundaries; managed app stays at512. [Report](docs/llama3-quality-context.md).
   - [x] Original FP32 long-row alignment and independent replay before full collection. [Evidence](benchmarks/results/2026-11-03-llama3-original-long-v1.json).
-  - [ ] All frozen original loss/task outcomes, without dropping cases or reserves. The
+  - [x] Original 10,000-target loss gate: delta0.0000197305 ≤0.05, all targets and prior alignment checks pass. [Report](docs/llama3-original-loss.md).
+  - [ ] Frozen 100-task outcomes, without dropping cases or reserves. The
   1,024-target same-artifact screen is not a substitute or app qualification.
 - [ ] Publish supported context/KV settings, evidence and remaining limitations;
   make explicit decisions on open/conditional admissions before milestone closure.
@@ -957,3 +958,15 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-03 | Llama1025 diagnostic reviewed | MacM1Pro15full-row comparisons, loader/state boundaries and no-app-identity pass; peakRSS1271480320bytes, maxadmission1727887552bytes. Default549/Metal657, strict lint/fmt/release pass, earlier check failures preserved. | Astra final code/results approval; commit Rust diagnostic task separately. Next original long run uses frozen10001IDs/held-out1026th token; managed app remains512. |
 
 | 2026-11-03 | Original long alignment reviewed | Four boundary prefixes pass frozen source consistency; eight saved rows independently replay. Max logit error3.91e-5, max target-NLL difference1.90e-5; peakRSS3,181,379,584bytes. Fifteen controls and prior short replay pass. | Astra final approval. Diagnostic committed `efe843d`; commit reference task, then full10k loss with unchanged blocks/threshold. Four-case delta0.02133 remains descriptive; 100 tasks stay open. |
+
+| 2026-11-03 | Full Llama loss collection implementation | Long alignment committed `7ac121e`. New native/reference workers retain all 10,000 targets and frozen resets. Astra approves source and requests pinned first-block alignment at targets512/513/1024; implemented with exact native numerical hashes and original NLL tolerance. Target1025 is excluded because it follows a reset. | Focused controls, strict Metal compilation and release build precede sequential collection. Full task quality remains separate. |
+
+| 2026-11-03 | Full-loss checks pass | Strict Metal Clippy, formatting, three worker controls and release build pass. A pre-existing log name blocks the checker job; failure retained, checker rerun writes a fresh receipt and passes. | Engine source is unchanged from549/657 regressions. Sequential Mac collection is next; no numerical outcome yet. |
+
+| 2026-11-03 | Incremental reference contract frozen | Astra approves a later566-position FP32 KV reference: predetermined corpus continuations, full-row/NLL gates and exact greedy IDs, overflow/reset checks and a tied-row control. Every generated task must also pass batched stateless trajectory replay, including hidden stops, before grading. | No task outcomes observed. Full loss collection remains active with immutable numerical sources. Implement incremental reference only after that task commits. |
+
+| 2026-11-03 | Full loss collected; checker compatibility retry | Both workers complete10,000 targets with clean exits. System Python3.9 rejects zip(strict=True) in the final checker; removed the unnecessary strict keyword from fixed two-element zips. Numerical workers, frozen policy and saved journals are unchanged. | Preserve first checker failure; run six controls and paired replay on the actual stdlib-only system interpreter before review. |
+
+| 2026-11-03 | Full loss passes; final review | Native mean2.7826524747 versus original2.7826327441 gives delta0.0000197305, below0.05. Exactly10,000 targets and all three prior-alignment checks pass. Final checker controls pass: three on system3.9, six on pinned3.12. Legacy same-artifact delta helper is3.10-only and is not called by this checker; its attempted3.9 test failure is retained. | Numerical workers unchanged; final Astra review and commit next. Original peakRSS3,589,652,480bytes; nativeRSS1,214,087,168bytes, admission1,543,629,376bytes. 100-task gate stays open. |
+
+| 2026-11-03 | Full loss reviewed | Astra approves final code, controls and all10,000 paired outcomes. Loss increase0.0000197305 passes the unchanged0.05 gate; no app, task or phone qualification is inferred. | Commit full loss task. Next incremental FP32 reference follows the frozen566-position contract before any100-task pass-rate outcome. |

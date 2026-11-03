@@ -9488,22 +9488,36 @@ until a bounded larger diagnostic range and unchanged full gates pass.
 ## 3 November 2026 — Bounded Llama quality execution
 
 A Rust-only authenticated Llama diagnostic admits 1,025 positions without granting
-the app identity or increasing its512 ceiling. Shared frequency/index checks and
-validated per-dispatch rotary bounds remain. MacM1Pro15full-row comparisons,
-independent prefixes and overflow preservation pass; peakRSS1,271,480,320bytes,
-maximum admission with diagnostics/app1,727,887,552bytes. Default549/Metal657,
-strict lint/fmt/release and Astra review pass. Failed cold checks remain recorded.
+the app identity or increasing its 512 ceiling. Shared frequency/index checks and
+validated per-dispatch rotary bounds remain. On Mac M1 Pro, 15 full-row comparisons,
+independent prefixes and overflow preservation pass. Peak RSS is 1,271,480,320
+bytes; maximum admission with diagnostics and app allowance is 1,727,887,552 bytes.
+All 549 default and 657 Metal tests, strict lint, formatting, release build and
+Astra review pass. Failed cold checks remain recorded. Commit: `efe843d`.
 [Report](llama3-quality-context.md),
 [evidence](../benchmarks/results/2026-11-03-llama3-quality-context-v1.json).
-Original long-reference alignment and full10k/100 adoption gates remain open.
+Original long alignment and full adoption gates are separate requirements.
 
 ## 3 November 2026 — Original Llama long alignment
 
-Frozen10,001 corpus IDs retain every original loss target and block/reset rule;
-a separate1,026-ID prefix supplies the long probe’s held-out target. Selected-row
-FP32 execution preserves the short512 entry point and bounds the quality route
-to1,025. Four original boundary prefixes and eight saved-row replays pass frozen
-gates; source peakRSS is3,181,379,584bytes. Fifteen focused controls, the previous
-short replay and Astra review pass. The four-case native NLL delta0.02133 is
-descriptive; full10k/100 quality remains open. Earlier failed controls are retained.
+Frozen 10,001 corpus IDs retain every original loss target and block/reset rule.
+A separately hashed 1,026-ID prefix supplies the long probe’s held-out target.
+Selected-row FP32 execution preserves the short 512 entry point and bounds the
+quality route to 1,025. Four original boundary prefixes and eight saved-row replays
+pass frozen gates; source peak RSS is 3,181,379,584 bytes. Fifteen focused controls,
+the previous short replay and Astra review pass. Commit: `7ac121e`.
+The four-case native NLL difference of 0.02133 is descriptive; full loss/task
+quality remains open. Earlier failed controls are retained.
 [Evidence](../benchmarks/results/2026-11-03-llama3-original-long-v1.json).
+
+## 3 November 2026 — Full original Llama loss gate
+
+All 10,000 frozen targets pass the original-reference loss gate on Mac M1 Pro.
+Native mean NLL 2.782652475 versus original 2.782632744 gives an increase of
+0.000019731 nats/token, below 0.05. Target IDs, block resets and earlier alignment
+checks pass. Three Rust controls, six checker controls, strict lint, formatting,
+release build and Astra review pass. A Python compatibility fix replayed saved
+results; numerical workers and thresholds stayed unchanged. Failed orchestration
+and compatibility checks remain recorded. The 100-task gate is still open.
+[Report](llama3-original-loss.md),
+[evidence](../benchmarks/results/2026-11-03-llama3-original-loss-v1.json).

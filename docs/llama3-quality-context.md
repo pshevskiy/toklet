@@ -32,6 +32,6 @@ The ordinary app window is not increased by this experiment.
 Mac Apple M1 Pro results: all 15 comparisons and overflow preservation pass.
 Peak RSS is 1,271,480,320 bytes; maximum admission including diagnostic buffers
 and the 64 MiB app allowance is 1,727,887,552 bytes. These are distinct quantities,
-both below 6 GiB. Default549/Metal657 tests, strict Clippy in both configurations,
+both below 6 GiB. All 549 default and 657 Metal tests, strict Clippy in both configurations,
 formatting and release build pass. Initial cold-check failures remain recorded.
 [Evidence](../benchmarks/results/2026-11-03-llama3-quality-context-v1.json).

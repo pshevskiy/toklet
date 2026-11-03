@@ -1,0 +1,55 @@
+{
+  "format": "toklet-llama3-original-loss-evidence-v1",
+  "completed": true,
+  "base_revision": "7ac121e",
+  "hardware": "Apple M1 Pro, macOS, Metal native and sequential CPU reference",
+  "model": "mlx-community/Llama-3.2-1B-Instruct-8bit",
+  "revision": "d48cdf0a4ea22d893b7c63a99d6a693e24822795",
+  "evaluation": {
+    "completed": true,
+    "targets": 10000,
+    "original_mean_nll": 2.782632744148034,
+    "native_mean_nll": 2.782652474673244,
+    "native_minus_original": 1.973052521009322e-05,
+    "mean_nll_increase_limit": 0.05,
+    "loss_gate_passed": true,
+    "full_quality_qualified": false,
+    "task_gate_pending": true,
+    "alignment_crosscheck_indices": [
+      512,
+      513,
+      1024
+    ]
+  },
+  "memory": {
+    "native_peak_rss_bytes": 1214087168,
+    "native_admitted_bytes_including_app": 1543629376,
+    "original_peak_rss_bytes": 3589652480,
+    "budget_bytes": 6442450944
+  },
+  "checks": {
+    "rust_worker_controls": 3,
+    "python_checker_controls": 6,
+    "system_python_checker_controls": 3,
+    "strict_metal_all_targets_clippy": true,
+    "fmt": true,
+    "release_build": true,
+    "engine_sources_unchanged_from_default549_metal657": true
+  },
+  "astra_review": "approved code/check/full loss results",
+  "retained_failures": [
+    "checker log filename collision",
+    "initial system Python3.9 strict zip incompatibility",
+    "unused legacy same-artifact paired_delta control is not3.9compatible; sixcontrols pass onpinned3.12"
+  ],
+  "receipts_sha256": {
+    "artifacts/llama3-original-loss-2026-11-03/execution-plan.json": "2459eea6ab8abf7326967540dd238013188ab24277a6b02e3752f7482c5da111",
+    "artifacts/llama3-original-loss-2026-11-03/final-checks.json": "e03ef5ee8640060877d45ff9f62e7edac744174f3db8f1ff2634e5172427aad1",
+    "artifacts/llama3-original-loss-2026-11-03/run.json": "3daeb9fa2192203042adbb59edbbbaacc153d1c46f43ff202ae0cd5a5931924d",
+    "artifacts/llama3-original-loss-2026-11-03/replay.json": "4755b2acd239e2d59321c023c7112b30c2716e137ea518b923a65f1cb6a26429",
+    "artifacts/llama3-original-loss-2026-11-03/validation.json": "30d30bc267e306f1f9eaf67f52c5e07e2d82d369463e415285f3c75735a462b6",
+    "artifacts/llama3-original-loss-2026-11-03/original-v1/result.json": "1fbc46f06e01876309a6bfd61c7be1979ea79768ee2915a0b97be3ee3588b455",
+    "artifacts/llama3-original-loss-2026-11-03/native-v1/result.json": "15575d4ebe7e4f865a0903550d46d5cc0310c83ab6d87fc3f6c53b320ddaad61",
+    "artifacts/llama3-original-loss-2026-11-03/paired-check-retry.log": "aba5dd6e2ee8f7c926927dbebeab2f1b9a9750b2eaa2854c48933872c30c8079"
+  }
+}
