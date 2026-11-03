@@ -9408,3 +9408,13 @@ Historical load512 stays distinct from replacement682.
 Astra approves; strict macOS/iOS/simulator source checks and the Mac app build pass.
 The first fixture compile and compiler-sandbox failure are retained. Physical
 iPhone UI and broader quality/performance qualification remain separate.
+
+## 3 November 2026 — Pinned Llama3 text codec
+
+A direct cold Rust codec supports the pinned Llama3 plain prompt policy: exact
+three-asset identity, frozen date, Python trimming, one BOS, reserved-input
+rejection and three hidden stops. Independent rendered-byte fixtures and the
+explicit cached-tokenizer comparison pass. Strict default/Metal Clippy, fmt and
+544/652 tests and Astra review pass. [Report](llama3-plain-codec.md),
+[evidence](../benchmarks/results/2026-11-03-llama3-plain-codec-v1.json).
+Native pairing, app activation, full quality and phone remain open.

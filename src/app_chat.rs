@@ -12,6 +12,7 @@ use tokenizers::Tokenizer;
 pub mod content;
 pub mod dense_content;
 pub mod gemma4;
+pub mod llama3;
 pub mod qwen3_content;
 mod qwen_content;
 pub mod stream;

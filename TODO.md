@@ -465,9 +465,12 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [ ] Finish Mac app checks and record separate iPhone 14 Pro validation or
   explicit remaining device gaps; Astra review and commit each code task.
 
-- [ ] Implement the pinned Llama3 plain renderer/codec in the app path, checking
+- [ ] Integrate the pinned Llama3 plain renderer/codec in the app path, checking
   single BOS, all three hidden stops, trim/decoding, cancellation and actual
   rendered prompt/reply boundaries. Independent fixtures alone do not enable Chat.
+  - [x] Source codec: exact asset pins, independent rendered bytes and cached tokenizer comparison; [report](docs/llama3-plain-codec.md). Checks544default/652Metal and Astra review pass.
+  - [ ] Real native Mac512 session boundary, cancellation/replay and observed stop evidence.
+  - [ ] Audited owner pairing and ordinary app activation/journey.
 
 ### M8 closure
 
@@ -885,3 +888,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-03 | Rendered Settings defect found | Isolated Mac app loads managedQwen upper1024/initial512 and shows owner/load metrics. Expanding Active details reveals default Mac Form overflow/clipped explanations and no scroll area. | Explicit grouped Form fix, rebuild and visible regression, strict platform checks and Astra review pending. |
 
 | 2026-11-03 | Rendered Settings regression passes | Grouped Form wraps expanded owner/load facts and scrolls first-to-last while Close stays reachable. Visible1024/8MiB Preview selects682; Apply and main session682 confirmed in isolated data. | V3 strict Mac build passes. First3SDK attempt blocked by compiler macro sandbox; retry passes all3SDKs and Astra approves. Next pinned Llama3 codec. |
+
+| 2026-11-03 | Llama codec implementation | Astra recommends a direct pinned codec first, leaving native factory/profile activation for the integration task. Three assets, frozen date, Python trim, single BOS, reserved input rejection and hidden stops implemented against the independent fixture. | CPU/default+Metal checks and explicit cached tokenizer comparison next; no model/app activation or quality claim. Settings fix committed `8c6e321`. |
+
+| 2026-11-03 | Llama codec checks pass | Exact cached tokenizer fixture and all6checks pass:544default/652Metal tests, strict Clippy both and fmt. No model execution. | Astra final result review passes; next reviewed native512 test composes existing APIs without extending complete identity. |

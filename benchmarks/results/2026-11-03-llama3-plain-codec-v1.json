@@ -1,0 +1,24 @@
+{
+  "scope": "Pinned Llama3 plain codec only; no native factory/app activation",
+  "checks": "artifacts/llama3-codec-2026-11-03/checks.json",
+  "counts": {
+    "test-default": {
+      "passed": 544,
+      "failed": 0,
+      "ignored": 24
+    },
+    "test-metal": {
+      "passed": 652,
+      "failed": 0,
+      "ignored": 194
+    }
+  },
+  "cached_tokenizer": "exact fixture IDs, Unicode, single BOS, 256 reserved inputs, three hidden stops; passed",
+  "source_sha256": {
+    "/Users/coloner/work/rust/toklet/src/app_chat.rs": "8bb57a4015d21b8b665a6793af50cec2acb134a8f8a513bd1b6f5f91e13dc886",
+    "/Users/coloner/work/rust/toklet/src/app_chat/llama3.rs": "78a10cce43409e58c3292e1705e9d0502d73ea99bbfa96e2eb89b0599d722ab6",
+    "/Users/coloner/work/rust/toklet/tests/fixtures/llama3-plain-text-v1/fixture.json": "7efa1dd5eec42d167f824c7f395417e98de47000761abd9cd62d6d0cc91fa3b3"
+  },
+  "review": "Astra source and final result review approved",
+  "limits": "No model execution, 512 integration, full adoption quality or device/performance claim"
+}
