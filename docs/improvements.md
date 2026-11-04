@@ -9652,3 +9652,13 @@ logit rows and15 valid KV prefixes remain bitwise equal.550default/658Metal,
 fmt/strictClippy/release and combined Astra review pass. Execution beyond31,
 long numerical reference, app and phone remain open.
 [Report](gemma-context-probe.md).
+
+## 4 November 2026 — Independent Gemma4 E2B512 oracle
+
+The reference computes512 inputs while projecting only four selected hidden
+rows through the head. Ordered FP64 products retain math.fsum and byte-identical
+real32 results; four cold controls and a64 pilot pass. The full run saves12MiB
+of dual-contract rows at860,078,080bytes peak RSS. Source/runtime/resource guards
+and combined Astra review pass. This prepares native comparison; earlier
+four-token failures and unquantized/app/phone quality remain open.
+[Report](gemma-e2b-context-reference.md).

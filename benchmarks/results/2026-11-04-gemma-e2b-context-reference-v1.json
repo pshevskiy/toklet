@@ -1,0 +1,92 @@
+{
+  "format": "toklet-gemma-e2b-context-reference-v1",
+  "passed": true,
+  "base_revision": "5171790",
+  "scope": "independent original packed-E2B512 selected-row oracle only",
+  "phases": {
+    "compat32": {
+      "elapsed_seconds": 46.82535850000022,
+      "peak_rss_bytes": 302809088,
+      "contract_times": {
+        "math_fp64": 20.583667167,
+        "staged_fp32": 21.847811416
+      },
+      "compatibility": {
+        "math_fp64": {
+          "all_bytes_exact": true,
+          "maximum_absolute_difference": 0.0
+        },
+        "staged_fp32": {
+          "all_bytes_exact": true,
+          "maximum_absolute_difference": 0.0
+        }
+      }
+    },
+    "pilot64": {
+      "elapsed_seconds": 97.10044037499938,
+      "peak_rss_bytes": 342507520,
+      "contract_times": {
+        "math_fp64": 45.575448333,
+        "staged_fp32": 47.081643458
+      }
+    },
+    "full512": {
+      "elapsed_seconds": 2070.986204625,
+      "peak_rss_bytes": 860078080,
+      "contract_times": {
+        "math_fp64": 1080.372551333,
+        "staged_fp32": 986.303114
+      }
+    }
+  },
+  "cold_controls": 4,
+  "reference_products_micro_speedups": [
+    3.4063173701383302,
+    3.427902691168836
+  ],
+  "products_bit_exact": true,
+  "real32_compatibility_all_bytes_exact": true,
+  "causal_prefix_0_31_all_bytes_exact": true,
+  "selected_full512_positions": [
+    0,
+    31,
+    255,
+    511
+  ],
+  "reference_allowance_bytes": 1124073472,
+  "process_limit_bytes": 6442450944,
+  "native512_qualified": false,
+  "earlier_precision_failures_waived": false,
+  "full_unquantized_quality_qualified": false,
+  "app_qualified": false,
+  "phone_qualified": false,
+  "engine_performance_claim": false,
+  "astra_review": "approved combined reference code, invariants, cold controls, measured phases and scoped claims; native512 and other tasks excluded",
+  "receipts_sha256": {
+    "artifacts/gemma-e2b-context-reference-2026-11-04/controls.log": "9fe165c3910237c96b35cedacd16e80d56f3904b6b0a9f07fe3a72196263b1d8",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/controls-first.log": "9fe165c3910237c96b35cedacd16e80d56f3904b6b0a9f07fe3a72196263b1d8",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/controls-complete.log": "e4e712f5a84f865e8d60f657b2cff7dbd1aa93b66bcaf299c3af604043344a88",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/run_phase.py": "f81f1da1eb5339056f1c2a3d360771e3ed56499004f0a9e6fc13f331297e0f26",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/compat32/execution-plan.json": "e51506569993c287da6d5e95a6adc0412a8f70f2bf7f3e0bdd0971abe862c5af",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/compat32/run.json": "6feb0d7979905586326eab4ccf8e89498531b2e8dba2707b2bb02e289cc53e58",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/compat32/reference/result.json": "270bcd63ea81bb2d996e778a7f0fd7eded32698e535cf881e954a0a6b9e93ee4",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/compat32/reference/rows.bin": "b784d06f7fa0b9212acf0eee4e08c3b804eef428e4a42c9cdc1669a647da3665",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/compat32/reference.stdout": "171759bf9c8e063ce782b9279109820903c6f63d7f8f9386f34601a158f283fa",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/compat32/reference.stderr": "dbb05f5aef07b774eeba3dea00ca252bf608969c05add743e233f0c0295d16c8",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/pilot64/execution-plan.json": "e9461642c61e8045ff2748926dcacbcb851f5186660b8cf7dcf277dde7166594",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/pilot64/run.json": "fc5cc00b89c3bdfdd70ba14437515a76915be0b4725317b2f2bf359c231a0cfc",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/pilot64/reference/result.json": "0fe02cbea261b38d2dc7d82fdba5cf8bc807ebccb09f872353bb1bf305474f31",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/pilot64/reference/rows.bin": "5a1ec0d1aa09bf897870541b72d29ee0221d3ffd97451300c4d8e59d7b10ff67",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/pilot64/reference.stdout": "8e5eea4febe461df8faced676b65e768efb1fb28cd284ed3f734c74df8c5040f",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/pilot64/reference.stderr": "60973b151e36f0b95ce7059a630c3ca79bf558a686fbd1bb9c5bba896c726c56",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/full512/execution-plan.json": "62f512945aa39a40dc11936c0a4de53d3ff9fd6a192beae500fbd027590e2ba7",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/full512/run.json": "b61c6d361bf733a187b5a7b128d7e9a2d9f3a262380c0833ad1f5fb9b3e5142f",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/full512/reference/result.json": "91ecc26699fb953046ff62b24abf8253d5c0a8fdba2903bc3d6897e22e803c01",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/full512/reference/rows.bin": "019687797eb846657a23a8101b3691ec2756e3c05b0d9b3bebd8ff8bca4ac207",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/full512/reference.stdout": "1cef2be83b76f57629b9863c0dbbb3dc8adc605baea8949dae349e6a10505c3d",
+    "artifacts/gemma-e2b-context-reference-2026-11-04/full512/reference.stderr": "42a4e89becea0a3568bb648680807ad3f4004954c392f339ff69b2f0e8e43a4b",
+    "artifacts/gemma-reference-products-2026-11-04/probe.py": "d62f81ee12139dd2161a4cf2dc1aa2d06a236168bb102fa45a4f8fdffccff2b6",
+    "artifacts/gemma-reference-products-2026-11-04/run1/result.json": "e02109fb4fce3455af468411a2b1593206ba9a81b16b4d9e5e1d0c4ed15bb7a9",
+    "artifacts/gemma-reference-products-2026-11-04/run2/result.json": "a5e3ea7f3c8c498fe96b28eb574fb2a38267eb953a92f41bf67891084f9bbe3d"
+  }
+}

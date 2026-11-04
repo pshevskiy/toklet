@@ -1,0 +1,93 @@
+{
+  "format": "toklet-gemma-e2b-context-reference-contract-v1",
+  "parent_tokens": {
+    "path": "benchmarks/gemma-quality-v1/held_out_loss.u32le",
+    "sha256": "877cbe18574b47e4b6a8d1b58fb79621c37e0531bd1f9504e50ce63d186f8c46"
+  },
+  "tokens": {
+    "path": "tokens.u32le",
+    "count": 512,
+    "sha256": "ade0775a55a1248340329388c5ba6fced9c12b42ef9974c6d10953fc5cca7f15"
+  },
+  "phases": {
+    "compat32": {
+      "tokens": 32,
+      "positions": [
+        0,
+        15,
+        30,
+        31
+      ]
+    },
+    "pilot64": {
+      "tokens": 64,
+      "positions": [
+        0,
+        31,
+        63
+      ]
+    },
+    "full512": {
+      "tokens": 512,
+      "positions": [
+        0,
+        31,
+        255,
+        511
+      ]
+    }
+  },
+  "per_call_rows": 32,
+  "native_gate": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "compatibility": {
+    "math_fp64_absolute": 1e-10,
+    "staged_fp32": "bitwise_exact"
+  },
+  "future_native_partitions": [
+    [
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32,
+      32
+    ],
+    [
+      1,
+      31,
+      31,
+      31,
+      31,
+      31,
+      31,
+      31,
+      31,
+      31,
+      31,
+      31,
+      31,
+      31,
+      31,
+      31,
+      31,
+      15
+    ]
+  ],
+  "process_limit_bytes": 6442450944,
+  "prior_precision_failures_waived": false,
+  "app_qualified": false,
+  "phone_qualified": false
+}

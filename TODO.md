@@ -1,8 +1,9 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Gemma4 independent long-context reference and timed pilot;512 execution follows oracle qualification**.
-Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Query](artifacts/m8-phone-availability-2026-11-03/availability.json).
+Current task: **Gemma4 real512 native boundary/capture and independent numerical replay**.
+Parallel task: **Mac pinned-profile journeys passed; combined review and evidence commit pending**.
+Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
 Completed B5f1: owner snapshot and explicit context/text facts; [evidence](benchmarks/results/2026-11-02-session-owner-memory-v1.json).
@@ -477,6 +478,11 @@ uses the existing full saved-conversation reset+prompt path on Send.
   - [x] Coherent native40 package and managed Mac developer route/journey; [report](docs/llama3-mac-app.md). Default bounded Mac discovery is now adopted; [report](docs/llama3-mac-adoption.md).
 
 ### M8 closure
+
+- [x] Gemma4 real32 state/schedule boundary and four selected rows; `fdba828`, [report](docs/gemma-hybrid32.md).
+- [x] Explicit diagnostic512 admission with qualified32-prefix preservation; `5171790`, [report](docs/gemma-context-probe.md).
+- [x] Independent real512 oracle: real32 compatibility,64 pilot and full512 collection pass Astra review; [report](docs/gemma-e2b-context-reference.md).
+- [ ] Real512 native state/schedule/boundary and independent selected-row qualification.
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1044,3 +1050,13 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Diagnostic512 candidate implemented | Explicit constructor caps real E2B probes at512; ordinary32 and row scratch32 stay unchanged. Pure controls predict18,679,680extra bytes at512. Add ignored real admission/default32-prefix parity test; no execution beyond31 is qualified. | Required Rust checks, then measured real parity/admission run and combined Astra review. Long-reference work remains next. |
 
 | 2026-11-04 | Diagnostic512 admission/parity passed | Actual session263,761,128bytes matches+18,679,680plan; exact budget/one-byte-less and invalid-limit no-allocation checks pass. Default32 full logits/15KV prefixes and prior selected hashes match. Peak RSS2,949,955,584bytes;550default/658Metal/fmt/Clippy/release pass. | Astra approves combined code/results review for commit. Positions32–511 remain numerically unqualified; bounded long oracle/pilot next. [Report](docs/gemma-context-probe.md). |
+
+| 2026-11-04 | Longer-reference prototype | Ordered NumPy FP64 products plus unchanged fsum match42 real/adversarial vector cases and speed the microprobe3.41/3.43×; engine timings unchanged. New selected-head oracle preserves old files and≤32-row gathers/projections. First cold test used IDs outside tiny vocabulary17; corrected before real execution. | Rerun cold controls, then frozen real32 compatibility and timed64 pilot before512 use. |
+
+| 2026-11-04 | Long oracle pilot and parallel Mac journeys | Real32 reference rows remain byte-identical;64pilot completes97.10s/RSS342,507,520bytes. Frozen512 reference is running. Independent Swift journey work adds explicit pinned-profile selection and Stop/recovery to close remaining Mac per-profile journeys. | Keep reference inputs frozen; focused Swift controls/real journeys and separate combined reviews before commits. |
+
+| 2026-11-04 | Real oracle compatibility and Mac selector checks | Real32 math/staged rows are byte-identical to the saved oracle;64pilot passes97.10s/RSS342,507,520bytes and512 collection runs. Shared journey strict compile, existing Hub controls and14 selector checks pass; Qwen2 remote search/admission pass and download is active. | Complete independent outputs/journeys, then combined scoped Astra reviews; no code task marked complete yet. |
+
+| 2026-11-04 | Required phone availability refreshed | Physical14Pro is paired over localNetwork but disconnected; read-only details exits2. Simulator/ProMax are distinct. No app/configuration changed. | Keep phone Settings/runtime qualification open; continue active Mac reference and journeys. [Query](artifacts/m8-phone-availability-2026-11-04/availability.json). |
+
+| 2026-11-04 | Full512 independent oracle captured | Both contracts finish2,070.99s/RSS860,078,080bytes. Real32 compatibility and causal0/31 rows are byte-identical;4 cold controls and source/runtime/resource guards pass. | Astra approves combined review for reference commit. Native512 capture scaffold is separate and not executed. [Report](docs/gemma-e2b-context-reference.md). |
