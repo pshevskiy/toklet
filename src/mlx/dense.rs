@@ -6,6 +6,7 @@ use crate::{
 use serde::Deserialize;
 use serde_json::Value;
 use std::collections::BTreeMap;
+mod smollm3;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Architecture {
@@ -14,6 +15,7 @@ pub enum Architecture {
     Llama,
     Mistral,
     Phi3,
+    SmolLm3,
 }
 impl Architecture {
     pub(crate) const fn has_projection_bias(self) -> bool {
@@ -29,6 +31,8 @@ pub(crate) struct ParsedConfig {
     pub position_plan: PositionPlan,
     /// Source declaration; not a sliding cache implementation.
     pub declared_sliding_window: Option<usize>,
+    /// Source mask: true applies the positional plan; false leaves Q/K unchanged.
+    pub rotary_layers: Option<Vec<bool>>,
 }
 
 #[derive(Deserialize)]
@@ -128,7 +132,7 @@ fn invalid(reason: impl Into<String>) -> Error {
     Error::Invalid(reason.into())
 }
 
-pub(crate) fn config(value: Value, options: LoadOptions) -> Result<ParsedConfig, Error> {
+pub(crate) fn config(mut value: Value, options: LoadOptions) -> Result<ParsedConfig, Error> {
     match value.get("model_type").and_then(Value::as_str) {
         Some("qwen3") => {
             let (config, tied) = super::qwen3::config(value, options)?;
@@ -138,6 +142,7 @@ pub(crate) fn config(value: Value, options: LoadOptions) -> Result<ParsedConfig,
                 tied_output: tied,
                 position_plan: PositionPlan::Ordinary,
                 declared_sliding_window: None,
+                rotary_layers: None,
             })
         }
         Some("qwen2") => Ok(ParsedConfig {
@@ -146,9 +151,15 @@ pub(crate) fn config(value: Value, options: LoadOptions) -> Result<ParsedConfig,
             tied_output: true,
             position_plan: PositionPlan::Ordinary,
             declared_sliding_window: None,
+            rotary_layers: None,
         }),
         Some("phi3") => super::phi3::config(value, options),
-        Some("llama" | "mistral") => {
+        Some("llama" | "mistral" | "smollm3") => {
+            let rotary_layers = if value["model_type"] == "smollm3" {
+                Some(smollm3::prepare(&mut value)?)
+            } else {
+                None
+            };
             // Mistral defaults can imply sliding attention when the field is
             // absent. Only an explicit null opts into this full-attention graph.
             if value.get("model_type").and_then(Value::as_str) == Some("mistral")
@@ -168,6 +179,8 @@ pub(crate) fn config(value: Value, options: LoadOptions) -> Result<ParsedConfig,
             let c: BiasFreeConfig = serde_json::from_value(value)?;
             let (architecture, class) = if c.model_type == "llama" {
                 (Architecture::Llama, "LlamaForCausalLM")
+            } else if c.model_type == "smollm3" {
+                (Architecture::SmolLm3, "SmolLM3ForCausalLM")
             } else {
                 (Architecture::Mistral, "MistralForCausalLM")
             };
@@ -178,7 +191,8 @@ pub(crate) fn config(value: Value, options: LoadOptions) -> Result<ParsedConfig,
                 || c.attention_dropout != 0.0
                 || c.rope_traditional
                 || c.rope_interleaved
-                || c.pretraining_tp.is_some_and(|v| v != 1)
+                || c.pretraining_tp
+                    .is_some_and(|v| v != 1 && !(architecture == Architecture::SmolLm3 && v == 2))
                 || c.is_llama_config.is_some_and(|v| !v)
                 || c.transformers_js_config.as_ref().is_some_and(|v| {
                     // Export metadata only: the native session always owns Half KV.
@@ -253,6 +267,7 @@ pub(crate) fn config(value: Value, options: LoadOptions) -> Result<ParsedConfig,
                 tied_output: c.tie_word_embeddings,
                 position_plan,
                 declared_sliding_window: None,
+                rotary_layers,
             })
         }
         _ => Err(invalid("unsupported native MLX decoder architecture")),

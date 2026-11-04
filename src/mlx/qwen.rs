@@ -152,6 +152,7 @@ pub struct Source {
     architecture: Architecture,
     tied_output: bool,
     position_plan: crate::model::PositionPlan,
+    rotary_layers: Option<Vec<bool>>,
     tensors: BTreeMap<String, TensorSpec>,
     logical: BTreeMap<String, LogicalTensorSpec>,
     source: weights::Source,
@@ -409,12 +410,16 @@ impl Source {
             .and_then(|value| usize::try_from(value).ok())
             .filter(|&value| value > 0)
             .ok_or_else(|| invalid("positive model position declaration required"))?;
+        let implicit_smollm3_tied = object.get("model_type").and_then(Value::as_str)
+            == Some("smollm3")
+            && !object.contains_key("tie_word_embeddings");
         let dense::ParsedConfig {
             config,
             architecture,
             tied_output,
             position_plan,
             declared_sliding_window,
+            rotary_layers,
         } = if allow_dense {
             dense::config(document, options)?
         } else {
@@ -424,6 +429,7 @@ impl Source {
                 tied_output: true,
                 position_plan: crate::model::PositionPlan::Ordinary,
                 declared_sliding_window: None,
+                rotary_layers: None,
             }
         };
         if let Some((profile, _)) = dense_config {
@@ -482,6 +488,11 @@ impl Source {
             weights::Source::open_with_audit(directory, audit)?
         };
         let has_head = source.info("lm_head.weight").is_some();
+        if implicit_smollm3_tied && has_head {
+            return Err(invalid(
+                "implicit SmolLM3 tying requires a single embedding table",
+            ));
+        }
         if has_head || !tied_output {
             expected.insert(
                 "lm_head.weight".into(),
@@ -584,6 +595,7 @@ impl Source {
             architecture,
             tied_output,
             position_plan,
+            rotary_layers,
             tensors,
             logical: BTreeMap::new(),
             source,
@@ -618,6 +630,9 @@ impl Source {
     }
     pub fn position_plan(&self) -> crate::model::PositionPlan {
         self.position_plan
+    }
+    pub fn rotary_layers(&self) -> Option<&[bool]> {
+        self.rotary_layers.as_deref()
     }
     pub fn tensors(&self) -> &BTreeMap<String, TensorSpec> {
         &self.tensors

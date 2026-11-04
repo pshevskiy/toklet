@@ -290,7 +290,7 @@ fn check_context(
             Architecture::Mistral => {
                 "Metal requires qualified full-attention Mistral geometry and at most 512 positions"
             }
-            Architecture::Llama | Architecture::Phi3 => {
+            Architecture::Llama | Architecture::Phi3 | Architecture::SmolLm3 => {
                 "Metal dense initial implemented context is at most 512 positions"
             }
             Architecture::Qwen2 => unreachable!("Qwen2 has no extra graph cap"),
@@ -339,7 +339,7 @@ fn metal_geometry_context_cap(
             qwen_geometry(c)?;
             Ok(None)
         }
-        Architecture::Llama | Architecture::Phi3 => {
+        Architecture::Llama | Architecture::Phi3 | Architecture::SmolLm3 => {
             c.validate()
                 .map_err(|_| GeometryError::Invalid("invalid dense model configuration"))?;
             if !c.rms_norm_eps.is_normal() {
@@ -751,7 +751,7 @@ mod tests {
             assert!(metal_geometry(&c, architecture).is_ok());
             let expected_cap = match architecture {
                 Architecture::Qwen2 => None,
-                Architecture::Llama | Architecture::Phi3 => Some(512),
+                Architecture::Llama | Architecture::Phi3 | Architecture::SmolLm3 => Some(512),
                 Architecture::Qwen3 | Architecture::Mistral => Some(positions),
             };
             assert_eq!(

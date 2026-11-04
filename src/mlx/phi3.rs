@@ -147,6 +147,7 @@ pub(crate) fn config(value: Value, options: LoadOptions) -> Result<ParsedConfig,
         tied_output: c.tie_word_embeddings,
         position_plan: PositionPlan::Ordinary,
         declared_sliding_window: c.sliding_window,
+        rotary_layers: None,
     })
 }
 

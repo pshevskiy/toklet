@@ -9956,3 +9956,11 @@ Reuse the dense engine for a second geometry: stock greedy/stop agreement,
 real512 boundary, chunk/reset/overflow checks and <6GiB process peaks pass.
 550default/658Metal tests, strict checks, release builds and Astra review pass.
 No full fidelity, held-out or managed Chat claim. [Report](qwen15-engine-execution.md).
+
+## 5 November 2026 — Add reusable per-layer rotary selection
+
+SmolLM3’s validated mask selects existing CPU/Metal Q/K buffers directly on
+bypass layers. Existing models keep their prior rotation. Independent
+nonzero-offset fixtures,1,680GPU snapshots,554default/662Metal tests, strict
+checks and Astra review pass. Real3B execution remains next.
+[Report](smollm3-rotary-schedule.md).

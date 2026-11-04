@@ -1,0 +1,124 @@
+{
+  "format": "toklet-smollm3-rotary-selection-v1",
+  "passed": true,
+  "base_revision": "cc47ee2",
+  "astra_review": "approved /root/astra_kv_limit code and scoped block evidence",
+  "default_tests": 554,
+  "metal_tests": 662,
+  "explicit_gpu_tests": 4,
+  "smollm3_snapshots": 1680,
+  "smollm3_compared_values": 110208,
+  "fixture_stages": 312,
+  "cases": 8,
+  "bypass_qk_bit_identity": true,
+  "real_checkpoint_qualified": false,
+  "app_adopted": false,
+  "phone_qualified": false,
+  "checks": {
+    "passed": true,
+    "jobs": [
+      {
+        "name": "fmt",
+        "exit_code": 0,
+        "seconds": 1.0747631670019473
+      },
+      {
+        "name": "clippy",
+        "exit_code": 0,
+        "seconds": 5.377048374997685
+      },
+      {
+        "name": "test",
+        "exit_code": 0,
+        "seconds": 111.06709704099922
+      },
+      {
+        "name": "metal-clippy",
+        "exit_code": 0,
+        "seconds": 13.17727316699893
+      },
+      {
+        "name": "metal-test",
+        "exit_code": 0,
+        "seconds": 131.5259586250031
+      },
+      {
+        "name": "release-lib",
+        "exit_code": 0,
+        "seconds": 64.25318941599835
+      }
+    ]
+  },
+  "gpu_checks": {
+    "passed": true,
+    "jobs": [
+      {
+        "name": "final-fmt",
+        "exit_code": 0,
+        "seconds": 1.1529657909995876
+      },
+      {
+        "name": "final-metal-clippy",
+        "exit_code": 0,
+        "seconds": 0.6296494999987772
+      },
+      {
+        "name": "gpu",
+        "exit_code": 0,
+        "seconds": 26.232533082998998
+      }
+    ]
+  },
+  "receipts_sha256": {
+    "artifacts/smollm3-block-checks-2026-11-05/checks.json": "714b1d786d4ac4aabe8f96d8a5b0af812dcba7d4e075a1f1a2fcb361d2f35aeb",
+    "artifacts/smollm3-block-checks-2026-11-05/clippy.stderr": "8e5d78d39b02a9ea41911626039eb9f6eb5c552a7416aa9bdc7cc87475145f9b",
+    "artifacts/smollm3-block-checks-2026-11-05/clippy.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-block-checks-2026-11-05/final-fmt.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-block-checks-2026-11-05/final-fmt.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-block-checks-2026-11-05/final-metal-clippy.stderr": "a93620d8c1619b22912892dfea84293fd64f05921a66840f6f1a7e1893ba6d32",
+    "artifacts/smollm3-block-checks-2026-11-05/final-metal-clippy.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-block-checks-2026-11-05/first-test.stderr": "e3e3ef72af4e2aa93b4d92a272730291a8c4e511b8613e5489ce31bde0908529",
+    "artifacts/smollm3-block-checks-2026-11-05/first-test.stdout": "67aa1b3416ac1ee7a88fddda6cf9d17ffefe43b63580160ee272f3ff54ac1e93",
+    "artifacts/smollm3-block-checks-2026-11-05/fmt.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-block-checks-2026-11-05/fmt.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-block-checks-2026-11-05/gpu-checks.json": "e2cbd943c752bd134ad005b8a6aea429df87f64b8a7b31b0c10fe68931e3c483",
+    "artifacts/smollm3-block-checks-2026-11-05/gpu.py": "f64d381ab6835b02d32bbb732f1affb7c906f3876a1502e20df2b33df761bcdb",
+    "artifacts/smollm3-block-checks-2026-11-05/gpu.stderr": "6c164e77234376179a2dcfd6318161f486e571a016ddf759d676c56c09918440",
+    "artifacts/smollm3-block-checks-2026-11-05/gpu.stdout": "2a1569c9b36189672f300680df35c6df097c9cc22a97020e93e37d077ce29151",
+    "artifacts/smollm3-block-checks-2026-11-05/reference/fixture.json": "a6cf4fbc824e8a0af25721181be477015b907dd3f6d3c093501b4eba88813466",
+    "artifacts/smollm3-block-checks-2026-11-05/reference/replay.json": "3b7ccd8f598dd78caefe3a49e3503c549a531eb6bedc48bbf5f742b12d5a324c",
+    "artifacts/smollm3-block-checks-2026-11-05/run.py": "5ae74722f5ee13cdd02cdfefa5462872c7339c5c859957724017fba8724ef3c7",
+    "artifacts/smollm3-block-checks-2026-11-05/v2/checks.json": "0e1129015c34cbd2f3f58dbf5d3c36a65199b36cd3d2dd9cfba5d8176a28db58",
+    "artifacts/smollm3-block-checks-2026-11-05/v2/clippy.stderr": "38b02542eda29ced70d16df36dbe4cf3dad59b5f7c6fefa3f99b65becb62667e",
+    "artifacts/smollm3-block-checks-2026-11-05/v2/clippy.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-block-checks-2026-11-05/v2/fmt.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-block-checks-2026-11-05/v2/fmt.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-block-checks-2026-11-05/v2/metal-clippy.stderr": "6f7e3e4b9b0b25f22e3e370267ffbe8d2eb976a298fbfc66dc8c45fc79928ff8",
+    "artifacts/smollm3-block-checks-2026-11-05/v2/metal-clippy.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-block-checks-2026-11-05/v2/metal-test.stderr": "e3479148c5399556da8c278d0f1115d03c9eb127f797be3dd4f99c83ef222022",
+    "artifacts/smollm3-block-checks-2026-11-05/v2/metal-test.stdout": "0a22fbf41b0c23ba1d2ac5085f896c9bd7795665b88d20172b3e500ffb91a749",
+    "artifacts/smollm3-block-checks-2026-11-05/v2/release-lib.stderr": "82bc59addf554b8a9f2a078bcb86478552da1a202a010e8ec704062cfadea8af",
+    "artifacts/smollm3-block-checks-2026-11-05/v2/release-lib.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-block-checks-2026-11-05/v2/run.py": "5ae74722f5ee13cdd02cdfefa5462872c7339c5c859957724017fba8724ef3c7",
+    "artifacts/smollm3-block-checks-2026-11-05/v2/test.stderr": "8d2fe353bbfa92ca0d397b15386fa69a6912e371da408761deca927d724c7607",
+    "artifacts/smollm3-block-checks-2026-11-05/v2/test.stdout": "805a5f367d5c93a95e797efbb510582bd5000a0f6b99113a2c44cdfd2b8fe653",
+    "src/metal/mod.rs": "0aab24c5f4b7c55639b08f75ffbd07b0dac5f649c629839355b97ef2fef71745",
+    "src/metal/planning.rs": "72c06a355961d47fdcedf86e08297e5128780091851159804ff8189a6a27217e",
+    "src/mlx/compatibility.rs": "6574ca0c848f0ecf7925e27238651042a0a9e29200146217c3c9bb67764d6931",
+    "src/mlx/dense/smollm3.rs": "309b8a42bb55809322b30877aedbf1774799d26511ed7cb9345e9766a4b176d8",
+    "src/mlx/dense.rs": "63131866c539e7f68360516e42b42e4ebc2332f2bd40ddb31f04640dedf5b519",
+    "src/mlx/execution.rs": "0904cb2e48102469d205180b881f20bc8b9d9baa36c90ad865e18a546c5cc441",
+    "src/mlx/native_limits.rs": "73d6bef9ff8eb14f68677f8013773e354b5bf6831642fbc37684d73cdec3ba31",
+    "src/mlx/phi3.rs": "e1cb04f4c350f70bd38ad48d0c82a954f40617d5d7f64cc9c75a33667bca0272",
+    "src/mlx/qwen/content_tests.rs": "716bec4620621925599c6c6f9f578379d93de9b93a250b564eb2d39c55e3b430",
+    "src/mlx/qwen/qwen3_content_tests.rs": "146b0b453418c39680fbe99d5e03343b0ee770f41fc93a2ced76729839aefc18",
+    "src/mlx/qwen/row_tests.rs": "4dc6746e9802d1ca5caa3c22b0d3038d09fb7c86c898e75386ccf01606229671",
+    "src/mlx/qwen.rs": "caca21ae9fb170b64e2127088e323f22bf45d839076df49d64b7288b24e17925",
+    "src/mlx/reference.rs": "21de0fc99b5d76df15381d3228254a0f5613a859f52d16d0759f9f9b847dbb0e",
+    "src/model/mod.rs": "3fafb7bd6caa50cda1f8bed3dfd5a96de074aeeda71959af8e7f35d4cd955b98",
+    "tests/fixtures/smollm3-half-graph-v1/fixture.json": "a6cf4fbc824e8a0af25721181be477015b907dd3f6d3c093501b4eba88813466",
+    "tests/mlx_llama.rs": "b0be48525ca80d46767a9dc8a88f772298dcf4a58bb541d14b963716e4a5dc8b",
+    "tests/mlx_llama_metal.rs": "5b2b97cfb970fe796ca0eca14de5062d00c632f1eba4d790e43c65dde95e7550",
+    "tools/reference/smollm3_half_graph.py": "749a187c8430b51fbe57626ade8ba3cc328fab664b8c5b7196a68602aa98bb7f"
+  }
+}

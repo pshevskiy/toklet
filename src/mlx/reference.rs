@@ -216,7 +216,8 @@ fn load_source(mut source: Source, options: LoadOptions) -> Result<Loaded, Error
     } else {
         Model::new(config, weights)?
     }
-    .with_position_plan(position_plan);
+    .with_position_plan(position_plan)
+    .with_rotary_layers(source.rotary_layers())?;
     Ok(Loaded {
         model,
         fp32_weights_bytes,

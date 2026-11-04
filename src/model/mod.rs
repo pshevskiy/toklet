@@ -204,6 +204,7 @@ pub struct Model {
     output: Option<Vec<f32>>,
     qk_norms: Option<Vec<QkNormWeights>>,
     position_plan: PositionPlan,
+    rotary_layers: Option<Box<[bool]>>,
 }
 
 impl Model {
@@ -300,6 +301,7 @@ impl Model {
             output,
             qk_norms,
             position_plan: PositionPlan::Ordinary,
+            rotary_layers: None,
         })
     }
 
@@ -329,6 +331,15 @@ impl Model {
 
     pub fn position_plan(&self) -> PositionPlan {
         self.position_plan
+    }
+
+    /// Immutable per-layer selection, independent of the rotation convention.
+    pub(crate) fn with_rotary_layers(mut self, layers: Option<&[bool]>) -> Result<Self, Error> {
+        if layers.is_some_and(|m| m.len() != self.config.num_layers) {
+            return Err(Error::InvalidConfig("rotary layer mask length differs"));
+        }
+        self.rotary_layers = layers.map(Into::into);
+        Ok(self)
     }
 
     pub fn config(&self) -> &Config {
@@ -382,6 +393,7 @@ impl Model {
         )?;
         layers
             .checked_add(norms)
+            .and_then(|n| n.checked_add(self.rotary_layers.as_ref().map_or(0, |m| m.len())))
             .ok_or(cpu::Error::SizeOverflow.into())
     }
 
@@ -630,17 +642,23 @@ impl Model {
                     t.q_norm.copy_from_slice(q_rot);
                     t.k_norm.copy_from_slice(k_rot);
                 }
-                self.position_plan
-                    .apply(q_rot, q, c, n, c.query_heads, offset)?;
-                self.position_plan
-                    .apply(k_rot, k, c, n, c.kv_heads, offset)?;
-                (q, k)
-            } else {
+                if self.rotary_layers.as_ref().is_none_or(|m| m[index]) {
+                    self.position_plan
+                        .apply(q_rot, q, c, n, c.query_heads, offset)?;
+                    self.position_plan
+                        .apply(k_rot, k, c, n, c.kv_heads, offset)?;
+                    (q, k)
+                } else {
+                    (q_rot, k_rot)
+                }
+            } else if self.rotary_layers.as_ref().is_none_or(|m| m[index]) {
                 self.position_plan
                     .apply(q, q_rot, c, n, c.query_heads, offset)?;
                 self.position_plan
                     .apply(k, k_rot, c, n, c.kv_heads, offset)?;
                 (q_rot, k_rot)
+            } else {
+                (q, k)
             };
             if let Some(cache) = cache.as_deref_mut() {
                 let capacity = cache.capacity;

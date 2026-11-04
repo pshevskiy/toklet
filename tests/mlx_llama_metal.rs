@@ -444,7 +444,8 @@ struct ScaledArtifact(PathBuf);
 impl ScaledArtifact {
     fn new(variant: &str, fixture: &Value) -> Self {
         let path = std::env::temp_dir().join(format!(
-            "toklet-scaled-half-{}-{variant}",
+            "toklet-half-{}-{}-{variant}",
+            fixture["format"].as_str().unwrap(),
             std::process::id()
         ));
         fs::create_dir(&path).unwrap();
@@ -471,11 +472,14 @@ impl Drop for ScaledArtifact {
 #[test]
 #[ignore = "Explicit Apple GPU scaled Llama Half graph and session checks; not real checkpoint qualification"]
 fn scaled_llama_half_graph_and_session_match_frozen_independent_oracle() {
-    let fixture = scaled_fixture();
+    check_half_graph(&scaled_fixture(), true);
+}
+
+fn check_half_graph(fixture: &Value, positional: bool) {
     let mut snapshots = 0;
     let mut compared = 0;
     for variant in ["tied", "untied"] {
-        let artifact = ScaledArtifact::new(variant, &fixture);
+        let artifact = ScaledArtifact::new(variant, fixture);
         let mut causal_logits = std::collections::BTreeMap::new();
         let model = metal::Model::load_mlx(
             &artifact.0,
@@ -485,7 +489,7 @@ fn scaled_llama_half_graph_and_session_match_frozen_independent_oracle() {
             },
         )
         .unwrap();
-        assert!(model.positional_resident_bytes() > 0);
+        assert_eq!(model.positional_resident_bytes() > 0, positional);
         for case in fixture["cases"]
             .as_array()
             .unwrap()
@@ -543,6 +547,31 @@ fn scaled_llama_half_graph_and_session_match_frozen_independent_oracle() {
                     assert_eq!(names.len(), 35);
                     let diagnostics = s.diagnostics().unwrap();
                     assert_eq!(diagnostics.len(), 35);
+                    if !positional {
+                        let mask = fixture["config_templates"][variant]["no_rope_layers"]
+                            .as_array()
+                            .unwrap();
+                        for (layer, enabled) in mask.iter().enumerate() {
+                            if enabled == 0 {
+                                for (before, after) in [("q", "q_rotary"), ("k", "k_rotary")] {
+                                    let values = |stage| {
+                                        &diagnostics
+                                            .iter()
+                                            .find(|d| d.layer == Some(layer) && d.stage == stage)
+                                            .unwrap()
+                                            .values
+                                    };
+                                    assert!(
+                                        values(before)
+                                            .iter()
+                                            .zip(values(after))
+                                            .all(|(a, b)| a.to_bits() == b.to_bits()),
+                                        "bypass must preserve every Q/K bit"
+                                    );
+                                }
+                            }
+                        }
+                    }
                     for d in diagnostics {
                         let full_name = stage("scaled", &d);
                         let name = full_name.strip_prefix("cases.scaled.").unwrap();
@@ -653,10 +682,35 @@ fn scaled_llama_half_graph_and_session_match_frozen_independent_oracle() {
     }
     assert_eq!(snapshots, 1680);
     println!(
-        "LLAMA3_HALF_GRAPH {}",
-        serde_json::json!({"snapshots":snapshots,"compared_values":compared,
+        "{} {}",
+        if positional {
+            "LLAMA3_HALF_GRAPH"
+        } else {
+            "SMOLLM3_HALF_GRAPH"
+        },
+        serde_json::json!({"format":fixture["format"],"snapshots":snapshots,"compared_values":compared,
         "diagnostic_stages_per_chunk":35,"fixture_stages":39,"cases":8,"schedules":3,
         "absolute_position_boundary":511,"boundary_initial_kv_tokens":0,
         "real_checkpoint_qualified":false,"iphone_qualified":false})
     );
+}
+
+#[test]
+#[ignore = "Explicit Apple GPU mixed rotary mask graph at nonzero offsets and cached chunks"]
+fn smollm3_half_graph_and_session_match_frozen_independent_oracle() {
+    let raw = include_bytes!("fixtures/smollm3-half-graph-v1/fixture.json");
+    assert_eq!(
+        format!("{:x}", Sha256::digest(raw)),
+        "a6cf4fbc824e8a0af25721181be477015b907dd3f6d3c093501b4eba88813466"
+    );
+    let fixture: Value = serde_json::from_slice(raw).unwrap();
+    let repo = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    for category in ["inputs", "producers"] {
+        for (name, pin) in fixture[category].as_object().unwrap() {
+            let bytes = fs::read(repo.join(name)).unwrap();
+            assert_eq!(bytes.len() as u64, pin["bytes"]);
+            assert_eq!(format!("{:x}", Sha256::digest(bytes)), pin["sha256"]);
+        }
+    }
+    check_half_graph(&fixture, false);
 }

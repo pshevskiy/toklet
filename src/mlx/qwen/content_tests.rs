@@ -31,6 +31,7 @@ fn wrapper(source: weights::Source, storage: Storage) -> Source {
         architecture: Architecture::Llama,
         tied_output: true,
         position_plan: crate::model::PositionPlan::Ordinary,
+        rotary_layers: None,
         tensors: tensors.clone(),
         logical: logical::plan(&tensors, &[]).unwrap(),
         source,

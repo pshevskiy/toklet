@@ -713,3 +713,170 @@ fn public_dense_constructors_validate_bias_and_independent_head_boundaries() {
         bytes
     );
 }
+
+#[test]
+fn smollm3_mask_selects_identity_and_rotary_before_cached_attention() {
+    let raw = include_bytes!("fixtures/smollm3-half-graph-v1/fixture.json");
+    let fixture: Value = serde_json::from_slice(raw).unwrap();
+    for variant in ["tied", "untied"] {
+        let a = CopyArtifact::new(variant);
+        fs::write(
+            a.0.join("config.json"),
+            serde_json::to_vec(&fixture["config_templates"][variant]).unwrap(),
+        )
+        .unwrap();
+        let source = Source::open_dense(&a.0, options()).unwrap();
+        assert_eq!(source.architecture(), Architecture::SmolLm3);
+        assert_eq!(source.position_plan(), PositionPlan::Ordinary);
+        let mask = if variant == "tied" {
+            [true, false]
+        } else {
+            [false, true]
+        };
+        assert_eq!(source.rotary_layers(), Some(mask.as_slice()));
+        assert!(Source::open(&a.0, options()).is_err());
+        let loaded = reference::load_dense(&a.0, options()).unwrap();
+        let tokens = [1, 7, 13, 3];
+        let mut scratch = loaded.model.scratch(tokens.len()).unwrap();
+        let trace = loaded
+            .model
+            .forward_diagnostic(&tokens, 5, &mut scratch)
+            .unwrap();
+        for (layer, enabled) in trace.layers.iter().zip(mask) {
+            for (before, after) in [
+                (&layer.q_projection, &layer.q_rotary),
+                (&layer.k_projection, &layer.k_rotary),
+            ] {
+                if enabled {
+                    let (sin, cos) = 5_f64.sin_cos();
+                    close(
+                        &after[..1],
+                        &[(f64::from(before[0]) * cos - f64::from(before[4]) * sin) as f32],
+                    );
+                    assert_ne!(before, after);
+                } else {
+                    assert!(
+                        before
+                            .iter()
+                            .zip(after)
+                            .all(|(a, b)| a.to_bits() == b.to_bits())
+                    );
+                }
+            }
+        }
+        for chunk in [1, 3] {
+            let mut s = Session::new(
+                &loaded.model,
+                session::Options {
+                    capacity: 16,
+                    prefill_chunk_size: chunk,
+                    position_offset: 5,
+                    memory_limit_bytes: 128 * 1024 * 1024,
+                },
+            )
+            .unwrap();
+            s.append(&tokens[..2]).unwrap();
+            s.evaluate().unwrap();
+            s.append(&tokens[2..]).unwrap();
+            s.evaluate().unwrap();
+            close(
+                s.logits().unwrap(),
+                &trace.logits[trace.logits.len() - 64..],
+            );
+            s.reset();
+            s.append(&tokens).unwrap();
+            s.evaluate().unwrap();
+            close(
+                s.logits().unwrap(),
+                &trace.logits[trace.logits.len() - 64..],
+            );
+        }
+    }
+}
+
+#[test]
+fn smollm3_rejects_ambiguous_masks_and_attention_semantics() {
+    let fixture: Value = serde_json::from_slice(include_bytes!(
+        "fixtures/smollm3-half-graph-v1/fixture.json"
+    ))
+    .unwrap();
+    for (name, bad) in [
+        ("no_rope_layers", json!([1])),
+        ("no_rope_layers", json!([true, false])),
+        ("no_rope_layers", json!([1, 2])),
+        ("no_rope_layers", json!(null)),
+        ("no_rope_layer_interval", json!(0)),
+        (
+            "layer_types",
+            json!(["full_attention", "sliding_attention"]),
+        ),
+        ("max_window_layers", json!(3)),
+        ("pretraining_tp", json!(3)),
+        ("rope_scaling", llama3_scaling()),
+        ("attention_bias", json!(true)),
+    ] {
+        let a = CopyArtifact::new("tied");
+        fs::write(
+            a.0.join("config.json"),
+            serde_json::to_vec(&fixture["config_templates"]["tied"]).unwrap(),
+        )
+        .unwrap();
+        a.config(name, bad);
+        assert!(Source::open_dense(&a.0, options()).is_err(), "{name}");
+    }
+}
+
+#[test]
+fn smollm3_independent_half_fixture_preserves_all_stage_gates() {
+    let raw = include_bytes!("fixtures/smollm3-half-graph-v1/fixture.json");
+    assert_eq!(
+        format!("{:x}", Sha256::digest(raw)),
+        "a6cf4fbc824e8a0af25721181be477015b907dd3f6d3c093501b4eba88813466"
+    );
+    let fixture: Value = serde_json::from_slice(raw).unwrap();
+    for category in ["inputs", "producers"] {
+        for (name, pin) in fixture[category].as_object().unwrap() {
+            let bytes = fs::read(PathBuf::from(env!("CARGO_MANIFEST_DIR")).join(name)).unwrap();
+            assert_eq!(bytes.len() as u64, pin["bytes"]);
+            assert_eq!(format!("{:x}", Sha256::digest(bytes)), pin["sha256"]);
+        }
+    }
+    assert_eq!(fixture["cases"].as_array().unwrap().len(), 8);
+    for case in fixture["cases"].as_array().unwrap() {
+        assert_eq!(case["arrays"].as_object().unwrap().len(), 39);
+        for spec in case["arrays"].as_object().unwrap().values() {
+            assert_eq!(
+                spec["main_bits"].as_array().unwrap().len(),
+                spec["wide_bits"].as_array().unwrap().len()
+            );
+            assert_eq!(spec["gate"]["rtol"], 1e-3);
+            assert_eq!(
+                spec["gate"]["atol"].as_f64().unwrap(),
+                1e-4_f64.max(2.0 * spec["precision_envelope"].as_f64().unwrap())
+            );
+        }
+    }
+}
+
+#[test]
+fn smollm3_implicit_tying_requires_one_table_and_explicit_layer_semantics() {
+    let fixture: Value = serde_json::from_slice(include_bytes!(
+        "fixtures/smollm3-half-graph-v1/fixture.json"
+    ))
+    .unwrap();
+    for (variant, remove) in [
+        ("untied", "tie_word_embeddings"),
+        ("tied", "no_rope_layers"),
+        ("tied", "layer_types"),
+    ] {
+        let a = CopyArtifact::new(variant);
+        let mut config = fixture["config_templates"][variant].clone();
+        config.as_object_mut().unwrap().remove(remove);
+        fs::write(
+            a.0.join("config.json"),
+            serde_json::to_vec(&config).unwrap(),
+        )
+        .unwrap();
+        assert!(Source::open_dense(&a.0, options()).is_err());
+    }
+}

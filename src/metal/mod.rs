@@ -172,6 +172,7 @@ impl Tensor {
     }
 }
 struct Layer {
+    use_rotary: bool,
     norm: Tensor,
     post: Tensor,
     q: Tensor,
@@ -578,6 +579,11 @@ impl Model {
                 source.architecture() == crate::mlx::dense::Architecture::Qwen3,
             )?;
             model.mlx_architecture = Some(source.architecture());
+            if let Some(mask) = source.rotary_layers() {
+                for (layer, &enabled) in model.layers.iter_mut().zip(mask) {
+                    layer.use_rotary = enabled;
+                }
+            }
             model.positional = positional;
             model.qwen3_context_diagnostic = matches!(import, MlxImport::Qwen3ContextDiagnostic);
             model.mlx_declared_positions = Some(source.declared_positions());
@@ -766,6 +772,7 @@ impl Model {
         for i in 0..config.num_layers {
             let p = format!("model.layers.{i}");
             layers.push(Layer {
+                use_rotary: true,
                 norm: take(&format!("{p}.input_layernorm.weight"))?,
                 post: take(&format!("{p}.post_attention_layernorm.weight"))?,
                 q: take(&format!("{p}.self_attn.q_proj.weight"))?,
@@ -1532,66 +1539,71 @@ impl<'m> Session<'m> {
                 } else {
                     (&s.q, &s.qr, &s.k, &s.kr)
                 };
-            let position = self.options.position_offset + start;
-            if let Some(operation) = &self.model.positional {
-                operation.encode(
-                    &command,
-                    llama3_rotary::Invocation {
-                        input: q_input,
-                        output: q_rotary,
-                        status: &s.status,
-                        rows: n,
-                        heads: c.query_heads,
-                        offset: position,
-                        position_limit: c.max_positions,
-                    },
-                )?;
+            let (q_rotary, k_rotary) = if layer.use_rotary {
+                let position = self.options.position_offset + start;
+                if let Some(operation) = &self.model.positional {
+                    operation.encode(
+                        &command,
+                        llama3_rotary::Invocation {
+                            input: q_input,
+                            output: q_rotary,
+                            status: &s.status,
+                            rows: n,
+                            heads: c.query_heads,
+                            offset: position,
+                            position_limit: c.max_positions,
+                        },
+                    )?;
+                } else {
+                    g.encode(
+                        &command,
+                        Kernel::Rotary,
+                        &[&q_input.raw, &q_rotary.raw],
+                        &[
+                            n as u32,
+                            c.query_heads as u32,
+                            c.head_dim as u32,
+                            position as u32,
+                            c.rope_theta.to_bits(),
+                        ],
+                        n * query_width / 2,
+                        Some(&s.status),
+                    )?;
+                }
+                if let Some(operation) = &self.model.positional {
+                    operation.encode(
+                        &command,
+                        llama3_rotary::Invocation {
+                            input: k_input,
+                            output: k_rotary,
+                            status: &s.status,
+                            rows: n,
+                            heads: c.kv_heads,
+                            offset: position,
+                            position_limit: c.max_positions,
+                        },
+                    )?;
+                } else {
+                    g.encode(
+                        &command,
+                        Kernel::Rotary,
+                        &[&k_input.raw, &k_rotary.raw],
+                        &[
+                            n as u32,
+                            c.kv_heads as u32,
+                            c.head_dim as u32,
+                            position as u32,
+                            c.rope_theta.to_bits(),
+                        ],
+                        n * kv / 2,
+                        Some(&s.status),
+                    )?;
+                }
+                (q_rotary, k_rotary)
             } else {
-                g.encode(
-                    &command,
-                    Kernel::Rotary,
-                    &[&q_input.raw, &q_rotary.raw],
-                    &[
-                        n as u32,
-                        c.query_heads as u32,
-                        c.head_dim as u32,
-                        position as u32,
-                        c.rope_theta.to_bits(),
-                    ],
-                    n * query_width / 2,
-                    Some(&s.status),
-                )?;
-            }
+                (q_input, k_input)
+            };
             self.snapshot(&command, Some(layer_index), "q_rotary", &q_rotary.raw)?;
-            if let Some(operation) = &self.model.positional {
-                operation.encode(
-                    &command,
-                    llama3_rotary::Invocation {
-                        input: k_input,
-                        output: k_rotary,
-                        status: &s.status,
-                        rows: n,
-                        heads: c.kv_heads,
-                        offset: position,
-                        position_limit: c.max_positions,
-                    },
-                )?;
-            } else {
-                g.encode(
-                    &command,
-                    Kernel::Rotary,
-                    &[&k_input.raw, &k_rotary.raw],
-                    &[
-                        n as u32,
-                        c.kv_heads as u32,
-                        c.head_dim as u32,
-                        position as u32,
-                        c.rope_theta.to_bits(),
-                    ],
-                    n * kv / 2,
-                    Some(&s.status),
-                )?;
-            }
             self.snapshot(&command, Some(layer_index), "k_rotary", &k_rotary.raw)?;
             g.encode(
                 &command,
