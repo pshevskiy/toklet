@@ -58,6 +58,22 @@ def prior_anchors():
     return result
 
 
+def statistics(item, *, block, local_row, global_index, target_id):
+    fields=['block','local_row','global_target_index','target','target_fp32_bits','vocab','greedy_lowest_id']
+    require(all(type(item.get(k)) is int for k in fields),'Integer target fields required')
+    require((item['block'],item['local_row'],item['global_target_index'],item['target'],item['vocab'])==
+            (block,local_row,global_index,target_id,VOCAB),'Target order/alignment differs')
+    require(0<=item['target_fp32_bits']<2**32 and 0<=item['greedy_lowest_id']<VOCAB and digest(item['row_sha256']),'Invalid row metadata')
+    maximum,mass,nll=(item[k] for k in ['maximum','exp_mass','nll'])
+    target=struct.unpack('<f',struct.pack('<I',item['target_fp32_bits']))[0]
+    require(all(type(v) in (int,float) and math.isfinite(v) for v in [maximum,mass,nll,target]),'Nonfinite statistics')
+    require(maximum>=target and 1<=mass<=VOCAB and nll>=0,'Invalid distribution statistics')
+    require(struct.unpack('<f',struct.pack('<f',maximum))[0]==maximum,'Maximum is not FP32')
+    require(close(nll,(maximum-target)+math.log(mass)),'Stable NLL formula differs')
+    require(target!=maximum or item['greedy_lowest_id']<=item['target'],'Greedy tie contradicts target')
+    return nll
+
+
 def replay(transcript, body, ids, previous):
     require(len(ids)==1025 and b'test result: ok.' in transcript,'Incomplete native run')
     records=labels(transcript,b'GEMMA_HYBRID_REAL_LOSS_TARGET ')
@@ -68,19 +84,8 @@ def replay(transcript, body, ids, previous):
     require(len(records)==1024 and len(summary)==len(unscored)==len(footer)==1,'Target inventory differs')
     values=[]
     for position,item in enumerate(records):
-        fields=['block','local_row','global_target_index','target','target_fp32_bits','vocab','greedy_lowest_id']
-        require(all(type(item.get(k)) is int for k in fields),'Integer target fields required')
-        require((item['block'],item['local_row'],item['global_target_index'],item['target'],item['vocab'])==
-                (0,position,position+1,ids[position+1],VOCAB),'Target order/alignment differs')
-        require(0<=item['target_fp32_bits']<2**32 and 0<=item['greedy_lowest_id']<VOCAB and digest(item['row_sha256']),'Invalid row metadata')
-        maximum,mass,nll=(item[k] for k in ['maximum','exp_mass','nll'])
-        target=struct.unpack('<f',struct.pack('<I',item['target_fp32_bits']))[0]
-        require(all(type(v) in (int,float) and math.isfinite(v) for v in [maximum,mass,nll,target]),'Nonfinite statistics')
-        require(maximum>=target and 1<=mass<=VOCAB and nll>=0,'Invalid distribution statistics')
-        require(struct.unpack('<f',struct.pack('<f',maximum))[0]==maximum,'Maximum is not FP32')
-        require(close(nll,(maximum-target)+math.log(mass)),'Stable NLL formula differs')
-        require(target!=maximum or item['greedy_lowest_id']<=item['target'],'Greedy tie contradicts target')
-        values.append(nll)
+        values.append(statistics(item,block=0,local_row=position,
+                                 global_index=position+1,target_id=ids[position+1]))
     require(unscored[0]['position']==1024 and unscored[0]['row_sha256']==previous[1024],'Unscored witness differs')
     require(len(arrays)==8 and len(body)==8*VOCAB*4,'Anchor capture extent differs')
     offset=0;anchors=[]

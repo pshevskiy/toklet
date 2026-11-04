@@ -89,3 +89,11 @@ upstream CPU eager BF16 as the prospective original-quality baseline; the
 independent graphs retain their fidelity role and all prior rejections. Next
 check full-width versus tiled stock tied-head bits at the saved real activations,
 then qualify a representative loss block before the1,025 original pilot.
+
+## Full loss result and task reference
+
+The [full10,000-target loss gate](gemma-full-loss.md) passes with exact frozen
+coverage and target-weighted aggregation. Next is resident original BF16 storage
+excluding the PLE table, with session-owned stock DynamicCache at567positions,
+then the unchanged100-task suite. This keeps earlier fidelity rejections and
+app admission separate.

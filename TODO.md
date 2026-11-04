@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Remaining nine original/native loss blocks and full10,000-target gate**.
+Current task: **Resident original BF16/stock-KV task-reference qualification, then100-task suite**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -498,7 +498,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Original-quality33-ID/32-target scorer pilot; [report](docs/gemma-upstream-loss-pilot.md).
 - [x] Full1,025-ID/1,024-target original BF16 block qualification; [report](docs/gemma-upstream-loss1025.md).
 - [x] Paired native1,024-target block with exact eight-row prior alignment; [report](docs/gemma-native-loss-block.md).
-- [ ] Remaining9original/native blocks, exact10,000-target weighted aggregation and unchanged full loss gate.
+- [x] Remaining9original/native blocks, exact10,000-target weighted aggregation and unchanged full loss gate; [report](docs/gemma-full-loss.md).
+- [ ] Resident original BF16/stockKV reference at511–567positions, then unchanged100-task gate.
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1168,3 +1169,15 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Native required checks passed / real block active | Local test-only NLL reuse annotation passes strictClippy. fmt,default/MetalClippy,550default/658Metal tests and release build pass; two cold checker controls pass. Initial lint logs retained. | Owned native1,025 block now runs; eight prior row hashes/full anchor statistics and paired descriptive NLL replay remain before Astra review/commit. |
 
 | 2026-11-04 | Paired native block reviewed | All1,024target statistics, eight prior FP32row hashes and seven independent scored-anchor replays pass; nativeNLL6.82681 vs original7.37456 is descriptive. RSS2,913,566,720bytes; all checks pass. Astra approves code/evidence/block-one reuse. | Commit native task; collect remaining9frozen blocks with reset positions and target-weighted10k aggregation before loss gate. [Report](docs/gemma-native-loss-block.md). |
+
+| 2026-11-04 | Full-loss collection implemented | Reuse both approved block-one receipts. Refactor native private block runner/reset and preserve first-block entry point; remaining9include785-ID/784-target tail. Add bounded BF16 replay and exact10k join with stable target-weighted means; threshold unchanged. | Nine focused loss controls and required Rust checks now run before real collection. Source9block cost estimated35–40min from measured pilot. |
+
+| 2026-11-04 | Full-loss controls / reset result correction | Nine focused controls pass, including785-ID tail/reset metadata, weighted10k gate and coherent BF16 corruption. First strictMetalClippy catches an unhandled diagnostic reset Result; change to explicit unwrap so any reset failure aborts collection. | Retain initial logs; rerun required checks. Source plan is frozen; no real remaining-block collection has started. |
+
+| 2026-11-04 | Full paired loss collection active | Nine focused controls and fmt/default+MetalClippy/550default658Metal/release pass after reset Result fix. Both approved block-one receipts are pinned. Source0/1 are replayed/sealed; source remaining and native remaining9 run with exact reset/785-ID tail contracts and bounded captures. | Await all10k targets and source/runtime/resource/owned-exit checks, then full join and one combined Astra review. Estimated source work remaining~30min; no loss decision yet. |
+
+| 2026-11-04 | Independent task-reference preparation | Astra recommends resident stockBF16 weights except4,697,620,480-byte PLE table, tied head once and session-owned DynamicCache. New reference-only helper keeps567limit/replay-on-failure; tiny resident/streamed/sharedKV/reset/partial-failure controls run independently of frozen loss collection. | Real resident load/511–567boundary checks wait for native loss process to release memory; no generation/task qualification yet. |
+
+| 2026-11-04 | Native9collection complete / replay transport retry | Owned native run exits0 with all8,976remaining targets; RSS2,891,120,640bytes. Replay sees only8block-start records because libtest attaches the first marker to its test-name prefix. All raw outputs/initial failure retained. | Strip only that exact known libtest prefix in a separate postprocessor; rerun unchanged reset/coverage/statistics gates without rebuilding or rerunning numerical workers. Source collection continues frozen. |
+
+| 2026-11-04 | Full10k loss gate reviewed | Exact10k index/token join and weighted tail pass; native9.2641167394 vs original9.9957761138 gives delta−0.7316593744≤0.05. All source/runtime/exit/resource guards, required Rust checks and9controls pass. Astra approves code/evidence. | Commit full-loss task; resident task-reference qualification is active separately. 100tasks, old fidelity failures and app adoption remain open. [Report](docs/gemma-full-loss.md). |

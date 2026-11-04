@@ -9780,3 +9780,10 @@ Native1,024-target collection passes exact eight-row prior alignment, seven
 independent anchor reductions, complete statistics/coverage and required checks.
 Astra approves; peakRSS2.91GB. One-block NLLdelta−0.54775 is descriptive; full10k
 loss and100-task gates remain open. [Report](gemma-native-loss-block.md).
+
+## 4 November 2026 — Full Gemma original-relative loss gate
+
+All10,000paired targets pass exact coverage/reset/provenance checks; nativeNLL
+9.26412 vs original9.99578 gives−0.73166 against≤+0.05. Required checks,nine
+controls and Astra review pass; peakRSS1.84GBsource/2.89GBnative. The100-task
+gate and prior fidelity/app limitations remain open. [Report](gemma-full-loss.md).
