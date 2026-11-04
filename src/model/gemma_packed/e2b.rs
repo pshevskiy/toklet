@@ -240,7 +240,7 @@ mod tests {
         .unwrap();
         let ordinary = Layout::e2b(&plan).unwrap();
         assert_eq!(ordinary.positions, 32);
-        for limit in [0, 513, usize::MAX] {
+        for limit in [0, 1026, usize::MAX] {
             assert!(matches!(
                 Layout::e2b_layers_for_limit(plan.layers(), limit),
                 Err(Error::InvalidConfig("Gemma E2B diagnostic position limit"))
@@ -249,7 +249,9 @@ mod tests {
         let mut previous = 0;
         let mut cache32 = 0;
         let mut scratch32 = 0;
-        for limit in [1, 32, 64, 256, 512] {
+        let mut cache512 = 0;
+        let mut scratch512 = 0;
+        for limit in [1, 32, 64, 256, 512, 513, 1024, 1025] {
             let layout = Layout::e2b_layers_for_limit(plan.layers(), limit).unwrap();
             assert_eq!(layout.positions, limit);
             let chunk = limit.min(32);
@@ -282,12 +284,25 @@ mod tests {
                 scratch32 = scratch;
             }
             if limit == 512 {
+                cache512 = cache;
+                scratch512 = scratch;
                 assert_eq!(cache - cache32, (512 - 32) * 36864);
                 assert_eq!(scratch - scratch32, 2 * 8 * 32 * (512 - 32) * 4);
                 assert_eq!(
                     cache - cache32 + scratch - scratch32 + (512 - 32) * 4,
                     18679680
                 );
+            }
+            if limit > 512 {
+                // Twelve local owners retain W512; only three full owners grow.
+                assert_eq!(cache - cache512, (limit - 512) * 3 * 2 * 512 * 4);
+                assert_eq!(scratch - scratch512, 2 * 8 * 32 * (limit - 512) * 4);
+                if limit == 1025 {
+                    assert_eq!(
+                        cache - cache512 + scratch - scratch512 + (limit - 512) * 4,
+                        7356420
+                    );
+                }
             }
         }
         assert!(Scratch::counts(&ordinary, 512, 32).is_err());

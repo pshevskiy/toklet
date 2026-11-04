@@ -9682,3 +9682,12 @@ is 3,063,037,952 bytes; two cold controls, 550 default/658 Metal tests, strict
 Clippy, formatting, release and combined Astra review pass. Local eviction,
 earlier precision failures, original quality and app/device support remain open.
 [Report](gemma-hybrid512.md).
+
+## 4 November 2026 — Gemma4 diagnostic 1,025 admission
+
+The explicit diagnostic ceiling now admits 1,025 positions with bounded 32-row
+scratch and unchanged ordinary construction. Measured session growth is
+7,356,420 bytes; exact-budget admission and all 512 prior output/KV rows pass.
+Reset and ownership checks, 550 default/658 Metal tests, strict Clippy, formatting,
+release and combined Astra review pass. Execution beyond absolute511 and real
+local-cache wrap remain separate. [Report](gemma-context1025-probe.md).

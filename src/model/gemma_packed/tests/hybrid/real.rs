@@ -15,6 +15,7 @@ const N: usize = 35;
 const HEADS: usize = 8;
 const PROCESS: usize = 6 * 1024 * 1024 * 1024;
 const DIAGNOSTIC: usize = 128 * 1024 * 1024;
+mod context_probe;
 fn identity(m: &std::fs::Metadata) -> [u64; 7] {
     [
         m.dev(),
@@ -373,7 +374,7 @@ fn diagnostic512_admission_preserves_default32_prefix() {
     let (source, file, path, original) = load_original();
     let owners = resident_snapshot(&source);
     let norms = hybrid::Norms::new(&source, PROCESS - DIAGNOSTIC).unwrap();
-    for limit in [0, 513, usize::MAX] {
+    for limit in [0, 1026, usize::MAX] {
         let measured = Measurement::start();
         let rejected = norms.model_for_context_probe(limit);
         let allocations = measured.finish();

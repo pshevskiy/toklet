@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Gemma4 diagnostic1,025 admission and preservation of the qualified512 prefix**.
+Current task: **Independent Gemma4 real1,025 oracle and local-cache wrap qualification**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -484,7 +484,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Explicit diagnostic512 admission with qualified32-prefix preservation; `5171790`, [report](docs/gemma-context-probe.md).
 - [x] Independent real512 oracle: real32 compatibility,64 pilot and full512 collection pass Astra review; [report](docs/gemma-e2b-context-reference.md).
 - [x] Real512 native state/schedule/boundary and independent selected-row qualification; [report](docs/gemma-hybrid512.md).
-- [ ] Diagnostic1,025 admission and qualified512-prefix parity; default32/chunk32 preserved.
+- [x] Diagnostic1,025 admission and qualified512-prefix parity; default32/chunk32 preserved. [Report](docs/gemma-context1025-probe.md).
 - [ ] Independent real1,025 selected-row oracle and native local-cache eviction/wrap qualification.
 
 - [x] Reconcile completed adapters and exact supported configurations with the
@@ -1069,3 +1069,15 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Native512 capture and replay passed | Both partitions match512-token/all15KV state; append513 preserves prefix and reset32 rows match. Both independent contracts have0 failures at selected main/prefix rows. RSS3,063,037,952bytes;2cold/550default/658Metal/fmt/Clippy/release pass. | Combined Astra review before native test/checker commit. Local eviction, free generation, original quality/app/phone remain open. [Report](docs/gemma-hybrid512.md). |
 
 | 2026-11-04 | Native512 reviewed | Astra approves combined code/checks/state/numerical evidence; all required checks pass. Earlier precision/quality/app/phone gaps remain. | Commit this task, then Astra-recommended1,025 admission/parity followed by independent local eviction/wrap qualification. [Report](docs/gemma-hybrid512.md). |
+
+| 2026-11-04 | Diagnostic1,025 admission implemented | Explicit probe ceiling grows to1,025; ordinary32/chunk32 stay fixed. Pure sizing expects three global owners to grow, twelve local owners capped512, adding7,356,420 session bytes. New ignored test compares all512 output rows and validKV prefixes, exact admission and reset. | Required checks then measured native parity run and one combined Astra review; no execution past511 qualified. |
+
+| 2026-11-04 | Astra wrap design | Save each independent producer's absoluteK/V once; reconstruct retained slots at512/513/1,024/1,025. Compare all retained values, not tags alone, plus eight logit positions and two schedules crossing wraps. Stream native captures under128MiB and retain separate state/numerical/overflow-reset verdicts. | Admission/parity checks remain active; freeze this next oracle contract after the current task commits. |
+
+| 2026-11-04 | Admission cold checks passed | Formatting, strict default/Metal Clippy,550default/658Metal tests and optimized libtest build pass. Actual admission/512-prefix comparison is running with source/binary guards and measured6GiB policy. | Await native outcome, then combined Astra review and commit. |
+
+| 2026-11-04 | Next oracle input staged | Freeze1,025 corpus IDs and eight selected positions before wrap outcomes; first512 IDs exactly match qualified input. Astra's once-per-producer K/V reference and four retained milestones are staged under artifacts/gemma-e2b-wrap-reference-2026-11-04. | Current native admission/parity run continues; publish the next contract only with its checked/reviewed oracle task. |
+
+| 2026-11-04 | Diagnostic1,025 native parity passed | All512 output rows and15 validKV prefixes match qualified512; exact budget/minus-one and reset pass. Session271,117,548bytes matches+7,356,420; RSS2,950,561,792bytes, below6GiB. All six required checks pass. | Combined Astra review before commit. Positions512–1,024 still need the independent wrap oracle. [Report](docs/gemma-context1025-probe.md). |
+
+| 2026-11-04 | Diagnostic1,025 admission reviewed | Astra approves combined code/checks/native results; no blocking findings. All required checks and measured prefix parity pass. | Commit admission task separately; independent oracle and real eviction/wrap next. [Report](docs/gemma-context1025-probe.md). |

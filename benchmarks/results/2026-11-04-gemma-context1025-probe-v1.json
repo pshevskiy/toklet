@@ -1,0 +1,43 @@
+{
+  "format": "toklet-gemma-context1025-admission-v1",
+  "passed": true,
+  "base_revision": "7d8bd4f",
+  "hardware": "Apple M1 Pro, macOS",
+  "scope": "diagnostic1025 admission; existing512-prefix preservation only",
+  "default_positions": 32,
+  "diagnostic_positions": 1025,
+  "chunk_rows": 32,
+  "tested_prefix_positions": 512,
+  "all512_logit_rows_exact": true,
+  "all15_valid_kv_prefixes_exact": true,
+  "baseline_allocated_bytes": 263761128,
+  "candidate_allocated_bytes": 271117548,
+  "required_bytes": 2876950172,
+  "exact_admission": true,
+  "minus_one_rejected": true,
+  "reset_reuse": true,
+  "positions_above511_qualified": false,
+  "app_qualified": false,
+  "phone_qualified": false,
+  "peak_rss_bytes": 2950561792,
+  "peak_physical_bytes": 2986199824,
+  "process_limit_bytes": 6442450944,
+  "checks": {
+    "default_passed": 550,
+    "metal_passed": 658,
+    "fmt": true,
+    "strict_clippy_default_and_metal": true,
+    "release": true
+  },
+  "astra_review": "approved combined code/checks/native/results review; admission and512-prefix scope only",
+  "receipts_sha256": {
+    "artifacts/gemma-context1025-probe-2026-11-04/check.py": "4e549fbfcb645b527f27a9e5327ef2bc5f05fd21e37066f6f2a85e8e1ff41588",
+    "artifacts/gemma-context1025-probe-2026-11-04/checks.json": "cb7dff846df5d59e83c8f40106ee6a8f71875746d3c305ac8a4f67311bb41d24",
+    "artifacts/gemma-context1025-probe-2026-11-04/native.py": "fc5afa1a06406ca9171d3f5a0f93da11ca6c5a6cd90b50505d274b656d9227e2",
+    "artifacts/gemma-context1025-probe-2026-11-04/native-plan.json": "a7c845e71b9ddf425719b265cafa5fec4d7f43debc3d6664e87519c268163083",
+    "artifacts/gemma-context1025-probe-2026-11-04/native-run.json": "00c540f85e5c982d68f988ab9399cf01c5114223d0c38ee842634d70e816cafc",
+    "artifacts/gemma-context1025-probe-2026-11-04/native.stdout": "315198522073921d8fda7ef0ed889c7d086386b280137cd449947f88aa2bd5b7",
+    "artifacts/gemma-context1025-probe-2026-11-04/native.stderr": "3a9d5ef8a3c50a2ea36160d0cda9501efd80f6aa22127e320f50ad7b850f7752",
+    "benchmarks/results/2026-11-04-gemma-hybrid512-v1.json": "b973ce57d7fbdb1176866e483e63408ba3271c4a939d01748b9978d4031f1519"
+  }
+}
