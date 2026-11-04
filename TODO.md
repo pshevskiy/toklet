@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **33-ID/32-target original BF16 scorer pilot**.
+Current task: **Full1,025-ID/1,024-target original BF16 block qualification**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -495,7 +495,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Official reader accounts for540selected/60excluded tensors, raw BF16/PLE/tied-head/read-chain checks; `a9d2b67`, [report](docs/gemma-upstream-reader.md).
 - [x] Descriptive real four-token upstream BF16 comparison under frozen policy and6GiB; [report](docs/gemma-upstream-real.md).
 - [x] Real upstream full-width versus tiled tied-head bit equality; [report](docs/gemma-upstream-head.md).
-- [ ] Representative original-quality loss block:33-ID pilot, then full1,025-position upstream block.
+- [x] Original-quality33-ID/32-target scorer pilot; [report](docs/gemma-upstream-loss-pilot.md).
+- [ ] Full1,025-ID/1,024-target original BF16 block qualification.
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1149,3 +1150,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Real upstream BF16 reviewed | Both four-token cases pass frozen journals/readchain,12finite arrays, causalprefix3 and independent scalar replay. RSS687,980,544bytes; greedy matches both independent profiles, logit differences remain descriptive. Astra approves scripts/results and prospective upstreamBF16 quality baseline. | Commit experiment; qualify real full-width versus tiled tied-head equality before a representative loss block. Old fidelity failures/full quality remain open. [Report](docs/gemma-upstream-real.md). |
 
 | 2026-11-04 | Real full-width head equality passed | All2,097,152BF16 words exactly match saved tiled outputs; independent raw replay,2,048-read sourcechain and runtime/resource guards pass. RSS1,236,647,936bytes. | Astra approves scripts/exact outputs/replay; commit then33-token/32-target scorer uses full-width head in bounded position batches. [Report](docs/gemma-upstream-head.md). |
+
+| 2026-11-04 | Original-quality scorer implemented / pilot active | One stock text forward plus full-vocabulary head batches≤32positions; gather chunks≤32unique IDs. Eight cold controls pass alignment, stock bits, position tails, gather splitting and admission/input rejection. Freeze first33loss IDs/32targets, full request/readchain and1.95GB ledger before execution. | Real owned pilot now running; exact stock-row and independent NLL replay, then combined Astra review/commit. No full-quality/native-delta claim. |
+
+| 2026-11-04 | Real32-target scorer pilot passed | Eight cold controls and all8,388,608real scoredBF16 words match stock output; independent32NLL replay differs≤1.78e-15. Frozen request/sourcechain, runtime/exit/resource guards pass; RSS1,538,588,672bytes. | Astra approves code/controls/real equality/replay; commit then qualify full1,025-position upstream block. [Report](docs/gemma-upstream-loss-pilot.md). |

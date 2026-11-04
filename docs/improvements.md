@@ -9759,3 +9759,10 @@ Full-width stock projection/softcap exactly reproduces2,097,152saved tiled-head
 BF16 words. Astra review, independent raw replay and source/runtime/resource guards pass;
 peakRSS1.24GB. This covers the two four-row cases only; arbitrary shapes and
 full quality remain unqualified. [Report](gemma-upstream-head.md).
+
+## 4 November 2026 — Original BF16 bounded loss scorer
+
+One stock causal text forward plus32-position full-width head batches scores
+exact next-token targets. Eight cold controls and the real32-target pilot pass
+8.39million exactBF16 words and independent NLL replay; Astra approves, peakRSS1.54GB. Full1,025
+shape and aggregate/native quality remain open. [Report](gemma-upstream-loss-pilot.md).
