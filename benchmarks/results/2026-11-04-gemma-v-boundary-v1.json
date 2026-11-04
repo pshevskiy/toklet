@@ -1,0 +1,75 @@
+{
+  "format": "toklet-gemma-same-input-v-boundary-v1",
+  "passed": true,
+  "base_revision": "3bfa036",
+  "hardware": "Apple M1 Pro, macOS",
+  "scope": "local Vprojection/RMSNorm from actual native inputs and exact cache transfer only",
+  "input_tokens": 651,
+  "cases": [
+    {
+      "owner": 13,
+      "absolute_position": 433,
+      "head_dim": 256
+    },
+    {
+      "owner": 12,
+      "absolute_position": 650,
+      "head_dim": 256
+    },
+    {
+      "owner": 14,
+      "absolute_position": 650,
+      "head_dim": 512
+    }
+  ],
+  "comparisons": {
+    "math_fp64": {
+      "compared_values": 2048,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0005258459610628371
+    },
+    "staged_fp32": {
+      "compared_values": 2048,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0
+    }
+  },
+  "cache_transfer_passed": true,
+  "prior_full_rows_exact": true,
+  "capture_records": 12,
+  "capture_bytes": 30720,
+  "peak_rss_bytes": 3033071616,
+  "peak_physical_bytes": 3027110720,
+  "replay_peak_rss_bytes": 149241856,
+  "process_limit_bytes": 6442450944,
+  "checks": {
+    "default_passed": 550,
+    "metal_passed": 658,
+    "fmt": true,
+    "strict_clippy_default_and_metal": true,
+    "release": true,
+    "cold_controls": 3
+  },
+  "whole_sequence_qualification": false,
+  "earlier_failures_waived": false,
+  "app_qualified": false,
+  "phone_qualified": false,
+  "astra_review": "approved combined code/checks/actual-results review; local operation/cache-transfer scope only",
+  "receipts_sha256": {
+    "artifacts/gemma-v-boundary-2026-11-04/check.py": "f52c024b5170ea88b45ecdac3ae5e3d352bbf96149b001f3d0918740be4683bf",
+    "artifacts/gemma-v-boundary-2026-11-04/checks.json": "633a010cb5f80be50120f6930477903a46afdaecb433eaa02515dca6a2b3d5d0",
+    "artifacts/gemma-v-boundary-2026-11-04/controls.log": "b64db9b0c10c2c0a9c56ac5b1d70090fc35e117c2f7a55a50772be27d7f9b7a9",
+    "artifacts/gemma-v-boundary-2026-11-04/native.py": "b2421a59c10af209487c4e55ace52ceeb6495abd3cc8b82c2315178b3e681f73",
+    "artifacts/gemma-v-boundary-2026-11-04/native-plan.json": "abef4e0dd2e1aa4619e3c73ec4ce24de00fb77984a210a1e6fc9893269704f49",
+    "artifacts/gemma-v-boundary-2026-11-04/native-run.json": "565edae359f4c69676e7a9b9e69edbfa91db4e0cf34243a2bfdb122258e9ceaa",
+    "artifacts/gemma-v-boundary-2026-11-04/native.stdout": "026025208b6d6c6fae2fce86bf86d6a7dbeadb5bec05d32d958984c2b8071302",
+    "artifacts/gemma-v-boundary-2026-11-04/native.stderr": "3b82169e5930a0b2454ffc4948b4020591e020aab30b7e64a8af5d5031f6b266",
+    "artifacts/gemma-v-boundary-2026-11-04/arrays.bin": "2e4e813733f28285dca05929d147d2418c962d28ff6f91a0854bc3eb0d13b42b",
+    "artifacts/gemma-v-boundary-2026-11-04/replay.json": "2fe8fec302967dc5e70fc72c48b0485e1250748a268d1df0112006228c0bfd28",
+    "artifacts/gemma-v-boundary-2026-11-04/replay.stderr": "bdb35f05b7b0c7eea13d95a043789210bfac589cc428f591698b8947fb64e4ea",
+    "tools/reference/check_gemma_v_boundary.py": "f494221ddc2156a7b60dfee96b1404977b960ae294680e598914e1eece6351d6",
+    "tools/reference/test_check_gemma_v_boundary.py": "d034373191d2ae209432df5247be04a2861dac4f6303fa013ba7e973a9da3f96",
+    "benchmarks/gemma-v-boundary-v1/manifest.json": "125e6dce18592c8538c89b7075da292bfd94136dc53f7bdde3903e1844e9083b",
+    "benchmarks/gemma-v-boundary-v1/tokens.u32le": "00c59a992187531f15bc99118fd8c4ad1b97bb07c40a6f4d3f0de8d80addb9a5"
+  }
+}

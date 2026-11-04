@@ -9710,3 +9710,11 @@ Two tiny controls preserve exact graph bytes in both contracts, source read
 chains, ownership and rejection behavior. Astra approves the preparation. Real
 model timing, upstream agreement and full quality remain pending.
 [Next experiment](gemma-original-quality-next.md).
+
+## 4 November 2026 — Same-input V boundary witness
+
+A651-token pass reproduces three full failing V rows and exact cache transfer.
+Projection and normalization each use the actual native input; all2,048values
+per contract pass, with zero staged differences. Three cold controls, required
+Rust checks, source/resource guards and Astra review pass. Full-sequence4math
+logit/8stagedKV failures remain rejected. [Report](gemma-v-boundary.md).

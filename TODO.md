@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Same-input V-projection/RMSNorm witness for the four rejected stagedKV coordinates**.
+Current task: **Original-BF16 four-token saved-reference reproduction and source profiling**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -486,6 +486,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Real512 native state/schedule/boundary and independent selected-row qualification; [report](docs/gemma-hybrid512.md).
 - [x] Diagnostic1,025 admission and qualified512-prefix parity; default32/chunk32 preserved. [Report](docs/gemma-context1025-probe.md).
 - [x] Independent real1,025 oracle and native local-cache state/wrap/overflow/reset capture; [report](docs/gemma-hybrid1025.md).
+- [x] Same-input V-projection/RMSNorm and exact cache-transfer witness; [report](docs/gemma-v-boundary.md).
 - [ ] Real1,025 numerical qualification:4mathematical logits and8stagedKV observations remain rejected; targeted same-input V-projection/RMSNorm witness next.
 - [ ] Measured original-BF16 four-token source/upstream experiment before full-quality scorer; [next task](docs/gemma-original-quality-next.md).
 - [x] Standalone BF16 profiling adapter preparation, tiny equivalence only; [evidence](benchmarks/results/2026-11-04-gemma-bf16-profile-v1.json).
@@ -1118,3 +1119,9 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Sealed1,025 replay complete / numerical rejected | Reference6,449.57s/RSS1,387,642,880bytes exits clean with exact512 causal compatibility; complete replay checks24,123,392values per contract. Math4logit failures; staged8KV observations/4unique coords, selectedstagedlogits0fail. State/overflow/reset and all source/resource guards pass. | Resolve final Astra review and commit diagnostic code/evidence, preserving numerical rejection; then targeted Vprojection/RMSNorm witness. [Report](docs/gemma-hybrid1025.md). |
 
 | 2026-11-04 | Wrap diagnostics reviewed / qualification rejected | Astra approves oracle/capture/replay code and sealed rejection evidence for commit. Code/oracle/state items close; mathematical4logit and staged8KV observations stay rejected with earlier failures. All required implementation checks pass. | Commit diagnostics, then one same-input Vprojection/RMSNorm witness at owner13/433 and owners12/14/650. [Report](docs/gemma-hybrid1025.md). |
+
+| 2026-11-04 | Targeted V witness implemented | Reuse existing test-only producer failure boundary; capture full normalized projection input/rawV/normalizedV for owner13/433 and owners12/14/650 in one651-token pass. Failure attempts preserve committed prefix; final normalized-to-retained bytes must match exactly. No numerical production code changes. | Required Rust checks now run; independent same-input replay and captured-row comparison to prior evidence next. |
+
+| 2026-11-04 | Same-input V witness passed | Native651 pass reproduces all three full V rows exactly; failed retries preserve prefix and normalized-to-retained bytes match. Both local operations pass2,048values per contract; staged values match exactly, maxmathratio0.000525846. NativeRSS3,033,071,616bytes;3cold/550default/658Metal/fmt/Clippy/release pass. | Combined Astra review before commit; local proof leaves full-sequence4math/8staged failures rejected. Original-BF16 short source experiment next. |
+
+| 2026-11-04 | Same-input witness reviewed | Astra approves local projection/norm and exact cache-transfer evidence; all implementation checks pass. No local kernel change is indicated by these samples; whole-sequence numerical rejection stays open. | Commit witness; proceed to original-BF16 four-token reference reproduction/profiling, then the pinned upstream comparison. [Report](docs/gemma-v-boundary.md). |

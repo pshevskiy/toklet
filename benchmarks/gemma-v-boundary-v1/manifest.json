@@ -1,0 +1,75 @@
+{
+  "format": "toklet-gemma-same-input-v-prospective-v1",
+  "input_tokens": 651,
+  "tokens_sha256": "00c59a992187531f15bc99118fd8c4ad1b97bb07c40a6f4d3f0de8d80addb9a5",
+  "parent_tokens": {
+    "path": "benchmarks/gemma-e2b-wrap-v1/tokens.u32le",
+    "sha256": "20e4789c70ba16a364591f621b274e3532f09ccb1859a51b227cc5b9c14b2503"
+  },
+  "capacity": 1025,
+  "partition": [
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    32,
+    11
+  ],
+  "cases": [
+    {
+      "owner": 13,
+      "absolute_position": 433,
+      "head_dim": 256,
+      "failed_components": [
+        68
+      ]
+    },
+    {
+      "owner": 12,
+      "absolute_position": 650,
+      "head_dim": 256,
+      "failed_components": [
+        0
+      ]
+    },
+    {
+      "owner": 14,
+      "absolute_position": 650,
+      "head_dim": 512,
+      "failed_components": [
+        277,
+        296
+      ]
+    }
+  ],
+  "capture": [
+    "complete s.norm projection input",
+    "complete s.kv raw V row",
+    "complete stage.v normalized V row"
+  ],
+  "cache_transfer": "stage.v byte-identical to prior retained chronological V row",
+  "projection_oracle": "original packed weights and actual native normalized input",
+  "normalization_oracle": "actual native raw V row; original epsilon and frozen math/staged arithmetic",
+  "gate": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "prior_failures_waived": false,
+  "scope": "one prospective local operation/cache-transfer witness; not upstream layer tracing or full qualification",
+  "tokens_path": "tokens.u32le"
+}
