@@ -9989,3 +9989,11 @@ process-memory checks pass. Native RSS2.78GB; admission2.82GB. Typed shared prob
 558CPU/667Metal, strict/release checks and Astra pass. Managed Chat, full fidelity,
 quality, phone and performance remain separate. Both setup failures are retained.
 [Report](granite33-engine-execution.md).
+
+## 5 November 2026 — Freeze the first sparse-MoE contract
+
+Authenticated Granite3.1 MoE header and conditional 4.33GB owner screen; no
+weights acquired. Astra approves deterministic routing, selected-only FP32
+softmax, ordered reduction and bounded BF16-to-Half import design. Exact planning,
+finite conversion and numerical execution remain open.
+[Design](granite-moe-next.md).

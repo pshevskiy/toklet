@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Astra-selected Granite sparse-MoE immutable metadata/header and memory admission. Qwen1.5, SmolLM3 and Granite3.3 scoped Mac engine execution reviewed/complete. New models first; performance secondary; iPhone deferred**.
+Current task: **Granite sparse-MoE independent router fixtures and scalar top-k block; immutable metadata/header screen reviewed. Qwen1.5, SmolLM3 and Granite3.3 scoped Mac engine execution reviewed/complete. New models first; performance secondary; iPhone deferred**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -489,7 +489,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Astra selects Granite3.3-2B MLX8 next: reusable embedding/attention/residual/logit scaling.
 - [x] Granite immutable artifact/memory screen and shared scaling blocks; [report](docs/granite-scaling-blocks.md).
 - [x] Granite real Mac512 execution, stock decisions, state and memory checks; [report](docs/granite33-engine-execution.md).
-- [ ] Next: Granite3.1-1B-A400M sparse-MoE artifact/header/memory screen, then independent router/expert blocks before real execution.
+- [x] Granite3.1-1B-A400M immutable metadata/header and conditional owner screen; [design](docs/granite-moe-next.md).
+- [ ] Sparse-MoE independent router/selected-expert fixtures and scalar blocks.
+- [ ] Sparse-MoE strict import/exact owner planning, resident Metal blocks and real execution.
 
 ### M8 closure
 
@@ -1277,3 +1279,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Granite native launcher corrected | Stop/geometry guard rejects copied Smol selector before model planning/loading. Failed launch/source/owned-exit evidence retained; correct wrapper selects Granite33. | Recheck selector/build before native retry; frozen model/prompt/stops unchanged. |
 
 | 2026-11-05 | Granite3.3 real execution reviewed | Two stock/native decisions and full 512/chunks1,32, overflow/reset pass. Admission 2,815,063,656 bytes; peak RSS 2,777,350,144. Full checks 558CPU/667Metal and fresh selector checks pass. | Astra approves scoped diagnostic code/evidence; commit. Next sparse-MoE metadata/admission. Both setup false starts preserved. [Report](docs/granite33-engine-execution.md). |
+
+| 2026-11-05 | Sparse-MoE design/admission reviewed | Pinned official artifact header validates 218 BF16 tensors; conditional owner screen 4,332,298,240 bytes fits 6GiB without duplicate full model. Routing ties/order/FP32 gates and final Half store frozen before coding. | Astra approves research scope; no payload or execution claim. Next independent router fixtures/scalar block. [Design](docs/granite-moe-next.md). |
