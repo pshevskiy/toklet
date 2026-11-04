@@ -9910,3 +9910,11 @@ All200 outcomes and raw evidence replay pass; the VM restores stopped. Original
 52/100 vsnative43/100 rejects Q4 at the unchanged2-point limit. One qualified
 CPU retry preserves its original attempt. Astra approves evidence; a four-case
 same-checkpoint MLX witness is next. [Result](gemma-full-tasks.md).
+
+## 4 November 2026 — Stock MLX reproduces four Q4 decisions
+
+Strict stock MLX chooses Toklet’s token at all four frozen disagreement prefixes.
+Four controls, complete-row replay, owned exit/runtime/memory checks and Astra
+review pass; peakphysical3.24GB. The first generated-module audit failure is
+preserved. Q4’s9-point task loss remains rejected; assess8-bit feasibility
+before new kernels. [Report](gemma-mlx-decisions.md).

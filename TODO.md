@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Q4 task gate rejected52→43/100 (limit2points); implement four-case same-checkpoint stock-MLX decision witness**.
+Current task: **Assess immutable Gemma E2B8-bit artifact lineage/header and combined-owner6GiB feasibility; stock load only if ledger fits. Q4 remains rejected52→43/100**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -1227,3 +1227,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Controlled CPU retry integration reviewed | Ordinary grader runs first; only natural137/readiness-only evidence retries the identical payload. Astra catches pre-journal failure loss and contradictory terminal eligibility; fixes pass38 controls and5 saved authored-pair replays. Original attempts always retained; shared-source isolation unchanged. | Witness committed `ce09496`; commit integration, then fresh full200-outcome window with all receipts/restoration independently replayed. Prior grading failure remains. [Evidence](benchmarks/results/2026-11-04-gemma-cpu-retry-integration-v1.json). |
 
 | 2026-11-04 | Full task grading reviewed / Q4 rejected | Integration `9127b04` resolves all200 outcomes with oneHumanEval39CPUretry (PROF4.000417166s). Independent raw replay/restoration pass; original52 vsnative43 gives9-point loss>2. Astra approves evidence, rejects candidate; NLLpass does not override. | Commit rejected result. Next bounded stockMLXsame-artifact decisions: HumanEval1/24,TruthfulQA0/3 at first shared-prefix disagreement. No gate/model/prompt tuning or app admission. [Report](docs/gemma-full-tasks.md). |
+
+| 2026-11-04 | Same-checkpoint MLX witness reviewed | Four cold controls and repeated strict-stock run/full-row replay pass; all4decisions agree with native, physicalpeak3,239,480,320bytes. First final audit fails on Torch-generated helper; preserved, then exact-template validation and fresh logs pass. | Astra approves code/results; commit witness. Next8-bit metadata/header/combined-owner feasibility before any kernel. Full Q4 task/fidelity/app/device gates stay open. [Report](docs/gemma-mlx-decisions.md). |

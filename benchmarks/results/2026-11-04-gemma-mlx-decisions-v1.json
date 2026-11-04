@@ -1,0 +1,83 @@
+{
+  "format": "toklet-gemma-stock-mlx-four-decisions-v1",
+  "passed": true,
+  "astra_review": "approved /root/astra_kv_limit code and evidence; higher-precision feasibility next, no quality waiver",
+  "selected_cases": [
+    {
+      "id": "HumanEval/1",
+      "agrees_with": "native",
+      "greedy_id": 19243,
+      "top_two_margin": 5.6875,
+      "dtype": "mlx.core.bfloat16"
+    },
+    {
+      "id": "HumanEval/24",
+      "agrees_with": "native",
+      "greedy_id": 236778,
+      "top_two_margin": 0.25,
+      "dtype": "mlx.core.bfloat16"
+    },
+    {
+      "id": "truthfulqa/row-0",
+      "agrees_with": "native",
+      "greedy_id": 236780,
+      "top_two_margin": 10.625,
+      "dtype": "mlx.core.bfloat16"
+    },
+    {
+      "id": "truthfulqa/row-3",
+      "agrees_with": "native",
+      "greedy_id": 236799,
+      "top_two_margin": 0.25,
+      "dtype": "mlx.core.bfloat16"
+    }
+  ],
+  "reference": "stock mlx-lm0.32.0 / mlx0.32.3",
+  "consumed_tensors": 1096,
+  "consumed_storage_bytes": 2603981382,
+  "peak_rss_bytes": 2530099200,
+  "peak_physical_bytes": 3239480320,
+  "peak_mlx_bytes": 2989794532,
+  "process_policy_bytes": 6442450944,
+  "controls": 4,
+  "task_quality_rejection_waived": false,
+  "full_graph_equivalence_qualified": false,
+  "conclusions": "All four selected stock Q4 decisions match native; no causal attribution for full task regression.",
+  "previous_rust_checks": "artifacts/gemma-projection-environment-2026-11-04/checks.json",
+  "receipts_sha256": {
+    "artifacts/gemma-mlx-decisions-2026-11-04/actual-v1/result.json": "332eb1185a1a26df98fca9f38c4f6f00821599455f8ebb228c3ec0c453b39b6a",
+    "artifacts/gemma-mlx-decisions-2026-11-04/actual-v1/row-1.f32le": "243650bed36e568d174d0d3fb25c9f307892c247b19484c7502829b54c811f9e",
+    "artifacts/gemma-mlx-decisions-2026-11-04/actual-v1/row-24.f32le": "a2bc53ff039122f32206809c4343b1ef2f813604b5a19b1252f7a85defcde667",
+    "artifacts/gemma-mlx-decisions-2026-11-04/actual-v1/row-40.f32le": "f4f4fcf7a097181cdc5d0fda5a87438dfd0e6c30344aa6b1636b00b6c3e8d284",
+    "artifacts/gemma-mlx-decisions-2026-11-04/actual-v1/row-43.f32le": "0f6f96648d2aaf95432a65f98c0e64d9ca3b3e8b9c8129eb9bdf3f108d5d3cc8",
+    "artifacts/gemma-mlx-decisions-2026-11-04/actual-v2/_remote_module_non_scriptable.py": "8205b16956fb264841ecd8644784a0d157f87df79b17c16825dc1163433ce5d8",
+    "artifacts/gemma-mlx-decisions-2026-11-04/actual-v2/result.json": "71ccebbac42fbbf96592db528d829dcfb8810c74c936b2fe4b099f5545f5c273",
+    "artifacts/gemma-mlx-decisions-2026-11-04/actual-v2/row-1.f32le": "243650bed36e568d174d0d3fb25c9f307892c247b19484c7502829b54c811f9e",
+    "artifacts/gemma-mlx-decisions-2026-11-04/actual-v2/row-24.f32le": "a2bc53ff039122f32206809c4343b1ef2f813604b5a19b1252f7a85defcde667",
+    "artifacts/gemma-mlx-decisions-2026-11-04/actual-v2/row-40.f32le": "f4f4fcf7a097181cdc5d0fda5a87438dfd0e6c30344aa6b1636b00b6c3e8d284",
+    "artifacts/gemma-mlx-decisions-2026-11-04/actual-v2/row-43.f32le": "0f6f96648d2aaf95432a65f98c0e64d9ca3b3e8b9c8129eb9bdf3f108d5d3cc8",
+    "artifacts/gemma-mlx-decisions-2026-11-04/controls.log": "e73c3805f810fdcf3d0167ced7085c48306c9482a952ffb710551d230cdb3e51",
+    "artifacts/gemma-mlx-decisions-2026-11-04/owned-run-v1.json": "8f1ace3d0e348fbd5ea5037cad2c8344e4e2ed632a2c23ff25db467a79043d33",
+    "artifacts/gemma-mlx-decisions-2026-11-04/owned-run.json": "f8ef41a8bc3f895378790cf14e2c0616291f4d63fc1cd7bad7b1b2a32408ac6c",
+    "artifacts/gemma-mlx-decisions-2026-11-04/plan-v1.json": "180bc027f3a756d4133cd149d1d1e36332196e6a08410ce98e0f885f518435e1",
+    "artifacts/gemma-mlx-decisions-2026-11-04/plan.json": "90e33a7e99a70e14186dffafe38fe9cd6c5e54240236bbdbf00ee9084b8c38a4",
+    "artifacts/gemma-mlx-decisions-2026-11-04/prepare.py": "73d29f7ee87004449bf581d45c872db3df1ff220598a8a68635d21ae4b1106e6",
+    "artifacts/gemma-mlx-decisions-2026-11-04/publish.py": "6b6e3098b0a32dae4d71c50c95ac7ed9b2190fe6f5e974d317dcf172baf723f7",
+    "artifacts/gemma-mlx-decisions-2026-11-04/replay.json": "06919d287f5f426f1d61bd1f74438986f9d0defd7b26018bafe59284cb888167",
+    "artifacts/gemma-mlx-decisions-2026-11-04/replay.py": "d0873869149be7350273546a9d7783e422d3983e0af43d592f95a6ea2279417b",
+    "artifacts/gemma-mlx-decisions-2026-11-04/review.diff": "9925fb06c27c090ca325d20af8c5b5659c3b59f70309f3117f7ca4f1bfb4de1c",
+    "artifacts/gemma-mlx-decisions-2026-11-04/run-owned-v1.py": "d0bfa2b4c0ee4e5ea503e4b0dc7e891d2fad468dd40588cbf96630a1a2c51ec8",
+    "artifacts/gemma-mlx-decisions-2026-11-04/run-owned.py": "49a87f13ef26217a69f61ef0020c4f51501ccff681dee494eac3773218885085",
+    "artifacts/gemma-mlx-decisions-2026-11-04/worker-v1.py": "5ca42e28aebae51d87538b1ded00476ae492d0ca72044eb5e2be1ffa44d58ef6",
+    "artifacts/gemma-mlx-decisions-2026-11-04/worker-v1.stderr": "2eebcc4f3024b0065815677d151def88a32e7260b740a821b69ee21741183a43",
+    "artifacts/gemma-mlx-decisions-2026-11-04/worker-v1.stdout": "cc23718e276edcba363e25a35991a6bcfca4580972ebacf51b9c58c9d130b924",
+    "artifacts/gemma-mlx-decisions-2026-11-04/worker-v2.py": "df45926ef97511051da8b55b5b5a8d23eb5662fe0c7b4fd7517ef6b49bb4a109",
+    "artifacts/gemma-mlx-decisions-2026-11-04/worker-v2.stderr": "419f43e55e9390350bd144f31b5cf9bd87031829201df8b0cd5bf0073c1bf5ec",
+    "artifacts/gemma-mlx-decisions-2026-11-04/worker-v2.stdout": "637246e8126267cb50e9665ddac5eea3bdd740f13b8366e11f46d7921c8ff666",
+    "artifacts/gemma-mlx-decisions-2026-11-04/worker.stderr": "2eebcc4f3024b0065815677d151def88a32e7260b740a821b69ee21741183a43",
+    "artifacts/gemma-mlx-decisions-2026-11-04/worker.stdout": "cc23718e276edcba363e25a35991a6bcfca4580972ebacf51b9c58c9d130b924",
+    "tools/reference/gemma4_mlx_decision_witness.py": "df45926ef97511051da8b55b5b5a8d23eb5662fe0c7b4fd7517ef6b49bb4a109",
+    "tools/reference/gemma_mlx_decisions.py": "22d49d484c65c5fd0515de544fe8835fa1de1cf2d96563f0e654399c102de9ea",
+    "tools/reference/test_gemma_mlx_decisions.py": "5e6cf62efa6f2362c5edb1fe8d48770050f2643cb97233277fd2cdf92bd6d35c"
+  }
+}
