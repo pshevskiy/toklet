@@ -17,7 +17,7 @@ not tokens per second or a promise that the engine can use that whole window.
 | Phi-3-mini-4k-instruct-4bit (`5b3819e`) | Native Metal fused-source dense, diagnostic | 4,096 | Selected Mac512 state/schedule and reference checks | No ordinary catalog/Chat adoption |
 | gemma-3-270m-it-4bit (`ff1143e`) | Native Metal local/global Gemma3, diagnostic | 32,768 | Selected capacity544, absolute positions0–543; bounded native conformance policy; historical precision rejections retained | No ordinary catalog/Chat adoption |
 | LFM2-350M-4bit (`18dc72a`) | Native Metal attention/causal-convolution, diagnostic | 128,000 |64 trajectory positions; capacity512 admitted separately | No ordinary catalog/Chat adoption |
-| gemma-4-e2b-it-4bit (`2387675`) | Packed Metal projections with CPU shared hybrid graph, diagnostic | 131,072 | 512 selected-logit evidence;1,025 state/wrap passes, mathematical-logit/stagedKV qualification rejected; earlier failures/full quality remain | No ordinary catalog/Chat adoption |
+| gemma-4-e2b-it-4bit (`2387675`) | Packed Metal projections with CPU shared hybrid graph, diagnostic | 131,072 | 512 selected-logit evidence;1,025 state/wrap passes, mathematical-logit/stagedKV qualification rejected; historical numerical failures remain; full task gate rejected52→43/100 | No ordinary catalog/Chat adoption |
 
 The full revisions, layouts, gates and numerical policies are in the artifact
 reports: [Qwen2 context](context-app-integration.md),
@@ -28,6 +28,13 @@ reports: [Qwen2 context](context-app-integration.md),
 [LFM2](lfm2-real-native.md), [Gemma4 hybrid](gemma-hybrid-real.md), [Gemma512 boundary](gemma-hybrid512.md),
 [Gemma1,025 admission](gemma-context1025-probe.md), [Gemma1,025 diagnostics](gemma-hybrid1025.md).
 This table indexes those scopes; it does not expand them.
+
+[Current M8 admission audit](m8-admission-audit.md) records all managed, conditional
+and diagnostic decisions. Gemma4 Q4 remains rejected by its
+[completed task gate](gemma-full-tasks.md); the
+[four-decision stock witness](gemma-mlx-decisions.md) does not waive it.
+Gemma E2B8-bit is excluded by the [current-owner memory estimate](gemma8-feasibility.md),
+with no payload or runtime qualification.
 
 Mac Settings separates model-declared, loaded and selected limits. Capacity,
 chunk, reply and numerical budget are saved under authenticated artifact/backend/

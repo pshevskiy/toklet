@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active milestone: **M8**.
-Current task: **Gemma8 actual-header ledger exceeds6GiB by102,686,350bytes; review decision and reconcile M8 conditional admissions. Q4 remains rejected52→43/100**.
+Current task: **Production Mac app load→reply process-memory audit; preserve workspace and bind exact profile/config/budget. Physical iPhone14Pro disconnected; Gemma Q4/Q8 remain rejected/excluded**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -415,7 +415,7 @@ separate requirements below. Further model admissions require their own scope.
           Astra saved audit. Restore256/chunk16 writes0; reply32 andApply128/chunk8
           save once each. Package37 selected with36retained; no real generation
           or rendered/device qualification.
-        - [ ] C6: reuse the same mechanisms for Mistral with its explicit text
+        - [x] C6: reuse the same mechanisms for Mistral with its explicit text
           policy bound and selected Reference attention contract.
           - [x] C6a: [source-only DenseAudit sharing](docs/mistral-consumed-source.md)
             passes530default/638Metal, seven controls and one cached745range
@@ -511,7 +511,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
   89 Python controls, 11 Mac compile/link groups and six mobile compiler checks
   pass. [Evidence](benchmarks/results/2026-10-30-standalone-swift-inventories-v1.json).
   Full nested wrapper execution and package-admission requirements are separate.
-- [ ] Complete required full adoption quality for newly adopted artifacts,
+- [x] Complete required full adoption quality for newly adopted artifacts,
   including Llama3's original unquantized 10,000-target / 100-task gates.
   - [x] Genuine original BF16 acquisition, bounded FP32 reference and four-prefix native alignment; [report](docs/llama3-original-reference.md).
   - [x] Quality-only 1,025-position route, native long-row consistency/state boundaries; managed app stays at512. [Report](docs/llama3-quality-context.md).
@@ -520,8 +520,10 @@ uses the existing full saved-conversation reset+prompt path on Send.
   - [x] Incremental original FP32 reference through566, 22-row replay/state/greedy checks. [Report](docs/llama3-original-incremental.md).
   - [x] Reference profiling/cache decision and frozen100-task collection/replay/grading. [Report](docs/llama3-task-quality.md), commit `bc7a704`.
   - [x] Join both original-quality gates for the pinned numerical/text configuration; [decision](docs/llama3-quality-qualification.md). App/device adoption remains separate.
-- [ ] Publish supported context/KV settings, evidence and remaining limitations;
-  make explicit decisions on open/conditional admissions before milestone closure.
+- [x] Publish supported context/KV settings, evidence and explicit admission decisions;
+  [M8 audit](docs/m8-admission-audit.md). This does not close remaining verification.
+- [ ] Externally measure production Mac app load→reply process peak with exact
+  bundle/profile/config and budget; helper/controller peaks do not qualify it.
 - [ ] Confirm required checks/reviews/commits and update this checklist and
   the improvement record. Do not infer support from a family name alone.
 
@@ -1232,3 +1234,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Same-checkpoint MLX witness reviewed | Four cold controls and repeated strict-stock run/full-row replay pass; all4decisions agree with native, physicalpeak3,239,480,320bytes. First final audit fails on Torch-generated helper; preserved, then exact-template validation and fresh logs pass. | Astra approves code/results; commit witness. Next8-bit metadata/header/combined-owner feasibility before any kernel. Full Q4 task/fidelity/app/device gates stay open. [Report](docs/gemma-mlx-decisions.md). |
 
 | 2026-11-05 | Gemma8 feasibility reviewed | Immutable metadata/two-shard headers validate1096selected tensors,4,918,123,078bytes, exact text config/tokenizer. Existing512/chunk32 owner estimate exceeds6GiB by102,686,350bytes before Q8extras. | No weight payload, stockload or kernels. Astra approves planning rejection; next M8 capability/admission reconciliation. Fetch failures preserved. [Report](docs/gemma8-feasibility.md). |
+
+| 2026-11-05 | M8 admission reconciliation reviewed | Five managed Mac profiles and four diagnostics checked against current catalog/evidence. Correct stale Mistral/Llama parents; preserve Gemma rejection/exclusion and physical phone gaps. | 303local links, six approved receipt decisions, unchanged engine inputs and Astra audit pass. New desktop gap: production app process peak; physical14Prodisconnected. No expanded support/device/performance claim. [Audit](docs/m8-admission-audit.md). |

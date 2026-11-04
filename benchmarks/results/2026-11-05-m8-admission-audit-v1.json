@@ -1,0 +1,41 @@
+{
+  "format": "toklet-m8-admission-audit-v1",
+  "passed": true,
+  "astra_review": "approved /root/astra_kv_limit; production Mac process peak remains open",
+  "m8_complete": false,
+  "production_mac_app_peak_qualified": false,
+  "physical_iphone14pro_qualified": false,
+  "checks": {
+    "passed": true,
+    "mac_profiles": 5,
+    "ios_catalog_profiles": 4,
+    "local_links_checked": 305,
+    "unchanged_engine_inputs_since": "4467b86",
+    "required_rust_jobs": 6,
+    "phone_qualification": false,
+    "m8_fully_complete": false,
+    "proofs_sha256": {
+      "benchmarks/results/2026-11-03-llama3-quality-qualification-v1.json": "e47233298aab4337cc133a64bd0cc006cf89734671a8b505077f98e4d001382b",
+      "benchmarks/results/2026-11-04-llama3-mac-adoption-v1.json": "b682b0423ec3287daa2851723fc783e3d7b5177049aa6d01b1ae588cc6de7d7e",
+      "benchmarks/results/2026-11-04-mac-hub-journeys-v1.json": "ef14b91b4775950ff09c7c140137fe6db1b35a6885a34b9e808d9aa96e4487c4",
+      "benchmarks/results/2026-11-04-gemma-task-quality-v1.json": "44155528016d06bd767b7b2f48ac46b4ec6debd4f2f8be9f1531cd0651de16b3",
+      "benchmarks/results/2026-11-04-gemma-mlx-decisions-v1.json": "5bf4e77d7b23292f804cd73f20ca9b95738e254392f414684ac8a935dabfb1a1",
+      "benchmarks/results/2026-11-05-gemma8-feasibility-v1.json": "48c14e24352e3548c1fd34f9f349b05038f4e96e842a8aaddd0e8c58a5a8b025"
+    },
+    "files_sha256": {
+      "apple/Harness/ModelHub.swift": "528410e471a33770e1408ddc8b2b370044675a26f9f98cb66b0132738ea216b9",
+      "apple/Harness/NativeAcceptedIdentity.swift": "343e625b2c1b516e3c2d469b21db22f2aa528b4d4c755489b259f7d9c10b1d05"
+    }
+  },
+  "receipts_sha256": {
+    "artifacts/m8-admission-audit-2026-11-05/devices-host.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m8-admission-audit-2026-11-05/devices-host.json": "5a0ac887264c6c753715f81baefb593438ca1810b12e1969481d6bc756119703",
+    "artifacts/m8-admission-audit-2026-11-05/check.stdout": "52bed6152d84f625bceec0e227f0ad5f0a30f4d5bd76d2e9751b8293849728fc",
+    "artifacts/m8-admission-audit-2026-11-05/check.py": "df5c434d2a6d307dedbcf1190187b78c24100072e18475b55e5d907c79bdbc92",
+    "artifacts/m8-admission-audit-2026-11-05/devices-host.stdout": "2b0b8e22800de25da6fbb4c41fbbe93eb1ff7cd1559adff809ab5914ef150109",
+    "artifacts/m8-admission-audit-2026-11-05/checks.json": "b75603e74c27751236c2e80e685331cd975b83772cb3a6e4309ea2dfeab208aa",
+    "artifacts/m8-admission-audit-2026-11-05/devices.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/m8-admission-audit-2026-11-05/devices.json": "02332de4d65db78744509676551fb0949b7e6a6d389cfd5fd575d519c5d35e7c",
+    "artifacts/m8-admission-audit-2026-11-05/devices.stderr": "bb08215adecc9877aab6cd214e277edd0bf5d83931fcff55f19bedb44e5cd13f"
+  }
+}

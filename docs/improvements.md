@@ -9926,3 +9926,11 @@ combined-owner estimate exceeds6GiB by102,686,350bytes. Exact config/tokenizer,
 header/arithmetic checks and Astra review pass. No weight payload, Q8 execution
 or quality claim; preserve Q4 rejection and reconcile M8 admissions next.
 [Report](gemma8-feasibility.md).
+
+## 5 November 2026 — Reconcile M8 admission decisions
+
+Publish five managed Mac profiles, four iOS catalog entries and explicit
+diagnostic/rejected scopes; correct completed Mistral/Llama parents. Catalog,
+receipt/link/source checks and Astra review pass. Production Mac app process
+peak and physical14Pro checks remain open; M8 is not declared complete.
+[Audit](m8-admission-audit.md).
