@@ -214,7 +214,7 @@ class Streamed:
         state = self.model.state_dict()
         if {n for n in state if not n.startswith('model.layers.') and n not in (EMBEDDING,PLE,'lm_head.weight')} != roots:
             raise ValueError('Upstream root inventory differs')
-        loaded = self.model.load_state_dict({n:reader.tensor(n) for n in roots}, strict=False, assign=True)
+        loaded = self.model.load_state_dict({n:reader.tensor(n) for n in sorted(roots)}, strict=False, assign=True)
         if loaded.unexpected_keys or set(loaded.missing_keys) != set(state)-roots:
             raise ValueError('Unexpected root materialization')
         self.model.model.rotary_emb = upstream.Gemma4TextRotaryEmbedding(self.config, device='cpu')

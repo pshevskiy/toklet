@@ -1,0 +1,29 @@
+{
+  "format": "toklet-gemma-upstream-reader-v1",
+  "admission": {
+    "selected": 540,
+    "excluded": 60,
+    "persistent_layer_scalars": 35,
+    "selected_bytes": 9257138758,
+    "tied_head_source": "model.language_model.embed_tokens.weight",
+    "four_token_memory_ledger": {
+      "runtime_allowance": 536870912,
+      "roots": 27528704,
+      "largest_layer": 140001282,
+      "read_and_decode_tiles": 6291456,
+      "captures_and_attention": 67108864
+    },
+    "memory_allowance_bytes": 777801218,
+    "process_policy_bytes": 6442450944
+  },
+  "checks": {
+    "cold_controls": 5,
+    "passed": true,
+    "log": "artifacts/gemma-upstream-reader-2026-11-04/controls-final.log",
+    "rust_inputs_unchanged": true
+  },
+  "astra_review": "approved reader, controls and prospective request-plan delta",
+  "real_checkpoint_executed": false,
+  "quality_qualified": false,
+  "earlier_failures_waived": false
+}

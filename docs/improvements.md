@@ -9736,3 +9736,11 @@ nonpersistent buffers and partial-read recovery pass. Frozen weights, complete
 runtime/input guards, retained generated source and Astra review pass; peakRSS
 is383,270,912bytes. Real-checkpoint fit/accuracy and earlier failures remain open.
 [Report](gemma-upstream-tiny.md).
+
+## 4 November 2026 — Official upstream BF16 reader
+
+All540selected tensors and60shared-consumer exclusions reconcile with stock
+persistent state, including35scalars and tied head ownership. Raw bounded BF16
+reads and a prospective request journal pass five cold controls and Astra review. Real checkpoint
+execution, measured fit and numerical/quality agreement remain next.
+[Report](gemma-upstream-reader.md).

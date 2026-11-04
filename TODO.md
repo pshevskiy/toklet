@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Official BF16 upstream reader admission and descriptive four-token comparison**.
+Current task: **Descriptive four-token real upstream BF16 comparison**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -1139,3 +1139,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Sealed upstream tiny equivalence passed | StockBF16 forward with storage proxies matches all layer/logit bits for two9-token cases; shared2→0/3→1, prefix8, tail head, buffers and partial-load recovery pass. Only one streamed layer set is materialized. Owned workerRSS383,270,912bytes; fullruntime/source guards pass and generated PyTorch source is retained. | Combined Astra review before commit; real upstream checkpoint remains unexecuted and earlier numerical gates stay rejected. |
 
 | 2026-11-04 | Upstream tiny reviewed | Astra approves bit-exact stock-forward storage integration, sharedKV/cleanup, frozenfixture and sealed evidence. No relevant Rust inputs changed; earlier numerical rejections remain. | Commit harness; admit all540selected/60excluded official text tensors and raw BF16 read coverage before real four-token outputs. [Report](docs/gemma-upstream-tiny.md). |
+
+| 2026-11-04 | Official upstream reader checked | All540selected/60excluded shapes,35persistent scalars and tied ownership admitted. Five cold controls pass rawBF16/order/extent/failure and prospective request-journal checks; four-token memory ledger777,801,218bytes is an estimate. | Astra approves reader and final request-plan delta; checks pass. Real upstream execution remains next. [Report](docs/gemma-upstream-reader.md). |
