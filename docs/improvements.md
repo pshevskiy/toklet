@@ -9718,3 +9718,12 @@ Projection and normalization each use the actual native input; all2,048values
 per contract pass, with zero staged differences. Three cold controls, required
 Rust checks, source/resource guards and Astra review pass. Full-sequence4math
 logit/8stagedKV failures remain rejected. [Report](gemma-v-boundary.md).
+
+## 4 November 2026 — Original-BF16 short source experiment
+
+All2,852saved states and the complete18.24GB read audit reproduce exactly.
+The47.11s correctness worker peaks at372,899,840bytes RSS and separates source
+authentication, reads, decoding, projection/conversion and head costs. Source,
+runtime, resource and NLL controls pass; Astra approves. Upstream BF16 agreement,
+full quality and earlier precision rejections remain open.
+[Report](gemma-bf16-source-experiment.md).

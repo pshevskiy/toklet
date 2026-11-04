@@ -1,0 +1,125 @@
+{
+  "format": "toklet-gemma-bf16-source-experiment-v1",
+  "passed": true,
+  "base_revision": "d2bcd1c",
+  "hardware": "Apple M1 Pro, macOS",
+  "scope": "original BF16 four-token saved-reference reproduction and observational source profiling",
+  "matched_states": 2852,
+  "source_audit": {
+    "bytes": 10246621918,
+    "sha256": "2db5482b20d746879bb3ef79b5203e9075a2e2b98f54ec7c2f281c1477ddc550",
+    "reads": 38182,
+    "read_bytes": 18236693062,
+    "read_chain_sha256": "0734f8d8b7813aeb726890eb04bf25d7b663a19a101c9e26b5c49dcef1100b67",
+    "poisoned": false,
+    "poison_reason": null,
+    "closed": true
+  },
+  "elapsed_seconds": 47.10961283399956,
+  "authentication_ns": 5755562459,
+  "binding_ns": 327196459,
+  "profiles": [
+    {
+      "sequence": "original",
+      "contract": "math_fp64",
+      "elapsed_ns": 9173371083,
+      "capture_ns": 152883542,
+      "operation_ns": {
+        "decode_validate_guard": 1675829601,
+        "read_guard_hash": 2588480134,
+        "tied_head_fp64_conversion_compute_framework": 500823081,
+        "tied_head_inclusive": 1179576875,
+        "projection_fp64_conversion_compute_framework": 2703925527,
+        "projection_inclusive": 6286233842
+      }
+    },
+    {
+      "sequence": "original",
+      "contract": "staged_fp32",
+      "elapsed_ns": 9744437708,
+      "capture_ns": 132550041,
+      "operation_ns": {
+        "decode_validate_guard": 1750883220,
+        "read_guard_hash": 2819448363,
+        "tied_head_fp64_conversion_compute_framework": 540158206,
+        "tied_head_inclusive": 1256960500,
+        "projection_fp64_conversion_compute_framework": 2906197054,
+        "projection_inclusive": 6759432259
+      }
+    },
+    {
+      "sequence": "future",
+      "contract": "math_fp64",
+      "elapsed_ns": 9975888917,
+      "capture_ns": 149263545,
+      "operation_ns": {
+        "decode_validate_guard": 1763659686,
+        "read_guard_hash": 2912508427,
+        "tied_head_fp64_conversion_compute_framework": 577514268,
+        "tied_head_inclusive": 1271342292,
+        "projection_fp64_conversion_compute_framework": 2972381711,
+        "projection_inclusive": 6954424881
+      }
+    },
+    {
+      "sequence": "future",
+      "contract": "staged_fp32",
+      "elapsed_ns": 9505708792,
+      "capture_ns": 127660492,
+      "operation_ns": {
+        "decode_validate_guard": 1689486134,
+        "read_guard_hash": 2866845473,
+        "tied_head_fp64_conversion_compute_framework": 429547047,
+        "tied_head_inclusive": 1113033875,
+        "projection_fp64_conversion_compute_framework": 2803353646,
+        "projection_inclusive": 6675897008
+      }
+    }
+  ],
+  "next_token_nlls": {
+    "original/math_fp64": [
+      9.687131174675335,
+      28.57894221893629,
+      7.186635719600819
+    ],
+    "original/staged_fp32": [
+      9.687131242053844,
+      28.5789447098417,
+      7.186636048097393
+    ],
+    "future/math_fp64": [
+      9.687131174675335,
+      28.57894221893629,
+      8.299758125724717
+    ],
+    "future/staged_fp32": [
+      9.687131242053844,
+      28.5789447098417,
+      8.29975898816087
+    ]
+  },
+  "peak_rss_bytes": 372899840,
+  "peak_physical_bytes": 290194464,
+  "process_limit_bytes": 6442450944,
+  "source_cross_precision_failures_retained": 11,
+  "upstream_runtime_executed": false,
+  "full_quality_qualified": false,
+  "earlier_failures_waived": false,
+  "performance_optimization_qualified": false,
+  "astra_review": "approved combined experiment/script/sealed-results review; short source reproduction/profiling only",
+  "receipts_sha256": {
+    "artifacts/gemma-bf16-source-experiment-2026-11-04/worker.py": "97c54ccbaef6326e522e06dad7bb5bdbba336cb9266aaf1b53b7440c23feec77",
+    "artifacts/gemma-bf16-source-experiment-2026-11-04/run.py": "7352299c7954a6bc510f3441a5e6769bbe1f1a9cca95b6a6c98576e57a8fbb40",
+    "artifacts/gemma-bf16-source-experiment-2026-11-04/runtime.json": "bab22547a3c51b2ab44b8b5c0696dada293a8fd081e1cdaaedb7a098ed2a33ca",
+    "artifacts/gemma-bf16-source-experiment-2026-11-04/controls.json": "b76e4677d7332c68a4469833d44c6f331d1e1b1d611466053392a1263cfe16d4",
+    "artifacts/gemma-bf16-source-experiment-2026-11-04/execution-plan.json": "edda236cd2c5741c1df08f2d2f07ed234ebdd9232a1e4951a7bd9ff56bc12dc4",
+    "artifacts/gemma-bf16-source-experiment-2026-11-04/run.json": "d9b0fbdd08ef5ff714ca172b9435607b80f5dcbdcd7fec98d9110bc2ddc14d14",
+    "artifacts/gemma-bf16-source-experiment-2026-11-04/capture.stdout": "a6c4e85c0c1827d21c885a33d41bf08a30faef8f799a99da6ea2c2bb2415e765",
+    "artifacts/gemma-bf16-source-experiment-2026-11-04/capture.stderr": "6689e6dc7ce8fdfa3ad1ae0f152f78e4c8d83831e6fe434f08b7b08aa5f51e8e",
+    "artifacts/gemma-bf16-source-experiment-2026-11-04/capture/result.json": "458ca0f70ba2671ccce6d9e149b37b7e5f5bd9032dcaf92721c92b078b213b5a",
+    "artifacts/gemma-bf16-source-experiment-2026-11-04/capture/observations.bin": "7b019ec9d2ec34a6bac554423b6c70e934de9237251038666bd0acbbcd6257a1",
+    "tools/reference/gemma4_bf16_profile.py": "50852c462a8f8e2ef4103b1b8784c8fa95af661cb7e03177644b37ed54778a6a",
+    "tests/fixtures/gemma-bf16-text-v1/capture.json": "66668be28232b7073ee8ed202b7330463b92e42331bb400cdf3a7705f36679cb",
+    "tests/fixtures/gemma-bf16-text-v1/plan.json": "04be1a0f1134441aabacb14de6b688fe4c81e97a01cf5d0919e2d0cd37397dd3"
+  }
+}

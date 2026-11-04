@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Original-BF16 four-token saved-reference reproduction and source profiling**.
+Current task: **Pinned upstream BF16 tiny resident-versus-streamed equivalence**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -487,9 +487,11 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Diagnostic1,025 admission and qualified512-prefix parity; default32/chunk32 preserved. [Report](docs/gemma-context1025-probe.md).
 - [x] Independent real1,025 oracle and native local-cache state/wrap/overflow/reset capture; [report](docs/gemma-hybrid1025.md).
 - [x] Same-input V-projection/RMSNorm and exact cache-transfer witness; [report](docs/gemma-v-boundary.md).
-- [ ] Real1,025 numerical qualification:4mathematical logits and8stagedKV observations remain rejected; targeted same-input V-projection/RMSNorm witness next.
+- [ ] Real1,025 numerical qualification:4mathematical logits and8stagedKV observations remain rejected; local same-input witness passes; source/precision decision remains.
 - [ ] Measured original-BF16 four-token source/upstream experiment before full-quality scorer; [next task](docs/gemma-original-quality-next.md).
 - [x] Standalone BF16 profiling adapter preparation, tiny equivalence only; [evidence](benchmarks/results/2026-11-04-gemma-bf16-profile-v1.json).
+- [x] Original-BF16 four-token saved-reference reproduction/profiling; [report](docs/gemma-bf16-source-experiment.md).
+- [ ] Pinned upstream BF16 tiny resident/streamed control, then descriptive real four-token comparison.
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1125,3 +1127,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Same-input V witness passed | Native651 pass reproduces all three full V rows exactly; failed retries preserve prefix and normalized-to-retained bytes match. Both local operations pass2,048values per contract; staged values match exactly, maxmathratio0.000525846. NativeRSS3,033,071,616bytes;3cold/550default/658Metal/fmt/Clippy/release pass. | Combined Astra review before commit; local proof leaves full-sequence4math/8staged failures rejected. Original-BF16 short source experiment next. |
 
 | 2026-11-04 | Same-input witness reviewed | Astra approves local projection/norm and exact cache-transfer evidence; all implementation checks pass. No local kernel change is indicated by these samples; whole-sequence numerical rejection stays open. | Commit witness; proceed to original-BF16 four-token reference reproduction/profiling, then the pinned upstream comparison. [Report](docs/gemma-v-boundary.md). |
+
+| 2026-11-04 | Original-BF16 source experiment passed | Four-token original/future cases reproduce all2,852saved states and full38,182-read/18,236,693,062-byte chain exactly under both profiles. Worker47.11s/RSS372,899,840bytes; sourceauth5.76s, binding0.33s, eachgraph9.17–9.98s. NLL/capture/source/runtime/resource checks pass. | Combined Astra review before commit; upstream tiny resident/streamed control next, without treating old11/27/4/8 numerical failures as waived. |
+
+| 2026-11-04 | Original source experiment reviewed | Astra approves scripts,2,852exact states/readchain and bounded profiling evidence; measured source cost does not qualify upstream arithmetic or performance retention. | Commit experiment; build four-layer BF16 upstream tiny resident/streamed control with fixed nine-token wrap input and tail head tile. [Report](docs/gemma-bf16-source-experiment.md). |

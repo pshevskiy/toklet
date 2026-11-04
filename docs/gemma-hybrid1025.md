@@ -52,10 +52,9 @@ Clippy in both configurations, 550 default/658 Metal tests and release build pas
 The initial checker fixture failure and provisional-preview syntax failure are
 retained. Final Astra approval is tracked in the evidence.
 
-Next is one same-input V-projection/RMSNorm witness at owner13/433 and
-owners12/14 at650, verifying complete projection input, raw V, normalized V and
-exact cache-transfer bytes. It distinguishes local-operation behavior from the
-full-sequence discrepancy without tracing every earlier layer. Mathematical and
+The [same-input V-projection/RMSNorm witness](gemma-v-boundary.md) now passes
+local operations and exact cache transfer at owner13/433 and owners12/14/650.
+It does not identify the full-sequence discrepancy. Mathematical and
 staged qualification remain rejected. The prior four-token 27 mathematical
 failures, original-BF16 cross-precision failures, full quality, free generation,
 resident scheduling and app/device qualification remain open.
