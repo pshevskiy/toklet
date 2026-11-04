@@ -1,0 +1,233 @@
+{
+  "format": "toklet-gemma-upstream-loss1025-v1",
+  "astra_review": "approved scripts, full block/replay and reuse as block one",
+  "owned": {
+    "passed": true,
+    "command": {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-s",
+        "-B",
+        "/Users/coloner/work/rust/toklet/artifacts/gemma-upstream-loss1025-2026-11-04/worker.py"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 33691,
+      "stdout": "artifacts/gemma-upstream-loss1025-2026-11-04/stdout",
+      "stderr": "artifacts/gemma-upstream-loss1025-2026-11-04/stderr"
+    },
+    "peak_rss_bytes": 1490796544,
+    "peak_physical_bytes": 1401342064,
+    "targets": 1024,
+    "scored_sha256": "56845d081c6bd2bf054ca249db1ef2b11782364c1b451bdec445425719158b12"
+  },
+  "verification": {
+    "passed": true,
+    "targets": 1024,
+    "batches": 32,
+    "finite_bf16_words": 268435456,
+    "nll_max_replay_difference": 7.105427357601002e-15,
+    "mean_nll": 7.374558536943502,
+    "stdlib_batch_anchors": [
+      {
+        "position": 0,
+        "nll": 20.84037503456603,
+        "difference": 0.0
+      },
+      {
+        "position": 32,
+        "nll": 18.03790326713443,
+        "difference": 0.0
+      },
+      {
+        "position": 64,
+        "nll": 1.8808933276659445e-05,
+        "difference": 0.0
+      },
+      {
+        "position": 96,
+        "nll": 0.002012146056753039,
+        "difference": 0.0
+      },
+      {
+        "position": 128,
+        "nll": 18.89875313111888,
+        "difference": 0.0
+      },
+      {
+        "position": 160,
+        "nll": 12.317383436579158,
+        "difference": 0.0
+      },
+      {
+        "position": 192,
+        "nll": 14.834163326270133,
+        "difference": 0.0
+      },
+      {
+        "position": 224,
+        "nll": 0.1908705285591511,
+        "difference": 2.220446049250313e-16
+      },
+      {
+        "position": 256,
+        "nll": 2.885391141856786,
+        "difference": 0.0
+      },
+      {
+        "position": 288,
+        "nll": 4.0593661765342404e-10,
+        "difference": 0.0
+      },
+      {
+        "position": 320,
+        "nll": 4.116215303602287,
+        "difference": 0.0
+      },
+      {
+        "position": 352,
+        "nll": 13.812506685244028,
+        "difference": 0.0
+      },
+      {
+        "position": 384,
+        "nll": 7.625556088038781,
+        "difference": 0.0
+      },
+      {
+        "position": 416,
+        "nll": 9.222951259115419,
+        "difference": 0.0
+      },
+      {
+        "position": 448,
+        "nll": 8.672174089952023e-12,
+        "difference": 0.0
+      },
+      {
+        "position": 480,
+        "nll": 16.82420198012865,
+        "difference": 0.0
+      },
+      {
+        "position": 512,
+        "nll": 12.402202023300234,
+        "difference": 0.0
+      },
+      {
+        "position": 544,
+        "nll": 16.492654970388372,
+        "difference": 3.552713678800501e-15
+      },
+      {
+        "position": 576,
+        "nll": 19.4694163924283,
+        "difference": 0.0
+      },
+      {
+        "position": 608,
+        "nll": 0.0018784252480443797,
+        "difference": 0.0
+      },
+      {
+        "position": 640,
+        "nll": 0.2148753031447228,
+        "difference": 0.0
+      },
+      {
+        "position": 672,
+        "nll": 1.3596078929493984,
+        "difference": 0.0
+      },
+      {
+        "position": 704,
+        "nll": 1.531930138298776e-11,
+        "difference": 3.552713678800501e-15
+      },
+      {
+        "position": 736,
+        "nll": 4.964678429031366e-06,
+        "difference": 8.881784197001252e-16
+      },
+      {
+        "position": 768,
+        "nll": 14.683394147036504,
+        "difference": 0.0
+      },
+      {
+        "position": 800,
+        "nll": 13.60525828031163,
+        "difference": 0.0
+      },
+      {
+        "position": 832,
+        "nll": 9.957504746438417e-05,
+        "difference": 0.0
+      },
+      {
+        "position": 864,
+        "nll": 16.24015569189766,
+        "difference": 0.0
+      },
+      {
+        "position": 896,
+        "nll": 3.8672387779377253,
+        "difference": 0.0
+      },
+      {
+        "position": 928,
+        "nll": 4.499497246257533e-05,
+        "difference": 0.0
+      },
+      {
+        "position": 960,
+        "nll": 14.71905227725014,
+        "difference": 0.0
+      },
+      {
+        "position": 992,
+        "nll": 4.149121934915456e-08,
+        "difference": 0.0
+      }
+    ],
+    "first32_vs_pilot_descriptive": {
+      "different_bf16_words": 0,
+      "max_absolute_difference": 0.0,
+      "values": 8388608,
+      "rms_difference": 0.0
+    }
+  },
+  "source_audit": {
+    "bytes": 10246621918,
+    "sha256": "2db5482b20d746879bb3ef79b5203e9075a2e2b98f54ec7c2f281c1477ddc550",
+    "reads": 10258,
+    "read_bytes": 4565018182,
+    "read_chain_sha256": "c2319ba6f5e18b4b3574aa531149845e41565e68ec9765a119d2dc700b811fcd",
+    "poisoned": false,
+    "poison_reason": null,
+    "closed": true
+  },
+  "score_targets": 1024,
+  "timings": {
+    "authentication_seconds": 6.223606708001171,
+    "score_seconds": 230.50931487499838
+  },
+  "receipts": {
+    "artifacts/gemma-upstream-loss1025-2026-11-04/plan.json": "571937fe434ab157eb34204b38fa895141e07d7e15dfdde2bef1355bf19791e4",
+    "artifacts/gemma-upstream-loss1025-2026-11-04/capture/run.json": "150b82a38e5b9b9f398d389a7ef09b11ac155a3f161eac686e3022f7be1ba6da",
+    "artifacts/gemma-upstream-loss1025-2026-11-04/capture/scored.bf16le": "56845d081c6bd2bf054ca249db1ef2b11782364c1b451bdec445425719158b12",
+    "artifacts/gemma-upstream-loss1025-2026-11-04/verification.json": "dc3d990a4a2289f1da4c7cf5285791962487c43974503a4db358475851944fdf"
+  },
+  "scripts": {
+    "worker.py": "6acb6833aaec1f449701acaeb891b1d1d59681f2564a4f5227a5f187adaf67a9",
+    "run.py": "95b613bd521f9df3cb85712a29bacc2a595535330659d44553b0ca7618f7d04c",
+    "verify.py": "acb3aacf61dbbd3d3e3a942847deca217888e4bb6e134fa7a902093ca51f90d8",
+    "prepare.py": "b4b72d362deed30db51b23d429cc35f98e4f8d00cd4de116bdfd30a890a3e00e"
+  },
+  "artifacts": "artifacts/gemma-upstream-loss1025-2026-11-04",
+  "quality_qualified": false,
+  "earlier_failures_waived": false
+}

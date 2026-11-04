@@ -9766,3 +9766,10 @@ One stock causal text forward plus32-position full-width head batches scores
 exact next-token targets. Eight cold controls and the real32-target pilot pass
 8.39million exactBF16 words and independent NLL replay; Astra approves, peakRSS1.54GB. Full1,025
 shape and aggregate/native quality remain open. [Report](gemma-upstream-loss-pilot.md).
+
+## 4 November 2026 — Full original BF16 loss block
+
+All1,024targets in the frozen1,025-ID block pass bounded independent NLL/greedy
+replay; meanNLL7.37456, maxreplayerror7.11e-15, peakRSS1.49GB. First32rows match
+the pilot exactly. Astra approves block-one reuse; native pairing and full10k/100
+quality remain open. [Report](gemma-upstream-loss1025.md).
