@@ -9801,3 +9801,10 @@ Three-category pilot verifies all65sampled decisions/hidden stops, pending state
 and reset under6GiB. Three cold controls and Astra review pass; source-read chain
 replays independently. No grading/full100task qualification yet.
 [Report](gemma-task-controller-pilot.md).
+
+## 4 November 2026 — Native task collector
+
+Existing generation/session APIs pass a three-category real pilot with exact
+stop/cap/pending/reset checks. Required checks, independent validation and Astra
+review pass; peakphysical2.90GB. Full100task collection/grading remains open.
+[Report](gemma-native-task-controller.md).

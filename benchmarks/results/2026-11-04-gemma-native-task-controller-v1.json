@@ -1,0 +1,104 @@
+{
+  "format": "toklet-gemma-native-task-controller-v1",
+  "astra_review": "approved existing-generation controller, required checks, two controls and three real cases; pilot reuse allowed",
+  "run": {
+    "passed": true,
+    "quality_qualified": false,
+    "command": {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/coloner/work/rust/toklet/artifacts/gemma-native-task-pilot-2026-11-04/release-driver",
+        "model::gemma_packed::tests::hybrid::real::task_controller::existing_generation_pilot",
+        "--exact",
+        "--ignored",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 42281,
+      "stdout": "artifacts/gemma-native-task-pilot-2026-11-04/native.stdout",
+      "stderr": "artifacts/gemma-native-task-pilot-2026-11-04/native.stderr"
+    },
+    "peak_rss_bytes": 2782937088,
+    "peak_physical_bytes": 2897070816,
+    "replay_command": {
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-s",
+        "-B",
+        "/Users/coloner/work/rust/toklet/artifacts/gemma-native-task-pilot-2026-11-04/replay.py"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 42365,
+      "stdout": "artifacts/gemma-native-task-pilot-2026-11-04/replay.json",
+      "stderr": "artifacts/gemma-native-task-pilot-2026-11-04/replay.stderr"
+    },
+    "cases": 3,
+    "tasks_sha256": "628a55c9d264a2595d00021ac2ff37d432d5d6b9233ac9cc43f37524a569cfc4",
+    "grading_executed": false
+  },
+  "cases": [
+    {
+      "id": "HumanEval/0",
+      "category": "code",
+      "visible_tokens": 51,
+      "stop_reason": {
+        "kind": "stop_token",
+        "token_id": 106
+      },
+      "generation_seconds": 26.066224709
+    },
+    {
+      "id": "truthfulqa/row-0",
+      "category": "prose",
+      "visible_tokens": 1,
+      "stop_reason": {
+        "kind": "stop_token",
+        "token_id": 106
+      },
+      "generation_seconds": 4.802454917
+    },
+    {
+      "id": "lambada/row-0",
+      "category": "continuation",
+      "visible_tokens": 3,
+      "stop_reason": {
+        "kind": "stop_token",
+        "token_id": 106
+      },
+      "generation_seconds": 6.712416458
+    }
+  ],
+  "checks": {
+    "fmt": true,
+    "strict_clippy_default": true,
+    "strict_clippy_metal": true,
+    "default_tests": 550,
+    "metal_tests": 658,
+    "release": true,
+    "cold_validator_controls": 2,
+    "rust_inputs_unchanged_after_python_guard_update": true
+  },
+  "receipts_sha256": {
+    "artifacts/gemma-native-task-pilot-2026-11-04/checks.json": "45f88531c0ee1f8046907aefecf1fb844c0692c13bec54de14580c093104f44c",
+    "artifacts/gemma-native-task-pilot-2026-11-04/native-plan.json": "3a1cd4cf4205c2382d8da5f832dd3e6d9170676e4a2a8c7e9037ac5e1194fdf9",
+    "artifacts/gemma-native-task-pilot-2026-11-04/native-run.json": "2d4ecfe0e8dbbf1c97b90835423990303d6d17847a9f5453e94617ba1b03b733",
+    "artifacts/gemma-native-task-pilot-2026-11-04/native.stdout": "0e2f907f4e22b7971fb543a0f0d3f124a02e68e8a262f02baf8e0e2aa6efeece",
+    "artifacts/gemma-native-task-pilot-2026-11-04/replay.json": "3dbfde3dc3a38a77cc3f43bc29d8bbe032b84deb4b32567151e86ec7889598b9",
+    "artifacts/gemma-native-task-pilot-2026-11-04/tasks.jsonl": "628a55c9d264a2595d00021ac2ff37d432d5d6b9233ac9cc43f37524a569cfc4",
+    "artifacts/gemma-native-task-pilot-2026-11-04/controls-current.log": "3443dab4689f827a8cd3ed048d7ab6039dea682828e49202264f60e5e3db9a8a"
+  },
+  "scripts_sha256": {
+    "artifacts/gemma-native-task-pilot-2026-11-04/check.py": "5602e411986250f43cdfa0e86c2688b0037f4b0814ae516aff542d2164d257fd",
+    "artifacts/gemma-native-task-pilot-2026-11-04/native.py": "c99c405683c09ebbf4e377f6f03731d4e53755083d853be144471982ff16335a",
+    "artifacts/gemma-native-task-pilot-2026-11-04/replay.py": "85aa3fa849148a1ba180e68681ba3f04a86e97335942def58044f4c8b423b9b9"
+  },
+  "task_grading_executed": false,
+  "full_quality_qualified": false,
+  "app_qualified": false
+}

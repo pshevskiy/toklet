@@ -17,6 +17,7 @@ const PROCESS: usize = 6 * 1024 * 1024 * 1024;
 const DIAGNOSTIC: usize = 128 * 1024 * 1024;
 mod context_probe;
 mod loss_block;
+mod task_controller;
 mod v_boundary;
 mod wrap;
 fn identity(m: &std::fs::Metadata) -> [u64; 7] {

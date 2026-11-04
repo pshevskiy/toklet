@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Full100original trajectories and native existing-generation-path pilot/collection**.
+Current task: **Complete paired100task collections, then qualified isolated grading**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -1187,3 +1187,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Resident task reference reviewed | Three cold controls and all6real greedy cases pass;568reject/reset/failure replay and read/runtime/resource guards pass. Peakphysical5,022,585,128bytes. Incremental logits differ descriptively; no bit-equivalence claim. Astra approves code/evidence. | Commit reference; pilot task controller with stateless verification of every sampledID/terminal stop before grading. Full100task gate remains open. [Report](docs/gemma-resident-generation.md). |
 
 | 2026-11-04 | Source task-controller pilot reviewed | All65sampledIDs/terminal106decisions across first code/prose/continuation cases verify statelessly; pending/reset/source/runtime/resource gates pass. Three cold controls pass; peakphysical4,935,520,432bytes. Astra approves code/evidence/three-case reuse. | Commit controller; collect remaining97source cases, prepare native genericGenerationSession pilot and grade only after100verified cases/model exit. [Report](docs/gemma-task-controller-pilot.md). |
+
+| 2026-11-04 | Full source tasks active / native controller implemented | Reuse approved source0/40/70; remaining97run single-threaded with mandatory stateless sampled/stop verification. Native test reuses existing genericGenerationSession at567/chunk32, full recipe/stop/cap/pending/reset checks. First cold checker import catches a test-only keyword-spacing typo before model execution. | Retain initial log, correct test syntax and run cold/required Rust checks before native pilot; no grading. Source7cases currently verified. |
+
+| 2026-11-04 | Native existing-generation pilot reviewed | Three real categories pass stop106/cap/pending/history/reset checks under6GiB; peakphysical2,897,070,816bytes. fmt/strictClippy/550default658Metal/release and two current validator controls pass. Astra approves code/evidence/three-record reuse. | Commit native collector; run remaining97 alongside original collection, then require exact100/role before isolated grading. [Report](docs/gemma-native-task-controller.md). |
