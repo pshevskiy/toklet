@@ -9808,3 +9808,10 @@ Existing generation/session APIs pass a three-category real pilot with exact
 stop/cap/pending/reset checks. Required checks, independent validation and Astra
 review pass; peakphysical2.90GB. Full100task collection/grading remains open.
 [Report](gemma-native-task-controller.md).
+
+## 4 November 2026 — Exact source trajectory recovery
+
+Stock execution confirms an upstream cached/fresh BF16 tie difference. Uniform
+first-mismatch repair discards the suffix and rechecks every decision; HumanEval17
+passes247IDs after one repair. Three controls and Astra review pass below6GiB.
+The original rejection and full-task/adoption limits remain. [Report](gemma-task-recovery.md).

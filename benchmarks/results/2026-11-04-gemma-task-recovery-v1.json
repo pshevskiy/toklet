@@ -1,0 +1,119 @@
+{
+  "format": "toklet-gemma-task-recovery-v1",
+  "astra_review": "approved decision witness, recovery code/three controls and exact247decision receipt; reuseallowed",
+  "run": {
+    "passed": true,
+    "command": {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-s",
+        "-B",
+        "/Users/coloner/work/rust/toklet/artifacts/gemma-task-recovery-2026-11-04/worker.py"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 44157,
+      "stdout": "artifacts/gemma-task-recovery-2026-11-04/stdout",
+      "stderr": "artifacts/gemma-task-recovery-2026-11-04/stderr"
+    },
+    "peak_rss_bytes": 5023367168,
+    "peak_physical_bytes": 4977266960,
+    "case": "HumanEval/17",
+    "repairs": 1,
+    "sampled_slots": 247,
+    "case_sha256": "334f4a504caefe4d30afc15bb0ff764176323722412127b21f550528b856c5e6"
+  },
+  "decision_witness": {
+    "passed": true,
+    "command": {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-s",
+        "-B",
+        "/Users/coloner/work/rust/toklet/artifacts/gemma-task17-decision-2026-11-04/worker.py"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 43760,
+      "stdout": "artifacts/gemma-task17-decision-2026-11-04/stdout",
+      "stderr": "artifacts/gemma-task17-decision-2026-11-04/stderr"
+    },
+    "peak_rss_bytes": 4876976128,
+    "peak_physical_bytes": 5020045608,
+    "matched_stock_cached_rows": 206,
+    "observations": [
+      {
+        "token_id": 1788,
+        "margin": 0.0,
+        "row_sha256": "ecceed8a151d32c3728dd67df5e23d7e125aec09ce2ea938bc66920e42e4d2f9",
+        "name": "stock_cached",
+        "candidate_logits": {
+          "1788": 21.75,
+          "58089": 21.75
+        }
+      },
+      {
+        "token_id": 58089,
+        "margin": 0.125,
+        "row_sha256": "c8badd95065abe69eccf663a24d7cfa0702cba0e6bc7af772750a468c4199685",
+        "name": "fresh412",
+        "candidate_logits": {
+          "1788": 21.625,
+          "58089": 21.75
+        }
+      },
+      {
+        "token_id": 58089,
+        "margin": 0.125,
+        "row_sha256": "c8badd95065abe69eccf663a24d7cfa0702cba0e6bc7af772750a468c4199685",
+        "name": "full_trajectory458",
+        "candidate_logits": {
+          "1788": 21.625,
+          "58089": 21.75
+        }
+      }
+    ]
+  },
+  "source_case": {
+    "id": "HumanEval/17",
+    "repairs": 1,
+    "discarded_samples": 47,
+    "verified_samples": 247,
+    "terminal_stop": 106,
+    "elapsed_seconds": 221.53460245799943
+  },
+  "checks": {
+    "cold_controls": 3,
+    "rust_inputs_unchanged": true,
+    "original_failure_retained": true,
+    "stateless_gate_unchanged": true
+  },
+  "receipts_sha256": {
+    "artifacts/gemma-task-recovery-2026-11-04/plan.json": "f48fdf843b2068c0530882db860c6a050ace41a3d86821fa2c7509bf32450265",
+    "artifacts/gemma-task-recovery-2026-11-04/run.json": "096978ff00d2b50fbef253a8fe537cd71a2edff05d27aade8c564dd8675e7271",
+    "artifacts/gemma-task-recovery-2026-11-04/capture/run.json": "7e8ec761a0e4cc74288c0e1d36b3758470df80590611a4e4d093aaeb2a56b6bc",
+    "artifacts/gemma-task-recovery-2026-11-04/capture/case.json": "334f4a504caefe4d30afc15bb0ff764176323722412127b21f550528b856c5e6",
+    "artifacts/gemma-task-recovery-2026-11-04/capture/input-calls.json": "118c135d6cc0dc90a08a06ea36547978c8f6b9f0c47be31503770496f0de8edd",
+    "artifacts/gemma-task17-decision-2026-11-04/plan.json": "5b95808482e34f0637c80564fa69a1a82682f4d9dac8b6b64db17a10f52b0fcf",
+    "artifacts/gemma-task17-decision-2026-11-04/run.json": "6127e59587ac0ca658c9575039e60e6a8722539bb29c7cdb2a5b3764546049e9",
+    "artifacts/gemma-task17-decision-2026-11-04/capture/run.json": "ab7ec99501fe226134471c7267abdd6e77cbe3ddcd886b7f56ad68b178f47d46",
+    "artifacts/gemma-task17-decision-2026-11-04/capture/arrays.bf16le": "e381a1cf1760adcde833e34708828ec3a24d35ba1a6936cc8336b88733ec4027"
+  },
+  "scripts_sha256": {
+    "artifacts/gemma-task-recovery-2026-11-04/worker.py": "8312dd5abd4a54fa8f8fdcbca8e1a4997cab6fd146f878e3cab5367eab690a4d",
+    "artifacts/gemma-task-recovery-2026-11-04/run.py": "3f0110e3a1ebde3e6a9273f450a46db688a0b2a432b823632290633eb481bfc0",
+    "artifacts/gemma-task-recovery-2026-11-04/prepare.py": "fbf1a5c9012886ffd7aff5a94d1c9b9b82b968884c66f3b54d2aa30dff1f0b27",
+    "artifacts/gemma-task17-decision-2026-11-04/worker.py": "d1ea2a770a21d3ec10f07cb490334d2e51d62b7469646250fbbd4830b15f75ce",
+    "artifacts/gemma-task17-decision-2026-11-04/run.py": "f2dca41a3f75dfbc4098096f739389ff2b6d49e7acd5fe238f4bfee5285fda8d",
+    "artifacts/gemma-task17-decision-2026-11-04/prepare.py": "46dda7153ba917dc67c306058f209d7ee1c67ce6176ab3d553d16ef719845d29"
+  },
+  "grading_executed": false,
+  "full_quality_qualified": false,
+  "old_rejection_waived": false
+}

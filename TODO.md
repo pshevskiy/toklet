@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Complete paired100task collections, then qualified isolated grading**.
+Current task: **Restart full source100 with exact trajectory recovery; native100complete; grading pending**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -1191,3 +1191,11 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Full source tasks active / native controller implemented | Reuse approved source0/40/70; remaining97run single-threaded with mandatory stateless sampled/stop verification. Native test reuses existing genericGenerationSession at567/chunk32, full recipe/stop/cap/pending/reset checks. First cold checker import catches a test-only keyword-spacing typo before model execution. | Retain initial log, correct test syntax and run cold/required Rust checks before native pilot; no grading. Source7cases currently verified. |
 
 | 2026-11-04 | Native existing-generation pilot reviewed | Three real categories pass stop106/cap/pending/history/reset checks under6GiB; peakphysical2,897,070,816bytes. fmt/strictClippy/550default658Metal/release and two current validator controls pass. Astra approves code/evidence/three-record reuse. | Commit native collector; run remaining97 alongside original collection, then require exact100/role before isolated grading. [Report](docs/gemma-native-task-controller.md). |
+
+| 2026-11-04 | Paired full-task collection active | Source controller `55466a5` and native collector `e7a65fc` reviewed/committed. Both full workers reuse approved0/40/70receipts and collect remaining97 with exact order/caps/state gates. Native reuses copied qualified binary; source retains stateless sampled/stop verification. | No grading while models live. Prepare thin adapter to unchanged qualified isolated grader; assert all literal grading fields equal canonical dataset and bind Gemma inference separately. |
+
+| 2026-11-04 | Source trajectory rejection at HumanEval17 | Full source worker stops as frozen policy requires: cases0–16verify, HumanEval17has a cached/stateless sampled-ID divergence. Partial journal/failure remain intact; no grading or gate relaxation. Native independent collection continues. | Astra investigates saved mismatch/state/profile evidence; resolve source trajectory consistency before full100quality. |
+
+| 2026-11-04 | Stock decision witness / deterministic repair pilot | Direct stock forward reproduces all206cached rows. At411cached1788/58089tie21.75; fresh412andfull458match58089 at21.75 vs1788 at21.625. Cache-wrapper error is excluded; oldcase staysrejected. Two repair controls pass full-suffix regeneration and terminal/bound handling. | Run bounded first-mismatch correction/new-suffix proposal, then unchanged whole-trajectory gate. Never splice old suffix or grade unresolved trajectories. Native collection continues. |
+
+| 2026-11-04 | Source recovery reviewed | One deterministic repair discards47samples and regenerates a tail; all247IDs/stop106pass unchangedwhole-trajectory verification. Three controls, source/runtime/owned/resource guards pass under6GiB; Astra approves witness/code/receipt reuse. Native100independentlycomplete/validated. | Commit recovery; restart source with approved0/17/40/70 and recollect96others. Preserve original rejection; grade only after full source completion. [Report](docs/gemma-task-recovery.md). |
