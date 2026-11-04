@@ -9836,3 +9836,11 @@ Astra records native arithmetic, selected Mac512 coupled rows and local
 witnesses in a [prospective design](gemma4-native-conformance.md). Provider/SIMD
 specification and independent-reference validation remain prerequisites; no
 numerical or app qualification changes. Local links and whitespace pass.
+
+## 4 November 2026 — Independent native projection replay
+
+Bounded CPU Q4/BF16 replay specifies FMA residuals, compensated lane updates and
+merge order. Sixteen controls and Astra review pass; archived128-word V tile
+matches at assumed32lanes. Diagnostic timings and initial runner correction are
+recorded. Actual Metal width/flush and coupled graph remain open.
+[Report](gemma-native-projection.md).

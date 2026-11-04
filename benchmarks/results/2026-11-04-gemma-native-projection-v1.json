@@ -1,0 +1,70 @@
+{
+  "format": "toklet-gemma-native-projection-primitive-v1",
+  "passed": true,
+  "scope": "CPU primitive only",
+  "hardware": "Apple M1 Pro 16GiB",
+  "compiler": "Apple clang21.0.0 arm64",
+  "compile_flags": [
+    "-std=c11",
+    "-O2",
+    "-Wall",
+    "-Wextra",
+    "-Werror",
+    "-ffp-contract=off",
+    "-fno-fast-math",
+    "-dynamiclib"
+  ],
+  "targeted_tests": 16,
+  "astra_review": "approved CPU primitive; Metal width/flush and coupled graph remain open",
+  "pipeline_width_qualified": false,
+  "metal_qualified": false,
+  "coupled_graph_qualified": false,
+  "app_qualified": false,
+  "earlier_failures_waived": false,
+  "measurements": {
+    "passed": true,
+    "plan_sha256": "0885a5112a556f255b3128a136fc37409e8b445365b5c54fb02a8ee25ebbd983",
+    "measurements": [
+      {
+        "tokens": 1,
+        "seconds": [
+          0.0014309580001281574,
+          0.0014273330016294494,
+          0.0014251250031520613
+        ],
+        "output_sha256": "7f87cf7d5e4face13241c36fcc38da6248916f65ba8155570ad8d1762baf2219"
+      },
+      {
+        "tokens": 32,
+        "seconds": [
+          0.0328384169988567,
+          0.032823333000123966,
+          0.03258816699963063
+        ],
+        "output_sha256": "280258a124fbd99272fa18aa165add338608c945bf88655235192d7f59335872"
+      }
+    ],
+    "prior_native_exact_word_mismatches": 0,
+    "hardware": "macOS-26.6.2-arm64-arm-64bit",
+    "peak_rss_bytes": 30244864,
+    "scope": "CPU primitive feasibility; no fresh Metal, pipeline-width or coupled-graph qualification"
+  },
+  "cargo_checks": "Prior required checks reused; Rust/dependency inputs unchanged",
+  "receipts_sha256": {
+    "tools/reference/gemma_native_projection.c": "9871002a4920f100967ec7e9e825b0295b8bbcacaf5241f67d4d97dc3afe01df",
+    "tools/reference/gemma_native_projection.py": "95a34fa3a2ae61585bbb6790c3b402c3237e0079ccc188b3f4cf2e8853e627a1",
+    "tools/reference/test_gemma_native_projection.py": "9c876db706ebc252c42f8943b7cf8f40a3377230289198119db2b7071b341cec",
+    "artifacts/gemma-native-projection-2026-11-04/projection.dylib": "00d31ad179a8adfc80aeff60cba883a017cc55f99988c4d2d844bd3bfe32ead6",
+    "artifacts/gemma-native-projection-2026-11-04/controls-final.log": "6209bdc576b1289fd4cc98de6a3ed4b4b31b4fa66d27f5e9709238b148d706df",
+    "artifacts/gemma-native-projection-2026-11-04/disassembly.txt": "3895376f3827629379a01dcea6d0608b3fb2e47016859045c6abbccd4e14113b",
+    "artifacts/gemma-native-projection-2026-11-04/measure.py": "3f5e5449c45489b64c3174a6ca9ef6bf8233db07b80acbe82a0f8a2bad87e7c5",
+    "artifacts/gemma-native-projection-2026-11-04/measurement-plan.json": "0885a5112a556f255b3128a136fc37409e8b445365b5c54fb02a8ee25ebbd983",
+    "artifacts/gemma-native-projection-2026-11-04/measurement.json": "42b9a2431fe0b3e6f9921382ce12fe152270bb26dd0fa75c61f89c58b2156035",
+    "artifacts/gemma-native-projection-2026-11-04/measurement.stdout": "42b9a2431fe0b3e6f9921382ce12fe152270bb26dd0fa75c61f89c58b2156035",
+    "artifacts/gemma-native-projection-2026-11-04/measurement.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/gemma-native-projection-2026-11-04/measure.py.initial": "76721b5b55eb3f7f3f9891cabb1ce01c651d140cb7d07fdd4ad661f2198f8fdd",
+    "artifacts/gemma-native-projection-2026-11-04/measurement.stderr.initial": "2cbb10ec816ce1b1151c70ee5059ec1308b790f4350d17c1b253d369f6ad6e11",
+    "artifacts/gemma-native-projection-2026-11-04/measurement-plan.json.initial": "f99f9c6610224deec7446899737014c64d1f28e5bb7a710aa41cc7295e6a8716",
+    "artifacts/gemma-native-projection-2026-11-04/measurement.stdout.initial": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
