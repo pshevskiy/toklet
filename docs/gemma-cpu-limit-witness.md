@@ -29,6 +29,27 @@ are insufficient. Missing identity or a below-threshold measurement leaves
 the original ambiguous exit unresolved. A trusted complete terminal event
 continues through its existing classifier.
 
+The first authored prototype used `clock_getcpuclockid` (SCHED). Its spinner
+recorded3,930,666,775ns and **failed** the frozen four-second rule. Keep that
+failure. Linux6.17 enforces RLIMIT_CPU against process `CPUCLOCK_PROF`, the
+user+system counter; SCHED is a different scheduler-runtime counter. Before
+fresh controls, select process PROF **only**, signed ID `((~tgid)<<3)|0`, with
+the per-thread bit clear. Record both PROF and SCHED at the same kernel exit
+stop, never select their maximum or add a rounding allowance. Require integer
+**PROF ≥4,000,000,000ns**, with the unchanged four-second limit.
+
+Use `PTRACE_SEIZE` with `PTRACE_O_TRACEEXIT`, query those clocks with
+`clock_gettime`, resume the exit stop and require matching final SIGKILL status.
+The process clocks exclude child-process accounting. Final `wait4(RUSAGE_BOTH)`
+alone would need proof that no descendants were ever reaped; an attachment-time
+snapshot cannot establish that prehistory. No `EXITKILL` or candidate register,
+memory, syscall or isolation changes are permitted. Forward real signal-delivery
+stops and preserve seized group stops. Observer loss or unknown stops remain
+inconclusive. Qualify teardown-pause overhead against the original watchdogs.
+[Linux process clocks](https://man7.org/linux/man-pages/man3/clock_getcpuclockid.3.html) ·
+[ptrace stop semantics](https://man7.org/linux/man-pages/man2/ptrace.2.html) ·
+[kernel enforcement and clock sampling](https://github.com/torvalds/linux/blob/v6.17/kernel/time/posix-cpu-timers.c).
+
 ## Bounded inventory in an owned VM window
 
 Record the stopped initial machine, existing rootless connection, tool hashes,
@@ -83,3 +104,31 @@ evidence and verify VM restoration. Review the controls, observer lifetime,
 resource overhead and classifier changes before any new generated-code run.
 Apply an accepted rule uniformly to both profiles in a fresh isolated grading
 window. The previous run never acquires a retrospective classification.
+
+## Authored qualification
+
+The owned read-only guest inventory finds Python3, passwordless guest-root
+access and ptrace support. No existing strace/getdelays/bpftool is present;
+kernel-config files are unavailable. The inventory's first launcher shadows
+stdlib `inspect` before VM startup; its failure is retained and the renamed
+launcher passes with independently stopped restoration.
+
+The final observer binds the container and process before the original
+transport releases stdin, samples PROF/SCHED at the kernel exit stop and waits
+for final status. Seven pure witness/identity tests plus existing evaluator checks
+total46 passing controls. Ten paired authored executions pass: baseline and
+observed normal completion, two spinners, raw early-exit137 and a controlled
+external SIGKILL. PROF reaches4,000,864,950/4,000,141,624ns for the observed
+spinners; normal/early/external measurements remain below budget. Both positive
+and negative final statuses match the original controller, without wall/OOM
+watchdogs. Every container is removed and the VM returns stopped with its
+lifetime owner finished. Astra approves this authored-witness scope.
+
+Grading integration remains separate: classify every original execution
+normally first. Only an otherwise unresolved137 triggers one observed rerun of
+the **identical** authenticated payload under this same rule for either profile.
+Require both readiness/payload/image/configuration/cleanup bindings to agree.
+A rerun with an observation failure, watchdog or insufficient PROF leaves the
+original unresolved. Preserve both raw attempts and the original verdict;
+qualifying a rerun does not identify the cause of the original signal.
+[Qualification evidence](../benchmarks/results/2026-11-04-linux-process-cpu-witness-v1.json).

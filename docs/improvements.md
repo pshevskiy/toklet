@@ -9887,3 +9887,11 @@ All100 responses per role pass admission; original trajectories verify exactly
 with six one-repair cases below6GiB. Astra approves collection reuse. The grader
 correctly withholds a score for ambiguous HumanEval39 exit137 and restores the
 VM. Authored process-CPU witness qualification is next. [Report](gemma-full-tasks.md).
+
+## 4 November 2026 — Qualified authored process-CPU witness
+
+An external observer measures the exact process PROF counter used by Linux's
+four-second CPU limit. Ten paired authored runs,46 controls and Astra review
+pass; early/external under-budget deaths stay unresolved. The failed scheduler
+counter experiment remains failed. Model-grading integration is next.
+[Report](gemma-cpu-limit-witness.md).

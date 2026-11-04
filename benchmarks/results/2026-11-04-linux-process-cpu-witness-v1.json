@@ -1,0 +1,152 @@
+{
+  "format": "toklet-linux-process-cpu-witness-qualification-v1",
+  "authored_witness_qualified": true,
+  "model_grading_qualified": false,
+  "targeted_tests": 46,
+  "authored_runs": 10,
+  "metric": "Linux process CPUCLOCK_PROF0 user+system at exit stop",
+  "threshold_ns": 4000000000,
+  "limits_changed": false,
+  "signal_cause_attributed": false,
+  "astra_review": "approved authored CPU-budget witness; integrate ordinary-first/ambiguous137-only identical observed rerun before model retry",
+  "restored_stopped": true,
+  "pipe_lifetime_finished": true,
+  "observer_python_sha256": "cb7b9670c4cfcad3ce6c2a126fd8d3a71cd0c3df5dc131df9f7ab4bc15e4227e",
+  "kernel": "6.17.7-300.fc43.aarch64",
+  "observer_peak_rss_bytes": 23707648,
+  "observations": [
+    {
+      "name": "normal",
+      "mode": "baseline",
+      "cpu": null,
+      "exit_code": 0
+    },
+    {
+      "name": "normal",
+      "mode": "observed",
+      "cpu": {
+        "process_cpu_ns": 100769875,
+        "budget_exhausted": false,
+        "sched_cpu_ns": 103800463,
+        "container_id": "b0ac7ca312b318a27e1689675669bb31ead5ebda915a63c7616cb1f142304ba7",
+        "pid": 1766,
+        "scope": "Linux process user+system PROF at exit stop; no signal-cause attribution"
+      },
+      "exit_code": 0
+    },
+    {
+      "name": "spinner",
+      "mode": "baseline",
+      "cpu": null,
+      "exit_code": 137
+    },
+    {
+      "name": "spinner",
+      "mode": "observed",
+      "cpu": {
+        "process_cpu_ns": 4000864950,
+        "budget_exhausted": true,
+        "sched_cpu_ns": 3767482355,
+        "container_id": "f525064311c41fcbea1cede48d37042cb19e8a1bccff69ea0398648b93365686",
+        "pid": 2026,
+        "scope": "Linux process user+system PROF at exit stop; no signal-cause attribution"
+      },
+      "exit_code": 137
+    },
+    {
+      "name": "spinner-repeat",
+      "mode": "baseline",
+      "cpu": null,
+      "exit_code": 137
+    },
+    {
+      "name": "spinner-repeat",
+      "mode": "observed",
+      "cpu": {
+        "process_cpu_ns": 4000141624,
+        "budget_exhausted": true,
+        "sched_cpu_ns": 3999605687,
+        "container_id": "737b5f55a4e4b4fffe0c1c30413509bc8bafc0399c85a5fdd48eb25eda24838b",
+        "pid": 2284,
+        "scope": "Linux process user+system PROF at exit stop; no signal-cause attribution"
+      },
+      "exit_code": 137
+    },
+    {
+      "name": "early-exit137",
+      "mode": "baseline",
+      "cpu": null,
+      "exit_code": 137
+    },
+    {
+      "name": "early-exit137",
+      "mode": "observed",
+      "cpu": {
+        "process_cpu_ns": 92310032,
+        "budget_exhausted": false,
+        "sched_cpu_ns": 93067951,
+        "container_id": "746dc7d82c8866f8587bfeeabaf935cda594d57be2f8976a7e5680254ef7eef1",
+        "pid": 2545,
+        "scope": "Linux process user+system PROF at exit stop; no signal-cause attribution"
+      },
+      "exit_code": 137
+    },
+    {
+      "name": "external-kill",
+      "mode": "baseline",
+      "cpu": null,
+      "exit_code": 137
+    },
+    {
+      "name": "external-kill",
+      "mode": "observed",
+      "cpu": {
+        "process_cpu_ns": 95140906,
+        "budget_exhausted": false,
+        "sched_cpu_ns": 94219991,
+        "container_id": "656456273a654028b9bb14afc9497187cc7b2211e0340c41cb9a87b1a45d01ca",
+        "pid": 2827,
+        "scope": "Linux process user+system PROF at exit stop; no signal-cause attribution"
+      },
+      "exit_code": 137
+    }
+  ],
+  "earlier_sched_rejection_preserved": true,
+  "original_humaneval39_unresolved": true,
+  "cargo_checks": "Required4467b86checks reused; Rust/dependency inputs unchanged",
+  "receipts_sha256": {
+    "tools/bench/linux_process_cpu_guest.py": "0b9b7007e8f5bd478c6e51e72929b62e4d6b30f2984e99eb0276f13554b2cf6a",
+    "tools/bench/linux_process_cpu_window.py": "6d15cd8323a356dc4c3c030da647bcacb330390e0e17b0110af99a3d126f9ca1",
+    "tools/bench/linux_process_cpu_evidence.py": "ba97bab7b3e9d1ab936317fb41887bb61429e469293d7510a2746f6a3625ddbc",
+    "tools/bench/test_linux_process_cpu_guest.py": "8a6d396537bc37689ec59fdda7ba7b630094191cfa7071a3948dd59c2e74ca85",
+    "tools/bench/test_linux_process_cpu_evidence.py": "2837d5092d4b7a8332fe041db86799be92176a12fd856c1122c950096343eff4",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/qualification-v1/run.py": "2a1d45dc17a982c7381e08835b7c5f60e77fa7cd825d7515dc67ce2e2e6e72fb",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/qualification-v1/plan.json": "93201eafe81b03798d82f2553a5cf3c637c0f14808c115ad102d57c3dc15f409",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/qualification-v1/result.json": "5658725f19332f260bef07ecb1b43b9d040e73d048d4d5429b73aa25f0f24a0c",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/qualification-v1/controls-final.log": "68e6b296b7a289c027b8a7c34b3ced6ed3b2489212ab9f49a5def57ac7753507",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/probe-v1/run.py": "52bca782f5ecd468eba61e47231fcbe565fe63923c4b36c7be2454e7c8d383f6",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/probe-v1/plan.json": "0d2ac6ca8d44f4c4abca8c2b299894529c263fdf9d3627515b6d495ee17b4308",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/probe-v1/result.json": "391b2544a83969236662fdf7a03050966882e1d7e89c025c67976c8e913be3e9",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/probe-v1/normal.json": "9299378d8011c7a88011c63abfc4d546a9041c664eea51410e28e3eee7d297ec",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/probe-v1/spinner.json": "5b24e28be2a1b679b70b5aef8861480d29d50b78f82bbe8c2a3ffccaaa080b33",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/probe-v2/run.py": "86110dd5e72a0607f28c47d23a022275167c3d76acbaba24943b3e5b040f158a",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/probe-v2/plan.json": "cee327d72f9596864ed42e40c04a99b07744fc38955ad289cb6bfb60a1cc9460",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/probe-v2/result.json": "cf7868cadb807bd9e9237d327f8443c1a6a1e980316f245041a37773ec1b9f5c",
+    "artifacts/gemma-cpu-witness-inventory-2026-11-04/inventory.py": "4e0d3de0343247499de6327a220e7c9c7b3a9f77d3b8c0bf30fc8634889f7f3c",
+    "artifacts/gemma-cpu-witness-inventory-2026-11-04/result.json": "382c7bdbaa1765b13a1dae7c8bd2d3ca98c60fd4b2971ede75cecbbcdf140351",
+    "artifacts/gemma-cpu-witness-inventory-2026-11-04/inspect.py.initial": "e98b51a2e49dc1afef53b8e00109a8017be75930fa9ce5cddd4df0c6a8598d94",
+    "artifacts/gemma-cpu-witness-inventory-2026-11-04/stderr.initial": "a3bc02981f96f786a7585933b73fe34ca9a628e5b55171ef47b14b43b77978d1",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/qualification-v1/sources/run.py": "2a1d45dc17a982c7381e08835b7c5f60e77fa7cd825d7515dc67ce2e2e6e72fb",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/qualification-v1/sources/linux_process_cpu_evidence.py": "ba97bab7b3e9d1ab936317fb41887bb61429e469293d7510a2746f6a3625ddbc",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/qualification-v1/sources/linux_process_cpu_window.py": "6d15cd8323a356dc4c3c030da647bcacb330390e0e17b0110af99a3d126f9ca1",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/qualification-v1/sources/gemma-cpu-limit-witness.md": "f207c37e0df537ea9948d4740bbdadd917e5fead6b27caf5985bfdeb02beade2",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/qualification-v1/sources/linux_process_cpu_guest.py": "0b9b7007e8f5bd478c6e51e72929b62e4d6b30f2984e99eb0276f13554b2cf6a",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/probe-v1/sources/test_linux_process_cpu_guest.py": "2eca83f05a4b1c754d64489e21e667482007858d79b8d378f9b65b19bf588eb4",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/probe-v1/sources/linux_process_cpu_evidence.py": "203f0cf221794766ae3148b32564583aea1797e9d24e15655a9911d2b5ba4264",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/probe-v1/sources/linux_process_cpu_window.py": "6d15cd8323a356dc4c3c030da647bcacb330390e0e17b0110af99a3d126f9ca1",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/probe-v1/sources/linux_process_cpu_guest.py": "6867a22dd970e551296b6354fe023fbed61abf72a1b1bd31b4aced89205190d8",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/probe-v2/sources/linux_process_cpu_evidence.py": "8dc28366e6c00ad61c613267cc6febc56dcf3c49c7c6ac42ebd603db7de44ad7",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/probe-v2/sources/linux_process_cpu_window.py": "6d15cd8323a356dc4c3c030da647bcacb330390e0e17b0110af99a3d126f9ca1",
+    "artifacts/gemma-cpu-witness-controls-2026-11-04/probe-v2/sources/linux_process_cpu_guest.py": "2fbe3bbe34559bda30cfbbaca0fc50f7dc51723f249db2527b7f8dc546e32ba1"
+  }
+}
