@@ -9964,3 +9964,11 @@ bypass layers. Existing models keep their prior rotation. Independent
 nonzero-offset fixtures,1,680GPU snapshots,554default/662Metal tests, strict
 checks and Astra review pass. Real3B execution remains next.
 [Report](smollm3-rotary-schedule.md).
+
+## 5 November 2026 — Execute SmolLM3-3B MLX4
+
+Seven stock/native decisions, real512/chunk parity, reset and overflow pass;
+peakRSS1.82GB and numerical admission1.86GB. Shared probe preserves both prior
+Qwen1.5 rows exactly.554default/662Metal, strict/release checks and Astra pass.
+Fidelity/held-out quality and managed Chat stay separate.
+[Report](smollm3-engine-execution.md).

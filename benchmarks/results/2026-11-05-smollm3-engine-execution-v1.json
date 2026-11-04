@@ -1,0 +1,293 @@
+{
+  "format": "toklet-smollm3-real-engine-execution-v1",
+  "passed": true,
+  "base_revision": "bf98041",
+  "astra_review": "approved /root/astra_kv_limit shared probe and scoped real SmolLM3 execution evidence",
+  "model": {
+    "passed": true,
+    "folder": "models/MLX-SmolLM3-3B-4bit-d3a7e05",
+    "revision": "d3a7e0594d6642dbcfb7d149bed8b0bdf49f95ce",
+    "bytes": 1730051993,
+    "sha256": "d501e6193d7eb84e10d3c377007d1fc4b4b2fa08799dd10fa4f6a75033334a70",
+    "seconds": 435.17508512500353
+  },
+  "result": {
+    "passed": true,
+    "exact_greedy_slots": 7,
+    "visible_text": "The answer is 4.",
+    "rows": [
+      {
+        "index": 0,
+        "id": 791,
+        "values": 128256,
+        "max_abs_error": 0.637664794921875,
+        "rmse": 0.08348787684624527,
+        "stock_margin": 0.25,
+        "native_margin": 0.20647239685058594
+      },
+      {
+        "index": 1,
+        "id": 4320,
+        "values": 128256,
+        "max_abs_error": 0.8785772323608398,
+        "rmse": 0.132360818678089,
+        "stock_margin": 0.25,
+        "native_margin": 0.33339691162109375
+      },
+      {
+        "index": 2,
+        "id": 374,
+        "values": 128256,
+        "max_abs_error": 0.6345615386962891,
+        "rmse": 0.20406208953121338,
+        "stock_margin": 3.25,
+        "native_margin": 3.205106735229492
+      },
+      {
+        "index": 3,
+        "id": 220,
+        "values": 128256,
+        "max_abs_error": 0.6554474830627441,
+        "rmse": 0.08494875431461081,
+        "stock_margin": 6.125,
+        "native_margin": 6.063865661621094
+      },
+      {
+        "index": 4,
+        "id": 19,
+        "values": 128256,
+        "max_abs_error": 0.5648674964904785,
+        "rmse": 0.0861387745366838,
+        "stock_margin": 5.75,
+        "native_margin": 5.905635833740234
+      },
+      {
+        "index": 5,
+        "id": 13,
+        "values": 128256,
+        "max_abs_error": 0.7514467239379883,
+        "rmse": 0.20885677419312268,
+        "stock_margin": 2.5,
+        "native_margin": 2.2318191528320312
+      },
+      {
+        "index": 6,
+        "id": 128012,
+        "values": 128256,
+        "max_abs_error": 0.5604003667831421,
+        "rmse": 0.08640399372568454,
+        "stock_margin": 3.625,
+        "native_margin": 3.3448219299316406
+      }
+    ],
+    "native_memory": {
+      "weights_bytes": 1729958910,
+      "kv_bytes": 37749744,
+      "scratch_bytes": 22473684,
+      "history_bytes": 2048,
+      "logits_bytes": 1026048,
+      "metadata_bytes": 4992,
+      "metadata_allowance_bytes": 67108864,
+      "admitted_bytes": 1858324290
+    },
+    "full_fidelity_qualified": false,
+    "held_out_quality_qualified": false,
+    "app_adopted": false,
+    "phone_qualified": false,
+    "peaks": {
+      "stock": {
+        "rss_lifetime_bytes": 2047393792,
+        "observed_physical_high_water_bytes": 2174044560,
+        "last_observation_seconds": 14.194817875002627
+      },
+      "native": {
+        "rss_lifetime_bytes": 1820540928,
+        "observed_physical_high_water_bytes": 1810810728,
+        "last_observation_seconds": 246.50534725000034
+      }
+    }
+  },
+  "qwen15_regression": {
+    "passed": true,
+    "exact_prior_native_rows": 2,
+    "slots": [
+      19,
+      151645
+    ],
+    "native_done": {
+      "event": "done",
+      "passed": true,
+      "ids": [
+        19,
+        151645
+      ],
+      "committed_generation": 34,
+      "pending_generation": 0,
+      "capacity": 512,
+      "chunks": [
+        1,
+        32
+      ],
+      "overflow_preserved": true,
+      "reset_reproduced": true,
+      "memory": {
+        "weights_bytes": 1640334262,
+        "kv_bytes": 14680848,
+        "scratch_bytes": 24257748,
+        "history_bytes": 2048,
+        "logits_bytes": 1215488,
+        "metadata_bytes": 4736,
+        "metadata_allowance_bytes": 67108864,
+        "admitted_bytes": 1747603994
+      },
+      "app_adopted": false,
+      "full_fidelity_qualified": false
+    },
+    "rss_peak_bytes": 1715224576,
+    "observed_physical_high_water_bytes": 1705527072
+  },
+  "checks": {
+    "passed": true,
+    "jobs": [
+      {
+        "name": "fmt",
+        "exit_code": 0,
+        "seconds": 1.110377666002023
+      },
+      {
+        "name": "clippy",
+        "exit_code": 0,
+        "seconds": 7.812771790995612
+      },
+      {
+        "name": "test",
+        "exit_code": 0,
+        "seconds": 62.908398459003365
+      },
+      {
+        "name": "metal-clippy",
+        "exit_code": 0,
+        "seconds": 13.554432958000689
+      },
+      {
+        "name": "metal-test",
+        "exit_code": 0,
+        "seconds": 63.142469249993155
+      },
+      {
+        "name": "release-lib",
+        "exit_code": 0,
+        "seconds": 0.1508789580038865
+      },
+      {
+        "name": "probe-build",
+        "exit_code": 0,
+        "seconds": 1.5865487910050433
+      }
+    ]
+  },
+  "qualification": "Pinned artifact Mac512 engine execution; full fidelity, held-out quality, managed Chat and phone unqualified",
+  "receipts_sha256": {
+    "Cargo.toml": "00a31966b0b7ad5c3bf4e4472214f0df25dcdde0434131c14410965b9ef50519",
+    "artifacts/new-goal-b0-checks-v1/target/release/examples/qwen15_probe": "1d711c1b2e3f8e40132994db648a688d0524d013f0256ca3614a74579f9d6c57",
+    "artifacts/new-goal-b0-checks-v1/target/release/examples/smollm3_probe": "5bb0d4899165aaad47f641631cdc89db891e8be5fe29b89284cae2a6fa6bd36f",
+    "artifacts/qwen15-shared-probe-2026-11-05/native/row-0.f32le": "4459707a43880e862509125a0c719e5d27738452bbaece66c147871ba73b8b17",
+    "artifacts/qwen15-shared-probe-2026-11-05/native/row-1.f32le": "ed0c5d6ba8c082134b3400590915041c3f13e063808a31e70af1f9eb685a917e",
+    "artifacts/qwen15-shared-probe-2026-11-05/native-input.json": "dd97600f372f7456f9c38f3e59729fa50c4655a2101356b2fb43cdef472c9ce4",
+    "artifacts/qwen15-shared-probe-2026-11-05/native-owned.json": "759eaa177d774b512726dfe0011c4e579738da4a04203bb8612321de6c885d89",
+    "artifacts/qwen15-shared-probe-2026-11-05/native.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/qwen15-shared-probe-2026-11-05/native.stdout": "aefe3c8904806e5a1f3b5bfbe5cc367812aa607937b5575f085121ddd41bb569",
+    "artifacts/qwen15-shared-probe-2026-11-05/replay.json": "072a0bff658280ef854cd6bb8bd6166149062c7c9620a0b9787469f5390f5f16",
+    "artifacts/qwen15-shared-probe-2026-11-05/replay.py": "0cc40f1452b4084d019c880c65025b012f6865548de8d27cca163ea38cdb2602",
+    "artifacts/qwen15-shared-probe-2026-11-05/replay.stdout": "877a522ee1d9aa8a5000b61acd68aca62b3ffbdc8ff64b9bd6c9e3107f198756",
+    "artifacts/qwen15-shared-probe-2026-11-05/run-owned.py": "6be067366964da078e59d600dc4aebb65849c6d0995d370033eaf50b47ee23b4",
+    "artifacts/smollm3-inventory-2026-11-05/README.md": "d187c98aa68acb72167a95cb24fa75ac129f53bae235dddfbda60c7e065d1561",
+    "artifacts/smollm3-inventory-2026-11-05/README.md.http": "c14c373564df25dcf96eeb8514589e17679953767224bda50e5c74e49d3865cc",
+    "artifacts/smollm3-inventory-2026-11-05/acquire.py": "18801b74985bab59d5df5527e060dac844f76d3bfe36a8458a33de88a5d2f2d9",
+    "artifacts/smollm3-inventory-2026-11-05/acquisition.json": "e3e2fbf164edb5e9bfa705a8a87ea7a530d2c24ac9bd03513a560c1f26d3032e",
+    "artifacts/smollm3-inventory-2026-11-05/admission.json": "e3357f2ca021947b66f39a14b50f4150c0d0b31e3f69a14d6c68d0886e9aa6ca",
+    "artifacts/smollm3-inventory-2026-11-05/admit.py": "56bf5dbd19a914b4e5f25611bca2bcd25d1ca39aa12bdab66e70867e992c479f",
+    "artifacts/smollm3-inventory-2026-11-05/api.json": "f8db948989fbc3c88d8a21cdf0a6b77218aed4a655c6f9fc65b8209a9b52b96d",
+    "artifacts/smollm3-inventory-2026-11-05/api.json.http": "05f152e3740a401a77ed08d434abb1cefd5c61cb61055547526de810eafae1f1",
+    "artifacts/smollm3-inventory-2026-11-05/boundary.json": "ed7a628373c283bba633bcfd92fac2f876ce41e2c2c9b8ccc286526478db75bb",
+    "artifacts/smollm3-inventory-2026-11-05/boundary.u32le": "023cd1f08692129290335cc272cdf6ad657210a0f04d29676156c34d22597793",
+    "artifacts/smollm3-inventory-2026-11-05/chat_template.jinja": "0dab472abbdc499c8d82acae3ad6e8404f672d2d50d9df582181daf062f66eb7",
+    "artifacts/smollm3-inventory-2026-11-05/config.json": "6d0046fc9fc07c74601b25107b8ff96077dc9c63941492f2856743eabc2a3d99",
+    "artifacts/smollm3-inventory-2026-11-05/config.json.http": "d1089a799f6377b4b3a0dbdc76abbba11c5b1e6d56c8108be633c8f03c844078",
+    "artifacts/smollm3-inventory-2026-11-05/download.log": "86973e84061e1ad08dcbd6ca1a6c0145fb1dfdab40ad7b2b6f16d553eafae792",
+    "artifacts/smollm3-inventory-2026-11-05/fetch-v1.py": "52c1220006205878151355039b068ddf5dddc37d81f835622df6b4990cb38a54",
+    "artifacts/smollm3-inventory-2026-11-05/fetch-v2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-inventory-2026-11-05/fetch-v2.stdout": "ddc5ef0d4ae0df509c49f19f1d0c68db8a5ee93686314db37f1a2492f9da9205",
+    "artifacts/smollm3-inventory-2026-11-05/fetch.json": "66c6db384e53a6151081a2b2c9cd07e802fc806ef91f76c3ef2d0d145fedf881",
+    "artifacts/smollm3-inventory-2026-11-05/fetch.py": "2764c92eee10ce73f0392a4851aa69387cfd1bb36e89a6f897c8115c1cd6f3ca",
+    "artifacts/smollm3-inventory-2026-11-05/fetch.stderr": "019f992c5258ab4fe63a5afe171529e84b8c48eef452650a9a6c3ed6a4d2f7e1",
+    "artifacts/smollm3-inventory-2026-11-05/fetch.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-inventory-2026-11-05/freeze.py": "5b47f133827db4350ca1d26b0cedc2adec0e718e2645fc554ad00794db347b64",
+    "artifacts/smollm3-inventory-2026-11-05/freeze.stdout": "dcde1489dfd337d746d3416a83a7ff52ffed5b53ff3060daf90a634e4810a883",
+    "artifacts/smollm3-inventory-2026-11-05/generation_config.json": "3458d62b3f9654f4bbe285223b0f4e5a1e67cae61c92bb6aeaadf04468bf9e01",
+    "artifacts/smollm3-inventory-2026-11-05/generation_config.json.http": "3ed756d1ce26e91e3e19ba0b36e8a437d5761746efcdc7264c414baf7014a69b",
+    "artifacts/smollm3-inventory-2026-11-05/inputs-plan.json": "0f20344adf1d5008ff458d18890d1b72e836daf50ad970ad721066282ec8f747",
+    "artifacts/smollm3-inventory-2026-11-05/model.safetensors.header.json": "b7ca7794b82ac5cdf295d45dd5b3e353a10e7009b659a8629adf6fdc552b09a0",
+    "artifacts/smollm3-inventory-2026-11-05/model.safetensors.header.json.http": "f11b22264da81da1543a09889860bb7b248b11c25391b37792cb4882cf1b305e",
+    "artifacts/smollm3-inventory-2026-11-05/model.safetensors.index.json": "64148ac05ad909f2fc69ec126ef9efe38545512a41914bdba17d1dc29437c19d",
+    "artifacts/smollm3-inventory-2026-11-05/model.safetensors.index.json.http": "29da3737ac960612ff62197aacf9c60d71165c53ad95390b8a65c8b6c2e3ffb6",
+    "artifacts/smollm3-inventory-2026-11-05/model.safetensors.length": "2a2cda88d32bc4e62bc8f8dc814a57bd110ad76b2b428d4bd0e97c558e5f554e",
+    "artifacts/smollm3-inventory-2026-11-05/model.safetensors.length.http": "550dc0e39d1fdb0e6263cb41d8d568adf55025a97a9092be03cf78112707f3fb",
+    "artifacts/smollm3-inventory-2026-11-05/native/row-0.f32le": "43f906c83fcd367fca38856166a930a15a37a9d5a679b0381deb19ae61f596eb",
+    "artifacts/smollm3-inventory-2026-11-05/native/row-1.f32le": "6fd64647ed5c58e2d64a1db7b9f4432ebecda1b1f75ee205c0853c3ca50f788c",
+    "artifacts/smollm3-inventory-2026-11-05/native/row-2.f32le": "db45e50a7b3bfbc03f71bfd00ebe5d106066c45e809e9bbf6c061d2d88f21582",
+    "artifacts/smollm3-inventory-2026-11-05/native/row-3.f32le": "99a8b7666bedc8fad7f2291686327b9c0da5aed95f08bddee0fb44c2ede4cf09",
+    "artifacts/smollm3-inventory-2026-11-05/native/row-4.f32le": "2593fdda678e1dfc25aafc0556e2f2312f6a849601d7d7b101f49fd81007a3b5",
+    "artifacts/smollm3-inventory-2026-11-05/native/row-5.f32le": "0a4be5cebceb0e091f98754922d3bd5997a9809f1589b63cd77d400317b2362e",
+    "artifacts/smollm3-inventory-2026-11-05/native/row-6.f32le": "5fed5b3e28ada7249c2d770789db88f6c6f0c7fe37234d081d965a3fdde3727e",
+    "artifacts/smollm3-inventory-2026-11-05/native-input.json": "1578e65662a35822890ae25c1b244d2ed051f979b83e6868dc3861178f47890c",
+    "artifacts/smollm3-inventory-2026-11-05/native-owned.json": "212c8ba910e3a86c61c47d785f02178ad00da345b810ec2f28d83e1e7b60533d",
+    "artifacts/smollm3-inventory-2026-11-05/native.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-inventory-2026-11-05/native.stdout": "8094eee4b902a7177b95f13a09192e1e3572300c88623dae4c86427bf1d5fb64",
+    "artifacts/smollm3-inventory-2026-11-05/prepare-inputs.py": "12c7a66a03b39c568fe58109e6b9ded23b64475c9021689828511755763f5856",
+    "artifacts/smollm3-inventory-2026-11-05/prepare-inputs.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-inventory-2026-11-05/prepare-inputs.stdout": "1a70bea19bfca4f6ef76e323cecd69c35f835dd2b807a8d3af931dc1a25dd68b",
+    "artifacts/smollm3-inventory-2026-11-05/replay.json": "dc97c387ffbe616718e4f59373758e864f11aa232e5ce4b7cc31c79b59a23a44",
+    "artifacts/smollm3-inventory-2026-11-05/replay.py": "75d2d46303efad7fb07970a444c6a964f37e725db17d13eaf2e567a3bb93f2ed",
+    "artifacts/smollm3-inventory-2026-11-05/replay.stdout": "f560054d12868a6630d07018d6b3cf03b02d79783406abf8592bc6f90af6a39d",
+    "artifacts/smollm3-inventory-2026-11-05/run-owned.py": "9e214a973cbbbf9bb8d8eef9fdd30a0a837d16506b604434cd2ff5fcd17fa481",
+    "artifacts/smollm3-inventory-2026-11-05/special_tokens_map.json": "12403efb970f069ba62ddf3b66166a27254be4a198166b61ad1ee604bd3a4515",
+    "artifacts/smollm3-inventory-2026-11-05/special_tokens_map.json.http": "5adfa88f684b4147f7030024a8ba59085203e9f8fba42124d0a68a436430f999",
+    "artifacts/smollm3-inventory-2026-11-05/stock/result.json": "bd4e9f5efcbeb2e7fc8383a7204372a0362d33fef951dc4d89e95a479c694f0f",
+    "artifacts/smollm3-inventory-2026-11-05/stock/row-0.f32le": "7d0688b58616848496a11f223432ad2b3755b162864bf457dd0c8fe1689daf7c",
+    "artifacts/smollm3-inventory-2026-11-05/stock/row-1.f32le": "0a59611415fe668f9d61cef45825d6523e80242013e1a8d58d85cae73b7fc3a4",
+    "artifacts/smollm3-inventory-2026-11-05/stock/row-2.f32le": "d49e3f43dee3bdad9fdbfd60ff12345bd1cf1941917cc1d6fde3890ea513f43e",
+    "artifacts/smollm3-inventory-2026-11-05/stock/row-3.f32le": "0ac964b47445d9dff7d23926ef17ae82714ce498a433a63af6f9b8ce4229d7a5",
+    "artifacts/smollm3-inventory-2026-11-05/stock/row-4.f32le": "2916f3315b41d4345f02b3d2d4d3c522afe480c5f894e1e3e126f74b98edfebf",
+    "artifacts/smollm3-inventory-2026-11-05/stock/row-5.f32le": "53f5e72ff724f08daf6973e868b196f3c8f47f01b5de419c994e96db76dd06d9",
+    "artifacts/smollm3-inventory-2026-11-05/stock/row-6.f32le": "35d7f31608a54f4f580abeac8575b4d14a996656928b5c1089f42fb2d55250f3",
+    "artifacts/smollm3-inventory-2026-11-05/stock-owned.json": "0ef28e017b26a1cb024e3af1c94cc0b72641eb10733b427549109ab8adc74f5a",
+    "artifacts/smollm3-inventory-2026-11-05/stock-plan.json": "57fa2e821bb647835e08da28be3e9d114c53af53f3d614b241169f89b4eb9ad2",
+    "artifacts/smollm3-inventory-2026-11-05/stock.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-inventory-2026-11-05/stock.stdout": "21dfc8dbcb219e7a8e8743f687aa9bc4558ebf886cead90a248bd57ad239c158",
+    "artifacts/smollm3-inventory-2026-11-05/tokenizer.json": "7b6a500b662a34eb3f0374db856ba4ad7de4c81040571d78dc0d357238930005",
+    "artifacts/smollm3-inventory-2026-11-05/tokenizer.json.http": "b21065e4e66224cc3197abadc5576529d9a9b1f8f8b1ecb15886aba975251a57",
+    "artifacts/smollm3-inventory-2026-11-05/tokenizer_config.json": "59a64b39f05ee0acf7479bbccf99a44d9e481c1a4a494eb03838ae3c35eb29be",
+    "artifacts/smollm3-inventory-2026-11-05/tokenizer_config.json.http": "f618de75cb6d2dd823c2d380f2b9bceb494f739b95f80dfcc6ebbc2a99b6a8b7",
+    "artifacts/smollm3-real-checks-2026-11-05/checks.json": "cf2890f5e615465b029955900ae41a436e3df5ef0651d08ac711e0b5cd97f021",
+    "artifacts/smollm3-real-checks-2026-11-05/clippy.stderr": "1817354ff2a80b92bc3b802d8a56895eaa25858630dad921872fadc0da10e13c",
+    "artifacts/smollm3-real-checks-2026-11-05/clippy.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-real-checks-2026-11-05/fmt.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-real-checks-2026-11-05/fmt.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-real-checks-2026-11-05/metal-clippy.stderr": "0d2f8b4b4e9c101637c5142580898198b294d08f30a819a2a68928bf07916d39",
+    "artifacts/smollm3-real-checks-2026-11-05/metal-clippy.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-real-checks-2026-11-05/metal-test.stderr": "37ba559ad8628863b326c7f01731ca114139691f878dfb1c192c86bc11d3da9f",
+    "artifacts/smollm3-real-checks-2026-11-05/metal-test.stdout": "652183cf28fe95f08007a704d0ddcddcdacefdbcd4813da5d965b9c51c783c16",
+    "artifacts/smollm3-real-checks-2026-11-05/probe-build.stderr": "9856442b82c2035dd76c6cd4094a810c9fbb0f478a67d8a2e6bfedd08bcded23",
+    "artifacts/smollm3-real-checks-2026-11-05/probe-build.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-real-checks-2026-11-05/release-lib.stderr": "cc18acd7f06688a75636eb80fd7c747ae2222c76eddb2b6e9cd2d4acce852264",
+    "artifacts/smollm3-real-checks-2026-11-05/release-lib.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/smollm3-real-checks-2026-11-05/run.py": "4a9490149b27110c7378c80e173384df5910fe3e97afe914c1e384f3446672de",
+    "artifacts/smollm3-real-checks-2026-11-05/test.stderr": "a9d289a4492fe9dc61675df0034e663c21176ce82b053b043091b5983df24c70",
+    "artifacts/smollm3-real-checks-2026-11-05/test.stdout": "0d6b6e72f42819a627500ab80b51d7c054d2bf349a082b0499a5a1599d975590",
+    "examples/qwen15_probe.rs": "4a83c557c65e651936911103131f3fa0712e331f73b15e193d101172c17c6476",
+    "examples/smollm3_probe.rs": "0dfcb8fc1d8357fcd4a96a7cef1725def05f28028d0e94326ea304d21a3efdc2",
+    "examples/support/dense_probe.rs": "1ade8df89670e4267694aa43f623bad3c111b49e280987e9d74317f21c8d8c4e",
+    "tools/reference/smollm3_stock_probe.py": "0a2854b4feb3e07e68cf9bfc79b5ec6c13c680dec094f36f1cfc94142e86e3b5"
+  }
+}

@@ -15,6 +15,7 @@ not tokens per second or a promise that the engine can use that whole window.
 | SmolLM2-135M-Instruct-8bit (`0f0d9b8`) | Native Metal dense Llama-family, managed | 8,192 | Mac512, fresh download and network-denied offline Chat; authenticated preferences | Mac/iOS catalog,512 |
 | Mistral-7B-Instruct-v0.3-4bit (`a4b8f87`) | Native Metal dense, managed | 32,768 | Recorded bounded Mac route and authenticated preferences; no family-wide/window claim | Mac/iOS catalog,512; independent memory admission |
 | Llama-3.2-1B-Instruct-8bit (`d48cdf0`) | Native Metal scaled RoPE, managed | 131,072 | Original10k-target/100-task quality passes; diagnostic loss1,025/task566; actual Mac512 UI and fresh/offline journey | Default Mac catalog,512; excluded from iOS |
+| SmolLM3-3B-4bit (`d3a7e05`) | Native Metal dense with per-layer RoPE bypass, diagnostic | 65,536 | Mac512/chunks1,32; seven stock greedy decisions, state/reset/overflow and process-memory checks | No managed Chat/catalog adoption |
 | Phi-3-mini-4k-instruct-4bit (`5b3819e`) | Native Metal fused-source dense, diagnostic | 4,096 | Selected Mac512 state/schedule and reference checks | No ordinary catalog/Chat adoption |
 | gemma-3-270m-it-4bit (`ff1143e`) | Native Metal local/global Gemma3, diagnostic | 32,768 | Selected capacity544, absolute positions0–543; bounded native conformance policy; historical precision rejections retained | No ordinary catalog/Chat adoption |
 | LFM2-350M-4bit (`18dc72a`) | Native Metal attention/causal-convolution, diagnostic | 128,000 |64 trajectory positions; capacity512 admitted separately | No ordinary catalog/Chat adoption |
@@ -69,3 +70,7 @@ reply128. The other four managed profiles have no new production-app peaks.
 [Qwen2.5-1.5B execution](qwen15-engine-execution.md) adds a second real dense
 geometry without a numerical kernel change. Its two decision rows are not a
 full fidelity or held-out quality gate.
+
+[SmolLM3 real execution](smollm3-engine-execution.md) adds the validated per-layer
+rotary mask to the shared dense blocks. Stock BF16/native Half row differences
+remain descriptive; full fidelity and held-out quality remain unqualified.
