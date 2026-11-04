@@ -9918,3 +9918,11 @@ Four controls, complete-row replay, owned exit/runtime/memory checks and Astra
 review pass; peakphysical3.24GB. The first generated-module audit failure is
 preserved. Q4’s9-point task loss remains rejected; assess8-bit feasibility
 before new kernels. [Report](gemma-mlx-decisions.md).
+
+## 5 November 2026 — Reject Gemma8 before weight download
+
+Actual immutable headers confirm4.918GB selected text; current512/chunk32
+combined-owner estimate exceeds6GiB by102,686,350bytes. Exact config/tokenizer,
+header/arithmetic checks and Astra review pass. No weight payload, Q8 execution
+or quality claim; preserve Q4 rejection and reconcile M8 admissions next.
+[Report](gemma8-feasibility.md).

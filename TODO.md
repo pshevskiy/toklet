@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
-Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Assess immutable Gemma E2B8-bit artifact lineage/header and combined-owner6GiB feasibility; stock load only if ledger fits. Q4 remains rejected52→43/100**.
+Last updated: **5 November 2026**. Active milestone: **M8**.
+Current task: **Gemma8 actual-header ledger exceeds6GiB by102,686,350bytes; review decision and reconcile M8 conditional admissions. Q4 remains rejected52→43/100**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -501,7 +501,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Remaining9original/native blocks, exact10,000-target weighted aggregation and unchanged full loss gate; [report](docs/gemma-full-loss.md).
 - [x] Resident original BF16/stockKV reference at511–567positions; [report](docs/gemma-resident-generation.md).
 - [x] Original100-task controller pilot with exact sampled/terminal-stop replay; [report](docs/gemma-task-controller-pilot.md).
-- [ ] Remaining97original trajectories, native existing-generation-path pilot/full collection and isolated100-task grading/gate.
+- [x] Complete original/native100-case collections and isolated grading; [task result](docs/gemma-full-tasks.md), `89f0613`.
+- [ ] Gemma4 adoption task gate: rejected52→43/100; stock MLX matches all4selected decisions (`c79fa90`). Higher-precision feasibility decision: [header ledger](docs/gemma8-feasibility.md); no8-bit execution.
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1229,3 +1230,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Full task grading reviewed / Q4 rejected | Integration `9127b04` resolves all200 outcomes with oneHumanEval39CPUretry (PROF4.000417166s). Independent raw replay/restoration pass; original52 vsnative43 gives9-point loss>2. Astra approves evidence, rejects candidate; NLLpass does not override. | Commit rejected result. Next bounded stockMLXsame-artifact decisions: HumanEval1/24,TruthfulQA0/3 at first shared-prefix disagreement. No gate/model/prompt tuning or app admission. [Report](docs/gemma-full-tasks.md). |
 
 | 2026-11-04 | Same-checkpoint MLX witness reviewed | Four cold controls and repeated strict-stock run/full-row replay pass; all4decisions agree with native, physicalpeak3,239,480,320bytes. First final audit fails on Torch-generated helper; preserved, then exact-template validation and fresh logs pass. | Astra approves code/results; commit witness. Next8-bit metadata/header/combined-owner feasibility before any kernel. Full Q4 task/fidelity/app/device gates stay open. [Report](docs/gemma-mlx-decisions.md). |
+
+| 2026-11-05 | Gemma8 feasibility reviewed | Immutable metadata/two-shard headers validate1096selected tensors,4,918,123,078bytes, exact text config/tokenizer. Existing512/chunk32 owner estimate exceeds6GiB by102,686,350bytes before Q8extras. | No weight payload, stockload or kernels. Astra approves planning rejection; next M8 capability/admission reconciliation. Fetch failures preserved. [Report](docs/gemma8-feasibility.md). |
