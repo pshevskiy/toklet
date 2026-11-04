@@ -9866,3 +9866,10 @@ arithmetic before dispatch; insufficient bounds retain inconclusive coordinates.
 Thirteen controls, strict real head replay and Astra review pass with unchanged
 output hashes. Host-provider/coupled graph remain open.
 [Evidence](../benchmarks/results/2026-11-04-gemma-projection-domain-v1.json).
+
+## 4 November 2026 — Host arithmetic investigation
+
+Astra resolves actual optimized provider call sites/constants/store boundaries
+and recommends a small independent host reference. Live provider/FP-environment
+seals and controls remain prerequisites. Links/whitespace pass; no new numerical
+qualification. [Design](gemma-native-host-profile.md).
