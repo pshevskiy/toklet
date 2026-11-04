@@ -9752,3 +9752,10 @@ checks;12finite arrays and independent NLL/greedy readback pass. RSS688MB; greed
 matches mathematical/staged references, while logit differences remain descriptive.
 Astra approves the prospective upstreamBF16 quality baseline; old fidelity failures
 and full quality stay open. [Report](gemma-upstream-real.md).
+
+## 4 November 2026 — Real BF16 tied-head equality
+
+Full-width stock projection/softcap exactly reproduces2,097,152saved tiled-head
+BF16 words. Astra review, independent raw replay and source/runtime/resource guards pass;
+peakRSS1.24GB. This covers the two four-row cases only; arbitrary shapes and
+full quality remain unqualified. [Report](gemma-upstream-head.md).

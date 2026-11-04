@@ -1,0 +1,71 @@
+{
+  "format": "toklet-gemma-upstream-head-v1",
+  "owned": {
+    "passed": true,
+    "command": {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-s",
+        "-B",
+        "/Users/coloner/work/rust/toklet/artifacts/gemma-upstream-head-2026-11-04/worker.py"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 32837,
+      "stdout": "artifacts/gemma-upstream-head-2026-11-04/stdout",
+      "stderr": "artifacts/gemma-upstream-head-2026-11-04/stderr"
+    },
+    "peak_rss_bytes": 1236647936,
+    "peak_physical_bytes": 1153402416,
+    "cases": [
+      {
+        "case": "original",
+        "shape": [
+          1,
+          4,
+          262144
+        ],
+        "different_bf16_words": 0,
+        "byte_equal": true,
+        "elapsed_seconds": 0.2837111669978185,
+        "offset": 0,
+        "bytes": 2097152,
+        "sha256": "e12df1e36ff58b27892c9b24d44a84eb308fbde8fbac20adf348d5402314c9f2"
+      },
+      {
+        "case": "future",
+        "shape": [
+          1,
+          4,
+          262144
+        ],
+        "different_bf16_words": 0,
+        "byte_equal": true,
+        "elapsed_seconds": 0.10541558299883036,
+        "offset": 2097152,
+        "bytes": 2097152,
+        "sha256": "b3b946957e33fd3f4883470d8cda78c902e6e52db4d5da855e5cc7db3226c034"
+      }
+    ],
+    "output_sha256": "b21a8d6c936fe6c8ff7d130684001eea9ee14369ff477d72e2e702064f176616"
+  },
+  "verification": {
+    "passed": true,
+    "cases": 2,
+    "exact_bf16_logit_words": 2097152
+  },
+  "astra_review": "approved scripts, exact real outputs and independent replay",
+  "plan_sha256": "a6072c9a7bc3a382207250544f7188ea7675231589c953d34c515ed1d1b383c5",
+  "scripts": {
+    "worker.py": "3dbc9deb6a5ec4e0813bfdeb466cd492c64f8344591efd9186a2200fbf4e44b6",
+    "run.py": "1311b1f2b33af21d413ca2556512384c2e860d23a57a4b42c57a121b84dabcee",
+    "verify.py": "03f2059cf1924dac900a85e93d796ad16f6867fbe4f02b493ad19d7ab8eb2dca",
+    "prepare.py": "58a5f5f3c742025ec1d83a113b2a54b125d5d3e5b53bb97b4d09394af41686da"
+  },
+  "artifacts": "artifacts/gemma-upstream-head-2026-11-04",
+  "quality_qualified": false,
+  "earlier_failures_waived": false
+}
