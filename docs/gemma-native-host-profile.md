@@ -48,3 +48,21 @@ softcap single-rounding, masked softmax and inactive rotary dimensions using
 independent exact/high-precision fixtures and selected host primitive witnesses.
 Keep any unresolved provider or contraction detail blocking. Start with four
 tokens and measure before moving a 512-position host operation into C.
+
+## Paired primitive and actual-process witness
+
+The explicit C/Python helper now batches up to65,536 binary64 angles within
+±512 and returns interleaved FP32 sine/cosine pairs. It validates the complete
+batch before writing, checks RNE and preserved FP32 subnormals, and calls the
+compiled Darwin paired ABI. Typed FFI arrays have separate aligned ownership.
+Live symbol lookup records provider paths, addresses and loaded Mach-O UUIDs
+for the five named operations. Four controls pass in the sealed worker:
+signed zeros,100-digit trigonometry/midpoint controls, bounded inputs, live UUID
+stability,200-digit sqrt and selected libm comparisons. Source/runtime hashes
+are unchanged at both endpoints; Astra approves this primitive/witness scope.
+
+UUIDs identify this worker's live lookup images. Future coupled callers must
+repeat the provider/environment checks and retain their import evidence.
+Sampled accuracy controls cover the tested inputs. The independent host graph,
+selected native witnesses and coupled comparisons remain open.
+[Witness evidence](../benchmarks/results/2026-11-04-gemma-native-host-v1.json).

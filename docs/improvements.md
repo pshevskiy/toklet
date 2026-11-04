@@ -9873,3 +9873,10 @@ Astra resolves actual optimized provider call sites/constants/store boundaries
 and recommends a small independent host reference. Live provider/FP-environment
 seals and controls remain prerequisites. Links/whitespace pass; no new numerical
 qualification. [Design](gemma-native-host-profile.md).
+
+## 4 November 2026 — Paired host primitive and provider witness
+
+Bounded Darwin paired sincos, live provider UUIDs and actual-process RNE/FP32
+subnormal checks pass four controls/Astra review. Binary/import/runtime evidence
+is retained. Future coupled callers need fresh seals; whole graph remains open.
+[Evidence](../benchmarks/results/2026-11-04-gemma-native-host-v1.json).

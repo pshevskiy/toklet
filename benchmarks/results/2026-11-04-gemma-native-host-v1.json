@@ -1,0 +1,68 @@
+{
+  "format": "toklet-gemma-native-host-primitive-v1",
+  "passed": true,
+  "targeted_tests": 4,
+  "astra_review": "approved paired primitive and named-process provider witness only",
+  "runtime": {
+    "passed": true,
+    "tests": 4,
+    "providers": {
+      "tanh": {
+        "path": "/usr/lib/system/libsystem_m.dylib",
+        "uuid": "b54fbe99db0b32c7abddc2206df606a4",
+        "address": 6829509680,
+        "image_base": 6829486080
+      },
+      "exp": {
+        "path": "/usr/lib/system/libsystem_m.dylib",
+        "uuid": "b54fbe99db0b32c7abddc2206df606a4",
+        "address": 6829491136,
+        "image_base": 6829486080
+      },
+      "pow": {
+        "path": "/usr/lib/system/libsystem_m.dylib",
+        "uuid": "b54fbe99db0b32c7abddc2206df606a4",
+        "address": 6829506560,
+        "image_base": 6829486080
+      },
+      "sqrt": {
+        "path": "/usr/lib/system/libsystem_m.dylib",
+        "uuid": "b54fbe99db0b32c7abddc2206df606a4",
+        "address": 6829534592,
+        "image_base": 6829486080
+      },
+      "__sincos_stret": {
+        "path": "/usr/lib/system/libsystem_m.dylib",
+        "uuid": "b54fbe99db0b32c7abddc2206df606a4",
+        "address": 6829489176,
+        "image_base": 6829486080
+      }
+    },
+    "rne_and_f32_subnormal_environment": true,
+    "runtime_plan_sha256": "4e80bddfb2e3903a4a11bacf39ac86aea494ca5743ef6fe81a8a56924691ae2e",
+    "source_and_runtime_endpoints_equal": true,
+    "coupled_graph_qualified": false,
+    "provider_universal_accuracy_claimed": false
+  },
+  "caller_binding_requirement": "Repeat live provider/environment checks and retain actual caller import evidence in coupled process",
+  "cargo_checks": "Required4467b86 checks reused; Rust/dependency inputs unchanged",
+  "coupled_graph_qualified": false,
+  "universal_accuracy_claimed": false,
+  "receipts_sha256": {
+    "tools/reference/gemma_native_host.c": "40a19b2f1fdf4c62bd346982dff331ab68537b6cc968ae219fc88750156479e2",
+    "tools/reference/gemma_native_host.py": "545b1471550fe0b954d8ab343ea64d2ab250fe9c5eb2cebd0e208cc86e56aa62",
+    "tools/reference/test_gemma_native_host.py": "07f654368b10f53611e6ff4340149c967f16b51cdcb57c24787d96665e84925b",
+    "artifacts/gemma-native-host-2026-11-04/host.dylib": "f82cffdf8e2b6802301f889f001517f0bc7cb9a854050d77423e1d68916b3e63",
+    "artifacts/gemma-native-host-2026-11-04/controls.log": "515f0d30669e23ab65007307db8fd6a831b68fa6f3866e2514543ed628e5d6ec",
+    "artifacts/gemma-native-host-2026-11-04/witness.py": "40a237e185ecf0b80c0819589c3d291fa7cefe266375d1e8e67bed79352cf817",
+    "artifacts/gemma-native-host-2026-11-04/runtime-plan.json": "4e80bddfb2e3903a4a11bacf39ac86aea494ca5743ef6fe81a8a56924691ae2e",
+    "artifacts/gemma-native-host-2026-11-04/runtime.json": "e9c694bf0860b11371d71b7e1f869a3f4c3c245312c8c49b94202971251ea8cc",
+    "artifacts/gemma-native-host-2026-11-04/runtime-controls.log": "56e03afda220e7ba78bbcecf9a2e53a0149cfc3e311fa10bbd01b25e8e5ba671",
+    "artifacts/gemma-native-host-2026-11-04/runtime.stdout": "8eca6127118b755f4b1e8d33987f9a366bb8b081639462f0420d5289f15ec7a3",
+    "artifacts/gemma-native-host-2026-11-04/runtime.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/gemma-native-host-2026-11-04/disassembly.txt": "be43e5de29b5194e4024889e45c83605fee313adba1a0e452181396d9579b295",
+    "artifacts/gemma-native-host-2026-11-04/wrapper-imports.txt": "3235f09d8d21fe0bfef23650188cb10e9ad784176974f7b8b9e85820367e980f",
+    "artifacts/gemma-native-host-2026-11-04/math-imports.txt": "0fcdfa652a6db56df51a993ea8ad493f47b1a2858bb5248aefb6e9d734ddf44d",
+    "artifacts/gemma-native-host-2026-11-04/compiler.txt": "55f7662ee66d47566d9f08f35a12158ac9588e4852f788eed57fa3bf625c9a5d"
+  }
+}
