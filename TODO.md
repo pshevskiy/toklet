@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Granite3.3-2B MLX8 real Mac execution; immutable artifact and shared scaling blocks reviewed/complete. Qwen1.5 and SmolLM3 engine coverage reviewed/complete. Performance secondary; iPhone deferred**.
+Current task: **Astra-selected Granite sparse-MoE immutable metadata/header and memory admission. Qwen1.5, SmolLM3 and Granite3.3 scoped Mac engine execution reviewed/complete. New models first; performance secondary; iPhone deferred**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -488,7 +488,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
   [report](docs/smollm3-engine-execution.md).
 - [x] Astra selects Granite3.3-2B MLX8 next: reusable embedding/attention/residual/logit scaling.
 - [x] Granite immutable artifact/memory screen and shared scaling blocks; [report](docs/granite-scaling-blocks.md).
-- [ ] Granite real Mac512 execution, stock decisions, state and memory checks.
+- [x] Granite real Mac512 execution, stock decisions, state and memory checks; [report](docs/granite33-engine-execution.md).
+- [ ] Next: Granite3.1-1B-A400M sparse-MoE artifact/header/memory screen, then independent router/expert blocks before real execution.
 
 ### M8 closure
 
@@ -1268,3 +1269,11 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Granite scaling blocks active | Immutable 2.692GB MLX8 payload authenticated; Half scalar contract frozen before native execution. Shared CPU/Metal scaling implemented; typecheck passes. Initial test syntax and fixture-capacity failures preserved. | Correct fixture capacity, run independent CPU/GPU checks and strict suite, then Astra review before commit. Real model and managed Chat remain unqualified. |
 
 | 2026-11-05 | Granite scaling blocks reviewed | Source scalar promotion frozen; independent8case/312stage CPU/Half fixture and1,680GPU snapshots pass.558CPU/667Metal, strict/release checks and exact rounding/padding controls pass. | Astra approves bounded scope; commit blocks. Next real2B512 execution. Initial syntax/capacity/Clippy failures preserved. [Report](docs/granite-scaling-blocks.md). |
+
+| 2026-11-05 | Granite real execution active | Scaling blocks committed `b2cf789`. Astra freezes27-token deterministic prompt and stop0; authenticated MLX8 artifact acquired. | Extend the shared bounded probe, run stock/native512 and replay full rows/state/memory; checks and Astra review before commit. |
+
+| 2026-11-05 | Granite stock dtype guard corrected | Initial worker assumed Smol BF16 and stopped before rows; immutable Granite header proves643F16/281U32. Attempt/source/pins retained. | Require original F16 export without conversion; re-freeze runtime before stock retry. Native Granite model run has not started. |
+
+| 2026-11-05 | Granite native launcher corrected | Stop/geometry guard rejects copied Smol selector before model planning/loading. Failed launch/source/owned-exit evidence retained; correct wrapper selects Granite33. | Recheck selector/build before native retry; frozen model/prompt/stops unchanged. |
+
+| 2026-11-05 | Granite3.3 real execution reviewed | Two stock/native decisions and full 512/chunks1,32, overflow/reset pass. Admission 2,815,063,656 bytes; peak RSS 2,777,350,144. Full checks 558CPU/667Metal and fresh selector checks pass. | Astra approves scoped diagnostic code/evidence; commit. Next sparse-MoE metadata/admission. Both setup false starts preserved. [Report](docs/granite33-engine-execution.md). |

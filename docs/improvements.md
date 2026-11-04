@@ -9981,3 +9981,11 @@ preserved; legacy graphs stay unchanged.558CPU/667Metal tests, six explicit GPU
 checks, strict/release checks and Astra pass. Real2B execution is next; no
 quality, performance, managed Chat or phone claim.
 [Report](granite-scaling-blocks.md).
+
+## 5 November 2026 — Execute Granite3.3-2B MLX8
+
+Stock/native return4 and hidden stop; full512, chunks1/32, overflow/reset and
+process-memory checks pass. Native RSS2.78GB; admission2.82GB. Typed shared probe,
+558CPU/667Metal, strict/release checks and Astra pass. Managed Chat, full fidelity,
+quality, phone and performance remain separate. Both setup failures are retained.
+[Report](granite33-engine-execution.md).

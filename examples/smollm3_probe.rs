@@ -4,7 +4,7 @@
 mod probe;
 fn main() {
     #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
-    if let Err(error) = probe::run(true) {
+    if let Err(error) = probe::run(probe::ModelKind::SmolLm3) {
         eprintln!("error: {error}");
         std::process::exit(1);
     }

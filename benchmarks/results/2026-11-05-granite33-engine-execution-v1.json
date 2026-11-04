@@ -1,0 +1,63 @@
+{
+  "format": "toklet-granite33-engine-execution-v1",
+  "engine_revision": "b2cf789 plus diagnostic-probe patch",
+  "hardware": "Apple M1 Pro",
+  "model": "mlx-community/granite-3.3-2b-instruct-8bit",
+  "revision": "37b98558f3eb3db67899d719fb9a74d2443a2529",
+  "model_file_bytes": 2692145735,
+  "model_sha256": "e56b83c455906865ebcca788b183a1902489b86003f721870aa7543ce7348b99",
+  "native_executable_sha256": "9f3bf445c64ea5619aa0e302e8e326e505fc3a2a7a5c38e34971f01c1f069d7d",
+  "checks": "artifacts/granite33-real-checks-2026-11-05/checks.json",
+  "selector_checks": "artifacts/granite33-real-checks-2026-11-05/post-selector-checks.json",
+  "replay": "artifacts/granite33-inventory-2026-11-05/replay.json",
+  "passed": true,
+  "review": "Astra approved scoped engine-execution task; no actionable findings",
+  "exact_greedy_slots": 2,
+  "visible_text": "4",
+  "rows": [
+    {
+      "index": 0,
+      "id": 38,
+      "values": 49159,
+      "max_abs_error": 0.08621644973754883,
+      "rmse": 0.009548707920666331,
+      "stock_margin": 10.234375,
+      "native_margin": 10.206936836242676
+    },
+    {
+      "index": 1,
+      "id": 0,
+      "values": 49159,
+      "max_abs_error": 0.05864095687866211,
+      "rmse": 0.008056133316371141,
+      "stock_margin": 9.265625,
+      "native_margin": 9.277641296386719
+    }
+  ],
+  "native_memory": {
+    "weights_bytes": 2692042734,
+    "kv_bytes": 41944160,
+    "scratch_bytes": 13567458,
+    "history_bytes": 2048,
+    "logits_bytes": 393272,
+    "metadata_bytes": 5120,
+    "metadata_allowance_bytes": 67108864,
+    "admitted_bytes": 2815063656
+  },
+  "full_fidelity_qualified": false,
+  "held_out_quality_qualified": false,
+  "app_adopted": false,
+  "phone_qualified": false,
+  "peaks": {
+    "stock": {
+      "rss_lifetime_bytes": 2497413120,
+      "observed_physical_high_water_bytes": 3053931616,
+      "last_observation_seconds": 21.315497666997544
+    },
+    "native": {
+      "rss_lifetime_bytes": 2777350144,
+      "observed_physical_high_water_bytes": 2771896864,
+      "last_observation_seconds": 172.68092312500085
+    }
+  }
+}

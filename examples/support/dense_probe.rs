@@ -1,4 +1,4 @@
-//! Shared bounded qualification worker for two executed dense model geometries.
+//! Shared bounded qualification worker for three concrete dense model geometries.
 use serde::Deserialize;
 use serde_json::json;
 use sha2::{Digest, Sha256};
@@ -6,22 +6,35 @@ use std::{fs, io::Write, path::Path};
 use toklet::{metal, sampling, session, weights};
 type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
-/// Two concrete consumers of the same session/decision probe, not an engine API.
+/// Three concrete consumers of the same session/decision probe, not an engine API.
 pub struct Spec {
     geometry: (usize, usize, usize, usize, usize, usize, usize),
     architecture: toklet::mlx::dense::Architecture,
-    stops: [u32; 2],
+    stops: &'static [u32],
 }
 const QWEN15: Spec = Spec {
     geometry: (1536, 8960, 28, 12, 2, 128, 151936),
     architecture: toklet::mlx::dense::Architecture::Qwen2,
-    stops: [151645, 151643],
+    stops: &[151645, 151643],
 };
 const SMOLLM3: Spec = Spec {
     geometry: (2048, 11008, 36, 16, 4, 128, 128256),
     architecture: toklet::mlx::dense::Architecture::SmolLm3,
-    stops: [128012, 128001],
+    stops: &[128012, 128001],
 };
+
+const GRANITE33: Spec = Spec {
+    geometry: (2048, 8192, 40, 32, 8, 64, 49159),
+    architecture: toklet::mlx::dense::Architecture::Granite,
+    stops: &[0],
+};
+// Each separately compiled executable constructs only its own variant.
+#[allow(dead_code)]
+pub enum ModelKind {
+    Qwen15,
+    SmolLm3,
+    Granite33,
+}
 
 const BUDGET: usize = 4 * 1024 * 1024 * 1024;
 #[derive(Deserialize)]
@@ -60,8 +73,12 @@ fn same(a: &[f32], b: &[f32]) -> Result<()> {
     }
     Ok(())
 }
-pub fn run(smollm3: bool) -> Result<()> {
-    let spec = if smollm3 { SMOLLM3 } else { QWEN15 };
+pub fn run(kind: ModelKind) -> Result<()> {
+    let spec = match kind {
+        ModelKind::Qwen15 => QWEN15,
+        ModelKind::SmolLm3 => SMOLLM3,
+        ModelKind::Granite33 => GRANITE33,
+    };
     let args: Vec<_> = std::env::args().collect();
     if args.len() != 4 {
         return Err("usage: dense probe MODEL INPUT_JSON FRESH_OUTPUT".into());
