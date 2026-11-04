@@ -1,0 +1,88 @@
+{
+  "format": "toklet-gemma-original-relative-task-quality-v1",
+  "completed": true,
+  "evidence_verified": true,
+  "task_gate_passed": false,
+  "decision": {
+    "complete": true,
+    "baseline_tasks": {
+      "cases": 100,
+      "passed": 52,
+      "pass_rate": 0.52,
+      "aggregation": "100_equal_weight_binary_cases",
+      "categories": {
+        "code": {
+          "cases": 40,
+          "passed": 33
+        },
+        "prose": {
+          "cases": 30,
+          "passed": 19
+        },
+        "continuation": {
+          "cases": 30,
+          "passed": 0
+        }
+      }
+    },
+    "native_tasks": {
+      "cases": 100,
+      "passed": 43,
+      "pass_rate": 0.43,
+      "aggregation": "100_equal_weight_binary_cases",
+      "categories": {
+        "code": {
+          "cases": 40,
+          "passed": 27
+        },
+        "prose": {
+          "cases": 30,
+          "passed": 16
+        },
+        "continuation": {
+          "cases": 30,
+          "passed": 0
+        }
+      }
+    },
+    "task_pass_rate_loss_percentage_points": 9,
+    "task_limit_percentage_points": 2,
+    "task_gate_passed": false,
+    "full_quality_qualified": false,
+    "app_discovery_qualified": false,
+    "device_qualified": false
+  },
+  "manifest_sha256": "c4e6fc5cce765a30c43c9ed2d3ee4bfda58a4b23bbfc3284e2160431e6fb6506",
+  "collection_sha256": "adb05c77285775a0d2cb154aaa30dcef3e40d5b6866aed6596234e710a44780f",
+  "ordinary_code_attempts": 80,
+  "observed_cpu_retries": 1,
+  "text_outcomes": 120,
+  "cpu_retry_case": "baseline/HumanEval/39",
+  "cpu_retry_prof_ns": 4000417166,
+  "first_window_preserved_unresolved": true,
+  "nll_gate": "Passed separately; no override of task rejection",
+  "astra_review": "approved complete grading evidence; Q4candidate rejected9points versus2limit; nextstockMLXfourdecision witness",
+  "next_cases": [
+    "HumanEval/1",
+    "HumanEval/24",
+    "truthfulqa/row-0",
+    "truthfulqa/row-3"
+  ],
+  "app_qualified": false,
+  "phone_qualified": false,
+  "earlier_failures_waived": false,
+  "receipts_sha256": {
+    "artifacts/gemma-task-grading-2026-11-04/actual-v2/execution-plan.json": "e6d466a88678af514b8ef184812bdd85cc5033f934e9a4adf8a9d852a864cb53",
+    "artifacts/gemma-task-grading-2026-11-04/actual-v2/result.json": "4fba5b3957aa00bce0f4071f7cd19513c94e8a6fd512f85536aba00d1b87fddb",
+    "artifacts/gemma-task-grading-2026-11-04/actual-v2/inner/result.json": "67cfaac617c7860b9db8fe6fa555c78d0e0d26fb907dcf07edc823b8d89706a6",
+    "artifacts/gemma-task-grading-2026-11-04/actual-v2/inner/grading.jsonl": "736ec6fbf4dd5c1c8bad71ce08c5f95ccdff436a716597e33c361f312c0d8963",
+    "artifacts/gemma-task-grading-2026-11-04/actual-v2/inner/baseline-decoded.json": "e9339af3b0cd4fcc15f066eaec2a0e0e33f6c56004f7bfcc5532d13a11c5d41e",
+    "artifacts/gemma-task-grading-2026-11-04/actual-v2/inner/native-decoded.json": "d02fcc4535f8246ef4217eb4af3878527cdaabe599044aa4cb5147af9faac363",
+    "artifacts/gemma-task-grading-2026-11-04/replay-cpu.py": "fb54cbcf7cf268622cc93318e74065ee73d457e87fdffe92b6dc7d8552cf6536",
+    "artifacts/gemma-task-grading-2026-11-04/replay-v2.json": "4587a1ae54e27731fd999a817d34033bcc9fea69a20b046abed934af5ebdead1",
+    "artifacts/gemma-task-grading-2026-11-04/replay-v2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/gemma-task-grading-2026-11-04/collection.json": "adb05c77285775a0d2cb154aaa30dcef3e40d5b6866aed6596234e710a44780f",
+    "artifacts/gemma-task-grading-2026-11-04/actual-v1/result.json": "dd7ff40e57d139f2f4e495460d2a093ab4976bb5a241a7f25b1505a48e0a5655",
+    "artifacts/gemma-task-grading-2026-11-04/actual-v1/inner/result.json": "2d085a978ae10218929a1193f4d4057fba8b256760673b5d097c6d3787a9c0a8"
+  }
+}

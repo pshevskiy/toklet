@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Both100-case collections complete/reviewed; run fresh200-outcome grading with reviewed ambiguous137-only CPU retry**.
+Current task: **Q4 task gate rejected52→43/100 (limit2points); implement four-case same-checkpoint stock-MLX decision witness**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -1225,3 +1225,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Authored CPU witness reviewed | Read-only guest inventory passes after pre-start launcher-name collision. SCHED-only spinner3.930s fails and is retained; kernel-source investigation selects enforcement PROF0 prospectively, unchanged4s threshold. Ten paired authored controls/46 tests and Astra review pass, including two≥4s positives and early/external below-budget negatives; stopped restoration passes. | Commit observer qualification; integrate ordinary-first/ambiguous137-only identical observed retry. No generated retry or task score yet; both100-case collections remain reusable. [Evidence](benchmarks/results/2026-11-04-linux-process-cpu-witness-v1.json). |
 
 | 2026-11-04 | Controlled CPU retry integration reviewed | Ordinary grader runs first; only natural137/readiness-only evidence retries the identical payload. Astra catches pre-journal failure loss and contradictory terminal eligibility; fixes pass38 controls and5 saved authored-pair replays. Original attempts always retained; shared-source isolation unchanged. | Witness committed `ce09496`; commit integration, then fresh full200-outcome window with all receipts/restoration independently replayed. Prior grading failure remains. [Evidence](benchmarks/results/2026-11-04-gemma-cpu-retry-integration-v1.json). |
+
+| 2026-11-04 | Full task grading reviewed / Q4 rejected | Integration `9127b04` resolves all200 outcomes with oneHumanEval39CPUretry (PROF4.000417166s). Independent raw replay/restoration pass; original52 vsnative43 gives9-point loss>2. Astra approves evidence, rejects candidate; NLLpass does not override. | Commit rejected result. Next bounded stockMLXsame-artifact decisions: HumanEval1/24,TruthfulQA0/3 at first shared-prefix disagreement. No gate/model/prompt tuning or app admission. [Report](docs/gemma-full-tasks.md). |

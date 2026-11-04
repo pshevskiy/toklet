@@ -9903,3 +9903,10 @@ CPU-budget exhaustion. Original failures remain journaled, contradictory frames
 stay unresolved, and the outer policy/decision guard remains strict.38 controls,
 five authored replays and Astra review pass. Full model grading is next.
 [Evidence](../benchmarks/results/2026-11-04-gemma-cpu-retry-integration-v1.json).
+
+## 4 November 2026 — Complete task gate exposes Q4 regression
+
+All200 outcomes and raw evidence replay pass; the VM restores stopped. Original
+52/100 vsnative43/100 rejects Q4 at the unchanged2-point limit. One qualified
+CPU retry preserves its original attempt. Astra approves evidence; a four-case
+same-checkpoint MLX witness is next. [Result](gemma-full-tasks.md).
