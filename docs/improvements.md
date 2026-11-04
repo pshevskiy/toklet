@@ -9787,3 +9787,10 @@ All10,000paired targets pass exact coverage/reset/provenance checks; nativeNLL
 9.26412 vs original9.99578 gives−0.73166 against≤+0.05. Required checks,nine
 controls and Astra review pass; peakRSS1.84GBsource/2.89GBnative. The100-task
 gate and prior fidelity/app limitations remain open. [Report](gemma-full-loss.md).
+
+## 4 November 2026 — Resident original BF16 task reference
+
+Resident4.56GBweights, on-disk PLE and session-owned stockKV pass three controls
+and six real greedy/reset/boundary checks below6GiB. Astra approves; peakphysical
+5.02GB. Incremental logit bits differ, so every task trajectory must pass stateless
+verification before grading. [Report](gemma-resident-generation.md).

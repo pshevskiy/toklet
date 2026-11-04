@@ -1,0 +1,227 @@
+{
+  "format": "toklet-gemma-resident-generation-v1",
+  "astra_review": "approved code, three cold controls and six-case greedy/resource qualification; task trajectory verification remains mandatory",
+  "owned": {
+    "passed": true,
+    "command": {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-s",
+        "-B",
+        "/Users/coloner/work/rust/toklet/artifacts/gemma-resident-generation-2026-11-04/worker.py"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 38837,
+      "stdout": "artifacts/gemma-resident-generation-2026-11-04/stdout",
+      "stderr": "artifacts/gemma-resident-generation-2026-11-04/stderr"
+    },
+    "peak_rss_bytes": 5011701760,
+    "peak_physical_bytes": 5022585128,
+    "cases": 6,
+    "array_sha256": "48ccc80aa3ff5e412a45817a2299abc3c01d604c743eca5662cd4f5cf9cdbefb"
+  },
+  "verification": {
+    "passed": true,
+    "cases": 6,
+    "finite_bf16_words": 3145728,
+    "greedy_all_exact": true,
+    "raw_bytes": 6291456,
+    "bit_differences_descriptive": [
+      {
+        "case": "511",
+        "different_bf16_words": 0
+      },
+      {
+        "case": "512",
+        "different_bf16_words": 262101
+      },
+      {
+        "case": "513",
+        "different_bf16_words": 262142
+      },
+      {
+        "case": "566",
+        "different_bf16_words": 259311
+      },
+      {
+        "case": "567",
+        "different_bf16_words": 262144
+      },
+      {
+        "case": "reset32",
+        "different_bf16_words": 0
+      }
+    ]
+  },
+  "ledger": {
+    "weights": 4559518278,
+    "runtime": 536870912,
+    "kv": 9775104,
+    "scratch": 268435456,
+    "loading": 9437184
+  },
+  "load_memory": {
+    "peak_rss_bytes": 1018544128,
+    "resident_size": 1011990528,
+    "phys_footprint": 4876095640,
+    "lifetime_max_phys_footprint": 4876095640
+  },
+  "replay_memory": {
+    "peak_rss_bytes": 5011701760,
+    "resident_size": 4671258624,
+    "phys_footprint": 4931948984,
+    "lifetime_max_phys_footprint": 5022585128
+  },
+  "load_seconds": 10.271928624999418,
+  "cases": [
+    {
+      "case": "511",
+      "positions": 511,
+      "new_tokens": 511,
+      "cached_seconds": 79.24675370800105,
+      "fresh_seconds": 78.74524008400113,
+      "greedy": 25239,
+      "top_two_margins": [
+        2.84375,
+        2.84375
+      ],
+      "different_bf16_words": 0,
+      "memory": {
+        "peak_rss_bytes": 3393323008,
+        "resident_size": 3284467712,
+        "phys_footprint": 4954853696,
+        "lifetime_max_phys_footprint": 5022585128
+      }
+    },
+    {
+      "case": "512",
+      "positions": 512,
+      "new_tokens": 1,
+      "cached_seconds": 0.5845306250012072,
+      "fresh_seconds": 78.22859049999897,
+      "greedy": 783,
+      "top_two_margins": [
+        2.296875,
+        2.59375
+      ],
+      "different_bf16_words": 262101,
+      "memory": {
+        "peak_rss_bytes": 4880318464,
+        "resident_size": 1882570752,
+        "phys_footprint": 4958638448,
+        "lifetime_max_phys_footprint": 5022585128
+      }
+    },
+    {
+      "case": "513",
+      "positions": 513,
+      "new_tokens": 1,
+      "cached_seconds": 0.8824512089995551,
+      "fresh_seconds": 77.537958334,
+      "greedy": 108,
+      "top_two_margins": [
+        6.03125,
+        6.0625
+      ],
+      "different_bf16_words": 262142,
+      "memory": {
+        "peak_rss_bytes": 4880318464,
+        "resident_size": 4861935616,
+        "phys_footprint": 4952445320,
+        "lifetime_max_phys_footprint": 5022585128
+      }
+    },
+    {
+      "case": "566",
+      "positions": 566,
+      "new_tokens": 53,
+      "cached_seconds": 8.222566666998318,
+      "fresh_seconds": 87.10436699999991,
+      "greedy": 623,
+      "top_two_margins": [
+        6.5,
+        6.5
+      ],
+      "different_bf16_words": 259311,
+      "memory": {
+        "peak_rss_bytes": 4970708992,
+        "resident_size": 4970708992,
+        "phys_footprint": 4937896352,
+        "lifetime_max_phys_footprint": 5022585128
+      }
+    },
+    {
+      "case": "567",
+      "positions": 567,
+      "new_tokens": 1,
+      "cached_seconds": 0.21315895800216822,
+      "fresh_seconds": 87.44740912499765,
+      "greedy": 751,
+      "top_two_margins": [
+        4.0625,
+        4.375
+      ],
+      "different_bf16_words": 262144,
+      "memory": {
+        "peak_rss_bytes": 5011701760,
+        "resident_size": 4916822016,
+        "phys_footprint": 4937863608,
+        "lifetime_max_phys_footprint": 5022585128
+      }
+    },
+    {
+      "case": "reset32",
+      "positions": 32,
+      "new_tokens": 32,
+      "cached_seconds": 3.852771959001984,
+      "fresh_seconds": 3.8316030829992087,
+      "greedy": 532,
+      "top_two_margins": [
+        17.4375,
+        17.4375
+      ],
+      "different_bf16_words": 0,
+      "memory": {
+        "peak_rss_bytes": 5011701760,
+        "resident_size": 4919083008,
+        "phys_footprint": 4930474424,
+        "lifetime_max_phys_footprint": 5022585128
+      }
+    }
+  ],
+  "source_audit": {
+    "bytes": 10246621918,
+    "sha256": "2db5482b20d746879bb3ef79b5203e9075a2e2b98f54ec7c2f281c1477ddc550",
+    "reads": 10870,
+    "read_bytes": 4579875398,
+    "read_chain_sha256": "395b3772961021099867b8bbec119c34a43217dcf0768c026546e6c88fa9de1c",
+    "poisoned": false,
+    "poison_reason": null,
+    "closed": true
+  },
+  "checks": {
+    "cold_controls": 3,
+    "rust_inputs_unchanged": true,
+    "reused_rust_check_evidence": "benchmarks/results/2026-11-04-gemma-full-loss-v1.json"
+  },
+  "receipts_sha256": {
+    "artifacts/gemma-resident-generation-2026-11-04/plan.json": "2921aa951af66ad33775d338e83e301a8d0b683dd6fab1e7ae044286fa4f72db",
+    "artifacts/gemma-resident-generation-2026-11-04/capture/run.json": "d5edc7d1a13c99f1fe1d3158637ed4bf954fe3fbf957bb655672576b4f6179b3",
+    "artifacts/gemma-resident-generation-2026-11-04/capture/arrays.bf16le": "48ccc80aa3ff5e412a45817a2299abc3c01d604c743eca5662cd4f5cf9cdbefb",
+    "artifacts/gemma-resident-generation-2026-11-04/verification.json": "bcd876c7277485f25e9877115190a8d0f1ef546cab28ed628237218ce7af9967",
+    "artifacts/gemma-resident-generation-2026-11-04/capture/execution-plan.json": "7a29f4d414aa25d792af3a457d4c55079f4485ba7972f24dcbbcc23b9deaf78a"
+  },
+  "scripts_sha256": {
+    "artifacts/gemma-resident-generation-2026-11-04/worker.py": "d3b4733ec354c9efd54187108b492ebb78875e52c52ec8f54e89822f5c5f9c2d",
+    "artifacts/gemma-resident-generation-2026-11-04/run.py": "7c57729a416612076b6bff8a3b9feff418edde3dd78a43865737d5a8891d2387",
+    "artifacts/gemma-resident-generation-2026-11-04/verify.py": "03d915b7a3696c417e400094900143f74d6363f5af16f47848e668a0345f6add",
+    "artifacts/gemma-resident-generation-2026-11-04/prepare.py": "ff9123ca2ee7ef556f8d31e2e5a05c53b2b51537ef7ee14b2b32844245dcc36b"
+  },
+  "task_gate_qualified": false,
+  "app_qualified": false,
+  "earlier_fidelity_failures_waived": false
+}
