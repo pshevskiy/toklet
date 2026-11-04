@@ -10,6 +10,7 @@ not tokens per second or a promise that the engine can use that whole window.
 | Pinned artifact (revision prefix) | Backend / route | Declared positions | Qualified or tested scope | Ordinary app |
 | --- | --- | ---: | --- | --- |
 | Qwen2.5-0.5B-Instruct-8bit (`6474d4c`) | Native Metal dense, managed | 32,768 | Mac load/session growth and rendered Chat through1,024; larger values require separate qualification | Mac/iOS catalog; next-load upper512 or1,024, initial KV512 |
+| Qwen2.5-1.5B-Instruct-8bit (`c7e1ff2`) | Native Metal dense, diagnostic | 32,768 | Mac512/chunks1,32; stock greedy/stop agreement, boundary/reset/overflow and process-memory checks | No managed Chat/catalog adoption |
 | Qwen3-0.6B-8bit (`11de968`) | Native Metal dense with Q/K norm, managed | 40,960 | Mac512 route; original relative loss/task gates accepted, but separate C512 numerical fidelity gate remains rejected | Mac/iOS catalog,512; experimental accuracy label |
 | SmolLM2-135M-Instruct-8bit (`0f0d9b8`) | Native Metal dense Llama-family, managed | 8,192 | Mac512, fresh download and network-denied offline Chat; authenticated preferences | Mac/iOS catalog,512 |
 | Mistral-7B-Instruct-v0.3-4bit (`a4b8f87`) | Native Metal dense, managed | 32,768 | Recorded bounded Mac route and authenticated preferences; no family-wide/window claim | Mac/iOS catalog,512; independent memory admission |
@@ -64,3 +65,7 @@ The [representative production Mac Qwen2 journey](mac-production-memory.md)
 measures lifetimeRSS816,709,632bytes and greatest observed pre-exit physical
 high-water728,090,064bytes below its1.5GiB profile allowance at512/chunk32/
 reply128. The other four managed profiles have no new production-app peaks.
+
+[Qwen2.5-1.5B execution](qwen15-engine-execution.md) adds a second real dense
+geometry without a numerical kernel change. Its two decision rows are not a
+full fidelity or held-out quality gate.

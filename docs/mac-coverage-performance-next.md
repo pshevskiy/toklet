@@ -5,7 +5,12 @@ engine model coverage and performance. Mac work proceeds independently; missing
 phone checks and all historical numerical/quality rejections remain recorded.
 M8 is not retrospectively declared fully qualified on iPhone.
 
-Astra recommends three bounded deliveries:
+Current priority, clarified by the user: **new models first**. Qualify1.5B
+before P0, then select another fitting architecture with Astra. Performance
+work follows demonstrated needs; the draft P0 worker is preserved unreviewed
+outside Cargo in `artifacts/m9-p0-deferred-2026-11-05/`.
+
+Astra recommends these bounded deliveries:
 
 1. **P0: current native MLX8 baseline.** Use the pinned Qwen2.5-0.5B eight-bit
    artifact, Half activations/F16 KV, Compensated normalization, Online attention,
@@ -35,7 +40,7 @@ independent fixtures and static operation-boundary dispatch remain. No new
 framework, speculative MoE layer or Gemma precision redesign belongs to this
 queue. A future concrete mechanism needs its own fitting artifact and criteria.
 Each code task gets checks, combined Astra review, a commit and concise progress
-updates. Start with P0's native-MLX worker and complete chunk labeling.
+updates. Start with the1.5B metadata/memory inventory, then real execution.
 
 The [M9 performance contract](next-performance-milestone.md) supplies measurement
 and acceptance details; [coverage](model-coverage.md) remains the support index.

@@ -42,6 +42,10 @@ name = "metal_trace"
 required-features = ["metal"]
 
 [[example]]
+name = "qwen15_probe"
+required-features = ["metal"]
+
+[[example]]
 name = "metal_continue"
 required-features = ["metal"]
 

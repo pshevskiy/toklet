@@ -1,0 +1,181 @@
+{
+  "format": "toklet-qwen15-real-engine-execution-v1",
+  "passed": true,
+  "base_revision": "ec40bbd",
+  "astra_review": "approved /root/astra_kv_limit code and bounded Mac512 execution evidence",
+  "model": {
+    "passed": true,
+    "folder": "models/MLX-Qwen2.5-1.5B-Instruct-8bit-c7e1ff2",
+    "revision": "c7e1ff25efda4a2c8f7ee312380557fb42e145a2",
+    "bytes": 1640414038,
+    "sha256": "8b76d08a5a70261b9ba4da5c06ac28bf09ee848e2322bae901e84764b7bba8e8",
+    "seconds": 398.9501617920032
+  },
+  "checks": {
+    "passed": true,
+    "jobs": [
+      {
+        "name": "fmt",
+        "exit_code": 0,
+        "seconds": 1.1606972079971456
+      },
+      {
+        "name": "clippy",
+        "exit_code": 0,
+        "seconds": 8.066880124999443
+      },
+      {
+        "name": "test",
+        "exit_code": 0,
+        "seconds": 63.61928574999911
+      },
+      {
+        "name": "metal-clippy",
+        "exit_code": 0,
+        "seconds": 14.501645167001698
+      },
+      {
+        "name": "metal-test",
+        "exit_code": 0,
+        "seconds": 64.91410879199975
+      },
+      {
+        "name": "release-lib",
+        "exit_code": 0,
+        "seconds": 0.20460920900222845
+      },
+      {
+        "name": "probe-build",
+        "exit_code": 0,
+        "seconds": 20.23870004100172
+      }
+    ]
+  },
+  "result": {
+    "passed": true,
+    "exact_greedy_slots": 2,
+    "visible_text": "4",
+    "rows": [
+      {
+        "index": 0,
+        "id": 19,
+        "values": 151936,
+        "max_abs_error": 0.08236503601074219,
+        "rmse": 0.017062717415386803,
+        "stock_margin": 10.796875,
+        "native_margin": 10.76364517211914
+      },
+      {
+        "index": 1,
+        "id": 151645,
+        "values": 151936,
+        "max_abs_error": 0.07866239547729492,
+        "rmse": 0.013065182318714707,
+        "stock_margin": 4.625,
+        "native_margin": 4.636281967163086
+      }
+    ],
+    "native_memory": {
+      "weights_bytes": 1640334262,
+      "kv_bytes": 14680848,
+      "scratch_bytes": 24257748,
+      "history_bytes": 2048,
+      "logits_bytes": 1215488,
+      "metadata_bytes": 4736,
+      "metadata_allowance_bytes": 67108864,
+      "admitted_bytes": 1747603994
+    },
+    "full_fidelity_qualified": false,
+    "held_out_quality_qualified": false,
+    "app_adopted": false,
+    "phone_qualified": false,
+    "peaks": {
+      "stock": {
+        "rss_lifetime_bytes": 1301856256,
+        "observed_physical_high_water_bytes": 1980451096,
+        "last_observation_seconds": 11.071985832997598
+      },
+      "native": {
+        "rss_lifetime_bytes": 1715470336,
+        "observed_physical_high_water_bytes": 1705772832,
+        "last_observation_seconds": 164.05052575000445
+      }
+    }
+  },
+  "qualification": "Pinned artifact Mac512 engine execution; no full fidelity, held-out quality, managed Chat or phone admission",
+  "receipts_sha256": {
+    "Cargo.toml": "bf00390e40b9959bf3c1e17b2f1aca41df70cbce3174ef00476a13d7799311ea",
+    "artifacts/new-goal-b0-checks-v1/target/release/examples/qwen15_probe": "ffcca69d5c71bba6246b98c9d4f24a36d2c5aa685607cf958a11d00e2ba320f8",
+    "artifacts/qwen15-checks-2026-11-05/checks.json": "2ce07a49a27bafbd80499d069db6f91e94d3352e3e70fdda633ab03042c2d066",
+    "artifacts/qwen15-checks-2026-11-05/clippy.stderr": "a64c7077c4a5ab1321081b2a5e6543289ff042b1c9a956d798e5d501aa67bd09",
+    "artifacts/qwen15-checks-2026-11-05/clippy.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/qwen15-checks-2026-11-05/fmt.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/qwen15-checks-2026-11-05/fmt.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/qwen15-checks-2026-11-05/metal-clippy.stderr": "d742bbf9561c7f1328074b32a88edf4bac4c161e32d8da3ce52454b4c3dd2da2",
+    "artifacts/qwen15-checks-2026-11-05/metal-clippy.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/qwen15-checks-2026-11-05/metal-test.stderr": "46fd9fee99d3ee83c67132d9c4cc8ebfc0f5a94a0a4e514dff2b7d03b014d509",
+    "artifacts/qwen15-checks-2026-11-05/metal-test.stdout": "eb83f71407c270ac55fb79c4f8aa88379e96dbb5a727acb41bcfb9d246152872",
+    "artifacts/qwen15-checks-2026-11-05/probe-build.stderr": "0d10e345f7a1f52e03bf73b9c12668e17742f6239900029f19b0b41c8a4bd902",
+    "artifacts/qwen15-checks-2026-11-05/probe-build.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/qwen15-checks-2026-11-05/release-lib.stderr": "a7b8562473943493b3f4dadac8ad0723a395f9b2e4bee3fd601b7147d3ae281e",
+    "artifacts/qwen15-checks-2026-11-05/release-lib.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/qwen15-checks-2026-11-05/run.py": "99d63f176181e4d7e0fa09d7aeb6825c16a6c6d6d23f4f2f07a9de91fcec4e01",
+    "artifacts/qwen15-checks-2026-11-05/test.stderr": "9ab078ecb009f5fbb81ea4e103c8265c4d8bbf519bfb445083211dc7cfc2059a",
+    "artifacts/qwen15-checks-2026-11-05/test.stdout": "357bec7a6fa0cdf2c52ad4404b3caf1009ed7aa1415b01b77371bc88e3416eb3",
+    "artifacts/qwen15-inventory-2026-11-05/README.md": "43174dbe29884e190bd7c278f31fc2853369578ee7632d19432796886ae6ba45",
+    "artifacts/qwen15-inventory-2026-11-05/README.md.http": "e405a9645349c950753f75d9b771a75484813a547d00e40a87e6c46d2f4db736",
+    "artifacts/qwen15-inventory-2026-11-05/acquire.py": "1570777cdb391b2d66ad862b366e61cad77f163708168ded8ed8e0b0e76d96d1",
+    "artifacts/qwen15-inventory-2026-11-05/acquisition.json": "99c5b8fb8e651cc86c44dd62339783ee2a8b89dec977efd9380caaaf1b77d65f",
+    "artifacts/qwen15-inventory-2026-11-05/admission.json": "588185c0b65cccacf2636a08eabdde16f5258b898a522110c10f50caec34152c",
+    "artifacts/qwen15-inventory-2026-11-05/admit.py": "7315c8f202304be16d97701140be9f65027d506c4861875012e93c4824978827",
+    "artifacts/qwen15-inventory-2026-11-05/api.json": "59dcdf730c29f1a7dd9ac71a52f0e6ef723ffa919e062e4cb021ff530cdf2c38",
+    "artifacts/qwen15-inventory-2026-11-05/api.json.http": "4f9287426ed4485cf9e357cb93bbff0378f8bda329b62c9f38ac167b21196a24",
+    "artifacts/qwen15-inventory-2026-11-05/config.json": "a939169f5c833fd4c1d872dc07f521c6e5098075ac53bf007b8595343e980937",
+    "artifacts/qwen15-inventory-2026-11-05/config.json.http": "9cfd81b0348808b30cce286f2a5c1f8bf8b9132bfa3b88d67532882b86abd508",
+    "artifacts/qwen15-inventory-2026-11-05/download.log": "57aa2c2ad718756414303c6b020290a4cf17c34d3749baed4f8e5bf6f651e73d",
+    "artifacts/qwen15-inventory-2026-11-05/fetch.json": "524bcca16105b4f6303d9cab4f28f35bdcde2bc863d4d04558682bc631601fce",
+    "artifacts/qwen15-inventory-2026-11-05/fetch.py": "329b8fca9d926e2e625027e7ce2a3463f106d1d76dee8ffcaaa0e785d62883d1",
+    "artifacts/qwen15-inventory-2026-11-05/fetch.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/qwen15-inventory-2026-11-05/fetch.stdout": "9dd299367fcfc0b7616e248c389c1dbd3877cc253b2c892bca41b5bab62c859d",
+    "artifacts/qwen15-inventory-2026-11-05/freeze.py": "5b47f133827db4350ca1d26b0cedc2adec0e718e2645fc554ad00794db347b64",
+    "artifacts/qwen15-inventory-2026-11-05/freeze.stdout": "919770e787c40a872af466e74bd12727599f353cd1eee2693a06ffb6de7127cc",
+    "artifacts/qwen15-inventory-2026-11-05/inputs-plan.json": "fee7fe7f3490a6405b1be147c23ba25286eb1b4e7233f4371ee3259b8a2d0430",
+    "artifacts/qwen15-inventory-2026-11-05/model.safetensors.header.json": "a3d042677f2e9c1fcadf6b252214e57243c57d749f06cfd0fc19750c109253aa",
+    "artifacts/qwen15-inventory-2026-11-05/model.safetensors.header.json.http": "5f6c88f96d73c9cdc97b8bde64d0102678a58d03f9f9bfe194b0777b29e78398",
+    "artifacts/qwen15-inventory-2026-11-05/model.safetensors.index.json": "b885e07bdf11ca668b338f4bceed9ac0000dfcab56abe4b92670b748291d3643",
+    "artifacts/qwen15-inventory-2026-11-05/model.safetensors.index.json.http": "d031af48a10bcf709f32644edf3fe4c1f8ef9f69f3621ebc96301fa71fead192",
+    "artifacts/qwen15-inventory-2026-11-05/model.safetensors.length": "f4d77d62aa31a1aefda9403d2d3a785e8fefeea6670365894aadbe1a8b345792",
+    "artifacts/qwen15-inventory-2026-11-05/model.safetensors.length.http": "8224b3b892ede80c7b4e935768f588f21cb4dcd7200eaf05a9a6f3ea75f96fb1",
+    "artifacts/qwen15-inventory-2026-11-05/native/row-0.f32le": "4459707a43880e862509125a0c719e5d27738452bbaece66c147871ba73b8b17",
+    "artifacts/qwen15-inventory-2026-11-05/native/row-1.f32le": "ed0c5d6ba8c082134b3400590915041c3f13e063808a31e70af1f9eb685a917e",
+    "artifacts/qwen15-inventory-2026-11-05/native-input.json": "dd97600f372f7456f9c38f3e59729fa50c4655a2101356b2fb43cdef472c9ce4",
+    "artifacts/qwen15-inventory-2026-11-05/native-owned.json": "c289b0eb3664584583d9d87fdb0509da1617ebf6c48bdc2ae2a0cb2d629a2685",
+    "artifacts/qwen15-inventory-2026-11-05/native.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/qwen15-inventory-2026-11-05/native.stdout": "aefe3c8904806e5a1f3b5bfbe5cc367812aa607937b5575f085121ddd41bb569",
+    "artifacts/qwen15-inventory-2026-11-05/prepare-inputs-v1.py": "31215c828201888359b77db51b6ac87ca8b463da4d45b2bfd1b3f800b6b08fd6",
+    "artifacts/qwen15-inventory-2026-11-05/prepare-inputs-v2.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/qwen15-inventory-2026-11-05/prepare-inputs-v2.stdout": "8325efb52a7e69d8eec2af6b2d82d46f70a39160037ded62656738a45cca17f5",
+    "artifacts/qwen15-inventory-2026-11-05/prepare-inputs.py": "568b8b7c27abb06b7e55f0aca5882f2383c178d4bc2838e2d3066c6bc20839b8",
+    "artifacts/qwen15-inventory-2026-11-05/prepare-inputs.stderr": "4ac9fd4fd064f1792e3818cae3e753404de09352073203ed58cc25370ea410df",
+    "artifacts/qwen15-inventory-2026-11-05/prepare-inputs.stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/qwen15-inventory-2026-11-05/replay.json": "33ca6dad7d4fa2c6a826daa9240fe96c89a1693483e333a06dcf7b7649ff1829",
+    "artifacts/qwen15-inventory-2026-11-05/replay.py": "93a3bad361ed3bffabbb8ac519304f90938ed92c0c1369ecc929eff0ebc83492",
+    "artifacts/qwen15-inventory-2026-11-05/replay.stdout": "0274d6e9e5da5ac430be01cdc7b4dcd18e429457f7b8db9a6115fb1c3d61eca3",
+    "artifacts/qwen15-inventory-2026-11-05/run-owned.py": "6be067366964da078e59d600dc4aebb65849c6d0995d370033eaf50b47ee23b4",
+    "artifacts/qwen15-inventory-2026-11-05/special_tokens_map.json": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd",
+    "artifacts/qwen15-inventory-2026-11-05/special_tokens_map.json.http": "dfe1da3b2e060777368768bca8439144bb99177330e8938a9971909e720bae83",
+    "artifacts/qwen15-inventory-2026-11-05/stock/result.json": "b6a2d7e862e7a247fdae028d1f2ea3dcb128de03d5387a13bbbb0bba7a50f640",
+    "artifacts/qwen15-inventory-2026-11-05/stock/row-0.f32le": "3069d7733cbef1ab1498e1a125286445f3f2dcf6493db1799088167e1bba8552",
+    "artifacts/qwen15-inventory-2026-11-05/stock/row-1.f32le": "a03b2e34a34abe8c67ced2ad981f2ff23d4f7f3cfdc3a74963dcb0dd2c29b455",
+    "artifacts/qwen15-inventory-2026-11-05/stock-owned.json": "11c0bed3d63f2ad616a9592b1c6c7a5614f67acda04926c7ed2725f8ae7bf303",
+    "artifacts/qwen15-inventory-2026-11-05/stock-plan.json": "892e103bc6e41f76a953adb8eb6c0dcfb31a633315b034a66e31eb8c38573b3e",
+    "artifacts/qwen15-inventory-2026-11-05/stock.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/qwen15-inventory-2026-11-05/stock.stdout": "621d29711d1a1f5d537042ad1187bf8c6da9fac892971b888da6a694c5921954",
+    "artifacts/qwen15-inventory-2026-11-05/tokenizer.json": "a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf",
+    "artifacts/qwen15-inventory-2026-11-05/tokenizer.json.http": "358b5f6876202e25643d90f8f87485f4c02ae329b44b63105f4328ee2ce1d56c",
+    "artifacts/qwen15-inventory-2026-11-05/tokenizer_config.json": "f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7",
+    "artifacts/qwen15-inventory-2026-11-05/tokenizer_config.json.http": "9a269d7e6146ec93bcc12ec04834a20be9d99e56c0c84e8856031edb33044059",
+    "examples/qwen15_probe.rs": "0f924b7deac5003b1a0f056c259178693278cc5d872f929b71f3f5a0abc92596",
+    "tools/reference/qwen15_stock_probe.py": "8ac3958566aa1c7215ab2c5732aa06feaa9b82272fde91cd71cf5dbde77d25a0"
+  }
+}

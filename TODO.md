@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **P0 native Qwen2.5 MLX8 profiling/timing worker with complete chunk labels; next real1.5B dense qualification, then one measured optimization. [Queue](docs/mac-coverage-performance-next.md)**.
+Current task: **SmolLM3 strict per-layer rotary schedule, CPU/Metal bypass and nonzero-offset mixed-layer fixture; then real Mac512 execution. Qwen1.5 engine qualification reviewed/complete. Performance secondary; iPhone deferred**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -477,6 +477,15 @@ uses the existing full saved-conversation reset+prompt path on Send.
   - [x] Real native Mac512 session boundary, cancellation/replay and observed stop evidence; [report](docs/llama3-native-chat-boundary.md).
   - [x] Audited native owner pairing; [report](docs/llama3-audited-pair.md).
   - [x] Coherent native40 package and managed Mac developer route/journey; [report](docs/llama3-mac-app.md). Default bounded Mac discovery is now adopted; [report](docs/llama3-mac-adoption.md).
+
+### New-model Mac queue (priority5November)
+
+- [x] Pinned Qwen2.5-1.5B MLX8 real Mac512 engine execution, stock decisions,
+  chunk/reset/overflow/memory checks and Astra review; [report](docs/qwen15-engine-execution.md).
+- [ ] SmolLM3 validated per-layer rotary mask, shared CPU/Metal bypass and
+  independent nonzero-offset mixed-layer fixture.
+- [ ] SmolLM3 pinned real Mac512 execution, stock comparison, state and memory.
+- [ ] Select the next fitting model/mechanism with Astra after these results.
 
 ### M8 closure
 
@@ -1242,3 +1251,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Production Mac memory reviewed | Unmodified optimized app cached-loads Qwen2 at512/chunk32/reply128, displays reply and quits0; RSS816,709,632 / observedphysical728,090,064bytes <1.5GiB. Exact bundle/model/workspace/owned-PID guards and saved replay pass. | First900sUItimeout and separate empty relaunch preserved; freshrootrepeat succeeds. Astra approves representative whole-app check; commit evidence. Otherprofile/phone peaks unclaimed. [Report](docs/mac-production-memory.md). |
 
 | 2026-11-05 | User defers iPhone / Mac queue revised | Astra selects current0.5B P0, real1.5B shared-dense qualification and one measured P1/P2 improvement. Phone/fidelity failures preserved; no arbitrary-model claim. | Begin nativeMLX8 profiling worker; separate timings, full chunk labels, bounded memory. [Queue](docs/mac-coverage-performance-next.md). |
+
+| 2026-11-05 | New-model priority / P0 interrupted | User prioritizes new models and compact autonomous work. Preserve unreviewed P0 draft outside Cargo; formatting passed, no profiling/qualification claimed. Astra advises1.5B execution and researches next fitting architecture. | Current1.5B immutable metadata/header/memory admission, then real Mac/reference checks. [Queue](docs/mac-coverage-performance-next.md). |
+
+| 2026-11-05 | Qwen1.5 engine execution reviewed |732tensors/1.640GB payload authenticated; two complete stock/native rows choose4+hiddenstop. Chunks1/32 reach512, preserve513 rejection and reset; admitted1,747,603,994bytes / peakRSS1,715,470,336. All7checks and Astra review pass. | Commit scoped engine coverage; no fidelity/quality/Chat/phone claim. NextSmolLM3 mask/bypass. Prompt-preparation failure preserved. [Report](docs/qwen15-engine-execution.md). |

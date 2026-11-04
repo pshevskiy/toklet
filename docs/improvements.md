@@ -9949,3 +9949,10 @@ User defers iPhone; Astra recommends0.5B profiling, real1.5B shared-dense
 qualification and one measured optimization. Preserve device/rejected gates;
 separate architecture execution, app admission and performance claims.
 [Queue](mac-coverage-performance-next.md).
+
+## 5 November 2026 — Execute Qwen2.5-1.5B MLX8
+
+Reuse the dense engine for a second geometry: stock greedy/stop agreement,
+real512 boundary, chunk/reset/overflow checks and <6GiB process peaks pass.
+550default/658Metal tests, strict checks, release builds and Astra review pass.
+No full fidelity, held-out or managed Chat claim. [Report](qwen15-engine-execution.md).
