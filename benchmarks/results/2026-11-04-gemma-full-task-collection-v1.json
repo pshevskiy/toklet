@@ -1,0 +1,69 @@
+{
+  "format": "toklet-gemma-full-task-collection-v1",
+  "collections_complete": true,
+  "cases_per_role": 100,
+  "astra_review": "approved complete paired collection for reuse; grading remains unresolved",
+  "source": {
+    "passed": true,
+    "command": {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-s",
+        "-B",
+        "/Users/coloner/work/rust/toklet/artifacts/gemma-full-tasks-recovered-2026-11-04/source-worker.py"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 45006,
+      "stdout": "artifacts/gemma-full-tasks-recovered-2026-11-04/source.stdout",
+      "stderr": "artifacts/gemma-full-tasks-recovered-2026-11-04/source.stderr"
+    },
+    "peak_rss_bytes": 5166071808,
+    "peak_physical_bytes": 4987457832,
+    "cases": 100,
+    "tasks_sha256": "3ed1e5400ab968bc58d6a6d9530434b0a803825ff058b140ab30dba18b53352a"
+  },
+  "repaired_case_indices": [
+    17,
+    18,
+    19,
+    20,
+    33,
+    82
+  ],
+  "collection_sha256": "adb05c77285775a0d2cb154aaa30dcef3e40d5b6866aed6596234e710a44780f",
+  "grading_completed": false,
+  "unresolved": {
+    "profile": "baseline",
+    "id": "HumanEval/39",
+    "reason": "Exit137 without independent resource or terminal evidence"
+  },
+  "restored_stopped": true,
+  "pipe_lifetime_finished": true,
+  "quality_gate_passed": null,
+  "app_qualified": false,
+  "earlier_failures_waived": false,
+  "receipts_sha256": {
+    "artifacts/gemma-task-grading-2026-11-04/assemble.py": "8bf8d9d246f5e805312f3cf5c66f2a877b53a558f8b0e6ca45494221be87e0c3",
+    "artifacts/gemma-task-grading-2026-11-04/assembly.json": "0b402c1ca1f87465bc00c7b1c46f89bb611ebfcfe4e87a29c030828c51dff893",
+    "artifacts/gemma-task-grading-2026-11-04/collection.json": "adb05c77285775a0d2cb154aaa30dcef3e40d5b6866aed6596234e710a44780f",
+    "artifacts/gemma-task-grading-2026-11-04/actual-v1/result.json": "dd7ff40e57d139f2f4e495460d2a093ab4976bb5a241a7f25b1505a48e0a5655",
+    "artifacts/gemma-task-grading-2026-11-04/actual-v1/execution-plan.json": "de15fb1833c4350b380e25817f454644a82f202c453628bc0b4f6ebe0acd280d",
+    "artifacts/gemma-task-grading-2026-11-04/actual-v1/inner/result.json": "2d085a978ae10218929a1193f4d4057fba8b256760673b5d097c6d3787a9c0a8",
+    "artifacts/gemma-task-grading-2026-11-04/actual-v1/inner/grading.jsonl": "e842319fd9fd3b53611a57c86afa7ec3f47a401949446553f99e7e760c90ea2d",
+    "artifacts/gemma-task-grading-2026-11-04/actual-v1/inner/baseline-decoded.json": "e9339af3b0cd4fcc15f066eaec2a0e0e33f6c56004f7bfcc5532d13a11c5d41e",
+    "artifacts/gemma-task-grading-2026-11-04/actual-v1/inner/native-decoded.json": "d02fcc4535f8246ef4217eb4af3878527cdaabe599044aa4cb5147af9faac363",
+    "artifacts/gemma-full-tasks-recovered-2026-11-04/source-run.json": "ec9a718421f740cbada363f302150c26fad36ef0539f910d58401555b5e4741b",
+    "artifacts/gemma-full-tasks-recovered-2026-11-04/source-plan.json": "5b6685ae7da069ba425aecb4423d081666f61d5b0cca8c7a3ce660e0151427c7",
+    "artifacts/gemma-full-tasks-recovered-2026-11-04/source.py": "4d09c6a162b8c2cf24f9fe9337658eaef0a175a4763abbb9cd4c84586a0432ba",
+    "artifacts/gemma-full-tasks-recovered-2026-11-04/source-worker.py": "3aa718793aa425564dc89ccd150a175f9993042062f60bba908d58c67ab1acfe",
+    "artifacts/gemma-full-tasks-recovered-2026-11-04/source/run.json": "9a0c44b1f56a9ced2e89163bd8c12d67097aa46f254bf2b5e200a5d1960bbd99",
+    "artifacts/gemma-full-tasks-recovered-2026-11-04/source/tasks.jsonl": "3ed1e5400ab968bc58d6a6d9530434b0a803825ff058b140ab30dba18b53352a",
+    "artifacts/gemma-full-tasks-recovered-2026-11-04/source/execution-plan.json": "c8904e1fae0a0fc6079b7e079e365f7042c216de495ea666bff9d3a02164a7b3",
+    "artifacts/gemma-full-tasks-recovered-2026-11-04/source/model-input-calls.json": "29f4d685f52167fe473081e22684307aef224412236a9b92be2ec32c97bcc580",
+    "artifacts/gemma-full-tasks-recovered-2026-11-04/source.stderr": "ba108173f4d8b36a89aad7561a3cd5959cb2c49525b6a4c8d78f06a1008b0be0"
+  }
+}

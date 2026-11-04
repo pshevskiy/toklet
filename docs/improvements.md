@@ -9880,3 +9880,10 @@ Bounded Darwin paired sincos, live provider UUIDs and actual-process RNE/FP32
 subnormal checks pass four controls/Astra review. Binary/import/runtime evidence
 is retained. Future coupled callers need fresh seals; whole graph remains open.
 [Evidence](../benchmarks/results/2026-11-04-gemma-native-host-v1.json).
+
+## 4 November 2026 — Complete Gemma task collections
+
+All100 responses per role pass admission; original trajectories verify exactly
+with six one-repair cases below6GiB. Astra approves collection reuse. The grader
+correctly withholds a score for ambiguous HumanEval39 exit137 and restores the
+VM. Authored process-CPU witness qualification is next. [Report](gemma-full-tasks.md).

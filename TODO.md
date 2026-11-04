@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Source100 with exact trajectory recovery is running; native100complete; reviewed grading window ready**.
+Current task: **Both100-case collections complete/reviewed; qualify process-CPU witness for unresolved isolated HumanEval/39**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -1219,3 +1219,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Host arithmetic investigation recorded | Astra resolves optimized RMS/GELU/softcap/RoPE/attention call sites, exact constants and separate FP32 stores. Lean explicit Python-f64/manual-sum reference plus batched paired-sincos wrapper is advised; nine local links/whitespace pass. | Domain committed `12ff14f`. [Host design](docs/gemma-native-host-profile.md) still requires live providerUUID/FP environment and independent controls before coupled collection. Source100 continues; grade after clean completion. |
 
 | 2026-11-04 | Paired host primitive reviewed | Strict batched Darwin sincos and actual-process providerUUID/FP environment witness pass4 controls/Astra review; binary/import/source endpoints retained. Accuracy scope is tested inputs; future caller bindings require fresh checks. | Commit primitive; host investigation `8dc0f18`. Source100 trajectories now verified; final source/runtime/resource/owned-exit guards pending before isolated grading. [Evidence](benchmarks/results/2026-11-04-gemma-native-host-v1.json). |
+
+| 2026-11-04 | Full task collections reviewed / grader withheld score | Source/native100 pass exact admission, clean exits and evidence bindings. Six source cases repair once (17/18/19/20/33/82); sourceRSS5.166GB. Astra approves reuse. Isolated baselineHumanEval39 exits137 without terminal/OOM/watchdog; VM restoration/owner completion pass; no decision. | Preserve run; qualify [independent process-CPU witness](docs/gemma-cpu-limit-witness.md) using authored controls before any generated retry. [Report](docs/gemma-full-tasks.md). Host primitive `f93260e`; independent coupled graph remains open. |
