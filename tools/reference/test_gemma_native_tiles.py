@@ -44,15 +44,15 @@ class TileControls(unittest.TestCase):
         for tokens in [1, 32]:
             inputs = struct.pack('<'+'f'*(tokens*64), *((index % 31-15)/16 for index in range(tokens*64)))
             outputs = []
-            for workers in [1, 4]:
+            for workers, normal_domain in [(1, False), (4, False), (1, True), (4, True)]:
                 matrix = self.source()
                 outputs.append(subject.project_rows(matrix, inputs, tokens=tokens, lanes=32,
-                                                    library=self.library, workers=workers))
+                                                    library=self.library, workers=workers, normal_domain=normal_domain))
                 if expected_reads is None:
                     expected_reads = matrix.stream.reads
                 self.assertEqual(matrix.stream.reads, expected_reads)
                 self.assertEqual(len(outputs[-1]), tokens*513*4)
-            self.assertEqual(*outputs)
+            self.assertTrue(all(output == outputs[0] for output in outputs))
             # Independent primitive replay of the final one-row tile verifies
             # its token stride and row placement, including the partial tail.
             matrix = self.source()
@@ -78,3 +78,20 @@ class TileControls(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, 'CPU worker subnormal environment differs'):
                 subject.project_rows(matrix, bytes(64*4), tokens=1, lanes=32, library=self.library, workers=4)
         self.assertFalse(matrix.stream.closed)
+
+    def test_strict_domain_reports_first_input_or_metadata_tile_before_dispatch(self):
+        matrix = self.source()
+        with patch.object(subject, 'Projection') as library:
+            with self.assertRaises(subject.domain.DomainError) as caught:
+                subject.project_rows(matrix, struct.pack('<I', 1)+bytes(63*4), tokens=1, lanes=32,
+                    library=self.library, workers=4, normal_domain=True, matrix_name='test.matrix')
+            self.assertEqual(caught.exception.evidence['matrix'], 'test.matrix')
+            self.assertIsNone(caught.exception.evidence['tile_start'])
+            matrix.stream.seek(matrix.bias_offset)
+            matrix.stream.write(struct.pack('<H', 0x00c0))
+            with self.assertRaises(subject.domain.DomainError) as caught:
+                subject.project_rows(matrix, bytes(64*4), tokens=1, lanes=32,
+                    library=self.library, workers=4, normal_domain=True, matrix_name='test.matrix')
+            self.assertEqual(caught.exception.evidence['tile_start'], 0)
+            self.assertEqual(caught.exception.evidence['status'], 'inconclusive')
+            library.assert_not_called()

@@ -9858,3 +9858,11 @@ One/four-worker projections preserve exact outputs and ordered source reads,
 including a partial tile. Seven controls and Astra review pass; measured32-token
 reference latency is134–135ms/42.6–42.7ms at30.2MBRSS. Graph arithmetic remains
 open. [Evidence](../benchmarks/results/2026-11-04-gemma-native-row-workers-v1.json).
+
+## 4 November 2026 — Projection underflow exclusion
+
+Optional dyadic-grid admission proves normal-or-zero internal projection
+arithmetic before dispatch; insufficient bounds retain inconclusive coordinates.
+Thirteen controls, strict real head replay and Astra review pass with unchanged
+output hashes. Host-provider/coupled graph remain open.
+[Evidence](../benchmarks/results/2026-11-04-gemma-projection-domain-v1.json).

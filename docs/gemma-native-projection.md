@@ -53,3 +53,26 @@ are134.2–135.0ms with one worker and42.62–42.74ms with four; peakRSS30.2MB.
 These measure reference feasibility. Astra approves the bounded worker scope;
 intermediate subnormal admission, provider graph and coupled checks remain open.
 [Worker evidence](../benchmarks/results/2026-11-04-gemma-native-row-workers-v1.json).
+
+## Sufficient projection underflow admission
+
+An optional strict mode derives the least-significant-set-bit quantum from raw
+normal FP32 inputs (`qx`) and BF16 metadata (`qm`), preserving signed zeros and
+rejecting subnormal operands. Require `qm >= -126` and `qm + qx >= -126`.
+Exact affine coefficients lie on the metadata grid; RNE can only coarsen it.
+Products, exact FMA residuals, compensation additions/subtractions, tree merges
+and final sums therefore stay on a grid whose smallest nonzero point is normal.
+This excludes internal underflow, including a nonzero result rounding to zero.
+Zero inputs still require metadata admission; zero metadata bypasses only the
+product-grid inequality after input validation. Finite/overflow, signed-zero and
+provider checks remain separate.
+
+The caller scans inputs once and tile metadata before dispatch. An insufficient
+bound is **inconclusive**, with operand index/matrix/tile evidence; it does not
+claim that a particular dot produced a subnormal. Thirteen controls and Astra
+review pass, including both exact−126 boundaries/one-bit-below cases, conservative
+normal-dot rejection and failure before dispatch. The original513-row head
+experiment passes strict admission with unchanged one/four-worker hashes/read
+order,29,966,336-byteRSS and66.9–67.4ms diagnostic32-token/four-worker samples.
+The IEEE C primitive is unchanged. Host operations and coupled graph remain open.
+[Domain evidence](../benchmarks/results/2026-11-04-gemma-projection-domain-v1.json).
