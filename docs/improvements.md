@@ -9851,3 +9851,10 @@ Fresh precise M1Pro pipeline reports32lanes; four subnormal probes return zero.
 Normal controls and27 authored outputs match CPU replay exactly. Required checks,
 two cold controls and Astra review pass. General flush semantics and coupled
 graph remain open. [Report](gemma-projection-environment.md).
+
+## 4 November 2026 — Bounded reference row workers
+
+One/four-worker projections preserve exact outputs and ordered source reads,
+including a partial tile. Seven controls and Astra review pass; measured32-token
+reference latency is134–135ms/42.6–42.7ms at30.2MBRSS. Graph arithmetic remains
+open. [Evidence](../benchmarks/results/2026-11-04-gemma-native-row-workers-v1.json).

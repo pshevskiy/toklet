@@ -34,3 +34,22 @@ fixtures, the independent host-provider graph and fatal coupled comparisons
 remain required by the [Mac conformance design](gemma4-native-conformance.md).
 All historical numerical rejections and app/phone limitations remain unchanged.
 [Evidence](../benchmarks/results/2026-11-04-gemma-native-projection-v1.json).
+
+## Bounded independent row workers
+
+The reference dispatcher admits one or four workers. Only the caller reads the
+borrowed source descriptor, in increasing128-row tiles; at most four jobs are
+outstanding. Each worker keeps the complete dot and SIMD reduction, checks its
+CPU rounding/subnormal environment and owns separate FFI buffers. Results
+assemble by source row, including partial tiles. Exceptions drain the worker
+scope before returning; the borrowed descriptor stays caller-owned.
+
+Seven focused controls pass, including513-row/partial-tail and1/32-token exact
+single/four identity, ordered caller-only reads, token strides, truncation and
+an intentionally wrong worker environment. An authenticated first513-row tied
+head experiment at width1536 repeats identical15 source reads and output hashes
+in both configurations. With source inference running, raw32-token CPU samples
+are134.2–135.0ms with one worker and42.62–42.74ms with four; peakRSS30.2MB.
+These measure reference feasibility. Astra approves the bounded worker scope;
+intermediate subnormal admission, provider graph and coupled checks remain open.
+[Worker evidence](../benchmarks/results/2026-11-04-gemma-native-row-workers-v1.json).

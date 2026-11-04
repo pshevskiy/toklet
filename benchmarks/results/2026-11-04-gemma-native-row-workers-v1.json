@@ -1,0 +1,80 @@
+{
+  "format": "toklet-gemma-native-row-workers-v1",
+  "passed": true,
+  "targeted_tests": 7,
+  "astra_review": "approved bounded row-worker reference scope",
+  "cargo_checks": "Required fmt/default+Metal strictClippy/550default658Metal tests from4467b86 reused; relevant inputs unchanged",
+  "worker_limit": 4,
+  "tile_rows": 128,
+  "library_receipt": "benchmarks/results/2026-11-04-gemma-native-projection-v1.json",
+  "measurements": {
+    "passed": true,
+    "measurements": [
+      {
+        "tokens": 1,
+        "workers": 1,
+        "seconds": [
+          0.006944332999410108,
+          0.006600417000299785,
+          0.006497624999610707
+        ],
+        "output_sha256": "ad024d55257d1f3f27a3280fd602dd3e756fd974e616343e95697492beb45b27",
+        "reads_per_call": 15
+      },
+      {
+        "tokens": 1,
+        "workers": 4,
+        "seconds": [
+          0.003962999995565042,
+          0.004106334003154188,
+          0.003962374998081941
+        ],
+        "output_sha256": "ad024d55257d1f3f27a3280fd602dd3e756fd974e616343e95697492beb45b27",
+        "reads_per_call": 15
+      },
+      {
+        "tokens": 32,
+        "workers": 1,
+        "seconds": [
+          0.13502691600297112,
+          0.1348060419986723,
+          0.1342205830005696
+        ],
+        "output_sha256": "ee9c89ae06b51fc7a39dc8f14db42facb0e6e2c34e19c10506729d096d275ab3",
+        "reads_per_call": 15
+      },
+      {
+        "tokens": 32,
+        "workers": 4,
+        "seconds": [
+          0.04262854200351285,
+          0.04273591600212967,
+          0.042622667002433445
+        ],
+        "output_sha256": "ee9c89ae06b51fc7a39dc8f14db42facb0e6e2c34e19c10506729d096d275ab3",
+        "reads_per_call": 15
+      }
+    ],
+    "single_four_hashes_equal": true,
+    "partial_tile_rows": 1,
+    "ordered_source_reads_equal": true,
+    "worker_environment_checked_each_tile": true,
+    "peak_rss_bytes": 30195712,
+    "scope": "First513 original tied-head rows; authored inputs; CPU feasibility while source inference runs",
+    "plan_sha256": "15eb8407fc41d88901afb746ecdae0db7f84ac43d52db9bb753aaa857add39ae"
+  },
+  "coupled_graph_qualified": false,
+  "engine_performance_qualified": false,
+  "app_qualified": false,
+  "receipts_sha256": {
+    "tools/reference/gemma_native_tiles.py": "640de13e6207d14e9450e7ec8c83f4f1039df844c03504f6a28149d3883d0277",
+    "tools/reference/test_gemma_native_tiles.py": "534e5b408432e45081ba8506e6d7a5b06d815611e9a228de27b201b9f98edff9",
+    "artifacts/gemma-native-projection-2026-11-04/tiles-controls.log": "1fc74cf1f0bae32795da1b873b142124b87845c3473f4d96d6c8cea7da792f65",
+    "artifacts/gemma-native-projection-2026-11-04/tiles-controls-final.log": "523af87af7be36e8a99780f4773beddb4b4f00fbc7bb4beb67f2051a8ca61aa7",
+    "artifacts/gemma-native-projection-2026-11-04/measure_tiles.py": "a689679ef8c748f57be53d09dc00fac28ebea3948015622f94f51097c91c8877",
+    "artifacts/gemma-native-projection-2026-11-04/tiles-plan.json": "15eb8407fc41d88901afb746ecdae0db7f84ac43d52db9bb753aaa857add39ae",
+    "artifacts/gemma-native-projection-2026-11-04/tiles-measurement.json": "2b999691726fff943d1d1eb2fa43fe7e91cc5517a1344e9c992283071e9f10e9",
+    "artifacts/gemma-native-projection-2026-11-04/tiles.stdout": "2b999691726fff943d1d1eb2fa43fe7e91cc5517a1344e9c992283071e9f10e9",
+    "artifacts/gemma-native-projection-2026-11-04/tiles.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
