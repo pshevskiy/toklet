@@ -75,3 +75,8 @@ BF16 and this reference's stagedFP32/Decimal80 arithmetic. Establishing one is
 a separate prospective decision. This experiment does not waive any of the
 earlier11/27 failures or the provisional four wrap-logit rejections, and cannot
 establish full quality or app eligibility.
+
+The [short source reproduction/profiling](gemma-bf16-source-experiment.md) and
+[tiny upstream streaming control](gemma-upstream-tiny.md) now pass their stated
+scopes. Next admit the official540selected/60excluded tensor mapping and read
+coverage, then run the descriptive real four-token comparison.

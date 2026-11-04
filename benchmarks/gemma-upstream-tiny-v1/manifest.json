@@ -1,0 +1,47 @@
+{
+  "format": "toklet-upstream-gemma-tiny-contract-v1",
+  "tokens": [
+    2,
+    7,
+    13,
+    7,
+    2,
+    7,
+    13,
+    7,
+    2
+  ],
+  "changed_future_tokens": [
+    2,
+    7,
+    13,
+    7,
+    2,
+    7,
+    13,
+    7,
+    3
+  ],
+  "seed": 170319,
+  "threads": 1,
+  "dtype": "bfloat16",
+  "attention": "eager",
+  "use_cache": false,
+  "head_tile": 4,
+  "tail_rows": 1,
+  "expected_shared_consumers": [
+    [
+      2,
+      0
+    ],
+    [
+      3,
+      1
+    ]
+  ],
+  "layer_outputs": "bitwise_exact",
+  "logits": "bitwise_exact",
+  "greedy": "lowest_id_exact",
+  "peak_streamed_layer_sets": 1,
+  "real_checkpoint_allowed": false
+}

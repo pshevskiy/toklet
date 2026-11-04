@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Pinned upstream BF16 tiny resident-versus-streamed equivalence**.
+Current task: **Official BF16 upstream reader admission and descriptive four-token comparison**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -491,7 +491,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [ ] Measured original-BF16 four-token source/upstream experiment before full-quality scorer; [next task](docs/gemma-original-quality-next.md).
 - [x] Standalone BF16 profiling adapter preparation, tiny equivalence only; [evidence](benchmarks/results/2026-11-04-gemma-bf16-profile-v1.json).
 - [x] Original-BF16 four-token saved-reference reproduction/profiling; [report](docs/gemma-bf16-source-experiment.md).
-- [ ] Pinned upstream BF16 tiny resident/streamed control, then descriptive real four-token comparison.
+- [x] Pinned upstream BF16 tiny resident/streamed control; [report](docs/gemma-upstream-tiny.md).
+- [ ] Official reader accounts for540selected/60excluded tensors, raw BF16/PLE/tied-head/read-chain checks.
+- [ ] Descriptive real four-token upstream BF16 comparison under frozen policy and6GiB.
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1131,3 +1133,9 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Original-BF16 source experiment passed | Four-token original/future cases reproduce all2,852saved states and full38,182-read/18,236,693,062-byte chain exactly under both profiles. Worker47.11s/RSS372,899,840bytes; sourceauth5.76s, binding0.33s, eachgraph9.17–9.98s. NLL/capture/source/runtime/resource checks pass. | Combined Astra review before commit; upstream tiny resident/streamed control next, without treating old11/27/4/8 numerical failures as waived. |
 
 | 2026-11-04 | Original source experiment reviewed | Astra approves scripts,2,852exact states/readchain and bounded profiling evidence; measured source cost does not qualify upstream arithmetic or performance retention. | Commit experiment; build four-layer BF16 upstream tiny resident/streamed control with fixed nine-token wrap input and tail head tile. [Report](docs/gemma-bf16-source-experiment.md). |
+
+| 2026-11-04 | Upstream tiny control / runtime retry | Frozen506,376BF16 bytes/67tensors precede inference. Two cold controls pass exact layer/logit bits, shared2→0/3→1, tail head, nonpersistent buffers and partial-load recovery. First sealed inventory stops on PyTorch synthetic namespace origins before model validation. | Bind only exact torch.ops/torch.classes types to their pinned implementation files; retain failed log and retry sealed control. No real upstream checkpoint executed. |
+
+| 2026-11-04 | Sealed upstream tiny equivalence passed | StockBF16 forward with storage proxies matches all layer/logit bits for two9-token cases; shared2→0/3→1, prefix8, tail head, buffers and partial-load recovery pass. Only one streamed layer set is materialized. Owned workerRSS383,270,912bytes; fullruntime/source guards pass and generated PyTorch source is retained. | Combined Astra review before commit; real upstream checkpoint remains unexecuted and earlier numerical gates stay rejected. |
+
+| 2026-11-04 | Upstream tiny reviewed | Astra approves bit-exact stock-forward storage integration, sharedKV/cleanup, frozenfixture and sealed evidence. No relevant Rust inputs changed; earlier numerical rejections remain. | Commit harness; admit all540selected/60excluded official text tensors and raw BF16 read coverage before real four-token outputs. [Report](docs/gemma-upstream-tiny.md). |

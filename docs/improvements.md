@@ -9727,3 +9727,12 @@ authentication, reads, decoding, projection/conversion and head costs. Source,
 runtime, resource and NLL controls pass; Astra approves. Upstream BF16 agreement,
 full quality and earlier precision rejections remain open.
 [Report](gemma-bf16-source-experiment.md).
+
+## 4 November 2026 — Tiny upstream BF16 streaming control
+
+Stock upstream forward matches resident BF16 layer/logit bits across9-token
+window-crossing and causal controls. One-layer leases, sharedKV, tail head,
+nonpersistent buffers and partial-read recovery pass. Frozen weights, complete
+runtime/input guards, retained generated source and Astra review pass; peakRSS
+is383,270,912bytes. Real-checkpoint fit/accuracy and earlier failures remain open.
+[Report](gemma-upstream-tiny.md).
