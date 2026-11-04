@@ -209,3 +209,8 @@ positions; iOS retains four profiles pending physical qualification. The origina
 [quality gates](../docs/llama3-quality-qualification.md) and fresh
 [ranged-download/offline journey](../docs/llama3-download-offline.md) pass.
 Open Llama through Models to use its audited loader and text policy.
+
+All five adopted Mac profiles have [fresh download, Stop/recovery and offline evidence](../docs/mac-hub-journeys.md).
+An optimized app from unmodified production sources is available at
+`artifacts/mac-hub-journeys-2026-11-04/production/Toklet.app`; it was built without
+launching or replacing a user session. iPhone qualification remains separate.

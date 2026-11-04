@@ -9662,3 +9662,13 @@ of dual-contract rows at860,078,080bytes peak RSS. Source/runtime/resource guard
 and combined Astra review pass. This prepares native comparison; earlier
 four-token failures and unquantized/app/phone quality remain open.
 [Report](gemma-e2b-context-reference.md).
+
+## 4 November 2026 — All adopted Mac profile journeys
+
+Explicit pinned selection and Stop/recovery extend the shared journey helper.
+Fresh Qwen2/Qwen3/Mistral/Smol downloads, audited Chat and separately network-denied
+offline/bad-cache checks pass, complementing Llama.14selector/existingHub controls,
+strict compile and combined Astra review pass. An optimized unmodified-source Mac
+app builds without touching the user's session. Quality warnings, generic-model
+support and physical-phone qualification remain separate.
+[Report](mac-hub-journeys.md).

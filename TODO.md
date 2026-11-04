@@ -2,7 +2,7 @@
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
 Current task: **Gemma4 real512 native boundary/capture and independent numerical replay**.
-Parallel task: **Mac pinned-profile journeys passed; combined review and evidence commit pending**.
+Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
@@ -463,11 +463,12 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Adopted Mac profiles: persist by artifact/plan identity; apply changes atomically with safe
   session recreation/replay and preserve rejected settings/drafts.
 - [x] Recorded Mac rendered prompt/reply boundaries and stale/cancel/recovery checks; see linked B5 receipts.
-- [ ] Reconcile remaining per-artifact search/download/load/offline journeys; do not infer them from shared controllers.
+- [x] Reconcile all five adopted Mac per-artifact search/download/Stop/offline journeys; [report](docs/mac-hub-journeys.md).
+  - [ ] Independent physical iPhone14Pro journeys/Settings; latest connection query times out.
   - [x] Ordinary Smol real download → verified cache → process-confined offline Chat; [report](docs/smol-download-offline.md).
   - [x] Llama fresh ranged download → verified cache → offline Chat and default Mac adoption; [report](docs/llama3-mac-adoption.md).
-- [ ] Finish Mac app checks and record separate iPhone 14 Pro validation or
-  explicit remaining device gaps; Astra review and commit each code task.
+- [x] Adopted-profile Mac app checks complete; record separate iPhone 14 Pro validation or
+  explicit remaining device gaps; current physical connection times out. [Mac report](docs/mac-hub-journeys.md).
 
 - [x] Integrate the pinned Llama3 plain renderer/codec in the Mac developer app path, checking
   single BOS, all three hidden stops, trim/decoding, cancellation and actual
@@ -1060,3 +1061,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Required phone availability refreshed | Physical14Pro is paired over localNetwork but disconnected; read-only details exits2. Simulator/ProMax are distinct. No app/configuration changed. | Keep phone Settings/runtime qualification open; continue active Mac reference and journeys. [Query](artifacts/m8-phone-availability-2026-11-04/availability.json). |
 
 | 2026-11-04 | Full512 independent oracle captured | Both contracts finish2,070.99s/RSS860,078,080bytes. Real32 compatibility and causal0/31 rows are byte-identical;4 cold controls and source/runtime/resource guards pass. | Astra approves combined review for reference commit. Native512 capture scaffold is separate and not executed. [Report](docs/gemma-e2b-context-reference.md). |
+
+| 2026-11-04 | Remaining Mac journeys passed | Qwen2/Qwen3/Mistral/Smol each pass fresh search/download/verify/Chat/Stop/recovery and separate network-denied offline/bad-cache checks. All processes and source guards pass.14selector/existingHub controls and strict compile pass; unmodified optimized Mac app built, not launched. | Astra approves combined helper/results/build review for commit; numerical/quality warnings and phone gaps remain. [Report](docs/mac-hub-journeys.md). |

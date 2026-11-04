@@ -35,17 +35,26 @@ struct HubOfflineJourneyMain {
         let encoder = JSONEncoder(); encoder.outputFormatting = [.sortedKeys]
         return try encoder.encode(chat.workspace)
     }
-    static func main() async throws {
-        let arguments = CommandLine.arguments.filter { $0 != "--llama3" }
-        guard arguments.count == 3, ["download","offline"].contains(arguments[1]) else {
-            throw NativeContextFailure("Expected download/offline and isolated root")
+    static func request(_ raw: [String]) throws -> (online: Bool, root: URL, profile: HubProfile, expected: NativeAcceptedIdentity.Profile) {
+        let legacy = raw.contains("--llama3")
+        let arguments = raw.filter { $0 != "--llama3" }
+        guard arguments.count == 3 || (arguments.count == 5 && arguments[3] == "--profile"),
+              ["download","offline"].contains(arguments[1]), !legacy || arguments.count == 3 else {
+            throw NativeContextFailure("Expected download/offline ROOT [--profile KEY]")
         }
-        let online = arguments[1] == "download", root = URL(fileURLWithPath:arguments[2])
+        let key = arguments.count == 5 ? arguments[4] : (legacy ? "llama3" : "smol")
+        guard let profile = HubProfile.named(key),
+              let expected = NativeAcceptedIdentity.Profile.allCases.first(where:{ $0.repository == profile.repository && $0.revision == profile.revision }) else {
+            throw NativeContextFailure("No pinned managed profile for requested key")
+        }
+        return (arguments[1] == "download",URL(fileURLWithPath:arguments[2]),profile,expected)
+    }
+    static func main() async throws {
+        let (online,root,profile,expectedProfile) = try request(CommandLine.arguments)
         if online {
             try check(!FileManager.default.fileExists(atPath:root.path),"Fresh root required")
             try FileManager.default.createDirectory(at:root,withIntermediateDirectories:false)
         } else { try check(FileManager.default.fileExists(atPath:root.path),"Downloaded root required") }
-        let profile: HubProfile = CommandLine.arguments.contains("--llama3") ? .llama3 : .smol
         let models = root.appendingPathComponent("Models")
         let service = ModelHub(root:models), hub = HubStore(profile:profile,hub:service)
         let run = UUID().uuidString
@@ -103,13 +112,39 @@ struct HubOfflineJourneyMain {
             chat.openManaged(folder,profile:profile,ifSelected:chat.workspace.selected)
             let loaded = try wait()
             guard let identity = loaded.acceptedIdentity else { throw NativeContextFailure("No accepted pinned identity: \(loaded.message)") }
-            try check(identity.profile == (profile == .llama3 ? .llama3 : .smol) && identity.loadedLimit == 512 && chat.ready,"Wrong opened identity")
+            try check(identity.profile == expectedProfile && identity.loadedLimit == 512 && chat.ready,"Wrong opened identity")
             chat.setReplyLimit(32)
             let response = try send("Say hello in one short sentence.")
             try check(response.status == 0 && response.emitted > 0 && response.chatResult?.rejected == false
                 && response.chatResult?.error.isEmpty == true && [1,2].contains(response.reason)
                 && response.chatResult?.text.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty == false && chat.workspace.current.messages.count == 2,"Completed chat failed")
             try record("chat",["online":online,"emitted":response.emitted,"reason":response.reason,"text":response.chatResult?.text ?? ""])
+            if online {
+                chat.newChat(); chat.setReplyLimit(128)
+                chat.edit("Write a long story about a sailor exploring an island.")
+                try check(chat.canSend,"Cancellation prompt unavailable")
+                chat.sendOrStop()
+                let deadline = Date().addingTimeInterval(60)
+                while worker.snapshot().busy && worker.snapshot().ids.isEmpty && Date() < deadline {
+                    try await Task.sleep(for:.milliseconds(10))
+                }
+                try check(worker.snapshot().busy && !worker.snapshot().ids.isEmpty,"No emitted token available for Stop")
+                harness.poll(); chat.observe(harness.state)
+                try check(chat.running,"Stop action unavailable")
+                chat.sendOrStop()
+                let cancelled = try wait()
+                try check(cancelled.status == 0 && cancelled.reason == 3 && cancelled.chatResult?.reason == 3
+                    && cancelled.chatResult?.rejected == false && cancelled.emitted > 0 && cancelled.pending <= 1
+                    && cancelled.history == cancelled.evaluated + cancelled.pending
+                    && cancelled.savedPrefix?.count == Int(cancelled.history),"Stop did not leave a valid prefix")
+                try record("stop",["profile":profile.key,"emitted":cancelled.emitted,"history":cancelled.history,
+                    "evaluated":cancelled.evaluated,"pending":cancelled.pending,"reason":cancelled.reason])
+                chat.newChat(); chat.setReplyLimit(32)
+                let recovered = try send("Say hello again.")
+                try check(recovered.status == 0 && recovered.emitted > 0 && [1,2].contains(recovered.reason)
+                    && recovered.chatResult?.text.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty == false,"Stop recovery failed")
+                try record("stop-recovery",["profile":profile.key,"emitted":recovered.emitted,"text":recovered.chatResult?.text ?? ""])
+            }
             if !online {
                 let badRoot = root.appendingPathComponent("PrivateBadModels"), badFolder = badRoot.appendingPathComponent(profile.folder)
                 try FileManager.default.createDirectory(at:badRoot,withIntermediateDirectories:false)

@@ -1,0 +1,158 @@
+{
+  "format": "toklet-mac-hub-journeys-v1",
+  "passed": true,
+  "base_revision": "5171790",
+  "hardware": "Apple M1 Pro, macOS",
+  "scope": "four pinned Mac fresh/controller/Stop/network-denied offline journeys; Llama linked separately",
+  "profiles": {
+    "qwen": {
+      "repository": "mlx-community/Qwen2.5-0.5B-Instruct-8bit",
+      "revision": "6474d4c1a05bd7bd634a9c993560e4e7272eda3d",
+      "bytes": 532130488,
+      "snapshot_sha256": "5f9b96bd1570eac10dbc1b2269a140635625b3961f1eb87e9feb110ba5182f97",
+      "online_stop": {
+        "emitted": 1,
+        "evaluated": 41,
+        "history": 41,
+        "pending": 0,
+        "profile": "qwen",
+        "reason": 3
+      },
+      "online_chat": {
+        "emitted": 9,
+        "online": true,
+        "reason": 2,
+        "text": "Hello! How can I assist you today?"
+      },
+      "offline_chat": {
+        "emitted": 9,
+        "online": false,
+        "reason": 2,
+        "text": "Hello! How can I assist you today?"
+      },
+      "recovery_emitted": 9
+    },
+    "qwen3": {
+      "repository": "mlx-community/Qwen3-0.6B-8bit",
+      "revision": "11de96878523501bcaa86104e3c186de07ff9068",
+      "bytes": 644927148,
+      "snapshot_sha256": "851ff5869fbe4a22af2a30b184b4536e8ad0ee766b90005d66b8013b87106054",
+      "online_stop": {
+        "emitted": 1,
+        "evaluated": 24,
+        "history": 24,
+        "pending": 0,
+        "profile": "qwen3",
+        "reason": 3
+      },
+      "online_chat": {
+        "emitted": 9,
+        "online": true,
+        "reason": 2,
+        "text": "Hello! How can I assist you today?"
+      },
+      "offline_chat": {
+        "emitted": 9,
+        "online": false,
+        "reason": 2,
+        "text": "Hello! How can I assist you today?"
+      },
+      "recovery_emitted": 10
+    },
+    "mistral": {
+      "repository": "mlx-community/Mistral-7B-Instruct-v0.3-4bit",
+      "revision": "a4b8f870474b0eb527f466a03fbc187830d271f5",
+      "bytes": 4079633318,
+      "snapshot_sha256": "8a72a39bee4373259ebee2f88fbc3829bcbe5256ccf5a65a6e00ec1aceecb163",
+      "online_stop": {
+        "emitted": 1,
+        "evaluated": 18,
+        "history": 18,
+        "pending": 0,
+        "profile": "mistral",
+        "reason": 3
+      },
+      "online_chat": {
+        "emitted": 10,
+        "online": true,
+        "reason": 2,
+        "text": "Hello there! How can I assist you today?"
+      },
+      "offline_chat": {
+        "emitted": 10,
+        "online": false,
+        "reason": 2,
+        "text": "Hello there! How can I assist you today?"
+      },
+      "recovery_emitted": 10
+    },
+    "smol": {
+      "repository": "mlx-community/SmolLM2-135M-Instruct-8bit",
+      "revision": "0f0d9b8218915bc34d401e1a340b8c049d300d5e",
+      "bytes": 146607552,
+      "snapshot_sha256": "47c703092351c0395d28501f5311df7d21b47e71dd5706827e13ee1b88320ec4",
+      "online_stop": {
+        "emitted": 1,
+        "evaluated": 42,
+        "history": 42,
+        "pending": 0,
+        "profile": "smol",
+        "reason": 3
+      },
+      "online_chat": {
+        "emitted": 2,
+        "online": true,
+        "reason": 2,
+        "text": "Hello!"
+      },
+      "offline_chat": {
+        "emitted": 2,
+        "online": false,
+        "reason": 2,
+        "text": "Hello!"
+      },
+      "recovery_emitted": 32
+    }
+  },
+  "selector_controls": 14,
+  "strict_compile": true,
+  "existing_hub_controls": true,
+  "production_mac_build": true,
+  "production_build_launched": false,
+  "native40_package_changed": false,
+  "phone_qualified": false,
+  "rendered_ui_qualified": false,
+  "quality_gate_changed": false,
+  "performance_claim": false,
+  "astra_review": "approved combined helper/selector code, allfour realjourneys, productionbuild and scopedclaims; pendingGemma task excluded",
+  "receipts_sha256": {
+    "artifacts/mac-hub-journeys-2026-11-04/check.py": "6541d73ebeb583d618af22b81cddc240b121eb2ee2b96e8f7fe5608a2983d2c4",
+    "artifacts/mac-hub-journeys-2026-11-04/checks.json": "bb08e911464c8728c7a48663655af6c351c077a02578e3746bcfe2358da34f3e",
+    "artifacts/mac-hub-journeys-2026-11-04/hub-controls-run.log": "b00cc96db8729d821f7be869008ea901dee07eae472598abc1f87592e95e6f72",
+    "artifacts/mac-hub-journeys-2026-11-04/run_journey.py": "7261a83832e6fa18ddc49c3f04b349961e967779fab154d09d0eb7ae5fc8eb91",
+    "artifacts/mac-hub-journeys-2026-11-04/production/build.py": "6017f5256ce53f759bfbd7882e223d1bfaedbf7ab0d09f81ed79ca6a69673646",
+    "artifacts/mac-hub-journeys-2026-11-04/production/apps.json": "97d376ecb5030468e2ae7310eec3e1d43d1b38274f3b9cee252e9ce5f821d991",
+    "artifacts/mac-hub-journeys-2026-11-04/qwen/run.json": "77676d37a81ee858cc940c6d8ad7b1d918c940e02d9c83ddb81b6faa5f3c8382",
+    "artifacts/mac-hub-journeys-2026-11-04/qwen/online.stdout": "3e492b8e33599fadfcc21ac738cf1dc94e44030d351cee357618b0b473013eac",
+    "artifacts/mac-hub-journeys-2026-11-04/qwen/online.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mac-hub-journeys-2026-11-04/qwen/offline.stdout": "8d9a17c4a877a3e8ee0d9c5669331e1e30e8382adb8ff59dddf431644077fd30",
+    "artifacts/mac-hub-journeys-2026-11-04/qwen/offline.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mac-hub-journeys-2026-11-04/qwen3/run.json": "1c890360c591bfd283e54ecfd4d8d2c38074f4aed26f8555c36be65117a64669",
+    "artifacts/mac-hub-journeys-2026-11-04/qwen3/online.stdout": "4ab1ec8f9ed442eb0bc53bc31c6d46bd90fa21474c5cb269bf4aab2f40ab3560",
+    "artifacts/mac-hub-journeys-2026-11-04/qwen3/online.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mac-hub-journeys-2026-11-04/qwen3/offline.stdout": "c01bfd911c5b42da618317ab0bb438b896a95d6b9bf76624b8cfb5df28a9182b",
+    "artifacts/mac-hub-journeys-2026-11-04/qwen3/offline.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mac-hub-journeys-2026-11-04/mistral/run.json": "c07f8d3a93bd5b9bdb1ded0b98d3c3e5efae05482de58720f6f8d22576530e9a",
+    "artifacts/mac-hub-journeys-2026-11-04/mistral/online.stdout": "6b71f9b1ece82906c23118486fe39cf0e670f63ae1503f80aefbde9d491df815",
+    "artifacts/mac-hub-journeys-2026-11-04/mistral/online.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mac-hub-journeys-2026-11-04/mistral/offline.stdout": "e0502c8a778f7e3c6e73e9badb2ef37d68a84ea3af202c3959567157b2340600",
+    "artifacts/mac-hub-journeys-2026-11-04/mistral/offline.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mac-hub-journeys-2026-11-04/smol/run.json": "ab3024e5385640d8a5f1acc925b283f1d3eac0a0b28dc1154df1c4217cfe18f6",
+    "artifacts/mac-hub-journeys-2026-11-04/smol/online.stdout": "17319095f4acc19d9e8a0a85f80c55d6f1d35cda42613aca8f541877bced46ce",
+    "artifacts/mac-hub-journeys-2026-11-04/smol/online.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/mac-hub-journeys-2026-11-04/smol/offline.stdout": "bfcdc1edbb816e74fd067c5dbd3ee084c717b4a9ac9b1e7d2c72b56265fa356b",
+    "artifacts/mac-hub-journeys-2026-11-04/smol/offline.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/llama3-native40-2026-11-03/build.json": "ae536dded3bf393047a8cb322b078d60c570ed9f4568f3a254d97600727cc696",
+    "artifacts/m8-phone-availability-2026-11-04/availability.json": "563cc7cc70790a95a7aeffe5045851b3c1f60db0122321ffa126a7bef0c5a930"
+  }
+}

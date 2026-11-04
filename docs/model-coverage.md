@@ -49,5 +49,5 @@ unknown. A numerical fit is not a reservation or a whole-device guarantee.
 Physical iPhone14Pro is currently unavailable. Earlier device receipts keep their
 original scope; the new Settings, Llama, wider context and diagnostic adapters
 have no new phone qualification. Mac compilation or a different Pro Max cannot
-substitute for it. Fresh production transfer/offline evidence is directly linked
-for Smol and Llama; remaining per-profile journeys must be reconciled separately.
+substitute for it. Fresh production transfer/Stop/offline evidence now covers all five adopted Mac
+profiles; [journey report](mac-hub-journeys.md). Phone evidence remains separate.
