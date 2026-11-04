@@ -486,6 +486,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Real512 native state/schedule/boundary and independent selected-row qualification; [report](docs/gemma-hybrid512.md).
 - [x] Diagnostic1,025 admission and qualified512-prefix parity; default32/chunk32 preserved. [Report](docs/gemma-context1025-probe.md).
 - [ ] Independent real1,025 selected-row oracle and native local-cache eviction/wrap qualification.
+- [ ] Measured original-BF16 four-token source/upstream experiment before full-quality scorer; [next task](docs/gemma-original-quality-next.md).
+- [x] Standalone BF16 profiling adapter preparation, tiny equivalence only; [evidence](benchmarks/results/2026-11-04-gemma-bf16-profile-v1.json).
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1081,3 +1083,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Diagnostic1,025 native parity passed | All512 output rows and15 validKV prefixes match qualified512; exact budget/minus-one and reset pass. Session271,117,548bytes matches+7,356,420; RSS2,950,561,792bytes, below6GiB. All six required checks pass. | Combined Astra review before commit. Positions512–1,024 still need the independent wrap oracle. [Report](docs/gemma-context1025-probe.md). |
 
 | 2026-11-04 | Diagnostic1,025 admission reviewed | Astra approves combined code/checks/native results; no blocking findings. All required checks and measured prefix parity pass. | Commit admission task separately; independent oracle and real eviction/wrap next. [Report](docs/gemma-context1025-probe.md). |
+
+| 2026-11-04 | BF16 profiling adapter prepared | Astra recommends independent preparation during sealed wrap collection. Two tiny controls pass: bit-identical full graph outputs in both contracts, identical source read chain, shared reader/vector ownership and preserved rejection. No arithmetic/cache changes or real-model timing. | Combined Astra adapter/control review; real source experiment follows completed wrap replay. [Evidence](benchmarks/results/2026-11-04-gemma-bf16-profile-v1.json). |
+
+| 2026-11-04 | BF16 profiling preparation reviewed | Astra approves isolated adapter/code/control evidence; two tiny controls pass and no source arithmetic/ownership changes. | Commit preparation separately; real BF16 execution waits for the active wrap reference/replay to finish. [Next task](docs/gemma-original-quality-next.md). |

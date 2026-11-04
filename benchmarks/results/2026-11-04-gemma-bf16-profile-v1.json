@@ -1,0 +1,29 @@
+{
+  "format": "toklet-gemma-bf16-profile-preparation-v1",
+  "passed": true,
+  "scope": "standalone observational adapter and tiny equivalence/failure controls only",
+  "base_revision": "614878a",
+  "cold_controls": 2,
+  "full_graph_contracts": [
+    "math_fp64",
+    "staged_fp32"
+  ],
+  "bit_identical_states": true,
+  "identical_source_read_chain": true,
+  "shared_original_readers_and_vectors": true,
+  "failed_raw_request_preserved": true,
+  "real_model_executed": false,
+  "performance_qualified": false,
+  "upstream_agreement_qualified": false,
+  "full_quality_qualified": false,
+  "astra_review": "approved combined profiling adapter/code/control review; tiny preparation only",
+  "receipts_sha256": {
+    "tools/reference/gemma4_bf16_profile.py": "50852c462a8f8e2ef4103b1b8784c8fa95af661cb7e03177644b37ed54778a6a",
+    "tools/reference/test_gemma4_bf16_profile.py": "a8a36291317c475b82e822c9f0550ff51b3da8d9381a96d03d75ab9346d8405c",
+    "tools/reference/bf16_source.py": "d9cb2bd36644ce4fca7db8abb16ee99524201a29ca5443b960ba4e337d314469",
+    "tools/reference/gemma4_text_math.py": "6c04a81b93c95edfad4a4de646da3731b71a6dd175163fb856d2009bd103b096",
+    "tools/reference/affine4_tiles.py": "16cf33497da87b857494268b275c4521e0945442548a0e66c9e21a8a30007220",
+    "tools/reference/test_gemma4_text_math.py": "431af19eeaddf60904ec7b9ce6ff0eb13942e8f3eb443590c51d8c2c1f6e799d",
+    "artifacts/gemma-bf16-profile-2026-11-04/controls-final.log": "cb481be8f3d3b66b0be107f3a55b4cbf977850032f2c20b62c40fc7efc4ddff1"
+  }
+}

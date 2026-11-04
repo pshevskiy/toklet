@@ -9691,3 +9691,12 @@ scratch and unchanged ordinary construction. Measured session growth is
 Reset and ownership checks, 550 default/658 Metal tests, strict Clippy, formatting,
 release and combined Astra review pass. Execution beyond absolute511 and real
 local-cache wrap remain separate. [Report](gemma-context1025-probe.md).
+
+## 4 November 2026 — BF16 source profiling preparation
+
+A standalone adapter measures authenticated reads/guards/hash, decoding and
+projection intervals with explicit overlapping buckets and a separate tied head.
+Two tiny controls preserve exact graph bytes in both contracts, source read
+chains, ownership and rejection behavior. Astra approves the preparation. Real
+model timing, upstream agreement and full quality remain pending.
+[Next experiment](gemma-original-quality-next.md).
