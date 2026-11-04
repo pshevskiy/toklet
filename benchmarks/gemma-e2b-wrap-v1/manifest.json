@@ -1,0 +1,69 @@
+{
+  "format": "toklet-gemma-e2b-wrap-reference-contract-v1",
+  "parent_tokens": {
+    "path": "benchmarks/gemma-quality-v1/held_out_loss.u32le",
+    "sha256": "877cbe18574b47e4b6a8d1b58fb79621c37e0531bd1f9504e50ce63d186f8c46"
+  },
+  "tokens": {
+    "path": "tokens.u32le",
+    "count": 1025,
+    "sha256": "20e4789c70ba16a364591f621b274e3532f09ccb1859a51b227cc5b9c14b2503"
+  },
+  "selected_positions": [
+    0,
+    31,
+    255,
+    511,
+    512,
+    767,
+    1023,
+    1024
+  ],
+  "retained_milestones": [
+    512,
+    513,
+    1024,
+    1025
+  ],
+  "producer_geometry": {
+    "physical_owners": 15,
+    "local_owners": 12,
+    "local_window": 512,
+    "global_owners": 3
+  },
+  "reference_kv": "each producer absolute K/V rows once, positions0..1024; independently reconstruct retained intervals",
+  "per_call_rows": 32,
+  "native_gate": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "process_limit_bytes": 6442450944,
+  "native_capture_limit_bytes": 134217728,
+  "prior_precision_failures_waived": false,
+  "app_qualified": false,
+  "phone_qualified": false,
+  "phases": {
+    "compat512": {
+      "tokens": 512,
+      "positions": [
+        0,
+        31,
+        255,
+        511
+      ]
+    },
+    "full1025": {
+      "tokens": 1025,
+      "positions": [
+        0,
+        31,
+        255,
+        511,
+        512,
+        767,
+        1023,
+        1024
+      ]
+    }
+  }
+}

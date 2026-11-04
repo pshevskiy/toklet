@@ -16,7 +16,7 @@ retains original-checkpoint results for `[2, 100, 257, 100]`.
 The code task should:
 
 1. Keep the established FP64 projection reductions and explicit staged-FP32
-   operator boundaries. Compare all four logit rows, target NLLs, greedy IDs
+   operator boundaries. Compare all four logit rows, the three available next-token NLLs, greedy IDs
    and selected intermediate states with the saved original reference.
 2. Pin a short upstream text comparison and freeze its policy before outcomes.
    Keep the prior eleven cross-precision failures and 27 packed-native
@@ -46,3 +46,32 @@ Two tiny controls preserve bit-identical full graph states under both contracts,
 source read chains, borrowed ownership and rejected requests. Real-model
 execution, timing qualification and upstream agreement remain pending.
 [Preparation evidence](../benchmarks/results/2026-11-04-gemma-bf16-profile-v1.json).
+
+## Prospective upstream comparison policy
+
+Astra identified the cached Transformers5.7.0 implementation, independently
+checked against SHA-256
+`fd93159380556e46029260ae38e5ec53ffd750ecb9872d0e89f57b334a25ed4e`.
+Installed PyTorch is2.9.1. The [existing layout audit](gemma-unquantized-layout.md)
+pins the shared-KV source; execution additionally needs imported helpers, native
+runtime, CPU backend, configuration and thread count pinned before any outputs.
+
+Use the official checkpoint revision
+`70af34e20bd4b7a91f0de6b22675850c43922a03`, CPU eager attention, eval/inference
+mode and no generation cache at `[2,100,257,100]`. Preserve upstream BF16 dtype
+transitions, including FP32 norm/rotary/softmax work. Load one BF16 layer at a
+time, gather only requested embedding/PLE rows, retain required shared K/V and
+tile the tied head. Do not call whole-checkpoint `from_pretrained`.
+
+Before the real run, require a tiny fully resident upstream model and streamed
+harness to agree on greedy IDs, head tiling and outputs under the same dtype and
+operators. Freeze their exact acceptance contract before inspecting outcomes.
+The real cross-arithmetic comparison is **descriptive**, prospectively: save all
+four full logits, three next-token NLLs, greedy IDs/top-two margins and selected
+embedding, attention and final-normalization states. Fatal gates are finite
+outputs, exact input/weight identity, shapes, causal alignment and measured peak
+under6GiB. There is no established per-value equivalence gate between upstream
+BF16 and this reference's stagedFP32/Decimal80 arithmetic. Establishing one is
+a separate prospective decision. This experiment does not waive any of the
+earlier11/27 failures or the provisional four wrap-logit rejections, and cannot
+establish full quality or app eligibility.

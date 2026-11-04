@@ -32,8 +32,9 @@ class ContextMathControls(unittest.TestCase):
     def test_selected_head_and_chunked_long_math_preserve_previous_oracle(self):
         self.assertEqual(hashlib.sha256(Path(candidate.frozen.__file__).read_bytes()).hexdigest(),candidate.ORIGINAL_SOURCE_SHA256)
         weights,_,_=fixture.fixture()
-        for count,selected in [(4,[0,2,3]),(32,[0,15,30,31]),(64,[0,31,63])]:
-            ids=([2,7,13,7]*16)[:count]
+        for count,selected in [(4,[0,2,3]),(32,[0,15,30,31]),(64,[0,31,63]),
+                               (1025,[0,31,511,512,1023,1024])]:
+            ids=([2,7,13,7]*((count+3)//4))[:count]
             for staged in [False,True]:
                 expected={};actual={}
                 previous.evaluate(weights,ids,staged,sink=lambda name,value:expected.update({name:value.copy()}))
@@ -62,7 +63,7 @@ class ContextMathControls(unittest.TestCase):
     def test_public_real_admission_and_selection_bounds(self):
         weights,_,_=fixture.fixture()
         with self.assertRaises(ValueError):candidate.evaluate(weights,[2],False,selected_positions=[0],sink=lambda *_:None)
-        for ids,selected in [([2]*513,[0]),([2],[True]),([2,3],[1,0]),([2,3],[0,0]),([2],[1]),([2],[])]:
+        for ids,selected in [([2]*1026,[0]),([2],[True]),([2,3],[1,0]),([2,3],[0,0]),([2],[1]),([2],[])]:
             with self.assertRaises(ValueError):candidate._evaluate(weights,ids,False,selected_positions=selected,sink=lambda *_:None)
         with self.assertRaises(ValueError):candidate._evaluate(weights,[2],False,selected_positions=[0],sink=None)
 

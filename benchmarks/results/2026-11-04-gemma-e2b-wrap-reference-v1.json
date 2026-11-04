@@ -1,0 +1,59 @@
+{
+  "format": "toklet-gemma-e2b-wrap-reference-v1",
+  "passed": true,
+  "scope": "independent real1025 absolute KV and selected-head oracle; not native numerical qualification",
+  "base_revision": "614878a",
+  "hardware": "Apple M1 Pro, macOS",
+  "input_tokens": 1025,
+  "selected_positions": [
+    0,
+    31,
+    255,
+    511,
+    512,
+    767,
+    1023,
+    1024
+  ],
+  "arrays": 76,
+  "output_bytes": 138522624,
+  "cold_controls": 7,
+  "elapsed_seconds": 6449.569499207999,
+  "contract_seconds": {
+    "math_fp64": 3418.1449185,
+    "staged_fp32": 3026.978396625
+  },
+  "peak_rss_bytes": 1387642880,
+  "peak_physical_bytes": 1222952640,
+  "process_limit_bytes": 6442450944,
+  "causal512_compatibility": {
+    "math_fp64": {
+      "all_bytes_exact": true,
+      "maximum_absolute_difference": 0.0
+    },
+    "staged_fp32": {
+      "all_bytes_exact": true,
+      "maximum_absolute_difference": 0.0
+    }
+  },
+  "prior_failures_waived": false,
+  "performance_claim": false,
+  "astra_review": "approved combined code/checks/sealed-results review; diagnostic rejection retained, no numerical promotion",
+  "receipts_sha256": {
+    "artifacts/gemma-e2b-wrap-reference-2026-11-04/run.py": "564c1ce655b56b23f963bfab11cf17ea6e88f47e3e8971debc532ec005c9d185",
+    "artifacts/gemma-e2b-wrap-reference-2026-11-04/producer-controls.log": "bb1fa0b84c0efd06ae3045e6b0ee1bcc9203b73de01d6984e9b994e61efcce68",
+    "artifacts/gemma-e2b-wrap-reference-2026-11-04/math-controls.log": "7bcf839b8272b707cd655b355cbd4e460284e6cb52325793e2088022d81d7487",
+    "artifacts/gemma-e2b-wrap-reference-2026-11-04/full1025/execution-plan.json": "e8e50230a13a1068d699759519f57343e8a922da34a971eb5cab1aba01723e21",
+    "artifacts/gemma-e2b-wrap-reference-2026-11-04/full1025/run.json": "aa252794bc6456cded7006ea25cf83d0e1a161287b0ac37e13272f1ef92ac8be",
+    "artifacts/gemma-e2b-wrap-reference-2026-11-04/full1025/reference.stdout": "e9ab7ec66d4b856372b5ea0e1bb2d90d66f0f4b026166a7c4e0b2ff9cf8e6ffa",
+    "artifacts/gemma-e2b-wrap-reference-2026-11-04/full1025/reference.stderr": "679d67e72878653ed80d859be6dcc08b50b72346c5ba70c70f835f630aa8e9de",
+    "artifacts/gemma-e2b-wrap-reference-2026-11-04/full1025/reference/result.json": "2f56c06cf80ad4ea7c57ae502b9bfe17dd313df536a46a393c1a96d8275b3472",
+    "artifacts/gemma-e2b-wrap-reference-2026-11-04/full1025/reference/rows.bin": "014301aa8c4f34b14173a271ee96d29a74a4b059a265b1bf54ff81f0fdbe2e59",
+    "tools/reference/gemma4_e2b_context_math.py": "b0ddf075ee10ce57bc2e98e6ad3233a4fab48c7a6a16f80920f80bf0a57cf088",
+    "tools/reference/test_gemma4_e2b_context_math.py": "afd1eb05fb159162aaa78fe948940a6564ed1478eeddfcb0f6f5e9f39f4041d0",
+    "tools/reference/gemma4_e2b_wrap_reference.py": "f1b448069ca23c81ae9b95e3648db26c4ca064184a767d744a2d40a5c361f0f8",
+    "tools/reference/test_gemma4_e2b_wrap_reference.py": "30e5c284037e43091f03aba66e047ca06da6c629d6060baf38b04e3922e2fa43",
+    "benchmarks/gemma-e2b-wrap-v1/manifest.json": "896d912de6c988019f6f9a221944b17ee9027da4ba4d29d81134267ffd42b69f",
+    "benchmarks/gemma-e2b-wrap-v1/tokens.u32le": "20e4789c70ba16a364591f621b274e3532f09ccb1859a51b227cc5b9c14b2503"
+  }
+}

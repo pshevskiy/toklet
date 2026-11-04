@@ -134,13 +134,15 @@ G4.3 [qualifies the real32-position state boundary and four selected rows](gemma
 The earlier four-token rejection remains. The [diagnostic512 constructor](gemma-context-probe.md),
 [independent oracle](gemma-e2b-context-reference.md) and
 [real512 state/selected-row comparison](gemma-hybrid512.md) now pass their bounded scopes.
-Next is explicit diagnostic1,025 admission and parity through512, followed by
-independent real local-cache eviction/wrap checks at511/512 and1,023/1,024.
-Default32 positions and at most32 rows per call stay unchanged. This prepares
-G5's frozen workload; original-BF16/full quality, resident scheduling and app/device
-acceptance remain open. A short candidate can be integrated as explicitly partial
-support after its required numerical/quality checks pass. It cannot close the
-full model-window requirement. Existing precision discrepancies remain unwaived.
+The [diagnostic1,025 admission](gemma-context1025-probe.md) and
+[real1,025 state/wrap/overflow/reset checks](gemma-hybrid1025.md) now pass.
+Numerical qualification is rejected: four mathematical logits and eight stagedKV
+observations at four stored V coordinates exceed unchanged gates. Next is one
+same-input V-projection/RMSNorm witness, then the
+[original-BF16 short source experiment](gemma-original-quality-next.md) as precision-
+decision evidence. Default32 positions and at most32 rows per call stay unchanged.
+Original quality, resident scheduling, app/device and full model-window acceptance
+remain open. Existing precision discrepancies remain unwaived.
 
 ## Shared model window replaces fixed output length
 

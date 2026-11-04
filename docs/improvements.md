@@ -9692,6 +9692,16 @@ Reset and ownership checks, 550 default/658 Metal tests, strict Clippy, formatti
 release and combined Astra review pass. Execution beyond absolute511 and real
 local-cache wrap remain separate. [Report](gemma-context1025-probe.md).
 
+## 4 November 2026 — Gemma4 real wrap diagnostics
+
+Two1,025-position schedules pass state, eviction/wrap, overflow and reset checks.
+Independent replay checks24,123,392values per contract: mathematical4logit and
+staged8KV observations (four stored coordinates) fail unchanged gates. All
+mathematicalKV and selectedstagedlogits pass; numerical qualification stays
+rejected. Required Rust/cold checks and source/resource guards pass. Astra approves
+diagnostic code and rejection evidence; numerical qualification stays open.
+[Report](gemma-hybrid1025.md).
+
 ## 4 November 2026 — BF16 source profiling preparation
 
 A standalone adapter measures authenticated reads/guards/hash, decoding and

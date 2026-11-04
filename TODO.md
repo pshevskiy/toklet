@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Independent Gemma4 real1,025 oracle and local-cache wrap qualification**.
+Current task: **Same-input V-projection/RMSNorm witness for the four rejected stagedKV coordinates**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -485,7 +485,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Independent real512 oracle: real32 compatibility,64 pilot and full512 collection pass Astra review; [report](docs/gemma-e2b-context-reference.md).
 - [x] Real512 native state/schedule/boundary and independent selected-row qualification; [report](docs/gemma-hybrid512.md).
 - [x] Diagnostic1,025 admission and qualified512-prefix parity; default32/chunk32 preserved. [Report](docs/gemma-context1025-probe.md).
-- [ ] Independent real1,025 selected-row oracle and native local-cache eviction/wrap qualification.
+- [x] Independent real1,025 oracle and native local-cache state/wrap/overflow/reset capture; [report](docs/gemma-hybrid1025.md).
+- [ ] Real1,025 numerical qualification:4mathematical logits and8stagedKV observations remain rejected; targeted same-input V-projection/RMSNorm witness next.
 - [ ] Measured original-BF16 four-token source/upstream experiment before full-quality scorer; [next task](docs/gemma-original-quality-next.md).
 - [x] Standalone BF16 profiling adapter preparation, tiny equivalence only; [evidence](benchmarks/results/2026-11-04-gemma-bf16-profile-v1.json).
 
@@ -1084,6 +1085,36 @@ completed or prerequisites for the active breadth-first queue.
 
 | 2026-11-04 | Diagnostic1,025 admission reviewed | Astra approves combined code/checks/native results; no blocking findings. All required checks and measured prefix parity pass. | Commit admission task separately; independent oracle and real eviction/wrap next. [Report](docs/gemma-context1025-probe.md). |
 
+| 2026-11-04 | Long wrap oracle implemented | Extend independent graph's bounded ceiling to1,025 without arithmetic changes; new producer streams each absoluteK/V once and eight head rows under both contracts. Three cold producer controls pass, including missing/duplicate/shape corruption and coherent input mutation; longer frozen-oracle comparison is running. | No real1,025 reference executed yet; run only after cold arithmetic check, then combined Astra code/results review before commit. |
+
+| 2026-11-04 | Long oracle collection started | All7cold controls pass, including the1,025-position frozen arithmetic comparison (224.29s). Full real reference now runs with frozen source/runtime/input, four-prefix compatibility checks,6GiB memory and disk/timeout guards. | Keep bound reference code unchanged; prepare independent native wrap/state capture while collection runs. No wider execution qualification yet. |
+
+| 2026-11-04 | Native wrap capture implemented | Freeze two1,025-token partitions: primary stops at512/513/1,024/1,025; secondary crosses both eviction boundaries in multirow calls. Capture all retainedK/V at primary milestones and eight logits on both schedules; compare full states at256/1,025, overflow and reset. | Required Rust checks start while independent reference collection continues; external numerical checker next. No native wrap execution yet. |
+
+| 2026-11-04 | Wrap checker fixture correction | First cold replay rejects the synthetic reference's empty source pins after the fixture patch exits; no native wrap run starts. Keep the source identity gate and keep the mock active for synthetic replay. Remove duplicate imported test discovery. | Retain failed log; rerun corrected checker controls. Independent real reference remains unchanged and running. |
+
+| 2026-11-04 | Wrap checks passed / native capture active | All six Rust checks pass (550default/658Metal); two corrected cold checker controls pass, including exact slot-map rejection and coherent numerical failure with state preserved. Real native two-schedule capture is active with sealed source/runtime/binary,128MiB capture and6GiB process limits. | Await captured state and independent oracle; final numerical decision and combined Astra review remain pending. |
+
+| 2026-11-04 | Astra original-quality research | Reuse authenticated BF16 reader/bindings and saved4-token reference; Gemma text9.26GBBF16 rules out Llama-style fullFP32 cache. Keep established arithmetic, qualify upstream/source agreement, measure read/widen/GEMM/head before selecting one tile/cache improvement and1,025 pilot. | Follow wrap qualification with this bounded source experiment; full10k/100 gates and earlier precision rejections remain open. [Next task](docs/gemma-original-quality-next.md). |
+
+| 2026-11-04 | Real1,025 state capture passed | Both schedules complete; exact state at256/1,025, all four retained-slot milestones, overflow1,026 and reset pass.136records/104,882,176bytes; RSS2,973,171,712bytes and clean owned native/replay processes. | Independent numerical reference is still collecting; no final qualification/review/commit yet. [Live report](docs/gemma-hybrid1025.md). |
+
+| 2026-11-04 | Wrap code/state review passed | Astra finds no blocking code issue and approves actual state/capture checks; independent numerical result remains the sole unresolved review gate. Pending evidence records state success without a numerical pass. | Keep reference collection source-frozen; resolve the same review with full replay before commit. [Evidence](benchmarks/results/2026-11-04-gemma-hybrid1025-v1.json). |
+
+| 2026-11-04 | Provisional cache preview retry | A read-only live-prefix diagnostic stops at a Python keyword-spacing syntax error before reading/comparing arrays. Correct the artifact helper and retain the failed log. | Retry provisional preview; final sealed reference/replay remains required and continues unchanged. |
+
+| 2026-11-04 | Provisional FP64 retained-cache comparison | Live append-only source prefix is stable across two reads. All22,026,240 retainedK/V values pass unchanged math gate; maxratio0.854816. Diagnostic is explicitly provisional because reference process/endpoint is unfinished. | Preserve preview evidence; wait for sealed full dual-contract/head replay and resolve final Astra approval. |
+
 | 2026-11-04 | BF16 profiling adapter prepared | Astra recommends independent preparation during sealed wrap collection. Two tiny controls pass: bit-identical full graph outputs in both contracts, identical source read chain, shared reader/vector ownership and preserved rejection. No arithmetic/cache changes or real-model timing. | Combined Astra adapter/control review; real source experiment follows completed wrap replay. [Evidence](benchmarks/results/2026-11-04-gemma-bf16-profile-v1.json). |
 
 | 2026-11-04 | BF16 profiling preparation reviewed | Astra approves isolated adapter/code/control evidence; two tiny controls pass and no source arithmetic/ownership changes. | Commit preparation separately; real BF16 execution waits for the active wrap reference/replay to finish. [Next task](docs/gemma-original-quality-next.md). |
+
+| 2026-11-04 | Provisional mathematical head rejection | Math pass finishes3,418.14s. RetainedKV22,026,240 values pass, but4logits at finalposition1,024 fail unchanged gate (maxratio1.264425); causal512 rows remain byte-exact. Staged pass is running. | Astra says retain separate per-contract verdicts, withhold mathematical-logit qualification and proceed to original-BF16 short source experiment after sealed replay; no per-layer localization unless staged/source comparison reveals a decision-changing discrepancy. |
+
+| 2026-11-04 | Upstream policy frozen prospectively | Astra identifies cachedTransformers5.7.0/modeling SHA and PyTorch2.9.1; root verifies versions/hash. Define bounded layer-streamed CPU eagerBF16 comparison and fatal identity/shape/finite/causal/6GiB gates; cross-arithmetic differences descriptive, with no invented equivalence threshold. | Tiny resident/streamed equivalence must precede real upstream outputs; original source experiment still waits for sealed wrap replay. [Policy](docs/gemma-original-quality-next.md). |
+
+| 2026-11-04 | Provisional stagedKV rejection / next witness | StagedKV prefix has8failed observations at4unique V coordinates (owner13/433/68 pre-eviction; owner12/650/0; owner14/650/277,296). State remains passing. Astra selects one same-input Vprojection/RMSNorm witness, capturing complete input/raw/normalized rows in a651-token pass and verifying exact cache transfer. | Stage head/finalsealed replay pending. Prospective witness inputs/contract staged under artifacts/gemma-v-boundary-2026-11-04; no bound code edited and no new witness execution. |
+
+| 2026-11-04 | Sealed1,025 replay complete / numerical rejected | Reference6,449.57s/RSS1,387,642,880bytes exits clean with exact512 causal compatibility; complete replay checks24,123,392values per contract. Math4logit failures; staged8KV observations/4unique coords, selectedstagedlogits0fail. State/overflow/reset and all source/resource guards pass. | Resolve final Astra review and commit diagnostic code/evidence, preserving numerical rejection; then targeted Vprojection/RMSNorm witness. [Report](docs/gemma-hybrid1025.md). |
+
+| 2026-11-04 | Wrap diagnostics reviewed / qualification rejected | Astra approves oracle/capture/replay code and sealed rejection evidence for commit. Code/oracle/state items close; mathematical4logit and staged8KV observations stay rejected with earlier failures. All required implementation checks pass. | Commit diagnostics, then one same-input Vprojection/RMSNorm witness at owner13/433 and owners12/14/650. [Report](docs/gemma-hybrid1025.md). |

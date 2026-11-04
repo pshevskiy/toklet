@@ -12,10 +12,10 @@ import gemma4_text_math as frozen
 
 E2B = frozen.E2B
 softcap = frozen.softcap
-MAX_POSITIONS = 512
+MAX_POSITIONS = 1025
 ORIGINAL_SOURCE_SHA256 = '6c04a81b93c95edfad4a4de646da3731b71a6dd175163fb856d2009bd103b096'
-LEDGER_MIB = dict(runtime_blas=320, tile_conversion=128, active_graph=512,
-                  capture=16, comparison=32, metadata_weights_margin=64)
+LEDGER_MIB = dict(runtime_blas=320, tile_conversion=128, active_graph=1024,
+                  capture=32, comparison=32, metadata_weights_margin=96)
 
 
 
@@ -57,7 +57,7 @@ def evaluate(weights, ids, staged, *, selected_positions, sink):
 
 
 def _evaluate(weights,ids,staged,*,selected_positions,sink):
-    """Batch-one causal prefill at positions0..N-1, N<=512; no tokenizer or KV API.
+    """Batch-one causal prefill at positions0..N-1, N<=1025; no tokenizer or KV API.
 
     The ideal path has FP64 activations/reductions over reconstructed FP32
     weights. The staged path rounds each explicit operator boundary to FP32,
