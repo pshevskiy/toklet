@@ -130,8 +130,7 @@ CPU model. Count bounded vector copies and CPU/GPU staging/readback. Keep the
 scalar implementation as oracle. Hybrid timings do not qualify fully resident
 performance. Require whole-graph feedback before more general prerequisites.
 
-G4.3 [qualifies the real32-position state boundary and four selected rows](gemma-hybrid32.md). The earlier four-token rejection remains. Next is a useful512-position candidate and model-specific larger
-boundaries. A short candidate can be integrated as explicitly partial support
+G4.3 [qualifies the real32-position state boundary and four selected rows](gemma-hybrid32.md). The earlier four-token rejection remains. The [diagnostic512 constructor/admission](gemma-context-probe.md) preserves the qualified32-prefix. Next are the independent long oracle/pilot and actual512-position state/numerical boundaries. A short candidate can be integrated as explicitly partial support
 after its required numerical/quality checks pass. It cannot close the full
 model-window requirement. The original cross-precision, upstream BF16, dense/
 packed GPU and long-rotary discrepancies remain unwaived.

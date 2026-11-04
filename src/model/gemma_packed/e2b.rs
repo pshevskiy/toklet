@@ -9,6 +9,15 @@ impl Layout {
         Self::e2b_layers(plan.layers())
     }
     fn e2b_layers(geometry: &[crate::mlx::gemma4::LayerPlan]) -> Result<Self, Error> {
+        Self::e2b_layers_for_limit(geometry, MAX_POSITIONS)
+    }
+    fn e2b_layers_for_limit(
+        geometry: &[crate::mlx::gemma4::LayerPlan],
+        position_limit: usize,
+    ) -> Result<Self, Error> {
+        if !(1..=MAX_E2B_DIAGNOSTIC_POSITIONS).contains(&position_limit) {
+            return Err(Error::InvalidConfig("Gemma E2B diagnostic position limit"));
+        }
         if geometry.len() != 35 {
             return Err(Error::InvalidConfig("Gemma E2B geometry count"));
         }
@@ -33,7 +42,7 @@ impl Layout {
             ple: 256,
             heads: 8,
             producers: 15,
-            positions: MAX_POSITIONS,
+            positions: position_limit,
             window: 512,
             layers,
         })
@@ -50,8 +59,13 @@ impl<'a, M: MatrixSource> Model<'a, M> {
         weights: Weights<'a, M>,
         geometry: &[crate::mlx::gemma4::LayerPlan],
         backing: Backing,
+        position_limit: usize,
     ) -> Result<Self, Error> {
-        let result = Self::with_storage(weights, Layout::e2b_layers(geometry)?, Some(backing))?;
+        let result = Self::with_storage(
+            weights,
+            Layout::e2b_layers_for_limit(geometry, position_limit)?,
+            Some(backing),
+        )?;
         for (index, layer) in geometry.iter().enumerate() {
             if result.plan.producer_for(index)? != layer.producer {
                 return Err(Error::InvalidConfig("Gemma E2B shared producer differs"));
@@ -212,5 +226,70 @@ mod tests {
                 "whole_model_executed":false,"real_numerical_graph_qualified":false})
             );
         }
+    }
+
+    #[test]
+    fn explicit_diagnostic_limit_keeps_default_and_row_scratch_bounded() {
+        let plan = inspect(
+            include_bytes!("../../../tests/fixtures/gemma4-e2b-metadata-v1/config.json"),
+            include_bytes!("../../../tests/fixtures/gemma4-e2b-metadata-v1/index.json"),
+            include_bytes!("../../../tests/fixtures/gemma4-e2b-metadata-v1/header.json"),
+            3550670554,
+            ModalityPolicy::TextOnly,
+        )
+        .unwrap();
+        let ordinary = Layout::e2b(&plan).unwrap();
+        assert_eq!(ordinary.positions, 32);
+        for limit in [0, 513, usize::MAX] {
+            assert!(matches!(
+                Layout::e2b_layers_for_limit(plan.layers(), limit),
+                Err(Error::InvalidConfig("Gemma E2B diagnostic position limit"))
+            ));
+        }
+        let mut previous = 0;
+        let mut cache32 = 0;
+        let mut scratch32 = 0;
+        for limit in [1, 32, 64, 256, 512] {
+            let layout = Layout::e2b_layers_for_limit(plan.layers(), limit).unwrap();
+            assert_eq!(layout.positions, limit);
+            let chunk = limit.min(32);
+            let counts = Scratch::counts(&layout, limit, chunk).unwrap();
+            assert_eq!(counts[19], 8 * chunk * limit);
+            assert_eq!(counts[20], 8 * chunk * limit);
+            assert_eq!(counts[21], chunk * 262144);
+            assert_eq!(counts[22], chunk * 262144);
+            assert!(Scratch::counts(&layout, limit + 1, chunk).is_err());
+            assert!(Scratch::counts(&layout, limit, 33).is_err());
+            let geometry: Vec<_> = layout
+                .layers
+                .iter()
+                .map(|g| LayerKvGeometry {
+                    kind: g.kind,
+                    heads: 1,
+                    head_dim: g.head_dim,
+                })
+                .collect();
+            let cache = SharedKvPlan::new(&geometry, 20, 512, limit, limit.max(512))
+                .unwrap()
+                .planned_narrowed_cache_bytes(limit)
+                .unwrap();
+            let scratch = total_bytes(&counts).unwrap();
+            let total = cache + scratch + limit * 4;
+            assert!(total > previous);
+            previous = total;
+            if limit == 32 {
+                cache32 = cache;
+                scratch32 = scratch;
+            }
+            if limit == 512 {
+                assert_eq!(cache - cache32, (512 - 32) * 36864);
+                assert_eq!(scratch - scratch32, 2 * 8 * 32 * (512 - 32) * 4);
+                assert_eq!(
+                    cache - cache32 + scratch - scratch32 + (512 - 32) * 4,
+                    18679680
+                );
+            }
+        }
+        assert!(Scratch::counts(&ordinary, 512, 32).is_err());
     }
 }

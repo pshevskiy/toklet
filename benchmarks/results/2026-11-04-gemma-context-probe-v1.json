@@ -1,0 +1,53 @@
+{
+  "format": "toklet-gemma-context-probe-v1",
+  "passed": true,
+  "base_revision": "fdba828",
+  "hardware": "Apple M1 Pro, macOS",
+  "scope": "diagnostic512 constructor/admission and qualified32-prefix preservation",
+  "default_limit": 32,
+  "diagnostic_upper": 512,
+  "per_call_rows": 32,
+  "positions_above31_qualified": false,
+  "invalid_limits_reject_before_model_allocation": true,
+  "observed": {
+    "default_positions": 32,
+    "diagnostic_positions": 512,
+    "chunk_rows": 32,
+    "tested_prefix_positions": 32,
+    "all32_logit_rows_exact": true,
+    "all15_valid_kv_prefixes_exact": true,
+    "default_allocated_bytes": 245081448,
+    "candidate_allocated_bytes": 263761128,
+    "required_bytes": 2869593752,
+    "exact_admission": true,
+    "minus_one_rejected": true,
+    "reset_reuse": true,
+    "positions_above31_qualified": false,
+    "app_qualified": false,
+    "phone_qualified": false
+  },
+  "peak_rss_bytes": 2949955584,
+  "peak_physical_bytes": 2943126240,
+  "process_limit_bytes": 6442450944,
+  "checks": {
+    "default_passed": 550,
+    "metal_feature_passed": 658,
+    "fmt": true,
+    "strict_clippy_default_and_metal": true,
+    "release": true
+  },
+  "app_qualified": false,
+  "phone_qualified": false,
+  "native_package_changed": false,
+  "astra_review": "approved combined code, invariants, checks, real admission/parity and scoped claims; no blocking findings",
+  "receipts_sha256": {
+    "artifacts/gemma-context-probe-2026-11-04/check.py": "52014adc2f3bafe06473c99d3649ba99efe1511ef3b5cd0373e3028e511d84ae",
+    "artifacts/gemma-context-probe-2026-11-04/checks.json": "2ff73df7492ec86fe2b2436cfb97b134489861bb7e9fd772768e00223f9b54d4",
+    "artifacts/gemma-context-probe-2026-11-04/native.py": "2bbe80d53053d8926483c9f9ed9ca2c4d60b8510d5910b6540edf8803914e5be",
+    "artifacts/gemma-context-probe-2026-11-04/native-plan.json": "b88a058097d481d1321566e3f6f015785a7b1acddccd54cbbfb9621bdc930c16",
+    "artifacts/gemma-context-probe-2026-11-04/native-run.json": "4218eaeff7ac7d3322aa6a40d71240e2d0a5ca5daeaca730e4c6a4080c79b73f",
+    "artifacts/gemma-context-probe-2026-11-04/native.stdout": "2f2ba545042fec72ec88a628d0fcd553c8e8c9f34dbb14cf60463a395640a45a",
+    "artifacts/gemma-context-probe-2026-11-04/native.stderr": "b1f6388f6584ead801766ae0533745d4fb4059c9e5c8d2e1c6d28f02101f0e85",
+    "benchmarks/results/2026-11-04-gemma-hybrid32-v1.json": "c190a5d3137b2510bb527c4d4e1f9f63e2069a5bf89c3334073520c9e18a8360"
+  }
+}

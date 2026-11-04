@@ -9642,3 +9642,13 @@ fmt/strictClippy/release and combined Astra review pass. Earlier four-token
 near-zero failures, unquantized quality, app/phone and larger contexts remain
 open. [Report](gemma-hybrid32.md),
 [evidence](../benchmarks/results/2026-11-04-gemma-hybrid32-v1.json).
+
+## 4 November 2026 — Explicit Gemma4 diagnostic512 admission
+
+A bounded diagnostic constructor reuses immutable E2B weights while preserving
+default32 positions and32-row scratch. Actual512 session allocation grows by
+18,679,680bytes; exact admission and one-byte-less rejection pass. All32 baseline
+logit rows and15 valid KV prefixes remain bitwise equal.550default/658Metal,
+fmt/strictClippy/release and combined Astra review pass. Execution beyond31,
+long numerical reference, app and phone remain open.
+[Report](gemma-context-probe.md).

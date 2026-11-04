@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Gemma4 bounded512-position candidate: admission, state/schedule and independent numerical checks**.
+Current task: **Gemma4 independent long-context reference and timed pilot;512 execution follows oracle qualification**.
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Query](artifacts/m8-phone-availability-2026-11-03/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
@@ -1038,3 +1038,9 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Gemma32 execution/replay passed | All3 schedules/reset match complete32-token/KV state and24 selected rows; append33 preserves prefix. Math/staged comparisons have0 failures; RSS native3,005,054,976/reference410,910,720bytes. Cold3/default549/Metal657/fmt/Clippy/release pass. | Combined Astra review passes; commit task. Earlier four-token27 near-zero logit failures and app/phone/full-quality gaps stay open. [Report](docs/gemma-hybrid32.md). |
 
 | 2026-11-04 | Gemma32 reviewed | Astra approves state boundary,24 exact rows and both numerical contracts; correct historical wording to27 near-zero logits on the earlier four-token input. Required checks and measured memory gates pass. | Commit source/contract/evidence; next separately admitted512-position candidate. [Report](docs/gemma-hybrid32.md). |
+
+| 2026-11-04 | Gemma512 admission design | Reuse existing separate context/scratch planner: explicit diagnostic model ceiling≤512, default32 unchanged and per-call rows≤32. Check fit and first32 parity before wider numerical claims. Long reference requires its own bounded implementation/pilot. | Implement candidate/admission controls and real32-prefix comparison, then one combined Astra code/results review. |
+
+| 2026-11-04 | Diagnostic512 candidate implemented | Explicit constructor caps real E2B probes at512; ordinary32 and row scratch32 stay unchanged. Pure controls predict18,679,680extra bytes at512. Add ignored real admission/default32-prefix parity test; no execution beyond31 is qualified. | Required Rust checks, then measured real parity/admission run and combined Astra review. Long-reference work remains next. |
+
+| 2026-11-04 | Diagnostic512 admission/parity passed | Actual session263,761,128bytes matches+18,679,680plan; exact budget/one-byte-less and invalid-limit no-allocation checks pass. Default32 full logits/15KV prefixes and prior selected hashes match. Peak RSS2,949,955,584bytes;550default/658Metal/fmt/Clippy/release pass. | Astra approves combined code/results review for commit. Positions32–511 remain numerically unqualified; bounded long oracle/pilot next. [Report](docs/gemma-context-probe.md). |

@@ -17,7 +17,7 @@ not tokens per second or a promise that the engine can use that whole window.
 | Phi-3-mini-4k-instruct-4bit (`5b3819e`) | Native Metal fused-source dense, diagnostic | 4,096 | Selected Mac512 state/schedule and reference checks | No ordinary catalog/Chat adoption |
 | gemma-3-270m-it-4bit (`ff1143e`) | Native Metal local/global Gemma3, diagnostic | 32,768 | Selected capacity544, absolute positions0–543; bounded native conformance policy; historical precision rejections retained | No ordinary catalog/Chat adoption |
 | LFM2-350M-4bit (`18dc72a`) | Native Metal attention/causal-convolution, diagnostic | 128,000 |64 trajectory positions; capacity512 admitted separately | No ordinary catalog/Chat adoption |
-| gemma-4-e2b-it-4bit (`2387675`) | Packed Metal projections with CPU shared hybrid graph, diagnostic | 131,072 | 32-position state boundary/four selected logit rows pass; earlier four-token near-zero failures and original quality gaps retained | No ordinary catalog/Chat adoption |
+| gemma-4-e2b-it-4bit (`2387675`) | Packed Metal projections with CPU shared hybrid graph, diagnostic | 131,072 | 32-position state boundary/four selected logit rows pass; diagnostic512 allocation admitted separately; earlier four-token failures and quality gaps retained | No ordinary catalog/Chat adoption |
 
 The full revisions, layouts, gates and numerical policies are in the artifact
 reports: [Qwen2 context](context-app-integration.md),

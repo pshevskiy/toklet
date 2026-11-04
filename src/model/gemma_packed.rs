@@ -23,6 +23,8 @@ pub use operations::{BackendMemory, MatrixSource, Operations, Scalar};
 mod tests;
 
 pub const MAX_POSITIONS: usize = 32;
+/// Explicit real-E2B diagnostic model ceiling; default execution remains32.
+pub const MAX_E2B_DIAGNOSTIC_POSITIONS: usize = 512;
 /// Explicit synthetic scalar context bound, independent of the32-row call bound.
 pub const MAX_WITNESS_CONTEXT: usize = 1025;
 pub const VOCAB_SIZE: usize = 17;

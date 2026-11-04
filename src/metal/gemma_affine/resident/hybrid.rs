@@ -188,6 +188,21 @@ impl<'weights> Norms<'weights> {
         self.source.map(E2bWeights::identity)
     }
     pub fn model(&self) -> HybridResult<Model<'_, 'weights>> {
+        self.model_for_context_probe(graph::MAX_POSITIONS)
+    }
+    /// Explicit diagnostic ceiling over the same immutable packed source.
+    ///
+    /// The default model remains32 positions. This probe does not qualify wider
+    /// numerical execution or app/codec identity. Per-call scratch stays<=32.
+    pub fn model_for_context_probe(
+        &self,
+        position_limit: usize,
+    ) -> HybridResult<Model<'_, 'weights>> {
+        if !(1..=graph::MAX_E2B_DIAGNOSTIC_POSITIONS).contains(&position_limit) {
+            return Err(
+                crate::model::Error::InvalidConfig("Gemma E2B diagnostic position limit").into(),
+            );
+        }
         let source = self.source.ok_or(super::Error::Unsupported(
             "Gemma hybrid synthetic source is test-only",
         ))?;
@@ -214,6 +229,7 @@ impl<'weights> Norms<'weights> {
             weights,
             &source.bindings.geometry(),
             backing,
+            position_limit,
         )?)
     }
     pub(super) fn matrix(&self, index: usize) -> Result<MatrixRef<'_, 'weights>> {

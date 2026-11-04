@@ -358,3 +358,131 @@ fn original_e2b_hybrid32_boundary_schedules_and_reset() {
         json!({"state_passed":true,"positions":32,"selected_rows":[0,15,30,31],"numerical_decision":"separate reference replay","prior_precision_failures_waived":false,"phone_qualified":false,"app_qualified":false}),
     );
 }
+
+#[test]
+#[ignore = "explicit E2B diagnostic512 admission and qualified32-prefix parity"]
+fn diagnostic512_admission_preserves_default32_prefix() {
+    use crate::model::gemma_reference::tests::Measurement;
+    use sha2::{Digest, Sha256};
+    let input = include_bytes!("../../../../../benchmarks/gemma-hybrid32-v1/tokens.u32le");
+    let ids: Vec<u32> = input
+        .chunks_exact(4)
+        .map(|v| u32::from_le_bytes(v.try_into().unwrap()))
+        .collect();
+    let (source, file, path, original) = load_original();
+    let owners = resident_snapshot(&source);
+    let norms = hybrid::Norms::new(&source, PROCESS - DIAGNOSTIC).unwrap();
+    for limit in [0, 513, usize::MAX] {
+        let measured = Measurement::start();
+        let rejected = norms.model_for_context_probe(limit);
+        let allocations = measured.finish();
+        assert!(matches!(
+            rejected,
+            Err(hybrid::Error::Model(Error::InvalidConfig(
+                "Gemma E2B diagnostic position limit"
+            )))
+        ));
+        assert_eq!(allocations, 0);
+    }
+    let ordinary = norms.model().unwrap();
+    assert_eq!(ordinary.layout.positions, 32);
+    let context = gemma_affine::Context::new(gemma_affine::CONTEXT_ALLOWANCE_BYTES).unwrap();
+    let mut session = norms
+        .new_session(&ordinary, &context, PROCESS - DIAGNOSTIC)
+        .unwrap();
+    session.forward(&ids).unwrap();
+    let baseline = snapshot(&session);
+    let old_allocated = session.allocated_bytes().unwrap();
+    for position in [0, 15, 30, 31] {
+        let mut hash = Sha256::new();
+        let mut raw = [0u8; 4096];
+        for part in baseline.logits[position * 262144..(position + 1) * 262144].chunks(1024) {
+            for (value, to) in part.iter().zip(raw.chunks_exact_mut(4)) {
+                to.copy_from_slice(&value.to_le_bytes());
+            }
+            hash.update(&raw[..part.len() * 4]);
+        }
+        emit(
+            "PROBE_DEFAULT_ROW",
+            json!({"position":position,"sha256":format!("{:x}",hash.finalize())}),
+        );
+    }
+    drop(session);
+    let probe = norms.model_for_context_probe(512).unwrap();
+    assert_eq!(probe.layout.positions, 512);
+    assert_eq!(probe.model_bytes(), ordinary.model_bytes());
+    assert!(probe.content_identity().is_none());
+    let warm = norms
+        .new_session(&probe, &context, PROCESS - DIAGNOSTIC)
+        .unwrap();
+    assert_eq!(warm.capacity(), 512);
+    assert_eq!(warm.chunk_capacity(), 32);
+    let allocated = warm.allocated_bytes().unwrap();
+    assert_eq!(allocated - old_allocated, 18679680);
+    let required = probe.model_bytes() + allocated;
+    drop(warm);
+    assert!(matches!(norms.new_session(&probe, &context, required - 1),
+        Err(hybrid::Error::Metal(crate::metal::Error::Budget {required:r,limit}))
+        if r == required && limit == required - 1));
+    let mut session = norms.new_session(&probe, &context, required).unwrap();
+    assert_eq!(session.allocated_bytes().unwrap(), allocated);
+    let pointers_before = pointers(&session);
+    for replay in 0..2 {
+        if replay == 1 {
+            session.reset().unwrap();
+        }
+        let rows = session.forward(&ids).unwrap();
+        assert_eq!(rows.len(), baseline.logits.len());
+        assert!(
+            rows.iter()
+                .zip(&baseline.logits)
+                .all(|(value, bits)| value.to_bits() == *bits)
+        );
+        assert_eq!(session.tokens(), &ids);
+        assert_eq!(session.caches.len(), 15);
+        for (owner, cache) in session.caches.iter().enumerate() {
+            let dim = probe.layout.layers[owner].head_dim;
+            let count = 32 * dim; // This exact E2B graph has one KV head per producer.
+            let (k, v) = cache.committed();
+            let expected = &baseline.caches[owner];
+            assert!(
+                k[..count]
+                    .iter()
+                    .zip(&expected.0)
+                    .all(|(value, bits)| value.to_bits() == *bits)
+            );
+            assert!(
+                v[..count]
+                    .iter()
+                    .zip(&expected.1)
+                    .all(|(value, bits)| value.to_bits() == *bits)
+            );
+            assert_eq!(expected.0.len(), count);
+            assert_eq!(expected.1.len(), count);
+            assert_eq!(cache.offset(), 32);
+            assert_eq!(cache.generation(), if replay == 0 { 1 } else { 3 });
+            assert_eq!(k.len(), 512 * dim);
+            assert_eq!(v.len(), 512 * dim);
+            for slot in 0..512 {
+                assert_eq!(cache.position_in_slot(slot), (slot < 32).then_some(slot));
+            }
+        }
+        assert_eq!(pointers(&session), pointers_before);
+        assert_eq!(session.allocated_bytes().unwrap(), allocated);
+    }
+    drop(session);
+    assert_eq!(resident_snapshot(&source), owners);
+    assert_eq!(original, identity(&file.metadata().unwrap()));
+    assert_eq!(
+        original,
+        identity(&std::fs::symlink_metadata(path).unwrap())
+    );
+    emit(
+        "PROBE_COMPLETE",
+        json!({"default_positions":32,"diagnostic_positions":512,"chunk_rows":32,
+        "tested_prefix_positions":32,"all32_logit_rows_exact":true,"all15_valid_kv_prefixes_exact":true,
+        "default_allocated_bytes":old_allocated,"candidate_allocated_bytes":allocated,
+        "required_bytes":required,"exact_admission":true,"minus_one_rejected":true,"reset_reuse":true,
+        "positions_above31_qualified":false,"app_qualified":false,"phone_qualified":false}),
+    );
+}
