@@ -9829,3 +9829,10 @@ The outer supervisor verifies child/group exit, independently stopped VM,
 receipt identity and all200 resolved outcomes before publishing a recomputed
 decision. Astra review and21 targeted controls pass after fixing its inventory
 finding. Actual grading waits for source100 completion. [Evidence](../benchmarks/results/2026-11-04-gemma-grading-window-v1.json).
+
+## 4 November 2026 — Gemma Mac conformance design
+
+Astra records native arithmetic, selected Mac512 coupled rows and local
+witnesses in a [prospective design](gemma4-native-conformance.md). Provider/SIMD
+specification and independent-reference validation remain prerequisites; no
+numerical or app qualification changes. Local links and whitespace pass.
