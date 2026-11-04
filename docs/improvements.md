@@ -9794,3 +9794,10 @@ Resident4.56GBweights, on-disk PLE and session-owned stockKV pass three controls
 and six real greedy/reset/boundary checks below6GiB. Astra approves; peakphysical
 5.02GB. Incremental logit bits differ, so every task trajectory must pass stateless
 verification before grading. [Report](gemma-resident-generation.md).
+
+## 4 November 2026 — Original task controller
+
+Three-category pilot verifies all65sampled decisions/hidden stops, pending state
+and reset under6GiB. Three cold controls and Astra review pass; source-read chain
+replays independently. No grading/full100task qualification yet.
+[Report](gemma-task-controller-pilot.md).

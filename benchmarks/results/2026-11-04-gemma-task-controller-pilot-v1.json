@@ -1,0 +1,94 @@
+{
+  "format": "toklet-gemma-task-controller-pilot-v1",
+  "astra_review": "approved source controller, three cold controls and all65sampled/terminal decisions; reusecases0/40/70",
+  "owned": {
+    "passed": true,
+    "command": {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-s",
+        "-B",
+        "/Users/coloner/work/rust/toklet/artifacts/gemma-task-controller-pilot-2026-11-04/worker.py"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 40519,
+      "stdout": "artifacts/gemma-task-controller-pilot-2026-11-04/stdout",
+      "stderr": "artifacts/gemma-task-controller-pilot-2026-11-04/stderr"
+    },
+    "peak_rss_bytes": 4995743744,
+    "peak_physical_bytes": 4935520432,
+    "cases": 3,
+    "tasks_sha256": "d5950c0544afd26f09e64f7f70b49d6d5433dcccc76a65be2aa863fabdfd3aa5"
+  },
+  "source_audit": {
+    "bytes": 10246621918,
+    "sha256": "2db5482b20d746879bb3ef79b5203e9075a2e2b98f54ec7c2f281c1477ddc550",
+    "reads": 10201,
+    "read_bytes": 4567886918,
+    "read_chain_sha256": "0886347d3753cb39d7785eb68328229b09b997f96219274250e97be460049b07",
+    "poisoned": false,
+    "poison_reason": null,
+    "closed": true
+  },
+  "cases": [
+    {
+      "id": "HumanEval/0",
+      "category": "code",
+      "sampled_slots": 61,
+      "stop_reason": {
+        "kind": "stop_token",
+        "token_id": 106
+      },
+      "verified": true,
+      "generation_seconds": 31.27032875000441,
+      "replay_seconds": 29.767271291995712
+    },
+    {
+      "id": "truthfulqa/row-0",
+      "category": "prose",
+      "sampled_slots": 2,
+      "stop_reason": {
+        "kind": "stop_token",
+        "token_id": 106
+      },
+      "verified": true,
+      "generation_seconds": 8.350428125006147,
+      "replay_seconds": 8.312800499996229
+    },
+    {
+      "id": "lambada/row-0",
+      "category": "continuation",
+      "sampled_slots": 2,
+      "stop_reason": {
+        "kind": "stop_token",
+        "token_id": 106
+      },
+      "verified": true,
+      "generation_seconds": 11.25471266599925,
+      "replay_seconds": 11.020924999997078
+    }
+  ],
+  "checks": {
+    "cold_controls": 3,
+    "rust_inputs_unchanged": true
+  },
+  "receipts_sha256": {
+    "artifacts/gemma-task-controller-pilot-2026-11-04/plan.json": "9d1aa7b6beb60ac51a5af46a246abf6d4138030bf13fdbd1d477862bae53f2d7",
+    "artifacts/gemma-task-controller-pilot-2026-11-04/run.json": "7956728f6e5c89c0481d4168b018cf8e98f341b95e43a12e2b468d1fae1c8441",
+    "artifacts/gemma-task-controller-pilot-2026-11-04/capture/run.json": "5fd66cdf2bff3ebe25c2b8f4e0960f4b29e531336115414270c51856f22e8a47",
+    "artifacts/gemma-task-controller-pilot-2026-11-04/capture/tasks.jsonl": "d5950c0544afd26f09e64f7f70b49d6d5433dcccc76a65be2aa863fabdfd3aa5",
+    "artifacts/gemma-task-controller-pilot-2026-11-04/capture/execution-plan.json": "1ef0ddfdd72061c1d53b59e04021beb25f6ab94bb5c3dd6ba95eeb0b57cc761d"
+  },
+  "scripts_sha256": {
+    "artifacts/gemma-task-controller-pilot-2026-11-04/worker.py": "1e6b27bce97b573d09de3e0c93a7ac799d51c159f3a73af793c88046cc8dc322",
+    "artifacts/gemma-task-controller-pilot-2026-11-04/run.py": "6cac4906369a7684968125ee82668a2b5e55945b1cf4dc862fa6600a15d90b6d",
+    "artifacts/gemma-task-controller-pilot-2026-11-04/prepare.py": "9ba1ec5242af30cd788fe1aef32132999f5274825f9fbe820db96482bbba3bf8"
+  },
+  "grading_executed": false,
+  "full_task_gate_qualified": false,
+  "earlier_fidelity_failures_waived": false
+}

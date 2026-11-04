@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **100-task controller pilot with mandatory stateless trajectory verification**.
+Current task: **Full100original trajectories and native existing-generation-path pilot/collection**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -500,7 +500,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Paired native1,024-target block with exact eight-row prior alignment; [report](docs/gemma-native-loss-block.md).
 - [x] Remaining9original/native blocks, exact10,000-target weighted aggregation and unchanged full loss gate; [report](docs/gemma-full-loss.md).
 - [x] Resident original BF16/stockKV reference at511–567positions; [report](docs/gemma-resident-generation.md).
-- [ ] 100-task controller pilot, exact sampled/terminal-stop replay, then unchanged full task gate.
+- [x] Original100-task controller pilot with exact sampled/terminal-stop replay; [report](docs/gemma-task-controller-pilot.md).
+- [ ] Remaining97original trajectories, native existing-generation-path pilot/full collection and isolated100-task grading/gate.
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1184,3 +1185,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Full10k loss gate reviewed | Exact10k index/token join and weighted tail pass; native9.2641167394 vs original9.9957761138 gives delta−0.7316593744≤0.05. All source/runtime/exit/resource guards, required Rust checks and9controls pass. Astra approves code/evidence. | Commit full-loss task; resident task-reference qualification is active separately. 100tasks, old fidelity failures and app adoption remain open. [Report](docs/gemma-full-loss.md). |
 
 | 2026-11-04 | Resident task reference reviewed | Three cold controls and all6real greedy cases pass;568reject/reset/failure replay and read/runtime/resource guards pass. Peakphysical5,022,585,128bytes. Incremental logits differ descriptively; no bit-equivalence claim. Astra approves code/evidence. | Commit reference; pilot task controller with stateless verification of every sampledID/terminal stop before grading. Full100task gate remains open. [Report](docs/gemma-resident-generation.md). |
+
+| 2026-11-04 | Source task-controller pilot reviewed | All65sampledIDs/terminal106decisions across first code/prose/continuation cases verify statelessly; pending/reset/source/runtime/resource gates pass. Three cold controls pass; peakphysical4,935,520,432bytes. Astra approves code/evidence/three-case reuse. | Commit controller; collect remaining97source cases, prepare native genericGenerationSession pilot and grade only after100verified cases/model exit. [Report](docs/gemma-task-controller-pilot.md). |
