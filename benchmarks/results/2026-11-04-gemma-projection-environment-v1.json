@@ -1,0 +1,90 @@
+{
+  "format": "toklet-gemma-projection-environment-v1",
+  "passed": true,
+  "hardware": "Apple M1 Pro 16GiB",
+  "scope": "Actual precise pipeline probes and authored normal projection; no coupled graph",
+  "required_checks": {
+    "test": 550,
+    "test-metal": 658
+  },
+  "targeted_controls": 2,
+  "simd_width": 32,
+  "observations": [
+    {
+      "name": "subnormal-positive",
+      "output_bits": 0,
+      "ieee_bits": 16777216,
+      "observation": "zero_output"
+    },
+    {
+      "name": "subnormal-negative",
+      "output_bits": 0,
+      "ieee_bits": 2164260864,
+      "observation": "zero_output"
+    },
+    {
+      "name": "two-subnormal-products",
+      "output_bits": 0,
+      "ieee_bits": 8388608,
+      "observation": "zero_output"
+    },
+    {
+      "name": "single-subnormal-product",
+      "output_bits": 0,
+      "ieee_bits": 4194304,
+      "observation": "zero_output"
+    },
+    {
+      "name": "normal-residual",
+      "output_bits": 872480768,
+      "ieee_bits": 872480768,
+      "observation": "ieee_output"
+    },
+    {
+      "name": "positive-zero",
+      "output_bits": 0,
+      "ieee_bits": 0,
+      "observation": "ieee_output"
+    }
+  ],
+  "authored_outputs_per_repeat": 27,
+  "repeats": 2,
+  "peaks": {
+    "normal": {
+      "rss_bytes": 34963456,
+      "physical_bytes": 22233760
+    },
+    "probes": {
+      "rss_bytes": 17399808,
+      "physical_bytes": 6783696
+    }
+  },
+  "astra_review": "approved scoped environment evidence; full graph must fail closed on unsupported subnormal intermediates",
+  "general_flush_semantics_qualified": false,
+  "coupled_graph_qualified": false,
+  "app_qualified": false,
+  "phone_qualified": false,
+  "earlier_failures_waived": false,
+  "receipts_sha256": {
+    "src/metal/gemma_affine/tests.rs": "a1e2aeab47af3dea45c6de61b3821d552dafacd306e27faeb7872f1b5b09c716",
+    "src/metal/gemma_affine/tests/native_arithmetic.rs": "d11107ccc7f1732e613bdd73d1ed43efac1d24eac25893154ec44a2794a5eeea",
+    "tools/reference/check_gemma_projection_environment.py": "ca513404d918ba7775ed7c4a0c09b2f9b4dde3b1f4349f3f28de9bfaa5754169",
+    "tools/reference/test_check_gemma_projection_environment.py": "2ae54af850bf66d75f7d62b35fbafa2ff87c0a18ef7324dc6ddf7227c324abec",
+    "artifacts/gemma-projection-environment-2026-11-04/check.py": "f52c024b5170ea88b45ecdac3ae5e3d352bbf96149b001f3d0918740be4683bf",
+    "artifacts/gemma-projection-environment-2026-11-04/checks.json": "8e411ad485c529ba189fff4ee3992aee3f14d3eae7a02b8a162835188cb03e62",
+    "artifacts/gemma-projection-environment-2026-11-04/controls.log": "455a234a903f02c7d36882c9b036acc1ee7cca1176404082cfe9897ae40211f7",
+    "artifacts/gemma-projection-environment-2026-11-04/native.py.initial": "3e2c1102abf456f46a46167144258836b53a554486d4242898291e36b04f5504",
+    "artifacts/gemma-projection-environment-2026-11-04/native.stderr.initial": "0b6391946abd57adaf8c7c51ef4dcf32b71467fe8f41363a770c04be29d16d71",
+    "artifacts/gemma-projection-environment-2026-11-04/native.py": "59a2994e089894ff3ef68a3c81940407ff0dea47ad5bc8a525e25eef8b52d91d",
+    "artifacts/gemma-projection-environment-2026-11-04/native-run.json": "e186aa49a80f5c3ff2423e476fbc94ed0507ba32a0d00dad52c494ab7d2d3e18",
+    "artifacts/gemma-projection-environment-2026-11-04/normal.stderr": "348eb54f6c0735a213c6a445b218833b05381431a8d731f42bce6c6e46f37fdc",
+    "artifacts/gemma-projection-environment-2026-11-04/actual-v2/native.py": "59a2994e089894ff3ef68a3c81940407ff0dea47ad5bc8a525e25eef8b52d91d",
+    "artifacts/gemma-projection-environment-2026-11-04/actual-v2/native-plan.json": "541166240284e5e87f26d4cf75d5bb1422b9c7673a1ee4dd2feb84d985f0bb9b",
+    "artifacts/gemma-projection-environment-2026-11-04/actual-v2/native-run.json": "683415a3baaebff4ea568ab4f264bf0fa23f95f35fd67df0e71b0181f2f9c554",
+    "artifacts/gemma-projection-environment-2026-11-04/actual-v2/release-driver": "0a9124ad13ad44f65b8abe11e18851d804b84361a004856febc3de37e5e99af6",
+    "artifacts/gemma-projection-environment-2026-11-04/actual-v2/normal.stdout": "9b9d53201303ef7d0180f3a680ff4dab1d86d89fe14b2b80a20b47e5e1b87097",
+    "artifacts/gemma-projection-environment-2026-11-04/actual-v2/normal.stderr": "5737613c7a5239671fdc4038af2301767e0b7b38b564575916f0b09aa4f63fa4",
+    "artifacts/gemma-projection-environment-2026-11-04/actual-v2/probes.stdout": "8af88c3d52885178ab33a074458a70d4072eaee2ac2e8316afd1ac3d67c3165f",
+    "artifacts/gemma-projection-environment-2026-11-04/actual-v2/probes.stderr": "f5fb493830870db217f1b986d45968747f532704a5c8d3adec42026bf3ce27e7"
+  }
+}

@@ -6,6 +6,7 @@ mod fixture;
 mod l1_fixture;
 use serde_json::{Value, json};
 
+mod native_arithmetic;
 mod real;
 
 thread_local! {

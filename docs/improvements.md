@@ -9844,3 +9844,10 @@ merge order. Sixteen controls and Astra review pass; archived128-word V tile
 matches at assumed32lanes. Diagnostic timings and initial runner correction are
 recorded. Actual Metal width/flush and coupled graph remain open.
 [Report](gemma-native-projection.md).
+
+## 4 November 2026 — Actual projection environment
+
+Fresh precise M1Pro pipeline reports32lanes; four subnormal probes return zero.
+Normal controls and27 authored outputs match CPU replay exactly. Required checks,
+two cold controls and Astra review pass. General flush semantics and coupled
+graph remain open. [Report](gemma-projection-environment.md).
