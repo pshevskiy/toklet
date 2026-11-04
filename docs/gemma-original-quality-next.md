@@ -80,3 +80,12 @@ The [short source reproduction/profiling](gemma-bf16-source-experiment.md) and
 [tiny upstream streaming control](gemma-upstream-tiny.md) now pass their stated
 scopes. Next admit the official540selected/60excluded tensor mapping and read
 coverage, then run the descriptive real four-token comparison.
+
+## Real upstream result and next boundary
+
+The [real four-token run](gemma-upstream-real.md) passes execution/resource
+checks with descriptive arithmetic differences. Astra selects pinned official
+upstream CPU eager BF16 as the prospective original-quality baseline; the
+independent graphs retain their fidelity role and all prior rejections. Next
+check full-width versus tiled stock tied-head bits at the saved real activations,
+then qualify a representative loss block before the1,025 original pilot.

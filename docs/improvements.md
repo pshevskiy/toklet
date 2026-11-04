@@ -9744,3 +9744,11 @@ persistent state, including35scalars and tied head ownership. Raw bounded BF16
 reads and a prospective request journal pass five cold controls and Astra review. Real checkpoint
 execution, measured fit and numerical/quality agreement remain next.
 [Report](gemma-upstream-reader.md).
+
+## 4 November 2026 — Real upstream BF16 comparison
+
+Official four-token cases pass sealed source/request/runtime/resource and causal
+checks;12finite arrays and independent NLL/greedy readback pass. RSS688MB; greedy
+matches mathematical/staged references, while logit differences remain descriptive.
+Astra approves the prospective upstreamBF16 quality baseline; old fidelity failures
+and full quality stay open. [Report](gemma-upstream-real.md).

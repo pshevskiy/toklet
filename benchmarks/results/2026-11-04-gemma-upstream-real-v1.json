@@ -1,0 +1,597 @@
+{
+  "format": "toklet-gemma-upstream-real-v1",
+  "passed": true,
+  "astra_review": "approved scripts, actual results and prospective BF16 original-quality baseline",
+  "comparison_is_descriptive": true,
+  "profile": "official Transformers5.7.0 PyTorch2.9.1 CPU eager BF16",
+  "plan_sha256": "0b811d2a960420881e1ac5534de56ec2a94ad0e0c5b850b97c1e0653671b2071",
+  "owned": {
+    "passed": true,
+    "command": {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-s",
+        "-B",
+        "/Users/coloner/work/rust/toklet/artifacts/gemma-upstream-real-2026-11-04/worker.py"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 32490,
+      "stdout": "artifacts/gemma-upstream-real-2026-11-04/stdout",
+      "stderr": "artifacts/gemma-upstream-real-2026-11-04/stderr"
+    },
+    "peak_rss_bytes": 687980544,
+    "peak_physical_bytes": 468042904,
+    "arrays": 12,
+    "array_bytes": 4325376,
+    "array_sha256": "2af0758c510bd118d4fd4ca2620db53f77b66710acc7cc2e174ab08725159bf5"
+  },
+  "cases": [
+    {
+      "case": "original",
+      "elapsed_seconds": 10.530706166999153,
+      "greedy": [
+        [
+          236761,
+          106,
+          1018,
+          106
+        ]
+      ],
+      "top_two_margins": [
+        [
+          0.625,
+          0.25,
+          0.25,
+          0.75
+        ]
+      ],
+      "next_token_nlls": [
+        9.661235941601298,
+        28.531244972204778,
+        7.1465441352216885
+      ],
+      "shared_consumers": [
+        [
+          15,
+          13
+        ],
+        [
+          16,
+          13
+        ],
+        [
+          17,
+          13
+        ],
+        [
+          18,
+          13
+        ],
+        [
+          19,
+          14
+        ],
+        [
+          20,
+          13
+        ],
+        [
+          21,
+          13
+        ],
+        [
+          22,
+          13
+        ],
+        [
+          23,
+          13
+        ],
+        [
+          24,
+          14
+        ],
+        [
+          25,
+          13
+        ],
+        [
+          26,
+          13
+        ],
+        [
+          27,
+          13
+        ],
+        [
+          28,
+          13
+        ],
+        [
+          29,
+          14
+        ],
+        [
+          30,
+          13
+        ],
+        [
+          31,
+          13
+        ],
+        [
+          32,
+          13
+        ],
+        [
+          33,
+          13
+        ],
+        [
+          34,
+          14
+        ]
+      ]
+    },
+    {
+      "case": "future",
+      "elapsed_seconds": 10.60719012499976,
+      "greedy": [
+        [
+          236761,
+          106,
+          1018,
+          106
+        ]
+      ],
+      "top_two_margins": [
+        [
+          0.625,
+          0.25,
+          0.25,
+          3.5
+        ]
+      ],
+      "next_token_nlls": [
+        9.661235941601298,
+        28.531244972204778,
+        8.334044135221689
+      ],
+      "shared_consumers": [
+        [
+          15,
+          13
+        ],
+        [
+          16,
+          13
+        ],
+        [
+          17,
+          13
+        ],
+        [
+          18,
+          13
+        ],
+        [
+          19,
+          14
+        ],
+        [
+          20,
+          13
+        ],
+        [
+          21,
+          13
+        ],
+        [
+          22,
+          13
+        ],
+        [
+          23,
+          13
+        ],
+        [
+          24,
+          14
+        ],
+        [
+          25,
+          13
+        ],
+        [
+          26,
+          13
+        ],
+        [
+          27,
+          13
+        ],
+        [
+          28,
+          13
+        ],
+        [
+          29,
+          14
+        ],
+        [
+          30,
+          13
+        ],
+        [
+          31,
+          13
+        ],
+        [
+          32,
+          13
+        ],
+        [
+          33,
+          13
+        ],
+        [
+          34,
+          14
+        ]
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "case": "original",
+      "contract": "math_fp64",
+      "name": "embedding",
+      "values": 6144,
+      "max_absolute_difference": 0.0,
+      "mean_absolute_difference": 0.0,
+      "rms_difference": 0.0
+    },
+    {
+      "case": "original",
+      "contract": "staged_fp32",
+      "name": "embedding",
+      "values": 6144,
+      "max_absolute_difference": 0.0,
+      "mean_absolute_difference": 0.0,
+      "rms_difference": 0.0
+    },
+    {
+      "case": "original",
+      "contract": "math_fp64",
+      "name": "scaled_embedding",
+      "values": 6144,
+      "max_absolute_difference": 0.03199895210765291,
+      "mean_absolute_difference": 0.0015878360892643117,
+      "rms_difference": 0.002610289922045111
+    },
+    {
+      "case": "original",
+      "contract": "staged_fp32",
+      "name": "scaled_embedding",
+      "values": 6144,
+      "max_absolute_difference": 0.03199958801269531,
+      "mean_absolute_difference": 0.0015878194551794955,
+      "rms_difference": 0.002610261974076701
+    },
+    {
+      "case": "original",
+      "contract": "math_fp64",
+      "name": "layer.0.input_layernorm",
+      "values": 6144,
+      "max_absolute_difference": 0.9054644654547701,
+      "mean_absolute_difference": 0.015352901514363936,
+      "rms_difference": 0.03379562719591104
+    },
+    {
+      "case": "original",
+      "contract": "staged_fp32",
+      "name": "layer.0.input_layernorm",
+      "values": 6144,
+      "max_absolute_difference": 0.90545654296875,
+      "mean_absolute_difference": 0.015352891510926744,
+      "rms_difference": 0.03379554364521995
+    },
+    {
+      "case": "original",
+      "contract": "math_fp64",
+      "name": "layer.0.context",
+      "values": 8192,
+      "max_absolute_difference": 0.14873297390042062,
+      "mean_absolute_difference": 0.00213793384959801,
+      "rms_difference": 0.004718519070742076
+    },
+    {
+      "case": "original",
+      "contract": "staged_fp32",
+      "name": "layer.0.context",
+      "values": 8192,
+      "max_absolute_difference": 0.14873456954956055,
+      "mean_absolute_difference": 0.002137933360042546,
+      "rms_difference": 0.0047185219186610785
+    },
+    {
+      "case": "original",
+      "contract": "math_fp64",
+      "name": "final_norm",
+      "values": 6144,
+      "max_absolute_difference": 0.9517490344102839,
+      "mean_absolute_difference": 0.036112755374665205,
+      "rms_difference": 0.05130543927356247
+    },
+    {
+      "case": "original",
+      "contract": "staged_fp32",
+      "name": "final_norm",
+      "values": 6144,
+      "max_absolute_difference": 0.9517669677734375,
+      "mean_absolute_difference": 0.036112834354279734,
+      "rms_difference": 0.05130563166726779
+    },
+    {
+      "case": "original",
+      "contract": "math_fp64",
+      "name": "logits",
+      "values": 1048576,
+      "max_absolute_difference": 0.3702454929166805,
+      "mean_absolute_difference": 0.09515466390130264,
+      "rms_difference": 0.11517871237352305,
+      "reference_greedy": [
+        [
+          236761,
+          106,
+          1018,
+          106
+        ]
+      ],
+      "upstream_greedy": [
+        [
+          236761,
+          106,
+          1018,
+          106
+        ]
+      ]
+    },
+    {
+      "case": "original",
+      "contract": "staged_fp32",
+      "name": "logits",
+      "values": 1048576,
+      "max_absolute_difference": 0.37024402618408203,
+      "mean_absolute_difference": 0.09515518998438222,
+      "rms_difference": 0.11517935666104427,
+      "reference_greedy": [
+        [
+          236761,
+          106,
+          1018,
+          106
+        ]
+      ],
+      "upstream_greedy": [
+        [
+          236761,
+          106,
+          1018,
+          106
+        ]
+      ]
+    },
+    {
+      "case": "future",
+      "contract": "math_fp64",
+      "name": "embedding",
+      "values": 6144,
+      "max_absolute_difference": 0.0,
+      "mean_absolute_difference": 0.0,
+      "rms_difference": 0.0
+    },
+    {
+      "case": "future",
+      "contract": "staged_fp32",
+      "name": "embedding",
+      "values": 6144,
+      "max_absolute_difference": 0.0,
+      "mean_absolute_difference": 0.0,
+      "rms_difference": 0.0
+    },
+    {
+      "case": "future",
+      "contract": "math_fp64",
+      "name": "scaled_embedding",
+      "values": 6144,
+      "max_absolute_difference": 0.03199895210765291,
+      "mean_absolute_difference": 0.001572784595540445,
+      "rms_difference": 0.002592025161343035
+    },
+    {
+      "case": "future",
+      "contract": "staged_fp32",
+      "name": "scaled_embedding",
+      "values": 6144,
+      "max_absolute_difference": 0.03199958801269531,
+      "mean_absolute_difference": 0.0015727674612479408,
+      "rms_difference": 0.002591996800514118
+    },
+    {
+      "case": "future",
+      "contract": "math_fp64",
+      "name": "layer.0.input_layernorm",
+      "values": 6144,
+      "max_absolute_difference": 0.9054644654547701,
+      "mean_absolute_difference": 0.015388866893541284,
+      "rms_difference": 0.033902451761609574
+    },
+    {
+      "case": "future",
+      "contract": "staged_fp32",
+      "name": "layer.0.input_layernorm",
+      "values": 6144,
+      "max_absolute_difference": 0.90545654296875,
+      "mean_absolute_difference": 0.015388860705890295,
+      "rms_difference": 0.033902385672259505
+    },
+    {
+      "case": "future",
+      "contract": "math_fp64",
+      "name": "layer.0.context",
+      "values": 8192,
+      "max_absolute_difference": 0.11535126307787635,
+      "mean_absolute_difference": 0.002186121879675035,
+      "rms_difference": 0.0046866624788164555
+    },
+    {
+      "case": "future",
+      "contract": "staged_fp32",
+      "name": "layer.0.context",
+      "values": 8192,
+      "max_absolute_difference": 0.11534976959228516,
+      "mean_absolute_difference": 0.0021861148358205545,
+      "rms_difference": 0.004686650756933653
+    },
+    {
+      "case": "future",
+      "contract": "math_fp64",
+      "name": "final_norm",
+      "values": 6144,
+      "max_absolute_difference": 1.7575800314121768,
+      "mean_absolute_difference": 0.04103969344160029,
+      "rms_difference": 0.06883830025698143
+    },
+    {
+      "case": "future",
+      "contract": "staged_fp32",
+      "name": "final_norm",
+      "values": 6144,
+      "max_absolute_difference": 1.7576065063476562,
+      "mean_absolute_difference": 0.041039866326618345,
+      "rms_difference": 0.06883887589248083
+    },
+    {
+      "case": "future",
+      "contract": "math_fp64",
+      "name": "logits",
+      "values": 1048576,
+      "max_absolute_difference": 0.6607144972104857,
+      "mean_absolute_difference": 0.10024459906861204,
+      "rms_difference": 0.12580308363694018,
+      "reference_greedy": [
+        [
+          236761,
+          106,
+          1018,
+          106
+        ]
+      ],
+      "upstream_greedy": [
+        [
+          236761,
+          106,
+          1018,
+          106
+        ]
+      ]
+    },
+    {
+      "case": "future",
+      "contract": "staged_fp32",
+      "name": "logits",
+      "values": 1048576,
+      "max_absolute_difference": 0.6607146263122559,
+      "mean_absolute_difference": 0.10024516951756776,
+      "rms_difference": 0.1258037508521389,
+      "reference_greedy": [
+        [
+          236761,
+          106,
+          1018,
+          106
+        ]
+      ],
+      "upstream_greedy": [
+        [
+          236761,
+          106,
+          1018,
+          106
+        ]
+      ]
+    }
+  ],
+  "source_audit": {
+    "bytes": 10246621918,
+    "sha256": "2db5482b20d746879bb3ef79b5203e9075a2e2b98f54ec7c2f281c1477ddc550",
+    "reads": 19482,
+    "read_bytes": 9119183500,
+    "read_chain_sha256": "a82a8f1430da3d1376d5757945df1f7a19f2abe286f108384253f37b93068ca0",
+    "poisoned": false,
+    "poison_reason": null,
+    "closed": true
+  },
+  "verification": {
+    "passed": true,
+    "arrays": 12,
+    "finite_bf16_values": 2162688,
+    "causal_prefix": 3,
+    "scalar_readback": [
+      {
+        "case": "original",
+        "greedy": [
+          236761,
+          106,
+          1018,
+          106
+        ],
+        "top_two_margins": [
+          0.625,
+          0.25,
+          0.25,
+          0.75
+        ],
+        "next_token_nlls": [
+          9.661235941601298,
+          28.531244972204778,
+          7.1465441352216885
+        ]
+      },
+      {
+        "case": "future",
+        "greedy": [
+          236761,
+          106,
+          1018,
+          106
+        ],
+        "top_two_margins": [
+          0.625,
+          0.25,
+          0.25,
+          3.5
+        ],
+        "next_token_nlls": [
+          9.661235941601298,
+          28.531244972204778,
+          8.334044135221689
+        ]
+      }
+    ]
+  },
+  "artifacts": "artifacts/gemma-upstream-real-2026-11-04",
+  "quality_qualified": false,
+  "earlier_failures_waived": false,
+  "script_sha256": {
+    "worker.py": "ac5df1509bbe8978734765101f86fc03956a41773539e6810c3f218956e73202",
+    "run.py": "f047ae59206f4799e01780648f740fa66574d3835699c57c8a3554db32a9ec11",
+    "verify.py": "d30ba1a97798b998e26d4b249c8ed5725fe39708bb0ad450989ab2ee9b162413",
+    "prepare.py": "ace7141959c5e528dedddd6902983a25ad16f67af483857e48eb2689aad1cb13"
+  }
+}

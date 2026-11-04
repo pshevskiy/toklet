@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Descriptive four-token real upstream BF16 comparison**.
+Current task: **Real BF16 full-width versus tiled tied-head equality**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -488,12 +488,13 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Independent real1,025 oracle and native local-cache state/wrap/overflow/reset capture; [report](docs/gemma-hybrid1025.md).
 - [x] Same-input V-projection/RMSNorm and exact cache-transfer witness; [report](docs/gemma-v-boundary.md).
 - [ ] Real1,025 numerical qualification:4mathematical logits and8stagedKV observations remain rejected; local same-input witness passes; source/precision decision remains.
-- [ ] Measured original-BF16 four-token source/upstream experiment before full-quality scorer; [next task](docs/gemma-original-quality-next.md).
+- [x] Measured original-BF16 four-token source/upstream experiment before full-quality scorer; [next task](docs/gemma-original-quality-next.md).
 - [x] Standalone BF16 profiling adapter preparation, tiny equivalence only; [evidence](benchmarks/results/2026-11-04-gemma-bf16-profile-v1.json).
 - [x] Original-BF16 four-token saved-reference reproduction/profiling; [report](docs/gemma-bf16-source-experiment.md).
 - [x] Pinned upstream BF16 tiny resident/streamed control; [report](docs/gemma-upstream-tiny.md).
 - [ ] Official reader accounts for540selected/60excluded tensors, raw BF16/PLE/tied-head/read-chain checks.
-- [ ] Descriptive real four-token upstream BF16 comparison under frozen policy and6GiB.
+- [x] Descriptive real four-token upstream BF16 comparison under frozen policy and6GiB; [report](docs/gemma-upstream-real.md).
+- [ ] Real upstream full-width versus tiled tied-head bit equality, then representative original-quality loss block.
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1141,3 +1142,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Upstream tiny reviewed | Astra approves bit-exact stock-forward storage integration, sharedKV/cleanup, frozenfixture and sealed evidence. No relevant Rust inputs changed; earlier numerical rejections remain. | Commit harness; admit all540selected/60excluded official text tensors and raw BF16 read coverage before real four-token outputs. [Report](docs/gemma-upstream-tiny.md). |
 
 | 2026-11-04 | Official upstream reader checked | All540selected/60excluded shapes,35persistent scalars and tied ownership admitted. Five cold controls pass rawBF16/order/extent/failure and prospective request-journal checks; four-token memory ledger777,801,218bytes is an estimate. | Astra approves reader and final request-plan delta; checks pass. Real upstream execution remains next. [Report](docs/gemma-upstream-reader.md). |
+
+| 2026-11-04 | Official reader committed / real run sealed | Reader task committed `a9d2b67` after5controls and Astra approval. Freeze original/future four-token cases, all expected logical requests and19,482-read/9,119,183,500-byte chain before inference. | Owned CPU BF16 worker now runs with600s/6GiB limits; full logits/selected states, causal prefix3 and descriptive comparison next. |
+
+| 2026-11-04 | Real upstream BF16 reviewed | Both four-token cases pass frozen journals/readchain,12finite arrays, causalprefix3 and independent scalar replay. RSS687,980,544bytes; greedy matches both independent profiles, logit differences remain descriptive. Astra approves scripts/results and prospective upstreamBF16 quality baseline. | Commit experiment; qualify real full-width versus tiled tied-head equality before a representative loss block. Old fidelity failures/full quality remain open. [Report](docs/gemma-upstream-real.md). |
