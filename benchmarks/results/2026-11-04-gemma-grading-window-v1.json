@@ -1,0 +1,16 @@
+{
+  "format": "toklet-gemma-grading-window-preparation-v1",
+  "passed": true,
+  "scope": "Outer supervisor preparation only; no actual grading",
+  "targeted_tests": 21,
+  "astra_review": "approved after complete-outcome publication correction",
+  "cargo_checks": "Reused prior fmt/strict default+Metal Clippy/550 default and658 Metal tests; relevant Rust/dependency inputs unchanged",
+  "generated_code_executed": false,
+  "actual_grading_executed": false,
+  "receipts_sha256": {
+    "tools/bench/run_gemma_quality_grading.py": "a8fadbeb3115f95565183a4bddd4090a6ae931f76055cbcffa9b0c5309411986",
+    "tools/bench/test_run_gemma_quality_grading.py": "c6a29fcc06c94d878a13b6e61e4cc20f70ede75c9464b9987334e7bf0e807bc7",
+    "artifacts/gemma-task-grading-2026-11-04/outer-controls.log": "f2e68ff5eaca5112c86f24c4ad0c9d0d26001ccbe752852d8d57a9abf2564f99",
+    "artifacts/gemma-task-grading-2026-11-04/outer-controls-reviewed.log": "88b767e4a591a20665bc463788fdd0a9735b53edcd7e4b38952cca66c8a5128b"
+  }
+}

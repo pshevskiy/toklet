@@ -33,3 +33,12 @@ initially stopped VM. No decoding, VM start or generated-code execution occurred
 while the original model collection runs. Astra approves preparation; actual
 paired grading remains pending full source completion.
 [Evidence](../benchmarks/results/2026-11-04-gemma-task-grading-preparation-v1.json).
+
+The outer Gemma supervisor now retains the existing TERM-only window owner
+through child/group exit and independently verifies the stopped VM. It binds
+both exited model receipts and journals, checks inner collection/manifest
+identity, and recomputes the decision from all200 ordered resolved outcomes
+before publication. Astra caught the initially missing outcome-inventory check;
+the corrected21-control suite passes, including empty outcomes, a contradictory
+decision, changed evidence and unverified restoration. This is preparation;
+actual paired grading remains pending. [Supervisor evidence](../benchmarks/results/2026-11-04-gemma-grading-window-v1.json).

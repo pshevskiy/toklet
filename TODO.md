@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Restart full source100 with exact trajectory recovery; native100complete; grading pending**.
+Current task: **Source100 with exact trajectory recovery is running; native100complete; reviewed grading window ready**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -1203,3 +1203,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Recovered full-run launcher retry | Recovery committed `8111ecc`; first new launcher fails Python syntax before imports/model loading due generated indentation. Preserve script/stdout/stderr/owned failure; correct indentation. Approved recovery/input recipe unchanged. | Compile-check separately before launching; then reuse0/17/40/70 and recollect96. |
 
 | 2026-11-04 | Grading adapter preparation reviewed | Seven controls pass; actual100native records/literal grading fields/tokenizer/qualified stoppedVM validate without decoding or execution. Astra catches receipt↔journal binding gap; bothroles now enforce worker/manifest/rawSHA equality and reject a coherently substituted valid journal before decoding. | Commit preparation; original96recollection with exact recovery continues. Actual grading still blocked on complete verified source/clean exits. [Report](docs/gemma-task-grading.md). |
+
+| 2026-11-04 | Gemma outer grading window reviewed | TERM-only ownership, independent stoppedVM/process-group exit and complete200-outcome decision replay are enforced. Astra catches missing publication inventory; fix and21 targeted controls pass. Numerical inputs unchanged; prior required Cargo checks reused. | Commit supervisor preparation; wait for complete source100/clean exit before grading. [Evidence](benchmarks/results/2026-11-04-gemma-grading-window-v1.json). |

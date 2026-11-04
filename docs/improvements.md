@@ -9822,3 +9822,10 @@ Gemma inference admission maps exact literal scoring fields to the unchanged
 qualified isolated grader. Seven controls and Astra review pass, including
 worker/journal hash binding and pre-VM rejection. No generated code executed;
 full source completion/paired grading remains pending. [Report](gemma-task-grading.md).
+
+## 4 November 2026 — Owned Gemma grading window
+
+The outer supervisor verifies child/group exit, independently stopped VM,
+receipt identity and all200 resolved outcomes before publishing a recomputed
+decision. Astra review and21 targeted controls pass after fixing its inventory
+finding. Actual grading waits for source100 completion. [Evidence](../benchmarks/results/2026-11-04-gemma-grading-window-v1.json).
