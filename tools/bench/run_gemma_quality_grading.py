@@ -14,7 +14,7 @@ from run_llama3_quality_grading import acceptable, group_alive, read_inner_resul
 ROOT = adapter.ROOT
 
 
-def run(collection_file, collection_sha, output, timeout=3600):
+def run(collection_file, collection_sha, output, timeout=3600, *, cpu_witness=False):
     output = Path(output).resolve()
     support.require(output.is_relative_to(ROOT/'artifacts'), 'Fresh outer artifact folder required')
     output.mkdir()
@@ -63,6 +63,13 @@ def run(collection_file, collection_sha, output, timeout=3600):
 
         command = [sys.executable, str(ROOT/'tools/bench/gemma_quality_grading.py'),
                    str(collection_file), collection_sha, str(output/'inner')]
+        if cpu_witness:
+            import linux_process_cpu_retry
+            adapter.bind(bindings, linux_process_cpu_retry.PROOF, linux_process_cpu_retry.PROOF_SHA)
+            for name in ['linux_process_cpu_retry.py', 'linux_process_cpu_window.py',
+                         'linux_process_cpu_guest.py', 'linux_process_cpu_evidence.py']:
+                adapter.bind(bindings, ROOT/'tools/bench'/name)
+            command.append('--qualified-cpu-witness')
         # Preserve the qualified Podman JSON's local-time rendering.
         environment = dict(os.environ, TZ='Europe/Moscow')
         plan = dict(bindings=bindings, podman_client_pin=client_pin, command=command,
@@ -89,6 +96,13 @@ def run(collection_file, collection_sha, output, timeout=3600):
                         and inner['collection_sha256'] == collection_sha
                         and inner['manifest_sha256'] == adapter.MANIFEST_SHA,
                         'Inner grading identity differs from outer plan')
+        if cpu_witness:
+            policy = inner['cpu_budget_policy']
+            support.require(policy['qualification_sha256'] == linux_process_cpu_retry.PROOF_SHA
+                            and policy['kind'] == 'ordinary-first-qualified-process-prof-retry-v1'
+                            and policy['threshold_ns'] == 4_000_000_000
+                            and policy['original_attempts_preserved'] is True,
+                            'Inner CPU retry policy differs from qualified plan')
         decision = adapter.results.decision(adapter.task_cases.load_cases(), inner['outcomes'])
         support.require(decision == inner['decision'], 'Inner decision differs from complete resolved outcomes')
         adapter.bind(bindings, inner_path, pin['sha256'])
@@ -107,7 +121,9 @@ if __name__ == '__main__':
     parser.add_argument('collection', type=Path)
     parser.add_argument('collection_sha256')
     parser.add_argument('fresh_output', type=Path)
+    parser.add_argument('--qualified-cpu-witness', action='store_true')
     args = parser.parse_args()
-    report = run(args.collection, args.collection_sha256, args.fresh_output)
+    report = run(args.collection, args.collection_sha256, args.fresh_output,
+                 cpu_witness=args.qualified_cpu_witness)
     print(json.dumps({k: v for k, v in report.items() if k != 'bindings'}, indent=2))
     raise SystemExit(0 if report['completed'] else 1)

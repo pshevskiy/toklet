@@ -24,7 +24,7 @@ def fixtures():
 
 
 class SharedRunnerTests(unittest.TestCase):
-    def exercise(self, folder, unresolved=False, stop_failure=False):
+    def exercise(self, folder, unresolved=False, stop_failure=False, execute=None, classify_override=None):
         cases,decoded=fixtures();state={'running':False};owner=Mock()
         image=dict(Id='sha256:'+subject.IMAGE,Digest=None,RepoDigests=None,Architecture='arm64',Os='linux',RootFS=None)
         binding=dict(URI='ssh://fixture',Identity='fixture-key')
@@ -54,8 +54,8 @@ class SharedRunnerTests(unittest.TestCase):
                 (subject.boundary,'bound_machine_connection',lambda *_:binding),
                 (subject.lifecycle,'start_machine',start),(subject.lifecycle,'await_stopped_owner',Mock()),
                 (subject,'running_containers',lambda *_:[]),(subject.controller,'bundled_source',lambda:b'trusted'),
-                (subject.controller,'admit_bootstrap',lambda _:None),(subject.controller,'execute',Mock(return_value=dict(raw='fixture'))),
-                (subject.evidence,'classify',classify)]:stack.enter_context(patch.object(obj,name,value))
+                (subject.controller,'admit_bootstrap',lambda _:None),(subject.controller,'execute',execute or Mock(return_value=dict(raw='fixture'))),
+                (subject.evidence,'classify',classify_override or classify)]:stack.enter_context(patch.object(obj,name,value))
             result=subject.grade_paired_cases(cases,decoded,guard,folder,record,{},decide)
         return result,owner,guard,decide
     def test_all80_literal_programs_journal_before_final_restored_decision(self):

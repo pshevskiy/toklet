@@ -20,7 +20,7 @@ def read_json(path, limit=16*1024**2):
     return json.loads(raw), raw
 
 
-def run(collection_file, expected_sha, output):
+def run(collection_file, expected_sha, output, *, cpu_witness=False):
     output = Path(output).resolve()
     require(output.is_relative_to(ROOT/'artifacts'), 'Fresh artifact destination required')
     output.mkdir()
@@ -31,6 +31,7 @@ def run(collection_file, expected_sha, output):
                   scope='Literal source-test outcomes; qualified isolation unchanged; no timing acceptance')
     bindings = {}
     workers = []
+    cpu_runtime = None
 
     def guard():
         for name, pin in bindings.items():
@@ -98,6 +99,11 @@ def run(collection_file, expected_sha, output):
         for path in package.rglob('*'):
             if path.is_file() and path.suffix in ['.py', '.so', '.dylib'] and '__pycache__' not in path.parts:
                 bind(bindings, path)
+        if cpu_witness:
+            import linux_process_cpu_retry
+            cpu_runtime = linux_process_cpu_retry.Runtime()
+            cpu_runtime.bind(bindings)
+            record['cpu_budget_policy'] = cpu_runtime.policy
         record['inference_manifest_sha256'] = MANIFEST_SHA
         record['canonical_grading_payload_sha256'] = task_cases.TASK_SHA
         guard()
@@ -106,8 +112,13 @@ def run(collection_file, expected_sha, output):
         record['source_and_evidence_bindings'] = bindings
         write_json(output/'result.json', record)
         return record
-    return isolated.grade_paired_cases(canonical, decoded, guard, output, record, bindings,
-                                      lambda outcomes: results.decision(canonical, outcomes))
+    def grade():
+        return isolated.grade_paired_cases(canonical, decoded, guard, output, record, bindings,
+                                           lambda outcomes: results.decision(canonical, outcomes))
+    if cpu_runtime is not None:
+        with cpu_runtime.install():
+            return grade()
+    return grade()
 
 
 if __name__ == '__main__':
@@ -116,7 +127,9 @@ if __name__ == '__main__':
     parser.add_argument('collection', type=Path)
     parser.add_argument('collection_sha256')
     parser.add_argument('fresh_output', type=Path)
+    parser.add_argument('--qualified-cpu-witness', action='store_true')
     args = parser.parse_args()
-    report = run(args.collection, args.collection_sha256, args.fresh_output)
+    report = run(args.collection, args.collection_sha256, args.fresh_output,
+                 cpu_witness=args.qualified_cpu_witness)
     print(json.dumps({k: report.get(k) for k in ['completed', 'decision', 'failure', 'unresolved_case_ids']}, indent=2))
     raise SystemExit(0 if report['completed'] else 1)

@@ -1,6 +1,6 @@
 # Proposed process CPU witness for isolated Gemma task grading
 
-**Design awaiting qualification.** HumanEval/39 produced a valid readiness
+**Authored witness and controlled retry integration reviewed; model grading pending.** HumanEval/39 produced a valid readiness
 record followed by exit 137, without a terminal result, OOM or watchdog event.
 The first run remains unresolved. Its 4.191 seconds of wall time cannot establish
 four seconds of evaluator CPU use. Keep the [qualified classifier](../tools/bench/linux_task_evidence.py)
@@ -132,3 +132,15 @@ A rerun with an observation failure, watchdog or insufficient PROF leaves the
 original unresolved. Preserve both raw attempts and the original verdict;
 qualifying a rerun does not identify the cause of the original signal.
 [Qualification evidence](../benchmarks/results/2026-11-04-linux-process-cpu-witness-v1.json).
+
+The optional Gemma adapter now binds that proof and its sources, preserves
+every original attempt for journaling before classification, and retries only
+natural unknown137 with one readiness frame and no remaining stdout/stderr.
+Contradictory terminal frames, recorded classification failures and observer
+startup failures remain unresolved. Both attempts require identical authenticated
+payloads, qualified image/bootstrap/configuration, fresh leases and clean exits.
+The outer supervisor checks the selected CPU policy and complete200-outcome
+decision. Thirty-eight controls and five saved authored-pair replays pass after
+fixing Astra's attempt-preservation and incomplete-frame findings. Astra approves
+a fresh supervised model grading window; no generated retry occurred during
+preparation. [Integration evidence](../benchmarks/results/2026-11-04-gemma-cpu-retry-integration-v1.json).

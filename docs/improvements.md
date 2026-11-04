@@ -9895,3 +9895,11 @@ four-second CPU limit. Ten paired authored runs,46 controls and Astra review
 pass; early/external under-budget deaths stay unresolved. The failed scheduler
 counter experiment remains failed. Model-grading integration is next.
 [Report](gemma-cpu-limit-witness.md).
+
+## 4 November 2026 — Controlled ambiguous-137 grading retry
+
+Ordinary grading stays first; one qualified identical-payload retry can resolve
+CPU-budget exhaustion. Original failures remain journaled, contradictory frames
+stay unresolved, and the outer policy/decision guard remains strict.38 controls,
+five authored replays and Astra review pass. Full model grading is next.
+[Evidence](../benchmarks/results/2026-11-04-gemma-cpu-retry-integration-v1.json).

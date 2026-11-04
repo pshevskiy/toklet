@@ -1,0 +1,31 @@
+{
+  "format": "toklet-gemma-cpu-retry-integration-v1",
+  "preparation_passed": true,
+  "model_grading_executed": false,
+  "targeted_tests": 38,
+  "authored_pairs_replayed": 5,
+  "astra_review": "approved fixes and fresh supervised full grading with authenticated100-case journals; publish only all200resolved plus independently stopped restoration",
+  "witness_commit": "ce09496",
+  "witness_qualification_sha256": "d39b1d233512bd9afefb665bddf045742a05eb4f2efa81ea6fa27100b0964e0b",
+  "ordinary_first": true,
+  "retry_only_natural_readiness_only137": true,
+  "original_attempts_preserved": true,
+  "threshold_ns": 4000000000,
+  "cargo_checks": "Required4467b86checks reused; relevant Rust/dependency inputs unchanged",
+  "receipts_sha256": {
+    "tools/bench/linux_process_cpu_retry.py": "b6741db535347a61025ebbcaaab8ea74778f7f8fdf0daed4a611f83858e43674",
+    "tools/bench/test_linux_process_cpu_retry.py": "3518e63a168bad2a5e4cd9e88b2496ca6f01231b7408348c84e9f7f9b3915277",
+    "tools/bench/gemma_quality_grading.py": "042275014d1655e4932ba91050f223a49e720cb62c452b22e3aa3cf8b23ff30f",
+    "tools/bench/run_gemma_quality_grading.py": "5936c43f8482cb8f6ecf423ccd233bff8d658375080370cf0c455e1b184df3cb",
+    "tools/bench/test_run_gemma_quality_grading.py": "c9aa4a60f554b023919ca4cbdfa40cf7d29b4903ba298c37f7cfdac4b8d5ad5c",
+    "tools/bench/test_paired_task_grading.py": "5e5f3c31879a0656cc636890c0a7fb446a3953a78870b131244470f5947720bc",
+    "artifacts/gemma-cpu-retry-integration-2026-11-04/controls.log": "60177aa0cfc683bafa273eb36309b45111bbb5ba087b73ce3d3df38c3e285c32",
+    "artifacts/gemma-cpu-retry-integration-2026-11-04/controls-final.log": "a6cfa887f79d178c563e0115b9340322cac6d34decea61a95cb6acce5084eb88",
+    "artifacts/gemma-cpu-retry-integration-2026-11-04/controls-reviewed.log": "2d79ff768c56f353f4ef6e5695084a833b488eab37e86b326b32a0302e471981",
+    "artifacts/gemma-cpu-retry-integration-2026-11-04/controls-reviewed-final.log": "945cad2b75b27cd3766175a5f6d35626508d0cd9a9c8e459f8ab62a6da803642",
+    "artifacts/gemma-cpu-retry-integration-2026-11-04/replay.py": "1b4984f9b4e89d2b4dddf0f24f2ef02af3fcfd3e2b32a017c82be15e3f2598ad",
+    "artifacts/gemma-cpu-retry-integration-2026-11-04/replay.json": "51684dbcea7809ab1e4557c0b37c5de6d933e2a0667f7729c83127dc87ae7aa0",
+    "artifacts/gemma-cpu-retry-integration-2026-11-04/replay-reviewed-v1/replay.py": "1b4984f9b4e89d2b4dddf0f24f2ef02af3fcfd3e2b32a017c82be15e3f2598ad",
+    "artifacts/gemma-cpu-retry-integration-2026-11-04/replay-reviewed-v1/replay.json": "85725b0039103f0d59fee01456dfc08450f0fe80ce549f64d327c97ad6d89dac"
+  }
+}

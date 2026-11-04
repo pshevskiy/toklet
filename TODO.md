@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Both100-case collections complete/reviewed; qualify process-CPU witness for unresolved isolated HumanEval/39**.
+Current task: **Both100-case collections complete/reviewed; run fresh200-outcome grading with reviewed ambiguous137-only CPU retry**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -1223,3 +1223,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Full task collections reviewed / grader withheld score | Source/native100 pass exact admission, clean exits and evidence bindings. Six source cases repair once (17/18/19/20/33/82); sourceRSS5.166GB. Astra approves reuse. Isolated baselineHumanEval39 exits137 without terminal/OOM/watchdog; VM restoration/owner completion pass; no decision. | Preserve run; qualify [independent process-CPU witness](docs/gemma-cpu-limit-witness.md) using authored controls before any generated retry. [Report](docs/gemma-full-tasks.md). Host primitive `f93260e`; independent coupled graph remains open. |
 
 | 2026-11-04 | Authored CPU witness reviewed | Read-only guest inventory passes after pre-start launcher-name collision. SCHED-only spinner3.930s fails and is retained; kernel-source investigation selects enforcement PROF0 prospectively, unchanged4s threshold. Ten paired authored controls/46 tests and Astra review pass, including two≥4s positives and early/external below-budget negatives; stopped restoration passes. | Commit observer qualification; integrate ordinary-first/ambiguous137-only identical observed retry. No generated retry or task score yet; both100-case collections remain reusable. [Evidence](benchmarks/results/2026-11-04-linux-process-cpu-witness-v1.json). |
+
+| 2026-11-04 | Controlled CPU retry integration reviewed | Ordinary grader runs first; only natural137/readiness-only evidence retries the identical payload. Astra catches pre-journal failure loss and contradictory terminal eligibility; fixes pass38 controls and5 saved authored-pair replays. Original attempts always retained; shared-source isolation unchanged. | Witness committed `ce09496`; commit integration, then fresh full200-outcome window with all receipts/restoration independently replayed. Prior grading failure remains. [Evidence](benchmarks/results/2026-11-04-gemma-cpu-retry-integration-v1.json). |

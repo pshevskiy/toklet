@@ -8,7 +8,7 @@ import run_gemma_quality_grading as subject
 
 
 class WindowControls(unittest.TestCase):
-    def exercise(self, change=None):
+    def exercise(self, change=None, cpu=False):
         with tempfile.TemporaryDirectory(dir=subject.ROOT/'artifacts') as directory:
             folder = Path(directory)
             client = folder/'podman'
@@ -36,6 +36,9 @@ class WindowControls(unittest.TestCase):
             decision = subject.adapter.results.decision(cases, outcomes)
 
             def supervised(command, stdout, stderr, environment, observe, group_alive, timeout):
+                if cpu:
+                    self.assertEqual(command[-1], '--qualified-cpu-witness')
+                    command = command[:-1]
                 self.assertEqual(command[-1], str(output/'inner'))
                 self.assertEqual(command[-3], str(path))
                 self.assertEqual(environment['TZ'], 'Europe/Moscow')
@@ -44,6 +47,11 @@ class WindowControls(unittest.TestCase):
                     pipe_lifetime_finished=True, unresolved_case_ids=['HumanEval/0'] if change == 'unresolved' else [],
                     format='toklet-gemma-full-task-grading-v1', collection_sha256=command[-2],
                     manifest_sha256=subject.adapter.MANIFEST_SHA, outcomes=outcomes, decision=decision)
+                if cpu:
+                    import linux_process_cpu_retry
+                    inner['cpu_budget_policy'] = linux_process_cpu_retry.Runtime().policy
+                    if change == 'cpu-policy':
+                        inner['cpu_budget_policy']['threshold_ns'] -= 1
                 if change == 'missing-outcomes':
                     inner['outcomes'] = dict(baseline=[], native=[])
                 if change == 'wrong-decision':
@@ -60,7 +68,7 @@ class WindowControls(unittest.TestCase):
                  patch.object(subject.runner, 'checked_json', return_value=dict(podman_sha256=hashlib.sha256(client.read_bytes()).hexdigest())), \
                  patch.object(subject.os, 'kill', side_effect=ProcessLookupError), \
                  patch.object(subject.support, 'supervise_window', side_effect=supervised) as supervisor:
-                result = subject.run(path, hashlib.sha256(path.read_bytes()).hexdigest(), output)
+                result = subject.run(path, hashlib.sha256(path.read_bytes()).hexdigest(), output, cpu_witness=cpu)
             self.assertEqual(json.loads((output/'result.json').read_text()), result)
             if change:
                 self.assertFalse(result['completed'])
@@ -93,3 +101,7 @@ class WindowControls(unittest.TestCase):
 
     def test_unclean_model_exit_prevents_grader_launch(self):
         self.exercise('live-model')
+
+    def test_qualified_cpu_policy_flag_and_publication_guard(self):
+        self.exercise(cpu=True)
+        self.exercise('cpu-policy', cpu=True)
