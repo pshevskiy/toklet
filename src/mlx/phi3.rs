@@ -148,6 +148,7 @@ pub(crate) fn config(value: Value, options: LoadOptions) -> Result<ParsedConfig,
         position_plan: PositionPlan::Ordinary,
         declared_sliding_window: c.sliding_window,
         rotary_layers: None,
+        scales: Default::default(),
     })
 }
 

@@ -9972,3 +9972,12 @@ peakRSS1.82GB and numerical admission1.86GB. Shared probe preserves both prior
 Qwen1.5 rows exactly.554default/662Metal, strict/release checks and Astra pass.
 Fidelity/held-out quality and managed Chat stay separate.
 [Report](smollm3-engine-execution.md).
+
+## 5 November 2026 — Reuse dense blocks for Granite scaling
+
+Strict Granite adapter supplies checkpoint embedding, attention, both residual
+and logit scales. Half coefficient/product boundaries and physical strides are
+preserved; legacy graphs stay unchanged.558CPU/667Metal tests, six explicit GPU
+checks, strict/release checks and Astra pass. Real2B execution is next; no
+quality, performance, managed Chat or phone claim.
+[Report](granite-scaling-blocks.md).

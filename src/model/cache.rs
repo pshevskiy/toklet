@@ -91,8 +91,30 @@ impl LayerKv {
         scores: &mut [f32],
         probabilities: &mut [f32],
         shape: &crate::cpu::CachedAttentionShape,
+        multiplier: Option<f32>,
     ) -> Result<(), Error> {
-        crate::cpu::attention_cached(q, &self.k, &self.v, context, scores, probabilities, shape)?;
+        if let Some(scale) = multiplier {
+            crate::cpu::attention_cached_scaled(
+                q,
+                &self.k,
+                &self.v,
+                context,
+                scores,
+                probabilities,
+                shape,
+                scale,
+            )?;
+        } else {
+            crate::cpu::attention_cached(
+                q,
+                &self.k,
+                &self.v,
+                context,
+                scores,
+                probabilities,
+                shape,
+            )?;
+        }
         Ok(())
     }
 }

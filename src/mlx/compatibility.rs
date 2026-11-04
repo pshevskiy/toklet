@@ -190,6 +190,7 @@ fn name(architecture: Architecture) -> &'static str {
         Architecture::Mistral => "mistral",
         Architecture::Phi3 => "phi3",
         Architecture::SmolLm3 => "smollm3",
+        Architecture::Granite => "granite",
     }
 }
 
@@ -237,7 +238,11 @@ pub fn inspect(directory: &Path, backend: Backend, options: LoadOptions) -> Repo
         }
     };
     report.declared_model_type = Some(model_type.to_owned());
-    if !["qwen2", "qwen3", "llama", "mistral", "phi3", "smollm3"].contains(&model_type) {
+    if ![
+        "qwen2", "qwen3", "llama", "mistral", "phi3", "smollm3", "granite",
+    ]
+    .contains(&model_type)
+    {
         report.status = Status::Unknown;
         report.reason = Reason::UnknownArchitecture;
         report.message = "The declared architecture has no native MLX decoder".into();

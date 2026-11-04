@@ -506,3 +506,51 @@ kernel void q4_v2_compensated_prefill(device const uchar* w[[buffer(0)]],device 
         }
     }
 }
+
+// Explicit checkpoint multiplier; legacy attention retains its original division.
+kernel void attention_scaled(device const half* q[[buffer(0)]],device const half* k[[buffer(1)]],device const half* v[[buffer(2)]],device float* scores[[buffer(3)]],device float* probs[[buffer(4)]],device half* out[[buffer(5)]],constant uint* s[[buffer(6)]],device atomic_uint* status[[buffer(7)]],uint query[[thread_position_in_grid]]) {
+    uint rows=s[0],heads=s[1],kvheads=s[2],d=s[3],cap=s[4],chunk=s[5],offset=s[6],valid=s[7];
+    if(query>=rows*heads)return;
+    uint token=query/heads,head=query%heads,kv=head/(heads/kvheads),base=(head*chunk+token)*cap,causal=offset+token+1;
+    float scale=as_type<float>(s[8]),maximum=-INFINITY;
+    for(uint p=0;p<valid;++p) {
+        float acc=0;
+        for(uint f=0;f<d;++f)acc=acc+float(q[(token*heads+head)*d+f])*float(k[(kv*cap+p)*d+f]);
+        float score=acc*scale;
+        scores[base+p]=score;
+        if(p<causal)maximum=max(maximum,score);
+    }
+    float sum=0;
+    for(uint p=0;p<valid;++p) {
+        float e=p<causal?exp(scores[base+p]-maximum):0.0f;
+        probs[base+p]=e;
+        sum=sum+e;
+    }
+    if(!isfinite(sum)||sum<=0)atomic_fetch_or_explicit(status,2u,memory_order_relaxed);
+    for(uint p=0;p<valid;++p)probs[base+p]=probs[base+p]/sum;
+    for(uint f=0;f<d;++f) {
+        float acc=0;
+        for(uint p=0;p<causal;++p)acc=acc+probs[base+p]*float(v[(kv*cap+p)*d+f]);
+        checked_half(out,(token*heads+head)*d+f,acc,status);
+    }
+}
+
+// Logical rows/columns may have padded storage. Scalar literals adopt Half dtype.
+kernel void scale_half(device half* x[[buffer(0)]],constant uint* s[[buffer(1)]],device atomic_uint* status[[buffer(2)]],uint i[[thread_position_in_grid]]) {
+    if(i>=s[0]*s[1])return;
+    uint offset=(i/s[1])*s[2]+i%s[1];
+    checked_half(x,offset,float(x[offset])*float(as_type<half>(ushort(s[3]))),status);
+}
+kernel void residual_scaled(device half* x[[buffer(0)]],device const half* delta[[buffer(1)]],constant uint* s[[buffer(2)]],device atomic_uint* status[[buffer(3)]],uint i[[thread_position_in_grid]]) {
+    if(i>=s[0]*s[1])return;
+    uint offset=(i/s[1])*s[2]+i%s[1];
+    half scaled=half(float(delta[offset])*float(as_type<half>(ushort(s[3]))));
+    checked_half(x,offset,float(x[offset])+float(scaled),status);
+}
+kernel void divide_float(device float* x[[buffer(0)]],constant uint* s[[buffer(1)]],device atomic_uint* status[[buffer(2)]],uint i[[thread_position_in_grid]]) {
+    if(i>=s[0]*s[1])return;
+    uint offset=(i/s[1])*s[2]+i%s[1];
+    float value=x[offset]/as_type<float>(s[3]);
+    if(!isfinite(value))atomic_fetch_or_explicit(status,1u,memory_order_relaxed);
+    x[offset]=value;
+}

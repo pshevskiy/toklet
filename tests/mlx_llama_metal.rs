@@ -547,10 +547,9 @@ fn check_half_graph(fixture: &Value, positional: bool) {
                     assert_eq!(names.len(), 35);
                     let diagnostics = s.diagnostics().unwrap();
                     assert_eq!(diagnostics.len(), 35);
-                    if !positional {
-                        let mask = fixture["config_templates"][variant]["no_rope_layers"]
-                            .as_array()
-                            .unwrap();
+                    if let Some(mask) =
+                        fixture["config_templates"][variant]["no_rope_layers"].as_array()
+                    {
                         for (layer, enabled) in mask.iter().enumerate() {
                             if enabled == 0 {
                                 for (before, after) in [("q", "q_rotary"), ("k", "k_rotary")] {
@@ -685,8 +684,10 @@ fn check_half_graph(fixture: &Value, positional: bool) {
         "{} {}",
         if positional {
             "LLAMA3_HALF_GRAPH"
-        } else {
+        } else if fixture["format"] == "toklet-smollm3-half-graph-v1" {
             "SMOLLM3_HALF_GRAPH"
+        } else {
+            "GRANITE_HALF_GRAPH"
         },
         serde_json::json!({"format":fixture["format"],"snapshots":snapshots,"compared_values":compared,
         "diagnostic_stages_per_chunk":35,"fixture_stages":39,"cases":8,"schedules":3,
@@ -702,6 +703,26 @@ fn smollm3_half_graph_and_session_match_frozen_independent_oracle() {
     assert_eq!(
         format!("{:x}", Sha256::digest(raw)),
         "a6cf4fbc824e8a0af25721181be477015b907dd3f6d3c093501b4eba88813466"
+    );
+    let fixture: Value = serde_json::from_slice(raw).unwrap();
+    let repo = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    for category in ["inputs", "producers"] {
+        for (name, pin) in fixture[category].as_object().unwrap() {
+            let bytes = fs::read(repo.join(name)).unwrap();
+            assert_eq!(bytes.len() as u64, pin["bytes"]);
+            assert_eq!(format!("{:x}", Sha256::digest(bytes)), pin["sha256"]);
+        }
+    }
+    check_half_graph(&fixture, false);
+}
+
+#[test]
+#[ignore = "Explicit Apple GPU Granite checkpoint scales, nonzero offsets and cached chunks"]
+fn granite_half_graph_and_session_match_frozen_independent_oracle() {
+    let raw = include_bytes!("fixtures/granite-half-graph-v1/fixture.json");
+    assert_eq!(
+        format!("{:x}", Sha256::digest(raw)),
+        "852711a8bfffd68f389f5db8a987ff6e4f56dd5e5d747bcbe89cccb089b58dd9"
     );
     let fixture: Value = serde_json::from_slice(raw).unwrap();
     let repo = PathBuf::from(env!("CARGO_MANIFEST_DIR"));

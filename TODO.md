@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Granite3.3-2B MLX8 header/memory admission, then checkpoint-defined scaling blocks and real Mac execution. Qwen1.5 and SmolLM3 engine coverage reviewed/complete. Performance secondary; iPhone deferred**.
+Current task: **Granite3.3-2B MLX8 real Mac execution; immutable artifact and shared scaling blocks reviewed/complete. Qwen1.5 and SmolLM3 engine coverage reviewed/complete. Performance secondary; iPhone deferred**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -487,7 +487,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] SmolLM3 pinned real Mac512 execution, stock comparison, state and memory;
   [report](docs/smollm3-engine-execution.md).
 - [x] Astra selects Granite3.3-2B MLX8 next: reusable embedding/attention/residual/logit scaling.
-- [ ] Granite immutable header/peak-memory ledger, scaling fixture/blocks and real Mac execution.
+- [x] Granite immutable artifact/memory screen and shared scaling blocks; [report](docs/granite-scaling-blocks.md).
+- [ ] Granite real Mac512 execution, stock decisions, state and memory checks.
 
 ### M8 closure
 
@@ -1263,3 +1264,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | SmolLM3 rotary block reviewed | Source mask/tying/attention validation and shared CPU/Metal bypass pass4new CPUcontrols and1,680GPU snapshots/110,208values.554default/662Metal, strict checks,4GPU regressions, fresh reference replay and Astra pass. Initial Source-test initializer failure preserved. | Commit block; real3B payload acquired separately, stock/native512 execution next. No real-model/app/phone qualification yet. [Report](docs/smollm3-rotary-schedule.md). |
 
 | 2026-11-05 | SmolLM3 real execution reviewed |832tensors/1.730GB authenticated; all7stock/native greedy slots agree. Native512/chunks1,32, overflow/reset pass at1,858,324,290admitted bytes; peakRSS1,820,540,928. Shared probe rechecks Qwen1.5’s prior rows exactly.554default/662Metal and release/strict checks pass. | Astra approves shared probe and scoped real execution; commit. No fullfidelity/quality/Chat/phone claim. NextGranite3.3 metadata/scaling. [Report](docs/smollm3-engine-execution.md). |
+
+| 2026-11-05 | Granite scaling blocks active | Immutable 2.692GB MLX8 payload authenticated; Half scalar contract frozen before native execution. Shared CPU/Metal scaling implemented; typecheck passes. Initial test syntax and fixture-capacity failures preserved. | Correct fixture capacity, run independent CPU/GPU checks and strict suite, then Astra review before commit. Real model and managed Chat remain unqualified. |
+
+| 2026-11-05 | Granite scaling blocks reviewed | Source scalar promotion frozen; independent8case/312stage CPU/Half fixture and1,680GPU snapshots pass.558CPU/667Metal, strict/release checks and exact rounding/padding controls pass. | Astra approves bounded scope; commit blocks. Next real2B512 execution. Initial syntax/capacity/Clippy failures preserved. [Report](docs/granite-scaling-blocks.md). |

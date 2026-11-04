@@ -236,6 +236,10 @@ pub(super) enum Kernel {
     Q4V2CompensatedPrefill,
     AttentionCompensated,
     ResidualClamp,
+    AttentionScaled,
+    ScaleHalf,
+    ResidualScaled,
+    DivideFloat,
 }
 impl Kernel {
     pub fn name(self) -> &'static str {
@@ -265,6 +269,10 @@ impl Kernel {
             "q4_v2_compensated_prefill",
             "attention_compensated",
             "residual_half_clamped",
+            "attention_scaled",
+            "scale_half",
+            "residual_scaled",
+            "divide_float",
         ][self as usize]
     }
 }
@@ -350,6 +358,10 @@ impl Gpu {
             Kernel::Q4V2CompensatedPrefill,
             Kernel::AttentionCompensated,
             Kernel::ResidualClamp,
+            Kernel::AttentionScaled,
+            Kernel::ScaleHalf,
+            Kernel::ResidualScaled,
+            Kernel::DivideFloat,
         ] {
             let f = library
                 .newFunctionWithName(&NSString::from_str(k.name()))

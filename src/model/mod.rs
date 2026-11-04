@@ -9,6 +9,7 @@ use crate::cpu::{self, AttentionShape, finite, length, nonzero, product};
 use std::fmt;
 
 mod cache;
+mod dense_scales;
 pub mod gemma3;
 pub mod gemma_packed;
 pub mod gemma_reference;
@@ -21,6 +22,7 @@ mod trace;
 pub mod window_cache;
 pub(crate) mod window_rows;
 pub(crate) use cache::KvCache;
+pub use dense_scales::DenseScales;
 pub use position::PositionPlan;
 pub use trace::{LayerTrace, Trace};
 
@@ -205,6 +207,7 @@ pub struct Model {
     qk_norms: Option<Vec<QkNormWeights>>,
     position_plan: PositionPlan,
     rotary_layers: Option<Box<[bool]>>,
+    scales: DenseScales,
 }
 
 impl Model {
@@ -302,6 +305,7 @@ impl Model {
             qk_norms,
             position_plan: PositionPlan::Ordinary,
             rotary_layers: None,
+            scales: DenseScales::default(),
         })
     }
 
@@ -331,6 +335,11 @@ impl Model {
 
     pub fn position_plan(&self) -> PositionPlan {
         self.position_plan
+    }
+    pub(crate) fn with_dense_scales(mut self, scales: DenseScales) -> Result<Self, Error> {
+        scales.validate()?;
+        self.scales = scales;
+        Ok(self)
     }
 
     /// Immutable per-layer selection, independent of the rotation convention.
@@ -425,6 +434,7 @@ impl Model {
             logits,
             [1, self.config.hidden_size, self.config.vocab_size],
         )?;
+        self.divide_logits(logits)?;
         Ok(())
     }
 
@@ -449,7 +459,15 @@ impl Model {
                 self.config.vocab_size,
             ],
         )?;
+        self.divide_logits(&mut trace.logits)?;
         Ok(trace)
+    }
+
+    fn divide_logits(&self, logits: &mut [f32]) -> Result<(), Error> {
+        if self.scales.logits_divisor != 1. {
+            cpu::divide_in_place(logits, self.scales.logits_divisor)?;
+        }
+        Ok(())
     }
 
     /// Private session path: stage a chunk at cached_len; the caller commits its
@@ -502,6 +520,7 @@ impl Model {
             logits,
             [rows, self.config.hidden_size, self.config.vocab_size],
         )?;
+        self.divide_logits(logits)?;
         Ok(())
     }
 
@@ -579,6 +598,9 @@ impl Model {
             c.vocab_size,
             c.hidden_size,
         )?;
+        if self.scales.embedding != 1. {
+            cpu::scale_in_place(activation, self.scales.embedding)?;
+        }
         if let Some(trace) = trace.as_deref_mut() {
             trace.embedding.copy_from_slice(activation);
         }
@@ -677,6 +699,23 @@ impl Model {
                         capacity,
                         offset: cached_len,
                     },
+                    self.scales.attention,
+                )?;
+            } else if let Some(multiplier) = self.scales.attention {
+                cpu::attention_scaled(
+                    rotary_q,
+                    rotary_k,
+                    v,
+                    context,
+                    scores,
+                    probabilities,
+                    &AttentionShape {
+                        tokens: n,
+                        query_heads: c.query_heads,
+                        kv_heads: c.kv_heads,
+                        head_dim: c.head_dim,
+                    },
+                    multiplier,
                 )?;
             } else {
                 cpu::attention(
@@ -711,7 +750,11 @@ impl Model {
                 t.attention_context.copy_from_slice(context);
                 t.attention_projection.copy_from_slice(projection);
             }
-            cpu::residual_add(activation, projection)?;
+            if self.scales.residual == 1. {
+                cpu::residual_add(activation, projection)?;
+            } else {
+                cpu::residual_add_scaled(activation, projection, self.scales.residual)?;
+            }
             if let Some(t) = t.as_deref_mut() {
                 t.attention_residual.copy_from_slice(activation);
             }
@@ -753,7 +796,11 @@ impl Model {
                 t.gated.copy_from_slice(gated);
                 t.down_projection.copy_from_slice(projection);
             }
-            cpu::residual_add(activation, projection)?;
+            if self.scales.residual == 1. {
+                cpu::residual_add(activation, projection)?;
+            } else {
+                cpu::residual_add_scaled(activation, projection, self.scales.residual)?;
+            }
             if let Some(t) = t {
                 t.output.copy_from_slice(activation);
             }

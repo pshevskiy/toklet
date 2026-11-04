@@ -6,6 +6,7 @@ use crate::{
 use serde::Deserialize;
 use serde_json::Value;
 use std::collections::BTreeMap;
+mod granite;
 mod smollm3;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -16,6 +17,7 @@ pub enum Architecture {
     Mistral,
     Phi3,
     SmolLm3,
+    Granite,
 }
 impl Architecture {
     pub(crate) const fn has_projection_bias(self) -> bool {
@@ -33,6 +35,7 @@ pub(crate) struct ParsedConfig {
     pub declared_sliding_window: Option<usize>,
     /// Source mask: true applies the positional plan; false leaves Q/K unchanged.
     pub rotary_layers: Option<Vec<bool>>,
+    pub scales: crate::model::DenseScales,
 }
 
 #[derive(Deserialize)]
@@ -143,6 +146,7 @@ pub(crate) fn config(mut value: Value, options: LoadOptions) -> Result<ParsedCon
                 position_plan: PositionPlan::Ordinary,
                 declared_sliding_window: None,
                 rotary_layers: None,
+                scales: Default::default(),
             })
         }
         Some("qwen2") => Ok(ParsedConfig {
@@ -152,9 +156,15 @@ pub(crate) fn config(mut value: Value, options: LoadOptions) -> Result<ParsedCon
             position_plan: PositionPlan::Ordinary,
             declared_sliding_window: None,
             rotary_layers: None,
+            scales: Default::default(),
         }),
         Some("phi3") => super::phi3::config(value, options),
-        Some("llama" | "mistral" | "smollm3") => {
+        Some("llama" | "mistral" | "smollm3" | "granite") => {
+            let scales = if value["model_type"] == "granite" {
+                granite::prepare(&mut value)?
+            } else {
+                Default::default()
+            };
             let rotary_layers = if value["model_type"] == "smollm3" {
                 Some(smollm3::prepare(&mut value)?)
             } else {
@@ -181,6 +191,8 @@ pub(crate) fn config(mut value: Value, options: LoadOptions) -> Result<ParsedCon
                 (Architecture::Llama, "LlamaForCausalLM")
             } else if c.model_type == "smollm3" {
                 (Architecture::SmolLm3, "SmolLM3ForCausalLM")
+            } else if c.model_type == "granite" {
+                (Architecture::Granite, "GraniteForCausalLM")
             } else {
                 (Architecture::Mistral, "MistralForCausalLM")
             };
@@ -202,7 +214,7 @@ pub(crate) fn config(mut value: Value, options: LoadOptions) -> Result<ParsedCon
                 || c.sliding_window.is_some()
             {
                 return Err(invalid(
-                    "only bias-free Llama/Mistral with SiLU, split-half RoPE and full causal attention is supported",
+                    "dense source requires bias-free SiLU, split-half RoPE and full causal attention",
                 ));
             }
             let position_plan = positions(c.rope_scaling, architecture)?;
@@ -268,6 +280,7 @@ pub(crate) fn config(mut value: Value, options: LoadOptions) -> Result<ParsedCon
                 position_plan,
                 declared_sliding_window: None,
                 rotary_layers,
+                scales,
             })
         }
         _ => Err(invalid("unsupported native MLX decoder architecture")),

@@ -91,6 +91,39 @@ pub fn attention(
     probabilities: &mut [f32],
     shape: &AttentionShape,
 ) -> Result<(), Error> {
+    attention_impl::<false>(q, k, v, context, scores, probabilities, shape, 0.)
+}
+
+#[allow(clippy::too_many_arguments)]
+pub fn attention_scaled(
+    q: &[f32],
+    k: &[f32],
+    v: &[f32],
+    context: &mut [f32],
+    scores: &mut [f32],
+    probabilities: &mut [f32],
+    shape: &AttentionShape,
+    multiplier: f32,
+) -> Result<(), Error> {
+    attention_impl::<true>(q, k, v, context, scores, probabilities, shape, multiplier)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn attention_impl<const EXPLICIT: bool>(
+    q: &[f32],
+    k: &[f32],
+    v: &[f32],
+    context: &mut [f32],
+    scores: &mut [f32],
+    probabilities: &mut [f32],
+    shape: &AttentionShape,
+    explicit: f32,
+) -> Result<(), Error> {
+    if EXPLICIT && (!explicit.is_normal() || explicit <= 0.) {
+        return Err(Error::InvalidParameter(
+            "attention multiplier must be positive normal FP32",
+        ));
+    }
     let AttentionShape {
         tokens,
         query_heads,
@@ -121,7 +154,11 @@ pub fn attention(
     finite("k", k)?;
     finite("v", v)?;
     let group = query_heads / kv_heads;
-    let denominator = (head_dim as f32).sqrt();
+    let scale = if EXPLICIT {
+        explicit
+    } else {
+        (head_dim as f32).sqrt()
+    };
     for head in 0..query_heads {
         let kv_head = head / group;
         for query in 0..tokens {
@@ -133,7 +170,7 @@ pub fn attention(
                 for feature in 0..head_dim {
                     dot += q[q_start + feature] * k[k_start + feature];
                 }
-                let score = dot / denominator;
+                let score = if EXPLICIT { dot * scale } else { dot / scale };
                 if !score.is_finite() {
                     return Err(Error::NonFinite {
                         tensor: "attention scores",
@@ -207,6 +244,39 @@ pub fn attention_cached(
     probabilities: &mut [f32],
     shape: &CachedAttentionShape,
 ) -> Result<(), Error> {
+    attention_cached_impl::<false>(q, k, v, context, scores, probabilities, shape, 0.)
+}
+
+#[allow(clippy::too_many_arguments)]
+pub fn attention_cached_scaled(
+    q: &[f32],
+    k: &[f32],
+    v: &[f32],
+    context: &mut [f32],
+    scores: &mut [f32],
+    probabilities: &mut [f32],
+    shape: &CachedAttentionShape,
+    multiplier: f32,
+) -> Result<(), Error> {
+    attention_cached_impl::<true>(q, k, v, context, scores, probabilities, shape, multiplier)
+}
+
+#[allow(clippy::too_many_arguments)]
+fn attention_cached_impl<const EXPLICIT: bool>(
+    q: &[f32],
+    k: &[f32],
+    v: &[f32],
+    context: &mut [f32],
+    scores: &mut [f32],
+    probabilities: &mut [f32],
+    shape: &CachedAttentionShape,
+    explicit: f32,
+) -> Result<(), Error> {
+    if EXPLICIT && (!explicit.is_normal() || explicit <= 0.) {
+        return Err(Error::InvalidParameter(
+            "attention multiplier must be positive normal FP32",
+        ));
+    }
     let CachedAttentionShape {
         tokens,
         query_heads,
@@ -250,7 +320,11 @@ pub fn attention_cached(
         finite("v cache prefix", &v[start..start + end * head_dim])?;
     }
     let group = query_heads / kv_heads;
-    let denominator = (head_dim as f32).sqrt();
+    let scale = if EXPLICIT {
+        explicit
+    } else {
+        (head_dim as f32).sqrt()
+    };
     for head in 0..query_heads {
         let kv_start = (head / group) * head_stride;
         for query in 0..tokens {
@@ -262,7 +336,7 @@ pub fn attention_cached(
                 for feature in 0..head_dim {
                     dot += q[q_start + feature] * k[start + feature];
                 }
-                *score = dot / denominator;
+                *score = if EXPLICIT { dot * scale } else { dot / scale };
                 if !score.is_finite() {
                     return Err(Error::NonFinite {
                         tensor: "attention scores",

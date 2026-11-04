@@ -11,6 +11,7 @@ use std::fmt;
 mod attention;
 mod causal_conv;
 mod dense_decoder;
+mod dense_scaling;
 mod gated_delta;
 mod gelu;
 mod llama3_rotary;
@@ -22,12 +23,16 @@ mod span_attention;
 mod tiled;
 mod window_attention;
 
-pub use attention::{AttentionShape, CachedAttentionShape, attention, attention_cached, rotary};
+pub use attention::{
+    AttentionShape, CachedAttentionShape, attention, attention_cached, attention_cached_scaled,
+    attention_scaled, rotary,
+};
 pub use causal_conv::causal_depthwise_conv_step;
 pub use dense_decoder::{
     DenseDecoderScratch, DenseDecoderShape, DenseDecoderWeights, PerLayerGateWeights,
     finish_dense_decoder,
 };
+pub use dense_scaling::{divide_in_place, residual_add_scaled, scale_in_place};
 pub use gated_delta::{
     GatedDeltaShape, gated_delta_gates, gated_delta_normalize, gated_delta_step,
 };

@@ -323,8 +323,14 @@ mod tests {
         let o = options();
         validate_options(true, Some(Architecture::Qwen3), &c, o).unwrap();
         assert!(validate_options(false, Some(Architecture::Qwen3), &c, o).is_err());
-        for architecture in [None, Some(Architecture::Qwen2), Some(Architecture::Llama)] {
+        for architecture in [
+            None,
+            Some(Architecture::Qwen2),
+            Some(Architecture::Llama),
+            Some(Architecture::Granite),
+        ] {
             assert!(validate_options(true, architecture, &c, o).is_err());
+            assert!(validate_options8192(true, architecture, &c, o).is_err());
         }
         for capacity in [0, 4097, 40960, usize::MAX] {
             assert!(

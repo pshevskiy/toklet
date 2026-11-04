@@ -39,6 +39,7 @@ fn wrapper(source: weights::Source) -> Source {
         tied_output: true,
         position_plan: crate::model::PositionPlan::Ordinary,
         rotary_layers: None,
+        scales: Default::default(),
         logical: logical::plan(&tensors, &[]).unwrap(),
         tensors,
         source,

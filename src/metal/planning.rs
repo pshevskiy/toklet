@@ -108,7 +108,8 @@ pub(super) fn native_attention_mode(architecture: Option<Architecture>) -> Atten
             | Architecture::Mistral
             | Architecture::Qwen3
             | Architecture::Phi3
-            | Architecture::SmolLm3,
+            | Architecture::SmolLm3
+            | Architecture::Granite,
         ) => AttentionMode::Reference,
     }
 }
@@ -117,6 +118,11 @@ pub(super) fn validate_attention(
     architecture: Option<Architecture>,
     mode: AttentionMode,
 ) -> Result<()> {
+    if architecture == Some(Architecture::Granite) && mode != AttentionMode::Reference {
+        return Err(Error::Unsupported(
+            "Granite requires scaled Reference attention",
+        ));
+    }
     if mode == AttentionMode::Online
         && matches!(
             architecture,
@@ -1370,6 +1376,17 @@ mod tests {
             (Some(Architecture::Qwen3), AttentionMode::Reference),
         ] {
             assert_eq!(native_attention_mode(architecture), expected);
+        }
+    }
+    #[test]
+    fn granite_requires_reference_before_device_creation() {
+        assert_eq!(
+            native_attention_mode(Some(Architecture::Granite)),
+            AttentionMode::Reference
+        );
+        assert!(validate_attention(Some(Architecture::Granite), AttentionMode::Reference).is_ok());
+        for mode in [AttentionMode::Online, AttentionMode::CompensatedReference] {
+            assert!(validate_attention(Some(Architecture::Granite), mode).is_err());
         }
     }
     #[test]

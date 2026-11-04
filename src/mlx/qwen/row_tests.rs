@@ -33,6 +33,7 @@ pub(super) fn wrapper(source: weights::Source, storage: Storage, shape: Vec<usiz
         tied_output: true,
         position_plan: crate::model::PositionPlan::Ordinary,
         rotary_layers: None,
+        scales: Default::default(),
         tensors: tensors.clone(),
         logical: logical::plan(&tensors, &[]).unwrap(),
         source,

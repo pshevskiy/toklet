@@ -5,6 +5,8 @@ mod capture;
 mod causal_conv3_half;
 #[cfg(test)]
 mod compensated_attention;
+#[cfg(test)]
+mod dense_scale_tests;
 mod diagnostic;
 #[cfg(test)]
 mod half_consistency;
@@ -202,6 +204,9 @@ pub struct Model {
     norm: Tensor,
     layers: Vec<Layer>,
     weight_bytes: usize,
+    scales: model::DenseScales,
+    half_embedding: Option<u16>,
+    half_residual: Option<u16>,
     positional: Option<llama3_rotary::Operation>,
     mlx_architecture: Option<crate::mlx::dense::Architecture>,
     // Set only by the explicit validated0.6B long-context diagnostic loader.
@@ -579,6 +584,11 @@ impl Model {
                 source.architecture() == crate::mlx::dense::Architecture::Qwen3,
             )?;
             model.mlx_architecture = Some(source.architecture());
+            model.scales = source.dense_scales();
+            model.half_embedding = (model.scales.embedding != 1.)
+                .then(|| half::f16::from_f32(model.scales.embedding).to_bits());
+            model.half_residual = (model.scales.residual != 1.)
+                .then(|| half::f16::from_f32(model.scales.residual).to_bits());
             if let Some(mask) = source.rotary_layers() {
                 for (layer, &enabled) in model.layers.iter_mut().zip(mask) {
                     layer.use_rotary = enabled;
@@ -818,6 +828,9 @@ impl Model {
             norm,
             layers,
             weight_bytes,
+            scales: model::DenseScales::default(),
+            half_embedding: None,
+            half_residual: None,
             positional: None,
             mlx_architecture: None,
             qwen3_context_diagnostic: false,
@@ -1438,6 +1451,16 @@ impl<'m> Session<'m> {
                 None,
             )?;
         }
+        if let Some(factor) = self.model.half_embedding {
+            g.encode(
+                &command,
+                Kernel::ScaleHalf,
+                &[&s.x.raw],
+                &[n as u32, h as u32, self.h.stride as u32, u32::from(factor)],
+                n * h,
+                Some(&s.status),
+            )?;
+        }
         self.snapshot(&command, None, "embedding", &s.x.raw)?;
         for (layer_index, (layer, cache)) in self.model.layers.iter().zip(&self.cache).enumerate() {
             rms(
@@ -1643,6 +1666,26 @@ impl<'m> Session<'m> {
                     attention_shape,
                     &s.status,
                 )?,
+                (AttentionMode::Reference, None) if self.model.scales.attention.is_some() => {
+                    let mut shape = [0; 9];
+                    shape[..8].copy_from_slice(&attention_shape);
+                    shape[8] = self.model.scales.attention.unwrap().to_bits();
+                    g.encode(
+                        &command,
+                        Kernel::AttentionScaled,
+                        &[
+                            &q_rotary.raw,
+                            &cache.k.raw,
+                            &cache.v.raw,
+                            &s.scores.raw,
+                            &s.probs.raw,
+                            &s.context.raw,
+                        ],
+                        &shape,
+                        n * c.query_heads,
+                        Some(&s.status),
+                    )?;
+                }
                 (AttentionMode::Reference | AttentionMode::CompensatedReference, _) => g.encode(
                     &command,
                     if self.attention_mode == AttentionMode::CompensatedReference {
@@ -1703,13 +1746,14 @@ impl<'m> Session<'m> {
                 "attention_projection",
                 &s.delta.raw,
             )?;
-            g.encode(
+            scaled_residual(
+                g,
                 &command,
-                Kernel::Residual,
-                &[&s.x.raw, &s.delta.raw],
-                &[(n * h) as u32],
-                n * h,
-                Some(&s.status),
+                &s.x,
+                &s.delta,
+                [n, h, self.h.stride],
+                self.model.half_residual,
+                &s.status,
             )?;
             self.snapshot(&command, Some(layer_index), "attention_residual", &s.x.raw)?;
             rms(
@@ -1799,13 +1843,14 @@ impl<'m> Session<'m> {
                 &s.status,
             )?;
             self.snapshot(&command, Some(layer_index), "down", &s.delta.raw)?;
-            g.encode(
+            scaled_residual(
+                g,
                 &command,
-                Kernel::Residual,
-                &[&s.x.raw, &s.delta.raw],
-                &[(n * h) as u32],
-                n * h,
-                Some(&s.status),
+                &s.x,
+                &s.delta,
+                [n, h, self.h.stride],
+                self.model.half_residual,
+                &s.status,
             )?;
             self.snapshot(&command, Some(layer_index), "output", &s.x.raw)?;
         }
@@ -1872,6 +1917,21 @@ impl<'m> Session<'m> {
                 self.f,
                 logit_rows,
                 c.vocab_size,
+            )?;
+        }
+        if self.model.scales.logits_divisor != 1. {
+            g.encode(
+                &command,
+                Kernel::DivideFloat,
+                &[&s.floats.raw],
+                &[
+                    logit_rows as u32,
+                    c.vocab_size as u32,
+                    self.f.stride as u32,
+                    self.model.scales.logits_divisor.to_bits(),
+                ],
+                logit_rows * c.vocab_size,
+                Some(&s.status),
             )?;
         }
         if self.readback_mode == ReadbackMode::FullLogits || all_logits {
@@ -1966,6 +2026,36 @@ impl<'m> Session<'m> {
             readback_seconds,
             command_count: 1,
         })
+    }
+}
+fn scaled_residual(
+    g: &Gpu,
+    c: &Command<'_>,
+    x: &Buffer<u16>,
+    delta: &Buffer<u16>,
+    shape: [usize; 3],
+    factor: Option<u16>,
+    status: &Buffer<u32>,
+) -> Result<()> {
+    let [rows, width, stride] = shape;
+    if let Some(factor) = factor {
+        g.encode(
+            c,
+            Kernel::ResidualScaled,
+            &[&x.raw, &delta.raw],
+            &[rows as u32, width as u32, stride as u32, u32::from(factor)],
+            rows * width,
+            Some(status),
+        )
+    } else {
+        g.encode(
+            c,
+            Kernel::Residual,
+            &[&x.raw, &delta.raw],
+            &[(rows * width) as u32],
+            rows * width,
+            Some(status),
+        )
     }
 }
 #[allow(clippy::too_many_arguments)]

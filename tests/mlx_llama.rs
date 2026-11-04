@@ -880,3 +880,141 @@ fn smollm3_implicit_tying_requires_one_table_and_explicit_layer_semantics() {
         assert!(Source::open_dense(&a.0, options()).is_err());
     }
 }
+
+#[test]
+fn granite_scalar_graph_and_cache_match_independent_source() {
+    let raw = include_bytes!("fixtures/granite-half-graph-v1/fixture.json");
+    assert_eq!(
+        format!("{:x}", Sha256::digest(raw)),
+        "852711a8bfffd68f389f5db8a987ff6e4f56dd5e5d747bcbe89cccb089b58dd9"
+    );
+    let f: Value = serde_json::from_slice(raw).unwrap();
+    for variant in ["tied", "untied"] {
+        let a = CopyArtifact::new(variant);
+        let mut config = f["config_templates"][variant].clone();
+        config["max_position_embeddings"] = json!(512);
+        fs::write(
+            a.0.join("config.json"),
+            serde_json::to_vec(&config).unwrap(),
+        )
+        .unwrap();
+        let source = Source::open_dense(
+            &a.0,
+            LoadOptions {
+                context_limit: 512,
+                ..options()
+            },
+        )
+        .unwrap();
+        assert_eq!(source.architecture(), Architecture::Granite);
+        assert_eq!(source.dense_scales().attention, Some(0.015625));
+        assert_eq!(source.dense_scales().embedding, 12.);
+        let loaded = reference::load_dense(
+            &a.0,
+            LoadOptions {
+                context_limit: 512,
+                ..options()
+            },
+        )
+        .unwrap();
+        for case in f["cases"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter(|c| c["variant"] == variant)
+        {
+            let ids = tokens(&case["tokens"]);
+            let offset = case["position_offset"].as_u64().unwrap() as usize;
+            let expected = |name: &str| {
+                case["arrays"][name]["cpu_bits"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|v| f32::from_bits(v.as_u64().unwrap() as u32))
+                    .collect::<Vec<_>>()
+            };
+            let mut scratch = loaded.model.scratch(ids.len()).unwrap();
+            let trace = loaded
+                .model
+                .forward_diagnostic(&ids, offset, &mut scratch)
+                .unwrap();
+            assert_eq!(values(&trace).len(), 39);
+            for (name, actual) in values(&trace) {
+                close(actual, &expected(&name));
+            }
+            let logits = expected("logits");
+            for chunk in [1, 3] {
+                let mut s = Session::new(
+                    &loaded.model,
+                    session::Options {
+                        capacity: 512 - offset,
+                        prefill_chunk_size: chunk,
+                        position_offset: offset,
+                        memory_limit_bytes: 128 * 1024 * 1024,
+                    },
+                )
+                .unwrap();
+                s.append(&ids[..2]).unwrap();
+                s.evaluate().unwrap();
+                s.append(&ids[2..]).unwrap();
+                s.evaluate().unwrap();
+                close(s.logits().unwrap(), &logits[logits.len() - 64..]);
+                s.reset();
+                s.set_tokens(&ids).unwrap();
+                s.evaluate().unwrap();
+                close(s.logits().unwrap(), &logits[logits.len() - 64..]);
+            }
+        }
+    }
+}
+
+#[test]
+fn granite_requires_valid_explicit_scales() {
+    let f: Value = serde_json::from_slice(include_bytes!(
+        "fixtures/granite-half-graph-v1/fixture.json"
+    ))
+    .unwrap();
+    for name in [
+        "embedding_multiplier",
+        "attention_multiplier",
+        "residual_multiplier",
+        "logits_scaling",
+    ] {
+        for value in [
+            json!(null),
+            json!(0),
+            json!(-1),
+            json!(true),
+            json!(1e99),
+            json!(1e-99),
+        ] {
+            let a = CopyArtifact::new("tied");
+            fs::write(
+                a.0.join("config.json"),
+                serde_json::to_vec(&f["config_templates"]["tied"]).unwrap(),
+            )
+            .unwrap();
+            a.config(name, value);
+            assert!(
+                Source::open_dense(
+                    &a.0,
+                    LoadOptions {
+                        context_limit: 512,
+                        ..options()
+                    }
+                )
+                .is_err(),
+                "{name}"
+            );
+        }
+    }
+    assert_eq!(f["scale_omissions_detected"].as_array().unwrap().len(), 5);
+    assert_ne!(
+        f["residual_witness"]["expected"],
+        f["residual_witness"]["wrong_fused"]
+    );
+    assert_ne!(
+        f["coefficient_witness"]["expected"],
+        f["coefficient_witness"]["wrong_fp32_coefficient"]
+    );
+}

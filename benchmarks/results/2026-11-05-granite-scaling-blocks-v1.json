@@ -1,0 +1,23 @@
+{
+  "format": "toklet-granite-scaling-blocks-v1",
+  "hardware": "Apple M1 Pro",
+  "passed": true,
+  "fixture_sha256": "852711a8bfffd68f389f5db8a987ff6e4f56dd5e5d747bcbe89cccb089b58dd9",
+  "fixture_cases": 8,
+  "fixture_stages": 312,
+  "cpu_passed": 558,
+  "metal_passed": 667,
+  "granite_gpu_snapshots": 1680,
+  "granite_gpu_values": 110208,
+  "explicit_gpu_tests": 6,
+  "checks": "artifacts/granite33-block-checks-2026-11-05/full-v2/checks.json",
+  "logs": [
+    "artifacts/granite33-block-checks-2026-11-05/gpu.stdout",
+    "artifacts/granite33-block-checks-2026-11-05/gpu.stderr",
+    "artifacts/granite33-block-checks-2026-11-05/pointwise.stdout",
+    "artifacts/granite33-block-checks-2026-11-05/pointwise.stderr"
+  ],
+  "source_scalar_experiment": "artifacts/granite33-inventory-2026-11-05/scalar-probe.json",
+  "scope": "Tiny blocks only; no real checkpoint, full fidelity, quality, performance, app or phone qualification",
+  "review": "Astra approved bounded block scope; no actionable findings"
+}

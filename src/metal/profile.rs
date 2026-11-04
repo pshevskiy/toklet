@@ -308,7 +308,9 @@ impl Session<'_> {
                 .filter(|layer| layer.qk_norms.is_some())
                 .count()
             + if half_compensated { 4 } else { 6 }
-            + usize::from(self.readback_mode == super::ReadbackMode::GreedyToken);
+            + usize::from(self.readback_mode == super::ReadbackMode::GreedyToken)
+            + usize::from(self.model.half_embedding.is_some())
+            + usize::from(self.model.scales.logits_divisor != 1.);
         if events > MAX_EVENTS {
             return Err(Error::Unsupported(
                 "model profiling exceeds admitted counter capacity",

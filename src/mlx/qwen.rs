@@ -153,6 +153,7 @@ pub struct Source {
     tied_output: bool,
     position_plan: crate::model::PositionPlan,
     rotary_layers: Option<Vec<bool>>,
+    scales: crate::model::DenseScales,
     tensors: BTreeMap<String, TensorSpec>,
     logical: BTreeMap<String, LogicalTensorSpec>,
     source: weights::Source,
@@ -420,6 +421,7 @@ impl Source {
             position_plan,
             declared_sliding_window,
             rotary_layers,
+            scales,
         } = if allow_dense {
             dense::config(document, options)?
         } else {
@@ -430,6 +432,7 @@ impl Source {
                 position_plan: crate::model::PositionPlan::Ordinary,
                 declared_sliding_window: None,
                 rotary_layers: None,
+                scales: Default::default(),
             }
         };
         if let Some((profile, _)) = dense_config {
@@ -596,6 +599,7 @@ impl Source {
             tied_output,
             position_plan,
             rotary_layers,
+            scales,
             tensors,
             logical: BTreeMap::new(),
             source,
@@ -633,6 +637,9 @@ impl Source {
     }
     pub fn rotary_layers(&self) -> Option<&[bool]> {
         self.rotary_layers.as_deref()
+    }
+    pub fn dense_scales(&self) -> crate::model::DenseScales {
+        self.scales
     }
     pub fn tensors(&self) -> &BTreeMap<String, TensorSpec> {
         &self.tensors

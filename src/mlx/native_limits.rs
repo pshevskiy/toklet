@@ -149,6 +149,7 @@ pub fn inspect(directory: &Path, profile: LoadProfile) -> Report {
         Architecture::Mistral => "mistral",
         Architecture::Phi3 => "phi3",
         Architecture::SmolLm3 => "smollm3",
+        Architecture::Granite => "granite",
     });
     report.declared_total_positions = Some(source.declared_positions());
     report.tensor_metadata_validated = true;

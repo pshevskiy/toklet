@@ -7,7 +7,7 @@ M8 is not retrospectively declared fully qualified on iPhone.
 
 Current priority, clarified by the user: **new models first**. Qwen1.5 and
 SmolLM3 real Mac512 execution now pass their scoped checks; Granite3.3-2B
-MLX8 is next, using checkpoint-defined scaling with shared dense blocks. Qualify1.5B
+MLX8 is next, using checkpoint-defined scaling with shared dense blocks. Qualify Granite
 before P0, then select another fitting architecture with Astra. Performance
 work follows demonstrated needs; the draft P0 worker is preserved unreviewed
 outside Cargo in `artifacts/m9-p0-deferred-2026-11-05/`.

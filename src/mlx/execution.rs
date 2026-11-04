@@ -67,6 +67,16 @@ fn source_position_limits(
     diagnostic_cap: Option<usize>,
 ) -> Result<NativePositionLimits, GeometryError> {
     use crate::mlx::{dense::Architecture, qwen::Storage};
+    for factor in [
+        source.dense_scales().embedding,
+        source.dense_scales().residual,
+    ] {
+        if !half::f16::from_f32(factor).is_normal() {
+            return Err(GeometryError::Unsupported(
+                "dense Half coefficients must remain normal and positive",
+            ));
+        }
+    }
     if source.position_plan() != model::PositionPlan::Ordinary
         && source.architecture() != Architecture::Llama
     {
@@ -290,7 +300,10 @@ fn check_context(
             Architecture::Mistral => {
                 "Metal requires qualified full-attention Mistral geometry and at most 512 positions"
             }
-            Architecture::Llama | Architecture::Phi3 | Architecture::SmolLm3 => {
+            Architecture::Llama
+            | Architecture::Phi3
+            | Architecture::SmolLm3
+            | Architecture::Granite => {
                 "Metal dense initial implemented context is at most 512 positions"
             }
             Architecture::Qwen2 => unreachable!("Qwen2 has no extra graph cap"),
@@ -339,7 +352,10 @@ fn metal_geometry_context_cap(
             qwen_geometry(c)?;
             Ok(None)
         }
-        Architecture::Llama | Architecture::Phi3 | Architecture::SmolLm3 => {
+        Architecture::Llama
+        | Architecture::Phi3
+        | Architecture::SmolLm3
+        | Architecture::Granite => {
             c.validate()
                 .map_err(|_| GeometryError::Invalid("invalid dense model configuration"))?;
             if !c.rms_norm_eps.is_normal() {
@@ -751,7 +767,10 @@ mod tests {
             assert!(metal_geometry(&c, architecture).is_ok());
             let expected_cap = match architecture {
                 Architecture::Qwen2 => None,
-                Architecture::Llama | Architecture::Phi3 | Architecture::SmolLm3 => Some(512),
+                Architecture::Llama
+                | Architecture::Phi3
+                | Architecture::SmolLm3
+                | Architecture::Granite => Some(512),
                 Architecture::Qwen3 | Architecture::Mistral => Some(positions),
             };
             assert_eq!(
