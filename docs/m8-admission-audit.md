@@ -2,8 +2,8 @@
 
 5 November 2026, after `aa7b3bf`. **The Mac delivery has five managed profiles
 and four additional diagnostic architectures; arbitrary MLX models are not
-supported. M8 is not fully closed: a production Mac app process-memory journey and
-physical iPhone14Pro Settings/journeys remain unverified.** Rejected Gemma candidates stay unavailable in ordinary Chat.
+supported. M8 is not fully closed: physical iPhone14Pro Settings/journeys remain unverified. The representative
+production Mac process-memory gap identified below is now closed in its measured scope.** Rejected Gemma candidates stay unavailable in ordinary Chat.
 
 The [coverage table](model-coverage.md) is the current artifact/route/device
 index. Match it against `ModelHub.swift` and `NativeAcceptedIdentity.swift`,
@@ -55,3 +55,7 @@ read-only host device inventory also shows the intended14Pro disconnected.
 Catalog/identity agreement, six approved result flags,303 local links, unchanged
 Rust inputs and whitespace pass. This publishes decisions without declaring
 M8 complete. [Audit evidence](../benchmarks/results/2026-11-05-m8-admission-audit-v1.json).
+
+Update: the [production Mac Qwen2 witness](mac-production-memory.md) closes the
+representative whole-app requirement after Astra review. Other profiles’
+production peaks remain unmeasured; no phone or new Gemma admission follows.

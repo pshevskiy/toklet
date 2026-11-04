@@ -9934,3 +9934,11 @@ diagnostic/rejected scopes; correct completed Mistral/Llama parents. Catalog,
 receipt/link/source checks and Astra review pass. Production Mac app process
 peak and physical14Pro checks remain open; M8 is not declared complete.
 [Audit](m8-admission-audit.md).
+
+## 5 November 2026 — Measure the production Mac app
+
+Unmodified production Qwen2 at512/chunk32/reply128 completes load→reply→quit.
+LifetimeRSS816.7MB and observedphysical728.1MB fit its1.5GiB allowance. Source,
+model, owned-process/workspace guards, saved replay and Astra review pass;
+failed UI attempt remains. Otherprofile/phone peaks stay unmeasured.
+[Report](mac-production-memory.md).

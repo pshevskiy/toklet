@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active milestone: **M8**.
-Current task: **Production Mac app load→reply process-memory audit; preserve workspace and bind exact profile/config/budget. Physical iPhone14Pro disconnected; Gemma Q4/Q8 remain rejected/excluded**.
+Current task: **M8 physical iPhone14Pro Settings/journeys await device connection. Representative production Mac memory passes; Gemma Q4/Q8 stay rejected/excluded. M9 baseline runs wait for milestone decision**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -522,8 +522,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
   - [x] Join both original-quality gates for the pinned numerical/text configuration; [decision](docs/llama3-quality-qualification.md). App/device adoption remains separate.
 - [x] Publish supported context/KV settings, evidence and explicit admission decisions;
   [M8 audit](docs/m8-admission-audit.md). This does not close remaining verification.
-- [ ] Externally measure production Mac app load→reply process peak with exact
-  bundle/profile/config and budget; helper/controller peaks do not qualify it.
+- [x] Representative production Mac Qwen2 load→reply→quit process-memory check;
+  exact bundle/profile/config, external peaks and Astra review pass.
+  [Report](docs/mac-production-memory.md). Other four production-profile peaks remain unmeasured.
 - [ ] Confirm required checks/reviews/commits and update this checklist and
   the improvement record. Do not infer support from a family name alone.
 
@@ -1236,3 +1237,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Gemma8 feasibility reviewed | Immutable metadata/two-shard headers validate1096selected tensors,4,918,123,078bytes, exact text config/tokenizer. Existing512/chunk32 owner estimate exceeds6GiB by102,686,350bytes before Q8extras. | No weight payload, stockload or kernels. Astra approves planning rejection; next M8 capability/admission reconciliation. Fetch failures preserved. [Report](docs/gemma8-feasibility.md). |
 
 | 2026-11-05 | M8 admission reconciliation reviewed | Five managed Mac profiles and four diagnostics checked against current catalog/evidence. Correct stale Mistral/Llama parents; preserve Gemma rejection/exclusion and physical phone gaps. | 303local links, six approved receipt decisions, unchanged engine inputs and Astra audit pass. New desktop gap: production app process peak; physical14Prodisconnected. No expanded support/device/performance claim. [Audit](docs/m8-admission-audit.md). |
+
+| 2026-11-05 | Production Mac memory reviewed | Unmodified optimized app cached-loads Qwen2 at512/chunk32/reply128, displays reply and quits0; RSS816,709,632 / observedphysical728,090,064bytes <1.5GiB. Exact bundle/model/workspace/owned-PID guards and saved replay pass. | First900sUItimeout and separate empty relaunch preserved; freshrootrepeat succeeds. Astra approves representative whole-app check; commit evidence. Otherprofile/phone peaks unclaimed. [Report](docs/mac-production-memory.md). |

@@ -59,3 +59,8 @@ original scope; the new Settings, Llama, wider context and diagnostic adapters
 have no new phone qualification. Mac compilation or a different Pro Max cannot
 substitute for it. Fresh production transfer/Stop/offline evidence now covers all five adopted Mac
 profiles; [journey report](mac-hub-journeys.md). Phone evidence remains separate.
+
+The [representative production Mac Qwen2 journey](mac-production-memory.md)
+measures lifetimeRSS816,709,632bytes and greatest observed pre-exit physical
+high-water728,090,064bytes below its1.5GiB profile allowance at512/chunk32/
+reply128. The other four managed profiles have no new production-app peaks.
