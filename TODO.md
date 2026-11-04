@@ -1,9 +1,9 @@
 # Toklet progress checklist
 
-Last updated: **5 November 2026**. Active milestone: **M8**.
-Current task: **M8 physical iPhone14Pro Settings/journeys await device connection. Representative production Mac memory passes; Gemma Q4/Q8 stay rejected/excluded. M9 baseline runs wait for milestone decision**.
+Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
+Current task: **P0 native Qwen2.5 MLX8 profiling/timing worker with complete chunk labels; next real1.5B dense qualification, then one measured optimization. [Queue](docs/mac-coverage-performance-next.md)**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
-Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
+Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
 Completed B5f1: owner snapshot and explicit context/text facts; [evidence](benchmarks/results/2026-11-02-session-owner-memory-v1.json).
@@ -530,9 +530,10 @@ uses the existing full saved-conversation reset+prompt path on Send.
 
 ## M9 — Next performance milestone
 
-First delivery: **P0 → one selected P1 candidate → P2**.
+First delivery: **P0 → one selected P1 candidate → P2**, with independent
+[Mac1.5B coverage qualification](docs/mac-coverage-performance-next.md). iPhone work is deferred.
 
-- [ ] P0: rebaseline the pinned Qwen2.5 MLX8 workload on the final M8 revision;
+- [ ] P0: rebaseline the pinned Qwen2.5 MLX8 workload on the recorded Mac queue revision;
   collect bounded, correctly labelled profiles and uninstrumented timings.
 - [ ] P0: rank normalization/projection costs and freeze a primary metric and
   comparison contract. Record Mac and iPhone evidence independently.
@@ -1239,3 +1240,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | M8 admission reconciliation reviewed | Five managed Mac profiles and four diagnostics checked against current catalog/evidence. Correct stale Mistral/Llama parents; preserve Gemma rejection/exclusion and physical phone gaps. | 303local links, six approved receipt decisions, unchanged engine inputs and Astra audit pass. New desktop gap: production app process peak; physical14Prodisconnected. No expanded support/device/performance claim. [Audit](docs/m8-admission-audit.md). |
 
 | 2026-11-05 | Production Mac memory reviewed | Unmodified optimized app cached-loads Qwen2 at512/chunk32/reply128, displays reply and quits0; RSS816,709,632 / observedphysical728,090,064bytes <1.5GiB. Exact bundle/model/workspace/owned-PID guards and saved replay pass. | First900sUItimeout and separate empty relaunch preserved; freshrootrepeat succeeds. Astra approves representative whole-app check; commit evidence. Otherprofile/phone peaks unclaimed. [Report](docs/mac-production-memory.md). |
+
+| 2026-11-05 | User defers iPhone / Mac queue revised | Astra selects current0.5B P0, real1.5B shared-dense qualification and one measured P1/P2 improvement. Phone/fidelity failures preserved; no arbitrary-model claim. | Begin nativeMLX8 profiling worker; separate timings, full chunk labels, bounded memory. [Queue](docs/mac-coverage-performance-next.md). |

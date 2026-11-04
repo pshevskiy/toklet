@@ -1,6 +1,9 @@
 # M9 — Measured performance improvements
 
-Planned next milestone after the active [M8 shared-block and capacity work](shared-block-model-plan.md).
+Active Mac work following the [M8 shared-block and capacity work](shared-block-model-plan.md).
+On5November the user deferred iPhone verification and authorized the
+[Mac coverage/performance queue](mac-coverage-performance-next.md); device gaps
+do not block its Mac baseline. Previous evidence keeps its original scope.
 Requested by the user on 28 October 2026. Source:
 [Toklet next performance improvement plan](https://chatgpt.com/space/page_18e155f0450c8191a76010b2b26832a5),
 Page sequence 2, updated `2026-10-28T05:53:35.133190Z`.
@@ -17,7 +20,7 @@ improvement-record update and a commit.
 
 | Task | Delivery and decision |
 | --- | --- |
-| P0: baseline | Refresh the pinned MLX8 configuration on the completed M8 revision. Collect bounded operator profiles and separate uninstrumented completed-work timings. Cover every relevant prefill chunk or label sampled offsets explicitly. Rank normalization versus affine projection cost and freeze the primary metric before coding. |
+| P0: baseline | Refresh the pinned MLX8 configuration on the recorded Mac queue revision. Collect bounded operator profiles and separate uninstrumented completed-work timings. Cover every relevant prefill chunk or label sampled offsets explicitly. Rank normalization versus affine projection cost and freeze the primary metric before coding. |
 | P1A or P1B | Choose parallel Compensated RMSNorm if normalization has a useful cost budget, or a four-token native MLX affine prefill tile if projection reuse is more promising. Preserve the current path and change one mechanism. If neither is useful, record why and select the observed bottleneck. |
 | P2: decision | Apply the unchanged numerical, held-out quality, session/state and memory gates. Confirm useful end-to-end performance independently with matched conditions. Adopt only the validated device/configuration or record the rejection and remove unused complexity. |
 

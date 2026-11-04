@@ -9942,3 +9942,10 @@ LifetimeRSS816.7MB and observedphysical728.1MB fit its1.5GiB allowance. Source,
 model, owned-process/workspace guards, saved replay and Astra review pass;
 failed UI attempt remains. Otherprofile/phone peaks stay unmeasured.
 [Report](mac-production-memory.md).
+
+## 5 November 2026 — Refocus on Mac coverage and performance
+
+User defers iPhone; Astra recommends0.5B profiling, real1.5B shared-dense
+qualification and one measured optimization. Preserve device/rejected gates;
+separate architecture execution, app admission and performance claims.
+[Queue](mac-coverage-performance-next.md).
