@@ -9815,3 +9815,10 @@ Stock execution confirms an upstream cached/fresh BF16 tie difference. Uniform
 first-mismatch repair discards the suffix and rechecks every decision; HumanEval17
 passes247IDs after one repair. Three controls and Astra review pass below6GiB.
 The original rejection and full-task/adoption limits remain. [Report](gemma-task-recovery.md).
+
+## 4 November 2026 — Gemma grading adapter preparation
+
+Gemma inference admission maps exact literal scoring fields to the unchanged
+qualified isolated grader. Seven controls and Astra review pass, including
+worker/journal hash binding and pre-VM rejection. No generated code executed;
+full source completion/paired grading remains pending. [Report](gemma-task-grading.md).

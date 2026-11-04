@@ -1,0 +1,30 @@
+{
+  "format": "toklet-gemma-task-grading-preparation-v1",
+  "astra_review": "approved preparation after both-role worker/journal hash binding and alternate-valid-journal negative control",
+  "checks": {
+    "results_controls": 5,
+    "adapter_controls": 2,
+    "rust_inputs_unchanged": true
+  },
+  "preparation": {
+    "passed": true,
+    "literal_grading_fields_equal": 100,
+    "native_records_admitted": 100,
+    "tokenizer_authenticated": true,
+    "tokenizer_decoding_executed": false,
+    "vm_started": false,
+    "vm_initially_stopped": true,
+    "podman_hash_matches_qualified": true,
+    "source_model_still_running": true,
+    "grading_executed": false
+  },
+  "receipts_sha256": {
+    "artifacts/gemma-task-grading-2026-11-04/controls-final.log": "0875262717c964fa9c1052eb8043695be234f5992de3d5f444986619abb2c1c4",
+    "artifacts/gemma-task-grading-2026-11-04/adapter-controls-receipt-fix.log": "b5632033147462541d508b3609d8805646f241acd8fbe996153ace10f66ca14a",
+    "artifacts/gemma-task-grading-2026-11-04/preparation.json": "c7ea63debe8475fd4a731634056d8f108496c5ef0b3948188dcab2ad2414e718",
+    "artifacts/gemma-task-grading-2026-11-04/prepare-check.py": "08c944360d836075a81dfc2a07d134d4b37ec55719f85d754885def6b5b83468"
+  },
+  "grading_executed": false,
+  "vm_started": false,
+  "full_task_gate_qualified": false
+}
