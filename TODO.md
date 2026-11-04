@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Gemma4 real512 native boundary/capture and independent numerical replay**.
+Current task: **Gemma4 diagnostic1,025 admission and preservation of the qualified512 prefix**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -483,7 +483,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Gemma4 real32 state/schedule boundary and four selected rows; `fdba828`, [report](docs/gemma-hybrid32.md).
 - [x] Explicit diagnostic512 admission with qualified32-prefix preservation; `5171790`, [report](docs/gemma-context-probe.md).
 - [x] Independent real512 oracle: real32 compatibility,64 pilot and full512 collection pass Astra review; [report](docs/gemma-e2b-context-reference.md).
-- [ ] Real512 native state/schedule/boundary and independent selected-row qualification.
+- [x] Real512 native state/schedule/boundary and independent selected-row qualification; [report](docs/gemma-hybrid512.md).
+- [ ] Diagnostic1,025 admission and qualified512-prefix parity; default32/chunk32 preserved.
+- [ ] Independent real1,025 selected-row oracle and native local-cache eviction/wrap qualification.
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1063,3 +1065,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Full512 independent oracle captured | Both contracts finish2,070.99s/RSS860,078,080bytes. Real32 compatibility and causal0/31 rows are byte-identical;4 cold controls and source/runtime/resource guards pass. | Astra approves combined review for reference commit. Native512 capture scaffold is separate and not executed. [Report](docs/gemma-e2b-context-reference.md). |
 
 | 2026-11-04 | Remaining Mac journeys passed | Qwen2/Qwen3/Mistral/Smol each pass fresh search/download/verify/Chat/Stop/recovery and separate network-denied offline/bad-cache checks. All processes and source guards pass.14selector/existingHub controls and strict compile pass; unmodified optimized Mac app built, not launched. | Astra approves combined helper/results/build review for commit; numerical/quality warnings and phone gaps remain. [Report](docs/mac-hub-journeys.md). |
+
+| 2026-11-04 | Native512 capture and replay passed | Both partitions match512-token/all15KV state; append513 preserves prefix and reset32 rows match. Both independent contracts have0 failures at selected main/prefix rows. RSS3,063,037,952bytes;2cold/550default/658Metal/fmt/Clippy/release pass. | Combined Astra review before native test/checker commit. Local eviction, free generation, original quality/app/phone remain open. [Report](docs/gemma-hybrid512.md). |
+
+| 2026-11-04 | Native512 reviewed | Astra approves combined code/checks/state/numerical evidence; all required checks pass. Earlier precision/quality/app/phone gaps remain. | Commit this task, then Astra-recommended1,025 admission/parity followed by independent local eviction/wrap qualification. [Report](docs/gemma-hybrid512.md). |

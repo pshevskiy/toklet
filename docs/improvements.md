@@ -9672,3 +9672,13 @@ strict compile and combined Astra review pass. An optimized unmodified-source Ma
 app builds without touching the user's session. Quality warnings, generic-model
 support and physical-phone qualification remain separate.
 [Report](mac-hub-journeys.md).
+
+## 4 November 2026 — Real Gemma4 diagnostic512 boundary
+
+Two chunk schedules produce identical 512-token/KV state. Overflow preserves
+the prefix; reset reproduces every initial 32-row output. Both independent
+contracts pass 2,097,152 selected comparisons each, with no failures. Peak RSS
+is 3,063,037,952 bytes; two cold controls, 550 default/658 Metal tests, strict
+Clippy, formatting, release and combined Astra review pass. Local eviction,
+earlier precision failures, original quality and app/device support remain open.
+[Report](gemma-hybrid512.md).

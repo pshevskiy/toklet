@@ -130,10 +130,17 @@ CPU model. Count bounded vector copies and CPU/GPU staging/readback. Keep the
 scalar implementation as oracle. Hybrid timings do not qualify fully resident
 performance. Require whole-graph feedback before more general prerequisites.
 
-G4.3 [qualifies the real32-position state boundary and four selected rows](gemma-hybrid32.md). The earlier four-token rejection remains. The [diagnostic512 constructor/admission](gemma-context-probe.md) preserves the qualified32-prefix. Next are the independent long oracle/pilot and actual512-position state/numerical boundaries. A short candidate can be integrated as explicitly partial support
-after its required numerical/quality checks pass. It cannot close the full
-model-window requirement. The original cross-precision, upstream BF16, dense/
-packed GPU and long-rotary discrepancies remain unwaived.
+G4.3 [qualifies the real32-position state boundary and four selected rows](gemma-hybrid32.md).
+The earlier four-token rejection remains. The [diagnostic512 constructor](gemma-context-probe.md),
+[independent oracle](gemma-e2b-context-reference.md) and
+[real512 state/selected-row comparison](gemma-hybrid512.md) now pass their bounded scopes.
+Next is explicit diagnostic1,025 admission and parity through512, followed by
+independent real local-cache eviction/wrap checks at511/512 and1,023/1,024.
+Default32 positions and at most32 rows per call stay unchanged. This prepares
+G5's frozen workload; original-BF16/full quality, resident scheduling and app/device
+acceptance remain open. A short candidate can be integrated as explicitly partial
+support after its required numerical/quality checks pass. It cannot close the
+full model-window requirement. Existing precision discrepancies remain unwaived.
 
 ## Shared model window replaces fixed output length
 

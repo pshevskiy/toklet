@@ -1,0 +1,75 @@
+{
+  "format": "toklet-gemma-hybrid512-v1",
+  "passed": true,
+  "base_revision": "6a0c1e2",
+  "hardware": "Apple M1 Pro, macOS",
+  "scope": "real512 hybrid state/schedule boundary and selected numerical rows",
+  "state_passed": true,
+  "numerical_passed": true,
+  "numerical": {
+    "math_fp64": {
+      "compared_values": 2097152,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.24609328932274493
+    },
+    "staged_fp32": {
+      "compared_values": 2097152,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.3465543086291543
+    }
+  },
+  "default_limit": 32,
+  "diagnostic_limit": 512,
+  "rejected_absolute_position": 512,
+  "physical_kv_owners": 15,
+  "main_selected_positions": [
+    0,
+    31,
+    255,
+    511
+  ],
+  "prefix_selected_positions": [
+    0,
+    15,
+    30,
+    31
+  ],
+  "capture_records": 11,
+  "capture_bytes": 109051904,
+  "session_allocated_bytes": 263761128,
+  "peak_rss_bytes": 3063037952,
+  "peak_physical_bytes": 3056438056,
+  "process_limit_bytes": 6442450944,
+  "checks": {
+    "cold_checker_controls": 2,
+    "default_passed": 550,
+    "metal_feature_passed": 658,
+    "fmt": true,
+    "strict_clippy_default_and_metal": true,
+    "release": true
+  },
+  "local_ring_eviction_qualified": false,
+  "earlier_precision_failures_waived": false,
+  "unquantized_quality_qualified": false,
+  "app_qualified": false,
+  "phone_qualified": false,
+  "performance_claim": false,
+  "astra_review": "approved combined code/checks/native/results review; diagnostic selected-row scope only",
+  "receipts_sha256": {
+    "artifacts/gemma-hybrid512-2026-11-04/check.py": "4e549fbfcb645b527f27a9e5327ef2bc5f05fd21e37066f6f2a85e8e1ff41588",
+    "artifacts/gemma-hybrid512-2026-11-04/checks.json": "98cc9f9ae85385432ec07e1d2bde4c27b03b0accf31e407efe649f8b9fa72dbb",
+    "artifacts/gemma-hybrid512-2026-11-04/controls.log": "2886ea73b65a624eefa726825a1d4c93151541776ef237172a68c6d9918ad2e8",
+    "artifacts/gemma-hybrid512-2026-11-04/native.py": "3b702ba1962c6941bd15a2f6f2d9bb8bacf3823cca6edc2758966df3703d881b",
+    "artifacts/gemma-hybrid512-2026-11-04/native-plan.json": "b7947e7b6275cbd08fddfcfc36ffd33122759ea09352429428d9155a436832b0",
+    "artifacts/gemma-hybrid512-2026-11-04/native-run.json": "791a41ba08aa84cdc704d7e257c3ece7fe978fc49c80c9ab820d66582e12a63d",
+    "artifacts/gemma-hybrid512-2026-11-04/native.stdout": "636a422c8f4350886a9153335115c04006520dd7087e92c6709dd6ba444fa0f4",
+    "artifacts/gemma-hybrid512-2026-11-04/native.stderr": "0df356c488d6bf39918443c3c3f976a5ca998bbdeb7c42a6d7814d3b37a21033",
+    "artifacts/gemma-hybrid512-2026-11-04/arrays.bin": "f4dd1d7382d181aa9150a849126904a7103e69f6de16fb0013f5d1d8a9360243",
+    "artifacts/gemma-hybrid512-2026-11-04/replay.json": "b6049c4823e59da77e555c1ac5b7479a03b4832e9c80eab90670df06f52771b1",
+    "tools/reference/check_gemma_hybrid512.py": "8cef80ee6ed76a4f4b75eb122d2a380e5079f8b4ad1647dedf2afb9a245b5d25",
+    "tools/reference/test_gemma_hybrid512.py": "2c32038f256cdb901454cf4057ecc823d32adfa9621a67ad2476bdc28086c0cd",
+    "tools/reference/check_gemma_hybrid32.py": "1b8b00d9dc99d375a3802186ac103ed67ef24a6f24ffe1c654032070b1ef120f",
+    "tools/reference/check_gemma_hybrid_tiny.py": "76301036595f2a8b77f8101b1368f3b1feb8964645d6dc993017bbed353b6a6e",
+    "benchmarks/results/2026-11-04-gemma-e2b-context-reference-v1.json": "6215cf483dfae6faf96624a37bc624a51c431b8c9c552a7154d36704a9597463"
+  }
+}

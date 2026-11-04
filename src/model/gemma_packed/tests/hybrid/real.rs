@@ -74,6 +74,16 @@ fn load_original() -> (E2bWeights, std::fs::File, std::path::PathBuf, [u64; 7]) 
     (source, file, path, original)
 }
 
+// Epochs count successful commits/reset operations, not numerical positions.
+// Validate them separately before comparing the logical committed prefix.
+fn canonical(mut state: Snapshot, vocab: usize) -> Snapshot {
+    state.logits = state.logits[state.logits.len() - vocab..].to_vec();
+    for cache in &mut state.caches {
+        cache.3 = 0;
+    }
+    state
+}
+
 #[test]
 #[ignore = "explicit original Gemma E2B hybrid numerical graph capture"]
 fn original_e2b_hybrid_graph_preserves_frozen_states_and_resident_owners() {
@@ -252,15 +262,6 @@ fn original_e2b_hybrid32_boundary_schedules_and_reset() {
     assert!(model.content_identity().is_none());
     let context = gemma_affine::Context::new(gemma_affine::CONTEXT_ALLOWANCE_BYTES).unwrap();
     let mut expected = None;
-    // Epochs count successful commits/reset operations, not numerical positions.
-    // Validate them separately before comparing the logical committed prefix.
-    fn canonical(mut state: Snapshot, vocab: usize) -> Snapshot {
-        state.logits = state.logits[state.logits.len() - vocab..].to_vec();
-        for cache in &mut state.caches {
-            cache.3 = 0;
-        }
-        state
-    }
     for schedule in [&[32][..], &[31, 1][..], &[1, 15, 16][..]] {
         emit("BOUNDARY_SCHEDULE", json!(schedule));
         let mut session = norms
@@ -484,5 +485,178 @@ fn diagnostic512_admission_preserves_default32_prefix() {
         "default_allocated_bytes":old_allocated,"candidate_allocated_bytes":allocated,
         "required_bytes":required,"exact_admission":true,"minus_one_rejected":true,"reset_reuse":true,
         "positions_above31_qualified":false,"app_qualified":false,"phone_qualified":false}),
+    );
+}
+
+#[test]
+#[ignore = "explicit real E2B diagnostic512 state and numerical capture"]
+fn diagnostic512_boundary_schedules_and_reset() {
+    use sha2::{Digest, Sha256};
+    fn hash(values: &[f32]) -> [u8; 32] {
+        let mut hash = Sha256::new();
+        let mut raw = [0u8; 4096];
+        for part in values.chunks(1024) {
+            for (value, to) in part.iter().zip(raw.chunks_exact_mut(4)) {
+                to.copy_from_slice(&value.to_le_bytes());
+            }
+            hash.update(&raw[..part.len() * 4]);
+        }
+        hash.finalize().into()
+    }
+    let raw = include_bytes!("../../../../../benchmarks/gemma-e2b-context-v1/tokens.u32le");
+    let ids: Vec<u32> = raw
+        .chunks_exact(4)
+        .map(|v| u32::from_le_bytes(v.try_into().unwrap()))
+        .collect();
+    assert_eq!(ids.len(), 512);
+    let mut second = vec![1];
+    second.extend([31; 16]);
+    second.push(15);
+    let schedules = [vec![32; 16], second];
+    let mut capture = capture::Capture::bounded(DIAGNOSTIC);
+    let (source, file, path, original) = load_original();
+    let owners = resident_snapshot(&source);
+    let norms = hybrid::Norms::new(&source, PROCESS - DIAGNOSTIC).unwrap();
+    let model = norms.model_for_context_probe(512).unwrap();
+    assert!(model.content_identity().is_none());
+    let context = gemma_affine::Context::new(gemma_affine::CONTEXT_ALLOWANCE_BYTES).unwrap();
+    let mut expected = None;
+    let mut prefix_logits = None;
+    let mut prefix_caches: Vec<(Vec<u32>, Vec<u32>)> = Vec::new();
+    for schedule in schedules {
+        emit("CONTEXT512_SCHEDULE", json!(schedule));
+        let mut session = norms
+            .new_session(&model, &context, PROCESS - DIAGNOSTIC)
+            .unwrap();
+        assert_eq!(session.capacity(), 512);
+        assert_eq!(session.chunk_capacity(), 32);
+        assert_eq!(session.caches.len(), 15);
+        let pointers_before = pointers(&session);
+        let allocated = session.allocated_bytes().unwrap();
+        assert_eq!(allocated, 263761128);
+        let mut offset = 0;
+        for (step, &count) in schedule.iter().enumerate() {
+            let rows = session.forward(&ids[offset..offset + count]).unwrap();
+            if prefix_logits.is_none() {
+                assert_eq!((offset, count), (0, 32));
+                prefix_logits = Some(hash(rows));
+                capture.record("context512.initial_logits", rows, 0, 32);
+            }
+            for position in [0, 31, 255, 511] {
+                if (offset..offset + count).contains(&position) {
+                    let start = (position - offset) * 262144;
+                    capture.record(
+                        "context512.logits",
+                        &rows[start..start + 262144],
+                        position,
+                        1,
+                    );
+                }
+            }
+            offset += count;
+            if prefix_caches.is_empty() {
+                assert_eq!(offset, 32);
+                prefix_caches = session
+                    .caches
+                    .iter()
+                    .enumerate()
+                    .map(|(owner, cache)| {
+                        let count = 32 * model.layout.layers[owner].head_dim;
+                        let (k, v) = cache.committed();
+                        (
+                            k[..count].iter().map(|v| v.to_bits()).collect(),
+                            v[..count].iter().map(|v| v.to_bits()).collect(),
+                        )
+                    })
+                    .collect();
+            }
+            assert_eq!(session.tokens(), &ids[..offset]);
+            for (owner, cache) in session.caches.iter().enumerate() {
+                let dim = model.layout.layers[owner].head_dim;
+                let (k, v) = cache.committed();
+                assert_eq!((k.len(), v.len()), (512 * dim, 512 * dim));
+                assert_eq!(cache.offset(), offset);
+                assert_eq!(cache.generation(), step as u64 + 1);
+                for slot in 0..512 {
+                    assert_eq!(
+                        cache.position_in_slot(slot),
+                        (slot < offset).then_some(slot)
+                    );
+                }
+            }
+            assert_eq!(pointers(&session), pointers_before);
+            assert_eq!(session.allocated_bytes().unwrap(), allocated);
+        }
+        assert_eq!(offset, 512);
+        let before = snapshot(&session);
+        assert!(matches!(
+            session.forward(&[ids[0]]),
+            Err(hybrid::Error::Model(Error::Capacity {
+                offset: 512,
+                tokens: 1,
+                limit: 512
+            }))
+        ));
+        assert_eq!(snapshot(&session), before);
+        assert_eq!(pointers(&session), pointers_before);
+        assert_eq!(session.allocated_bytes().unwrap(), allocated);
+        let state = canonical(before, 262144);
+        if let Some(expected) = &expected {
+            assert_eq!(&state, expected);
+        } else {
+            expected = Some(state);
+        }
+        session.reset().unwrap();
+        assert!(session.tokens().is_empty() && session.logits().is_empty());
+        for cache in &session.caches {
+            assert_eq!(cache.offset(), 0);
+            assert!((0..512).all(|slot| cache.position_in_slot(slot).is_none()));
+        }
+        let rows = session.forward(&ids[..32]).unwrap();
+        assert_eq!(Some(hash(rows)), prefix_logits);
+        capture.record("context512.reset_logits", rows, 0, 32);
+        assert_eq!(session.tokens(), &ids[..32]);
+        for (owner, cache) in session.caches.iter().enumerate() {
+            let count = 32 * model.layout.layers[owner].head_dim;
+            let (k, v) = cache.committed();
+            let previous = &prefix_caches[owner];
+            assert!(
+                k[..count]
+                    .iter()
+                    .zip(&previous.0)
+                    .all(|(value, bits)| value.to_bits() == *bits)
+            );
+            assert!(
+                v[..count]
+                    .iter()
+                    .zip(&previous.1)
+                    .all(|(value, bits)| value.to_bits() == *bits)
+            );
+            assert_eq!(cache.offset(), 32);
+            assert_eq!(cache.generation(), schedule.len() as u64 + 2);
+            for slot in 0..512 {
+                assert_eq!(cache.position_in_slot(slot), (slot < 32).then_some(slot));
+            }
+        }
+        assert_eq!(pointers(&session), pointers_before);
+        assert_eq!(session.allocated_bytes().unwrap(), allocated);
+        emit(
+            "CONTEXT512_STATE",
+            json!({"schedule":schedule,"committed_before_rejection":512,"rejected_absolute_position":512,
+            "overflow_preserved":true,"reset_prefix_tokens":32,"reset_all32_rows_exact":true,
+            "all15_valid_kv_prefixes_exact":true,"allocated_bytes":allocated}),
+        );
+    }
+    assert_eq!(resident_snapshot(&source), owners);
+    assert_eq!(original, identity(&file.metadata().unwrap()));
+    assert_eq!(
+        original,
+        identity(&std::fs::symlink_metadata(path).unwrap())
+    );
+    capture.finish();
+    emit(
+        "CONTEXT512_COMPLETE",
+        json!({"state_passed":true,"positions":512,"selected_rows":[0,31,255,511],
+        "prior_precision_failures_waived":false,"app_qualified":false,"phone_qualified":false}),
     );
 }
