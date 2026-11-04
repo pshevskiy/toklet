@@ -1,6 +1,6 @@
 # Toklet improvement record
 
-Updated 28 October 2026. This records implemented capabilities, measured benefits,
+Updated 4 November 2026. This records implemented capabilities, measured benefits,
 and the decisions that limit their use. Detailed reports retain exact revisions,
 artifact hashes, raw samples, checks and Astra reviews. M0–M6 are complete in their
 qualified scopes: M5 selects the small compensated Half and frozen larger group8
@@ -9773,3 +9773,10 @@ All1,024targets in the frozen1,025-ID block pass bounded independent NLL/greedy
 replay; meanNLL7.37456, maxreplayerror7.11e-15, peakRSS1.49GB. First32rows match
 the pilot exactly. Astra approves block-one reuse; native pairing and full10k/100
 quality remain open. [Report](gemma-upstream-loss1025.md).
+
+## 4 November 2026 — Paired native Gemma loss block
+
+Native1,024-target collection passes exact eight-row prior alignment, seven
+independent anchor reductions, complete statistics/coverage and required checks.
+Astra approves; peakRSS2.91GB. One-block NLLdelta−0.54775 is descriptive; full10k
+loss and100-task gates remain open. [Report](gemma-native-loss-block.md).

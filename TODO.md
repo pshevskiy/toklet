@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Paired native1,024-target loss block and eight alignment witnesses**.
+Current task: **Remaining nine original/native loss blocks and full10,000-target gate**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -497,7 +497,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Real upstream full-width versus tiled tied-head bit equality; [report](docs/gemma-upstream-head.md).
 - [x] Original-quality33-ID/32-target scorer pilot; [report](docs/gemma-upstream-loss-pilot.md).
 - [x] Full1,025-ID/1,024-target original BF16 block qualification; [report](docs/gemma-upstream-loss1025.md).
-- [ ] Paired native1,024-target block with exact eight-row prior alignment, then remaining9blocks/full loss gate.
+- [x] Paired native1,024-target block with exact eight-row prior alignment; [report](docs/gemma-native-loss-block.md).
+- [ ] Remaining9original/native blocks, exact10,000-target weighted aggregation and unchanged full loss gate.
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1159,3 +1160,11 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Scorer committed / full original block active | `5b50efb` includes Astra-approved scorer and32-target pilot. Freeze full1,025IDs/1,024targets,32position batches,10,258-read sourcechain and2,276,912,256-byte memory ledger before outputs. | Full upstream block runs under6GiB/1,800s; bounded per-batch independent NLL replay next. Relevant source/check inputs unchanged. |
 
 | 2026-11-04 | Full upstream block reviewed | All1,024targets/32batches replay independently; meanNLL7.37455853694, maxreplayerror7.11e-15. First32rows exactly match pilot; RSS1,490,796,544bytes. Astra approves evidence and block-one reuse. | Commit source block; native paired-block test/checker next, preserving full10k/100 and old fidelity failures. [Report](docs/gemma-upstream-loss1025.md). |
+
+| 2026-11-04 | Paired native block implemented | Test-only1,025session scores rows0–1,023 against IDs1–1,024, emits stable statistics/rowhashes and eight full anchors including unscored1,024. Reuse existing compensated NLL helper; preserve source/session/pointers. Independent checker enforces prior anchor identity, target coverage/formula and full anchor replay. | Cold controls and required Rust checks next; real native paired run/review/commit pending. |
+
+| 2026-11-04 | Native checker controls / Clippy wiring retry | Two independent journal controls pass. fmt/defaultClippy pass; MetalClippy rejects duplicate inclusion of existing NLL helper by two private test harnesses. Astra recommends a reasoned local duplicate-module allowance, preserving one frozen implementation without cross-harness coupling. | Retain initial logs; rerun all required checks with the local annotation before native execution. |
+
+| 2026-11-04 | Native required checks passed / real block active | Local test-only NLL reuse annotation passes strictClippy. fmt,default/MetalClippy,550default/658Metal tests and release build pass; two cold checker controls pass. Initial lint logs retained. | Owned native1,025 block now runs; eight prior row hashes/full anchor statistics and paired descriptive NLL replay remain before Astra review/commit. |
+
+| 2026-11-04 | Paired native block reviewed | All1,024target statistics, eight prior FP32row hashes and seven independent scored-anchor replays pass; nativeNLL6.82681 vs original7.37456 is descriptive. RSS2,913,566,720bytes; all checks pass. Astra approves code/evidence/block-one reuse. | Commit native task; collect remaining9frozen blocks with reset positions and target-weighted10k aggregation before loss gate. [Report](docs/gemma-native-loss-block.md). |

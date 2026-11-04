@@ -1,0 +1,75 @@
+{
+  "format": "toklet-gemma-native-loss-block-v1",
+  "astra_review": "approved code, checks, real paired block and independent replay; reuse as block one",
+  "run": {
+    "passed": true,
+    "quality_qualified": false,
+    "command": {
+      "command": [
+        "/usr/bin/time",
+        "-l",
+        "/Users/coloner/work/rust/toklet/artifacts/gemma-native-loss1024-2026-11-04/release-driver",
+        "model::gemma_packed::tests::hybrid::real::loss_block::diagnostic1025_first_loss_block",
+        "--exact",
+        "--ignored",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 35104,
+      "stdout": "artifacts/gemma-native-loss1024-2026-11-04/native.stdout",
+      "stderr": "artifacts/gemma-native-loss1024-2026-11-04/native.stderr"
+    },
+    "peak_rss_bytes": 2913566720,
+    "peak_physical_bytes": 2907704008,
+    "replay_command": {
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-s",
+        "-B",
+        "/Users/coloner/work/rust/toklet/tools/reference/check_gemma_loss_block.py",
+        "/Users/coloner/work/rust/toklet/artifacts/gemma-native-loss1024-2026-11-04/native.stdout",
+        "/Users/coloner/work/rust/toklet/artifacts/gemma-native-loss1024-2026-11-04/arrays.bin"
+      ],
+      "exit_code": 0,
+      "primary_error": null,
+      "cleanup_errors": [],
+      "pid": 35344,
+      "stdout": "artifacts/gemma-native-loss1024-2026-11-04/replay.json",
+      "stderr": "artifacts/gemma-native-loss1024-2026-11-04/replay.stderr"
+    },
+    "targets": 1024,
+    "native_mean_nll": 6.826809458509215,
+    "original_mean_nll": 7.374558536943502,
+    "native_minus_original_descriptive": -0.5477490784342862,
+    "prior_native_row_hashes": 8,
+    "independent_scored_anchors": 7,
+    "arrays_bytes": 8388608
+  },
+  "checks": {
+    "fmt": true,
+    "strict_clippy_default": true,
+    "strict_clippy_metal": true,
+    "default_tests": 550,
+    "metal_tests": 658,
+    "release": true,
+    "cold_controls": 2,
+    "initial_clippy_failure_retained": true
+  },
+  "receipts": {
+    "artifacts/gemma-native-loss1024-2026-11-04/checks.json": "5227eac012707be5a1a362f4cd585f67a6659041b090f7d32eca3615bb0ceeed",
+    "artifacts/gemma-native-loss1024-2026-11-04/native-plan.json": "044bdd3e8e8798861bc33d8e708f23a30e849ce4ee56f764da2523a3da15c5d6",
+    "artifacts/gemma-native-loss1024-2026-11-04/native.stdout": "5e5c563f90a9142b0fb4598a089114201672761b99cff2d1503519d36ec4b5b2",
+    "artifacts/gemma-native-loss1024-2026-11-04/arrays.bin": "48c72f91a7ac0aaa776074c5f092aed1526e407235b45d02c86ceb7410fe075d",
+    "artifacts/gemma-native-loss1024-2026-11-04/replay.json": "8f666902c52c9ed408d6153d4302c871a1c9994ba4db46a8f602da2c2ed42d78",
+    "artifacts/gemma-native-loss1024-2026-11-04/native-run.json": "ca0ca750a537374772d82ea933d3f39aa09a0ace629244d52c485aa7c378d2ba"
+  },
+  "scripts": {
+    "check.py": "808b0c38d33b5cc4286bb5a98ad690496651c32b1a324d15579af76464b2cb6d",
+    "native.py": "dcc652d8dd006546d59bf8ef06bed332630903b883963d4ddbbbe384a3d2064c"
+  },
+  "quality_qualified": false,
+  "earlier_failures_waived": false
+}
