@@ -1103,3 +1103,42 @@ fn request_arithmetic_is_shared_read_only_and_relative_to_session_capacity() {
         assert_eq!((s.evaluated_len(), s.pending_len()), before);
     }
 }
+
+#[test]
+fn selected_router_reuses_caller_owned_buffers() {
+    let scores: [f32; 9 * 32] = std::array::from_fn(|i| -((i % 32) as f32));
+    let mut ids = [u32::MAX; 9 * 8];
+    let mut gates = [0.; 9 * 8];
+    for tokens in [7, 8, 9] {
+        let shape = cpu::RouterShape {
+            tokens,
+            experts: 32,
+            selected: 8,
+        };
+        cpu::route_topk(
+            &scores[..tokens * 32],
+            &mut ids[..tokens * 8],
+            &mut gates[..tokens * 8],
+            shape,
+        )
+        .unwrap();
+        ALLOCATIONS.with(|n| n.set(0));
+        TRACK.with(|track| track.set(true));
+        let mut result = Ok(());
+        for _ in 0..16 {
+            result = cpu::route_topk(
+                &scores[..tokens * 32],
+                &mut ids[..tokens * 8],
+                &mut gates[..tokens * 8],
+                shape,
+            );
+            if result.is_err() {
+                break;
+            }
+        }
+        TRACK.with(|track| track.set(false));
+        result.unwrap();
+        assert_eq!(ALLOCATIONS.with(Cell::get), 0);
+        assert_eq!(&ids[..8], &[0, 1, 2, 3, 4, 5, 6, 7]);
+    }
+}

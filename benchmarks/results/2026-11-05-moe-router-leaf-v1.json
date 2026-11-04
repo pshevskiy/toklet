@@ -1,0 +1,20 @@
+{
+  "format": "toklet-moe-router-leaf-v1",
+  "passed": true,
+  "engine_revision": "f780a89 plus router patch",
+  "fixture_sha256": "68ad524d8abb8b7ed6ed6a4a6c6d2cdf0e2fcba394e667a4a9afc39e98bb0034",
+  "fixture_cases": 11,
+  "fixture_rows": 32,
+  "selected_ids_and_gates": 234,
+  "exact_control": "ranked FP32 mass, opposite-extreme subtraction overflow and mixed-score cutoff ties",
+  "steady_rust_allocations": 0,
+  "steady_measured_calls": 48,
+  "checks": "artifacts/moe-router-checks-2026-11-05/checks.json",
+  "refreshed_control_checks": "artifacts/moe-router-checks-2026-11-05/review-checks.json",
+  "counts": {
+    "test": 562,
+    "metal-test": 671
+  },
+  "review": "Astra approved final code/tests; no outstanding findings",
+  "scope": "CPU routing leaf only; expert projections/reduction, import, Metal and model execution remain open"
+}

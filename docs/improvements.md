@@ -9997,3 +9997,11 @@ weights acquired. Astra approves deterministic routing, selected-only FP32
 softmax, ordered reduction and bounded BF16-to-Half import design. Exact planning,
 finite conversion and numerical execution remain open.
 [Design](granite-moe-next.md).
+
+## 5 November 2026 — Add deterministic sparse-expert routing
+
+Allocation-free scalar top-k uses ascending-ID ties and selected-only ordered
+FP32 normalization. Independent fixtures, overflow/mass/cutoff controls,
+562CPU/671Metal, strict/release checks and Astra pass. Expert projection/reduction,
+import, Metal and real MoE execution remain open.
+[Report](moe-router-block.md).

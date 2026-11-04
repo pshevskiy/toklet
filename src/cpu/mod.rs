@@ -15,6 +15,7 @@ mod dense_scaling;
 mod gated_delta;
 mod gelu;
 mod llama3_rotary;
+mod moe_router;
 mod per_layer;
 mod proportional_rotary;
 mod reductions;
@@ -38,6 +39,7 @@ pub use gated_delta::{
 };
 pub use gelu::{gated_gelu_tanh, gelu_tanh};
 pub use llama3_rotary::{Llama3RotaryShape, Llama3Scaling, llama3_rotary};
+pub use moe_router::{RouterShape, route_topk};
 pub use per_layer::{
     PerLayerInputShape, finish_per_layer_inputs, prepare_per_layer_projection_input,
 };
