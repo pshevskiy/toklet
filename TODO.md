@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **4 November 2026**. Active milestone: **M8**.
-Current task: **Gemma4 real32-position hybrid state/schedule boundary with separate numerical replay**.
+Current task: **Gemma4 bounded512-position candidate: admission, state/schedule and independent numerical checks**.
 Device gap: the paired physical iPhone 14 Pro is unavailable; a different Pro Max is not substituted. [Query](artifacts/m8-phone-availability-2026-11-03/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
@@ -1026,3 +1026,15 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-04 | Mac capability/checklist reconciliation | Astra identifies completed B5 rollups: authenticated persistence, atomic Apply, settings and conditional memory reporting. Mark only adopted Mac scopes complete; publish exact9-artifact route/window/device table. New phone and unreconciled per-artifact journeys remain open. | Link/content/whitespace checks and Astra documentation review; next Gemma4 real32-position boundary, preserving precision/quality failures. |
 
 | 2026-11-04 | Coverage review correction | Astra separates Qwen3 accepted original relative quality from its rejected C512 numerical fidelity gate. Correct the new coverage table and link both scopes; experimental app label remains unchanged. | Astra approves corrected scoped reconciliation; commit documentation, then Gemma4 real32 boundary. |
+
+| 2026-11-04 | Gemma32 contract and first implementation | Freeze first32 IDs from pinned quality corpus, schedules32/31+1/1+15+16 and rows0/15/30/31 before outcomes. Add ignored sibling state test, reuse bounded loader, compare all15 physical KV owners, final rows, slot mappings and reset; reference producer streams selected math/staged rows under existing gates. | No model execution yet. Source review, checker/controls and cold checks precede independent reference then native capture. Prior27 failures remain rejected. |
+
+| 2026-11-04 | Gemma32 cold-check correction | Initial Python controls stop at a conditional-expression spacing syntax error, before any model/reference execution. Correct it and retain the log. Rust formatting passes. | Rerun controls, source/checker review and strict compile before numerical captures. |
+
+| 2026-11-04 | Gemma32 reference measurement retry | Numerical producer completes both contracts with endpoint guard, but sandbox blocks BSDtime sysctl; outer exit/memory evidence fails. Preserve all rows and failed wrapper. | Repeat unchanged reference with measurement access in a fresh directory; compare raw row hashes and enforce6GiB before native execution. |
+
+| 2026-11-04 | Reference interrupted on session reset | Retry has no final receipt or surviving owned worker and only zero-byte partial rows. Preserve interruption evidence; no native run started. | Fresh unchanged reference retry, then native boundary and combined Astra diff/results review. |
+
+| 2026-11-04 | Gemma32 execution/replay passed | All3 schedules/reset match complete32-token/KV state and24 selected rows; append33 preserves prefix. Math/staged comparisons have0 failures; RSS native3,005,054,976/reference410,910,720bytes. Cold3/default549/Metal657/fmt/Clippy/release pass. | Combined Astra review passes; commit task. Earlier four-token27 near-zero logit failures and app/phone/full-quality gaps stay open. [Report](docs/gemma-hybrid32.md). |
+
+| 2026-11-04 | Gemma32 reviewed | Astra approves state boundary,24 exact rows and both numerical contracts; correct historical wording to27 near-zero logits on the earlier four-token input. Required checks and measured memory gates pass. | Commit source/contract/evidence; next separately admitted512-position candidate. [Report](docs/gemma-hybrid32.md). |

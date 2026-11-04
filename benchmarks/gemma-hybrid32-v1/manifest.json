@@ -1,0 +1,45 @@
+{
+  "format": "toklet-gemma-hybrid32-contract-v1",
+  "parent_tokens": {
+    "path": "benchmarks/gemma-quality-v1/held_out_loss.u32le",
+    "sha256": "877cbe18574b47e4b6a8d1b58fb79621c37e0531bd1f9504e50ce63d186f8c46"
+  },
+  "tokens": {
+    "path": "tokens.u32le",
+    "count": 32,
+    "sha256": "ed74f5fc197e89e1fd21cfefcdfe09b893433acaccfc76e4b6bce5f7fb706abe"
+  },
+  "schedules": [
+    [
+      32
+    ],
+    [
+      31,
+      1
+    ],
+    [
+      1,
+      15,
+      16
+    ]
+  ],
+  "selected_logit_positions": [
+    0,
+    15,
+    30,
+    31
+  ],
+  "capacity": 32,
+  "rejected_next_position": 33,
+  "gate": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "numerical_contracts": [
+    "math_fp64",
+    "staged_fp32"
+  ],
+  "state_and_numerical_decisions_separate": true,
+  "previous_precision_failures_waived": false,
+  "rejected_absolute_position": 32
+}

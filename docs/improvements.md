@@ -9631,3 +9631,14 @@ receipts. Qwen3's passed relative quality remains distinct from rejected C512
 numerical fidelity. KV-byte limits stay per-Apply and load-only peaks conditional.
 Astra approves; content/link/whitespace checks pass. M8 remains open for Gemma
 state/numerical work, unreconciled journeys and physical-phone validation.
+
+## 4 November 2026 — Real Gemma4 32-position boundary
+
+Three schedules and reset reproduce all15 KV owners and selected logits exactly;
+the33rd token is rejected with the32-token prefix intact. Four full-vocabulary
+rows pass both independent contracts, across24 captures. Native peak RSS is
+3,005,054,976bytes below6GiB. Three cold controls,549default/657Metal tests,
+fmt/strictClippy/release and combined Astra review pass. Earlier four-token
+near-zero failures, unquantized quality, app/phone and larger contexts remain
+open. [Report](gemma-hybrid32.md),
+[evidence](../benchmarks/results/2026-11-04-gemma-hybrid32-v1.json).

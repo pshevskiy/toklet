@@ -36,12 +36,10 @@ fn buffers(phase: &str, values: &[serde_json::Value]) {
         emit("BUFFER", json!({"phase":phase,"value":value}));
     }
 }
-#[test]
-#[ignore = "explicit original Gemma E2B hybrid numerical graph capture"]
-fn original_e2b_hybrid_graph_preserves_frozen_states_and_resident_owners() {
-    let mut capture = capture::Capture::bounded(DIAGNOSTIC);
-    let path =
-        std::env::var_os("TOKLET_GEMMA_RESIDENT_MODEL").expect("explicit original model path");
+fn load_original() -> (E2bWeights, std::fs::File, std::path::PathBuf, [u64; 7]) {
+    let path = std::path::PathBuf::from(
+        std::env::var_os("TOKLET_GEMMA_RESIDENT_MODEL").expect("explicit original model path"),
+    );
     let mut file = OpenOptions::new()
         .read(true)
         .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)
@@ -73,6 +71,14 @@ fn original_e2b_hybrid_graph_preserves_frozen_states_and_resident_owners() {
         )
         .unwrap()
     });
+    (source, file, path, original)
+}
+
+#[test]
+#[ignore = "explicit original Gemma E2B hybrid numerical graph capture"]
+fn original_e2b_hybrid_graph_preserves_frozen_states_and_resident_owners() {
+    let mut capture = capture::Capture::bounded(DIAGNOSTIC);
+    let (source, file, path, original) = load_original();
     let before = resident_snapshot(&source);
     buffers("loaded", &before);
     let norms = hybrid::Norms::new(&source, PROCESS - DIAGNOSTIC).unwrap();
@@ -226,5 +232,129 @@ fn original_e2b_hybrid_graph_preserves_frozen_states_and_resident_owners() {
         json!({"captured":true,"positions":32,"tested_input_positions":4,"source_path_and_descriptor_unchanged":true,
         "resident_buffers_unchanged":true,"full_model_window_qualified":false,"performance_qualified":false,"phone_qualified":false,
         "original_precision_failures_waived":false}),
+    );
+}
+
+#[test]
+#[ignore = "explicit original Gemma E2B hybrid32 state and numerical capture"]
+fn original_e2b_hybrid32_boundary_schedules_and_reset() {
+    let input = include_bytes!("../../../../../benchmarks/gemma-hybrid32-v1/tokens.u32le");
+    let ids: Vec<u32> = input
+        .chunks_exact(4)
+        .map(|v| u32::from_le_bytes(v.try_into().unwrap()))
+        .collect();
+    assert_eq!(ids.len(), 32);
+    let mut capture = capture::Capture::bounded(DIAGNOSTIC);
+    let (source, file, path, original) = load_original();
+    let owners = resident_snapshot(&source);
+    let norms = hybrid::Norms::new(&source, PROCESS - DIAGNOSTIC).unwrap();
+    let model = norms.model().unwrap();
+    assert!(model.content_identity().is_none());
+    let context = gemma_affine::Context::new(gemma_affine::CONTEXT_ALLOWANCE_BYTES).unwrap();
+    let mut expected = None;
+    // Epochs count successful commits/reset operations, not numerical positions.
+    // Validate them separately before comparing the logical committed prefix.
+    fn canonical(mut state: Snapshot, vocab: usize) -> Snapshot {
+        state.logits = state.logits[state.logits.len() - vocab..].to_vec();
+        for cache in &mut state.caches {
+            cache.3 = 0;
+        }
+        state
+    }
+    for schedule in [&[32][..], &[31, 1][..], &[1, 15, 16][..]] {
+        emit("BOUNDARY_SCHEDULE", json!(schedule));
+        let mut session = norms
+            .new_session(&model, &context, PROCESS - DIAGNOSTIC)
+            .unwrap();
+        assert_eq!(session.caches.len(), 15);
+        assert_eq!(session.capacity(), 32);
+        assert_eq!(session.chunk_capacity(), 32);
+        let allocated = session.allocated_bytes().unwrap();
+        let pointers_before = pointers(&session);
+        let mut offset = 0;
+        for (step, &count) in schedule.iter().enumerate() {
+            let rows = session.forward(&ids[offset..offset + count]).unwrap();
+            for position in [0, 15, 30, 31] {
+                if (offset..offset + count).contains(&position) {
+                    let start = (position - offset) * 262144;
+                    capture.record("boundary.logits", &rows[start..start + 262144], position, 1);
+                }
+            }
+            offset += count;
+            assert_eq!(session.tokens(), &ids[..offset]);
+            for cache in &session.caches {
+                assert_eq!(cache.offset(), offset);
+                assert_eq!(cache.generation(), step as u64 + 1);
+                for slot in 0..32 {
+                    assert_eq!(
+                        cache.position_in_slot(slot),
+                        (slot < offset).then_some(slot)
+                    );
+                }
+            }
+            assert_eq!(pointers(&session), pointers_before);
+            assert_eq!(session.allocated_bytes().unwrap(), allocated);
+        }
+        assert_eq!(session.committed, 32);
+        let prior = snapshot(&session);
+        let result = session.forward(&[ids[0]]);
+        assert!(matches!(
+            result,
+            Err(hybrid::Error::Model(Error::Capacity {
+                offset: 32,
+                tokens: 1,
+                limit: 32
+            }))
+        ));
+        assert_eq!(snapshot(&session), prior);
+        assert_eq!(pointers(&session), pointers_before);
+        assert_eq!(session.allocated_bytes().unwrap(), allocated);
+        let state = canonical(prior, 262144);
+        if let Some(expected) = &expected {
+            assert_eq!(&state, expected);
+        } else {
+            expected = Some(state);
+        }
+        session.reset().unwrap();
+        assert!(session.tokens().is_empty() && session.logits().is_empty());
+        for cache in &session.caches {
+            assert_eq!(cache.offset(), 0);
+            assert_eq!(cache.generation(), schedule.len() as u64 + 1);
+            assert!((0..32).all(|slot| cache.position_in_slot(slot).is_none()));
+        }
+        let rows = session.forward(&ids).unwrap();
+        for position in [0, 15, 30, 31] {
+            let start = position * 262144;
+            capture.record(
+                "boundary.reset_logits",
+                &rows[start..start + 262144],
+                position,
+                1,
+            );
+        }
+        for cache in &session.caches {
+            assert_eq!(cache.generation(), schedule.len() as u64 + 2);
+        }
+        assert_eq!(
+            canonical(snapshot(&session), 262144),
+            *expected.as_ref().unwrap()
+        );
+        assert_eq!(pointers(&session), pointers_before);
+        assert_eq!(session.allocated_bytes().unwrap(), allocated);
+        emit(
+            "BOUNDARY_STATE",
+            json!({"schedule":schedule,"positions":32,"overflow_preserved":true,"reset_reuse":true,"allocated_bytes":allocated}),
+        );
+    }
+    assert_eq!(resident_snapshot(&source), owners);
+    assert_eq!(original, identity(&file.metadata().unwrap()));
+    assert_eq!(
+        original,
+        identity(&std::fs::symlink_metadata(path).unwrap())
+    );
+    capture.finish();
+    emit(
+        "BOUNDARY_COMPLETE",
+        json!({"state_passed":true,"positions":32,"selected_rows":[0,15,30,31],"numerical_decision":"separate reference replay","prior_precision_failures_waived":false,"phone_qualified":false,"app_qualified":false}),
     );
 }

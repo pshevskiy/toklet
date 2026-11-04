@@ -1,0 +1,67 @@
+{
+  "format": "toklet-gemma-hybrid32-evidence-v1",
+  "passed": true,
+  "base_revision": "7252181",
+  "hardware": "Apple M1 Pro, macOS",
+  "scope": "32-position hybrid state and four selected full-vocabulary rows; original four-bit artifact",
+  "state_passed": true,
+  "numerical": {
+    "math_fp64": {
+      "compared_values": 6291456,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.039125877426973134
+    },
+    "staged_fp32": {
+      "compared_values": 6291456,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0013620591981437639
+    }
+  },
+  "unique_selected_rows": 4,
+  "unique_values_per_contract": 1048576,
+  "gate": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "committed_tokens": 32,
+  "rejected_absolute_position": 32,
+  "session_allocated_bytes": 245081448,
+  "reference_peak_rss_bytes": 410910720,
+  "native_peak_rss_bytes": 3005054976,
+  "native_peak_physical_bytes": 2998668048,
+  "process_limit_bytes": 6442450944,
+  "checks": {
+    "cold_python": 3,
+    "default_passed": 549,
+    "metal_feature_passed": 657,
+    "fmt": true,
+    "strict_clippy_default_and_metal": true,
+    "release_harness": true
+  },
+  "earlier27_failures_waived": false,
+  "full_unquantized_quality_qualified": false,
+  "app_qualified": false,
+  "phone_qualified": false,
+  "performance_claim": false,
+  "astra_review": "approved combined diff, invariants, checks and actual results; earlier four-token27 near-zero logit failures remain rejected",
+  "receipts_sha256": {
+    "artifacts/gemma-hybrid32-2026-11-04/checks.json": "65648485548d07e6144a8d7848a311af28bf5c112c08919e11d77569ca512671",
+    "artifacts/gemma-hybrid32-2026-11-04/cold-first.log": "129b12a01e375c98962103b4bc9f961364c8606f418cacaacbccd0a4a38b45ed",
+    "artifacts/gemma-hybrid32-2026-11-04/cold.log": "f63a5a621673b02d4b8a05dc0d42e856a186d6694e808951ed74585bdbdb1fa7",
+    "artifacts/gemma-hybrid32-2026-11-04/reference-run.json": "e17bb58c5f30b38e52d797f0fd7be5690a4219cdddf4a3a60e0304472f5d3e41",
+    "artifacts/gemma-hybrid32-2026-11-04/reference/result.json": "49cbf063d45950d846efbfbf23397d2f0bf934a98c4f54634c2f0c57c6aeb075",
+    "artifacts/gemma-hybrid32-2026-11-04/reference-retry/interrupted.json": "891c8b7db526576e0859f180f5186484f4c0dcaac01b64024d885fa9582465f3",
+    "artifacts/gemma-hybrid32-2026-11-04/reference-retry2/reference-plan.json": "120238fa0336393c88fa7585dddba4cfd49ea7afe7961d783ed8a0d933c99202",
+    "artifacts/gemma-hybrid32-2026-11-04/reference-retry2/reference-run.json": "37d8b9b56c599fc439d9206e5add053f7e33794b8148d1f68a88f371c20a040a",
+    "artifacts/gemma-hybrid32-2026-11-04/reference-retry2/reference/result.json": "cad8ca4156581652a281736e2ed9e5638f75ce00cc79d0e7697c63cc8e0ec3a0",
+    "artifacts/gemma-hybrid32-2026-11-04/reference-retry2/reference/rows.bin": "b784d06f7fa0b9212acf0eee4e08c3b804eef428e4a42c9cdc1669a647da3665",
+    "artifacts/gemma-hybrid32-2026-11-04/reference-identity.json": "0d5d322e9569b21277ff77267889dee70e049a2d8152dfd84f423826e24ff698",
+    "artifacts/gemma-hybrid32-2026-11-04/native.py": "9fcdb3521bfcb0d8c5538cbddac27a7ad6974cfe7c174eec37acd702ddeb0120",
+    "artifacts/gemma-hybrid32-2026-11-04/native-plan.json": "62fde4dec5cb861aff05ff7647fedbe13ba3c27ca7ae9e3f3657b701ae1056f6",
+    "artifacts/gemma-hybrid32-2026-11-04/native-run.json": "2f5f1fd2eae8956199577d82e180920a9c252d8ca023d217dfb1fd3d361db784",
+    "artifacts/gemma-hybrid32-2026-11-04/native.stdout": "9319c300646c87b0785bec7dda31a50c4fa562a5a2c43ca5e0ca5773bc624cae",
+    "artifacts/gemma-hybrid32-2026-11-04/arrays.bin": "4a6fc95a5bd354917144675cde6d217641165a955434922b3e9427e8cef5913b",
+    "artifacts/gemma-hybrid32-2026-11-04/replay.json": "491bd84b9a75b529a61c51116d3508c8b5750255696418efa31a95e752772236",
+    "tools/reference/check_gemma_hybrid_tiny.py": "76301036595f2a8b77f8101b1368f3b1feb8964645d6dc993017bbed353b6a6e"
+  }
+}

@@ -1,5 +1,7 @@
 # Original Gemma E2B hybrid execution on Mac
 
+The later [32-position boundary](gemma-hybrid32.md) passes its state/schedule and four selected-row checks. The earlier four-token near-zero mathematical failures below remain rejected.
+
 The original resident packed weights now execute through the shared Gemma
 scalar/hybrid graph and the public real norm-copy/adapter path. This record
 covers short diagnostics for the pinned `mlx-community/gemma-4-e2b-it-4bit`
