@@ -134,7 +134,14 @@ Wait for the selected Gemma graph to pass its required gates. Validate checkpoin
 
 ### Llama Online correctness
 
-Reproduce the tied model at offset 5 with tokens 7, 13 and 3. The first rejected value is layer 1 attention projection, row 2 and channel 4. Astra selects a same-operand Reference, Online prefill and Online one-row replay of rotated Q and valid KV. Check causal lengths 1/2/3 with poisoned unused storage, then project each resulting context. Rerun the original gate and boundaries before qualification.
+The [same-operand witness](../benchmarks/results/2026-11-05-llama-online-witness-v1.json)
+reproduces the layer 1 projection failure on the tied graph at offset 5.
+Online prefill and decode agree and padding poison has no effect. The Online
+quotient crosses a Half midpoint relative to Reference's normalized-probability
+sum. The [ablation](../benchmarks/results/2026-11-05-llama-online-ablation-v1.json)
+isolates a compensated alternative with a host FP64 quotient. Astra recommends
+retaining the raw Online rejection because a GPU compensated quotient needs
+independent numerical, quality and performance qualification.
 
 [The depth-32 staged screen](../benchmarks/results/2026-11-05-llama-online-staged-v1.json) passes the frozen graphs. The next candidate uses separately admitted FP32 scores and an ascending normalized-V pass. Check depth boundaries, state and the real Mac512 checkpoint against Reference before retention.
 
@@ -155,5 +162,5 @@ The [explicit audited Mac512 selector](../benchmarks/results/2026-11-05-llama-st
 passes exact workspace accounting, lifecycle controls and isolated-row replay.
 The [opt-in Mac app route](../benchmarks/results/2026-11-06-llama-staged-app-v1.json)
 proves the staged dispatch from Chat, with Stop, New Chat, rejected capacity
-replacement, unload/reopen and observed process memory. The original Online
-gate and managed-default decision remain separate.
+replacement, unload/reopen and observed process memory. Raw Online remains
+rejected. Managed-default staged adoption has a separate decision.

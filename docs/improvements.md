@@ -10423,3 +10423,12 @@ scores 32 targets with identical chunk1/chunk32 rows and a +0.005026-nat mean
 difference from original FP32. Both tokenizers reproduce the pinned plain
 prompt. Astra approved the short scope, which precedes both full quality gates.
 [Evidence](../benchmarks/results/2026-11-06-qwen15-original-alignment-v1.json)
+
+## 6 November 2026 — Record the remaining conditional M9 decisions
+
+Astra confirms the raw Llama Online failure comes from a different reduction
+crossing a Half midpoint under the same operands. Keep the frozen rejection
+and the separately qualified staged path. Defer I8 integration until a
+selected profile needs capacity that FP16 cannot admit under its budget.
+[Decision and evidence](todo-implementation-plans.md#llama-online-correctness)
+[Capacity ledger](todo-implementation-plans.md#p4-i8-kv)

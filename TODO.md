@@ -576,15 +576,16 @@ Conditional follow-ons require their own decision; they do not all block M9:
 
 - [x] P3 current candidate evaluated and deferred. [Paired operation timing](benchmarks/results/2026-11-05-m9-split-kv-timing-v1.json) passes, [real session](benchmarks/results/2026-11-05-m9-split-kv-session-v1.json) rejects, and [same-input witness](benchmarks/results/2026-11-05-m9-split-kv-witness-v1.json) localizes the rounding difference to the stored partials for the first differing word.
 - [x] R1: evaluate rotary reuse and defer the table for pinned Qwen2.5 MLX8 on M1 Pro. [Decision](docs/m9-rotary-opportunity.md)
-- [ ] P4: integrated I8 KV for a defined capacity requirement, with an actual codec. Astra reviewed the current Mac profile. [Capacity trigger](docs/todo-implementation-plans.md#p4-i8-kv) remains open.
+- [x] P4 feasibility decision: defer integrated I8 KV until a selected profile
+  requires more capacity than FP16 admits. [Capacity trigger and ledger](docs/todo-implementation-plans.md#p4-i8-kv).
 - [x] P5: bounded strict-greedy verification and paired Qwen2 prompt lookup.
   [Implementation and parity](docs/todo-implementation-plans.md#p5-strict-greedy-verifier-and-prompt-lookup).
   [Timing](benchmarks/results/2026-11-06-m9-qwen2-lookup-timing-v1.json) repeats a 53% decode
   gain on the repeated contract prompt. The code prompt misses the 5% gate.
   Retain the explicit nonstreaming API and reject default adoption.
 - [ ] G2/G3: checkpoint-defined shared-KV prefill/MTP after selected Gemma support.
-- [ ] Separate correctness task: Llama Online remains rejected.
-  [Plan and staged evidence](docs/todo-implementation-plans.md#llama-online-correctness).
+- [x] Llama Online investigation: retain rejection under the frozen numerical gate.
+  [Arithmetic decision and separate staged evidence](docs/todo-implementation-plans.md#llama-online-correctness).
   - [x] Isolated staged Llama Mac512 Chat controller, real prefill/decode,
     Stop, Settings rejection, unload and reopen. [Evidence](benchmarks/results/2026-11-06-llama-staged-app-v1.json).
   - [x] Reproduce the one-word difference on identical operands. [Result](benchmarks/results/2026-11-05-llama-online-witness-v1.json)
@@ -1442,3 +1443,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | Staged Llama Mac Chat probe reviewed | Two authenticated sessions and 43 chunks dispatch all 16 staged layers. Send, Stop, New Chat, rejected Apply, unload/reopen and close pass. Physical peak 1.55 GB. | Diagnostic controller scope. Feature recheck passes after ordering admission. [Evidence](benchmarks/results/2026-11-06-llama-staged-app-v1.json) |
 
 | 2026-11-06 | Qwen1.5B short original-weight alignment reviewed | Original baseline replays all 10,000 rows; native chunks 1/32 agree exactly on 32 targets and plain prompt IDs. Short NLL delta +0.005026, physical peak 1.88 GB. | Astra approves descriptive diagnostic scope. Native full loss and task quality remain open. [Evidence](benchmarks/results/2026-11-06-qwen15-original-alignment-v1.json) |
+
+| 2026-11-06 | M9 conditional decisions recorded | Llama raw Online differs at a Half midpoint under the same operands. Existing Mac Qwen3 admission gives I8 KV no selected capacity target. | Astra confirms retained Online rejection and deferred I8 integration. The staged Llama probe is qualified separately. |
