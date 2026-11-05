@@ -10248,3 +10248,10 @@ The authenticated Q6 checkpoint changes all four disputed Q4 decisions to
 the original BF16 token. Strict load and independent full-row replay pass
 under the 6 GiB worker policy. Astra approved the bounded result.
 [Report](gemma6-feasibility.md#stock-decision-preflight)
+
+## 5 November 2026 — Check stock Gemma Q6 task state
+
+Three frozen cases pass all 50 cached and stateless greedy comparisons,
+including terminal EOS. Peak physical memory is 4.65 GB. Astra approved
+the pilot. Full task grading and loss remain open.
+[Evidence](../benchmarks/results/2026-11-05-gemma6-stock-task-pilot-v1.json)

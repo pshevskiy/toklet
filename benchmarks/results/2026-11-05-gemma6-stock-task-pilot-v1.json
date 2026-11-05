@@ -1,0 +1,54 @@
+{
+  "passed": true,
+  "device": "Apple M1 Pro",
+  "cases": [
+    {
+      "id": "HumanEval/0",
+      "category": "code",
+      "samples": 46,
+      "visible": 45,
+      "stop": {
+        "kind": "stop_token",
+        "token_id": 106
+      },
+      "stateless_matches": 46
+    },
+    {
+      "id": "truthfulqa/row-0",
+      "category": "prose",
+      "samples": 2,
+      "visible": 1,
+      "stop": {
+        "kind": "stop_token",
+        "token_id": 106
+      },
+      "stateless_matches": 2
+    },
+    {
+      "id": "lambada/row-0",
+      "category": "continuation",
+      "samples": 2,
+      "visible": 1,
+      "stop": {
+        "kind": "stop_token",
+        "token_id": 106
+      },
+      "stateless_matches": 2
+    }
+  ],
+  "total_exact_rows": 50,
+  "physical_peak_bytes": 4645900128,
+  "limit_bytes": 6442450944,
+  "full_quality_qualified": false,
+  "output_limit_exercised": false,
+  "review": "Astra approved three-category frozen stock pilot",
+  "receipts": {
+    "artifacts/gemma6-feasibility-2026-11-05/pilot/prepare.py": "d1b36ff2a0dcf6bf4345e336bddb91507725b59cdfa3a117759abb1f3117f5e9",
+    "artifacts/gemma6-feasibility-2026-11-05/pilot/tasks-loop.py": "48f5ee4134505e5deeb44738b6e8e8d431095b653a1db45631e167e33d13ac1a",
+    "artifacts/gemma6-feasibility-2026-11-05/pilot/stock.py": "c9150d3bdde13942f308df5846e40de48c9ac93b51231c8c935e9de0595d266f",
+    "artifacts/gemma6-feasibility-2026-11-05/pilot/stock-plan.json": "7ca76572a1aee9c988c9796e1c11f9faa4e3d4bf69007815cfcf5f6d7fc8c358",
+    "artifacts/gemma6-feasibility-2026-11-05/pilot/own-stock.py": "fefe3720b9942b6ac4c6b7816d2ed4e150ae7c34e7ab1e51a3aed53cb2ba1b60",
+    "artifacts/gemma6-feasibility-2026-11-05/pilot/stock-owned.json": "6d9c6abc30539f00e0552577751689ff500aff097f892af21c3f4fc8a2b075ed",
+    "artifacts/gemma6-feasibility-2026-11-05/pilot/stock/result.json": "fdbf87f884f5ac1bc3771995dbc15f813752a975d1d12b02fb1c35b3306bbca6"
+  }
+}

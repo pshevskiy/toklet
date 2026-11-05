@@ -41,3 +41,9 @@ and validate sampled tokens, hidden stops and stateless replay before running
 all 100 cases. Reuse the frozen grading literals and 2-point gate against
 original BF16. The full loss gate and native Q6 implementation remain separate.
 [Decision evidence](../benchmarks/results/2026-11-05-gemma6-stock-decisions-v1.json).
+
+The three-category pilot reproduces all 50 sampled IDs statelessly and
+verifies three terminal EOS predictions. The M1 Pro physical peak is
+4,645,900,128 bytes. Astra approved this run. The next collector checks the
+output-limit path, bounds long replay, and journals each complete case.
+[Pilot evidence](../benchmarks/results/2026-11-05-gemma6-stock-task-pilot-v1.json).
