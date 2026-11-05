@@ -10398,3 +10398,11 @@ Mac release run matches both serial transcripts and state, including 15 of 23
 accepted proposals. Astra approved the explicit nonstreaming path. The
 paired performance comparison is pending.
 [Evidence](../benchmarks/results/2026-11-06-m9-qwen2-metal-generation-v1.json)
+
+## 6 November 2026 — Measure bounded Qwen2 lookup in both orders
+
+Exact greedy state and logits recovered after the timed interval match across
+trials. Astra approved the evidence. The repeated contract prompt gains 53.33%/53.76% in decode. The code prompt misses the 5%
+gate, with 19 of 46 proposals accepted. Retain the explicit API and reject
+default adoption. The caller-owned target workspace is 5,469,696 bytes.
+[Evidence](../benchmarks/results/2026-11-06-m9-qwen2-lookup-timing-v1.json)

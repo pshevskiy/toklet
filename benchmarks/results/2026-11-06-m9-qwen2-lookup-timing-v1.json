@@ -1,0 +1,189 @@
+{
+  "device": "Apple M1 Pro",
+  "profile": "Pinned Qwen2.5-0.5B-Instruct MLX8 6474d4c, Mac256/chunk8 Online FullLogits",
+  "design": "artifacts/m9-p5-lookup-timing-2026-11-06/workload.txt",
+  "frozen_inputs": "artifacts/m9-p5-lookup-timing-2026-11-06/retry/frozen.sha256",
+  "raw": "artifacts/m9-p5-lookup-timing-2026-11-06/paired.json",
+  "trials_per_case_order": {
+    "warmups": 3,
+    "measured": 10
+  },
+  "environment": [
+    "artifacts/m9-p5-lookup-timing-2026-11-06/environment.txt",
+    "artifacts/m9-p5-lookup-timing-2026-11-06/reverse/before.txt",
+    "artifacts/m9-p5-lookup-timing-2026-11-06/reverse/after.txt"
+  ],
+  "recovery": "Initial harness read hidden logits while the last sampled token was pending. Corrected post-timing replay retained the original workloads, timing boundaries and thresholds.",
+  "initial_failure": "artifacts/m9-p5-lookup-timing-2026-11-06/gpu.stderr",
+  "exact_in_all_pairs": [
+    "visible IDs",
+    "stop reason",
+    "history",
+    "evaluated/pending positions",
+    "final logit bits after evaluating the pending token outside timing"
+  ],
+  "primary_code_gate_percent": 5,
+  "primary_code_gate_passed": false,
+  "decision": "Retain explicit bounded lookup for repeatable favorable prefixes. No default or streaming adoption.",
+  "repetitions": [
+    {
+      "memory": {
+        "session_admitted_bytes": 602021754,
+        "lookup_rows_bytes": 5469696,
+        "output_bytes": 128,
+        "initial_order_reversed": false
+      },
+      "sampled_physical_peak_bytes": 658867328,
+      "rss_peak_bytes": 671744000,
+      "limit_bytes": 2684354560,
+      "binary_sha256": "59d396a7a126ec59088855a9334518bcdb6c127d5484e94b35dd313b8da7ef6c",
+      "owner": "artifacts/m9-p5-lookup-timing-2026-11-06/retry/owned.json",
+      "cases": {
+        "regular": {
+          "prompt_tokens": 128,
+          "proposed": 28,
+          "accepted": 28,
+          "emitted": 32,
+          "metrics": {
+            "decode_seconds": {
+              "serial": {
+                "median": 0.9394244375,
+                "mad": 0.022243271000000064
+              },
+              "lookup": {
+                "median": 0.4383914795,
+                "mad": 0.008780978999999994
+              },
+              "gain_percent": 53.33403496861875,
+              "exceeds_larger_mad": true
+            },
+            "request_seconds": {
+              "serial": {
+                "median": 2.062653917,
+                "mad": 0.04309464650000017
+              },
+              "lookup": {
+                "median": 1.5514161045,
+                "mad": 0.013970479000000036
+              },
+              "gain_percent": 24.785438230159485,
+              "exceeds_larger_mad": true
+            }
+          }
+        },
+        "code": {
+          "prompt_tokens": 96,
+          "proposed": 46,
+          "accepted": 19,
+          "emitted": 32,
+          "metrics": {
+            "decode_seconds": {
+              "serial": {
+                "median": 0.8909451669999999,
+                "mad": 0.0064462294999999
+              },
+              "lookup": {
+                "median": 0.900910688,
+                "mad": 0.00659989649999998
+              },
+              "gain_percent": -1.1185335943351085,
+              "exceeds_larger_mad": false
+            },
+            "request_seconds": {
+              "serial": {
+                "median": 1.7010981875,
+                "mad": 0.008803666499999974
+              },
+              "lookup": {
+                "median": 1.711426167,
+                "mad": 0.009227292000000054
+              },
+              "gain_percent": -0.60713600049027,
+              "exceeds_larger_mad": false
+            }
+          }
+        }
+      }
+    },
+    {
+      "memory": {
+        "session_admitted_bytes": 602021754,
+        "lookup_rows_bytes": 5469696,
+        "output_bytes": 128,
+        "initial_order_reversed": true
+      },
+      "sampled_physical_peak_bytes": 656540704,
+      "rss_peak_bytes": 669483008,
+      "limit_bytes": 2684354560,
+      "binary_sha256": "59d396a7a126ec59088855a9334518bcdb6c127d5484e94b35dd313b8da7ef6c",
+      "owner": "artifacts/m9-p5-lookup-timing-2026-11-06/reverse/owned.json",
+      "cases": {
+        "regular": {
+          "prompt_tokens": 128,
+          "proposed": 28,
+          "accepted": 28,
+          "emitted": 32,
+          "metrics": {
+            "decode_seconds": {
+              "serial": {
+                "median": 0.9218185624999999,
+                "mad": 0.004366228999999999
+              },
+              "lookup": {
+                "median": 0.4262514585,
+                "mad": 0.0010296249999999785
+              },
+              "gain_percent": 53.759722808792965,
+              "exceeds_larger_mad": true
+            },
+            "request_seconds": {
+              "serial": {
+                "median": 2.0097345835000002,
+                "mad": 0.009260333500000106
+              },
+              "lookup": {
+                "median": 1.5127073334999999,
+                "mad": 0.005549437499999921
+              },
+              "gain_percent": 24.730989558552338,
+              "exceeds_larger_mad": true
+            }
+          }
+        },
+        "code": {
+          "prompt_tokens": 96,
+          "proposed": 46,
+          "accepted": 19,
+          "emitted": 32,
+          "metrics": {
+            "decode_seconds": {
+              "serial": {
+                "median": 0.8926842500000001,
+                "mad": 0.0062989999999999435
+              },
+              "lookup": {
+                "median": 0.8959082085000001,
+                "mad": 0.003590604500000094
+              },
+              "gain_percent": -0.36115328572224864,
+              "exceeds_larger_mad": false
+            },
+            "request_seconds": {
+              "serial": {
+                "median": 1.701228333,
+                "mad": 0.014069499499999916
+              },
+              "lookup": {
+                "median": 1.703795,
+                "mad": 0.00615377100000003
+              },
+              "gain_percent": -0.15087139981226536,
+              "exceeds_larger_mad": false
+            }
+          }
+        }
+      }
+    }
+  ],
+  "review": "Astra approved timing/evidence and experimental retention with the primary code gate explicitly failed."
+}
