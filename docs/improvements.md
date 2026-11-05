@@ -10639,3 +10639,10 @@ The template difference only affects tool media. Astra approved the
 bounded result and the conditional mixed projection plan. QAT keeps a
 separate native identity and admission gate.
 [Evidence](../benchmarks/results/2026-11-06-gemma-qat-text-v1.json)
+
+## 6 November 2026 — Pass bounded Gemma QAT stock checks
+
+The resumed shard authenticates. Strict mixed loading peaks at 3.97GB.
+All 144 sampled decisions verify on HumanEval/37 after one repair, at
+4.47GB peak. Astra approved the unchanged full quality sequence.
+[Evidence](../benchmarks/results/2026-11-06-gemma-qat-stock-v1.json)

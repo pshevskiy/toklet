@@ -1,0 +1,87 @@
+{
+  "passed": true,
+  "replayed": [
+    {
+      "id": "HumanEval/1",
+      "agrees_with": "native",
+      "greedy_id": 19243,
+      "original_id": 236751,
+      "q4_stock_id": 19243,
+      "q4_stock_margin": 5.6875,
+      "top_two_margin": 2.625,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "19baf9938aecc61bd1e618f504a04cc32560fe8e8400bce2bba5272a8f1b7981"
+    },
+    {
+      "id": "HumanEval/24",
+      "agrees_with": "original",
+      "greedy_id": 236770,
+      "original_id": 236770,
+      "q4_stock_id": 236778,
+      "q4_stock_margin": 0.25,
+      "top_two_margin": 1.75,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "5708a4e2dc11fd620868838ca6808a6a855b6b2959e914b4f7a48962dca10b22"
+    },
+    {
+      "id": "truthfulqa/row-0",
+      "agrees_with": "native",
+      "greedy_id": 236780,
+      "original_id": 236776,
+      "q4_stock_id": 236780,
+      "q4_stock_margin": 10.625,
+      "top_two_margin": 0.75,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "1f2e83c362b672e3c09ef76d7417392a8405a0d29893a0ba554b5201aa3ab517"
+    },
+    {
+      "id": "truthfulqa/row-3",
+      "agrees_with": "original",
+      "greedy_id": 236796,
+      "original_id": 236796,
+      "q4_stock_id": 236799,
+      "q4_stock_margin": 0.25,
+      "top_two_margin": 2.5,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "51787e4def7f6227e95199559ccdba938a4a31f7e1495bf2019dd786369161c6"
+    }
+  ],
+  "source_revision": "42f62737af7a9fd8c1d55d79666c1a217be4e2e2",
+  "q4_comparison_evidence": "benchmarks/results/2026-11-04-gemma-mlx-decisions-v1.json",
+  "external_rss_peak_bytes": 1791410176,
+  "original_comparison_informational": true,
+  "task_gate_waived": false,
+  "device": "Apple M1 Pro",
+  "strict_text_tensors": 1096,
+  "affine_matrix_bits": {
+    "4": 173,
+    "8": 105
+  },
+  "four_decision_peak_physical_bytes": 3965193792,
+  "bounded_trajectory": {
+    "case": "HumanEval/37",
+    "sampled_decisions": 144,
+    "repairs": 1,
+    "terminal": {
+      "kind": "stop_token",
+      "token_id": 106
+    },
+    "physical_peak_bytes": 4466101920,
+    "passed": true
+  },
+  "full_quality_qualified": false,
+  "native_app_qualified": false,
+  "corrected_transfer": "An interrupted HTTP/2 stream resumed over HTTP/1.1. The completed shard matched the original LFS size and SHA-256.",
+  "review": "Astra approved bounded stock evidence and the unchanged full100 collection.",
+  "receipts_sha256": {
+    "artifacts/gemma-qat-screen-2026-11-06/acquisition.json": "55482953a0595ad7fa26356ea70a25fe9b9f15ef328fb131c6de32dbb9623755",
+    "artifacts/gemma-qat-screen-2026-11-06/acquire.stderr": "eeb37b21ce0f0b1d8223feca18f61b05121f049ff1b46297a225d0aa7813c02f",
+    "artifacts/gemma-qat-screen-2026-11-06/resume-attempts.jsonl": "6003a2901078aa01f5b0f80c7036919a9bcc58b41435c41c3501f6d442141967",
+    "artifacts/gemma-qat-screen-2026-11-06/stock-owned.json": "89e5291e4c923ba9e2cdb8b07b05376af963174c55f342caf6a8015ec2a5d632",
+    "artifacts/gemma-qat-screen-2026-11-06/stock-plan.json": "d89173a8b6b051187c009502587fe7bcc4a0a8c59136b5ddb670c38238c3eab4",
+    "artifacts/gemma-qat-screen-2026-11-06/replay.json": "c067c769fd8ca30a8867e4f22f0f5950be2b82961001adbb0d708c8eccc47d3a",
+    "artifacts/gemma-qat-screen-2026-11-06/stock/result.json": "6b356bd80c8276c0fe905986450aa9a860eb2a84d1e74d3a815d8686bb3860dc",
+    "artifacts/gemma-qat-screen-2026-11-06/trajectory37/stock-owned.json": "734ad829a8defac71d551756b2916a0c52bf94ca59e6165420dc9bfa096a3e03",
+    "artifacts/gemma-qat-screen-2026-11-06/trajectory37/stock/result.json": "44a784b56b12b7ed8213e5ee9c008f94d83094035e211b81e8734162a351a076"
+  }
+}

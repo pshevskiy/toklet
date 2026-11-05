@@ -112,6 +112,10 @@ The changed template and unknown conversion lineage require separate scope.
 The [QAT text witness](../benchmarks/results/2026-11-06-gemma-qat-text-v1.json)
 matches all 97 frozen basic-text records and the installed loader's parsed
 text arguments. It leaves native identity and live mixed loading separate.
+The [bounded QAT stock result](../benchmarks/results/2026-11-06-gemma-qat-stock-v1.json)
+verifies strict mixed loading and all 144 HumanEval/37 samples after one
+repair, at 4.47GB peak. Run the frozen100 cases first. If the grade passes,
+score the exact ten reset loss windows against the unchanged original mean.
 If stock quality passes, extend the existing Gemma FP32 compensated affine
 projection with a statically selected 8-bit leaf. Reuse the packing layout
 as the pool key and derive the admitted pool inventory from the pinned
