@@ -355,6 +355,85 @@ impl<'model> Session<'model> {
         Ok(())
     }
 
+    /// Verify one bounded tentative CPU chunk against its target rows. The
+    /// caller separately admits exactly (proposal length + 1) * vocabulary
+    /// FP32 words. No published state changes on error or observed cancellation.
+    /// Accepted proposals enter KV; the correction, bonus, or hidden stop stays
+    /// pending. Caller controls visibility and must only use qualified schedules.
+    pub fn verify_greedy_round(
+        &mut self,
+        proposals: &[u32],
+        stop_tokens: &[u32],
+        rows: &mut [f32],
+        cancelled: impl Fn() -> bool,
+    ) -> Result<Option<crate::generation::GreedyVerification>, crate::generation::Error> {
+        use crate::generation::{Error as GenerationError, VerifiedNext, verify_greedy};
+
+        let start = self.evaluated_len;
+        let width = self.vocab_size();
+        let current = self.logits().ok_or(GenerationError::InvalidRequest(
+            "verification requires a committed distribution",
+        ))?;
+        if proposals.len() > self.options.prefill_chunk_size {
+            return Err(GenerationError::InvalidRequest(
+                "proposal exceeds admitted chunk",
+            ));
+        }
+        self.validate(proposals, start)?;
+        let proposal_end = start + proposals.len();
+        if proposal_end == self.capacity() {
+            return Err(GenerationError::InvalidRequest(
+                "no capacity for pending verification token",
+            ));
+        }
+        if (proposals.len() + 1).checked_mul(width) != Some(rows.len()) {
+            return Err(GenerationError::InvalidRequest(
+                "invalid target logits shape",
+            ));
+        }
+        if stop_tokens.iter().any(|&token| token as usize >= width) {
+            return Err(GenerationError::InvalidRequest(
+                "stop token out of vocabulary",
+            ));
+        }
+        if cancelled() {
+            return Ok(None);
+        }
+
+        let (initial, tentative) = rows.split_at_mut(width);
+        initial.copy_from_slice(current);
+        if !proposals.is_empty() {
+            // This append-only graph can dirty the uncommitted tail on failure.
+            // Published history, length and logits are held until verification.
+            self.model
+                .forward_cached(
+                    proposals,
+                    self.options.position_offset + start,
+                    &mut self.scratch,
+                    &mut self.cache,
+                    start,
+                    tentative,
+                )
+                .map_err(Error::from)?;
+        }
+        let verification = verify_greedy(proposals, rows, width, stop_tokens)?;
+        if cancelled() {
+            return Ok(None);
+        }
+
+        let accepted = verification.accepted;
+        let published = accepted * width;
+        let next = match verification.next {
+            VerifiedNext::Token(id) | VerifiedNext::Stop(id) => id,
+        };
+        self.logits
+            .copy_from_slice(&rows[published..published + width]);
+        self.history.extend_from_slice(&proposals[..accepted]);
+        self.evaluated_len += accepted;
+        self.history.push(next);
+        Ok(Some(verification))
+    }
+
     /// Evaluate at most one admitted chunk. On success commit all its layers and
     /// final logits together. On failure the previously committed prefix remains
     /// valid and pending history remains for replay or discard. Staged KV tails

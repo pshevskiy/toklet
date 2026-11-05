@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "default_tests": 582,
+  "metal_tests": 694,
+  "session_tests_each": 20,
+  "release_round_tests": 1,
+  "successful_round_allocations": 0,
+  "measured_rounds": 4,
+  "checked": [
+    "zero partial full acceptance",
+    "hidden stop",
+    "cancellation after forward",
+    "exact capacity for pending target",
+    "discard and replay",
+    "preflight shape and stop IDs"
+  ],
+  "scope": "Explicit append-only CPU session transaction with caller-owned FP32 rows. No live streaming integration or Metal path.",
+  "review": "Astra approved the bounded CPU transaction",
+  "checks": "artifacts/m9-p5-cpu-round-2026-11-05/checks.json"
+}

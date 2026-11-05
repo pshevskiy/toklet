@@ -10322,3 +10322,10 @@ The isolated leaf passes 116,800 FP64 comparisons on the M1 Pro. Single-row
 and batched output bits match on identical inputs. Astra approved workspace
 guards, status handling and scratch reset. Real-model qualification remains open.
 [Evidence](../benchmarks/results/2026-11-05-llama-staged-leaf-v1.json)
+
+## 5 November 2026 — Verify an explicit CPU proposal transaction
+
+The CPU session evaluates a tentative chunk into caller-admitted target
+rows. It publishes the accepted prefix and leaves one correction, bonus or
+hidden stop pending. Astra approved cancellation, replay and admission checks.
+[Evidence](../benchmarks/results/2026-11-05-m9-cpu-greedy-round-v1.json)

@@ -1316,3 +1316,127 @@ fn greedy_tentative_batch_rolls_back_to_the_sequential_prefix() {
         }
     }
 }
+
+#[test]
+fn cpu_greedy_round_publishes_only_accepted_state_and_pending_target() {
+    use toklet::generation::{GreedyVerification, VerifiedNext};
+
+    let fixture = Fixture::tiny();
+    let (config, weights) = tiny_parts(&fixture);
+    let model = Model::new(config, weights).unwrap();
+    let prompt = [1, 7, 13];
+    let options = options(6, 2, 5);
+    let width = model.config().vocab_size;
+    let new = |options| {
+        let mut s = Session::new(&model, options).unwrap();
+        s.append(&prompt).unwrap();
+        s.evaluate().unwrap();
+        s
+    };
+    let mut serial = new(options);
+    let mut choices = [0; 3];
+    let mut distributions = Vec::new();
+    for next in &mut choices {
+        let logits = serial.logits().unwrap();
+        distributions.push(logits.to_vec());
+        *next = sampling::greedy(logits).unwrap();
+        if serial.history().len() < 5 {
+            serial.append(&[*next]).unwrap();
+            serial.evaluate().unwrap();
+        }
+    }
+    let other = |token| (token + 1) % u32::try_from(width).unwrap();
+    for (proposal, accepted, stops) in [
+        ([other(choices[0]), choices[1]], 0, &[][..]),
+        ([choices[0], other(choices[1])], 1, &[]),
+        ([choices[0], choices[1]], 2, &[]),
+        ([choices[0], choices[1]], 0, &choices[..1]),
+    ] {
+        let mut s = new(options);
+        let mut rows = vec![f32::NAN; width * 3];
+        let next = choices[accepted];
+        let expected = if stops.contains(&next) {
+            VerifiedNext::Stop(next)
+        } else {
+            VerifiedNext::Token(next)
+        };
+        let called = Cell::new(0);
+        assert_eq!(
+            s.verify_greedy_round(&proposal, stops, &mut rows, || {
+                called.set(called.get() + 1);
+                called.get() == 2
+            })
+            .unwrap(),
+            None
+        );
+        assert_eq!(called.get(), 2);
+        assert!(rows.iter().all(|value| value.is_finite()));
+        assert_eq!(s.history(), prompt);
+        assert_eq!(s.logits().unwrap(), distributions[0]);
+        assert_eq!(s.evaluated_len(), prompt.len());
+        ALLOCATIONS.with(|count| count.set(0));
+        TRACK.with(|track| track.set(true));
+        let result = s.verify_greedy_round(&proposal, stops, &mut rows, || false);
+        TRACK.with(|track| track.set(false));
+        assert_eq!(ALLOCATIONS.with(Cell::get), 0);
+        assert_eq!(
+            result.unwrap(),
+            Some(GreedyVerification {
+                accepted,
+                next: expected
+            })
+        );
+        assert_eq!(&s.history()[..prompt.len()], &prompt);
+        assert_eq!(
+            &s.history()[prompt.len()..s.evaluated_len()],
+            &proposal[..accepted]
+        );
+        assert_eq!(s.history().last(), Some(&next));
+        assert_eq!(s.pending_len(), 1);
+        assert!(s.logits().is_none());
+        s.discard_pending();
+        assert_eq!(s.logits().unwrap(), distributions[accepted]);
+        s.append(&[next]).unwrap();
+        s.evaluate().unwrap();
+        let mut replay = new(options);
+        for token in &choices[..=accepted] {
+            replay.append(&[*token]).unwrap();
+            replay.evaluate().unwrap();
+        }
+        assert_eq!(s.history(), replay.history());
+        assert_eq!(s.logits(), replay.logits());
+    }
+    let mut s = new(Options {
+        capacity: 5,
+        ..options
+    });
+    let mut rows = vec![f32::NAN; width * 3];
+    assert!(
+        s.verify_greedy_round(&choices[..2], &[], &mut rows, || false)
+            .is_err()
+    );
+    assert!(
+        s.verify_greedy_round(&choices[..1], &[u32::MAX], &mut rows[..width * 2], || false)
+            .is_err()
+    );
+    assert!(
+        s.verify_greedy_round(&choices[..1], &[], &mut rows[..width], || false)
+            .is_err()
+    );
+    assert_eq!(
+        s.verify_greedy_round(&[], &[], &mut rows[..width], || true)
+            .unwrap(),
+        None
+    );
+    assert!(rows.iter().all(|x| x.is_nan()));
+    assert_eq!(s.history(), prompt);
+    assert_eq!(s.logits().unwrap(), distributions[0]);
+    assert_eq!(
+        s.verify_greedy_round(&[], &[], &mut rows[..width], || false)
+            .unwrap(),
+        Some(GreedyVerification {
+            accepted: 0,
+            next: VerifiedNext::Token(choices[0])
+        })
+    );
+}
