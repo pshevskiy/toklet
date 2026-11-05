@@ -1,0 +1,34 @@
+{
+  "position": 1024,
+  "ids": [
+    1822,
+    6212,
+    23958,
+    74252
+  ],
+  "normalized_row_sha256": "fdc0de6cde9266dd480db3230d5439aa68b053b817afb39f2d7c021a2c36d4b7",
+  "archived_native_row_exact": true,
+  "local_head": {
+    "math_fp64": {
+      "values": 4,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.00015045544608433662,
+      "examples": []
+    },
+    "staged_fp32": {
+      "values": 4,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    }
+  },
+  "local_head_passed": true,
+  "earlier_full_gate_remains_open": true,
+  "passed": true,
+  "device": "Apple M1 Pro",
+  "sampled_physical_peak_bytes": 2905721544,
+  "review": "Astra approved the local same-input head witness",
+  "checks": "artifacts/gemma-head-witness-2026-11-05/checks.json",
+  "mutation_controls": "artifacts/gemma-head-witness-2026-11-05/checker-controls.json",
+  "owner": "artifacts/gemma-head-witness-2026-11-05/owned.json"
+}

@@ -10161,3 +10161,10 @@ controller proof. [Evidence](../benchmarks/results/2026-11-05-m9-affine-app-v1.j
 M9 first delivery closes in the pinned M1 Pro scope. Independent prefill
 improves 13.69%, and full quality, state and diagnostic Chat gates pass.
 Managed-default deployment stays separate. [Decision](m9-mac-affine-decision.md)
+
+## 5 November 2026 — Isolate the Gemma final head and softcap
+
+The four rejected output IDs pass both frozen contracts from the actual
+native normalized row. The complete native row matches its archived hash.
+Astra approves the local witness. Earlier propagated errors remain open.
+[Evidence](../benchmarks/results/2026-11-05-gemma-head-witness-v1.json)

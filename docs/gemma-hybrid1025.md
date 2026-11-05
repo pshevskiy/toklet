@@ -61,3 +61,10 @@ resident scheduling and app/device qualification remain open.
 [Next original-quality experiment](gemma-original-quality-next.md).
 [Native/replay evidence](../benchmarks/results/2026-11-04-gemma-hybrid1025-v1.json).
 [Independent-reference evidence](../benchmarks/results/2026-11-04-gemma-e2b-wrap-reference-v1.json).
+
+A later same-input witness captured the native normalized row at position
+1,024 and reproduced the complete archived native logit row. Independent
+packed head and softcap replay passes at all four mathematical failures.
+The staged outputs match exactly. This narrows the investigation to earlier
+boundaries and retains the original whole-graph verdict.
+[Head witness](../benchmarks/results/2026-11-05-gemma-head-witness-v1.json).

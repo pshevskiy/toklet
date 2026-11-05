@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Gemma4 1,025-position same-input head and softcap diagnostic. M9 first delivery is complete in its reviewed Mac opt-in scope.**
+Current task: **Gemma4 actual-input RMSNorm witnesses at owner13/433 and final position 1,024. Final head and softcap pass on the same normalized input.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -510,7 +510,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Diagnostic1,025 admission and qualified512-prefix parity; default32/chunk32 preserved. [Report](docs/gemma-context1025-probe.md).
 - [x] Independent real1,025 oracle and native local-cache state/wrap/overflow/reset capture; [report](docs/gemma-hybrid1025.md).
 - [x] Same-input V-projection/RMSNorm and exact cache-transfer witness; [report](docs/gemma-v-boundary.md).
-- [ ] Real1,025 numerical qualification:4mathematical logits and8stagedKV observations remain rejected; local same-input witness passes; source/precision decision remains.
+- [ ] Real1,025 numerical qualification:4mathematical logits and8stagedKV observations remain rejected; local same-input witnesses pass; source/precision decision remains.
+  - [x] Same-input final head and softcap pass at the four rejected IDs. [Result](benchmarks/results/2026-11-05-gemma-head-witness-v1.json)
 - [x] Measured original-BF16 four-token source/upstream experiment before full-quality scorer; [next task](docs/gemma-original-quality-next.md).
 - [x] Standalone BF16 profiling adapter preparation, tiny equivalence only; [evidence](benchmarks/results/2026-11-04-gemma-bf16-profile-v1.json).
 - [x] Original-BF16 four-token saved-reference reproduction/profiling; [report](docs/gemma-bf16-source-experiment.md).
@@ -1359,3 +1360,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | P2 Mac Chat probe reviewed | Tile dispatch, managed cached load, Chat, Stop, New Chat and clean close pass. Separate raw command reuses 36 of 63 tokens with exact fresh-reset output/state. | Sampled physical peak 722.6 MB. Astra approves the controller scope. Ordinary Chat resets per turn. Publish scoped M9 decision next. [Result](benchmarks/results/2026-11-05-m9-affine-app-v1.json) |
 
 | 2026-11-05 | M9 first delivery published | Retain the opt-in affine8 tile on the pinned M1 Pro scope. Independent prefill −13.69%, request −6.22%; loss, tasks, state and diagnostic Chat pass. | Managed default, capacity transitions and phone stay separate. Continue Gemma numerical localization. [Decision](docs/m9-mac-affine-decision.md) |
+
+| 2026-11-05 | Gemma head witness reviewed | Exact archived full native row and four same-input outputs pass both frozen contracts. Staged outputs match exactly. | Astra approves local witness. Keep full gate open and check earlier RMSNorm operands. [Result](benchmarks/results/2026-11-05-gemma-head-witness-v1.json) |

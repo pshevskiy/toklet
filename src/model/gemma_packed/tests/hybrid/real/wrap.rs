@@ -230,3 +230,46 @@ fn diagnostic1025_wrap_schedules_overflow_and_reset() {
         "prior_precision_failures_waived":false,"app_qualified":false,"phone_qualified":false}),
     );
 }
+
+#[test]
+#[ignore = "Explicit original E2B final head same-input diagnostic at position 1024"]
+fn diagnostic1025_same_input_final_head() {
+    let raw = include_bytes!("../../../../../../benchmarks/gemma-e2b-wrap-v1/tokens.u32le");
+    let ids: Vec<u32> = raw
+        .chunks_exact(4)
+        .map(|v| u32::from_le_bytes(v.try_into().unwrap()))
+        .collect();
+    assert_eq!(ids.len(), 1025);
+    let (source, file, path, original) = load_original();
+    let owners = resident_snapshot(&source);
+    let norms = hybrid::Norms::new(&source, PROCESS - DIAGNOSTIC).unwrap();
+    let model = norms.model_for_context_probe(1025).unwrap();
+    let context = gemma_affine::Context::new(gemma_affine::CONTEXT_ALLOWANCE_BYTES).unwrap();
+    let mut session = norms
+        .new_session(&model, &context, PROCESS - DIAGNOSTIC)
+        .unwrap();
+    assert_eq!((session.capacity(), session.chunk_capacity()), (1025, 32));
+    let allocated = session.allocated_bytes().unwrap();
+    let mut offset = 0;
+    for count in [32; 16].into_iter().chain([1]).chain([32; 15]).chain([31]) {
+        session.forward(&ids[offset..offset + count]).unwrap();
+        offset += count;
+    }
+    assert_eq!(offset, 1024);
+    let row = session.forward(&ids[offset..]).unwrap();
+    assert_eq!(row.len(), 262144);
+    emit(
+        "FINAL_HEAD_ROW",
+        json!({"position":1024,"sha256":hash(row),"allocated_bytes":allocated}),
+    );
+    assert_eq!(session.tokens(), ids);
+    let mut capture = capture::Capture::bounded(H * 4);
+    capture.record("head.normalized", &session.scratch.norm[..H], 1024, 1);
+    capture.finish();
+    assert_eq!(resident_snapshot(&source), owners);
+    assert_eq!(original, identity(&file.metadata().unwrap()));
+    assert_eq!(
+        original,
+        identity(&std::fs::symlink_metadata(path).unwrap())
+    );
+}
