@@ -5,7 +5,8 @@ feed-forward execution while reusing the reviewed Granite scalar boundaries,
 RMSNorm, ordinary RoPE, GQA and SiLU. This document freezes the prospective
 arithmetic and work order. Router and selected-expert scalar leaves are complete;
 strict BF16 import and tight storage/load planning are also complete.
-Full sparse-MoE model execution and exact session planning remain open.
+The resident session and pinned Mac512 decision experiment are now complete
+in their recorded scope. [Execution report](granite-moe-execution.md).
 
 The [official pinned config](https://huggingface.co/ibm-granite/granite-3.1-1b-a400m-instruct/blob/0da7a48b0276d500ce5922fd2b33944091fc6c09/config.json)
 declares 24 layers, hidden 1024, expert width 512, 32 experts/top 8,
@@ -29,7 +30,8 @@ oracle. No duplicate full CPU model is retained alongside GPU weights.
 The [header/owner screen](../artifacts/granitemoe-discovery-2026-11-05/admission.json)
 validates immutable API/config identity, exact tensor names/shapes, contiguous
 spans and file length using only eight header-length bytes and 26,384 header
-bytes. Weight payload has not been acquired. The conservative ledger includes
+bytes. The initial screen used headers only. The execution report records
+the later authenticated payload acquisition. The conservative ledger includes
 Half weights/KV, selected-expert and attention scratch guards, bounded conversion,
 driver, tokenizer/text and application allowances. A fitting screen does not
 replace exact native admission or observed process peaks.

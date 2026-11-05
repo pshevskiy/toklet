@@ -10087,3 +10087,9 @@ P0 selects four-token affine8 reuse for 1,024-token prefill. The frozen
 comparison requires a 5% median gain beyond measured dispersion and
 bitwise baseline parity. Astra reviewed the selection and gates.
 [Contract](m9-p1-affine-prefill.md)
+
+## 5 November 2026 — Reconcile model scope and follow-on diagnostics
+
+The coverage index now includes the pinned Granite MoE diagnostic. Astra
+localized the next Llama Online and Gemma probes to specific recorded failures.
+Documentation links and whitespace pass. [Plans](todo-implementation-plans.md)

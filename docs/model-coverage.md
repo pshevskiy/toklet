@@ -77,3 +77,9 @@ rotary mask to the shared dense blocks. Stock BF16/native Half row differences
 remain descriptive; full fidelity and held-out quality remain unqualified.
 
 Additional diagnostic: [Granite3.3 execution](granite33-engine-execution.md).
+
+[Granite3.1 sparse-MoE execution](granite-moe-execution.md) verifies the pinned
+original BF16 checkpoint converted to resident Half on the M1 Pro. Its two
+frozen decisions and final-layer selected sets match stock. Native capacity
+512, chunk 1/32, overflow and reset pass. This is an engine diagnostic.
+Wider context, held-out quality and managed Chat remain open.

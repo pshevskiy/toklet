@@ -1325,3 +1325,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | M9 P0 collection reviewed | 75 profiles and 39 timing requests pass complete-row parity and process limits. At 1,024 tokens the median first distribution is 6.775 s. | Strict checks, release build and Astra pass. Freeze P1 metric from raw prefill times. [Report](docs/m9-mac-baseline.md) |
 
 | 2026-11-05 | P1 comparison frozen | Choose four-token affine8 prefill. Primary is 1,024-token completed prefill, 5% useful gain plus a defined MAD threshold. | Keep bitwise and state gates, existing fallback and separate adoption checks. Astra reviewed selection. [Contract](docs/m9-p1-affine-prefill.md) |
+
+| 2026-11-05 | P1 affine tile implementation checks | Explicit M1 Pro fixture passes fallback, bitwise baseline/independent output, offsets, guards, midpoint and overflow cases. Restored the shared interface after the initial compile caught older callers. | Required suites and existing MLX GPU regressions queued. End-to-end parity and timing follow as a separate screen. [Logs](artifacts/m9-p1-tile4-2026-11-05/) |
+
+| 2026-11-05 | Scope and follow-on plans reconciled | Linked MoE Mac512 and M9 receipts. Astra traced Llama Online and Gemma rejections to bounded next diagnostics. | Existing gates remain open. [Plans](docs/todo-implementation-plans.md) |

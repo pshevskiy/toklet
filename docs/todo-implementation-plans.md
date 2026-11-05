@@ -22,7 +22,7 @@ After the resident graph passes, acquire the pinned original artifact and verify
 
 ### Gemma4 real 1,025 numerical qualification
 
-Reuse the completed [same-input V witness](gemma-v-boundary.md) and the four rejected mathematical logits and eight staged KV observations. State a new source or arithmetic hypothesis and test it on a discriminating control before changing code. Freeze the supported policy, apply the smallest correction, and rerun the complete gate and qualified prefix checks.
+Reuse the completed [same-input V witness](gemma-v-boundary.md) and the four rejected mathematical logits and eight staged KV observations. Astra selects a same-input final head and softcap replay for vocabulary IDs 1822, 6212, 23958 and 74252 at position 1024. First require exact agreement with the archived native row. Replay the four projections under both frozen contracts before considering an upstream change. Rerun the complete gate and qualified prefix checks for any correction.
 
 ### Gemma4 adoption task gate
 
@@ -78,4 +78,4 @@ Wait for the selected Gemma graph to pass its required gates. Validate checkpoin
 
 ### Llama Online correctness
 
-Replay the frozen failing case in Reference and Online, capture the first differing attention state and correct the affected arithmetic or indexing. Rerun the original gate and boundary cases before qualifying that configuration.
+Reproduce the tied model at offset 5 with tokens 7, 13 and 3. The first rejected value is layer 1 attention projection, row 2 and channel 4. Astra selects a same-operand Reference, Online prefill and Online one-row replay of rotated Q and valid KV. Check causal lengths 1/2/3 with poisoned unused storage, then project each resulting context. Rerun the original gate and boundaries before qualification.

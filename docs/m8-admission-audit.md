@@ -59,3 +59,8 @@ M8 complete. [Audit evidence](../benchmarks/results/2026-11-05-m8-admission-audi
 Update: the [production Mac Qwen2 witness](mac-production-memory.md) closes the
 representative whole-app requirement after Astra review. Other profiles’
 production peaks remain unmeasured; no phone or new Gemma admission follows.
+
+Subsequent scoped work includes [Granite3.1 MoE Mac512](granite-moe-execution.md)
+and the [M9 Mac baseline](m9-mac-baseline.md). The MoE test covers pinned
+engine decisions, state and process memory. Broader numerical qualification,
+catalog adoption and deferred phone verification remain open.
