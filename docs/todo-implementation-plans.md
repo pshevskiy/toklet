@@ -60,6 +60,14 @@ margin under 6 GiB. Verify actual strict loading with the assistant absent,
 the known redundant KV projections discarded, and exact per-matrix modes.
 Run the frozen four decisions and HumanEval/37 before any full collection.
 
+The [oQ6 run](../benchmarks/results/2026-11-06-gemma-oq6-stock-v1.json)
+matches all four original decisions. HumanEval/37 rejects on a proposal
+cycle after three repairs, so defer the full collection. A separate Q8
+stock estimate leaves 205 MB under 6 GiB with no live tokenizer or app.
+Authenticate both shards, verify the strict affine8 text inventory and
+enforce the live memory limit. Run four decisions first and condition the
+frozen single trajectory on that result. The native/app Q8 ledger still fails.
+
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 
 The [short alignment](../benchmarks/results/2026-11-06-qwen15-original-alignment-v1.json)

@@ -1,0 +1,119 @@
+{
+  "device": "Apple M1 Pro",
+  "source_revision": "16ab042b9961009b7d9741fba2434c659b675b4b",
+  "decisions_passed": true,
+  "decisions": [
+    {
+      "id": "HumanEval/1",
+      "agrees_with": "original",
+      "greedy_id": 236751,
+      "original_id": 236751,
+      "q4_stock_id": 19243,
+      "q4_stock_margin": 5.6875,
+      "top_two_margin": 2.125,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "ec9012f897c6c8853dbc0084ea18ed8f69a491c9e10646a7343a44da79e6c471"
+    },
+    {
+      "id": "HumanEval/24",
+      "agrees_with": "original",
+      "greedy_id": 236770,
+      "original_id": 236770,
+      "q4_stock_id": 236778,
+      "q4_stock_margin": 0.25,
+      "top_two_margin": 10.125,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "06ee58d76c06314c71050eb28fe1841ad134edbdac0f073843682cd771926551"
+    },
+    {
+      "id": "truthfulqa/row-0",
+      "agrees_with": "original",
+      "greedy_id": 236776,
+      "original_id": 236776,
+      "q4_stock_id": 236780,
+      "q4_stock_margin": 10.625,
+      "top_two_margin": 2.0,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "1f9f202c9524f5f9d3425d68d3a858b42e0fd28863a06feda2cfea9a4f8649db"
+    },
+    {
+      "id": "truthfulqa/row-3",
+      "agrees_with": "original",
+      "greedy_id": 236796,
+      "original_id": 236796,
+      "q4_stock_id": 236799,
+      "q4_stock_margin": 0.25,
+      "top_two_margin": 2.875,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "165732d67c32e32ea03c9e5c7f4b3ebbd7a5a2cf5891a708574fc30e6aeb4eea"
+    }
+  ],
+  "strict_text_tensors": 1096,
+  "affine_matrices": {
+    "6": 244,
+    "8": 34
+  },
+  "decisions_physical_peak_bytes": 4478832576,
+  "bounded_trajectory": {
+    "case": "HumanEval/37",
+    "passed": false,
+    "repairs": 3,
+    "failure": "proposal_cycle",
+    "visible_tokens": 82,
+    "terminal": {
+      "kind": "stop_token",
+      "token_id": 106
+    },
+    "physical_peak_bytes": 4939501528,
+    "endpoint_audit_passed": true
+  },
+  "full_quality_ran": false,
+  "native_app_qualification": false,
+  "q8_stock_screen": {
+    "repo": "mlx-community/gemma-4-e2b-it-8bit",
+    "revision": "03dcf209f3f549b4075e7191e77cf69b3d48e1b2",
+    "shards": {
+      "model-00001-of-00002.safetensors": {
+        "size": 5365634455,
+        "sha256": "0e82359bc2f0effdad15168d05a2ae3d46e72cb3296b5658303a2f78eee9926b",
+        "header_sha256": "1edc8f53c08316cdd8d8e3c33b3b324c4613dce7497420c8b96c88ee3167db89",
+        "header_path": "artifacts/gemma8-feasibility-2026-11-04/model-00001-of-00002.safetensors.header.json"
+      },
+      "model-00002-of-00002.safetensors": {
+        "size": 500946703,
+        "sha256": "797c7786d137de2b77826ae838ee366eab5a9479dfca91b345f71b7e99d71cfe",
+        "header_sha256": "ce38a5a20afcd05efec8ea031fbcf4bce6c8e9e285be43bfe1f47738e73e6982",
+        "header_path": "artifacts/gemma8-feasibility-2026-11-04/model-00002-of-00002.safetensors.header.json"
+      }
+    },
+    "selected_text_bytes": 4918123078,
+    "observed_nonweight_peaks": {
+      "q6_four": 594490650,
+      "oq6_four": 590574970,
+      "oq6_trajectory": 1051243922,
+      "optiq_trajectory": 1048065690
+    },
+    "unmeasured_width_margin_bytes": 268435456,
+    "projected_physical_bytes": 6237802456,
+    "limit_bytes": 6442450944,
+    "headroom_bytes": 204648488,
+    "strict_live_text_tensors": 1096,
+    "strict_live_affine8_modules": 278,
+    "controls": "Frozen four token-ID decisions, then only HumanEval/37 if admitted. Strict verified text-only loading, no live tokenizer. External sampled lifetime peak and RSS. No app, native or task promotion."
+  },
+  "q8_native_app_exclusion_unchanged": true,
+  "review": "Astra approved the scoped rejection and separate bounded Q8 stock screen.",
+  "receipts_sha256": {
+    "artifacts/gemma-oq6-screen-2026-11-06/acquisition.json": "17fdcc4f920579cb3a266e1db1e0fccfddc23b26a191f04f19e960a13cf67e69",
+    "artifacts/gemma-oq6-screen-2026-11-06/stock-owned.json": "f7e3448378fadf605a1b020886ebcfc62c07b148024760c3c7c96e3e81910742",
+    "artifacts/gemma-oq6-screen-2026-11-06/replay.json": "59eb37e2acce0c8c0f2d9ee3f0ab47f2496efbc6e45e6dc21dd5b7aea33eac4f",
+    "artifacts/gemma-oq6-screen-2026-11-06/stock-plan.json": "5b97a95bde37a821b22818a39fe6bffc0425e49801b35c881bd9eebb6f019242",
+    "artifacts/gemma-oq6-screen-2026-11-06/stock/result.json": "2a7dc21feb2496b14f0d6772a7380da13b422601184b069b6ad0020103a5f16b",
+    "artifacts/gemma-oq6-screen-2026-11-06/trajectory37/stock-owned.json": "dcf31461ce45cc48917268b2594dcf83285a9b33a6c51ea0d02d94efa66d7b93",
+    "artifacts/gemma-oq6-screen-2026-11-06/trajectory37/stock-plan.json": "0fbb6da8a5581a7669e6f530055f43f05f3fc4837fa0bf46e65d890042d1996d",
+    "artifacts/gemma-oq6-screen-2026-11-06/trajectory37/stock/result.json": "1e6146280ee3f4d660c81fbd1ffd22c21c7b438a22215ff27b30c372c137f939",
+    "artifacts/gemma-oq6-screen-2026-11-06/trajectory37/stock/rejected.jsonl": "57eb51e48aa7b1aae0a302fe23b462f09ac20009f4a7f1c40306ac884688aa5f",
+    "artifacts/gemma-q8-stock-2026-11-06/plan.py": "aeaf03443e9dc1f5d552646f92e8ce665dac98dccbb260b74be5cbfbb6264d11",
+    "artifacts/gemma-q8-stock-2026-11-06/screen.json": "9b20c6cad706c045c2ecca4b7169b440e4e19d4329317502112e28aec2033648"
+  }
+}

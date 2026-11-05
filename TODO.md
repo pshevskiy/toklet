@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Gemma oQ6 stock preflight and next source/precision decision.**
+Current task: **Bounded stock-only Gemma Q8 decisions and M8 evidence audit.**
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
 [Evidence](benchmarks/results/2026-11-06-qwen15-mac-app-v1.json).
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
@@ -555,6 +555,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
     versus original52/100 rejects the two-point task gate. [Evidence](benchmarks/results/2026-11-06-gemma-optiq-task-quality-v1.json).
   - [x] Distinct oQ6 affine6/8 artifact passes a header-only memory screen.
     [Evidence](benchmarks/results/2026-11-06-gemma-oq6-header-v1.json).
+  - [x] oQ6 matches all four original decisions. HumanEval/37 rejects on a
+    cycle after three repairs. Q8 stock-only feasibility passes separately.
+    [Evidence](benchmarks/results/2026-11-06-gemma-oq6-stock-v1.json).
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
