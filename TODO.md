@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **M9 P0 metric and comparison freeze. Mac baseline collection and Granite3.1 Mac512 engine qualification are complete in their recorded scopes.**
+Current task: **M9 P1 experimental four-token affine8 prefill. Mac baseline and comparison contract frozen.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -557,8 +557,7 @@ First delivery: **P0 → one selected P1 candidate → P2**, with independent
 [Mac1.5B coverage qualification](docs/mac-coverage-performance-next.md). iPhone work is deferred.
 
 - [x] P0: collect pinned Qwen2.5 MLX8 Mac profiles and uninstrumented timings. [Report](docs/m9-mac-baseline.md)
-- [ ] P0: rank normalization/projection costs and freeze a primary metric and
-  comparison contract. Record Mac and iPhone evidence independently.
+- [x] P0: rank costs and freeze the Mac primary metric and comparison. [Contract](docs/m9-p1-affine-prefill.md). Phone measurements remain deferred.
 - [ ] P1: implement one useful candidate: parallel Compensated RMSNorm or a
   four-token native MLX prefill tile; retain the qualified fallback.
 - [ ] P1: pass targeted numerical/state and usefulness screens with Astra review.
@@ -1324,3 +1323,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | M9 P0 collection active | Restored release-only Mac worker. Astra checked packed embedding/head labels and full prefill/decode parity. Strict checks and release build pass. | Capture separate profile/timing workers and verify raw coverage before selecting a metric. [Evidence](artifacts/m9-p0-mac-2026-11-05/) |
 
 | 2026-11-05 | M9 P0 collection reviewed | 75 profiles and 39 timing requests pass complete-row parity and process limits. At 1,024 tokens the median first distribution is 6.775 s. | Strict checks, release build and Astra pass. Freeze P1 metric from raw prefill times. [Report](docs/m9-mac-baseline.md) |
+
+| 2026-11-05 | P1 comparison frozen | Choose four-token affine8 prefill. Primary is 1,024-token completed prefill, 5% useful gain plus a defined MAD threshold. | Keep bitwise and state gates, existing fallback and separate adoption checks. Astra reviewed selection. [Contract](docs/m9-p1-affine-prefill.md) |

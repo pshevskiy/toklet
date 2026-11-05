@@ -10080,3 +10080,10 @@ Separate workers collected 75 profiles and 39 timing requests. Affine
 projection dominated 128-row prefill counter time. The 1,024-token median
 first distribution was 6.775 s. Both processes stayed below 2.5 GiB.
 Strict checks, release build and Astra review pass. [Report](m9-mac-baseline.md)
+
+## 5 November 2026 — Freeze the affine prefill experiment
+
+P0 selects four-token affine8 reuse for 1,024-token prefill. The frozen
+comparison requires a 5% median gain beyond measured dispersion and
+bitwise baseline parity. Astra reviewed the selection and gates.
+[Contract](m9-p1-affine-prefill.md)
