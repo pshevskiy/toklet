@@ -206,7 +206,7 @@ fn staged_simd_guards_and_schedules() {
             concat!(
                 include_str!("../kernels.metal"),
                 "\n",
-                include_str!("staged.metal")
+                include_str!("../llama_staged.metal")
             ),
         )
         .unwrap();

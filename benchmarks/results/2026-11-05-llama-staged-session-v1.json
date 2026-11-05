@@ -1,0 +1,23 @@
+{
+  "admitted_bytes": 1488994598,
+  "isolated_hash_matched": true,
+  "boundary_hash": "80769de9c8a59945a559719ec2013cafc76606d9e34cb79da4e46a041ee87bce",
+  "device": "Apple M1 Pro",
+  "review": "Astra approved the explicit authenticated Mac512 selector",
+  "feature": "llama-staged-mac-probe",
+  "prefill_chunk": 32,
+  "staged_tests": 695,
+  "exact_workspace_reuse": true,
+  "pipeline_allowance_bytes": 67108864,
+  "lifecycle": [
+    "pre-cancellation",
+    "hidden stop",
+    "reset",
+    "seeded nonfinite status",
+    "synthetic completion replay",
+    "512 boundary"
+  ],
+  "checks": "artifacts/llama-staged-session-2026-11-05/checks.json",
+  "owner": "artifacts/llama-staged-session-2026-11-05/owned.json",
+  "app_qualified": false
+}

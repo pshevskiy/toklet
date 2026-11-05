@@ -32,6 +32,8 @@ pub mod gemma_rms;
 pub mod gemma_rotary;
 pub mod lfm2;
 mod llama3_rotary;
+#[cfg(all(feature = "llama-staged-mac-probe", target_os = "macos"))]
+mod llama_staged;
 #[cfg(target_os = "macos")]
 mod lookup_round;
 mod memory;
@@ -1033,6 +1035,8 @@ pub struct Session<'m> {
     attention_mode: AttentionMode,
     parallel_reference: Option<&'m reference_schedule::Pipelines>,
     affine_tile4: Option<&'m mlx::Pipeline>,
+    #[cfg(all(feature = "llama-staged-mac-probe", target_os = "macos"))]
+    llama_staged: Option<&'m llama_staged::Pipeline>,
     memory: session::Memory,
     history: Vec<u32>,
     evaluated: usize,
@@ -1335,6 +1339,8 @@ impl<'m> Session<'m> {
                 attention_mode,
                 parallel_reference: None,
                 affine_tile4: None,
+                #[cfg(all(feature = "llama-staged-mac-probe", target_os = "macos"))]
+                llama_staged: None,
                 memory,
                 history: Vec::with_capacity(options.capacity),
                 evaluated: 0,
@@ -1795,6 +1801,26 @@ impl<'m> Session<'m> {
                 (start + n) as u32,
             ];
             match (self.attention_mode, self.parallel_reference) {
+                #[cfg(all(feature = "llama-staged-mac-probe", target_os = "macos"))]
+                (AttentionMode::Reference, None) if self.llama_staged.is_some() => {
+                    // These six model/session allocations are separate tracked
+                    // buffers from the same device, live through completion.
+                    self.llama_staged
+                        .expect("selected staged pipeline")
+                        .encode(
+                            &command,
+                            [
+                                &q_rotary.raw,
+                                &cache.k.raw,
+                                &cache.v.raw,
+                                &s.scores.raw,
+                                &s.probs.raw,
+                                &s.context.raw,
+                            ],
+                            attention_shape,
+                            &s.status,
+                        )?;
+                }
                 (AttentionMode::Reference, Some(pipelines)) => pipelines.encode(
                     &command,
                     [

@@ -10382,3 +10382,11 @@ Five cancelled rounds preserve published state and four successful rounds
 publish only the accepted prefix plus a pending target. Astra approved the
 transaction. Bounded Metal generation and performance remain open.
 [Evidence](../benchmarks/results/2026-11-05-m9-qwen2-atomic-round-v1.json)
+
+## 5 November 2026 — Add the explicit staged Llama Mac512 selector
+
+The feature-gated selector uses the existing FP32 workspace, admits the
+model-owned pipeline, and reproduces the isolated real Llama row exactly.
+Astra approved admission, cancellation and replay checks. Mac app
+qualification remains separate.
+[Evidence](../benchmarks/results/2026-11-05-llama-staged-session-v1.json)

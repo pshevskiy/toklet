@@ -27,6 +27,12 @@ const FLOAT_GUARD: u32 = 0x3eaaaaab;
 impl super::Session<'_> {
     /// Explicit Mac experiment. Ordinary sessions keep the qualified kernels.
     pub fn enable_affine_prefill_tile4(&mut self) -> Result<()> {
+        #[cfg(all(feature = "llama-staged-mac-probe", target_os = "macos"))]
+        if self.llama_staged.is_some() {
+            return Err(Error::Unsupported(
+                "staged Llama and affine tile4 are separate experiments",
+            ));
+        }
         if !cfg!(target_os = "macos")
             || self.projection_mode != super::ProjectionMode::MlxAffine
             || self.model.qwen3_context_diagnostic

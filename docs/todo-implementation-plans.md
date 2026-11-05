@@ -131,6 +131,7 @@ passed in both worker orders. Preserve the original 10,000-target
 capacity for those workloads. Both isolated gates now pass
 ([loss](../benchmarks/results/2026-11-05-llama-staged-loss-v1.json),
 [tasks](../benchmarks/results/2026-11-05-llama-staged-tasks-v1.json)).
-Add an explicit audited Mac512 session selector with exact workspace
-accounting, lifecycle checks and replay against the isolated result.
-Keep the managed app on Reference pending app qualification.
+The [explicit audited Mac512 selector](../benchmarks/results/2026-11-05-llama-staged-session-v1.json)
+passes exact workspace accounting, lifecycle controls and isolated-row replay.
+Add a separate opt-in Mac app route. Exercise actual Chat load, Send, Stop,
+reopen and process memory before any managed-default decision.

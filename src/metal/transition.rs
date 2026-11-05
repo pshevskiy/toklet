@@ -69,6 +69,12 @@ impl Session<'_> {
     /// Exact current numerical buffer lengths and host vector capacities.
     /// This does not overwrite the historical single-session admission report.
     pub(crate) fn native_owned_memory(&self) -> Result<session::Memory> {
+        #[cfg(all(feature = "llama-staged-mac-probe", target_os = "macos"))]
+        if self.llama_staged.is_some() {
+            return Err(Error::Unsupported(
+                "staged Llama session has no native capacity transition",
+            ));
+        }
         let (projection, normalization) = self.model.native_session_modes();
         // diagnostic_rows is a last-chunk marker even in ordinary execution.
         // Retained diagnostic storage, not that marker, identifies extra owners.

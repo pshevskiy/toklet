@@ -283,8 +283,19 @@ pub(super) struct Gpu {
     pub width: usize,
     parallel_reference: OnceLock<std::result::Result<super::reference_schedule::Pipelines, String>>,
     affine_tile4: OnceLock<std::result::Result<super::mlx::Pipeline, String>>,
+    #[cfg(all(feature = "llama-staged-mac-probe", target_os = "macos"))]
+    llama_staged: OnceLock<std::result::Result<super::llama_staged::Pipeline, String>>,
 }
 impl Gpu {
+    #[cfg(all(feature = "llama-staged-mac-probe", target_os = "macos"))]
+    pub(super) fn llama_staged(&self) -> Result<&super::llama_staged::Pipeline> {
+        self.llama_staged
+            .get_or_init(|| {
+                super::llama_staged::Pipeline::new(self).map_err(|error| error.to_string())
+            })
+            .as_ref()
+            .map_err(|error| Error::Native(error.clone()))
+    }
     pub(super) fn affine_tile4(&self) -> Result<&super::mlx::Pipeline> {
         self.affine_tile4
             .get_or_init(|| super::mlx::compile_tile4(self).map_err(|error| error.to_string()))
@@ -398,6 +409,8 @@ impl Gpu {
             width,
             parallel_reference: OnceLock::new(),
             affine_tile4: OnceLock::new(),
+            #[cfg(all(feature = "llama-staged-mac-probe", target_os = "macos"))]
+            llama_staged: OnceLock::new(),
         })
     }
     pub fn command(&self) -> Result<Retained<ProtocolObject<dyn MTLCommandBuffer>>> {
