@@ -116,7 +116,10 @@ impl Context {
         })
     }
 }
-fn precise_library(gpu: &Gpu, source: &str) -> Result<Retained<ProtocolObject<dyn MTLLibrary>>> {
+pub(super) fn precise_library(
+    gpu: &Gpu,
+    source: &str,
+) -> Result<Retained<ProtocolObject<dyn MTLLibrary>>> {
     let options = MTLCompileOptions::new();
     options.setLanguageVersion(MTLLanguageVersion::Version2_3);
     options.setMathMode(MTLMathMode::Safe);

@@ -2,6 +2,10 @@
 use super::*;
 use half::f16;
 use objc2::runtime::ProtocolObject;
+use objc2_foundation::NSString;
+use objc2_metal::{
+    MTLCommandEncoder, MTLComputeCommandEncoder, MTLComputePipelineState, MTLLibrary, MTLSize,
+};
 use sha2::{Digest, Sha256};
 
 #[test]
@@ -185,10 +189,15 @@ fn llama_online_same_input_witness() {
             (a != b).then_some((i, f16::from_bits(a).to_f32(), f16::from_bits(b).to_f32()))
         })
         .collect();
+    let stages = ablation(g, &q, &cache.k, &cache.v);
+    assert_eq!(f16::from_f32(stages[8]).to_bits(), contexts[1][77]);
+    let precise = (f64::from(stages[12]) + f64::from(stages[13]))
+        / (f64::from(stages[10]) + f64::from(stages[11]));
     let k = cache.k.with_slice(|b| b.to_vec());
     let v = cache.v.with_slice(|b| b.to_vec());
     let half = |bits| f64::from(f16::from_bits(bits).to_f32());
     let mut maximum_error = [0.0f64; 3];
+    let mut target_fp64 = 0.;
     for row in 0..3 {
         for head in 0..4 {
             let kv = head / 2;
@@ -215,6 +224,9 @@ fn llama_online_same_input_witness() {
                     })
                     .sum::<f64>()
                     / total;
+                if (row, head, channel) == (2, 1, 5) {
+                    target_fp64 = expected;
+                }
                 for (mode, actual) in contexts.iter().enumerate() {
                     let actual = half(actual[(row * 4 + head) * 8 + channel]);
                     assert!(actual.is_finite());
@@ -224,6 +236,17 @@ fn llama_online_same_input_witness() {
         }
     }
     println!(
+        "LLAMA_ABLATION {}",
+        serde_json::json!({"scores":&stages[..3],"weights":&stages[3..6],
+            "mass":stages[6],"numerator":stages[7],"online_before_half":stages[8],
+            "staged_before_half":stages[9],"compensated_mass":&stages[10..12],
+            "compensated_numerator":&stages[12..14],"compensated_ratio":precise,
+            "fp64_oracle":target_fp64,"reference_half":half(contexts[0][77]),
+            "online_half":half(contexts[1][77]),
+            "staged_half":f16::from_f32(stages[9]).to_f32(),
+            "compensated_half":f16::from_f64(precise).to_f32()})
+    );
+    println!(
         "LLAMA_ONLINE {}",
         serde_json::json!({"projection":projections,"differences":differences,
                  "online_prefill_single_equal":contexts[1]==contexts[2],
@@ -231,4 +254,50 @@ fn llama_online_same_input_witness() {
                  "ordinary_reference_projection":ordinary,"frozen_atol":atol,"frozen_rtol":rtol,
                  "frozen_online_gate_passed":f64::from(rejected-frozen).abs()<=gate})
     );
+}
+
+fn ablation(gpu: &Gpu, q: &Buffer<u16>, k: &Buffer<u16>, v: &Buffer<u16>) -> [f32; 14] {
+    assert!(q.len >= 96 && k.len >= 24 && v.len >= 24);
+    let library = mlx::precise_library(gpu, include_str!("llama_ablation.metal")).unwrap();
+    let function = library
+        .newFunctionWithName(&NSString::from_str("llama_offset_ablation"))
+        .unwrap();
+    let pipeline = gpu
+        .device
+        .newComputePipelineStateWithFunction_error(&function)
+        .unwrap();
+    let width = pipeline.threadExecutionWidth();
+    assert_eq!(width, gpu.execution_width(Kernel::AttentionDecode));
+    assert!(width >= 8 && width <= pipeline.maxTotalThreadsPerThreadgroup());
+    let output = Buffer::<u32>::new(gpu, 14).unwrap();
+    let raw = gpu.command().unwrap();
+    let encoder = raw.computeCommandEncoder().unwrap();
+    encoder.setComputePipelineState(&pipeline);
+    // SAFETY: The fixed fixture shader reads the checked active Q/K/V extents
+    // and writes exactly 14 float words. All buffers live through completion.
+    unsafe {
+        for (index, buffer) in [&q.raw, &k.raw, &v.raw, &output.raw]
+            .into_iter()
+            .enumerate()
+        {
+            encoder.setBuffer_offset_atIndex(Some(buffer), 0, index);
+        }
+    }
+    encoder.dispatchThreadgroups_threadsPerThreadgroup(
+        MTLSize {
+            width: 1,
+            height: 1,
+            depth: 1,
+        },
+        MTLSize {
+            width,
+            height: 1,
+            depth: 1,
+        },
+    );
+    encoder.endEncoding();
+    raw.commit();
+    raw.waitUntilCompleted();
+    assert_eq!(raw.status(), MTLCommandBufferStatus::Completed);
+    output.with_slice(|words| std::array::from_fn(|i| f32::from_bits(words[i])))
 }

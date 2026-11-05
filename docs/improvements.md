@@ -10181,3 +10181,10 @@ local evidence and retains the full graph rejection.
 The frozen projection difference follows one Half context word. Both Online
 schedules match and the output is invariant to unused cache poison.
 Astra approved the local diagnostic. [Evidence](../benchmarks/results/2026-11-05-llama-online-witness-v1.json)
+
+## 5 November 2026 — Isolate Llama softmax accumulation
+
+GPU FP32 probability staging recovers the expected Half context word from the
+failing input. Compensated GPU sums followed by a host FP64 quotient recover the
+same word. Astra approved the diagnostic. The complete Llama gate remains open.
+[Evidence](../benchmarks/results/2026-11-05-llama-online-ablation-v1.json)

@@ -1,0 +1,36 @@
+{
+  "scores": [
+    -0.37273273,
+    -0.029205406,
+    0.20777665
+  ],
+  "weights": [
+    0.5596132,
+    0.78900546,
+    1.0
+  ],
+  "mass": 2.3486187,
+  "numerator": -2.6800401,
+  "online_before_half": -1.1411133,
+  "staged_before_half": -1.1411134,
+  "compensated_mass": [
+    2.3486187,
+    -5.9604645e-08
+  ],
+  "compensated_numerator": [
+    -2.6800401,
+    -7.624476e-08
+  ],
+  "compensated_ratio": -1.1411133757350829,
+  "fp64_oracle": -1.1411133625029537,
+  "reference_half": -1.1416015625,
+  "online_half": -1.140625,
+  "staged_half": -1.1416016,
+  "compensated_half": -1.1416016,
+  "device": "Apple M1 Pro",
+  "review": "Astra approved this isolated diagnostic",
+  "checks": "artifacts/llama-online-ablation-2026-11-05/checks.json",
+  "owner": "artifacts/llama-online-ablation-2026-11-05/owned.json",
+  "scope": "One frozen row/head/channel with common SIMD scores and weights. Staged sum runs in GPU FP32; compensated components run in GPU FP32 and their final quotient is calculated in host FP64.",
+  "online_qualified": false
+}
