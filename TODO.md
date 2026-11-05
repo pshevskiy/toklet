@@ -539,6 +539,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
   - [x] Isolated CPU and Metal expansion corrects the captured word.
     A/B prefix64 and full gates before production selection.
     [Evidence](benchmarks/results/2026-11-06-gemma-affine-expansion-v1.json).
+  - [x] Isolated prefix64 A/B matches all25 staged captures bitwise.
+    Run the frozen full1,025 comparison.
+    [Evidence](benchmarks/results/2026-11-06-gemma-affine-prefix-v1.json).
   - [x] Same-input layer 13 and final RMSNorm pass. [Result](benchmarks/results/2026-11-05-gemma-norm-witness-v1.json)
   - [x] Same-input final head and softcap pass at the four rejected IDs. [Result](benchmarks/results/2026-11-05-gemma-head-witness-v1.json)
   - [x] Layer 12 attention and O projection at position 433 pass same-input replay. [Result](benchmarks/results/2026-11-06-gemma-attention-boundary-v1.json)

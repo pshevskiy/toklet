@@ -1,0 +1,250 @@
+{
+  "passed": true,
+  "all_frozen_prefix_stage_gates_pass": true,
+  "downstream_stage_improved": true,
+  "gate": {
+    "bit_differences": 0,
+    "values": 6144,
+    "failed_values": 0,
+    "maximum_gate_ratio": 0.0,
+    "examples": []
+  },
+  "gate_row": 2149,
+  "gate_corrected": true,
+  "stages": {
+    "layer.2.output": {
+      "bit_differences": 0,
+      "values": 1536,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.input_layernorm": {
+      "bit_differences": 0,
+      "values": 1536,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.self_attn.q_norm": {
+      "bit_differences": 0,
+      "values": 2048,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.q_rotary": {
+      "bit_differences": 0,
+      "values": 2048,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.context": {
+      "bit_differences": 0,
+      "values": 2048,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.self_attn.o_proj": {
+      "bit_differences": 0,
+      "values": 1536,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.mlp.up_proj": {
+      "bit_differences": 0,
+      "values": 6144,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.per_layer_input_gate": {
+      "bit_differences": 0,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.per_layer_projection": {
+      "bit_differences": 0,
+      "values": 1536,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.post_per_layer_input_norm": {
+      "bit_differences": 0,
+      "values": 1536,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.ple_input": {
+      "bit_differences": 0,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.output": {
+      "bit_differences": 0,
+      "values": 1536,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.4.input_layernorm": {
+      "bit_differences": 0,
+      "values": 1536,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.4.self_attn.v_proj": {
+      "bit_differences": 0,
+      "values": 512,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.4.self_attn.k_norm": {
+      "bit_differences": 0,
+      "values": 512,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.0.k_rotary": {
+      "bit_differences": 0,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.0.self_attn.v_norm": {
+      "bit_differences": 0,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.1.k_rotary": {
+      "bit_differences": 0,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.1.self_attn.v_norm": {
+      "bit_differences": 0,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.2.k_rotary": {
+      "bit_differences": 0,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.2.self_attn.v_norm": {
+      "bit_differences": 0,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.k_rotary": {
+      "bit_differences": 0,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.self_attn.v_norm": {
+      "bit_differences": 0,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.4.k_rotary": {
+      "bit_differences": 0,
+      "values": 512,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.4.self_attn.v_norm": {
+      "bit_differences": 0,
+      "values": 512,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    }
+  },
+  "changed": {
+    "layer.3.per_layer_input_gate": {
+      "before": 8,
+      "after": 0
+    },
+    "layer.3.per_layer_projection": {
+      "before": 323,
+      "after": 0
+    },
+    "layer.3.post_per_layer_input_norm": {
+      "before": 294,
+      "after": 0
+    },
+    "layer.3.output": {
+      "before": 54,
+      "after": 0
+    },
+    "layer.4.input_layernorm": {
+      "before": 52,
+      "after": 0
+    },
+    "layer.4.self_attn.v_proj": {
+      "before": 180,
+      "after": 0
+    },
+    "layer.4.self_attn.k_norm": {
+      "before": 80,
+      "after": 0
+    },
+    "layer.4.k_rotary": {
+      "before": 75,
+      "after": 0
+    },
+    "layer.4.self_attn.v_norm": {
+      "before": 166,
+      "after": 0
+    }
+  },
+  "full_graph_qualified": false,
+  "device": "Apple M1 Pro",
+  "isolated_base": "807d82e6905d9eddbc40e96046ff5b6997bbca7c",
+  "binary_sha256": "1fe7304e81972592cde14b0b9fcb27d7f9fd7ea0946d7c12a42a598ed1c504c6",
+  "strict_metal_test_passes": 695,
+  "physical_peaks": {
+    "affine": 21578424,
+    "prefix": 3027192592,
+    "ff": 3024702224
+  },
+  "review": "Astra approved the isolated prefix and unchanged full comparison.",
+  "receipts_sha256": {
+    "artifacts/gemma-affine-expansion-2026-11-06/graph-build.json": "18cbaf8c39ba20d437e9aeb830365278385a2a1732b9f829b8a320e1665db0d1",
+    "artifacts/gemma-affine-expansion-2026-11-06/graph-prefix.json": "4f104a8700d0b2d309217bdf08aa9d498273883e399d9d164eb4f806cc213397",
+    "artifacts/gemma-affine-expansion-2026-11-06/graph-prefix.py": "84d1dbd782841c6fa070b578ce0b483f963f8b41c3afdc6aa92d2f7a29d9da10",
+    "artifacts/gemma-affine-expansion-2026-11-06/graph-affine/owned.json": "3ec7ebd524a3b0712719fb21c0f115e33e169e1acf183c1407978edc37f9ff48",
+    "artifacts/gemma-affine-expansion-2026-11-06/graph-prefix/owned.json": "bd0b930f7e49c5b727bf4d4539b930b54f50d84ec9cf366e6108b76ffff92ed3",
+    "artifacts/gemma-affine-expansion-2026-11-06/graph-prefix/arrays.bin": "4694bf40db1ba007efabe510285f154fd697733b3cee46d015b840b18ac26387",
+    "artifacts/gemma-affine-expansion-2026-11-06/graph-ff/owned.json": "744828eb67cd569ee2028b28122addc21fe9f909ca90b9dad7e3b5cdd121ca9f",
+    "artifacts/gemma-affine-expansion-2026-11-06/graph-ff/arrays.bin": "73fdd80acf21b24ee36b009f858888074fedb2e3948482b5c0c7756b3b051729"
+  }
+}

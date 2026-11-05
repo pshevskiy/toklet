@@ -10573,3 +10573,11 @@ component recovers it. Exact CPU controls and the original plus candidate
 Metal projections pass on the M1 Pro. Astra approved an isolated graph
 A/B. Production and full qualification stay unchanged.
 [Evidence](../benchmarks/results/2026-11-06-gemma-affine-expansion-v1.json)
+
+## 6 November 2026 — Remove the observed position-48 Gemma propagation
+
+The isolated shader passes the frozen affine fixture and matches all 25
+staged prefix captures bitwise. The earlier layer3 output and layer4 K/V
+differences disappear. Metal checks and Astra review pass. The full
+1,025-position test is separate.
+[Evidence](../benchmarks/results/2026-11-06-gemma-affine-prefix-v1.json)

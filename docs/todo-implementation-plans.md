@@ -49,6 +49,9 @@ recovers the exact lost term and corrects the captured word. Use a
 source-isolated shader swap for the prefix64 A/B. Require the corrected
 gate and inspect every recorded stage and K/V endpoint. Carry useful
 results to the unchanged full 1,025 comparison and resource checks.
+The [isolated prefix result](../benchmarks/results/2026-11-06-gemma-affine-prefix-v1.json)
+matches all 25 staged comparisons bitwise. The full run retains the historical
+32-row digest requirement alongside the numerical and state gates.
 
 ### Gemma4 adoption task gate
 
