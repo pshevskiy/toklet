@@ -1,0 +1,112 @@
+{
+  "passed": true,
+  "replayed": [
+    {
+      "id": "HumanEval/1",
+      "agrees_with": "native",
+      "greedy_id": 19243,
+      "original_id": 236751,
+      "q4_stock_id": 19243,
+      "q4_stock_margin": 5.6875,
+      "top_two_margin": 4.875,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "8481e7ed84bf7dd1e4928eded6db65dbb14225181d6d0e94e4d6328ecd66eadb"
+    },
+    {
+      "id": "HumanEval/24",
+      "agrees_with": "original",
+      "greedy_id": 236770,
+      "original_id": 236770,
+      "q4_stock_id": 236778,
+      "q4_stock_margin": 0.25,
+      "top_two_margin": 0.375,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "91cbaa848bffbc8ff09cb16420e5be6ce53eebbc61e929f72b19378633cb9ee7"
+    },
+    {
+      "id": "truthfulqa/row-0",
+      "agrees_with": "native",
+      "greedy_id": 236780,
+      "original_id": 236776,
+      "q4_stock_id": 236780,
+      "q4_stock_margin": 10.625,
+      "top_two_margin": 5.625,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "8d8c273e6f6508d0625cf12151c48d53d27267df2edb44f0783d9c0687c302cd"
+    },
+    {
+      "id": "truthfulqa/row-3",
+      "agrees_with": "native",
+      "greedy_id": 236799,
+      "original_id": 236796,
+      "q4_stock_id": 236799,
+      "q4_stock_margin": 0.25,
+      "top_two_margin": 0.875,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "922095ea400cbaa390de2a2b59e49299ffbcf07f7e22c10197ab0fcc2a1d9864"
+    }
+  ],
+  "source_revision": "ffcf5c056bdd0df50627867ee8c7cba890eabe33",
+  "q4_comparison_evidence": "benchmarks/results/2026-11-04-gemma-mlx-decisions-v1.json",
+  "external_rss_peak_bytes": 2032844800,
+  "task_gate_waived": false,
+  "device": "Apple M1 Pro",
+  "inventory": {
+    "artifacts": {
+      "artifacts/gemma-optiq-inventory-2026-11-06/config.json": "e5bbd625c64572f5f7e201bea5e4a703884aceb27f58a3fb484a786edb6b5f8b",
+      "artifacts/gemma-optiq-inventory-2026-11-06/first-retry.http": "b689d7939c124527c8a006cb21472cf3506126feb0d9ba3f63e20f1b5bcb51b1",
+      "artifacts/gemma-optiq-inventory-2026-11-06/first.bin": "d5fa9223d512854f0e736f9230dbdb5698890004f48a83e95c1385b1cd23672e",
+      "artifacts/gemma-optiq-inventory-2026-11-06/header.http": "f109c4b32b18283da1050a445598232f08ab2efa24dadbc847e540beb5efd1b4",
+      "artifacts/gemma-optiq-inventory-2026-11-06/model.safetensors.header.json": "50c049c82dbec5f75214fac77306691a4bcade4fd6ce15a614f988b2bacef885",
+      "artifacts/gemma-optiq-inventory-2026-11-06/model.safetensors.index.json": "b3fbd0985009c1c2277ee770812fa18adbf2d5b80ebe907bed654bd301e97f23",
+      "artifacts/gemma-optiq-inventory-2026-11-06/optiq_metadata.json": "316fca4904668f29e5ffb09be64add2608a16f707d9a07cde08a3a8de03cc922",
+      "artifacts/gemma-optiq-inventory-2026-11-06/tokenizer.head": "86e5c54a4346008b0949138181f62645cd7da2770e182c12c5d1d120a83fc6c0"
+    },
+    "baseline_nonweight_bytes": 1627014216,
+    "canonical_text_inventory": true,
+    "container_bytes": 4274963112,
+    "declared_container_sha256": "088c5f8fed7c724dbf0847dedbcafb994b6b2c7ecf2e33353f1dca569a0a1221",
+    "estimated_headroom_bytes": 540615026,
+    "estimated_total_bytes": 5901835918,
+    "group_size": 64,
+    "header_bytes": 141402,
+    "limit_bytes": 6442450944,
+    "limits": "Header estimate. Payload, mixed execution and quality remain unqualified.",
+    "metadata_source": "https://huggingface.co/mlx-community/gemma-4-e2b-it-OptiQ-4bit/tree/ffcf5c056bdd0df50627867ee8c7cba890eabe33",
+    "quantized_matrices": {
+      "4": 142,
+      "8": 136
+    },
+    "revision": "ffcf5c056bdd0df50627867ee8c7cba890eabe33",
+    "same_text_config": true,
+    "selected_text_tensors": 1096,
+    "separate_vision_tensors": 1411,
+    "text_payload_bytes": 4274821702,
+    "tokenizer_sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"
+  },
+  "authenticated_payload": {
+    "passed": true,
+    "bytes": 4274963112,
+    "sha256": "088c5f8fed7c724dbf0847dedbcafb994b6b2c7ecf2e33353f1dca569a0a1221",
+    "revision": "ffcf5c056bdd0df50627867ee8c7cba890eabe33"
+  },
+  "sampled_physical_peak_bytes": 4863299784,
+  "owner": "artifacts/gemma-optiq-inventory-2026-11-06/stock-owned.json",
+  "exact_strict_text_tensors": 1096,
+  "live_bits": {
+    "4": 142,
+    "8": 136
+  },
+  "original_matches": 1,
+  "q4_matches": 3,
+  "review": "Astra approved the text-only feasibility and four saved decision rows.",
+  "source_pins": {
+    "artifacts/gemma-optiq-inventory-2026-11-06/check.py": "0e31d0add995e596f8fccf4aa3098cc64ff58832b90e41156634601ef20ad620",
+    "artifacts/gemma-optiq-inventory-2026-11-06/prepare-stock.py": "f0cdff2f00f165cfbee9daf7d11bf2fb63fe7ee03fd9ef99f7ed49587416f324",
+    "artifacts/gemma-optiq-inventory-2026-11-06/stock.py": "f848c322a5ac714fc8871cd7c4b149882e2ae74aecd094d0f8faa6a3bef77ac0",
+    "artifacts/gemma-optiq-inventory-2026-11-06/replay-stock.py": "e2551682ae0f89ca9920128306eb94407b5c443ff6c6c58dc3f29dc63c04614e",
+    "artifacts/gemma-optiq-inventory-2026-11-06/stock-plan.json": "6490897de22ad52d9014a8360af0202234b6b4075678d01dead07de677e6f171"
+  },
+  "limits": "Header estimate and four stock rows only. No whole-trajectory, quality, native mixed execution, or app claim.",
+  "next": "Frozen HumanEval/37 complete cached/stateless replay and existing bounded recovery only if needed."
+}

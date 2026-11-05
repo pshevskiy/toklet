@@ -40,6 +40,12 @@ still rejects after bounded recovery and an independent causal-prefix
 diagnostic. Defer this checkpoint under the current policy. A different
 candidate needs a new immutable source and unchanged full quality gates.
 
+The [pinned OptiQ stock preflight](../benchmarks/results/2026-11-06-gemma-optiq-stock-v1.json)
+fits the 6 GiB process policy. One of four saved decisions matches original
+BF16 and three match Q4. Run HumanEval/37 with the original prompt, output cap
+and stops. Require complete cached/stateless trajectory parity, using the
+existing first-mismatch, cycle and eight-repair policy if needed.
+
 ### Qwen2.5-1.5B MLX8 original-weight quality
 
 The [short alignment](../benchmarks/results/2026-11-06-qwen15-original-alignment-v1.json)

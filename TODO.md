@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Qwen1.5B frozen task quality and pinned OptiQ Gemma stock preflight.**
+Current task: **Qwen1.5B frozen task quality and OptiQ Gemma single-case trajectory.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -536,6 +536,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Original100-task controller pilot with exact sampled/terminal-stop replay; [report](docs/gemma-task-controller-pilot.md).
 - [x] Complete original/native100-case collections and isolated grading; [task result](docs/gemma-full-tasks.md), `89f0613`.
 - [ ] Gemma4 adoption task gate: rejected52→43/100; stock MLX matches all4selected decisions (`c79fa90`). Higher-precision feasibility decision: [header ledger](docs/gemma8-feasibility.md); no8-bit execution. [Q6 header screen](docs/gemma6-feasibility.md) leaves estimated headroom; [Stock decision replay](benchmarks/results/2026-11-05-gemma6-stock-decisions-v1.json) matches original BF16 in all four probes. [Three-category pilot](benchmarks/results/2026-11-05-gemma6-stock-task-pilot-v1.json) passes 50 exact sampled rows. [Complete stock collection](benchmarks/results/2026-11-05-gemma6-stock-tasks-v1.json) has 26 stateless mismatches across 13 cases. [Bounded recovery](benchmarks/results/2026-11-05-gemma6-stock-recovery-v1.json) verifies 99, with one proposal cycle. [Fresh-prefix replay](benchmarks/results/2026-11-05-gemma6-stock-prefix37-v1.json) also rejects. Current Q6 deferred, grading withheld.
+  - [x] OptiQ text payload, strict mixed4/8 stock load and four pinned decisions. [Evidence](benchmarks/results/2026-11-06-gemma-optiq-stock-v1.json).
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1456,3 +1457,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | Qwen1.5B full original-weight loss reviewed | All 10,000 targets and ten independent blocks replay. NLL increase +0.001528 ≤0.05, physical peak 1.90 GB. | Astra approves the loss gate. Full task quality follows; the first CLI pilot hit the separate template guard. [Evidence](benchmarks/results/2026-11-06-qwen15-full-loss-v1.json) |
 
 | 2026-11-06 | Qwen1.5B raw task producer reviewed | Three cases pass with exact CLI profile and visible/hidden stop state. The first pilot hit the template guard; raw numerical staging and post-exit decoding pass. | Astra approves bounded producer scope. Run all 100 before isolated grading. [Evidence](benchmarks/results/2026-11-06-qwen15-task-pilot-v1.json) |
+
+| 2026-11-06 | Gemma OptiQ stock preflight reviewed | Strict text-only load audits 142 Q4 and 136 Q8 modules. Four saved decisions replay, one matches original BF16. Physical peak 4.86 GB. | Astra approves feasibility scope. Next HumanEval/37 full trajectory with unchanged policy. [Evidence](benchmarks/results/2026-11-06-gemma-optiq-stock-v1.json) |

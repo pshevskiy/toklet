@@ -10457,3 +10457,12 @@ decodes the bounded transcripts. All three pilot cases pass, including hidden
 EOS and output-limit state. Astra approved the producer and original grade
 binding. Full collection and grading follow.
 [Evidence](../benchmarks/results/2026-11-06-qwen15-task-pilot-v1.json)
+
+## 6 November 2026 — Screen pinned mixed-precision Gemma in stock MLX
+
+The text-only checkpoint authenticates and strictly loads all 1,096 tensors.
+Live module audit finds 142 Q4 and 136 Q8 matrices. Four saved decision rows
+replay, one matching original BF16 and three matching Q4. Physical peak is
+4.86 GB. Astra approved feasibility and the unchanged next trajectory gate.
+[Evidence](../benchmarks/results/2026-11-06-gemma-optiq-stock-v1.json)
+[Pinned Hub revision](https://huggingface.co/mlx-community/gemma-4-e2b-it-OptiQ-4bit/tree/ffcf5c056bdd0df50627867ee8c7cba890eabe33)
