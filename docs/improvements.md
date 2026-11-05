@@ -10226,3 +10226,11 @@ prefix plus a correction, bonus, or hidden stop. Astra approved the code.
 It made zero allocations in 48 calls. A five-row verifier microbenchmark
 at vocabulary 151,936 measured about 2.97 ms per batch on the M1 Pro.
 [Evidence](../benchmarks/results/2026-11-05-m9-strict-greedy-v1.json)
+
+## 5 November 2026 — Measure split-KV decode on resident fixtures
+
+Both split kernels together reduce completed GPU command time by
+75.09–78.08% at valid depths 1,025, 1,056, 1,088 and 1,151 on the M1 Pro.
+The depth-128 control falls below the 5% threshold. Astra approved both
+opposite-order runs. A real Qwen2 session still needs qualification.
+[Evidence](../benchmarks/results/2026-11-05-m9-split-kv-timing-v1.json)

@@ -64,6 +64,12 @@ Record the baseline, candidate, independent result, scope and decision after P2.
 
 Confirm a decode attention bottleneck and qualified Online mode. Implement partitioned accumulation and stable merging with a checked workspace plan. Verify masking, GQA, boundaries and end-to-end improvement before enabling the selected route.
 
+The [paired command screen](../benchmarks/results/2026-11-05-m9-split-kv-timing-v1.json)
+supports an explicit Qwen2 experiment at valid depths 1,025–1,152 for
+single-token decode. Admit and reuse guarded partials, keep existing Online
+outside the selected range, and qualify complete numerical decisions, state,
+quality and uninstrumented requests before considering adoption.
+
 ### R1 rotary reuse
 
 Measure repeated rotary work and size the retained phase data. If the benefit justifies the memory, implement reuse keyed by positional semantics and compare offsets, resets, and end-to-end latency. Close with a measured retain or defer decision.

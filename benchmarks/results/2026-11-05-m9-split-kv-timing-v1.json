@@ -1,0 +1,335 @@
+{
+  "device": "Apple M1 Pro",
+  "data": "resident deterministic Qwen-shaped Half fixtures",
+  "candidate": "split partial plus merge in one completed command",
+  "primary": "completed GPU timestamps",
+  "threshold": "at least 5% median reduction beyond the greater MAD in both opposite-order runs",
+  "eligible_long_depths": [
+    1025,
+    1056,
+    1088,
+    1151
+  ],
+  "timings": [
+    {
+      "order": "forward",
+      "depth": 128,
+      "metrics": {
+        "gpu_seconds": {
+          "medians": [
+            0.0004744375037262216,
+            0.00046729166206205264
+          ],
+          "mads": [
+            5.416659405454993e-07,
+            1.791675458662212e-06
+          ],
+          "fractional_reduction": 0.015061713309014785,
+          "useful": false
+        },
+        "wall_seconds": {
+          "medians": [
+            0.000662396,
+            0.000664354
+          ],
+          "mads": [
+            7.104000000000019e-06,
+            6.458000000000039e-06
+          ],
+          "fractional_reduction": -0.0029559357242495998,
+          "useful": false
+        }
+      },
+      "binary_sha256": "8187ea064fc64f70ed7f2cf7a3d9f2c452b68b1b4f4d1fe7c901a8d2c8e494ed"
+    },
+    {
+      "order": "forward",
+      "depth": 1025,
+      "metrics": {
+        "gpu_seconds": {
+          "medians": [
+            0.0012072083336533979,
+            0.0003006666593137197
+          ],
+          "mads": [
+            1.500004145782441e-06,
+            4.166664439253509e-06
+          ],
+          "fractional_reduction": 0.750940536995958,
+          "useful": true
+        },
+        "wall_seconds": {
+          "medians": [
+            0.0014157915000000002,
+            0.0005166875
+          ],
+          "mads": [
+            1.2270500000000268e-05,
+            2.7125000000000022e-05
+          ],
+          "fractional_reduction": 0.6350539609822492,
+          "useful": true
+        }
+      },
+      "binary_sha256": "8187ea064fc64f70ed7f2cf7a3d9f2c452b68b1b4f4d1fe7c901a8d2c8e494ed"
+    },
+    {
+      "order": "forward",
+      "depth": 1056,
+      "metrics": {
+        "gpu_seconds": {
+          "medians": [
+            0.001263687496248167,
+            0.0003040624942514114
+          ],
+          "mads": [
+            9.583309292793274e-07,
+            1.2499949662014842e-06
+          ],
+          "fractional_reduction": 0.759384740963126,
+          "useful": true
+        },
+        "wall_seconds": {
+          "medians": [
+            0.0014791665,
+            0.00052475
+          ],
+          "mads": [
+            6.875499999999999e-06,
+            1.064600000000006e-05
+          ],
+          "fractional_reduction": 0.6452393966466926,
+          "useful": true
+        }
+      },
+      "binary_sha256": "8187ea064fc64f70ed7f2cf7a3d9f2c452b68b1b4f4d1fe7c901a8d2c8e494ed"
+    },
+    {
+      "order": "forward",
+      "depth": 1088,
+      "metrics": {
+        "gpu_seconds": {
+          "medians": [
+            0.0013005208311369643,
+            0.0003033125030924566
+          ],
+          "mads": [
+            3.5416451282799244e-07,
+            1.4583347365260124e-06
+          ],
+          "fractional_reduction": 0.7667761285858917,
+          "useful": true
+        },
+        "wall_seconds": {
+          "medians": [
+            0.0015274585,
+            0.00051575
+          ],
+          "mads": [
+            5.5000000000000795e-06,
+            7.353999999999998e-06
+          ],
+          "fractional_reduction": 0.6623476186096053,
+          "useful": true
+        }
+      },
+      "binary_sha256": "8187ea064fc64f70ed7f2cf7a3d9f2c452b68b1b4f4d1fe7c901a8d2c8e494ed"
+    },
+    {
+      "order": "forward",
+      "depth": 1151,
+      "metrics": {
+        "gpu_seconds": {
+          "medians": [
+            0.0013750833386438899,
+            0.0003032916647498496
+          ],
+          "mads": [
+            2.7083297027274966e-07,
+            9.791692718863487e-07
+          ],
+          "fractional_reduction": 0.7794376120876015,
+          "useful": true
+        },
+        "wall_seconds": {
+          "medians": [
+            0.001608479,
+            0.0005167080000000001
+          ],
+          "mads": [
+            1.0999499999999988e-05,
+            6.499999999999995e-06
+          ],
+          "fractional_reduction": 0.6787598719038296,
+          "useful": true
+        }
+      },
+      "binary_sha256": "8187ea064fc64f70ed7f2cf7a3d9f2c452b68b1b4f4d1fe7c901a8d2c8e494ed"
+    },
+    {
+      "order": "reverse",
+      "depth": 128,
+      "metrics": {
+        "gpu_seconds": {
+          "medians": [
+            0.00047485416143899783,
+            0.0004666666645789519
+          ],
+          "mads": [
+            1.6666308511048555e-07,
+            8.541610441170633e-07
+          ],
+          "fractional_reduction": 0.017242129320788835,
+          "useful": false
+        },
+        "wall_seconds": {
+          "medians": [
+            0.0006736455,
+            0.0006613954999999999
+          ],
+          "mads": [
+            1.8853499999999998e-05,
+            1.0041999999999929e-05
+          ],
+          "fractional_reduction": 0.018184638656385456,
+          "useful": false
+        }
+      },
+      "binary_sha256": "8187ea064fc64f70ed7f2cf7a3d9f2c452b68b1b4f4d1fe7c901a8d2c8e494ed"
+    },
+    {
+      "order": "reverse",
+      "depth": 1025,
+      "metrics": {
+        "gpu_seconds": {
+          "medians": [
+            0.0015295416669687256,
+            0.00037431250530062243
+          ],
+          "mads": [
+            1.500004145782441e-06,
+            1.437496393918991e-06
+          ],
+          "fractional_reduction": 0.7552779938042211,
+          "useful": true
+        },
+        "wall_seconds": {
+          "medians": [
+            0.0017391245,
+            0.0005638955
+          ],
+          "mads": [
+            4.550049999999992e-05,
+            7.812500000000007e-06
+          ],
+          "fractional_reduction": 0.6757589810275227,
+          "useful": true
+        }
+      },
+      "binary_sha256": "8187ea064fc64f70ed7f2cf7a3d9f2c452b68b1b4f4d1fe7c901a8d2c8e494ed"
+    },
+    {
+      "order": "reverse",
+      "depth": 1056,
+      "metrics": {
+        "gpu_seconds": {
+          "medians": [
+            0.0013460000045597553,
+            0.0003058125075767748
+          ],
+          "mads": [
+            8.168750355252996e-05,
+            3.2916723284870386e-06
+          ],
+          "fractional_reduction": 0.7727990293159034,
+          "useful": true
+        },
+        "wall_seconds": {
+          "medians": [
+            0.0015655414999999999,
+            0.000529021
+          ],
+          "mads": [
+            9.218749999999993e-05,
+            1.3104499999999956e-05
+          ],
+          "fractional_reduction": 0.662084333120521,
+          "useful": true
+        }
+      },
+      "binary_sha256": "8187ea064fc64f70ed7f2cf7a3d9f2c452b68b1b4f4d1fe7c901a8d2c8e494ed"
+    },
+    {
+      "order": "reverse",
+      "depth": 1088,
+      "metrics": {
+        "gpu_seconds": {
+          "medians": [
+            0.001303479162743315,
+            0.0003049791630473919
+          ],
+          "mads": [
+            8.541683200746775e-07,
+            3.333261702209711e-07
+          ],
+          "fractional_reduction": 0.7660268213221532,
+          "useful": true
+        },
+        "wall_seconds": {
+          "medians": [
+            0.0015261670000000001,
+            0.0005248545
+          ],
+          "mads": [
+            4.853999999999991e-06,
+            5.729500000000007e-06
+          ],
+          "fractional_reduction": 0.656096285662054,
+          "useful": true
+        }
+      },
+      "binary_sha256": "8187ea064fc64f70ed7f2cf7a3d9f2c452b68b1b4f4d1fe7c901a8d2c8e494ed"
+    },
+    {
+      "order": "reverse",
+      "depth": 1151,
+      "metrics": {
+        "gpu_seconds": {
+          "medians": [
+            0.001377937507641036,
+            0.0003020000003743917
+          ],
+          "mads": [
+            1.458320184610784e-07,
+            3.958339220844209e-07
+          ],
+          "fractional_reduction": 0.780831860153512,
+          "useful": true
+        },
+        "wall_seconds": {
+          "medians": [
+            0.0016184375,
+            0.0005198955
+          ],
+          "mads": [
+            2.8208500000000006e-05,
+            1.3790999999999977e-05
+          ],
+          "fractional_reduction": 0.6787670206603592,
+          "useful": true
+        }
+      },
+      "binary_sha256": "8187ea064fc64f70ed7f2cf7a3d9f2c452b68b1b4f4d1fe7c901a8d2c8e494ed"
+    }
+  ],
+  "session_qualified": false,
+  "checks": "artifacts/m9-p3-splitkv-2026-11-05/timing/checks.json",
+  "raw": "artifacts/m9-p3-splitkv-2026-11-05/timing/comparison.json",
+  "raw_sha256": "ff8e61227bb530314df6b5400e3c80cdbece8d1ab08ee42ffa556241fbe95b76",
+  "review": "Astra approved test-only operation-level timing",
+  "hardware_runs": 3,
+  "power_observations": [
+    "artifacts/m9-p3-splitkv-2026-11-05/timing/thermal-before.txt",
+    "artifacts/m9-p3-splitkv-2026-11-05/timing/thermal-after.txt"
+  ]
+}
