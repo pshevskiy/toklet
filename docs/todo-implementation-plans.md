@@ -98,6 +98,11 @@ The [Q8 memory decision](../benchmarks/results/2026-11-06-gemma-q8-stock-cap-v1.
 retains 32 completed cases, of which 31 verify. HumanEval/24 reaches a
 proposal cycle. A hardened HumanEval/32 retry exceeds6GiB by14.8MB and
 is stopped. A later group query confirms exit. Grading is withheld.
+The [native chunk-pool change](../benchmarks/results/2026-11-06-gemma-chunk-pools-v1.json)
+reduces Mac512 resident admission by130.7MB at chunk3 and139.7MB at chunk1.
+Applying those Q4 savings to the historical Q8 estimate leaves 28MB and
+37MB before Q8-specific costs. The stock trajectory and memory rejections
+remain in force.
 
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 

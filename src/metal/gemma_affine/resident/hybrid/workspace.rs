@@ -3,7 +3,7 @@
 use super::*;
 
 impl<'a, 'weights, 'context> Backend<'a, 'weights, 'context> {
-    pub(super) fn minimum_bytes(source: &Norms<'_>) -> Result<usize> {
+    pub(super) fn minimum_bytes(source: &Norms<'_>, chunk_rows: usize) -> Result<usize> {
         let mut bytes = add(
             CONTEXT_ALLOWANCE_BYTES,
             multiply(source.shapes.len(), size_of::<Projection<'_>>())?,
@@ -12,7 +12,7 @@ impl<'a, 'weights, 'context> Backend<'a, 'weights, 'context> {
             bytes = add(
                 bytes,
                 subtract(
-                    Projection::minimum_owned_bytes(layout, TILE, graph::MAX_POSITIONS)?,
+                    Projection::minimum_owned_bytes(layout, TILE, chunk_rows)?,
                     size_of::<Projection<'_>>(),
                 )?,
             )?;
@@ -23,7 +23,7 @@ impl<'a, 'weights, 'context> Backend<'a, 'weights, 'context> {
                 subtract(
                     Gather::minimum_admitted_bytes(
                         source.matrices[index].layout().columns(),
-                        graph::MAX_POSITIONS,
+                        chunk_rows,
                     )?,
                     size_of::<Gather<'_>>(),
                 )?,
@@ -34,6 +34,7 @@ impl<'a, 'weights, 'context> Backend<'a, 'weights, 'context> {
     pub(super) fn new(
         source: &'a Norms<'weights>,
         context: &'context Context,
+        chunk_rows: usize,
         budget: usize,
     ) -> HybridResult<Self> {
         if source.matrices.iter().any(|w| !w.same_device(context)) {
@@ -41,7 +42,7 @@ impl<'a, 'weights, 'context> Backend<'a, 'weights, 'context> {
                 super::super::Error::Options("Gemma hybrid Context device mismatch").into(),
             );
         }
-        let minimum = Self::minimum_bytes(source)?;
+        let minimum = Self::minimum_bytes(source, chunk_rows)?;
         admit(minimum, budget)?;
         let mut projections = owner_vec::<Projection<'context>>(source.shapes.len())?;
         let slot_extra = multiply(
@@ -62,7 +63,7 @@ impl<'a, 'weights, 'context> Backend<'a, 'weights, 'context> {
         )?;
         for &layout in &source.shapes {
             let expected = subtract(
-                Projection::minimum_owned_bytes(layout, TILE, graph::MAX_POSITIONS)?,
+                Projection::minimum_owned_bytes(layout, TILE, chunk_rows)?,
                 size_of::<Projection<'_>>(),
             )?;
             remaining = subtract(remaining, expected)?;
@@ -70,8 +71,7 @@ impl<'a, 'weights, 'context> Backend<'a, 'weights, 'context> {
                 subtract(budget, add(actual, remaining)?)?,
                 size_of::<Projection<'_>>(),
             )?;
-            let workspace =
-                context.projection_session(layout, TILE, graph::MAX_POSITIONS, local)?;
+            let workspace = context.projection_session(layout, TILE, chunk_rows, local)?;
             actual = add(
                 actual,
                 subtract(workspace.owned_bytes(), size_of::<Projection<'_>>())?,
@@ -82,7 +82,7 @@ impl<'a, 'weights, 'context> Backend<'a, 'weights, 'context> {
         let mut gather = |index: usize| -> Result<Gather<'context>> {
             let columns = source.matrices[index].layout().columns();
             let expected = subtract(
-                Gather::minimum_admitted_bytes(columns, graph::MAX_POSITIONS)?,
+                Gather::minimum_admitted_bytes(columns, chunk_rows)?,
                 size_of::<Gather<'_>>(),
             )?;
             remaining = subtract(remaining, expected)?;
@@ -90,7 +90,7 @@ impl<'a, 'weights, 'context> Backend<'a, 'weights, 'context> {
                 subtract(budget, add(actual, remaining)?)?,
                 size_of::<Gather<'_>>(),
             )?;
-            let workspace = context.gather_session(columns, graph::MAX_POSITIONS, local)?;
+            let workspace = context.gather_session(columns, chunk_rows, local)?;
             actual = add(
                 actual,
                 subtract(workspace.admitted_bytes(), size_of::<Gather<'_>>())?,

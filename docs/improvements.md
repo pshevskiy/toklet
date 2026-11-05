@@ -10606,3 +10606,11 @@ endpoint check. The hardened HumanEval/32 retry reaches
 6,457,283,264bytes and is stopped above the 6GiB limit. A separate group
 query confirms exit. Astra approved the scoped rejection. Grading stays open.
 [Evidence](../benchmarks/results/2026-11-06-gemma-q8-stock-cap-v1.json)
+
+## 6 November 2026 — Size Gemma Metal pools to the admitted chunk
+
+Mac512 Q4 admission drops by130.7MB at chunk3 and139.7MB at chunk1.
+Exact/minus-one budgets, full-logit parity, rejection and reset pass.
+Default and Metal checks and Astra review pass. No throughput or Q8
+qualification follows from the ownership savings.
+[Evidence](../benchmarks/results/2026-11-06-gemma-chunk-pools-v1.json)

@@ -263,16 +263,17 @@ impl<'weights> Norms<'weights> {
         budget: usize,
     ) -> HybridResult<Session<'model, 'a, 'weights, 'context>> {
         self.check_model(model)?;
+        let chunk_rows = model.default_chunk_rows();
         let numerical = model.planned_backend_session_bytes::<Backend<'a, 'weights, 'context>>()?;
         admit(
             add(
                 add(model.model_bytes(), numerical)?,
-                Backend::minimum_bytes(self)?,
+                Backend::minimum_bytes(self, chunk_rows)?,
             )?,
             budget,
         )?;
         let remaining = subtract(budget, add(model.model_bytes(), numerical)?)?;
-        let backend = Backend::new(self, context, remaining)?;
+        let backend = Backend::new(self, context, chunk_rows, remaining)?;
         model.session_with_backend(backend, budget)
     }
     pub fn new_generation_session<'model, 'a, 'context>(
@@ -301,7 +302,7 @@ impl<'weights> Norms<'weights> {
             .map_err(session::Error::from)?;
         let full = add(
             required,
-            Backend::minimum_bytes(self)
+            Backend::minimum_bytes(self, options.prefill_chunk_size)
                 .map_err(Error::from)
                 .map_err(session::Error::from)?,
         )
@@ -319,7 +320,8 @@ impl<'weights> Norms<'weights> {
                 limit: options.memory_limit_bytes,
             },
         )?;
-        let backend = Backend::new(self, context, remaining).map_err(session::Error::from)?;
+        let backend = Backend::new(self, context, options.prefill_chunk_size, remaining)
+            .map_err(session::Error::from)?;
         graph::GenerationSession::with_backend(model, backend, options)
     }
 }

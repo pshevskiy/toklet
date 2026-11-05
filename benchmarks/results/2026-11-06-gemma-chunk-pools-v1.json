@@ -1,0 +1,77 @@
+{
+  "passed": true,
+  "device": "Apple M1 Pro",
+  "capacity": 512,
+  "chunks": [
+    {
+      "chunk": 32,
+      "memory": {
+        "weights_bytes": 2605730512,
+        "kv_bytes": 20054016,
+        "scratch_bytes": 75925032,
+        "history_bytes": 4096,
+        "logits_bytes": 67108864,
+        "metadata_bytes": 110112,
+        "metadata_allowance_bytes": 100663296,
+        "admitted_bytes": 2869595928
+      },
+      "saved_against_chunk32_bytes": 0
+    },
+    {
+      "chunk": 3,
+      "memory": {
+        "weights_bytes": 2605730512,
+        "kv_bytes": 18984960,
+        "scratch_bytes": 7119168,
+        "history_bytes": 4096,
+        "logits_bytes": 6291456,
+        "metadata_bytes": 110112,
+        "metadata_allowance_bytes": 100663296,
+        "admitted_bytes": 2738903600
+      },
+      "saved_against_chunk32_bytes": 130692328
+    },
+    {
+      "chunk": 1,
+      "memory": {
+        "weights_bytes": 2605730512,
+        "kv_bytes": 18911232,
+        "scratch_bytes": 2373936,
+        "history_bytes": 4096,
+        "logits_bytes": 2097152,
+        "metadata_bytes": 110112,
+        "metadata_allowance_bytes": 100663296,
+        "admitted_bytes": 2729890336
+      },
+      "saved_against_chunk32_bytes": 139705592
+    }
+  ],
+  "fmt": true,
+  "strict_default_and_metal_clippy": true,
+  "default_passes": 583,
+  "metal_passes": 695,
+  "optimized_hardware": true,
+  "exact_and_minus_one_admission": true,
+  "full_logits_bitwise_equal": true,
+  "capacity_rejection_preserves_state": true,
+  "plain32_preserved": true,
+  "process_physical_peak_bytes": 2902231728,
+  "q8_provisional_ledger_headroom_bytes": {
+    "3": 28005978,
+    "1": 37019242
+  },
+  "q8_format_costs_included": false,
+  "q8_qualified": false,
+  "performance_claim": false,
+  "review": "Astra approved the matching plan and allocation paths and the real Q4 checks.",
+  "receipts_sha256": {
+    "artifacts/gemma-chunk-pools-2026-11-06/checks.json": "3e16293d2ef3ec906d04e035550fa03c11e70ecc3a1f29829393f0635f9a254f",
+    "artifacts/gemma-chunk-pools-2026-11-06/default-clippy.stderr": "6514fb44869812f62ead9d1ce577bfc9021c9510b54fb2f0097209bec421dace",
+    "artifacts/gemma-chunk-pools-2026-11-06/default-test.stdout": "a8cf52dd7e0198b29bff2230272c2f3a6d1451e26658f7b29e9405f9b1a18558",
+    "artifacts/gemma-chunk-pools-2026-11-06/default-test.stderr": "65b2eed7cfc8ec212be50b2bb9c13aa515a54ccf28f4ec4a5236b3a486094a4b",
+    "artifacts/gemma-chunk-pools-2026-11-06/metal-test.stdout": "bf4fcc5a5ac879ab37a5a8979b08b40ebd042057bf42b970a694d6cb0d3adf68",
+    "artifacts/gemma-chunk-pools-2026-11-06/gpu.stdout": "f705ccbb9b991c3196835468b48ba33123b22fe9e1d3f931a14dd1ade7a2db98",
+    "artifacts/gemma-chunk-pools-2026-11-06/gpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/gemma-chunk-pools-2026-11-06/owned.json": "e4b61daa390780d32618acfe779c372903cc201056cd2292cbb768c772d5abf6"
+  }
+}

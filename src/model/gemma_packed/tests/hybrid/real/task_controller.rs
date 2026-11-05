@@ -5,6 +5,102 @@ use serde::Deserialize;
 use sha2::{Digest, Sha256};
 use std::{io::Read, sync::atomic::AtomicBool};
 
+#[test]
+#[ignore = "explicit original E2B resident chunk admission"]
+fn generation_pools_follow_admitted_chunk() {
+    let (source, file, path, original) = load_original();
+    let owners = resident_snapshot(&source);
+    let norms = hybrid::Norms::new(&source, PROCESS - DIAGNOSTIC).unwrap();
+    let model = norms.model_for_context_probe(512).unwrap();
+    let context = gemma_affine::Context::new(gemma_affine::CONTEXT_ALLOWANCE_BYTES).unwrap();
+    let mut previous: Option<session::Memory> = None;
+    let mut baseline = None;
+    for chunk in [32, 3, 1] {
+        let mut options = session::Options {
+            capacity: 512,
+            prefill_chunk_size: chunk,
+            memory_limit_bytes: PROCESS - DIAGNOSTIC,
+            position_offset: 0,
+        };
+        let memory = norms
+            .new_generation_session(&model, &context, options)
+            .unwrap()
+            .memory();
+        if let Some(larger) = previous {
+            assert!(memory.scratch_bytes < larger.scratch_bytes);
+            assert!(memory.logits_bytes < larger.logits_bytes);
+            assert!(memory.admitted_bytes < larger.admitted_bytes);
+            assert_eq!(
+                memory.metadata_allowance_bytes,
+                larger.metadata_allowance_bytes
+            );
+            assert_eq!(memory.weights_bytes, larger.weights_bytes);
+        }
+        previous = Some(memory);
+        options.memory_limit_bytes = memory.admitted_bytes - 1;
+        assert!(matches!(
+            norms.new_generation_session(&model, &context, options),
+            Err(session::Error::MemoryBudget { required, limit })
+                if required == memory.admitted_bytes && limit == required - 1
+        ));
+        options.memory_limit_bytes += 1;
+        let mut active = norms
+            .new_generation_session(&model, &context, options)
+            .unwrap();
+        assert_eq!(active.memory(), memory);
+        active.append(&IDS).unwrap();
+        let mut remaining = IDS.len();
+        while remaining > 0 {
+            let count = active.evaluate_next_chunk().unwrap();
+            assert_eq!(count, remaining.min(chunk));
+            remaining -= count;
+            assert_eq!(active.memory(), memory);
+        }
+        let words: Vec<_> = active
+            .logits()
+            .unwrap()
+            .iter()
+            .map(|v| v.to_bits())
+            .collect();
+        assert_eq!(active.history(), IDS);
+        assert_eq!(active.evaluated_len(), IDS.len());
+        assert!(active.append(&[2; 512]).is_err());
+        assert_eq!(active.history(), IDS);
+        assert_eq!(active.evaluated_len(), IDS.len());
+        assert!(
+            active
+                .logits()
+                .unwrap()
+                .iter()
+                .map(|v| v.to_bits())
+                .eq(words.iter().copied())
+        );
+        if let Some(expected) = &baseline {
+            assert_eq!(&words, expected);
+        } else {
+            baseline = Some(words);
+        }
+        active.reset();
+        assert!(active.history().is_empty());
+        assert!(active.logits().is_none());
+        assert_eq!(active.memory(), memory);
+        emit(
+            "GENERATION_CHUNK_MEMORY",
+            json!({"chunk":chunk,"memory":memory}),
+        );
+    }
+    let plain = norms
+        .new_session(&model, &context, PROCESS - DIAGNOSTIC)
+        .unwrap();
+    assert_eq!((plain.capacity(), plain.chunk_capacity()), (512, 32));
+    assert_eq!(resident_snapshot(&source), owners);
+    assert_eq!(original, identity(&file.metadata().unwrap()));
+    assert_eq!(
+        original,
+        identity(&std::fs::symlink_metadata(path).unwrap())
+    );
+}
+
 #[derive(Deserialize)]
 struct Task {
     id: String,

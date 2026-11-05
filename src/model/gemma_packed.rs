@@ -404,8 +404,11 @@ impl<'a, M: MatrixSource> Model<'a, M> {
     pub fn model_bytes(&self) -> usize {
         self.bytes
     }
+    pub(crate) fn default_chunk_rows(&self) -> usize {
+        self.layout.positions.min(MAX_POSITIONS)
+    }
     pub(crate) fn planned_backend_session_bytes<B>(&self) -> Result<usize, Error> {
-        self.planned_backend_session_bytes_for_chunk::<B>(self.layout.positions.min(MAX_POSITIONS))
+        self.planned_backend_session_bytes_for_chunk::<B>(self.default_chunk_rows())
     }
     pub(crate) fn planned_backend_session_bytes_for_chunk<B>(
         &self,
@@ -448,11 +451,7 @@ impl<'a, M: MatrixSource> Model<'a, M> {
         operations: B,
         budget: usize,
     ) -> Result<Session<'_, 'a, M, B>, B::Error> {
-        self.session_with_backend_for_chunk(
-            operations,
-            self.layout.positions.min(MAX_POSITIONS),
-            budget,
-        )
+        self.session_with_backend_for_chunk(operations, self.default_chunk_rows(), budget)
     }
     pub(crate) fn session_with_backend_for_chunk<B: Operations<M>>(
         &self,
