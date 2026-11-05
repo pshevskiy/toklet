@@ -10489,3 +10489,11 @@ plain ChatML text assets. Native creation and transition planning use
 Reference attention. The real Mac512 witness passes exact/below budgets,
 encoded fixtures and both stops. Astra approved the native scope.
 [Evidence](../benchmarks/results/2026-11-06-qwen15-native-owner-v1.json)
+
+## 6 November 2026 — Retain the OptiQ stock task rejection
+
+All 100 stock trajectories replay in both runs. The receipted repeat binds
+the live process group, and qualified CPU-witness grading resolves all 200
+outcomes. OptiQ scores 49/100 against original 52/100 and misses the two-point
+limit. Astra approved preserving the failed gate and deferring native mixing.
+[Evidence](../benchmarks/results/2026-11-06-gemma-optiq-task-quality-v1.json)

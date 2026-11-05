@@ -1,0 +1,75 @@
+{
+  "collection_passed": true,
+  "quality_passed": false,
+  "device": "Apple M1 Pro",
+  "cases": 100,
+  "same_generation_and_trajectories_across_two_runs": true,
+  "repaired_cases": 16,
+  "repairs": 24,
+  "observed_physical_peaks": [
+    5881270520,
+    5878255864
+  ],
+  "decision": {
+    "complete": true,
+    "baseline_tasks": {
+      "cases": 100,
+      "passed": 52,
+      "pass_rate": 0.52,
+      "aggregation": "100_equal_weight_binary_cases",
+      "categories": {
+        "code": {
+          "cases": 40,
+          "passed": 33
+        },
+        "prose": {
+          "cases": 30,
+          "passed": 19
+        },
+        "continuation": {
+          "cases": 30,
+          "passed": 0
+        }
+      }
+    },
+    "native_tasks": {
+      "cases": 100,
+      "passed": 49,
+      "pass_rate": 0.49,
+      "aggregation": "100_equal_weight_binary_cases",
+      "categories": {
+        "code": {
+          "cases": 40,
+          "passed": 29
+        },
+        "prose": {
+          "cases": 30,
+          "passed": 20
+        },
+        "continuation": {
+          "cases": 30,
+          "passed": 0
+        }
+      }
+    },
+    "task_pass_rate_loss_percentage_points": 3,
+    "task_limit_percentage_points": 2,
+    "task_gate_passed": false,
+    "full_quality_qualified": false,
+    "app_discovery_qualified": false,
+    "device_qualified": false
+  },
+  "artifacts": [
+    "artifacts/gemma-optiq-inventory-2026-11-06/full-tasks/stock/result.json",
+    "artifacts/gemma-optiq-inventory-2026-11-06/full-tasks-receipted/stock/result.json",
+    "artifacts/gemma-optiq-inventory-2026-11-06/full-tasks-receipted/stock-owned.json",
+    "artifacts/gemma-optiq-inventory-2026-11-06/grade/window-qualified/result.json"
+  ],
+  "prior_failures": [
+    "artifacts/gemma-optiq-inventory-2026-11-06/grade/run.stderr",
+    "artifacts/gemma-optiq-inventory-2026-11-06/grade/window/inner/result.json"
+  ],
+  "scope": "Stock OptiQ trajectory gate passes. Original-weight task grade rejects; native mixed implementation and app adoption remain gated.",
+  "review": "Astra approved publication as a completed stock experiment with a failed task gate and no native/app fit claim.",
+  "owner_rerun": "The first run omitted the live group ID; the second captures it and exactly reproduces all 100 generation/trajectory records."
+}
