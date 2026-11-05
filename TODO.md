@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Granite sparse-MoE strict source adapter, bounded BF16 import and exact owner planning; router/selected-expert scalar blocks and metadata/header screen reviewed. Qwen1.5, SmolLM3 and Granite3.3 scoped Mac engine execution reviewed/complete. New models first; performance secondary; iPhone deferred**.
+Current task: **Granite sparse-MoE resident Metal routing/expert consumers and their exact session layout; BF16 import/tight storage planning and scalar blocks reviewed. Qwen1.5, SmolLM3 and Granite3.3 scoped Mac engine execution reviewed/complete. New models first; performance secondary; iPhone deferred**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -492,7 +492,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Granite3.1-1B-A400M immutable metadata/header and conditional owner screen; [design](docs/granite-moe-next.md).
 - [x] Sparse-MoE deterministic router fixture/scalar block; [report](docs/moe-router-block.md).
 - [x] Sparse-MoE independent selected-expert projection/reduction fixtures and scalar blocks; [report](docs/moe-expert-blocks.md).
-- [ ] Sparse-MoE strict import/exact owner planning, resident Metal blocks and real execution.
+- [x] Sparse-MoE strict BF16 import and exact tight storage/load planning; [report](docs/moe-bf16-import.md).
+- [ ] Sparse-MoE resident Metal consumers and exact shared session/scratch allocation plan.
+- [ ] Sparse-MoE real stock/native execution, state and process-memory checks.
 
 ### M8 closure
 
@@ -1290,3 +1292,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Selected-expert leaves active | Frozen independent fused-axis fixture and four targeted stage/ordering/validation tests pass; token/expert permutations and unselected weights covered. | Run allocation, required default/Metal and optimized checks, then Astra review before commit. No MoE import/Metal/model claim. |
 
 | 2026-11-05 | Selected-expert leaves reviewed | Seven cases/969 stage values and exact FP32 ordering/product controls pass. 567CPU/676Metal, strict/release checks and zero allocation in48 projection/reduction pairs pass. | Astra approves final code/evidence; commit scalar leaves. Next strict import/exact owner planning; Half/Metal/model execution remain open. [Report](docs/moe-expert-blocks.md). |
+
+| 2026-11-05 | BF16 import/storage planning active | Strict separate MoE adapter and authenticated direct Half delivery compile; seven targeted controls pass, including mutation/truncation, capacity/budget rejection and bounded multi-chunk conversion. Real metadata yields 2,736,470,872-byte load requirement including a separate64MiB metadata reservation. | First test type-inference failure retained/fixed. Run required/optimized checks and Astra review; session scratch remains prospective until its Metal consumer exists. |
+
+| 2026-11-05 | BF16 import/storage reviewed | Authenticated bounded direct Half conversion, exact fused layout and tight load planning pass seven controls. 574CPU/683Metal, strict/optimized checks and Astra pass; real metadata load requirement2,736,470,872 bytes includes separate64MiB reservation. | Commit importer/storage task. Next Metal consumers and exact session layout; KV stays prospective. No real payload/model qualification. [Report](docs/moe-bf16-import.md). |

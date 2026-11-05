@@ -10013,3 +10013,12 @@ slot order and separate FP32 products. Independent stages, validation/overflow
 controls, 567CPU/676Metal, strict/optimized checks and Astra pass. Repeated calls
 allocate no Rust buffers. Import, Half/Metal and full MoE execution remain open.
 [Report](moe-expert-blocks.md).
+
+## 5 November 2026 — Add authenticated BF16 MoE import
+
+Strict source/fused-tensor validation and bounded direct Half conversion return
+receipts only after successful authenticated delivery. Tight load planning separates
+actual importer storage from reservations and prospective KV. 574CPU/683Metal,
+strict/optimized checks and Astra pass. Real payload, Metal/session allocation and
+model qualification remain open.
+[Report](moe-bf16-import.md).

@@ -369,16 +369,7 @@ impl Shard {
         if let Some(audit) = audit {
             audit.verify_metadata(audit::MetadataKind::Header, &header)?;
         }
-        if header.first() != Some(&b'{') {
-            return Err(invalid("safetensors header must start with an object"));
-        }
-        serde_json::from_slice::<UniqueKeys>(&header)?;
-        let metadata: Metadata = serde_json::from_slice(&header)?;
-        if data_start.checked_add(metadata.data_len() as u64) != Some(file_bytes) {
-            return Err(invalid(
-                "safetensors offsets do not cover the complete file",
-            ));
-        }
+        let metadata = parse_safetensors_header(&header, data_start, file_bytes)?;
         Ok(Self {
             path,
             file,
@@ -387,6 +378,25 @@ impl Shard {
             header_bytes: count,
         })
     }
+}
+
+/// Shared metadata validation; does not read or authenticate tensor payload.
+pub(crate) fn parse_safetensors_header(
+    header: &[u8],
+    data_start: u64,
+    file_bytes: u64,
+) -> Result<Metadata, Error> {
+    if header.first() != Some(&b'{') {
+        return Err(invalid("safetensors header must start with an object"));
+    }
+    serde_json::from_slice::<UniqueKeys>(header)?;
+    let metadata: Metadata = serde_json::from_slice(header)?;
+    if data_start.checked_add(metadata.data_len() as u64) != Some(file_bytes) {
+        return Err(invalid(
+            "safetensors offsets do not cover the complete file",
+        ));
+    }
+    Ok(metadata)
 }
 
 pub(crate) struct Source {

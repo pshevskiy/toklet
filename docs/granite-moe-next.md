@@ -4,7 +4,8 @@
 feed-forward execution while reusing the reviewed Granite scalar boundaries,
 RMSNorm, ordinary RoPE, GQA and SiLU. This document freezes the prospective
 arithmetic and work order. Router and selected-expert scalar leaves are complete;
-full sparse-MoE model execution is not implemented yet.
+strict BF16 import and tight storage/load planning are also complete.
+Full sparse-MoE model execution and exact session planning remain open.
 
 The [official pinned config](https://huggingface.co/ibm-granite/granite-3.1-1b-a400m-instruct/blob/0da7a48b0276d500ce5922fd2b33944091fc6c09/config.json)
 declares 24 layers, hidden 1024, expert width 512, 32 experts/top 8,
@@ -60,6 +61,8 @@ Proceed in reviewable tasks, each checked and reviewed by Astra before commit:
    [selected experts/reduction](moe-expert-blocks.md), with Astra review and checks.
 2. Strict source adapter, fused expert slice mapping, bounded BF16 conversion
    and exact owner planning. Reject unsupported source variants before allocation.
+   Import/storage stage complete: [BF16 source and planner](moe-bf16-import.md).
+   KV remains prospective; exact session/scratch planning belongs to its consumer.
 3. Resident Metal routing/expert blocks with no host readback or numerical
    hot-loop dynamic dispatch; tiny intermediate, padding and cached-state checks.
 4. Pinned stock/native real 512-position execution, chunk/reset/overflow,

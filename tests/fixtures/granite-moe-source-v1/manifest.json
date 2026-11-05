@@ -1,0 +1,162 @@
+{
+  "format": "toklet-granite-moe-source-v1",
+  "producer_sha256": "4da2202e399022e903278f0ecd7259b45bfabd9e218c591745d7d200777ebedd",
+  "config_sha256": "0dc037208e5e1a73cea1f3b97425f851ffe25fa515a1f15d40922d68893a9a14",
+  "model_sha256": "3c3b1df779d3e3d0404c88f48ce508aec4ea0875d493c4a5b88d79e369101514",
+  "model_bytes": 1264,
+  "half_sha256": "3900b6e2fdce3b60f3da86bd9008e4a967efed1e696bee896d286d5ef26ab54d",
+  "underflows": 22,
+  "tensors": [
+    {
+      "name": "model.embed_tokens.weight",
+      "half_bits": [
+        0,
+        32768,
+        15360,
+        48128,
+        1,
+        0
+      ]
+    },
+    {
+      "name": "model.layers.0.block_sparse_moe.input_linear.weight",
+      "half_bits": [
+        32768,
+        13312,
+        0,
+        32768,
+        15360,
+        48128,
+        1,
+        0,
+        32768,
+        13312,
+        0,
+        32768,
+        15360,
+        48128,
+        1,
+        0,
+        32768,
+        13312,
+        0,
+        32768,
+        15360,
+        48128,
+        1,
+        0,
+        32768,
+        13312,
+        0,
+        32768,
+        15360,
+        48128,
+        1,
+        0,
+        32768,
+        13312,
+        0,
+        32768
+      ]
+    },
+    {
+      "name": "model.layers.0.block_sparse_moe.output_linear.weight",
+      "half_bits": [
+        15360,
+        48128,
+        1,
+        0,
+        32768,
+        13312,
+        0,
+        32768,
+        15360,
+        48128,
+        1,
+        0,
+        32768,
+        13312,
+        0,
+        32768,
+        15360,
+        48128
+      ]
+    },
+    {
+      "name": "model.layers.0.block_sparse_moe.router.layer.weight",
+      "half_bits": [
+        1,
+        0,
+        32768,
+        13312,
+        0,
+        32768
+      ]
+    },
+    {
+      "name": "model.layers.0.input_layernorm.weight",
+      "half_bits": [
+        15360,
+        48128
+      ]
+    },
+    {
+      "name": "model.layers.0.post_attention_layernorm.weight",
+      "half_bits": [
+        1,
+        0
+      ]
+    },
+    {
+      "name": "model.layers.0.self_attn.k_proj.weight",
+      "half_bits": [
+        32768,
+        13312,
+        0,
+        32768
+      ]
+    },
+    {
+      "name": "model.layers.0.self_attn.o_proj.weight",
+      "half_bits": [
+        15360,
+        48128,
+        1,
+        0
+      ]
+    },
+    {
+      "name": "model.layers.0.self_attn.q_proj.weight",
+      "half_bits": [
+        32768,
+        13312,
+        0,
+        32768
+      ]
+    },
+    {
+      "name": "model.layers.0.self_attn.v_proj.weight",
+      "half_bits": [
+        15360,
+        48128,
+        1,
+        0
+      ]
+    },
+    {
+      "name": "model.norm.weight",
+      "half_bits": [
+        32768,
+        13312
+      ]
+    }
+  ],
+  "real_metadata": {
+    "repository": "ibm-granite/granite-3.1-1b-a400m-instruct",
+    "revision": "0da7a48b0276d500ce5922fd2b33944091fc6c09",
+    "model_bytes": 2669283096,
+    "expected_model_sha256": "ac02591061f1344027a7e7b11dbb4143f75f166c47dc09b742f5de3ab1dde1d1",
+    "config_sha256": "f1b64813debfabeb9cc20f1a13ed8248da6774fe54e532d19912d4b3f2ab335d",
+    "header_sha256": "e581e46ea7b775bd754b0ea1ee91ab30f4ad433af3c484b6825ace398d26d218"
+  }
+}

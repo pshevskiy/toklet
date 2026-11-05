@@ -1,0 +1,27 @@
+{
+  "format": "toklet-granite-moe-bf16-import-v1",
+  "passed": true,
+  "engine_revision": "8007812a plus BF16 import/storage patch",
+  "fixture_sha256": "6408f2b6a6131105bd507b6376aa85ff85643a7f3b8531ab3660e410bb1d58c2",
+  "checks": "artifacts/moe-import-checks-2026-11-05/checks.json",
+  "counts": {
+    "test": 574,
+    "metal-test": 683,
+    "release-source": 7
+  },
+  "real_metadata_storage": {
+    "half_weights_bytes": 2669256704,
+    "largest_tensor_bytes": 100669440,
+    "import_owned_bytes": 105304,
+    "metadata_reservation_bytes": 67108864,
+    "admitted_load_bytes": 2736470872,
+    "prospective_kv512_bytes": 25165824,
+    "session_or_payload_qualified": false
+  },
+  "real_model_revision": "0da7a48b0276d500ce5922fd2b33944091fc6c09",
+  "expected_real_model_sha256": "ac02591061f1344027a7e7b11dbb4143f75f166c47dc09b742f5de3ab1dde1d1",
+  "real_weight_payload_acquired": false,
+  "real_model_execution_qualified": false,
+  "review": "Astra approved final code/checks; no outstanding findings",
+  "scope": "Authenticated historical BF16-to-Half delivery and tight storage/load requirements. Metadata reservation is not an actual allocation. Passed slices do not attest a retained model owner. KV is prospective; exact session/scratch and Metal remain open."
+}
