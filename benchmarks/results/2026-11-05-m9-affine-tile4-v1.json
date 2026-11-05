@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "device": "Apple M1 Pro",
+  "scope": "Explicit affine8 tile4 operation and cold session admission",
+  "gpu_fixture": "artifacts/m9-p1-tile4-2026-11-05/gpu.stdout",
+  "existing_gpu": "artifacts/m9-p1-tile4-2026-11-05/required/gpu.json",
+  "checks": "artifacts/m9-p1-tile4-2026-11-05/required/checks.json",
+  "initial_typecheck": "artifacts/m9-p1-tile4-2026-11-05/first.stderr",
+  "counts": {
+    "cpu": 574,
+    "metal": 686,
+    "gpu": 8
+  },
+  "review": "Astra approved, and the queued existing MLX GPU regressions passed",
+  "end_to_end_qualified": false,
+  "performance_qualified": false
+}

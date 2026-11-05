@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **M9 P1 experimental four-token affine8 prefill. Mac baseline and comparison contract frozen.**
+Current task: **M9 P1 end-to-end parity and usefulness screen. The experimental four-token affine8 prefill operation is reviewed and checked.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -558,8 +558,7 @@ First delivery: **P0 → one selected P1 candidate → P2**, with independent
 
 - [x] P0: collect pinned Qwen2.5 MLX8 Mac profiles and uninstrumented timings. [Report](docs/m9-mac-baseline.md)
 - [x] P0: rank costs and freeze the Mac primary metric and comparison. [Contract](docs/m9-p1-affine-prefill.md). Phone measurements remain deferred.
-- [ ] P1: implement one useful candidate: parallel Compensated RMSNorm or a
-  four-token native MLX prefill tile; retain the qualified fallback.
+- [x] P1: implement the opt-in four-token affine8 tile and preserve the qualified fallback. [Result](benchmarks/results/2026-11-05-m9-affine-tile4-v1.json)
 - [ ] P1: pass targeted numerical/state and usefulness screens with Astra review.
 - [ ] P2: pass unchanged quality, state, memory and app/device gates; collect
   independent performance confirmation and adopt or document rejection.
@@ -1329,3 +1328,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | P1 affine tile implementation checks | Explicit M1 Pro fixture passes fallback, bitwise baseline/independent output, offsets, guards, midpoint and overflow cases. Restored the shared interface after the initial compile caught older callers. | Required suites and existing MLX GPU regressions queued. End-to-end parity and timing follow as a separate screen. [Logs](artifacts/m9-p1-tile4-2026-11-05/) |
 
 | 2026-11-05 | Scope and follow-on plans reconciled | Linked MoE Mac512 and M9 receipts. Astra traced Llama Online and Gemma rejections to bounded next diagnostics. | Existing gates remain open. [Plans](docs/todo-implementation-plans.md) |
+
+| 2026-11-05 | P1 affine tile reviewed | Opt-in matched-SIMD affine8/F16 tile passes independent arithmetic, status and padding checks. Seven existing GPU regressions and 574 CPU/686 Metal tests pass. | Astra approves implementation. Run full-row/state parity and matched timings before any performance claim. [Result](benchmarks/results/2026-11-05-m9-affine-tile4-v1.json) |

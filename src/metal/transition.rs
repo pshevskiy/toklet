@@ -79,6 +79,7 @@ impl Session<'_> {
             || self.readback_mode != ReadbackMode::FullLogits
             || self.attention_mode != self.model.native_attention_mode()
             || self.parallel_reference.is_some()
+            || self.affine_tile4.is_some()
             || self.trace.is_some()
             || self.diagnostics.capacity() != 0
         {

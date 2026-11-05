@@ -1030,6 +1030,7 @@ pub struct Session<'m> {
     readback_mode: ReadbackMode,
     attention_mode: AttentionMode,
     parallel_reference: Option<&'m reference_schedule::Pipelines>,
+    affine_tile4: Option<&'m mlx::Pipeline>,
     memory: session::Memory,
     history: Vec<u32>,
     evaluated: usize,
@@ -1331,6 +1332,7 @@ impl<'m> Session<'m> {
                 readback_mode,
                 attention_mode,
                 parallel_reference: None,
+                affine_tile4: None,
                 memory,
                 history: Vec::with_capacity(options.capacity),
                 evaluated: 0,
@@ -1599,6 +1601,7 @@ impl<'m> Session<'m> {
                 self.q,
                 n,
                 self.projection_mode,
+                self.affine_tile4,
                 &s.status,
             )?;
             self.snapshot(&command, Some(layer_index), "q", &s.q.raw)?;
@@ -1616,6 +1619,7 @@ impl<'m> Session<'m> {
                 self.k,
                 n,
                 self.projection_mode,
+                self.affine_tile4,
                 &s.status,
             )?;
             self.snapshot(&command, Some(layer_index), "k", &s.k.raw)?;
@@ -1633,6 +1637,7 @@ impl<'m> Session<'m> {
                 self.k,
                 n,
                 self.projection_mode,
+                self.affine_tile4,
                 &s.status,
             )?;
             self.snapshot(&command, Some(layer_index), "v", &s.v.raw)?;
@@ -1847,6 +1852,7 @@ impl<'m> Session<'m> {
                 self.h,
                 n,
                 self.projection_mode,
+                self.affine_tile4,
                 &s.status,
             )?;
             self.snapshot(
@@ -1903,6 +1909,7 @@ impl<'m> Session<'m> {
                         self.m,
                         n,
                         self.projection_mode,
+                        self.affine_tile4,
                         &s.status,
                     )?;
                     self.snapshot(&command, Some(layer_index), "gate", &dense.gate.raw)?;
@@ -1929,6 +1936,7 @@ impl<'m> Session<'m> {
                         self.m,
                         n,
                         self.projection_mode,
+                        self.affine_tile4,
                         &s.status,
                     )?;
                     self.snapshot(&command, Some(layer_index), "up", &dense.up.raw)?;
@@ -1955,6 +1963,7 @@ impl<'m> Session<'m> {
                         self.h,
                         n,
                         self.projection_mode,
+                        self.affine_tile4,
                         &s.status,
                     )?;
                 }
@@ -2378,10 +2387,22 @@ fn project(
     hl: Layout,
     n: usize,
     mode: ProjectionMode,
+    affine_tile4: Option<&mlx::Pipeline>,
     status: &Buffer<u32>,
 ) -> Result<()> {
     if matches!(weight.storage, TensorStorage::Mlx(_)) {
-        return mlx::product(c, weight, bias, left, &out.raw, hl.stride, n, true, status);
+        return mlx::product_scheduled(
+            c,
+            weight,
+            bias,
+            left,
+            &out.raw,
+            hl.stride,
+            n,
+            true,
+            affine_tile4,
+            status,
+        );
     }
     if matches!(
         mode,

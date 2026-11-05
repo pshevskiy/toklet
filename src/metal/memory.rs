@@ -282,8 +282,15 @@ pub(super) struct Gpu {
     pipelines: Vec<Retained<ProtocolObject<dyn MTLComputePipelineState>>>,
     pub width: usize,
     parallel_reference: OnceLock<std::result::Result<super::reference_schedule::Pipelines, String>>,
+    affine_tile4: OnceLock<std::result::Result<super::mlx::Pipeline, String>>,
 }
 impl Gpu {
+    pub(super) fn affine_tile4(&self) -> Result<&super::mlx::Pipeline> {
+        self.affine_tile4
+            .get_or_init(|| super::mlx::compile_tile4(self).map_err(|error| error.to_string()))
+            .as_ref()
+            .map_err(|error| Error::Native(error.clone()))
+    }
     pub(super) fn parallel_reference(&self) -> Result<&super::reference_schedule::Pipelines> {
         // Cold once-per-model initialization, including a cached failure. Using
         // OnceLock avoids changing the existing GPU object's Sync capability or
@@ -390,6 +397,7 @@ impl Gpu {
             pipelines,
             width,
             parallel_reference: OnceLock::new(),
+            affine_tile4: OnceLock::new(),
         })
     }
     pub fn command(&self) -> Result<Retained<ProtocolObject<dyn MTLCommandBuffer>>> {

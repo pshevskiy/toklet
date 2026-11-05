@@ -24,6 +24,37 @@ const GUARD: usize = 7;
 const HALF_GUARD: u16 = 0x3555;
 const FLOAT_GUARD: u32 = 0x3eaaaaab;
 
+impl super::Session<'_> {
+    /// Explicit Mac experiment. Ordinary sessions keep the qualified kernels.
+    pub fn enable_affine_prefill_tile4(&mut self) -> Result<()> {
+        if !cfg!(target_os = "macos")
+            || self.projection_mode != super::ProjectionMode::MlxAffine
+            || self.model.qwen3_context_diagnostic
+            || self.options.prefill_chunk_size < 4
+            || !self.history.is_empty()
+            || self.evaluated != 0
+            || self.affine_tile4.is_some()
+        {
+            return Err(Error::Options(
+                "tile4 requires a fresh ordinary Mac MLX session with a chunk of at least four",
+            ));
+        }
+        let admitted = super::add(self.memory.admitted_bytes, super::ALLOWANCE)?;
+        if admitted > self.options.memory_limit_bytes {
+            return Err(Error::Budget {
+                required: admitted,
+                limit: self.options.memory_limit_bytes,
+            });
+        }
+        let allowance = super::add(self.memory.metadata_allowance_bytes, super::ALLOWANCE)?;
+        let pipeline = autoreleasepool(|_| self.model.gpu.affine_tile4())?;
+        self.affine_tile4 = Some(pipeline);
+        self.memory.metadata_allowance_bytes = allowance;
+        self.memory.admitted_bytes = admitted;
+        Ok(())
+    }
+}
+
 /// One explicit context caches the 18 useful bits/dtype pairs. Creating it does
 /// not change the existing engine's default library/pipelines or execution.
 pub struct Context {
@@ -85,7 +116,7 @@ impl Context {
         })
     }
 }
-pub(super) fn compile(gpu: &Gpu) -> Result<Vec<[Pipeline; 2]>> {
+fn precise_library(gpu: &Gpu, source: &str) -> Result<Retained<ProtocolObject<dyn MTLLibrary>>> {
     let options = MTLCompileOptions::new();
     options.setLanguageVersion(MTLLanguageVersion::Version2_3);
     options.setMathMode(MTLMathMode::Safe);
@@ -96,13 +127,28 @@ pub(super) fn compile(gpu: &Gpu) -> Result<Vec<[Pipeline; 2]>> {
     {
         return Err(Error::Unsupported("MLX precise math policy unavailable"));
     }
-    let library = gpu
-        .device
-        .newLibraryWithSource_options_error(
-            &NSString::from_str(include_str!("mlx.metal")),
-            Some(&options),
-        )
-        .map_err(|e| Error::Native(e.to_string()))?;
+    gpu.device
+        .newLibraryWithSource_options_error(&NSString::from_str(source), Some(&options))
+        .map_err(|e| Error::Native(e.to_string()))
+}
+
+pub(super) fn compile_tile4(gpu: &Gpu) -> Result<Pipeline> {
+    let source = concat!(
+        include_str!("mlx.metal"),
+        "\n",
+        include_str!("mlx_tile4.metal")
+    );
+    let library = precise_library(gpu, source)?;
+    let function = library
+        .newFunctionWithName(&NSString::from_str("mlx_product_tile4_8_0"))
+        .ok_or_else(|| Error::Native("MLX tile4 kernel absent".into()))?;
+    gpu.device
+        .newComputePipelineStateWithFunction_error(&function)
+        .map_err(|e| Error::Native(e.to_string()))
+}
+
+pub(super) fn compile(gpu: &Gpu) -> Result<Vec<[Pipeline; 2]>> {
+    let library = precise_library(gpu, include_str!("mlx.metal"))?;
     let mut pipelines = Vec::new();
     for bits in [2, 3, 4, 5, 6, 8] {
         for dtype in 0..3 {
@@ -271,6 +317,33 @@ pub(super) fn product(
     half_output: bool,
     status: &Buffer<u32>,
 ) -> Result<()> {
+    product_scheduled(
+        command,
+        weight,
+        bias,
+        left,
+        output,
+        output_stride,
+        n,
+        half_output,
+        None,
+        status,
+    )
+}
+
+#[allow(clippy::too_many_arguments)]
+pub(super) fn product_scheduled(
+    command: &Command<'_>,
+    weight: &super::Tensor,
+    bias: &Buffer<u16>,
+    left: &objc2_metal_performance_shaders::MPSMatrix,
+    output: &ProtocolObject<dyn MTLBuffer>,
+    output_stride: usize,
+    n: usize,
+    half_output: bool,
+    tile4: Option<&Pipeline>,
+    status: &Buffer<u32>,
+) -> Result<()> {
     let super::TensorStorage::Mlx(p) = &weight.storage else {
         return Err(Error::Options("MLX projection storage differs"));
     };
@@ -316,9 +389,23 @@ pub(super) fn product(
         output_stride,
         offset / 2,
     ])?;
+    let baseline = &p.pipelines[0];
+    let tile4 = tile4.filter(|pipeline| {
+        n >= 4
+            && half_output
+            && p.layout.bits() == 8
+            && p.layout.group_size() == 64
+            && p.layout.metadata_dtype() == MetadataDtype::F16
+            && pipeline.threadExecutionWidth() == baseline.threadExecutionWidth()
+            && pipeline.threadExecutionWidth() <= pipeline.maxTotalThreadsPerThreadgroup()
+    });
+    let (pipeline, rows, kind) = match tile4 {
+        Some(pipeline) => (pipeline, n.div_ceil(4), EncodeKind::Tile4),
+        None => (baseline, n, EncodeKind::Product),
+    };
     encode(
         command,
-        &p.pipelines[0],
+        pipeline,
         &[
             &weight.buffer.raw,
             &p.scales.raw,
@@ -328,9 +415,9 @@ pub(super) fn product(
             output,
         ],
         &shape,
-        n.checked_mul(out)
+        rows.checked_mul(out)
             .ok_or(Error::Options("MLX dispatch overflow"))?,
-        false,
+        kind,
         status,
     )
 }
@@ -375,7 +462,7 @@ pub(super) fn gather(
         &shape,
         n.checked_mul(width)
             .ok_or(Error::Options("MLX gather dispatch overflow"))?,
-        true,
+        EncodeKind::Gather,
         status,
     )
 }
@@ -386,20 +473,30 @@ fn shape(values: [usize; 8]) -> Result<[u32; 8]> {
     }
     Ok(output)
 }
+enum EncodeKind {
+    Gather,
+    Product,
+    Tile4,
+}
+
 fn encode(
     command: &Command<'_>,
     pipeline: &ProtocolObject<dyn MTLComputePipelineState>,
     buffers: &[&ProtocolObject<dyn MTLBuffer>],
     shape: &[u32; 8],
     items: usize,
-    gather: bool,
+    kind: EncodeKind,
     status: &Buffer<u32>,
 ) -> Result<()> {
     let width = pipeline.threadExecutionWidth();
     if width == 0 || width > pipeline.maxTotalThreadsPerThreadgroup() || status.len < 1 {
         return Err(Error::Unsupported("MLX launch width/status invalid"));
     }
-    let groups = if gather { items.div_ceil(width) } else { items };
+    let (groups, name) = match kind {
+        EncodeKind::Gather => (items.div_ceil(width), "mlx_gather"),
+        EncodeKind::Product => (items, "mlx_product"),
+        EncodeKind::Tile4 => (items, "mlx_product_tile4"),
+    };
     if items == 0
         || groups
             .checked_mul(width)
@@ -407,7 +504,6 @@ fn encode(
     {
         return Err(Error::Options("MLX rounded dispatch overflow"));
     }
-    let name = if gather { "mlx_gather" } else { "mlx_product" };
     let (index, encoder) = if let Some(trace) = command.trace {
         let (i, e) = trace.encoder(command.raw, name)?;
         (Some(i), e)
@@ -1085,3 +1181,6 @@ impl Packed {
         Ok(())
     }
 }
+
+#[cfg(all(test, target_os = "macos"))]
+mod tile4_tests;

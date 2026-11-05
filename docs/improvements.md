@@ -10093,3 +10093,11 @@ bitwise baseline parity. Astra reviewed the selection and gates.
 The coverage index now includes the pinned Granite MoE diagnostic. Astra
 localized the next Llama Online and Gemma probes to specific recorded failures.
 Documentation links and whitespace pass. [Plans](todo-implementation-plans.md)
+
+## 5 November 2026 — Add the experimental affine8 prefill tile
+
+One SIMD group reuses each reconstructed weight across up to four tokens
+while retaining independent compensated sums. The M1 Pro fixture matches
+the baseline and independent calculation, including tails and overflow.
+Astra and required checks pass. The matched performance screen follows.
+[Result](../benchmarks/results/2026-11-05-m9-affine-tile4-v1.json)
