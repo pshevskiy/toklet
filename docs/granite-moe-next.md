@@ -66,7 +66,8 @@ Proceed in reviewable tasks, each checked and reviewed by Astra before commit:
 3. Resident Metal routing/expert blocks with no host readback or numerical
    hot-loop dynamic dispatch; tiny intermediate, padding and cached-state checks.
    [Standalone router](moe-metal-router.md) is qualified on Mac and test-gated
-   until a resident graph consumes it. Expert leaves and combined layout are next.
+   until a resident graph consumes it. The [Half expert leaves](moe-metal-experts.md)
+   are also qualified on Mac. Combined graph wiring and session allocation follow.
 4. Pinned stock/native real 512-position execution, chunk/reset/overflow,
    full decision rows and process peaks. Quality, managed Chat, full declared
    context, performance tuning and iPhone remain separate gates.

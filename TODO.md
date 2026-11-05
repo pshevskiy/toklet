@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Granite sparse-MoE resident Half expert projection/reduction blocks and their allocation plan; Metal router, BF16 import and scalar blocks reviewed. Qwen1.5, SmolLM3 and Granite3.3 scoped Mac engine execution reviewed/complete. New models first; performance secondary; iPhone deferred**.
+Current task: **Granite sparse-MoE resident graph wiring and combined session/scratch allocation. Metal router and expert leaves, BF16 import and scalar blocks reviewed. Qwen1.5, SmolLM3 and Granite3.3 scoped Mac engine execution reviewed/complete. New models first; performance secondary; iPhone deferred**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -494,7 +494,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Sparse-MoE independent selected-expert projection/reduction fixtures and scalar blocks; [report](docs/moe-expert-blocks.md).
 - [x] Sparse-MoE strict BF16 import and exact tight storage/load planning; [report](docs/moe-bf16-import.md).
 - [x] Sparse-MoE standalone resident Metal router and consumed allocation layout; [report](docs/moe-metal-router.md).
-- [ ] Sparse-MoE resident Half expert projection/reduction and exact shared session/scratch allocation plan.
+- [x] Sparse-MoE Metal Half expert projection/reduction and consumed leaf allocation. [Report](docs/moe-metal-experts.md)
+- [ ] Sparse-MoE resident graph wiring and exact combined session/scratch allocation.
 - [ ] Sparse-MoE real stock/native execution, state and process-memory checks.
 
 ### M8 closure
@@ -1303,3 +1304,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Metal router qualification active | Frozen Half-input fixture, checked guarded allocation plan and borrowed encode compile. | Run explicit release GPU routing/status/reuse checks, required Rust suite and Astra review before commit. Expert consumers/full session pending. |
 
 | 2026-11-05 | Metal router leaf reviewed | Apple M1 Pro:45 launches/1,527 slots pass, exact IDs, bounded gates, OR-only failure/guards and zero Rust encode allocations. 574CPU/684Metal, strict/release and Astra pass. | Commit test-gated router; next Half expert projections/reduction and combined session layout. [Report](docs/moe-metal-router.md). |
+
+| 2026-11-05 | Metal expert leaves reviewed | Added independent gate/up rounding witnesses after the initial fixture coverage check. Final M1 Pro run matched 45,612 stage words with zero Rust encode allocations. 574 CPU and 685 Metal-feature tests, strict checks and Astra review pass. | Commit standalone leaves. Combined session wiring and allocation follow. [Report](docs/moe-metal-experts.md) |

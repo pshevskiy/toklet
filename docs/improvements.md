@@ -10035,3 +10035,10 @@ Half scores route deterministically into FP32 gates using a checked, consumed
 allocation plan. Apple M1 Pro: 1,527 slots, status/guards and zero Rust encode
 allocations pass. 574CPU/684Metal, strict/release and Astra pass. Experts, full
 session and real model remain open. [Report](moe-metal-router.md).
+
+## 5 November 2026 — Qualify Metal expert projection and reduction
+
+Resident Half expert stages consume a checked allocation plan and preserve
+ordered FP32 reduction. The M1 Pro matched 45,612 stage words with zero measured
+Rust encode allocations. Full checks and Astra review passed. Combined session
+wiring follows. [Report](moe-metal-experts.md)

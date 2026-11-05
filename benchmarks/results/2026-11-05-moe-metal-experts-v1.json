@@ -1,0 +1,24 @@
+{
+  "format": "toklet-moe-metal-experts-v1",
+  "passed": true,
+  "engine_revision": "4c374b09 plus standalone expert patch",
+  "fixture_sha256": "a54750600516cc6b94d18d9e13e4912857482eac5b982e6f1bf5f0491ecc5fdd",
+  "counts": {
+    "test": 574,
+    "metal-test": 685,
+    "gpu": 2
+  },
+  "gpu": {
+    "device": "Apple M1 Pro",
+    "cases": 9,
+    "launches": 18,
+    "exact_stage_values": 45612,
+    "max_encode_rust_allocations": 0
+  },
+  "checks": "artifacts/moe-experts-half-checks-2026-11-05/final/checks.json",
+  "small_guarded_operand_bytes": 852,
+  "granite_fixture_weight_payload_bytes": 100663296,
+  "source_coverage": "Initial gate/up rounding gap closed with independently generated discriminators before final target execution",
+  "review": "Astra approved code with no actionable findings. Required check condition satisfied.",
+  "scope": "Standalone test-gated Metal expert leaves and their consumed allocation plan"
+}

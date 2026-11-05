@@ -35,6 +35,8 @@ mod llama3_rotary;
 mod memory;
 pub mod mlx;
 #[cfg(test)]
+mod moe_experts_half;
+#[cfg(test)]
 mod moe_router_half;
 pub mod planning;
 mod profile;
