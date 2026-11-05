@@ -46,14 +46,28 @@ BF16 and three match Q4. Run HumanEval/37 with the original prompt, output cap
 and stops. Require complete cached/stateless trajectory parity, using the
 existing first-mismatch, cycle and eight-repair policy if needed.
 
-### Qwen2.5-1.5B MLX8 original-weight quality
+### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 
 The [short alignment](../benchmarks/results/2026-11-06-qwen15-original-alignment-v1.json)
-binds the original FP32 baseline and shows bit equality between native chunk
-schedules. The [full native loss](../benchmarks/results/2026-11-06-qwen15-full-loss-v1.json)
-passes all 10,000 causal targets with an increase of 0.001528 nats.
-Replay and grade the frozen 100 tasks against the matched original responses. Keep each owner's observed peak below 6 GiB. Managed Chat requires
-both gates, audited artifact/text admission and a separate Mac journey.
+binds the original FP32 baseline and matches native chunk schedules. The
+[full native loss](../benchmarks/results/2026-11-06-qwen15-full-loss-v1.json)
+passes all 10,000 causal targets with an increase of 0.001528 nats. The
+[raw task pilot](../benchmarks/results/2026-11-06-qwen15-task-pilot-v1.json)
+passes after isolating numerical assets and decoding after native exit.
+
+1. Collect and independently replay the frozen 100 raw task responses. Grade
+   only the complete collection in the isolated literal controller. Require
+   the unchanged two-point gate against the matched original score of 11/100.
+2. After the grade passes, pin the six-file dense artifact and its exact plain
+   renderer/codec. Compare no-tools, defaults, Unicode and stop handling. The
+   distinct tool-template literal stays outside this route.
+3. Bind the larger profile to Reference attention for initial sessions,
+   memory plans and replacements. Preserve the existing smaller Qwen policy.
+   Verify actual mode, exact and below-budget admission, owner mismatch,
+   mutated assets and generation state through the additive native boundary.
+4. Verify the managed Mac download, open, Send/Stop, context Apply and offline
+   reopen under measured model, codec and process budgets. Keep the physical
+   iPhone evidence as a separate deferred task.
 
 ### M8 closure audit
 
