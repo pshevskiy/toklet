@@ -34,6 +34,8 @@ pub mod lfm2;
 mod llama3_rotary;
 mod memory;
 pub mod mlx;
+#[cfg(test)]
+mod moe_router_half;
 pub mod planning;
 mod profile;
 mod reference_schedule;

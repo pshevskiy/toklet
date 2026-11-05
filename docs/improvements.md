@@ -10022,3 +10022,16 @@ actual importer storage from reservations and prospective KV. 574CPU/683Metal,
 strict/optimized checks and Astra pass. Real payload, Metal/session allocation and
 model qualification remain open.
 [Report](moe-bf16-import.md).
+
+## 5 November 2026 — Remove temporary build and staging files
+
+Removed 215.5GB of rebuildable files and verified duplicates. Available space
+rose from 73 to 192GiB. Models, executables, active target and evidence retained;
+[cleanup inventory](../artifacts/cleanup-2026-11-05/cleanup.json).
+
+## 5 November 2026 — Qualify the resident Metal router leaf
+
+Half scores route deterministically into FP32 gates using a checked, consumed
+allocation plan. Apple M1 Pro: 1,527 slots, status/guards and zero Rust encode
+allocations pass. 574CPU/684Metal, strict/release and Astra pass. Experts, full
+session and real model remain open. [Report](moe-metal-router.md).

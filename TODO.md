@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Granite sparse-MoE resident Metal routing/expert consumers and their exact session layout; BF16 import/tight storage planning and scalar blocks reviewed. Qwen1.5, SmolLM3 and Granite3.3 scoped Mac engine execution reviewed/complete. New models first; performance secondary; iPhone deferred**.
+Current task: **Granite sparse-MoE resident Half expert projection/reduction blocks and their allocation plan; Metal router, BF16 import and scalar blocks reviewed. Qwen1.5, SmolLM3 and Granite3.3 scoped Mac engine execution reviewed/complete. New models first; performance secondary; iPhone deferred**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -493,7 +493,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Sparse-MoE deterministic router fixture/scalar block; [report](docs/moe-router-block.md).
 - [x] Sparse-MoE independent selected-expert projection/reduction fixtures and scalar blocks; [report](docs/moe-expert-blocks.md).
 - [x] Sparse-MoE strict BF16 import and exact tight storage/load planning; [report](docs/moe-bf16-import.md).
-- [ ] Sparse-MoE resident Metal consumers and exact shared session/scratch allocation plan.
+- [x] Sparse-MoE standalone resident Metal router and consumed allocation layout; [report](docs/moe-metal-router.md).
+- [ ] Sparse-MoE resident Half expert projection/reduction and exact shared session/scratch allocation plan.
 - [ ] Sparse-MoE real stock/native execution, state and process-memory checks.
 
 ### M8 closure
@@ -1296,3 +1297,9 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | BF16 import/storage planning active | Strict separate MoE adapter and authenticated direct Half delivery compile; seven targeted controls pass, including mutation/truncation, capacity/budget rejection and bounded multi-chunk conversion. Real metadata yields 2,736,470,872-byte load requirement including a separate64MiB metadata reservation. | First test type-inference failure retained/fixed. Run required/optimized checks and Astra review; session scratch remains prospective until its Metal consumer exists. |
 
 | 2026-11-05 | BF16 import/storage reviewed | Authenticated bounded direct Half conversion, exact fused layout and tight load planning pass seven controls. 574CPU/683Metal, strict/optimized checks and Astra pass; real metadata load requirement2,736,470,872 bytes includes separate64MiB reservation. | Commit importer/storage task. Next Metal consumers and exact session layout; KV stays prospective. No real payload/model qualification. [Report](docs/moe-bf16-import.md). |
+
+| 2026-11-05 | Temporary artifact cleanup complete | Removed inactive compiler caches and verified staging/log duplicates;215.5GB apparent bytes. Available space rose73→192GiB. Models, executables, active target and evidence retained. | [Inventory](artifacts/cleanup-2026-11-05/cleanup.json). Continue standalone resident router; exact full session layout still open. |
+
+| 2026-11-05 | Metal router qualification active | Frozen Half-input fixture, checked guarded allocation plan and borrowed encode compile. | Run explicit release GPU routing/status/reuse checks, required Rust suite and Astra review before commit. Expert consumers/full session pending. |
+
+| 2026-11-05 | Metal router leaf reviewed | Apple M1 Pro:45 launches/1,527 slots pass, exact IDs, bounded gates, OR-only failure/guards and zero Rust encode allocations. 574CPU/684Metal, strict/release and Astra pass. | Commit test-gated router; next Half expert projections/reduction and combined session layout. [Report](docs/moe-metal-router.md). |

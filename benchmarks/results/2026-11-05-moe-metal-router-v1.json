@@ -1,0 +1,27 @@
+{
+  "format": "toklet-moe-metal-router-v1",
+  "passed": true,
+  "engine_revision": "5129284b plus standalone router patch",
+  "fixture_sha256": "071fbe82797e4b7eb1fb7348597aa618273bcc5a5f5cb61e12c88c2bd88c55ad",
+  "counts": {
+    "test": 574,
+    "metal-test": 684,
+    "gpu": 2
+  },
+  "gpu": {
+    "device": "Apple M1 Pro",
+    "cases": 15,
+    "launches": 45,
+    "checked_slots": 1527,
+    "max_gate_abs_error": 7.450580596923828e-09,
+    "max_encode_rust_allocations": 0,
+    "release_zero_required": true,
+    "session_or_checkpoint_qualified": false
+  },
+  "example_guarded_operand_bytes": 5798,
+  "pipeline_reservation_bytes": 67108864,
+  "checks": "artifacts/moe-router-half-checks-2026-11-05/checks.json",
+  "cleanup": "artifacts/cleanup-2026-11-05/cleanup.json",
+  "review": "Astra approved final code/evidence; no actionable findings",
+  "scope": "Standalone test-gated Metal router and exact consumed leaf plan only. Expert/complete session/model qualification remains open."
+}
