@@ -124,7 +124,7 @@ passes finite/status, poisoned KV, GQA and single-row/batch scratch-reset contro
 The scratch stores unnormalized exponentials.
 The [pinned corpus screen](../benchmarks/results/2026-11-05-llama-staged-corpus-v1.json)
 passes chunk1/chunk32 greedy agreement. Before full quality collection,
-require a useful uninstrumented fixed 128-input/128-decode comparison,
-repeated with reversed worker order. Preserve the original 10,000-target
+the [uninstrumented 128-input/128-decode comparison](../benchmarks/results/2026-11-05-llama-staged-timing-v1.json)
+passed in both worker orders. Preserve the original 10,000-target
 0.05-nat limit and 100-task two-point limit, with separate diagnostic
 capacity for those workloads. Keep the managed app on Reference pending qualification.

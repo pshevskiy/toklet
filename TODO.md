@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Llama staged uninstrumented usefulness screen. P5 bounded CPU generation passes; real Metal target parity is next.**
+Current task: **Llama staged full original-quality gates. P5 bounded CPU generation passes; real Metal target parity is next.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -576,7 +576,7 @@ Conditional follow-ons require their own decision; they do not all block M9:
 - [ ] P4: integrated I8 KV for a defined capacity requirement, with an actual codec. Astra reviewed the current Mac profile. [Capacity trigger](docs/todo-implementation-plans.md#p4-i8-kv) remains open.
 - [ ] P5: strict-greedy transactional verifier, then measured prompt lookup. [Comparison leaf](benchmarks/results/2026-11-05-m9-strict-greedy-v1.json) passes. [CPU transaction witness](benchmarks/results/2026-11-05-m9-greedy-transaction-v1.json) passes. [Prompt lookup proposer](benchmarks/results/2026-11-05-m9-prompt-lookup-v1.json) passes. [CPU verification transaction](benchmarks/results/2026-11-05-m9-cpu-greedy-round-v1.json) passes. [Bounded CPU generation](benchmarks/results/2026-11-05-m9-cpu-lookup-v1.json) passes authored ties and near ties. Next qualify real Metal target parity and measure generation.
 - [ ] G2/G3: checkpoint-defined shared-KV prefill/MTP after selected Gemma support.
-- [ ] Separate correctness task: Llama Online remains rejected. [Deeper staged screen](benchmarks/results/2026-11-05-llama-staged-depth-v1.json) passes frozen fixtures and matches ten greedy decisions. [Guarded leaf](benchmarks/results/2026-11-05-llama-staged-leaf-v1.json) passes. [Frozen 511-target screen](benchmarks/results/2026-11-05-llama-staged-corpus-v1.json) passes schedule comparisons. Next measure useful end-to-end performance before full quality.
+- [ ] Separate correctness task: Llama Online remains rejected. [Deeper staged screen](benchmarks/results/2026-11-05-llama-staged-depth-v1.json) passes frozen fixtures and matches ten greedy decisions. [Guarded leaf](benchmarks/results/2026-11-05-llama-staged-leaf-v1.json) passes. [Frozen 511-target screen](benchmarks/results/2026-11-05-llama-staged-corpus-v1.json) passes schedule comparisons. [Completed request timing](benchmarks/results/2026-11-05-llama-staged-timing-v1.json) passes twice. Next execute the original full loss and task gates.
   - [x] Reproduce the one-word difference on identical operands. [Result](benchmarks/results/2026-11-05-llama-online-witness-v1.json)
 
 Full-Qwen3-window expansion, old streaming prototypes and unselected techniques
@@ -1412,3 +1412,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Llama staged corpus screen reviewed | Each route matches 511 canonical row hashes across chunk1/32. Exact greedy IDs match between routes, while NLL changes descriptively. | Astra approves scoped evidence. Initial isolated build missing a fixture was corrected. Next uninstrumented timing before full quality. [Evidence](benchmarks/results/2026-11-05-llama-staged-corpus-v1.json) |
 
 | 2026-11-05 | P5 bounded CPU generation reviewed | Opt-in nonstreaming path matches ordinary greedy output and state on authored ties and near ties. Acceptance, rejection, no-match, stop and zero allocations pass. | Astra approves valid-prefix semantics. 583 default, 695 Metal and release check pass. Real-model and throughput gates stay open. [Evidence](benchmarks/results/2026-11-05-m9-cpu-lookup-v1.json) |
+
+| 2026-11-05 | Llama staged usefulness confirmed | Completed fixed 128-input/128-decode requests improve 43.13% and 43.06% in opposite worker orders on the M1 Pro. Exact final greedy ID and route-local hashes repeat. | Astra approves scoped timing. Full original quality and app gates remain open. [Evidence](benchmarks/results/2026-11-05-llama-staged-timing-v1.json) |

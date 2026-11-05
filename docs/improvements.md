@@ -10344,3 +10344,10 @@ on authored ties and near ties, with zero allocations in the measured runs.
 Astra approved its valid-prefix, stop and pending-state behavior. Real-model
 and throughput checks remain open.
 [Evidence](../benchmarks/results/2026-11-05-m9-cpu-lookup-v1.json)
+
+## 5 November 2026 — Measure staged Llama completed requests
+
+Staged SIMD reduces median request time by 43.13% and 43.06% on the pinned
+Mac 128-input/128-decode workload. Decode improves by about 50%. Astra
+approved both worker orders. Full original quality and app gates remain open.
+[Evidence](../benchmarks/results/2026-11-05-llama-staged-timing-v1.json)

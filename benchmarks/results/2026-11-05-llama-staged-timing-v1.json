@@ -1,0 +1,145 @@
+{
+  "rounds": [
+    {
+      "order": [
+        "reference",
+        "staged"
+      ],
+      "metrics": {
+        "prefill_seconds": {
+          "reference_median": 1.971110396,
+          "staged_median": 1.9015124170000002,
+          "mads": [
+            0.00017681250000012305,
+            0.000185500500000213
+          ],
+          "fractional_reduction": 0.035309021321807216,
+          "regresses": false,
+          "useful": false
+        },
+        "decode_seconds": {
+          "reference_median": 11.687898437000001,
+          "staged_median": 5.866771396,
+          "mads": [
+            0.0011666035000015285,
+            0.004421812500000399
+          ],
+          "fractional_reduction": 0.49804736688781004,
+          "regresses": false,
+          "useful": true
+        },
+        "total_seconds": {
+          "reference_median": 13.65893375,
+          "staged_median": 7.768327854000001,
+          "mads": [
+            0.0010119584999985776,
+            0.004215458500000047
+          ],
+          "fractional_reduction": 0.431263962752583,
+          "regresses": false,
+          "useful": true
+        }
+      },
+      "ac_power_at_endpoints": true,
+      "owners": {
+        "reference": {
+          "binary_sha256": "f083ac8c7118bae25f68f9d148074a95faf2b02f40fab1d3643cfb07b80d12bb",
+          "peak_physical_bytes": 1364952600,
+          "exit_code": 0,
+          "rss_peak_bytes": 1374961664,
+          "group_absent": true
+        },
+        "staged": {
+          "binary_sha256": "fe685396367a0f630384e0aecf719063bb95b0ee8e27ad3884a8be2a113c0d12",
+          "peak_physical_bytes": 1365034544,
+          "exit_code": 0,
+          "rss_peak_bytes": 1375043584,
+          "group_absent": true
+        }
+      },
+      "useful": true
+    },
+    {
+      "order": [
+        "staged",
+        "reference"
+      ],
+      "metrics": {
+        "prefill_seconds": {
+          "reference_median": 1.9714648335,
+          "staged_median": 1.9017415835000002,
+          "mads": [
+            0.00027983349999993745,
+            0.00015352050000005946
+          ],
+          "fractional_reduction": 0.03536621542278187,
+          "regresses": false,
+          "useful": false
+        },
+        "decode_seconds": {
+          "reference_median": 11.692004333500002,
+          "staged_median": 5.8776328755,
+          "mads": [
+            0.0008932080000008114,
+            0.0010946040000003876
+          ],
+          "fractional_reduction": 0.49729467182462717,
+          "regresses": false,
+          "useful": true
+        },
+        "total_seconds": {
+          "reference_median": 13.6636820625,
+          "staged_median": 7.7794838539999995,
+          "mads": [
+            0.0012202499999993677,
+            0.0007588335000003887
+          ],
+          "fractional_reduction": 0.43064513515351716,
+          "regresses": false,
+          "useful": true
+        }
+      },
+      "ac_power_at_endpoints": true,
+      "owners": {
+        "staged": {
+          "binary_sha256": "fe685396367a0f630384e0aecf719063bb95b0ee8e27ad3884a8be2a113c0d12",
+          "peak_physical_bytes": 1364690480,
+          "exit_code": 0,
+          "rss_peak_bytes": 1374666752,
+          "group_absent": true
+        },
+        "reference": {
+          "binary_sha256": "f083ac8c7118bae25f68f9d148074a95faf2b02f40fab1d3643cfb07b80d12bb",
+          "peak_physical_bytes": 1364772400,
+          "exit_code": 0,
+          "rss_peak_bytes": 1374748672,
+          "group_absent": true
+        }
+      },
+      "useful": true
+    }
+  ],
+  "usefulness_confirmed": true,
+  "full_quality_qualified": false,
+  "device": "Apple M1 Pro",
+  "workload": "128 prompt and 128 forced decode evaluations, chunk32, capacity512",
+  "review": "Astra approved isolated usefulness screen",
+  "quality_or_application_qualified": false,
+  "power_evidence": [
+    "artifacts/llama-staged-time-2026-11-05/forward-before-power.json",
+    "artifacts/llama-staged-time-2026-11-05/forward-after-power.json",
+    "artifacts/llama-staged-time-2026-11-05/reverse-before-power.json",
+    "artifacts/llama-staged-time-2026-11-05/reverse-after-power.json"
+  ],
+  "initial_build_failure": "artifacts/llama-staged-time-2026-11-05/staged-build.stderr",
+  "receipts": {
+    "artifacts/llama-staged-time-2026-11-05/contract.md": "0e8194a7674cbf18042953cb6668ef76ded3eeecccfc98f1c2a94174738c905c",
+    "artifacts/llama-staged-time-2026-11-05/llama_staged_time.rs": "181ff044f29e5bfce8a524128920060def19787fc2e0032fb59c917e3e0245b9",
+    "artifacts/llama-staged-time-2026-11-05/run.py": "d75c6a84dcc6cf2ce3ee370d77856dd2ab7d5d13e0cf2b9d6733f057709b8c97",
+    "artifacts/llama-staged-time-2026-11-05/decision.json": "d89f5eaa443ee3abdba63983fb0323bde7004c6a4508144bf6ce142e0a66729d",
+    "artifacts/llama-staged-time-2026-11-05/forward/reference.stdout": "7ccdcbaa408901f3366ea8f0bc56b665e45d6a95e48db0349c77d7d566cc4a7a",
+    "artifacts/llama-staged-time-2026-11-05/forward/staged.stdout": "801a21295e5cd15b3e44f10aeb28b2bc6fd204b41899dbc8201311093cb1d430",
+    "artifacts/llama-staged-time-2026-11-05/reverse/reference.stdout": "a9f63af358eab7464e037a1947758e58c7251eb38e7463c0c5ccb39374a900e3",
+    "artifacts/llama-staged-time-2026-11-05/reverse/staged.stdout": "d6297ea23860f0018badf86d577458fa9f37176cca751b4786472cd61f9fcf39"
+  }
+}
