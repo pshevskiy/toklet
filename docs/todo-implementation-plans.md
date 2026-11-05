@@ -35,6 +35,10 @@ or propagated precision differences.
 The [archived band intersection](../benchmarks/results/2026-11-06-gemma-reference-intersection-v1.json)
 rules out mutually exclusive bands for the retained coordinates. It leaves
 the joint graph computation and the original failures unresolved.
+The [authenticated prefix64 replay](../benchmarks/results/2026-11-06-gemma-first-staged-v1.json)
+localizes the first observed position48 propagation to layer3. Attention
+and FF up are exact. The first captured difference is the per-layer gate.
+Replay the remaining FF stages using the same operands and 32-row shape.
 
 ### Gemma4 adoption task gate
 

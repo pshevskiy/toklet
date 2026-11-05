@@ -10541,3 +10541,11 @@ HumanEval/37 replay reaches a proposal cycle after three repairs at
 Q8 screen with 205 MB projected headroom. Native/app Q8 admission still fails.
 [Evidence](../benchmarks/results/2026-11-06-gemma-oq6-stock-v1.json)
 [Q8 model card](https://huggingface.co/mlx-community/gemma-4-e2b-it-8bit)
+
+## 6 November 2026 — Localize the first observed Gemma staged propagation
+
+Prefix64 reproduces both archived K/V endpoints at position48. Layer3
+attention and FF up match bitwise. Eight per-layer gate words differ,
+followed by 54 output words. All 25 captured stages pass tolerance.
+Metal checks and Astra review pass. Replay layer3 FF next.
+[Evidence](../benchmarks/results/2026-11-06-gemma-first-staged-v1.json)

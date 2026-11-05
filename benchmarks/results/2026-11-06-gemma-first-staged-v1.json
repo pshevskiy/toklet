@@ -1,0 +1,238 @@
+{
+  "passed": true,
+  "position": 48,
+  "archived_endpoints_exact": true,
+  "earliest_archived_kv_differences": {
+    "layer.0.k_rotary": null,
+    "layer.0.self_attn.v_norm": null,
+    "layer.1.k_rotary": 375,
+    "layer.1.self_attn.v_norm": 375,
+    "layer.2.k_rotary": 375,
+    "layer.2.self_attn.v_norm": 375,
+    "layer.3.k_rotary": 366,
+    "layer.3.self_attn.v_norm": 366,
+    "layer.4.k_rotary": 48,
+    "layer.4.self_attn.v_norm": 48,
+    "layer.5.k_rotary": 48,
+    "layer.5.self_attn.v_norm": 48,
+    "layer.6.k_rotary": 48,
+    "layer.6.self_attn.v_norm": 48,
+    "layer.7.k_rotary": 48,
+    "layer.7.self_attn.v_norm": 48,
+    "layer.8.k_rotary": 48,
+    "layer.8.self_attn.v_norm": 48,
+    "layer.9.k_rotary": 48,
+    "layer.9.self_attn.v_norm": 48,
+    "layer.10.k_rotary": 48,
+    "layer.10.self_attn.v_norm": 48,
+    "layer.11.k_rotary": 48,
+    "layer.11.self_attn.v_norm": 48,
+    "layer.12.k_rotary": 48,
+    "layer.12.self_attn.v_norm": 48,
+    "layer.13.k_rotary": 48,
+    "layer.13.self_attn.v_norm": 48,
+    "layer.14.k_rotary": 48,
+    "layer.14.self_attn.v_norm": 48
+  },
+  "stages": {
+    "layer.2.output": {
+      "bit_differences": 0,
+      "values": 1536,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.input_layernorm": {
+      "bit_differences": 0,
+      "values": 1536,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.self_attn.q_norm": {
+      "bit_differences": 0,
+      "values": 2048,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.q_rotary": {
+      "bit_differences": 0,
+      "values": 2048,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.context": {
+      "bit_differences": 0,
+      "values": 2048,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.self_attn.o_proj": {
+      "bit_differences": 0,
+      "values": 1536,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.mlp.up_proj": {
+      "bit_differences": 0,
+      "values": 6144,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.per_layer_input_gate": {
+      "bit_differences": 8,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0009248858233075555,
+      "examples": []
+    },
+    "layer.3.per_layer_projection": {
+      "bit_differences": 323,
+      "values": 1536,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.005420339228265419,
+      "examples": []
+    },
+    "layer.3.post_per_layer_input_norm": {
+      "bit_differences": 294,
+      "values": 1536,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0010291121205511817,
+      "examples": []
+    },
+    "layer.3.ple_input": {
+      "bit_differences": 0,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.output": {
+      "bit_differences": 54,
+      "values": 1536,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0010363000787608787,
+      "examples": []
+    },
+    "layer.4.input_layernorm": {
+      "bit_differences": 52,
+      "values": 1536,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0021391616595983136,
+      "examples": []
+    },
+    "layer.4.self_attn.v_proj": {
+      "bit_differences": 180,
+      "values": 512,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0019529845965370691,
+      "examples": []
+    },
+    "layer.4.self_attn.k_norm": {
+      "bit_differences": 80,
+      "values": 512,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0005019884691943456,
+      "examples": []
+    },
+    "layer.0.k_rotary": {
+      "bit_differences": 0,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.0.self_attn.v_norm": {
+      "bit_differences": 0,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.1.k_rotary": {
+      "bit_differences": 0,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.1.self_attn.v_norm": {
+      "bit_differences": 0,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.2.k_rotary": {
+      "bit_differences": 0,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.2.self_attn.v_norm": {
+      "bit_differences": 0,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.k_rotary": {
+      "bit_differences": 0,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.3.self_attn.v_norm": {
+      "bit_differences": 0,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "layer.4.k_rotary": {
+      "bit_differences": 75,
+      "values": 512,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0005019884691943456,
+      "examples": []
+    },
+    "layer.4.self_attn.v_norm": {
+      "bit_differences": 166,
+      "values": 512,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0028450976215349004,
+      "examples": []
+    }
+  },
+  "whole_graph_qualified": false,
+  "device": "Apple M1 Pro",
+  "metal_passes": 695,
+  "checker_mutations_rejected": 7,
+  "physical_peak_bytes": 3027667728,
+  "first_differing_captured_stage": "layer.3.per_layer_input_gate",
+  "initial_failures": [
+    "Reference stop ordered before final K row; corrected to authenticate all K/V rows.",
+    "NumPy scalar serialization rejected; corrected reporting to use Python floats."
+  ],
+  "review": "Astra approved diagnostic completion and narrow layer-3 follow-up.",
+  "receipts_sha256": {
+    "artifacts/gemma-first-staged-2026-11-06/prefix.py": "218332affaaa4a165cc241418293e7c77fb1e79e65d268cad52a43c036cfb8a9",
+    "artifacts/gemma-first-staged-2026-11-06/reference-complete.json": "71b4e61f49f0ee729c20c58e924637f22ed9bccafa19eeee680dc9e336577901",
+    "artifacts/gemma-first-staged-2026-11-06/staged-complete.npz": "f6fe92a59af4ec7e40ac96d803c375478217f13eff66bc0c2225a90976142111",
+    "artifacts/gemma-first-staged-2026-11-06/checks.json": "4a01224da364ddfc666cb7f9b3d4ba9c768c38fc9416bdbfb0382e069998e1b0",
+    "artifacts/gemma-first-staged-2026-11-06/checker-controls.json": "e2e248633a3ea055fb36aac6c9a89a8ce56bb40be6d0f44eeb23a422285a02c7",
+    "artifacts/gemma-first-staged-2026-11-06/gpu.stdout": "e4c3d4a0efca648d2b5c0c38e7b23a081a8ddec66746c02cee871a9be39260c8",
+    "artifacts/gemma-first-staged-2026-11-06/arrays.bin": "e062f4109c5dfb237f2e939a8e5df3e27063976ca3dc739f3b74ef1190904ac2",
+    "artifacts/gemma-first-staged-2026-11-06/owned.json": "9e64e25710d33765b47867c1630b406d7f56b2f4ce2511341f7cb43e3041b46d",
+    "artifacts/gemma-first-staged-2026-11-06/replay-retry.json": "0d5e4013b6319024c5b4a9a87a4cd29e238e524622f2a4dd53baa7affd7013a0",
+    "artifacts/gemma-first-staged-2026-11-06/reference.stderr": "bd5136a527c193ea1e5b56adbb6f66facf5b22347d239c7226fc0d40d7a0ea92",
+    "artifacts/gemma-first-staged-2026-11-06/replay.stderr": "918e2ff2e9ca163e0869a639f5db64147b50b4f076dad4894ba0a47a1d746048"
+  }
+}

@@ -201,3 +201,116 @@ fn native_layer12_tail_at_433() {
     );
     capture.finish();
 }
+
+#[test]
+#[ignore = "explicit original E2B earliest retained staged difference"]
+fn native_prefix64_at_48() {
+    const POSITION: usize = 48;
+    const ROWS: usize = 32;
+    let raw = include_bytes!("../../../../../../benchmarks/gemma-v-boundary-v1/tokens.u32le");
+    let ids: Vec<_> = raw[..2 * ROWS * 4]
+        .chunks_exact(4)
+        .map(|value| u32::from_le_bytes(value.try_into().unwrap()))
+        .collect();
+    let (source, file, path, original) = load_original();
+    let owners = resident_snapshot(&source);
+    let norms = hybrid::Norms::new(&source, PROCESS - DIAGNOSTIC).unwrap();
+    let model = norms.model_for_context_probe(1025).unwrap();
+    let context = gemma_affine::Context::new(gemma_affine::CONTEXT_ALLOWANCE_BYTES).unwrap();
+    let mut session = norms
+        .new_session(&model, &context, PROCESS - DIAGNOSTIC)
+        .unwrap();
+    session.forward(&ids[..ROWS]).unwrap();
+    let committed = snapshot(&session);
+    let owned = pointers(&session);
+    let row = POSITION - ROWS;
+    let at = |width| row * width..(row + 1) * width;
+    let mut capture = capture::Capture::bounded(256 * 1024);
+    emit(
+        "FIRST_STAGED",
+        json!({"position":POSITION,"prefix":ids.len(),"chunk":ROWS,"context":1025}),
+    );
+    for layer in [2, 3, 4] {
+        session.fault = Some(layer);
+        assert!(matches!(
+            session.forward(&ids[ROWS..]),
+            Err(hybrid::Error::Model(Error::InvalidConfig(
+                "injected Gemma layer failure"
+            )))
+        ));
+        assert_eq!(snapshot(&session), committed);
+        assert_eq!(pointers(&session), owned);
+        let s = &session.scratch;
+        let g = &model.layout.layers[layer];
+        if layer == 3 {
+            let q = HEADS * g.head_dim;
+            for (stage, values) in [
+                ("input_layernorm", &s.norm[at(H)]),
+                ("self_attn.q_norm", &s.q_norm[at(q)]),
+                ("q_rotary", &s.q[at(q)]),
+                ("context", &s.context[at(q)]),
+                ("self_attn.o_proj", &s.attention[at(H)]),
+                ("mlp.up_proj", &s.up[at(g.intermediate)]),
+                ("per_layer_input_gate", &s.gate[at(P)]),
+                ("per_layer_projection", &s.dense_work[at(H)]),
+                ("post_per_layer_input_norm", &s.dense_norm[at(H)]),
+                ("ple_input", &s.layer_ple[at(P)]),
+            ] {
+                capture.record(&format!("layer.3.{stage}"), values, POSITION, 1);
+            }
+        }
+        if layer == 4 {
+            capture.record("layer.4.input_layernorm", &s.norm[at(H)], POSITION, 1);
+            capture.record(
+                "layer.4.self_attn.v_proj",
+                &s.kv[at(g.head_dim)],
+                POSITION,
+                1,
+            );
+            capture.record(
+                "layer.4.self_attn.k_norm",
+                &s.kv_norm[at(g.head_dim)],
+                POSITION,
+                1,
+            );
+            for owner in 0..=layer {
+                let dim = model.layout.layers[owner].head_dim;
+                let stage = &session.staging[owner];
+                capture.record(
+                    &format!("layer.{owner}.k_rotary"),
+                    &stage.k[at(dim)],
+                    POSITION,
+                    1,
+                );
+                capture.record(
+                    &format!("layer.{owner}.self_attn.v_norm"),
+                    &stage.v[at(dim)],
+                    POSITION,
+                    1,
+                );
+            }
+        } else {
+            capture.record(
+                &format!("layer.{layer}.output"),
+                &s.hidden[at(H)],
+                POSITION,
+                1,
+            );
+        }
+    }
+    session.fault = None;
+    session.forward(&ids[ROWS..]).unwrap();
+    assert_eq!(session.tokens(), ids);
+    assert_eq!(pointers(&session), owned);
+    assert_eq!(resident_snapshot(&source), owners);
+    assert_eq!(original, identity(&file.metadata().unwrap()));
+    assert_eq!(
+        original,
+        identity(&std::fs::symlink_metadata(path).unwrap())
+    );
+    emit(
+        "FIRST_STAGED_COMPLETE",
+        json!({"committed":ids.len(),"faults_preserved_prefix":true}),
+    );
+    capture.finish();
+}
