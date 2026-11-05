@@ -30,6 +30,7 @@ libc = "=0.2.190"
 [features]
 default = []
 metal = ["dep:objc2", "dep:objc2-foundation", "dep:objc2-metal", "dep:objc2-metal-performance-shaders"]
+affine-tile4-mac-probe = ["metal"]
 
 [target.'cfg(all(any(target_os = "macos", target_os = "ios"), target_arch = "aarch64"))'.dependencies]
 objc2 = { version = "=0.6.5", optional = true }

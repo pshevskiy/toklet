@@ -53,3 +53,13 @@ private input, explicit completion replay, changed prefix, cancellation and
 1,152-position rejection. Sampled physical peak was 781,698,272 bytes.
 Astra approved the state and synthetic fault scope.
 [State evidence](../benchmarks/results/2026-11-05-m9-affine-state-v1.json).
+
+The isolated Mac Chat controller loaded the audited cache at 512 positions
+and chunk 32. It completed Send, Stop, New Chat and clean shutdown with
+active tile dispatch. The separate raw command reused 36 of 63 encoded
+tokens and matched a fresh reset in output and committed state. Ordinary
+Friendly Chat resets per turn, as the first publication check exposed.
+The controller sampled peak physical footprint was 722,633,928 bytes.
+This qualifies the explicitly built diagnostic controller. Rendered UI,
+capacity transitions and the managed default remain separate.
+[Mac Chat evidence](../benchmarks/results/2026-11-05-m9-affine-app-v1.json).

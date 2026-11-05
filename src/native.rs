@@ -24,6 +24,12 @@ pub use transition_planning::*;
 mod context;
 pub use context::*;
 mod text;
+#[cfg(all(
+    feature = "affine-tile4-mac-probe",
+    target_os = "macos",
+    target_arch = "aarch64"
+))]
+mod tile4_app_probe;
 pub use compatibility::*;
 use std::{
     cell::{Cell, RefCell},
@@ -185,7 +191,16 @@ impl NativeSession {
                 any(target_os = "macos", target_os = "ios"),
                 target_arch = "aarch64"
             ))]
-            Self::Metal(s) => generation::generate(s.as_mut(), request, cancel, emit),
+            Self::Metal(s) => {
+                #[cfg(all(feature = "affine-tile4-mac-probe", target_os = "macos"))]
+                {
+                    tile4_app_probe::generate(s.as_mut(), request, cancel, emit)
+                }
+                #[cfg(not(all(feature = "affine-tile4-mac-probe", target_os = "macos")))]
+                {
+                    generation::generate(s.as_mut(), request, cancel, emit)
+                }
+            }
         }
     }
     fn score(&self, target: u32) -> Result<Score> {
@@ -726,17 +741,18 @@ fn create_session(model: &ModelHandle, opts: session::Options) -> Result<Box<Ses
         NativeModel::Metal(model) => {
             use crate::metal::{ReadbackMode, Session};
             let (projection, normalization) = model.native_session_modes();
-            NativeSession::Metal(Box::new(
-                Session::with_attention_mode(
-                    model,
-                    opts,
-                    projection,
-                    normalization,
-                    ReadbackMode::FullLogits,
-                    model.native_attention_mode(),
-                )
-                .map_err(|e| fail(ENGINE_ERROR, e.to_string()))?,
-            ))
+            let session = Session::with_attention_mode(
+                model,
+                opts,
+                projection,
+                normalization,
+                ReadbackMode::FullLogits,
+                model.native_attention_mode(),
+            )
+            .map_err(|e| fail(ENGINE_ERROR, e.to_string()))?;
+            #[cfg(all(feature = "affine-tile4-mac-probe", target_os = "macos"))]
+            let session = tile4_app_probe::configure(model, session, opts)?;
+            NativeSession::Metal(Box::new(session))
         }
     };
     Ok(Box::new(SessionHandle {

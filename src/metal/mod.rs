@@ -1497,7 +1497,25 @@ impl<'m> Session<'m> {
         }
         self.diagnostic_rows = 0;
         let result = autoreleasepool(|_| self.run_chunk(n, start));
-        self.finish_chunk(n, result)
+        let result = self.finish_chunk(n, result);
+        #[cfg(all(feature = "affine-tile4-mac-probe", target_os = "macos"))]
+        if result.is_ok()
+            && n >= 4
+            && self.affine_tile4.is_some()
+            && let Ok(profile) = self.profile()
+        {
+            let dispatches = profile
+                .events
+                .iter()
+                .filter(|event| event.name == "mlx_product_tile4")
+                .count();
+            eprintln!(
+                "TOKLET_TILE4_APP {}",
+                serde_json::json!({"event":"prefill","rows":n,"offset":start,
+                    "tile_dispatches":dispatches})
+            );
+        }
+        result
     }
     fn finish_chunk(&mut self, n: usize, result: Result<Timing>) -> Result<usize> {
         match result {

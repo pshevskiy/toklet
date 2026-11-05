@@ -10148,3 +10148,10 @@ strict checks pass. [Evidence](../benchmarks/results/2026-11-05-m9-affine-tasks-
 The real Qwen tile session preserves committed distributions across failure,
 replay, cancellation and capacity checks. The injected input exercises native
 GPU status. Astra and required checks pass. [Evidence](../benchmarks/results/2026-11-05-m9-affine-state-v1.json)
+
+## 5 November 2026 — Qualify the Mac tiled Chat controller
+
+An isolated diagnostic build verifies actual tiled prefill, Send, Stop,
+New Chat and clean close under the process budget. A separate raw request
+reuses 36 tokens and matches fresh reset. Astra approved the scoped
+controller proof. [Evidence](../benchmarks/results/2026-11-05-m9-affine-app-v1.json)

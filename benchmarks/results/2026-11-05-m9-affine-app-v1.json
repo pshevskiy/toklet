@@ -1,0 +1,179 @@
+{
+  "passed": true,
+  "workflow": [
+    {
+      "event": "loaded",
+      "fields": {
+        "admitted_bytes": 755205914,
+        "repository": "mlx-community/Qwen2.5-0.5B-Instruct-8bit",
+        "revision": "6474d4c1a05bd7bd634a9c993560e4e7272eda3d"
+      }
+    },
+    {
+      "event": "continuation",
+      "fields": {
+        "first_emitted": 9,
+        "second_emitted": 9,
+        "shared_prefix": 46
+      }
+    },
+    {
+      "event": "stopped",
+      "fields": {
+        "emitted": 1,
+        "evaluated": 41,
+        "history": 41,
+        "pending": 0
+      }
+    },
+    {
+      "event": "reset_reply",
+      "fields": {
+        "emitted": 9
+      }
+    },
+    {
+      "event": "raw_reuse",
+      "fields": {
+        "extended": 63,
+        "fresh_output_state_equal": true,
+        "prefix": 36
+      }
+    },
+    {
+      "event": "complete",
+      "fields": {
+        "closed": true,
+        "ui_rendered": false
+      }
+    }
+  ],
+  "native": [
+    {
+      "event": "session",
+      "capacity": 512,
+      "chunk": 32,
+      "admitted_bytes": 755185434
+    },
+    {
+      "event": "prefill",
+      "rows": 32,
+      "offset": 0,
+      "tile_dispatches": 168
+    },
+    {
+      "event": "prefill",
+      "rows": 4,
+      "offset": 32,
+      "tile_dispatches": 168
+    },
+    {
+      "event": "reply",
+      "reused_tokens": 0,
+      "prefill_tokens": 36,
+      "sampled": 10
+    },
+    {
+      "event": "prefill",
+      "rows": 32,
+      "offset": 0,
+      "tile_dispatches": 168
+    },
+    {
+      "event": "prefill",
+      "rows": 31,
+      "offset": 32,
+      "tile_dispatches": 168
+    },
+    {
+      "event": "reply",
+      "reused_tokens": 0,
+      "prefill_tokens": 63,
+      "sampled": 10
+    },
+    {
+      "event": "prefill",
+      "rows": 32,
+      "offset": 0,
+      "tile_dispatches": 168
+    },
+    {
+      "event": "prefill",
+      "rows": 8,
+      "offset": 32,
+      "tile_dispatches": 168
+    },
+    {
+      "event": "reply",
+      "reused_tokens": 0,
+      "prefill_tokens": 40,
+      "sampled": 1
+    },
+    {
+      "event": "prefill",
+      "rows": 32,
+      "offset": 0,
+      "tile_dispatches": 168
+    },
+    {
+      "event": "reply",
+      "reused_tokens": 0,
+      "prefill_tokens": 33,
+      "sampled": 10
+    },
+    {
+      "event": "prefill",
+      "rows": 32,
+      "offset": 0,
+      "tile_dispatches": 168
+    },
+    {
+      "event": "prefill",
+      "rows": 4,
+      "offset": 32,
+      "tile_dispatches": 168
+    },
+    {
+      "event": "prefill",
+      "rows": 27,
+      "offset": 36,
+      "tile_dispatches": 168
+    },
+    {
+      "event": "reply",
+      "reused_tokens": 36,
+      "prefill_tokens": 27,
+      "sampled": 1
+    },
+    {
+      "event": "prefill",
+      "rows": 32,
+      "offset": 0,
+      "tile_dispatches": 168
+    },
+    {
+      "event": "prefill",
+      "rows": 31,
+      "offset": 32,
+      "tile_dispatches": 168
+    },
+    {
+      "event": "reply",
+      "reused_tokens": 0,
+      "prefill_tokens": 63,
+      "sampled": 1
+    }
+  ],
+  "profile_scope": "isolated macOS Chat controller probe",
+  "sampled_physical_peak_bytes": 722633928,
+  "rss_peak_bytes": 708067328,
+  "process_limit_bytes": 1610612736,
+  "device": "Apple M1 Pro",
+  "review": "Astra approved scoped Mac controller probe and independent raw reuse",
+  "checks": "artifacts/m9-p2-tile4-2026-11-05/app/checks/checks.json",
+  "owner": "artifacts/m9-p2-tile4-2026-11-05/app/final/app-owned.json",
+  "first_publication": "artifacts/m9-p2-tile4-2026-11-05/app/app-owned.json",
+  "initial_swift_preflight": "artifacts/m9-p2-tile4-2026-11-05/app/swift-preflight.stderr",
+  "managed_default_adopted": false,
+  "physical_phone_qualified": false
+}
