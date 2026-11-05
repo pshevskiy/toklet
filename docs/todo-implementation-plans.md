@@ -32,6 +32,9 @@ passes both arithmetic contracts at position 433. Its attention output and
 next hidden match the archived boundary rows exactly. Astra ends the local
 layer walk. Further graph work needs a concrete hypothesis about the source
 or propagated precision differences.
+The [archived band intersection](../benchmarks/results/2026-11-06-gemma-reference-intersection-v1.json)
+rules out mutually exclusive bands for the retained coordinates. It leaves
+the joint graph computation and the original failures unresolved.
 
 ### Gemma4 adoption task gate
 

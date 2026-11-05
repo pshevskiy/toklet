@@ -529,6 +529,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
   - [x] Layer12 position433 complete post-attention tail passes both
     arithmetic contracts. Astra confirms no further local layer walking.
     [Evidence](benchmarks/results/2026-11-06-gemma-layer12-tail-v1.json).
+  - [x] Both reference bands intersect at an FP32 value for all 24,123,392
+    observed comparisons. [Evidence](benchmarks/results/2026-11-06-gemma-reference-intersection-v1.json).
   - [x] Same-input layer 13 and final RMSNorm pass. [Result](benchmarks/results/2026-11-05-gemma-norm-witness-v1.json)
   - [x] Same-input final head and softcap pass at the four rejected IDs. [Result](benchmarks/results/2026-11-05-gemma-head-witness-v1.json)
   - [x] Layer 12 attention and O projection at position 433 pass same-input replay. [Result](benchmarks/results/2026-11-06-gemma-attention-boundary-v1.json)

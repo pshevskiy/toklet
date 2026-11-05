@@ -10524,3 +10524,11 @@ exactly. Metal checks, seven malformed-record controls and Astra review
 pass. Retain the tested tail and end the local layer walk. Full 1,025
 qualification remains rejected.
 [Evidence](../benchmarks/results/2026-11-06-gemma-layer12-tail-v1.json)
+
+## 6 November 2026 — Test the two Gemma reference bands for overlap
+
+All 24,123,392 retained comparisons admit at least one FP32 value within
+both bands, coordinate by coordinate. Replay reproduces the four
+mathematical and eight staged failures. Astra approved the narrow result.
+The joint graph computation and full gate remain unresolved.
+[Evidence](../benchmarks/results/2026-11-06-gemma-reference-intersection-v1.json)

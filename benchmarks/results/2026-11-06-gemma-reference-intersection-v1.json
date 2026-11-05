@@ -1,0 +1,124 @@
+{
+  "counts": {
+    "values": 24123392,
+    "math_failures": 4,
+    "staged_failures": 8,
+    "disjoint_real": 0,
+    "disjoint_float32": 0
+  },
+  "unique_coordinates": [
+    {
+      "kind": "logits",
+      "owner": null,
+      "position": 1024,
+      "dimension": 1822,
+      "actual": 0.014027738012373447,
+      "math": 0.014040910796693798,
+      "staged": 0.014030883088707924,
+      "joint_lower": 0.014029506705614129,
+      "joint_upper": 0.014042286177016795,
+      "float32_feasible": true,
+      "minimum_absolute_change": 1.768693240681088e-06
+    },
+    {
+      "kind": "logits",
+      "owner": null,
+      "position": 1024,
+      "dimension": 6212,
+      "actual": 0.018533818423748016,
+      "math": 0.018547336039576694,
+      "staged": 0.018534939736127853,
+      "joint_lower": 0.018535481305972736,
+      "joint_upper": 0.018546793230101465,
+      "float32_feasible": true,
+      "minimum_absolute_change": 1.6628822247198582e-06
+    },
+    {
+      "kind": "logits",
+      "owner": null,
+      "position": 1024,
+      "dimension": 23958,
+      "actual": 0.00942678190767765,
+      "math": 0.009440619848477258,
+      "staged": 0.00942726619541645,
+      "joint_lower": 0.00942967578649241,
+      "joint_upper": 0.009438208922035993,
+      "float32_feasible": true,
+      "minimum_absolute_change": 2.8938788147591515e-06
+    },
+    {
+      "kind": "logits",
+      "owner": null,
+      "position": 1024,
+      "dimension": 74252,
+      "actual": 0.03370625898241997,
+      "math": 0.03372019886248971,
+      "staged": 0.03370705246925354,
+      "joint_lower": 0.03370682684260346,
+      "joint_upper": 0.03372042317450046,
+      "float32_feasible": true,
+      "minimum_absolute_change": 5.678601834938068e-07
+    },
+    {
+      "kind": "v",
+      "owner": 13,
+      "position": 433,
+      "dimension": 68,
+      "actual": -0.028451867401599884,
+      "math": -0.028454961765935018,
+      "staged": -0.028467414900660515,
+      "joint_lower": -0.02846780726211161,
+      "joint_upper": -0.028454568159170447,
+      "float32_feasible": true,
+      "minimum_absolute_change": 2.7007575705631504e-06
+    },
+    {
+      "kind": "v",
+      "owner": 12,
+      "position": 650,
+      "dimension": 0,
+      "actual": -0.018619460985064507,
+      "math": -0.018628362891136355,
+      "staged": -0.018634488806128502,
+      "joint_lower": -0.018640225727425467,
+      "joint_upper": -0.018622625357247888,
+      "float32_feasible": true,
+      "minimum_absolute_change": 3.164372183381281e-06
+    },
+    {
+      "kind": "v",
+      "owner": 14,
+      "position": 650,
+      "dimension": 277,
+      "actual": 0.032094042748212814,
+      "math": 0.03208521145115887,
+      "staged": 0.03207981958985329,
+      "joint_lower": 0.032072002930013756,
+      "joint_upper": 0.032093027571812274,
+      "float32_feasible": true,
+      "minimum_absolute_change": 1.015176400540052e-06
+    },
+    {
+      "kind": "v",
+      "owner": 14,
+      "position": 650,
+      "dimension": 296,
+      "actual": -0.0022325674071907997,
+      "math": -0.002223829152896341,
+      "staged": -0.0022166967391967773,
+      "joint_lower": -0.002226918408870697,
+      "joint_upper": -0.0022136067699810515,
+      "float32_feasible": true,
+      "minimum_absolute_change": 5.648998320102825e-06
+    }
+  ],
+  "whole_graph_qualified": false,
+  "native_or_gate_changed": false,
+  "passed": true,
+  "review": "Astra approved the coordinate-wise result. Full graph qualification stays rejected.",
+  "receipts_sha256": {
+    "artifacts/gemma-reference-intersection-2026-11-06/check.py": "2498724c0e7041aec301a0598e884cea6c7773f537a90d37ee691ade9a8ab2ef",
+    "artifacts/gemma-reference-intersection-2026-11-06/intersection.json": "710b6e499d434ec6fad42de687c8a5f023c4f66b95b2ef82b268445b06fe5b1e",
+    "artifacts/gemma-reference-intersection-2026-11-06/check.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
