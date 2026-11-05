@@ -39,7 +39,7 @@ impl DenseCodecContentIdentity {
     }
     pub const fn text_policy(&self) -> &'static str {
         match self.profile {
-            DenseProfile::Qwen(QwenProfile::Qwen2) => "qwen-chatml-v1",
+            DenseProfile::Qwen(QwenProfile::Qwen2 | QwenProfile::Qwen15) => "qwen-chatml-v1",
             DenseProfile::Qwen(QwenProfile::Qwen3) => "qwen3-plain-nonthinking-v1",
             DenseProfile::Mistral => "mistral-instruct-v1",
             DenseProfile::Llama3 => "llama3-plain-20240726-v1",
@@ -49,6 +49,7 @@ impl DenseCodecContentIdentity {
 fn text_profile(profile: DenseProfile) -> Profile {
     match profile {
         DenseProfile::Qwen(QwenProfile::Qwen2) => Profile::Qwen,
+        DenseProfile::Qwen(QwenProfile::Qwen15) => Profile::Qwen15,
         DenseProfile::Qwen(QwenProfile::Qwen3) => Profile::Qwen3,
         DenseProfile::Mistral => Profile::Mistral,
         DenseProfile::Llama3 => Profile::Llama3,
@@ -56,7 +57,7 @@ fn text_profile(profile: DenseProfile) -> Profile {
 }
 fn tokenizer_cap(profile: DenseProfile) -> usize {
     match profile {
-        DenseProfile::Qwen(QwenProfile::Qwen2) => 8 * 1024 * 1024,
+        DenseProfile::Qwen(QwenProfile::Qwen2 | QwenProfile::Qwen15) => 8 * 1024 * 1024,
         DenseProfile::Qwen(QwenProfile::Qwen3) => 16 * 1024 * 1024,
         DenseProfile::Mistral => 4 * 1024 * 1024,
         DenseProfile::Llama3 => 16 * 1024 * 1024,
@@ -78,7 +79,7 @@ fn admit(
         || allowance > crate::weights::INITIAL_MEMORY_LIMIT_BYTES
     {
         return Err(invalid(match profile {
-            DenseProfile::Qwen(QwenProfile::Qwen2) => {
+            DenseProfile::Qwen(QwenProfile::Qwen2 | QwenProfile::Qwen15) => {
                 "Audited Qwen2 codec requires a separate 128 MiB..=6 GiB allowance"
             }
             DenseProfile::Qwen(QwenProfile::Qwen3) => {
@@ -104,7 +105,7 @@ fn admit(
         || source.verified_container_reads() < source.container_physical_ranges()
     {
         return Err(invalid(match profile {
-            DenseProfile::Qwen(QwenProfile::Qwen2) => {
+            DenseProfile::Qwen(QwenProfile::Qwen2 | QwenProfile::Qwen15) => {
                 "Unsupported authenticated source for Qwen2 codec"
             }
             DenseProfile::Qwen(QwenProfile::Qwen3) => {
@@ -186,6 +187,19 @@ impl Codec {
     ) -> io::Result<Self> {
         Self::load_dense_audited(
             DenseProfile::Qwen(QwenProfile::Qwen2),
+            directory,
+            source,
+            allowance,
+        )
+    }
+    /// Verified larger Qwen2.5 plain ChatML assets, bound to the exact source receipt.
+    pub fn load_qwen15_audited(
+        directory: &Path,
+        source: &DenseSourceContentIdentity,
+        allowance: usize,
+    ) -> io::Result<Self> {
+        Self::load_dense_audited(
+            DenseProfile::Qwen(QwenProfile::Qwen15),
             directory,
             source,
             allowance,

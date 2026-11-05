@@ -30,6 +30,7 @@ const CONFIG_SHA: &str = "a27f638bd2831f5c3dea654a75838930f2b11fbe550c4d4e1d5d7b
 pub enum Profile {
     Smol,
     Qwen,
+    Qwen15,
     Qwen3,
     Mistral,
     Llama3,
@@ -51,6 +52,7 @@ impl Profile {
         let (shape, theta, eps) = match self {
             Self::Smol => ((49152, 576, 1536, 30, 9, 3, 64), 100000.0, 1e-5),
             Self::Qwen => ((151936, 896, 4864, 24, 14, 2, 64), 1000000.0, 1e-6),
+            Self::Qwen15 => ((151936, 1536, 8960, 28, 12, 2, 128), 1000000.0, 1e-6),
             Self::Qwen3 => ((151936, 1024, 3072, 28, 16, 8, 128), 1000000.0, 1e-6),
             Self::Mistral => ((32768, 4096, 14336, 32, 32, 8, 128), 1000000.0, 1e-5),
             Self::Llama3 => ((128256, 2048, 8192, 16, 32, 8, 64), 500000.0, 1e-5),
@@ -70,14 +72,14 @@ impl Profile {
     pub fn allowance(self) -> usize {
         match self {
             Self::Smol | Self::Mistral => TOKENIZER_ALLOWANCE,
-            Self::Qwen => 128 * 1024 * 1024,
+            Self::Qwen | Self::Qwen15 => 128 * 1024 * 1024,
             Self::Qwen3 | Self::Llama3 => 256 * 1024 * 1024,
         }
     }
     pub fn stop_ids(self) -> &'static [u32] {
         match self {
             Self::Smol => &[0, 2],
-            Self::Qwen => &[151643, 151645],
+            Self::Qwen | Self::Qwen15 => &[151643, 151645],
             Self::Qwen3 => &[151645],
             Self::Mistral => &[2],
             Self::Llama3 => llama3::STOPS,
@@ -86,7 +88,7 @@ impl Profile {
     fn special_ids(self) -> &'static [(&'static str, u32)] {
         match self {
             Self::Smol => &[("<|endoftext|>", 0), ("<|im_start|>", 1), ("<|im_end|>", 2)],
-            Self::Qwen | Self::Qwen3 => &[
+            Self::Qwen | Self::Qwen15 | Self::Qwen3 => &[
                 ("<|endoftext|>", 151643),
                 ("<|im_start|>", 151644),
                 ("<|im_end|>", 151645),
@@ -104,7 +106,7 @@ impl Profile {
     fn vocab(self) -> u32 {
         match self {
             Self::Smol => 49152,
-            Self::Qwen | Self::Qwen3 => 151936,
+            Self::Qwen | Self::Qwen15 | Self::Qwen3 => 151936,
             Self::Mistral => 32768,
             Self::Llama3 => llama3::VOCAB,
         }
@@ -162,7 +164,9 @@ fn render_profile(
     }
     let system = match profile {
         Profile::Smol => "You are a helpful AI assistant named SmolLM, trained by Hugging Face",
-        Profile::Qwen => "You are Qwen, created by Alibaba Cloud. You are a helpful assistant.",
+        Profile::Qwen | Profile::Qwen15 => {
+            "You are Qwen, created by Alibaba Cloud. You are a helpful assistant."
+        }
         Profile::Mistral | Profile::Qwen3 | Profile::Llama3 => "",
     };
     let mut text = if profile == Profile::Mistral {
@@ -248,6 +252,9 @@ impl Codec {
                 16 * 1024 * 1024,
                 16 * 1024,
             ),
+            Profile::Qwen15 => {
+                return Err(invalid("Qwen1.5B requires the audited constructor"));
+            }
             Profile::Llama3 => {
                 return Err(invalid(
                     "Llama3 requires the direct pinned or audited constructor",

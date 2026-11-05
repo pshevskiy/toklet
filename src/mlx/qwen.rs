@@ -257,6 +257,17 @@ impl Source {
             weights::content::DenseProfile::Qwen(weights::content::QwenProfile::Qwen2),
         )
     }
+    /// Bounded source audit for the pinned larger Qwen2.5 artifact.
+    pub fn open_qwen15_audited(directory: &Path, options: LoadOptions) -> Result<Self, Error> {
+        if options.context_limit > 512 {
+            return Err(invalid("audited Qwen1.5B requires context <=512"));
+        }
+        Self::open_dense_audited(
+            directory,
+            options,
+            weights::content::DenseProfile::Qwen(weights::content::QwenProfile::Qwen15),
+        )
+    }
     /// Opt-in delivered config/index/container evidence for the pinned Mistral
     /// artifact. This does not assemble a model, pair a codec or change modes.
     pub fn open_mistral_audited(directory: &Path, options: LoadOptions) -> Result<Self, Error> {
@@ -437,9 +448,9 @@ impl Source {
         };
         if let Some((profile, _)) = dense_config {
             let expected = match profile {
-                weights::content::DenseProfile::Qwen(weights::content::QwenProfile::Qwen2) => {
-                    Architecture::Qwen2
-                }
+                weights::content::DenseProfile::Qwen(
+                    weights::content::QwenProfile::Qwen2 | weights::content::QwenProfile::Qwen15,
+                ) => Architecture::Qwen2,
                 weights::content::DenseProfile::Qwen(weights::content::QwenProfile::Qwen3) => {
                     Architecture::Qwen3
                 }

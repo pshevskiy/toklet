@@ -602,6 +602,19 @@ pub unsafe extern "C" fn toklet_model_load_mlx_qwen2_audited(
 ) -> u32 {
     unsafe { load_mlx(path, len, opts, out, error, MlxLoadProfile::Qwen2Audited) }
 }
+/// Mac-only audited Qwen2.5-1.5B source import through native Reference.
+/// # Safety
+/// Follow the parent foreign pointer, thread and disjoint-output contract.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_model_load_mlx_qwen15_audited(
+    path: *const u8,
+    len: usize,
+    opts: *const Options,
+    out: *mut *mut ModelHandle,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe { load_mlx(path, len, opts, out, error, MlxLoadProfile::Qwen15Audited) }
+}
 /// Audited Mistral source import through the existing native Reference graph.
 /// Evidence attaches after successful assembly; reserve text memory separately.
 /// # Safety
@@ -634,6 +647,7 @@ enum MlxLoadProfile {
     Ordinary,
     SmolAudited,
     Qwen2Audited,
+    Qwen15Audited,
     MistralAudited,
     Llama3Audited,
     Qwen3Audited,
@@ -677,6 +691,9 @@ unsafe fn load_mlx(
                     }
                     MlxLoadProfile::Qwen2Audited => {
                         crate::metal::Model::load_mlx_qwen2_audited(&path, options)
+                    }
+                    MlxLoadProfile::Qwen15Audited => {
+                        crate::metal::Model::load_mlx_qwen15_audited(&path, options)
                     }
                     MlxLoadProfile::Qwen3Audited => {
                         crate::metal::Model::load_mlx_qwen3_audited(&path, options)

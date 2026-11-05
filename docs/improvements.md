@@ -10481,3 +10481,11 @@ OptiQ matches all 122 cached and complete stateless decisions on the frozen
 HumanEval/37 case, including hidden EOS106. No repair is needed. Astra approved
 the one-case scope and full stock follow-up.
 [Evidence](../benchmarks/results/2026-11-06-gemma-optiq-trajectory37-v1.json)
+
+## 6 November 2026 — Bind the audited Qwen1.5B Reference owner and codec
+
+The larger checkpoint has a distinct manifest and reuses the byte-identical
+plain ChatML text assets. Native creation and transition planning use
+Reference attention. The real Mac512 witness passes exact/below budgets,
+encoded fixtures and both stops. Astra approved the native scope.
+[Evidence](../benchmarks/results/2026-11-06-qwen15-native-owner-v1.json)

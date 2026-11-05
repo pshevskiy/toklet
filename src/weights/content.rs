@@ -383,7 +383,7 @@ impl FileAudit {
 mod smol;
 pub(crate) use smol::smol_manifest;
 mod qwen2;
-pub(crate) use qwen2::qwen2_manifest;
+pub(crate) use qwen2::{qwen2_manifest, qwen15_manifest};
 mod qwen;
 mod qwen3;
 pub(crate) use qwen::QwenProfile;

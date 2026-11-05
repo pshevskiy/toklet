@@ -246,6 +246,8 @@ uint32_t toklet_model_load_mlx_smol_audited(const uint8_t *, size_t, const Tokle
 uint32_t toklet_model_load_mlx_qwen3_audited(const uint8_t *, size_t, const TokletOptions *, TokletModel **, TokletError *);
 /* Explicit consumed-source Qwen2.5 import; ordinary Online policy, text separate. */
 uint32_t toklet_model_load_mlx_qwen2_audited(const uint8_t *, size_t, const TokletOptions *, TokletModel **, TokletError *);
+/* macOS audited Qwen1.5B: Reference attention, capacity at most 512. */
+uint32_t toklet_model_load_mlx_qwen15_audited(const uint8_t *, size_t, const TokletOptions *, TokletModel **, TokletError *);
 /* Pinned Mistral audited source import, ordinary Reference graph/bounds;
    text allowance remains separate and evidence publishes only after assembly. */
 /* Pinned Llama3 scaled-RoPE import; context must be <=512. */

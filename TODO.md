@@ -492,7 +492,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
     decoding. [Evidence](benchmarks/results/2026-11-06-qwen15-task-pilot-v1.json).
   - [x] Full frozen task quality passes 12/100 versus original FP32 11/100.
     [Evidence](benchmarks/results/2026-11-06-qwen15-task-quality-v1.json).
-  - [ ] Audited Reference owner, plain codec and managed Mac Chat journey.
+  - [x] Audited Reference owner, plain codec and exact/below Mac512 admission.
+    [Evidence](benchmarks/results/2026-11-06-qwen15-native-owner-v1.json).
+  - [ ] Managed Mac Chat, matching preview/Apply and verified package.
 - [x] SmolLM3 validated per-layer rotary mask, shared CPU/Metal bypass and
   independent nonzero-offset mixed-layer fixture; [block report](docs/smollm3-rotary-schedule.md).
 - [x] SmolLM3 pinned real Mac512 execution, stock comparison, state and memory;
@@ -1466,3 +1468,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | Qwen1.5B full literal task quality reviewed | All 100 native responses replay; isolated grade is 12/100 vs matched FP32 11/100. Zero unresolved cases and stopped VM restored. | Both original-weight gates pass. Next audited codec/owner and Mac Chat. [Evidence](benchmarks/results/2026-11-06-qwen15-task-quality-v1.json) |
 
 | 2026-11-06 | Gemma OptiQ single-case trajectory reviewed | HumanEval/37 replays all 122 decisions including hidden stop106, with zero repairs and final runtime audit. Physical peak 5.32 GB. | Astra approves scope and the full 100-case stock follow-up. [Evidence](benchmarks/results/2026-11-06-gemma-optiq-trajectory37-v1.json) |
+
+| 2026-11-06 | Qwen1.5B audited native owner reviewed | Exact manifest, both plain fixtures and stops, 513 rejection and exact/below admission pass. Final 583 default/695 Metal tests; physical peak 1.80 GB. | Astra approves Reference owner/codec. Swift preview, journey and package are next. [Evidence](benchmarks/results/2026-11-06-qwen15-native-owner-v1.json) |

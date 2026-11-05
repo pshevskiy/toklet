@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "device": "Apple M1 Pro",
+  "manifest": "775a61717b5785783a75a19a6a472fb8eb9ea1e5a8efbbf4c919330e7c6c209c",
+  "native": {
+    "attention": "Reference",
+    "admitted_bytes": 1747624474,
+    "text_allowance": 134217728,
+    "loaded": 512,
+    "chunk": 32
+  },
+  "default_tests": 583,
+  "metal_tests": 695,
+  "checks": "artifacts/qwen15-native-owner-2026-11-06/retry/checks.json",
+  "owner": "artifacts/qwen15-native-owner-2026-11-06/retry/owned.json",
+  "raw": "artifacts/qwen15-native-owner-2026-11-06/retry/gpu.stdout",
+  "initial_compile": "artifacts/qwen15-native-owner-2026-11-06/default-clippy.stderr",
+  "physical_peak_bytes": 1801750448,
+  "rss_peak_bytes": 1122942976,
+  "review": "Astra approved distinct artifact binding, native Reference, exact/below admission, and scope; header comment clarified.",
+  "scope": "Native audited owner, plain tokenizer and bounded session. Managed app/preview and package adoption separate."
+}

@@ -6,7 +6,8 @@ use crate::{
     app_chat::dense_content::DenseCodecContentIdentity,
     mlx::qwen::DenseSourceContentIdentity,
     weights::content::{
-        Manifest, llama3_manifest, mistral_manifest, qwen2_manifest, qwen3_manifest, smol_manifest,
+        Manifest, llama3_manifest, mistral_manifest, qwen2_manifest, qwen3_manifest,
+        qwen15_manifest, smol_manifest,
     },
 };
 use serde::Serialize;
@@ -31,6 +32,8 @@ enum LoadPolicy {
     Mistral,
     #[serde(rename = "qwen2_audited_v1")]
     Qwen2,
+    #[serde(rename = "qwen15_audited_v1")]
+    Qwen15,
     #[serde(rename = "qwen3_audited_v1")]
     Qwen3,
     #[serde(rename = "smol_witness_audited_v1")]
@@ -112,6 +115,7 @@ enum IdentityProfile {
     Llama3,
     Mistral,
     Qwen2,
+    Qwen15,
     Qwen3,
     Smol,
 }
@@ -119,6 +123,7 @@ impl IdentityProfile {
     fn manifest(self) -> Result<Manifest<'static>> {
         match self {
             Self::Qwen2 => qwen2_manifest(),
+            Self::Qwen15 => qwen15_manifest(),
             Self::Qwen3 => qwen3_manifest(),
             Self::Smol => smol_manifest(),
             Self::Mistral => mistral_manifest(),
@@ -129,6 +134,7 @@ impl IdentityProfile {
     fn repository(self) -> &'static str {
         match self {
             Self::Qwen2 => "mlx-community/Qwen2.5-0.5B-Instruct-8bit",
+            Self::Qwen15 => "mlx-community/Qwen2.5-1.5B-Instruct-8bit",
             Self::Qwen3 => REPOSITORY,
             Self::Smol => "mlx-community/SmolLM2-135M-Instruct-8bit",
             Self::Mistral => "mlx-community/Mistral-7B-Instruct-v0.3-4bit",
@@ -138,6 +144,7 @@ impl IdentityProfile {
     fn revision(self) -> &'static str {
         match self {
             Self::Qwen2 => "6474d4c1a05bd7bd634a9c993560e4e7272eda3d",
+            Self::Qwen15 => "c7e1ff25efda4a2c8f7ee312380557fb42e145a2",
             Self::Qwen3 => REVISION,
             Self::Smol => "0f0d9b8218915bc34d401e1a340b8c049d300d5e",
             Self::Mistral => "a4b8f870474b0eb527f466a03fbc187830d271f5",
@@ -146,7 +153,7 @@ impl IdentityProfile {
     }
     fn text(self) -> &'static str {
         match self {
-            Self::Qwen2 => "qwen-chatml-v1",
+            Self::Qwen2 | Self::Qwen15 => "qwen-chatml-v1",
             Self::Qwen3 => "qwen3-plain-nonthinking-v1",
             Self::Smol => "smol-chatml-v1",
             Self::Mistral => "mistral-instruct-v1",
@@ -260,7 +267,10 @@ fn build(evidence: Evidence, instance: u64, loaded: usize) -> Result<IdentityRep
         || (matches!(profile, IdentityProfile::Qwen2) && loaded > crate::weights::MAX_CONTEXT_LIMIT)
         || (matches!(
             profile,
-            IdentityProfile::Qwen3 | IdentityProfile::Mistral | IdentityProfile::Llama3
+            IdentityProfile::Qwen15
+                | IdentityProfile::Qwen3
+                | IdentityProfile::Mistral
+                | IdentityProfile::Llama3
         ) && loaded > 512)
         || (matches!(profile, IdentityProfile::Smol) && evidence.ranges != 694)
     {
@@ -271,6 +281,7 @@ fn build(evidence: Evidence, instance: u64, loaded: usize) -> Result<IdentityRep
     }
     let source_roles: &[Role] = match profile {
         IdentityProfile::Qwen2
+        | IdentityProfile::Qwen15
         | IdentityProfile::Qwen3
         | IdentityProfile::Mistral
         | IdentityProfile::Llama3 => &[Role::SourceBytesDeliveredToAssembledModel],
@@ -305,13 +316,14 @@ fn build(evidence: Evidence, instance: u64, loaded: usize) -> Result<IdentityRep
             backend: BackendPolicy::MetalNativeDense,
             load: match profile {
                 IdentityProfile::Qwen2 => LoadPolicy::Qwen2,
+                IdentityProfile::Qwen15 => LoadPolicy::Qwen15,
                 IdentityProfile::Qwen3 => LoadPolicy::Qwen3,
                 IdentityProfile::Smol => LoadPolicy::SmolWitness,
                 IdentityProfile::Mistral => LoadPolicy::Mistral,
                 IdentityProfile::Llama3 => LoadPolicy::Llama3,
             },
             text: match profile {
-                IdentityProfile::Qwen2 => TextPolicy::QwenChatml,
+                IdentityProfile::Qwen2 | IdentityProfile::Qwen15 => TextPolicy::QwenChatml,
                 IdentityProfile::Qwen3 => TextPolicy::Qwen3PlainNonthinking,
                 IdentityProfile::Smol => TextPolicy::SmolChatml,
                 IdentityProfile::Mistral => TextPolicy::MistralInstruct,
@@ -380,6 +392,13 @@ pub unsafe extern "C" fn toklet_model_chat_identity_create(
                     chat.codec
                         .qwen2_content_identity()
                         .ok_or_else(|| fail(UNSUPPORTED, "chat has no audited Qwen2 codec"))?,
+                )?,
+                SourceReceipt::Qwen15(source) => evidence(
+                    IdentityProfile::Qwen15,
+                    &source,
+                    chat.codec
+                        .dense_content_identity()
+                        .ok_or_else(|| fail(UNSUPPORTED, "chat has no audited Qwen1.5B codec"))?,
                 )?,
                 SourceReceipt::Qwen3(source) => evidence(
                     IdentityProfile::Qwen3,

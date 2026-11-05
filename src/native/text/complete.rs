@@ -6,6 +6,7 @@ use crate::mlx::qwen::{DenseSourceContentIdentity, SourceContentIdentity};
 pub(super) enum SourceReceipt {
     Smol(SourceContentIdentity),
     Qwen2(DenseSourceContentIdentity),
+    Qwen15(DenseSourceContentIdentity),
     Qwen3(DenseSourceContentIdentity),
     Mistral(DenseSourceContentIdentity),
     Llama3(DenseSourceContentIdentity),
@@ -15,6 +16,7 @@ impl SourceReceipt {
         match self {
             Self::Smol(_) => Profile::Smol,
             Self::Qwen2(_) => Profile::Qwen,
+            Self::Qwen15(_) => Profile::Qwen15,
             Self::Qwen3(_) => Profile::Qwen3,
             Self::Mistral(_) => Profile::Mistral,
             Self::Llama3(_) => Profile::Llama3,
@@ -57,12 +59,12 @@ impl SourceReceipt {
             use crate::metal::{AttentionMode, NormalizationMode, ProjectionMode};
             let architecture = match source {
                 Self::Smol(_) => crate::mlx::dense::Architecture::Llama,
-                Self::Qwen2(_) => crate::mlx::dense::Architecture::Qwen2,
+                Self::Qwen2(_) | Self::Qwen15(_) => crate::mlx::dense::Architecture::Qwen2,
                 Self::Qwen3(_) => crate::mlx::dense::Architecture::Qwen3,
                 Self::Mistral(_) => crate::mlx::dense::Architecture::Mistral,
                 Self::Llama3(_) => crate::mlx::dense::Architecture::Llama,
             };
-            if (matches!(source, Self::Llama3(_)) && loaded > 512)
+            if (matches!(source, Self::Llama3(_) | Self::Qwen15(_)) && loaded > 512)
                 || !source.profile().supports(value.config())
                 || value.native_session_modes()
                     != (ProjectionMode::MlxAffine, NormalizationMode::Compensated)
@@ -87,6 +89,7 @@ impl SourceReceipt {
         use crate::weights::content::{DenseProfile, QwenProfile};
         for profile in [
             DenseProfile::Qwen(QwenProfile::Qwen2),
+            DenseProfile::Qwen(QwenProfile::Qwen15),
             DenseProfile::Qwen(QwenProfile::Qwen3),
             DenseProfile::Mistral,
             DenseProfile::Llama3,
@@ -97,6 +100,7 @@ impl SourceReceipt {
             if source.expected_manifest_sha256() == manifest.identity() {
                 return Ok(match profile {
                     DenseProfile::Qwen(QwenProfile::Qwen2) => Self::Qwen2(source),
+                    DenseProfile::Qwen(QwenProfile::Qwen15) => Self::Qwen15(source),
                     DenseProfile::Qwen(QwenProfile::Qwen3) => Self::Qwen3(source),
                     DenseProfile::Mistral => Self::Mistral(source),
                     DenseProfile::Llama3 => Self::Llama3(source),
@@ -112,6 +116,7 @@ impl SourceReceipt {
         match self {
             Self::Smol(s) => Codec::load_smol_complete_audited(directory, &s, allowance),
             Self::Qwen2(s) => Codec::load_qwen2_audited(directory, &s, allowance),
+            Self::Qwen15(s) => Codec::load_qwen15_audited(directory, &s, allowance),
             Self::Qwen3(s) => Codec::load_qwen3_audited(directory, &s, allowance),
             Self::Mistral(s) => Codec::load_mistral_audited(directory, &s, allowance),
             Self::Llama3(s) => Codec::load_llama3_audited(directory, &s, allowance),
@@ -120,10 +125,10 @@ impl SourceReceipt {
     }
 }
 
-/// Construct a complete audited codec from the actual attached Smol/Qwen2/Qwen3/Mistral/Llama3
+/// Construct a complete audited codec from the actual attached Smol/Qwen2/Qwen1.5B/Qwen3/Mistral/Llama3
 /// model evidence. No caller-selected profile/path is authority. Reserve a
 /// separate profile text allowance before loading the model (Smol/Mistral64 MiB,
-/// Qwen2 128 MiB, Qwen3/Llama3 256 MiB; at most6 GiB); combined process/device fit stays separate.
+/// Qwen2/Qwen1.5B 128 MiB, Qwen3/Llama3 256 MiB; at most6 GiB); combined process/device fit stays separate.
 /// Legacy factories retain their existing contracts. A missing ancillary asset
 /// fails this new route, and no partial codec or additional Rc is published.
 /// # Safety

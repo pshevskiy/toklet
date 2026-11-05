@@ -108,6 +108,7 @@ enum MlxImport {
     Ordinary,
     SmolAudited,
     Qwen2Audited,
+    Qwen15Audited,
     MistralAudited,
     Llama3Audited,
     Llama3QualityDiagnostic,
@@ -379,7 +380,13 @@ impl Model {
             .then_some(identity)
     }
     pub(crate) fn native_attention_mode(&self) -> AttentionMode {
-        if self.moe.is_some() {
+        if self.moe.is_some()
+            || self
+                .mlx_dense_profile_content_identity(crate::weights::content::DenseProfile::Qwen(
+                    crate::weights::content::QwenProfile::Qwen15,
+                ))
+                .is_some()
+        {
             AttentionMode::Reference
         } else {
             planning::native_attention_mode(self.mlx_architecture)
@@ -444,6 +451,16 @@ impl Model {
     pub fn load_mlx_qwen2_audited(directory: &Path, options: weights::LoadOptions) -> Result<Self> {
         Self::load_mlx_impl(directory, options, MlxImport::Qwen2Audited)
     }
+    /// Pinned larger Qwen2.5 native Reference profile, qualified on macOS.
+    pub fn load_mlx_qwen15_audited(
+        directory: &Path,
+        options: weights::LoadOptions,
+    ) -> Result<Self> {
+        if !cfg!(target_os = "macos") {
+            return Err(Error::Unsupported("audited Qwen1.5B requires macOS"));
+        }
+        Self::load_mlx_impl(directory, options, MlxImport::Qwen15Audited)
+    }
     /// Pinned Mistral audit; the existing Reference graph and geometry apply.
     pub fn load_mlx_mistral_audited(
         directory: &Path,
@@ -503,6 +520,8 @@ impl Model {
                 crate::mlx::qwen::Source::open_mistral_audited(directory, options)?
             } else if matches!(import, MlxImport::Qwen2Audited) {
                 crate::mlx::qwen::Source::open_qwen2_audited(directory, options)?
+            } else if matches!(import, MlxImport::Qwen15Audited) {
+                crate::mlx::qwen::Source::open_qwen15_audited(directory, options)?
             } else if matches!(import, MlxImport::Qwen3Audited) {
                 crate::mlx::qwen::Source::open_qwen3_audited(directory, options)?
             } else if matches!(import, MlxImport::Qwen3ContextDiagnostic) {
@@ -643,7 +662,9 @@ impl Model {
             let dense_identity = match import {
                 MlxImport::Qwen2Audited => Some(source.qwen2_content_identity()),
                 MlxImport::MistralAudited => Some(source.mistral_content_identity()),
-                MlxImport::Llama3Audited => Some(source.dense_content_identity()),
+                MlxImport::Llama3Audited | MlxImport::Qwen15Audited => {
+                    Some(source.dense_content_identity())
+                }
                 MlxImport::Qwen3Audited => Some(source.qwen3_content_identity()),
                 _ => None,
             };

@@ -213,3 +213,161 @@ fn pinned_qwen2_complete_pair_identity_and_release() {
         );
     }
 }
+
+#[test]
+#[ignore = "Explicit cached larger Qwen2.5 audited Reference and plain ChatML"]
+fn pinned_qwen15_reference_pair_and_session() {
+    const TEXT: u64 = 128 * 1024 * 1024;
+    let path = b"models/MLX-Qwen2.5-1.5B-Instruct-8bit-c7e1ff2";
+    let mut options = Options {
+        abi_version: ABI_VERSION,
+        struct_size: size_of::<Options>() as u32,
+        capacity: 512,
+        chunk: 32,
+        memory_limit_bytes: 2 * 1024 * 1024 * 1024,
+    };
+    let mut owners = Owners {
+        model: ptr::null_mut(),
+        chat: ptr::null_mut(),
+        identity: ptr::null_mut(),
+    };
+    let mut error = NativeError {
+        code: 0,
+        message: [0; 256],
+    };
+    let fixture: serde_json::Value = serde_json::from_str(include_str!(
+        "../../../../tests/fixtures/app-chat-qwen-v1/reference.json"
+    ))
+    .unwrap();
+    unsafe {
+        let mut excessive = options;
+        excessive.capacity = 513;
+        assert_eq!(
+            toklet_model_load_mlx_qwen15_audited(
+                path.as_ptr(),
+                path.len(),
+                &excessive,
+                &mut owners.model,
+                &mut error
+            ),
+            LOAD_ERROR
+        );
+        assert!(owners.model.is_null());
+        assert_eq!(
+            toklet_model_load_mlx_qwen15_audited(
+                path.as_ptr(),
+                path.len(),
+                &options,
+                &mut owners.model,
+                &mut error
+            ),
+            OK
+        );
+        let NativeModel::Metal(model) = (*owners.model).model.as_ref() else {
+            panic!("expected Metal");
+        };
+        assert!(model.mlx_qwen2_source_content_identity().is_none());
+        assert_eq!(
+            model.native_attention_mode(),
+            crate::metal::AttentionMode::Reference
+        );
+        let (memory, _, _) = model
+            .native_session_plan(session::Options {
+                capacity: 512,
+                prefill_chunk_size: 32,
+                position_offset: 0,
+                memory_limit_bytes: options.memory_limit_bytes as usize - BRIDGE_BYTES,
+            })
+            .unwrap();
+        assert_eq!(
+            toklet_chat_create_complete_audited(
+                owners.model,
+                TEXT - 1,
+                &mut owners.chat,
+                &mut error
+            ),
+            INVALID
+        );
+        assert!(owners.chat.is_null());
+        assert_eq!(
+            toklet_chat_create_complete_audited(owners.model, TEXT, &mut owners.chat, &mut error),
+            OK
+        );
+        for case in fixture["cases"].as_array().unwrap() {
+            let bytes = serde_json::to_vec(&case["messages"]).unwrap();
+            let expected: Vec<u32> = serde_json::from_value(case["ids"].clone()).unwrap();
+            let mut actual = vec![0; expected.len()];
+            let mut count = 0;
+            assert_eq!(
+                toklet_chat_encode(
+                    owners.chat,
+                    bytes.as_ptr(),
+                    bytes.len(),
+                    actual.as_mut_ptr(),
+                    actual.len(),
+                    &mut count,
+                    &mut error
+                ),
+                OK
+            );
+            assert_eq!(count, expected.len());
+            assert_eq!(actual, expected);
+        }
+        let mut stops = [0; 2];
+        let mut count = 0;
+        assert_eq!(
+            toklet_chat_stop_ids(
+                owners.chat,
+                stops.as_mut_ptr(),
+                stops.len(),
+                &mut count,
+                &mut error
+            ),
+            OK
+        );
+        assert_eq!((count, stops), (2, [151643, 151645]));
+        assert_eq!(
+            toklet_model_chat_identity_create(
+                owners.model,
+                owners.chat,
+                &mut owners.identity,
+                &mut error
+            ),
+            OK
+        );
+        let identity: serde_json::Value =
+            serde_json::from_slice(&captured(owners.identity)).unwrap();
+        assert_eq!(
+            identity["preference_namespace"]["load"],
+            "qwen15_audited_v1"
+        );
+        assert_eq!(
+            identity["preference_namespace"]["manifest_sha256"],
+            "775a61717b5785783a75a19a6a472fb8eb9ea1e5a8efbbf4c919330e7c6c209c"
+        );
+        assert_eq!(identity["loaded_position_limit"], 512);
+
+        let mut native = ptr::null_mut();
+        options.memory_limit_bytes = (memory.admitted_bytes + BRIDGE_BYTES - 1) as u64;
+        assert_eq!(
+            toklet_session_create(owners.model, &options, &mut native, &mut error),
+            ENGINE_ERROR
+        );
+        assert!(native.is_null());
+        options.memory_limit_bytes += 1;
+        assert_eq!(
+            toklet_session_create(owners.model, &options, &mut native, &mut error),
+            OK
+        );
+        let mut state = Report::default();
+        assert_eq!(toklet_session_state(native, &mut state, &mut error), OK);
+        assert_eq!(state.admitted_bytes, options.memory_limit_bytes);
+        assert_eq!(toklet_session_release(native, &mut error), OK);
+        record("qwen15_identity", identity);
+        record(
+            "qwen15_admission",
+            serde_json::json!({"attention":"Reference",
+            "admitted_bytes":state.admitted_bytes,"text_allowance":TEXT,"loaded":512,"chunk":32}),
+        );
+    }
+}
