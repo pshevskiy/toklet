@@ -1440,3 +1440,181 @@ fn cpu_greedy_round_publishes_only_accepted_state_and_pending_target() {
         })
     );
 }
+
+#[test]
+fn cpu_lookup_matches_sequential_output_and_state_for_ties_and_near_ties() {
+    use std::sync::atomic::AtomicBool;
+    use toklet::generation::{self, Input, Request, StopReason};
+
+    for near_tie in [false, true] {
+        let fixture = Fixture::tiny();
+        let (config, mut weights) = tiny_parts(&fixture);
+        let hidden = config.hidden_size;
+        let width = config.vocab_size;
+        weights.embedding.fill(0.0);
+        if near_tie {
+            weights.embedding[0] = 1.0;
+            weights.embedding[hidden] = f32::from_bits(1.0f32.to_bits() + 4);
+            for layer in &mut weights.layers {
+                layer.o.fill(0.0);
+                layer.down.fill(0.0);
+            }
+            weights.final_norm.fill(1.0);
+        }
+        let model = Model::new(config, weights).unwrap();
+        let target = u32::from(near_tie);
+        let prompt = [target; 20];
+        let open = || {
+            let mut s = Session::new(&model, options(32, 8, 0)).unwrap();
+            s.append(&prompt).unwrap();
+            s.evaluate().unwrap();
+            s
+        };
+        let mut reference = open();
+        let logits = reference.logits().unwrap();
+        assert_eq!(sampling::greedy(logits).unwrap(), target);
+        if near_tie {
+            assert!((0.0..0.00001).contains(&(logits[1] - logits[0])) && logits[1] > logits[0]);
+        } else {
+            assert!(logits.iter().all(|&value| value == 0.0));
+        }
+        let cancel = AtomicBool::new(false);
+        let mut expected = Vec::new();
+        let ordinary = generation::generate(
+            &mut reference,
+            Request {
+                input: Input::Continue,
+                max_new_tokens: 12,
+                stop_tokens: &[],
+            },
+            &cancel,
+            |event| {
+                expected.push(event.token_id);
+                Ok(())
+            },
+        )
+        .unwrap();
+        let mut candidate = open();
+        let mut output = Vec::with_capacity(13);
+        output.push(u32::MAX);
+        let mut rows = vec![f32::NAN; 9 * width];
+        ALLOCATIONS.with(|count| count.set(0));
+        TRACK.with(|track| track.set(true));
+        let report = generation::generate_cpu_lookup(
+            &mut candidate,
+            12,
+            &[],
+            &mut output,
+            &mut rows,
+            &cancel,
+        );
+        TRACK.with(|track| track.set(false));
+        assert_eq!(ALLOCATIONS.with(Cell::get), 0);
+        let report = report.unwrap();
+        assert_eq!(report.reason, ordinary.reason);
+        assert_eq!(report.emitted_tokens, 12);
+        assert!(report.proposed_tokens > 0 && report.proposed_tokens == report.accepted_tokens);
+        assert_eq!(output[0], u32::MAX);
+        assert_eq!(&output[1..], expected);
+        assert_eq!(candidate.history(), reference.history());
+        assert_eq!(candidate.evaluated_len(), reference.evaluated_len());
+        assert_eq!(candidate.pending_len(), 1);
+        for session in [&mut candidate, &mut reference] {
+            session.discard_pending();
+        }
+        assert_eq!(candidate.logits(), reference.logits());
+
+        for (history, expected_proposals) in [
+            (vec![2, target], false),
+            ([&[target; 8][..], &[2], &[target; 8]].concat(), true),
+        ] {
+            let mut candidate = Session::new(&model, options(32, 8, 0)).unwrap();
+            let mut reference = Session::new(&model, options(32, 8, 0)).unwrap();
+            for session in [&mut reference, &mut candidate] {
+                session.append(&history).unwrap();
+                session.evaluate().unwrap();
+            }
+            let mut expected = Vec::with_capacity(2);
+            generation::generate(
+                &mut reference,
+                Request {
+                    input: Input::Continue,
+                    max_new_tokens: 2,
+                    stop_tokens: &[],
+                },
+                &cancel,
+                |event| {
+                    expected.push(event.token_id);
+                    Ok(())
+                },
+            )
+            .unwrap();
+            let mut visible = Vec::with_capacity(2);
+            let report = generation::generate_cpu_lookup(
+                &mut candidate,
+                2,
+                &[],
+                &mut visible,
+                &mut rows,
+                &cancel,
+            )
+            .unwrap();
+            assert_eq!(report.proposed_tokens, usize::from(expected_proposals));
+            assert_eq!(report.accepted_tokens, 0);
+            assert_eq!(visible, expected);
+            assert_eq!(candidate.history(), reference.history());
+            assert_eq!(candidate.evaluated_len(), reference.evaluated_len());
+        }
+
+        let mut stopped = open();
+        let mut visible = Vec::with_capacity(12);
+        let report = generation::generate_cpu_lookup(
+            &mut stopped,
+            12,
+            &[target],
+            &mut visible,
+            &mut rows,
+            &cancel,
+        )
+        .unwrap();
+        assert_eq!(report.reason, StopReason::StopToken { token_id: target });
+        assert!(report.proposed_tokens > 0);
+        assert_eq!(report.accepted_tokens, 0);
+        assert!(visible.is_empty());
+        assert_eq!(stopped.pending_len(), 1);
+
+        let mut small = open();
+        let mut visible = Vec::with_capacity(1);
+        let report =
+            generation::generate_cpu_lookup(&mut small, 1, &[], &mut visible, &mut [], &cancel)
+                .unwrap();
+        assert_eq!(report.proposed_tokens, 0);
+        assert_eq!(visible, [target]);
+        let mut untouched = open();
+        let mut visible = Vec::with_capacity(12);
+        assert!(
+            generation::generate_cpu_lookup(
+                &mut untouched,
+                12,
+                &[],
+                &mut visible,
+                &mut [],
+                &cancel
+            )
+            .is_err()
+        );
+        let cancelled = AtomicBool::new(true);
+        let report = generation::generate_cpu_lookup(
+            &mut untouched,
+            12,
+            &[],
+            &mut visible,
+            &mut rows,
+            &cancelled,
+        )
+        .unwrap();
+        assert_eq!(report.reason, StopReason::Cancelled);
+        assert_eq!(untouched.history(), prompt);
+        assert!(visible.is_empty());
+    }
+}

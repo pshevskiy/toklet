@@ -8,8 +8,10 @@
 //! Callback failure preserves a valid KV prefix and the pending sampled token;
 //! callers may continue or discard pending input explicitly.
 
+mod cpu_lookup;
 mod lookup;
 mod verify;
+pub use cpu_lookup::{CpuLookupReport, generate_cpu_lookup};
 pub use lookup::prompt_lookup;
 pub use verify::{GreedyVerification, VerifiedNext, verify_greedy};
 

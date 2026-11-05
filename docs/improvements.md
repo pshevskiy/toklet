@@ -10336,3 +10336,11 @@ Each route matches 511 complete canonical row hashes between chunk sizes
 1 and 32. All greedy IDs match between staged and Reference, with mean NLL
 2.36070 and 2.36057 respectively. Astra approved the bounded screen.
 [Evidence](../benchmarks/results/2026-11-05-llama-staged-corpus-v1.json)
+
+## 5 November 2026 — Exercise bounded CPU prompt lookup generation
+
+The explicit nonstreaming path matches sequential greedy output and state
+on authored ties and near ties, with zero allocations in the measured runs.
+Astra approved its valid-prefix, stop and pending-state behavior. Real-model
+and throughput checks remain open.
+[Evidence](../benchmarks/results/2026-11-05-m9-cpu-lookup-v1.json)

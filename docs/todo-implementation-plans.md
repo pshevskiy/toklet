@@ -102,6 +102,10 @@ before raising capacity. [Existing projection](qwen3-context-admission.md).
 ### P5 strict greedy verifier and prompt lookup
 
 Qualify tentative state, exact target decisions and rollback first. Then add the separate lookup proposer and measure accepted tokens, latency and memory. Require identical greedy trajectories across rejection, cancellation and replay cases.
+The [nonstreaming CPU path](../benchmarks/results/2026-11-05-m9-cpu-lookup-v1.json)
+passes authored tie and near-tie controls. Use an isolated real Metal session
+to compare complete batched target decisions against sequential decode before
+implementing a Metal transaction. Keep streaming and throughput separate.
 
 ### G2/G3 shared KV and MTP
 

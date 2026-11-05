@@ -1,8 +1,8 @@
 //! Bounded prompt lookup over an already committed history.
 use super::Error;
 
-const MAX_MATCH: usize = 8;
-const MAX_PROPOSAL: usize = 8;
+pub(super) const MAX_MATCH: usize = 8;
+pub(super) const MAX_PROPOSAL: usize = 8;
 
 /// Copy known continuation IDs for the longest matching suffix, breaking
 /// equal-length ties in favor of the most recent eligible occurrence.

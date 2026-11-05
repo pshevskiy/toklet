@@ -1,0 +1,18 @@
+{
+  "passed": true,
+  "default_tests": 583,
+  "metal_tests": 695,
+  "session_tests_each": 21,
+  "release_lookup_tests": 1,
+  "checked": [
+    "exact and near-tie authored model parity",
+    "accepted and rejected proposals",
+    "no-match and one-slot fallback",
+    "hidden stop and terminal pending state",
+    "storage and cancellation admission",
+    "zero allocations in two complete selected runs"
+  ],
+  "scope": "Explicit nonstreaming CPU generation. No real-model, streaming, Metal backend or throughput qualification.",
+  "review": "Astra approved the CPU integration and valid-prefix contract",
+  "checks": "artifacts/m9-p5-cpu-lookup-2026-11-05/checks.json"
+}
