@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Llama staged Mac512 frozen corpus screen and P5 bounded CPU lookup generation. CPU verification transaction passes.**
+Current task: **P5 bounded CPU lookup generation and Llama staged uninstrumented usefulness screen. The Llama frozen corpus screen passes.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -576,7 +576,7 @@ Conditional follow-ons require their own decision; they do not all block M9:
 - [ ] P4: integrated I8 KV for a defined capacity requirement, with an actual codec. Astra reviewed the current Mac profile. [Capacity trigger](docs/todo-implementation-plans.md#p4-i8-kv) remains open.
 - [ ] P5: strict-greedy transactional verifier, then measured prompt lookup. [Comparison leaf](benchmarks/results/2026-11-05-m9-strict-greedy-v1.json) passes. [CPU transaction witness](benchmarks/results/2026-11-05-m9-greedy-transaction-v1.json) passes. [Prompt lookup proposer](benchmarks/results/2026-11-05-m9-prompt-lookup-v1.json) passes. [CPU verification transaction](benchmarks/results/2026-11-05-m9-cpu-greedy-round-v1.json) passes. Next exercise bounded CPU generation end to end and qualify model-backed near ties.
 - [ ] G2/G3: checkpoint-defined shared-KV prefill/MTP after selected Gemma support.
-- [ ] Separate correctness task: Llama Online remains rejected. [Deeper staged screen](benchmarks/results/2026-11-05-llama-staged-depth-v1.json) passes frozen fixtures and matches ten greedy decisions. [Guarded leaf](benchmarks/results/2026-11-05-llama-staged-leaf-v1.json) passes. Next freeze a real-model numerical and quality contract before session promotion.
+- [ ] Separate correctness task: Llama Online remains rejected. [Deeper staged screen](benchmarks/results/2026-11-05-llama-staged-depth-v1.json) passes frozen fixtures and matches ten greedy decisions. [Guarded leaf](benchmarks/results/2026-11-05-llama-staged-leaf-v1.json) passes. [Frozen 511-target screen](benchmarks/results/2026-11-05-llama-staged-corpus-v1.json) passes schedule comparisons. Next measure useful end-to-end performance before full quality.
   - [x] Reproduce the one-word difference on identical operands. [Result](benchmarks/results/2026-11-05-llama-online-witness-v1.json)
 
 Full-Qwen3-window expansion, old streaming prototypes and unselected techniques
@@ -1408,3 +1408,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Llama guarded staged leaf reviewed | 18 cases and 116,800 FP64 comparisons pass, including one-row/batch equality, scratch reuse, GQA, poisoned tails and active nonfinite status. | Astra approves test-only scope. Real-model admission and quality remain open. [Evidence](benchmarks/results/2026-11-05-llama-staged-leaf-v1.json) |
 
 | 2026-11-05 | P5 CPU verification transaction reviewed | Bounded evaluation publishes only the accepted prefix plus one pending target. Cancellation, overwrite/replay, exact capacity and four allocation-free successful rounds pass. | Astra approves CPU-only scope. 582 default, 694 Metal and release check pass. [Evidence](benchmarks/results/2026-11-05-m9-cpu-greedy-round-v1.json) |
+
+| 2026-11-05 | Llama staged corpus screen reviewed | Each route matches 511 canonical row hashes across chunk1/32. Exact greedy IDs match between routes, while NLL changes descriptively. | Astra approves scoped evidence. Initial isolated build missing a fixture was corrected. Next uninstrumented timing before full quality. [Evidence](benchmarks/results/2026-11-05-llama-staged-corpus-v1.json) |

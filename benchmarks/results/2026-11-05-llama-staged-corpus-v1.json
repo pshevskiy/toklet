@@ -1,0 +1,59 @@
+{
+  "targets_per_route": 511,
+  "original_nll": 2.3600025773851976,
+  "routes": {
+    "reference-1": {
+      "mean_nll": 2.3605701809697357,
+      "delta_from_original": 0.0005676035845381122
+    },
+    "reference-32": {
+      "mean_nll": 2.3605701809697357,
+      "delta_from_original": 0.0005676035845381122
+    },
+    "staged-1": {
+      "mean_nll": 2.360697660524937,
+      "delta_from_original": 0.0006950831397394275
+    },
+    "staged-32": {
+      "mean_nll": 2.360697660524937,
+      "delta_from_original": 0.0006950831397394275
+    }
+  },
+  "staged_schedule": {
+    "canonical_hash_matches": 511,
+    "greedy_mismatches": [],
+    "max_target_nll_difference": 0.0
+  },
+  "reference_schedule": {
+    "canonical_hash_matches": 511,
+    "greedy_mismatches": [],
+    "max_target_nll_difference": 0.0
+  },
+  "staged_against_reference": {
+    "1": {
+      "canonical_hash_matches": 1,
+      "greedy_mismatches": [],
+      "max_target_nll_difference": 0.01895243404773339
+    },
+    "32": {
+      "canonical_hash_matches": 1,
+      "greedy_mismatches": [],
+      "max_target_nll_difference": 0.01895243404773339
+    }
+  },
+  "full_quality_qualified": false,
+  "schedule_screen_passed": true,
+  "device": "Apple M1 Pro",
+  "review": "Astra approved isolated corpus screen and descriptive comparisons",
+  "schedule_screen_rule": "Exact staged greedy choices between chunk1 and chunk32",
+  "owner": "artifacts/llama-staged-corpus-2026-11-05/owned.json",
+  "peak_sampled_physical_bytes": 1399653936,
+  "initial_build_failure": "artifacts/llama-staged-corpus-2026-11-05/reference-build.stderr",
+  "receipts": {
+    "artifacts/llama-staged-corpus-2026-11-05/contract.md": "16b982bf65aa6b29a00dd3eb7230f36f83916757293fcf9beeaf61b2530f2dfe",
+    "artifacts/llama-staged-corpus-2026-11-05/llama_staged_corpus.rs": "6b8a9aaa3221f7ce5b87ac0f93a8c7ffd0ea3da5559073ee4b88899b0942b091",
+    "artifacts/llama-staged-corpus-2026-11-05/overlay.patch": "ec8cd49ffe7ea93c11d0b450135218a41a67df527f89043dc381079012d76986",
+    "artifacts/llama-staged-corpus-2026-11-05/replay.py": "6257501b7f33f601ee9aa50967a9056e1cdcff751683e336fc954661b520e257",
+    "artifacts/llama-staged-corpus-2026-11-05/comparison.json": "70316281a778bd5b3c44412a59aad371c007a6191fe9db65dc4209e18c20e62e"
+  }
+}

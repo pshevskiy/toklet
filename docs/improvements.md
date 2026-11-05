@@ -10329,3 +10329,10 @@ The CPU session evaluates a tentative chunk into caller-admitted target
 rows. It publishes the accepted prefix and leaves one correction, bonus or
 hidden stop pending. Astra approved cancellation, replay and admission checks.
 [Evidence](../benchmarks/results/2026-11-05-m9-cpu-greedy-round-v1.json)
+
+## 5 November 2026 — Check staged Llama on the pinned corpus
+
+Each route matches 511 complete canonical row hashes between chunk sizes
+1 and 32. All greedy IDs match between staged and Reference, with mean NLL
+2.36070 and 2.36057 respectively. Astra approved the bounded screen.
+[Evidence](../benchmarks/results/2026-11-05-llama-staged-corpus-v1.json)

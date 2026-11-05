@@ -118,4 +118,9 @@ matches ten greedy IDs through depth 512 on one reused-prefix schedule.
 The [guarded leaf](../benchmarks/results/2026-11-05-llama-staged-leaf-v1.json)
 passes finite/status, poisoned KV, GQA and single-row/batch scratch-reset controls.
 The scratch stores unnormalized exponentials.
-Freeze a real numerical and quality contract before any session promotion.
+The [pinned corpus screen](../benchmarks/results/2026-11-05-llama-staged-corpus-v1.json)
+passes chunk1/chunk32 greedy agreement. Before full quality collection,
+require a useful uninstrumented fixed 128-input/128-decode comparison,
+repeated with reversed worker order. Preserve the original 10,000-target
+0.05-nat limit and 100-task two-point limit, with separate diagnostic
+capacity for those workloads. Keep the managed app on Reference pending qualification.
