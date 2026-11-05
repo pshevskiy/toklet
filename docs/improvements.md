@@ -10202,3 +10202,11 @@ comparisons across both tied and untied Llama graphs. Astra approved the
 experiment. Production Llama retains Reference attention. A separate deeper
 candidate needs workspace admission and real-checkpoint checks.
 [Evidence](../benchmarks/results/2026-11-05-llama-online-staged-v1.json)
+
+## 5 November 2026 — Check the split-KV decode primitive
+
+The test-only two-kernel path passes 32,249 independent FP64 comparisons
+on the M1 Pro. The Qwen-shaped fixture uses 18,480 bytes of raw partial
+workspace. Astra approved the primitive. The latency comparison and
+session admission are separate tasks.
+[Evidence](../benchmarks/results/2026-11-05-m9-split-kv-primitive-v1.json)

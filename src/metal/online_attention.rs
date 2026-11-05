@@ -456,3 +456,6 @@ fn high_position_rotary_matches_independent_math_envelope() {
 
 #[cfg(target_os = "macos")]
 mod llama_witness;
+
+#[cfg(target_os = "macos")]
+mod split_kv;

@@ -1,0 +1,22 @@
+{
+  "compared": 32249,
+  "max_abs_error": 0.00048825577480515747,
+  "workspace_bytes": 18480,
+  "device": "Apple M1 Pro",
+  "policy": "Independent FP64, absolute tolerance 0.0001 plus relative tolerance 0.001",
+  "fixture": {
+    "query_heads": 14,
+    "kv_heads": 2,
+    "head_dim": 64,
+    "capacity": 1152,
+    "partition_tokens": 256,
+    "cases": 36
+  },
+  "tail_and_nonfinite_checks_passed": true,
+  "production_selected": false,
+  "performance_measured": false,
+  "review": "Astra approved test-only primitive",
+  "checks": "artifacts/m9-p3-splitkv-2026-11-05/retry/checks.json",
+  "owner": "artifacts/m9-p3-splitkv-2026-11-05/retry/owned.json",
+  "initial_compile_failure": "artifacts/m9-p3-splitkv-2026-11-05/checks/metal-clippy.stderr"
+}

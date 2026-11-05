@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **P3 split-KV decode primitive on Mac and Gemma Q6 authenticated stock preflight. The Llama staged result queues a separately admitted deeper variant.**
+Current task: **P5 strict greedy verification leaf and Gemma Q6 authenticated stock preflight. P3 decode timing follows its checked primitive.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -571,7 +571,7 @@ First delivery: **P0 → one selected P1 candidate → P2**, with independent
 
 Conditional follow-ons require their own decision; they do not all block M9:
 
-- [ ] P3: split-KV attention after measured demand and qualified Online support.
+- [ ] P3: split-KV attention. [Primitive passes](benchmarks/results/2026-11-05-m9-split-kv-primitive-v1.json). Time completed split+merge against Online at P0 depths before session wiring.
 - [x] R1: evaluate rotary reuse and defer the table for pinned Qwen2.5 MLX8 on M1 Pro. [Decision](docs/m9-rotary-opportunity.md)
 - [ ] P4: integrated I8 KV for a defined capacity requirement, with an actual codec.
 - [ ] P5: strict-greedy transactional verifier, then measured prompt lookup.
@@ -1374,3 +1374,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Gemma Q6 header screen reviewed | Immutable config, tokenizer digest and tensor extents verify. The Mac512/chunk32 estimate is 5,388,066,446 bytes with 1,054,384,498 bytes below the 6 GiB policy. | Astra approves the planning screen. Authenticate the payload and compare the four frozen stock decision probes before native work. [Report](docs/gemma6-feasibility.md) |
 
 | 2026-11-05 | Llama staged graph reviewed | Isolated depth-32 experiment passes 1,050 snapshots and 149,568 frozen values across tied/untied schedules. | Astra approves the result. Queue bounded FP32 score workspace with separate admission and real Mac512 comparison. [Evidence](benchmarks/results/2026-11-05-llama-online-staged-v1.json) |
+
+| 2026-11-05 | P3 split-KV primitive reviewed | 32,249 independent values, grouped queries, partition edges, poisoned tails and active nonfinite status pass on M1 Pro. fmt, strict Clippy, 686 Metal tests and release pass. | Astra approves test-only code. First missing-import compile failure preserved. Measure both completed split kernels together before session work. [Evidence](benchmarks/results/2026-11-05-m9-split-kv-primitive-v1.json) |
