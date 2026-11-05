@@ -72,6 +72,18 @@ Measure repeated rotary work and size the retained phase data. If the benefit ju
 
 Specify the target capacity and codec, including scale and storage layout. Implement writes and reads with fused reconstruction, then bind the solver to real allocation. Qualify quality, state, memory peaks and device behavior before exposing the option.
 
+The current Mac Qwen3 Chat limit is 512 positions. Its profile allows 1.5 GiB
+numerical and 2.25 GiB whole-process memory. The 4,096-position result is a
+separate diagnostic. At the declared 40,960 positions, applying the existing
+[M6 I8 format](experiments/2026-10-15-m6-kv-component.md) to the planner's FP16
+KV payload would save 2,202,009,600 raw bytes. The numerical projection after
+this substitution is still 3,386,567,826 bytes, before I8-specific buffers
+and guards. This prospective window is outside the current Mac profile.
+Astra recommends deferring integration until a selected larger profile shows
+an FP16 capacity rejection under its own complete budget. Then reuse the M6
+format, implement cache writes first, and qualify the chosen attention path
+before raising capacity. [Existing projection](qwen3-context-admission.md).
+
 ### P5 strict greedy verifier and prompt lookup
 
 Qualify tentative state, exact target decisions and rollback first. Then add the separate lookup proposer and measure accepted tokens, latency and memory. Require identical greedy trajectories across rejection, cancellation and replay cases.

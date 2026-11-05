@@ -10210,3 +10210,11 @@ on the M1 Pro. The Qwen-shaped fixture uses 18,480 bytes of raw partial
 workspace. Astra approved the primitive. The latency comparison and
 session admission are separate tasks.
 [Evidence](../benchmarks/results/2026-11-05-m9-split-kv-primitive-v1.json)
+
+## 5 November 2026 — Check the I8 KV capacity trigger
+
+The existing I8 format offers a projected 2.20 GB raw saving at Qwen3’s
+declared 40,960 positions. The current Mac Chat profile is 512 positions.
+Astra reviewed the estimates and deferred integration until a selected
+larger profile establishes its capacity need.
+[Plan](todo-implementation-plans.md#p4-i8-kv)

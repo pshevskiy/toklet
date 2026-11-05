@@ -573,7 +573,7 @@ Conditional follow-ons require their own decision; they do not all block M9:
 
 - [ ] P3: split-KV attention. [Primitive passes](benchmarks/results/2026-11-05-m9-split-kv-primitive-v1.json). Time completed split+merge against Online at P0 depths before session wiring.
 - [x] R1: evaluate rotary reuse and defer the table for pinned Qwen2.5 MLX8 on M1 Pro. [Decision](docs/m9-rotary-opportunity.md)
-- [ ] P4: integrated I8 KV for a defined capacity requirement, with an actual codec.
+- [ ] P4: integrated I8 KV for a defined capacity requirement, with an actual codec. Astra reviewed the current Mac profile. [Capacity trigger](docs/todo-implementation-plans.md#p4-i8-kv) remains open.
 - [ ] P5: strict-greedy transactional verifier, then measured prompt lookup.
 - [ ] G2/G3: checkpoint-defined shared-KV prefill/MTP after selected Gemma support.
 - [ ] Separate correctness task: reproduce and resolve frozen Llama Online failure.
@@ -1376,3 +1376,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Llama staged graph reviewed | Isolated depth-32 experiment passes 1,050 snapshots and 149,568 frozen values across tied/untied schedules. | Astra approves the result. Queue bounded FP32 score workspace with separate admission and real Mac512 comparison. [Evidence](benchmarks/results/2026-11-05-llama-online-staged-v1.json) |
 
 | 2026-11-05 | P3 split-KV primitive reviewed | 32,249 independent values, grouped queries, partition edges, poisoned tails and active nonfinite status pass on M1 Pro. fmt, strict Clippy, 686 Metal tests and release pass. | Astra approves test-only code. First missing-import compile failure preserved. Measure both completed split kernels together before session work. [Evidence](benchmarks/results/2026-11-05-m9-split-kv-primitive-v1.json) |
+
+| 2026-11-05 | P4 capacity trigger reviewed | Existing M6 I8 format would save 2,202,009,600 raw bytes at Qwen3’s declared window. The numerical estimate still exceeds the adopted app’s allowance, and its current limit is 512. | Astra defers codec integration pending a selected larger profile and a complete FP16 admission rejection. [Plan](docs/todo-implementation-plans.md#p4-i8-kv) |
