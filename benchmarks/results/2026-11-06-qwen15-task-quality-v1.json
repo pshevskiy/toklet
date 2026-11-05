@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "original_passed": 11,
+  "candidate_passed": 12,
+  "cases": 100,
+  "allowed_drop_points": 2,
+  "delta_points": 1,
+  "original_categories": {
+    "code": {
+      "cases": 40,
+      "passed": 0
+    },
+    "prose": {
+      "cases": 30,
+      "passed": 10
+    },
+    "continuation": {
+      "cases": 30,
+      "passed": 1
+    }
+  },
+  "candidate_categories": {
+    "code": {
+      "cases": 40,
+      "passed": 0
+    },
+    "prose": {
+      "cases": 30,
+      "passed": 11
+    },
+    "continuation": {
+      "cases": 30,
+      "passed": 1
+    }
+  },
+  "unresolved": 0,
+  "stopped_vm_restored": true,
+  "collection_sha256": "a9554d0f39b757ae2047cf16921397c4ece9c06dfb4e6997dc738b95d8528ef3",
+  "isolated_artifacts": {
+    "benchmarks/raw/2026-10-14-backend-task-qwen15-mlx8-2026-11-06-v1-window.json": "138af17e501037f1a76474d8a3c478d73c2d5662d0ad9c217d9ff792d9779556",
+    "benchmarks/raw/2026-10-14-backend-task-qwen15-mlx8-2026-11-06-v1-probe.json": "42d0a07f73fac3d4e71640abe19e31995866b166b91c504aaf1d6172bed149fb"
+  },
+  "scope": "Frozen literal task quality and full loss pass for the pinned Mac candidate. Managed Chat remains gated.",
+  "collection_receipt_sha256": "42acaa6a5186b148a7268ef806609a4ed9bb968b153a2a918f7b7e54c1eb9ffd",
+  "collection": "artifacts/qwen15-quality-tasks-2026-11-06/full.json",
+  "review": "Astra approved exact raw admission, baseline binding and isolated grading after correcting receipt-vs-collection digest labels.",
+  "portable_checks": "artifacts/qwen15-quality-tasks-2026-11-06/grade-portable-retry.stderr"
+}

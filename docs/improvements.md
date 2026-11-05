@@ -10466,3 +10466,11 @@ replay, one matching original BF16 and three matching Q4. Physical peak is
 4.86 GB. Astra approved feasibility and the unchanged next trajectory gate.
 [Evidence](../benchmarks/results/2026-11-06-gemma-optiq-stock-v1.json)
 [Pinned Hub revision](https://huggingface.co/mlx-community/gemma-4-e2b-it-OptiQ-4bit/tree/ffcf5c056bdd0df50627867ee8c7cba890eabe33)
+
+## 6 November 2026 — Pass Qwen1.5B frozen literal task quality
+
+The raw native collection reproduces all 100 transcripts after process exit.
+Isolated grading gives 12/100 versus matched original FP32 11/100, with no
+unresolved cases. The VM returns to its stopped state. Both original-weight
+gates pass for this numerical profile. Managed Mac Chat remains a separate task.
+[Evidence](../benchmarks/results/2026-11-06-qwen15-task-quality-v1.json)

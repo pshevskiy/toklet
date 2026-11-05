@@ -1,0 +1,28 @@
+{
+  "passed": true,
+  "device": "Apple M1 Pro",
+  "profile": {
+    "backend": "metal",
+    "model": "qwen2.5-1.5b-instruct-mlx8-c7e1ff2",
+    "projection_mode": "MlxAffine",
+    "normalization_mode": "Compensated",
+    "readback_mode": "FullLogits",
+    "attention_mode": "Reference"
+  },
+  "cases": 100,
+  "original_baseline_passed_cases": 11,
+  "binary": "artifacts/new-goal-b0-checks-v1/target/release/toklet",
+  "binary_sha256": "5260d12edbc33a35f07dcd5527b64d2f24a7190d627907ec17b32eb1a9b199cf",
+  "collection": "artifacts/qwen15-quality-tasks-2026-11-06/full.json",
+  "collection_sha256": "a9554d0f39b757ae2047cf16921397c4ece9c06dfb4e6997dc738b95d8528ef3",
+  "raw_sha256": "5a1118c89caefa0effc0cbddac34991aaca05fd5440fb45f210b4baf79d6ec3d",
+  "loss_sha256": "eb46b07e2d49cd4fd04b07e14dbc9b2fa9a88f6d3f78a22e8999818d754f81b8",
+  "producer_commit": "e2e3df45",
+  "peak_joint_physical_bytes": 1724795328,
+  "stop_counts": {
+    "stop_token": 69,
+    "output_limit": 31
+  },
+  "visible_tokens": 5524,
+  "scope": "Complete candidate response collection. Literal grading and managed Chat remain separate."
+}

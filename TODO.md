@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Qwen1.5B frozen task quality and OptiQ Gemma single-case trajectory.**
+Current task: **Qwen1.5B audited Mac owner/codec and OptiQ Gemma full stock trajectories.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -490,7 +490,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
     [Evidence](benchmarks/results/2026-11-06-qwen15-full-loss-v1.json).
   - [x] Three-category raw native task pilot with explicit stops and post-exit
     decoding. [Evidence](benchmarks/results/2026-11-06-qwen15-task-pilot-v1.json).
-  - [ ] Full frozen 100-task quality before managed Chat.
+  - [x] Full frozen task quality passes 12/100 versus original FP32 11/100.
+    [Evidence](benchmarks/results/2026-11-06-qwen15-task-quality-v1.json).
+  - [ ] Audited Reference owner, plain codec and managed Mac Chat journey.
 - [x] SmolLM3 validated per-layer rotary mask, shared CPU/Metal bypass and
   independent nonzero-offset mixed-layer fixture; [block report](docs/smollm3-rotary-schedule.md).
 - [x] SmolLM3 pinned real Mac512 execution, stock comparison, state and memory;
@@ -1459,3 +1461,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | Qwen1.5B raw task producer reviewed | Three cases pass with exact CLI profile and visible/hidden stop state. The first pilot hit the template guard; raw numerical staging and post-exit decoding pass. | Astra approves bounded producer scope. Run all 100 before isolated grading. [Evidence](benchmarks/results/2026-11-06-qwen15-task-pilot-v1.json) |
 
 | 2026-11-06 | Gemma OptiQ stock preflight reviewed | Strict text-only load audits 142 Q4 and 136 Q8 modules. Four saved decisions replay, one matches original BF16. Physical peak 4.86 GB. | Astra approves feasibility scope. Next HumanEval/37 full trajectory with unchanged policy. [Evidence](benchmarks/results/2026-11-06-gemma-optiq-stock-v1.json) |
+
+| 2026-11-06 | Qwen1.5B full literal task quality reviewed | All 100 native responses replay; isolated grade is 12/100 vs matched FP32 11/100. Zero unresolved cases and stopped VM restored. | Both original-weight gates pass. Next audited codec/owner and Mac Chat. [Evidence](benchmarks/results/2026-11-06-qwen15-task-quality-v1.json) |

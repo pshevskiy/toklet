@@ -55,9 +55,9 @@ passes all 10,000 causal targets with an increase of 0.001528 nats. The
 [raw task pilot](../benchmarks/results/2026-11-06-qwen15-task-pilot-v1.json)
 passes after isolating numerical assets and decoding after native exit.
 
-1. Collect and independently replay the frozen 100 raw task responses. Grade
-   only the complete collection in the isolated literal controller. Require
-   the unchanged two-point gate against the matched original score of 11/100.
+1. The [frozen literal task grade](../benchmarks/results/2026-11-06-qwen15-task-quality-v1.json)
+   passes at 12/100 versus matched original FP32 11/100, with all 100 native
+   responses replayed and the isolated VM restored stopped.
 2. After the grade passes, pin the six-file dense artifact and its exact plain
    renderer/codec. Compare no-tools, defaults, Unicode and stop handling. The
    distinct tool-template literal stays outside this route.
