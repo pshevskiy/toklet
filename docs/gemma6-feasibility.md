@@ -69,3 +69,10 @@ regenerates with a fresh cache. HumanEval/37 cycles after three corrections
 and stays rejected. Corrected rows record the originating stateless margin.
 The final live-module audit passes and grading remains withheld.
 [Recovery evidence](../benchmarks/results/2026-11-05-gemma6-stock-recovery-v1.json).
+
+The separate HumanEval/37 diagnostic generates each decision from a fresh
+causal prefix and verifies the resulting sequence once. It samples 188 IDs
+and still disagrees at one position in complete-sequence replay. Its logical
+token counts describe output bookkeeping. Astra approved deferring the current
+Q6 candidate. Grading and native Q6 implementation remain gated.
+[Diagnostic evidence](../benchmarks/results/2026-11-05-gemma6-stock-prefix37-v1.json).

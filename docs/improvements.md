@@ -10300,3 +10300,10 @@ storage. Astra approved the deterministic disjoint-match policy and checks.
 At 1,024 tokens, the authored hit and miss medians are 1.67 µs and 15.87 µs.
 Live acceptance and generation speed remain open.
 [Evidence](../benchmarks/results/2026-11-05-m9-prompt-lookup-v1.json)
+
+## 5 November 2026 — Defer the current Gemma Q6 candidate
+
+Fresh causal-prefix generation of the sole unresolved case still differs
+on one of 188 sampled IDs in complete replay. Astra approved the bounded
+diagnostic and defer decision. Grading remains withheld.
+[Evidence](../benchmarks/results/2026-11-05-gemma6-stock-prefix37-v1.json)

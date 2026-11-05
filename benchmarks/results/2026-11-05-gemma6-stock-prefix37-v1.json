@@ -1,0 +1,31 @@
+{
+  "case": "HumanEval/37",
+  "samples": 188,
+  "stop": {
+    "kind": "stop_token",
+    "token_id": 106
+  },
+  "mismatch": {
+    "index": 167,
+    "absolute_row": 324,
+    "expected_id": 11049,
+    "stateless_id": 537,
+    "incremental_margin": 0.75,
+    "stateless_margin": 0.125,
+    "stateless_row_sha256": "8725a944d63ca7d5481d4fe54a30337d47f7496509b874e25ec0e20d36e158f0"
+  },
+  "stateless_complete_gate_passed": false,
+  "endpoint_audit_passed": true,
+  "physical_peak_bytes": 4925476776,
+  "grading_started": false,
+  "native_implemented": false,
+  "decision": "Defer this Q6 candidate under the frozen trajectory gate",
+  "review": "Astra approved the separate one-case diagnostic and scoped defer",
+  "receipts": {
+    "artifacts/gemma6-feasibility-2026-11-05/prefix37/prepare.py": "645a97ddd8b72e28aabc0464632eecf2fbe50d39b6822553088f904141edfe22",
+    "artifacts/gemma6-feasibility-2026-11-05/prefix37/stock.py": "5ace21aa2f60b0534bacae0d8b1acb5fd2188c53e8a24550ee5d07e943299821",
+    "artifacts/gemma6-feasibility-2026-11-05/prefix37/stock-plan.json": "657798b7c67ca0cb0c5ed1c2b8648e22a3558b7d5ca8d3f2e465b8607e5f19e3",
+    "artifacts/gemma6-feasibility-2026-11-05/prefix37/stock-owned.json": "27b9175989adcf16a5e46736b34e76b97e95f369341e44deec1cd32d5cd79319",
+    "artifacts/gemma6-feasibility-2026-11-05/prefix37/stock/result.json": "6cfd39144aee37316584478c09f1cde99f89511673594e55e354b14051998b6b"
+  }
+}
