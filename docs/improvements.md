@@ -10359,3 +10359,10 @@ observes zero difference across 6,077,440 logit values. Astra approved
 the witness. Its abandonment path restores a published batch, so atomic
 Metal cancellation remains separate.
 [Evidence](../benchmarks/results/2026-11-05-m9-qwen2-lookup-parity-v1.json)
+
+## 5 November 2026 — Pass the staged Llama original loss gate
+
+All 10,000 frozen targets pass the retained-statistics replay. Mean NLL
+rises 0.00004424 nats/token against the 0.05 limit. Astra approved the
+diagnostic 1,025-position scope. The task gate remains separate.
+[Evidence](../benchmarks/results/2026-11-05-llama-staged-loss-v1.json)

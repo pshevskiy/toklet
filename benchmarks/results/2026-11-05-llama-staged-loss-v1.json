@@ -1,0 +1,25 @@
+{
+  "passed": true,
+  "targets": 10000,
+  "original_mean_nll": 2.782632744148034,
+  "staged_mean_nll": 2.7826769850943562,
+  "mean_nll_increase": 4.424094632238251e-05,
+  "limit": 0.05,
+  "ordinary_app_qualified": false,
+  "device": "Apple M1 Pro",
+  "diagnostic_capacity": 1025,
+  "prefill_chunk": 32,
+  "peak_sampled_physical_bytes": 1421051464,
+  "review": "Astra approved the isolated full-loss subgate",
+  "app_or_task_qualified": false,
+  "replay_scope": "All target identities and retained NLL statistics; no independent replay of every complete vocabulary row.",
+  "receipts": {
+    "artifacts/llama-staged-full-2026-11-05/inputs.json": "ac3fb33569194c14373e7f30171aa6db7b40da7f3f01696769fdb9ae228cdb6f",
+    "artifacts/llama-staged-full-2026-11-05/llama_staged_full_loss.rs": "150e82d528b3c68cf2df562da5335748ba1f821358ba2a1c0bc24869822f6f6b",
+    "artifacts/llama-staged-full-2026-11-05/loss-owned.json": "8dbb4a51fd6debc72f957a8cf72030dc2181cf30ce95603ff320b6f146f9f7ba",
+    "artifacts/llama-staged-full-2026-11-05/loss-replay.json": "128112b36f5ebbbf5d915022495a1047369d34e192f8ca8cbaec5922196c29ce",
+    "artifacts/llama-staged-full-2026-11-05/check_loss.py": "14559dd5c0d6942bd99ef391444549347f4c0564f0ec3b4116b9fd09d2ecbf7e",
+    "artifacts/llama-staged-full-2026-11-05/loss/result.json": "27baa7fb1a4a0d9a561a4ba05db632323379a72a03cab89c0c4cf87df0d282d7",
+    "artifacts/llama-staged-full-2026-11-05/loss/targets.jsonl": "5289a1ffd6499221e877f151d39f5de8b6b5ae1f8a052d7545c5abfb588e9e84"
+  }
+}
