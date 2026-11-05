@@ -1142,3 +1142,62 @@ fn selected_router_reuses_caller_owned_buffers() {
         assert_eq!(&ids[..8], &[0, 1, 2, 3, 4, 5, 6, 7]);
     }
 }
+
+#[test]
+fn selected_expert_projection_and_reduction_reuse_caller_buffers() {
+    let input = [0.5; 9 * 5];
+    let ids: [u32; 9 * 8] = std::array::from_fn(|i| ((i / 8 + i % 8) % 32) as u32);
+    let gate_up = [0.125; 32 * 2 * 3 * 5];
+    let down = [0.25; 32 * 5 * 3];
+    let gates = [0.125; 9 * 8];
+    let mut values = [0.; 9 * 8 * 5];
+    let mut gate = [0.; 9 * 8 * 3];
+    let mut up = [0.; 9 * 8 * 3];
+    let mut out = [0.; 9 * 5];
+    let weights = cpu::ExpertWeights {
+        gate_up: &gate_up,
+        down: &down,
+    };
+    for tokens in [7, 8, 9] {
+        let shape = cpu::SelectedExpertShape {
+            tokens,
+            experts: 32,
+            selected: 8,
+            hidden: 5,
+            intermediate: 3,
+        };
+        let mut evaluate = || -> Result<(), cpu::Error> {
+            cpu::selected_expert_glu(
+                &input[..tokens * 5],
+                &ids[..tokens * 8],
+                &weights,
+                &mut values[..tokens * 8 * 5],
+                &mut gate[..tokens * 8 * 3],
+                &mut up[..tokens * 8 * 3],
+                shape,
+            )?;
+            cpu::reduce_selected_experts(
+                &values[..tokens * 8 * 5],
+                &gates[..tokens * 8],
+                &mut out[..tokens * 5],
+                tokens,
+                8,
+                5,
+            )
+        };
+        evaluate().unwrap();
+        ALLOCATIONS.with(|n| n.set(0));
+        TRACK.with(|track| track.set(true));
+        let mut result = Ok(());
+        for _ in 0..16 {
+            result = evaluate();
+            if result.is_err() {
+                break;
+            }
+        }
+        TRACK.with(|track| track.set(false));
+        result.unwrap();
+        assert_eq!(ALLOCATIONS.with(Cell::get), 0);
+        assert!(out[..tokens * 5].iter().all(|x| x.is_finite() && *x > 0.));
+    }
+}

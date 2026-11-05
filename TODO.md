@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Granite sparse-MoE independent selected-expert projection/reduction fixtures and scalar blocks; router and metadata/header screen reviewed. Qwen1.5, SmolLM3 and Granite3.3 scoped Mac engine execution reviewed/complete. New models first; performance secondary; iPhone deferred**.
+Current task: **Granite sparse-MoE strict source adapter, bounded BF16 import and exact owner planning; router/selected-expert scalar blocks and metadata/header screen reviewed. Qwen1.5, SmolLM3 and Granite3.3 scoped Mac engine execution reviewed/complete. New models first; performance secondary; iPhone deferred**.
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -491,7 +491,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Granite real Mac512 execution, stock decisions, state and memory checks; [report](docs/granite33-engine-execution.md).
 - [x] Granite3.1-1B-A400M immutable metadata/header and conditional owner screen; [design](docs/granite-moe-next.md).
 - [x] Sparse-MoE deterministic router fixture/scalar block; [report](docs/moe-router-block.md).
-- [ ] Sparse-MoE independent selected-expert projection/reduction fixtures and scalar blocks.
+- [x] Sparse-MoE independent selected-expert projection/reduction fixtures and scalar blocks; [report](docs/moe-expert-blocks.md).
 - [ ] Sparse-MoE strict import/exact owner planning, resident Metal blocks and real execution.
 
 ### M8 closure
@@ -1286,3 +1286,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Sparse router block active | Independent sorting/FP32 oracle frozen before target: 11 cases, ties/extremes/permutations and 7/8/9-token batches. Scalar top-k/selected-softmax and prewrite invalid-input checks pass initial targeted tests. | Run required checks and allocation control, byte-identical oracle replay, then one Astra review before commit. Expert projections/reduction, import, Metal and real MoE remain next. |
 
 | 2026-11-05 | Sparse router leaf reviewed | 11 independent cases/234 gates, exact ranked FP32 mass and overflow/cutoff controls pass. 562CPU/671Metal, strict/release checks and zero allocations in48 calls pass. | Astra approves final code/tests; commit leaf. Next selected-expert projections/reduction; no real MoE/Metal/import claim. [Report](docs/moe-router-block.md). |
+
+| 2026-11-05 | Selected-expert leaves active | Frozen independent fused-axis fixture and four targeted stage/ordering/validation tests pass; token/expert permutations and unselected weights covered. | Run allocation, required default/Metal and optimized checks, then Astra review before commit. No MoE import/Metal/model claim. |
+
+| 2026-11-05 | Selected-expert leaves reviewed | Seven cases/969 stage values and exact FP32 ordering/product controls pass. 567CPU/676Metal, strict/release checks and zero allocation in48 projection/reduction pairs pass. | Astra approves final code/evidence; commit scalar leaves. Next strict import/exact owner planning; Half/Metal/model execution remain open. [Report](docs/moe-expert-blocks.md). |

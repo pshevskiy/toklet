@@ -1,0 +1,22 @@
+{
+  "format": "toklet-moe-expert-leaves-v1",
+  "passed": true,
+  "engine_revision": "31e3722 plus selected-expert patch",
+  "fixture_sha256": "add465495c770e1f7f6582c7741596fd551dad447cbbe88aac2899d6ecc0b287",
+  "fixture_cases": 7,
+  "fixture_token_rows": 29,
+  "expected_stage_values": 969,
+  "exact_reduction_controls": 4,
+  "profile": "Scalar FP32 ascending projections/stores, stable SiLU, slot-ordered separately rounded weighted products/sums",
+  "steady_rust_allocations": 0,
+  "steady_measured_projection_reduction_pairs": 48,
+  "counts": {
+    "test": 567,
+    "metal-test": 676,
+    "release-experts": 4,
+    "release-allocation": 1
+  },
+  "checks": "artifacts/moe-experts-checks-2026-11-05/checks.json",
+  "review": "Astra approved final code/evidence; no actionable findings",
+  "scope": "CPU leaves only; Half, import, exact model planning, Metal and full sparse-MoE execution remain open"
+}

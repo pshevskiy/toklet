@@ -10005,3 +10005,11 @@ FP32 normalization. Independent fixtures, overflow/mass/cutoff controls,
 562CPU/671Metal, strict/release checks and Astra pass. Expert projection/reduction,
 import, Metal and real MoE execution remain open.
 [Report](moe-router-block.md).
+
+## 5 November 2026 — Add selected-expert projections and reduction
+
+Borrowed fused gate/up expert views reuse scalar GLU; reduction preserves supplied
+slot order and separate FP32 products. Independent stages, validation/overflow
+controls, 567CPU/676Metal, strict/optimized checks and Astra pass. Repeated calls
+allocate no Rust buffers. Import, Half/Metal and full MoE execution remain open.
+[Report](moe-expert-blocks.md).
