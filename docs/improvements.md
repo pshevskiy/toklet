@@ -10129,3 +10129,10 @@ loss recipe and adds paired tiled rows. [P2 plan](m9-p2-affine-qualification.md)
 The fresh matched pair reproduces a 13.69% reduction in 1,024-token prefill
 and 6.22% in total request time. Astra confirms the timing subgate. The
 quality, state and app gates remain active. [P2 plan](m9-p2-affine-qualification.md)
+
+## 5 November 2026 — Pass the full original and tiled loss gate
+
+All 10,000 distributions match bitwise across the two schedules. The
+original target statistics replay exactly and mean loss passes the frozen
+gate. Astra approved after strict checker and mutation validation.
+[Evidence](../benchmarks/results/2026-11-05-m9-affine-loss-v1.json)

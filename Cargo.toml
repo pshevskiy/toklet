@@ -108,3 +108,7 @@ required-features = ["metal"]
 [[example]]
 name = "mlx_mac_baseline"
 required-features = ["metal"]
+
+[[example]]
+name = "mlx_tile_loss"
+required-features = ["metal"]

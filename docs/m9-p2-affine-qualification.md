@@ -32,3 +32,10 @@ Independent Mac timing passed. The 1,024-token prefill median was 6.568 s
 baseline and 5.669 s tile. Total request time fell 6.22% and the pair had
 no flagged timing controls. Astra confirmed this timing subgate.
 [Evidence](../benchmarks/results/2026-11-05-m9-affine-independent-v1.json).
+
+The original loss replay and the paired tiled replay each scored all
+10,000 targets. All row hashes, archived target bits, greedy IDs and NLL
+agree. Mean loss is 2.884953696657687, up 0.0012285467282029394 against the
+unchanged 0.05 gate. The paired sampled physical peak is 1,053,263,240 bytes.
+Astra approved the collector and strict checker after four mutation controls.
+[Loss evidence](../benchmarks/results/2026-11-05-m9-affine-loss-v1.json).

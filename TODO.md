@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **M9 P2 independent timing, quality and state checks. The P1 decode-control difference did not repeat in reverse order.**
+Current task: **M9 P2 paired 100-task quality. Independent timing and both 10,000-target loss checks pass.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -562,6 +562,7 @@ First delivery: **P0 → one selected P1 candidate → P2**, with independent
 - [x] P1: pass numerical/state and useful prefill screens with Astra review and reverse-order control investigation. [Report](docs/m9-p1-affine-screen.md)
 - [ ] P2: pass unchanged quality, state, memory and app/device gates; collect
   independent performance confirmation and adopt or document rejection.
+  - [x] Full 10,000-target legacy and paired tile loss pass. [Evidence](benchmarks/results/2026-11-05-m9-affine-loss-v1.json)
   - [x] Independent Mac timing passes. [Evidence](benchmarks/results/2026-11-05-m9-affine-independent-v1.json)
 - [ ] Publish the M9 decision and update the checklist/improvement record.
 
@@ -1343,3 +1344,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | P2 timing and quality plan active | Independent owned timing pair started. Prepared original one-token loss replay and a paired chunk-128 all-row check for the changed kernel. | Apply unchanged 10,000-target and 100-task gates, state and Mac app checks. [Plan](docs/m9-p2-affine-qualification.md) |
 
 | 2026-11-05 | P2 independent timing reviewed | 1,024 prefill 6.568→5.669 s, −13.69%. Total request −6.22%. No flagged timing controls. | Astra confirms timing subgate. Full loss replay and changed-prefill row proof next. [Evidence](benchmarks/results/2026-11-05-m9-affine-independent-v1.json) |
+
+| 2026-11-05 | P2 tiled loss rows passed | 10,000 complete paired rows match bitwise with active tile dispatch. Mean NLL 2.884954 passes unchanged gate; sampled peak 1.05 GB. | Original chunk-1 replay is in progress. Strict checks and the three shared loss tests pass. [Logs](artifacts/m9-p2-tile4-2026-11-05/quality/) |
+
+| 2026-11-05 | P2 full loss reviewed | 10,000 row hashes match across schedules, archived target bits/greedy/NLL match exactly, and unchanged loss gate passes. | Astra approves after strict checker fix and four rejected mutations. Next frozen 100-task trajectories. [Result](benchmarks/results/2026-11-05-m9-affine-loss-v1.json) |

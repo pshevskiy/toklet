@@ -1,0 +1,32 @@
+{
+  "legacy": {
+    "mean_nll": 2.884953696657687,
+    "delta": 0.0012285467282029394,
+    "largest_delta_from_archived_target": 0.0,
+    "complete_paired_rows": 0
+  },
+  "paired": {
+    "mean_nll": 2.884953696657687,
+    "delta": 0.0012285467282029394,
+    "largest_delta_from_archived_target": 0.0,
+    "complete_paired_rows": 10000
+  },
+  "cross_schedule_exact_rows": 10000,
+  "passed": true,
+  "device": "Apple M1 Pro",
+  "review": "Astra approved collector and strict journal replay after checker fix",
+  "checks": "artifacts/m9-p2-tile4-2026-11-05/quality/checks.json",
+  "mutation_controls": "artifacts/m9-p2-tile4-2026-11-05/quality/loss-mutations.json",
+  "peak_sampled_physical_bytes": {
+    "legacy": 553092032,
+    "paired": 1053263240
+  },
+  "raw": {
+    "legacy": "artifacts/m9-p2-tile4-2026-11-05/quality/legacy.jsonl",
+    "paired": "artifacts/m9-p2-tile4-2026-11-05/quality/paired.jsonl"
+  },
+  "owners": {
+    "legacy": "artifacts/m9-p2-tile4-2026-11-05/quality/legacy-owned.json",
+    "paired": "artifacts/m9-p2-tile4-2026-11-05/quality/paired-owned.json"
+  }
+}
