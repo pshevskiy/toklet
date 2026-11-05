@@ -307,3 +307,195 @@ fn split_kv_decode_timing() {
         }
     });
 }
+
+#[test]
+#[ignore = "explicit Qwen2.5 layer-zero split-KV same-input Metal witness"]
+fn split_kv_real_same_input_rounding_witness() {
+    use std::path::Path;
+
+    autoreleasepool(|_| {
+        let path = Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("models/MLX-Qwen2.5-0.5B-Instruct-8bit-6474d4c");
+        let (capacity, depth, heads, kv_heads, dimension) =
+            (1152usize, 1025usize, 14usize, 2usize, 64usize);
+        let budget = 2560 * 1024 * 1024;
+        let model = Model::load_mlx_qwen2_audited(
+            &path,
+            weights::LoadOptions {
+                context_limit: capacity,
+                memory_limit_bytes: budget,
+            },
+        )
+        .unwrap();
+        let mut session = Session::with_attention_mode(
+            &model,
+            session::Options {
+                capacity,
+                position_offset: 0,
+                prefill_chunk_size: 128,
+                memory_limit_bytes: budget,
+            },
+            ProjectionMode::MlxAffine,
+            NormalizationMode::Compensated,
+            ReadbackMode::FullLogits,
+            AttentionMode::Online,
+        )
+        .unwrap();
+        let layers: Vec<_> = (0..model.config.num_layers).collect();
+        session.enable_diagnostics(&layers).unwrap();
+        let prompt: Vec<_> = include_bytes!("../../../benchmarks/contract-v1/prompt_1024.u32le")
+            .chunks_exact(4)
+            .map(|word| u32::from_le_bytes(word.try_into().unwrap()))
+            .collect();
+        let continuation = include_bytes!("../../../benchmarks/contract-v1/continuation_128.u32le");
+        session.set_tokens(&prompt).unwrap();
+        session.evaluate().unwrap();
+        session
+            .append(&[u32::from_le_bytes(continuation[..4].try_into().unwrap())])
+            .unwrap();
+        assert_eq!(session.evaluate_next_chunk().unwrap(), 1);
+        assert_eq!(session.evaluated_len(), depth);
+
+        let snapshots = session.diagnostics().unwrap();
+        let gpu = &model.gpu;
+        let pipelines = split_pipelines(gpu);
+        let partitions = capacity.div_ceil(256);
+        let shape =
+            [heads, kv_heads, dimension, capacity, depth, partitions].map(|word| word as u32);
+        let online_shape = [
+            1,
+            heads,
+            kv_heads,
+            dimension,
+            capacity,
+            128,
+            depth - 1,
+            depth,
+        ]
+        .map(|word| word as u32);
+        let mut query = Buffer::<u16>::new(gpu, heads * dimension).unwrap();
+        let baseline = Buffer::<u16>::new(gpu, heads * dimension).unwrap();
+        let split = Buffer::<u16>::new(gpu, heads * dimension).unwrap();
+        let partial = Buffer::<u32>::new(gpu, heads * partitions * (dimension + 2)).unwrap();
+        let status = Buffer::<u32>::new(gpu, 8).unwrap();
+        let half = |bits| f64::from(f16::from_bits(bits).to_f32());
+
+        for layer in layers {
+            let snapshot = |name| {
+                snapshots
+                    .iter()
+                    .find(|item| item.layer == Some(layer) && item.stage == name)
+                    .unwrap()
+            };
+            let q = &snapshot("q_rotary").values;
+            let expected_context = &snapshot("attention_context").values;
+            query.with_mut(|bits| {
+                for (slot, &value) in bits.iter_mut().zip(q) {
+                    *slot = f16::from_f32(value).to_bits();
+                }
+            });
+            let cache = &session.cache[layer];
+            let raw = gpu.command().unwrap();
+            gpu.encode(
+                &Command {
+                    raw: &raw,
+                    trace: None,
+                },
+                Kernel::AttentionDecode,
+                &[&query.raw, &cache.k.raw, &cache.v.raw, &baseline.raw],
+                &online_shape,
+                heads,
+                Some(&status),
+            )
+            .unwrap();
+            encode_split(
+                &raw,
+                &pipelines,
+                [
+                    &[&query.raw, &cache.k.raw, &cache.v.raw, &partial.raw],
+                    &[&partial.raw, &split.raw],
+                ],
+                &shape,
+                &status,
+            );
+            raw.commit();
+            raw.waitUntilCompleted();
+            assert_eq!(raw.status(), MTLCommandBufferStatus::Completed);
+            assert!(status.with_slice(|bits| bits.iter().all(|&word| word == 0)));
+            let base = baseline.with_slice(|bits| bits.to_vec());
+            let result = split.with_slice(|bits| bits.to_vec());
+            assert!(
+                base.iter()
+                    .zip(expected_context)
+                    .all(|(&bits, &value)| half(bits) == f64::from(value))
+            );
+            let Some(index) = base.iter().zip(&result).position(|(a, b)| a != b) else {
+                continue;
+            };
+            let head = index / dimension;
+            let feature = index % dimension;
+            let cache_head = head / (heads / kv_heads);
+            let key = cache.k.with_slice(|bits| bits.to_vec());
+            let value = cache.v.with_slice(|bits| bits.to_vec());
+            let q = &q[head * dimension..][..dimension];
+            let row = |position| (cache_head * capacity + position) * dimension;
+            let scores: Vec<_> = (0..depth)
+                .map(|position| {
+                    q.iter()
+                        .zip(&key[row(position)..][..dimension])
+                        .map(|(&q, &k)| f64::from(q) * half(k))
+                        .sum::<f64>()
+                        / (dimension as f64).sqrt()
+                })
+                .collect();
+            let maximum = scores.iter().copied().fold(f64::NEG_INFINITY, f64::max);
+            let (mass, numerator) =
+                scores
+                    .iter()
+                    .enumerate()
+                    .fold((0.0, 0.0), |(mass, sum), (position, score)| {
+                        let weight = (score - maximum).exp();
+                        (
+                            mass + weight,
+                            sum + weight * half(value[row(position) + feature]),
+                        )
+                    });
+            let ideal = numerator / mass;
+            let packets = partial.with_slice(|words| {
+                (0..depth.div_ceil(256))
+                    .map(|partition| {
+                        let start = (head * partitions + partition) * (dimension + 2);
+                        [words[start], words[start + 1], words[start + 2 + feature]]
+                            .map(|x| f64::from(f32::from_bits(x)))
+                    })
+                    .collect::<Vec<_>>()
+            });
+            let packet_max = packets
+                .iter()
+                .map(|p| p[0])
+                .fold(f64::NEG_INFINITY, f64::max);
+            let (packet_mass, packet_sum) = packets.iter().fold((0.0, 0.0), |(mass, sum), p| {
+                let scale = (p[0] - packet_max).exp();
+                (mass + scale * p[1], sum + scale * p[2])
+            });
+            let baseline_word = half(base[index]);
+            let split_word = half(result[index]);
+            let midpoint = (baseline_word + split_word) / 2.0;
+            let ideal_round = half(f16::from_f64(ideal).to_bits());
+            let packet_round = half(f16::from_f64(packet_sum / packet_mass).to_bits());
+            println!(
+                "SPLIT_WITNESS {}",
+                serde_json::json!({
+                    "depth":depth,"first_different_layer":layer,"head":head,"feature":feature,
+                    "baseline_half":baseline_word,"split_half":split_word,"midpoint":midpoint,
+                    "fp64_oracle":ideal,"fp64_oracle_half":ideal_round,
+                    "packet_fp64_merge":packet_sum/packet_mass,"packet_fp64_merge_half":packet_round,
+                    "differing_words":base.iter().zip(&result).filter(|(a,b)|a!=b).count(),
+                    "packets":packets
+                })
+            );
+            return;
+        }
+        panic!("expected a split rounding difference on identical captured operands");
+    });
+}

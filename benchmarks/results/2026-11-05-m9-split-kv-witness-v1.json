@@ -1,0 +1,47 @@
+{
+  "depth": 1025,
+  "first_different_layer": 0,
+  "head": 10,
+  "feature": 24,
+  "baseline_half": -2.378225326538086e-05,
+  "split_half": -2.372264862060547e-05,
+  "midpoint": -2.3752450942993164e-05,
+  "fp64_oracle": -2.3757315358443335e-05,
+  "fp64_oracle_half": -2.378225326538086e-05,
+  "packet_fp64_merge": -2.3752341875944396e-05,
+  "packet_fp64_merge_half": -2.372264862060547e-05,
+  "differing_words": 1,
+  "packets": [
+    [
+      163.49449157714844,
+      25.189193725585938,
+      -0.036924414336681366
+    ],
+    [
+      164.31182861328125,
+      19.59992027282715,
+      -0.008061499334871769
+    ],
+    [
+      164.65806579589844,
+      18.748605728149414,
+      -0.009094527922570705
+    ],
+    [
+      164.873291015625,
+      23.55787467956543,
+      0.020706232637166977
+    ],
+    [
+      163.16998291015625,
+      1.0,
+      -0.004467010498046875
+    ]
+  ],
+  "passed": true,
+  "decision": "Defer current split-KV candidate; stored partial error already crosses the Half midpoint",
+  "review": "Astra approved test-only witness and scoped defer",
+  "checks": "artifacts/m9-p3-splitkv-2026-11-05/same-input/checks.json",
+  "owner": "artifacts/m9-p3-splitkv-2026-11-05/same-input/owned.json",
+  "candidate_adopted": false
+}

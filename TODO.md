@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Gemma Q6 bounded trajectory recovery and P3 same-input split-KV witness.**
+Current task: **Gemma Q6 bounded trajectory recovery. P3 evaluated and deferred for the current partial reduction.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -571,7 +571,7 @@ First delivery: **P0 → one selected P1 candidate → P2**, with independent
 
 Conditional follow-ons require their own decision; they do not all block M9:
 
-- [ ] P3: split-KV attention. [Primitive passes](benchmarks/results/2026-11-05-m9-split-kv-primitive-v1.json). [Paired operation timing](benchmarks/results/2026-11-05-m9-split-kv-timing-v1.json) passes at four long depths. [Real session rejected](benchmarks/results/2026-11-05-m9-split-kv-session-v1.json) across 128 rows, with one greedy divergence. Run one same-input layer-0 witness before deciding whether to defer.
+- [x] P3 current candidate evaluated and deferred. [Paired operation timing](benchmarks/results/2026-11-05-m9-split-kv-timing-v1.json) passes, [real session](benchmarks/results/2026-11-05-m9-split-kv-session-v1.json) rejects, and [same-input witness](benchmarks/results/2026-11-05-m9-split-kv-witness-v1.json) localizes the rounding difference to the stored partials for the first differing word.
 - [x] R1: evaluate rotary reuse and defer the table for pinned Qwen2.5 MLX8 on M1 Pro. [Decision](docs/m9-rotary-opportunity.md)
 - [ ] P4: integrated I8 KV for a defined capacity requirement, with an actual codec. Astra reviewed the current Mac profile. [Capacity trigger](docs/todo-implementation-plans.md#p4-i8-kv) remains open.
 - [ ] P5: strict-greedy transactional verifier, then measured prompt lookup. [Comparison leaf](benchmarks/results/2026-11-05-m9-strict-greedy-v1.json) passes. [CPU transaction witness](benchmarks/results/2026-11-05-m9-greedy-transaction-v1.json) passes. Next qualify backend-integrated tentative state and near-tie decisions.
@@ -1394,3 +1394,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Gemma Q6 full stock trajectory rejected | All 100 cases journaled, 4,036 sampled IDs, 26 stateless differences across 13 cases. Peak 5,244,112,712 bytes, output-limit and 567-position controls pass. | Astra approves failure scope. Final live-module audit was skipped after the gate failed. Withhold grading and localize the first two rows. [Evidence](benchmarks/results/2026-11-05-gemma6-stock-tasks-v1.json) |
 
 | 2026-11-05 | Gemma Q6 stateless mismatch localized | Fresh cache and complete-stateless rows match both archived hashes at the first two disputes. Prefix-only stateless picks the cached ID in both. | Astra approves bounded evidence and the existing first-mismatch recovery rule. [Evidence](benchmarks/results/2026-11-05-gemma6-stock-localization-v1.json) |
+
+| 2026-11-05 | P3 same-input witness reviewed | Identical real layer-0 inputs differ in one Half word. FP64 attention rounds to Online and even FP64 merge of stored partials rounds to split. | Astra approves scoped defer. Future candidates need separate partial-accumulation qualification. [Evidence](benchmarks/results/2026-11-05-m9-split-kv-witness-v1.json) |

@@ -10277,3 +10277,11 @@ Fresh cached and complete-sequence rows reproduce the archived hashes.
 Stateless evaluation of only the prefix selects the cached ID in both cases.
 Astra approved the bounded observation and queued exact trajectory recovery.
 [Evidence](../benchmarks/results/2026-11-05-gemma6-stock-localization-v1.json)
+
+## 5 November 2026 — Defer the current split-KV reduction
+
+The first same-input difference is one layer-0 Half word at depth 1,025.
+FP64 attention rounds to the Online word. FP64 merging of the stored partial
+packets still rounds to the split word. Astra approved deferring the current
+candidate. Future work needs a separately qualified partial reduction.
+[Evidence](../benchmarks/results/2026-11-05-m9-split-kv-witness-v1.json)
