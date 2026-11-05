@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Llama staged 100-task gate and P5 atomic Qwen2 Metal transaction. The real Metal target parity witness passes.**
+Current task: **P5 atomic Qwen2 Metal transaction and explicit staged Llama Mac512 session admission. Both isolated Llama quality gates pass.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -576,7 +576,7 @@ Conditional follow-ons require their own decision; they do not all block M9:
 - [ ] P4: integrated I8 KV for a defined capacity requirement, with an actual codec. Astra reviewed the current Mac profile. [Capacity trigger](docs/todo-implementation-plans.md#p4-i8-kv) remains open.
 - [ ] P5: strict-greedy transactional verifier, then measured prompt lookup. [Comparison leaf](benchmarks/results/2026-11-05-m9-strict-greedy-v1.json) passes. [CPU transaction witness](benchmarks/results/2026-11-05-m9-greedy-transaction-v1.json) passes. [Prompt lookup proposer](benchmarks/results/2026-11-05-m9-prompt-lookup-v1.json) passes. [CPU verification transaction](benchmarks/results/2026-11-05-m9-cpu-greedy-round-v1.json) passes. [Bounded CPU generation](benchmarks/results/2026-11-05-m9-cpu-lookup-v1.json) passes authored ties and near ties. [Real Qwen2 target parity](benchmarks/results/2026-11-05-m9-qwen2-lookup-parity-v1.json) passes. Next implement atomic Metal publication and measure generation.
 - [ ] G2/G3: checkpoint-defined shared-KV prefill/MTP after selected Gemma support.
-- [ ] Separate correctness task: Llama Online remains rejected. [Deeper staged screen](benchmarks/results/2026-11-05-llama-staged-depth-v1.json) passes frozen fixtures and matches ten greedy decisions. [Guarded leaf](benchmarks/results/2026-11-05-llama-staged-leaf-v1.json) passes. [Frozen 511-target screen](benchmarks/results/2026-11-05-llama-staged-corpus-v1.json) passes schedule comparisons. [Completed request timing](benchmarks/results/2026-11-05-llama-staged-timing-v1.json) passes twice. [Full loss gate](benchmarks/results/2026-11-05-llama-staged-loss-v1.json) passes. Complete the 100-task gate before session promotion.
+- [ ] Separate correctness task: Llama Online remains rejected. [Deeper staged screen](benchmarks/results/2026-11-05-llama-staged-depth-v1.json) passes frozen fixtures and matches ten greedy decisions. [Guarded leaf](benchmarks/results/2026-11-05-llama-staged-leaf-v1.json) passes. [Frozen 511-target screen](benchmarks/results/2026-11-05-llama-staged-corpus-v1.json) passes schedule comparisons. [Completed request timing](benchmarks/results/2026-11-05-llama-staged-timing-v1.json) passes twice. [Full loss gate](benchmarks/results/2026-11-05-llama-staged-loss-v1.json) passes. [Full 100-task gate](benchmarks/results/2026-11-05-llama-staged-tasks-v1.json) passes with identical graded inputs. Next explicit authenticated Mac512 session admission and state.
   - [x] Reproduce the one-word difference on identical operands. [Result](benchmarks/results/2026-11-05-llama-online-witness-v1.json)
 
 Full-Qwen3-window expansion, old streaming prototypes and unselected techniques
@@ -1418,3 +1418,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | P5 real Metal target parity reviewed | Five pinned Qwen2 cases match every greedy choice and observe zero logit difference across 6,077,440 values. Rollback/replay and pending-state checks pass. | Astra approves test-only scope. Next atomic Metal transaction, preserving Completion replay. [Evidence](benchmarks/results/2026-11-05-m9-qwen2-lookup-parity-v1.json) |
 
 | 2026-11-05 | Llama staged full loss reviewed | All 10,000 frozen targets replay. Mean NLL increases 0.00004424 nats/token against the unchanged 0.05 limit. | Astra approves diagnostic1025/chunk32 scope. Task and app gates remain open. [Evidence](benchmarks/results/2026-11-05-llama-staged-loss-v1.json) |
+
+| 2026-11-05 | Llama staged full tasks reviewed | All 100 output trajectories, stops and decoded completions match the archived graded Reference run. Replayed score is 23 versus 22 original. | Astra approves exact grade reuse. Next staged Mac512 session admission and state, then app scope. [Evidence](benchmarks/results/2026-11-05-llama-staged-tasks-v1.json) |

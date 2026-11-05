@@ -1,0 +1,79 @@
+{
+  "cases": 100,
+  "identical_trajectories": 100,
+  "different": [],
+  "original_grading_reused": true,
+  "awaiting_review": false,
+  "passed": true,
+  "decoded_completions_exact": 100,
+  "decision": {
+    "complete": true,
+    "baseline_tasks": {
+      "cases": 100,
+      "passed": 22,
+      "pass_rate": 0.22,
+      "aggregation": "100_equal_weight_binary_cases",
+      "categories": {
+        "code": {
+          "cases": 40,
+          "passed": 12
+        },
+        "prose": {
+          "cases": 30,
+          "passed": 9
+        },
+        "continuation": {
+          "cases": 30,
+          "passed": 1
+        }
+      }
+    },
+    "native_tasks": {
+      "cases": 100,
+      "passed": 23,
+      "pass_rate": 0.23,
+      "aggregation": "100_equal_weight_binary_cases",
+      "categories": {
+        "code": {
+          "cases": 40,
+          "passed": 14
+        },
+        "prose": {
+          "cases": 30,
+          "passed": 8
+        },
+        "continuation": {
+          "cases": 30,
+          "passed": 1
+        }
+      }
+    },
+    "task_pass_rate_loss_percentage_points": -1,
+    "task_limit_percentage_points": 2,
+    "task_gate_passed": true,
+    "full_quality_qualified": false,
+    "app_discovery_qualified": false,
+    "device_qualified": false
+  },
+  "archived_grading_sha256": "6765731b61ad2a4317acb9b945b1c4619f74b0f3165493de54d27b513f694a00",
+  "archived_decoded_sha256": "4f957b1507c18645549134db161f946b3825de7a18600dc0f822400335bda793",
+  "candidate_journal_sha256": "b0685611db2659f427e76219dde6e681dc23c944722aa72d438c7c079954313b",
+  "candidate_owner_sha256": "d25d98e5b41bcdb5ff189c6a8b9fa0782553fac98d700fe1b807bfc53a4b6e45",
+  "device": "Apple M1 Pro",
+  "diagnostic_capacity": 566,
+  "prefill_chunk": 32,
+  "review": "Astra approved reuse of archived isolated grading for byte-identical completions",
+  "peak_sampled_physical_bytes": 1367148080,
+  "app_qualified": false,
+  "receipts": {
+    "artifacts/llama-staged-full-2026-11-05/inputs.json": "ac3fb33569194c14373e7f30171aa6db7b40da7f3f01696769fdb9ae228cdb6f",
+    "artifacts/llama-staged-full-2026-11-05/llama_staged_full_tasks.rs": "13dba12734262e13d6a35aad68da07a13fff41a4350b19a478704a256c6d5d0f",
+    "artifacts/llama-staged-full-2026-11-05/tasks-owned.json": "d25d98e5b41bcdb5ff189c6a8b9fa0782553fac98d700fe1b807bfc53a4b6e45",
+    "artifacts/llama-staged-full-2026-11-05/tasks/result.json": "fa3031b41e55c57e555313368beec01d56651eda2cdd9f2a1bc8918a4451aae8",
+    "artifacts/llama-staged-full-2026-11-05/tasks/tasks.jsonl": "b0685611db2659f427e76219dde6e681dc23c944722aa72d438c7c079954313b",
+    "artifacts/llama-staged-full-2026-11-05/check_tasks.py": "32202d045f74b9d73a3b9685e82d16f534e96489a264b9cc54c97bf34d3b4e7f",
+    "artifacts/llama-staged-full-2026-11-05/task-replay.json": "f560c4ddee77a5f29d2436fdbf8200c12aa5899f05ce9d8391ffe1fbfb8fe614",
+    "artifacts/llama-staged-full-2026-11-05/check_grade_reuse.py": "b4e60ffd7af6865e4bec8256c16eb70c36718a9cc86a83912eb1acc64c320325",
+    "artifacts/llama-staged-full-2026-11-05/task-grade-reuse.json": "5d2e890d6f753eaa0cc127df8df05a3e4436cad95ee4aac6caf5f2c82f518b70"
+  }
+}

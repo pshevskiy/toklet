@@ -128,4 +128,9 @@ passes chunk1/chunk32 greedy agreement. Before full quality collection,
 the [uninstrumented 128-input/128-decode comparison](../benchmarks/results/2026-11-05-llama-staged-timing-v1.json)
 passed in both worker orders. Preserve the original 10,000-target
 0.05-nat limit and 100-task two-point limit, with separate diagnostic
-capacity for those workloads. Keep the managed app on Reference pending qualification.
+capacity for those workloads. Both isolated gates now pass
+([loss](../benchmarks/results/2026-11-05-llama-staged-loss-v1.json),
+[tasks](../benchmarks/results/2026-11-05-llama-staged-tasks-v1.json)).
+Add an explicit audited Mac512 session selector with exact workspace
+accounting, lifecycle checks and replay against the isolated result.
+Keep the managed app on Reference pending app qualification.

@@ -10366,3 +10366,11 @@ All 10,000 frozen targets pass the retained-statistics replay. Mean NLL
 rises 0.00004424 nats/token against the 0.05 limit. Astra approved the
 diagnostic 1,025-position scope. The task gate remains separate.
 [Evidence](../benchmarks/results/2026-11-05-llama-staged-loss-v1.json)
+
+## 5 November 2026 — Pass the staged Llama original task gate
+
+All 100 staged trajectories and decoded completions match the previously
+graded Reference inputs. The authenticated isolated grade replays to 23
+staged versus 22 original. Astra approved reuse. Explicit session and app
+qualification remain separate.
+[Evidence](../benchmarks/results/2026-11-05-llama-staged-tasks-v1.json)
