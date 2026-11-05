@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Pinned Granite3.1-1B-A400M stock/native Mac512 qualification. Resident MoE session and allocation pass checks and Astra review. P0 baseline follows.**
+Current task: **M9 P0 Mac baseline for pinned Qwen2.5 MLX8. Granite3.1-1B-A400M Mac512 engine qualification complete in the frozen decision scope.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -499,7 +499,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Sparse-MoE Metal Half expert projection/reduction and consumed leaf allocation. [Report](docs/moe-metal-experts.md)
 - [x] Sparse-MoE resident graph and exact combined session/scratch allocation. [Result](benchmarks/results/2026-11-05-moe-metal-session-v1.json)
   - [x] Shared scratch and projected router scores in one command. [Evidence](benchmarks/results/2026-11-05-moe-ffn-projection-v1.json)
-- [ ] Sparse-MoE real stock/native execution, state and process-memory checks.
+- [x] Sparse-MoE real stock/native Mac512 execution, state and process-memory checks. [Report](docs/granite-moe-execution.md)
 
 ### M8 closure
 
@@ -1317,3 +1317,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | MoE session verification in progress | First GPU run passed six leaf checks and reached failure recovery in the full session fixture. Corrected the assertion to use the existing pending-state contract. | Fixed Astra’s router zero-buffer and native-mode findings and the Clippy enum warning. Rerun required and hardware checks. [Logs](artifacts/moe-session-2026-11-05/) |
 
 | 2026-11-05 | MoE resident session reviewed | Authenticated two-layer fixture matches exact logits across chunks 1, 3 and 32. Budget, consumed bytes and pending failure recovery pass. | Astra approves. 574 CPU, 686 Metal and 13 explicit GPU checks pass. Proceed to real stock/native Mac512 qualification. [Result](benchmarks/results/2026-11-05-moe-metal-session-v1.json) |
+
+| 2026-11-05 | Real Granite MoE qualification active | Verified the 2,669,283,096-byte original and tokenizer files. Stock BF16 returns 38, then stop 0. | Native 512 and route comparison queued behind Rust checks. macOS sleep delayed the suite. P0 draft pending-logit correction is prepared separately. [Evidence](artifacts/granitemoe-real-2026-11-05/) |
+
+| 2026-11-05 | Granite MoE real execution reviewed | Both decisions and final-layer expert sets match. Native chunk 1/32, 512-token state, rejection and reset pass. Native sampled peak physical footprint 2,719,173,152 bytes. | 574 CPU, 686 Metal, strict/release and Astra pass. Full-row drift retained. Next M9 P0. [Report](docs/granite-moe-execution.md) |

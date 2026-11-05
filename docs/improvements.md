@@ -10065,3 +10065,11 @@ dense path. Its checked plan charges the expert scratch and router bias buffers
 before allocation. The two-layer oracle matches bitwise across three schedules.
 Astra and 13 explicit M1 Pro checks pass. Real checkpoint testing follows.
 [Result](../benchmarks/results/2026-11-05-moe-metal-session-v1.json)
+
+## 5 November 2026 — Qualify the pinned Granite MoE checkpoint on Mac
+
+Stock BF16 and native Half agree on both frozen decisions and both final-layer
+expert sets. Native chunk 1/32, 512-token state, capacity rejection and reset
+pass. Sampled native peak physical footprint was 2.72 GB. Astra and required
+checks pass. Full-row drift is recorded, and broader quality and adoption
+remain open. [Report](granite-moe-execution.md)

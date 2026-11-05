@@ -211,6 +211,8 @@ impl Scratch {
     }
 }
 
+#[cfg(all(test, target_os = "macos"))]
+mod real;
 #[cfg(test)]
 mod tests;
 

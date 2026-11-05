@@ -1,0 +1,102 @@
+{
+  "device": "Apple M1 Pro",
+  "acquisition": {
+    "passed": true,
+    "revision": "0da7a48b0276d500ce5922fd2b33944091fc6c09",
+    "bytes": 2669283096,
+    "sha256": "ac02591061f1344027a7e7b11dbb4143f75f166c47dc09b742f5de3ab1dde1d1"
+  },
+  "comparison": {
+    "exact_decisions": true,
+    "rows": [
+      {
+        "index": 0,
+        "decision_ids": [
+          38,
+          38
+        ],
+        "native_routing_replay": true,
+        "selected_sets_match": true,
+        "stock_cutoff_margin": 0.0546875,
+        "native_cutoff_margin": 0.024414000000000158,
+        "max_absolute_logit_error": 2.013355702161789,
+        "mean_absolute_logit_error": 0.4623532862562237
+      },
+      {
+        "index": 1,
+        "decision_ids": [
+          0,
+          0
+        ],
+        "native_routing_replay": true,
+        "selected_sets_match": true,
+        "stock_cutoff_margin": 0.2265625,
+        "native_cutoff_margin": 0.23828129999999992,
+        "max_absolute_logit_error": 1.1667656898498535,
+        "mean_absolute_logit_error": 0.17878590322174182
+      }
+    ]
+  },
+  "native_memory": {
+    "32": {
+      "weights_bytes": 2669259756,
+      "kv_bytes": 25166496,
+      "scratch_bytes": 10294664,
+      "history_bytes": 2048,
+      "logits_bytes": 393240,
+      "metadata_bytes": 58560,
+      "metadata_allowance_bytes": 201326800,
+      "admitted_bytes": 2906501564
+    },
+    "1": {
+      "weights_bytes": 2669259756,
+      "kv_bytes": 25166496,
+      "scratch_bytes": 417692,
+      "history_bytes": 2048,
+      "logits_bytes": 393240,
+      "metadata_bytes": 54840,
+      "metadata_allowance_bytes": 201326800,
+      "admitted_bytes": 2896620872
+    }
+  },
+  "native_state": {
+    "event": "done",
+    "capacity": 512,
+    "chunks": [
+      32,
+      1
+    ],
+    "overflow_preserved": true,
+    "reset_reproduced": true,
+    "ids": [
+      38,
+      0
+    ]
+  },
+  "process_peaks": {
+    "native": {
+      "rss_bytes": 2532081664,
+      "sampled_physical_bytes": 2719173152,
+      "owned_exit": true
+    },
+    "stock": {
+      "rss_bytes": 1108262912,
+      "sampled_physical_bytes": 2990754792,
+      "owned_exit": true
+    }
+  },
+  "checks": "artifacts/granitemoe-real-2026-11-05/checks/checks.json",
+  "cpu_tests": 574,
+  "metal_tests": 686,
+  "stock": "artifacts/granitemoe-real-2026-11-05/stock/result.json",
+  "native": "artifacts/granitemoe-real-2026-11-05/native.stdout",
+  "limits": {
+    "capacity": 512,
+    "process_bytes": 6442450944,
+    "held_out_quality_qualified": false,
+    "app_adopted": false
+  },
+  "passed": true,
+  "review": "Astra approved frozen real-checkpoint diagnostic and independently checked owner receipts",
+  "saved_rows_finite_and_lowest_id_argmax_verified": true
+}
