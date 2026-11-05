@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **P5 tentative append and rollback, and Gemma Q6 authenticated stock preflight. P3 queues explicit Qwen2 single-token session integration after both paired timing runs pass.**
+Current task: **Gemma Q6 authenticated stock preflight and P3 explicit Qwen2 session integration. P5 CPU rollback passes; append-only backend integration and prompt lookup remain.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -574,7 +574,7 @@ Conditional follow-ons require their own decision; they do not all block M9:
 - [ ] P3: split-KV attention. [Primitive passes](benchmarks/results/2026-11-05-m9-split-kv-primitive-v1.json). [Paired operation timing](benchmarks/results/2026-11-05-m9-split-kv-timing-v1.json) passes at four long depths. Next wire an explicit Qwen2 session experiment at 1,025–1,152 valid positions.
 - [x] R1: evaluate rotary reuse and defer the table for pinned Qwen2.5 MLX8 on M1 Pro. [Decision](docs/m9-rotary-opportunity.md)
 - [ ] P4: integrated I8 KV for a defined capacity requirement, with an actual codec. Astra reviewed the current Mac profile. [Capacity trigger](docs/todo-implementation-plans.md#p4-i8-kv) remains open.
-- [ ] P5: strict-greedy transactional verifier, then measured prompt lookup. [Comparison leaf](benchmarks/results/2026-11-05-m9-strict-greedy-v1.json) passes. Verify CPU tentative append and rollback before proposing tokens.
+- [ ] P5: strict-greedy transactional verifier, then measured prompt lookup. [Comparison leaf](benchmarks/results/2026-11-05-m9-strict-greedy-v1.json) passes. [CPU transaction witness](benchmarks/results/2026-11-05-m9-greedy-transaction-v1.json) passes. Next qualify backend-integrated tentative state and near-tie decisions.
 - [ ] G2/G3: checkpoint-defined shared-KV prefill/MTP after selected Gemma support.
 - [ ] Separate correctness task: reproduce and resolve frozen Llama Online failure.
   - [x] Reproduce the one-word difference on identical operands. [Result](benchmarks/results/2026-11-05-llama-online-witness-v1.json)
@@ -1382,3 +1382,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | P5 strict greedy leaf reviewed | Exact tie, bonus, correction, hidden stop and malformed-row controls pass. 578 default, 690 Metal and 5 release tests pass. Zero allocations in 48 measured calls. | Astra approves caller-supplied row verification. Next test tentative CPU append and replay. [Evidence](benchmarks/results/2026-11-05-m9-strict-greedy-v1.json) |
 
 | 2026-11-05 | P3 split-KV timing reviewed | Two opposite-order runs reduce completed GPU command time 75.09–78.08% at all four long depths. The depth-128 control misses the threshold. | Astra approves operation-level evidence. Next explicit session candidate with admitted workspace and full request gates. [Evidence](benchmarks/results/2026-11-05-m9-split-kv-timing-v1.json) |
+
+| 2026-11-05 | P5 CPU transaction reviewed | Two offsets and five acceptance, stop or abandonment scenarios match sequential greedy rows. Replay restores exact float logits and valid state. | Astra approves the test-only witness. Production cancellation and adversarial near-ties remain open. [Evidence](benchmarks/results/2026-11-05-m9-greedy-transaction-v1.json) |

@@ -1,0 +1,22 @@
+{
+  "checked_offsets": [
+    0,
+    5
+  ],
+  "cases": [
+    "zero",
+    "partial",
+    "full",
+    "hidden stop pending",
+    "abandoned before publication"
+  ],
+  "batch_rows_against_sequential": 40,
+  "exact_float_logit_comparison_after_replay": true,
+  "session_tests_each_configuration": 19,
+  "release_tests": 1,
+  "checks": "artifacts/m9-p5-strict-greedy-2026-11-05/transaction/checks.json",
+  "asynchronous_cancel_exercised": false,
+  "near_tie_model_qualification": false,
+  "production_speculation": false,
+  "review": "Astra approved the test-only CPU transaction fixture"
+}

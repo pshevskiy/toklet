@@ -1201,3 +1201,118 @@ fn selected_expert_projection_and_reduction_reuse_caller_buffers() {
         assert!(out[..tokens * 5].iter().all(|x| x.is_finite() && *x > 0.));
     }
 }
+
+#[test]
+fn greedy_tentative_batch_rolls_back_to_the_sequential_prefix() {
+    use toklet::generation::{GreedyVerification, VerifiedNext, verify_greedy};
+
+    let fixture = Fixture::tiny();
+    let (config, weights) = tiny_parts(&fixture);
+    let model = Model::new(config, weights).unwrap();
+    let initial = [1, 7, 13];
+    let width = model.config().vocab_size;
+    let capacity = initial.len() + 4;
+    let chunk = 3;
+    for offset in [0, 5] {
+        let mut oracle = Session::new(&model, options(capacity, 1, offset)).unwrap();
+        oracle.append(&initial).unwrap();
+        oracle.evaluate().unwrap();
+        let mut expected = [0; 4];
+        for token in &mut expected {
+            *token = sampling::greedy(oracle.logits().unwrap()).unwrap();
+            oracle.append(&[*token]).unwrap();
+            oracle.evaluate().unwrap();
+        }
+        for case in ["zero", "partial", "full", "stop", "cancel"] {
+            let mut tentative = Session::new(&model, options(capacity, chunk, offset)).unwrap();
+            tentative.append(&initial).unwrap();
+            tentative.evaluate().unwrap();
+            let committed = tentative.logits().unwrap().to_vec();
+            assert!(tentative.append(&[0; 5]).is_err());
+            assert_eq!(tentative.logits().unwrap(), committed);
+            let mut proposed: [u32; 3] = expected[..3].try_into().unwrap();
+            let (accept_count, stops) = match case {
+                "zero" => {
+                    proposed[0] = (proposed[0] + 1) % width as u32;
+                    (0, vec![])
+                }
+                "partial" => {
+                    proposed[2] = (proposed[2] + 1) % width as u32;
+                    (2, vec![])
+                }
+                "full" => (3, vec![]),
+                "stop" => (0, vec![expected[0]]),
+                "cancel" => (0, vec![]),
+                _ => unreachable!(),
+            };
+            let mut rows = vec![0.; (proposed.len() + 1) * width];
+            rows[..width].copy_from_slice(&committed);
+            tentative.append(&proposed).unwrap();
+            assert_eq!(
+                tentative
+                    .evaluate_next_chunk_with_logits(&mut rows[width..])
+                    .unwrap(),
+                proposed.len()
+            );
+
+            let mut sequential = Session::new(&model, options(capacity, 1, offset)).unwrap();
+            sequential.append(&initial).unwrap();
+            sequential.evaluate().unwrap();
+            for (row, token) in rows
+                .chunks_exact(width)
+                .zip(proposed.into_iter().map(Some).chain([None]))
+            {
+                assert_eq!(
+                    sampling::greedy(row).unwrap(),
+                    sampling::greedy(sequential.logits().unwrap()).unwrap(),
+                    "{case}"
+                );
+                if let Some(token) = token {
+                    sequential.append(&[token]).unwrap();
+                    sequential.evaluate().unwrap();
+                }
+            }
+
+            let result = if case == "cancel" {
+                None
+            } else {
+                Some(verify_greedy(&proposed, &rows, width, &stops).unwrap())
+            };
+            let next = if case == "stop" {
+                VerifiedNext::Stop(expected[0])
+            } else {
+                VerifiedNext::Token(expected[accept_count])
+            };
+            if let Some(actual) = result {
+                assert_eq!(
+                    actual,
+                    GreedyVerification {
+                        accepted: accept_count,
+                        next
+                    }
+                );
+            }
+            let mut kept = initial.to_vec();
+            kept.extend_from_slice(&proposed[..accept_count]);
+            tentative.set_tokens(&kept).unwrap();
+            tentative.evaluate().unwrap();
+            sequential.reset();
+            sequential.append(&kept).unwrap();
+            sequential.evaluate().unwrap();
+            assert_eq!(tentative.history(), sequential.history());
+            assert_eq!(tentative.evaluated_len(), sequential.evaluated_len());
+            assert_eq!(tentative.pending_len(), 0);
+            assert_eq!(tentative.logits(), sequential.logits());
+            if result.is_some() {
+                tentative.append(&[expected[accept_count]]).unwrap();
+                assert_eq!(tentative.pending_len(), 1);
+                assert_eq!(tentative.history().last(), Some(&expected[accept_count]));
+                assert!(tentative.logits().is_none());
+                tentative.evaluate().unwrap();
+                sequential.append(&[expected[accept_count]]).unwrap();
+                sequential.evaluate().unwrap();
+                assert_eq!(tentative.logits(), sequential.logits());
+            }
+        }
+    }
+}

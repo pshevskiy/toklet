@@ -10234,3 +10234,10 @@ Both split kernels together reduce completed GPU command time by
 The depth-128 control falls below the 5% threshold. Astra approved both
 opposite-order runs. A real Qwen2 session still needs qualification.
 [Evidence](../benchmarks/results/2026-11-05-m9-split-kv-timing-v1.json)
+
+## 5 November 2026 — Check CPU tentative append and rollback
+
+The CPU fixture compares 40 batched target rows to sequential greedy decisions.
+Rollback and replay restore equal logits and valid prefix state at two offsets.
+Astra approved the fixture. Live cancellation and model near-tie gates remain.
+[Evidence](../benchmarks/results/2026-11-05-m9-greedy-transaction-v1.json)
