@@ -1,26 +1,30 @@
 # M8 capability and admission audit
 
-5 November 2026, after `aa7b3bf`. **The Mac delivery has five managed profiles
-and four additional diagnostic architectures; arbitrary MLX models are not
-supported. M8 is not fully closed: physical iPhone14Pro Settings/journeys remain unverified. The representative
-production Mac process-memory gap identified below is now closed in its measured scope.** Rejected Gemma candidates stay unavailable in ordinary Chat.
+**6 November 2026 update. Mac has six managed profiles and iOS has four.
+M8 remains open for Gemma numerical and task qualification and deferred
+physical iPhone 14 Pro Settings and journeys.** The representative
+production Mac process-memory requirement passes. See the exact artifact
+and route index for diagnostic model coverage. [Coverage](model-coverage.md).
 
 The [coverage table](model-coverage.md) is the current artifact/route/device
 index. Match it against `ModelHub.swift` and `NativeAcceptedIdentity.swift`,
-not model-family names. The catalog contains Qwen2.5, Qwen3, SmolLM2, Mistral and
-Mac-only Llama3. Complete [fresh download/Stop/offline journeys](mac-hub-journeys.md)
-cover all five Mac profiles. HF search may return other repositories, but search
-results do not authorize execution.
+using exact model and codec identities. The catalog contains Qwen2.5 0.5B,
+Qwen3, SmolLM2, Mistral and two Mac-only profiles, Llama3 and Qwen2.5 1.5B.
+The five earlier profiles have production fresh download/Stop/offline evidence.
+The sixth has a linked Mac product and isolated controller evidence.
+[Production journeys](mac-hub-journeys.md).
+[Qwen2.5 1.5B controller](../benchmarks/results/2026-11-06-qwen15-mac-app-v1.json).
 
 | Decision | Current scope / evidence |
 | --- | --- |
 | Qwen2.5 managed | Mac growth/Chat through1024; model declaration32768 remains separate. Initial KV512, chosen upper512/1024. |
+| Qwen2.5 1.5B managed, Mac only | Original10k loss and100-task gates pass. Reference attention up to512, verified download, Apply256 and network-denied controller restart. |
 | Qwen3 conditional managed | Mac512, explicit experimental accuracy notice. Original-relative full quality passes; separate C512 fidelity gate remains rejected. |
 | SmolLM2 and Mistral managed | Mac512 routes, identity-bound preferences and fresh/offline journeys. Mistral remains separately memory-admitted. |
 | Llama3 managed, Mac only | Original10k NLL and100-task gates pass; Mac512 managed adoption/download/offline evidence is complete. No131072-window or iPhone claim. |
 | Phi3, Gemma3, LFM2 diagnostic | Bounded adapter/block/state/reference qualifications exist. Original full adoption quality and ordinary app admission do not; they stay out of the catalog. |
 | Gemma4 Q4 rejected for adoption | Original/native full collections and grading complete. NLL passes, tasks52→43/100 fail. Historical mathematical-logit/KV failures remain; four stock-MLX decisions agree with Toklet but cannot waive those failures. |
-| Gemma4 Q8 excluded by current owner policy | Actual header plus existing owner estimates exceed6GiB before Q8extras. No payload download, execution or quality qualification. |
+| Gemma4 alternative weights | OptiQ passes stock trajectories and fails the task limit at49/100 vs original52/100. Uniform Q6 and oQ6 reject on a proposal cycle. Separate stock-only Q8 screen proceeds under a measured 6GiB gate. Native/app Q8 still exceeds its estimated allowance. |
 | Physical iPhone14Pro outstanding | Four-profile catalog is not new-device evidence. Current Settings, journeys, wider context and diagnostic adapters lack a fresh phone run; Llama3 is excluded. |
 
 [Context/KV controls](context-app-integration.md) calculate capacity from the
@@ -37,13 +41,12 @@ complete with a rejected acceptance gate. It does not mark rejected numerical
 checks passed or silently remove them from the checklist. Diagnostic full-quality
 work is a prerequisite for future adoption, not a new ordinary support claim.
 
-Latest engine checks remain550 default/658 Metal tests, formatting, strict
+The 5 November audit used550 default/658 Metal tests, formatting, strict
 all-target Clippy for both configurations and release library test build in
 `4467b86`. Subsequent work changes reference/benchmark tooling and documentation;
 its task-specific checks and Astra reviews are recorded per commit. There is no
-new engine binary or performance qualification from this audit. M9's final-M8
-baseline and optimization candidates remain unstarted; see the
-[next milestone](next-performance-milestone.md).
+new engine binary or performance qualification from the audit. Subsequent
+M9 decisions and their measurements are indexed separately. [M9 plan](next-performance-milestone.md).
 
 Astra approves the publication/admission reconciliation, while identifying one
 remaining desktop acceptance gap: a fresh production Mac app load→send/reply
@@ -64,3 +67,10 @@ Subsequent scoped work includes [Granite3.1 MoE Mac512](granite-moe-execution.md
 and the [M9 Mac baseline](m9-mac-baseline.md). The MoE test covers pinned
 engine decisions, state and process memory. Broader numerical qualification,
 catalog adoption and deferred phone verification remain open.
+
+The 6 November review verified all six catalog and identity pairs, the selected
+41-export package and current rejection receipts. The package was built before
+the later test-only Gemma capture edits. Rebuild for the next source-matched
+Apple package validation. The remaining Gemma and phone gates keep the
+aggregate TODO open.
+[Current audit evidence](../benchmarks/results/2026-11-06-m8-mac-audit-v1.json).

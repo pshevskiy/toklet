@@ -10549,3 +10549,11 @@ attention and FF up match bitwise. Eight per-layer gate words differ,
 followed by 54 output words. All 25 captured stages pass tolerance.
 Metal checks and Astra review pass. Replay layer3 FF next.
 [Evidence](../benchmarks/results/2026-11-06-gemma-first-staged-v1.json)
+
+## 6 November 2026 — Reconcile the M8 Mac evidence
+
+Checked all six managed Mac identities, the four-profile iOS scope and the
+selected package. Added Granite MoE to the diagnostic coverage table. Gemma
+and deferred iPhone gates keep M8 open. The selected package predates the
+test-only Gemma edits.
+[Audit evidence](../benchmarks/results/2026-11-06-m8-mac-audit-v1.json)

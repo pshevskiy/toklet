@@ -17,6 +17,7 @@ not tokens per second or a promise that the engine can use that whole window.
 | Llama-3.2-1B-Instruct-8bit (`d48cdf0`) | Native Metal scaled RoPE, managed | 131,072 | Original10k-target/100-task quality passes; diagnostic loss1,025/task566; actual Mac512 UI and fresh/offline journey | Default Mac catalog,512; excluded from iOS |
 | SmolLM3-3B-4bit (`d3a7e05`) | Native Metal dense with per-layer RoPE bypass, diagnostic | 65,536 | Mac512/chunks1,32; seven stock greedy decisions, state/reset/overflow and process-memory checks | No managed Chat/catalog adoption |
 | granite-3.3-2b-instruct-8bit (`37b9855`) | Native Metal dense with checkpoint scales, diagnostic | 131,072 | Mac512/chunks1,32; stock decisions, full-cache/reset/overflow and process-memory checks | No managed Chat/catalog adoption |
+| granite-3.1-1b-a400m-instruct BF16 (`0da7a48`) | Native Metal sparse MoE, resident compensated Half | 131,072 | Mac512/chunks1,32; two stock decisions, selected expert sets, state and process memory | No managed Chat/catalog adoption |
 | Phi-3-mini-4k-instruct-4bit (`5b3819e`) | Native Metal fused-source dense, diagnostic | 4,096 | Selected Mac512 state/schedule and reference checks | No ordinary catalog/Chat adoption |
 | gemma-3-270m-it-4bit (`ff1143e`) | Native Metal local/global Gemma3, diagnostic | 32,768 | Selected capacity544, absolute positions0–543; bounded native conformance policy; historical precision rejections retained | No ordinary catalog/Chat adoption |
 | LFM2-350M-4bit (`18dc72a`) | Native Metal attention/causal-convolution, diagnostic | 128,000 |64 trajectory positions; capacity512 admitted separately | No ordinary catalog/Chat adoption |
@@ -36,8 +37,10 @@ This table indexes those scopes; it does not expand them.
 and diagnostic decisions. Gemma4 Q4 remains rejected by its
 [completed task gate](gemma-full-tasks.md); the
 [four-decision stock witness](gemma-mlx-decisions.md) does not waive it.
-Gemma E2B8-bit is excluded by the [current-owner memory estimate](gemma8-feasibility.md),
-with no payload or runtime qualification.
+Gemma E2B8-bit remains excluded by the
+[native/app memory estimate](gemma8-feasibility.md). Its separate
+[stock-only experiment](../benchmarks/results/2026-11-06-gemma-oq6-stock-v1.json)
+uses frozen token IDs and its own process measurement.
 
 Mac Settings separates model-declared, loaded and selected limits. Capacity,
 chunk, reply and numerical budget are saved under authenticated artifact/backend/

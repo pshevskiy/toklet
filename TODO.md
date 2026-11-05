@@ -585,6 +585,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
   [Report](docs/mac-production-memory.md). Other four production-profile peaks remain unmeasured.
 - [ ] Confirm required checks/reviews/commits and update this checklist and
   the improvement record. Do not infer support from a family name alone.
+  - [x] Reconcile six Mac and four iOS catalog identities, selected package
+    and open gates. [Audit](benchmarks/results/2026-11-06-m8-mac-audit-v1.json).
 
 ## M9 — Next performance milestone
 
