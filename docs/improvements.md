@@ -10049,3 +10049,10 @@ One scratch owner supplies route IDs and gates to both stages in the same
 command. The GPU verified exact outputs, planned bytes and late failure status.
 Astra review and required checks passed.
 [Result](../benchmarks/results/2026-11-05-moe-ffn-shared-v1.json)
+
+## 5 November 2026 — Feed projected scores into Metal MoE routing
+
+The compensated Half projection writes directly into shared score scratch.
+Six GPU checks verify routing, exact outputs and rejected invalid views or
+buffers. Required checks and Astra review passed.
+[Result](../benchmarks/results/2026-11-05-moe-ffn-projection-v1.json)

@@ -106,3 +106,109 @@ fn moe_ffn_shared_buffers_run_in_one_command() {
         }
     });
 }
+
+#[test]
+#[ignore = "Explicit Apple GPU projected scores through shared MoE scratch"]
+fn moe_ffn_projection_feeds_router_in_same_command() {
+    use crate::metal::memory::{Layout, matrix};
+    objc2::rc::autoreleasepool(|_| {
+        let gpu = Gpu::new().unwrap();
+        let router = router::Operation::new(&gpu, 65 * 1024 * 1024).unwrap();
+        let experts = experts::Operation::new(&gpu, 65 * 1024 * 1024).unwrap();
+        let layout = Layout::new(2, 8, true).unwrap();
+        let plan = Plan::new([2, 2, 1, 8, 1], 4, [layout.stride, 3, 2, 9, 8]).unwrap();
+        let scratch = Scratch::new(&gpu, plan, 4096).unwrap();
+        let mut input = Buffer::<u16>::new(&gpu, layout.elements).unwrap();
+        let view = matrix(&input, layout, true).unwrap();
+        let mut weights = Tensor::allocate(&gpu, Layout::new(2, 8, true).unwrap()).unwrap();
+        let zero = Buffer::<u16>::new(&gpu, 2).unwrap();
+        let mut fused = Buffer::<u16>::new(&gpu, plan.experts.half[1]).unwrap();
+        let mut down = Buffer::<u16>::new(&gpu, plan.experts.half[2]).unwrap();
+        let delta = Buffer::<u16>::new(&gpu, plan.experts.half[7]).unwrap();
+        let status = Buffer::<u32>::new(&gpu, plan.experts.word[2]).unwrap();
+        let half = |v| f16::from_f32(v).to_bits();
+        input.with_mut(|b| {
+            b[0] = half(1.);
+            b[layout.stride + 1] = half(1.);
+        });
+        weights.buffer.with_mut(|b| {
+            b[1] = half(1.);
+            b[weights.layout.stride] = half(1.);
+        });
+        fused.with_mut(|b| {
+            for e in 0..2 {
+                b[e * 16..e * 16 + 2].fill(half(2.));
+                b[e * 16 + 8..e * 16 + 10].fill(half(1.));
+            }
+        });
+        down.with_mut(|b| {
+            b[0] = half(1.);
+            b[8] = half(2.);
+        });
+        let io = LayerIo {
+            input: &input,
+            fused: &fused,
+            down: &down,
+            delta: &delta,
+            status: &status,
+        };
+        let raw = gpu.command().unwrap();
+        let command = Command {
+            raw: &raw,
+            trace: None,
+        };
+        let other = Buffer::<u16>::new(&gpu, layout.elements).unwrap();
+        let wrong_view = matrix(&other, layout, true).unwrap();
+        let short_zero = Buffer::<u16>::new(&gpu, 1).unwrap();
+        let short_status = Buffer::<u32>::new(&gpu, 7).unwrap();
+        let short_io = LayerIo {
+            status: &short_status,
+            ..io
+        };
+        for (layer, zero, input_view) in [
+            (&io, &zero, &*wrong_view),
+            (&io, &short_zero, &*view),
+            (&short_io, &zero, &*view),
+        ] {
+            assert!(
+                scratch
+                    .project_scores(
+                        &gpu,
+                        &command,
+                        2,
+                        layer,
+                        RouterProjection {
+                            weights: &weights,
+                            zero,
+                            input_view
+                        },
+                    )
+                    .is_err()
+            );
+        }
+        scratch
+            .project_scores(
+                &gpu,
+                &command,
+                2,
+                &io,
+                RouterProjection {
+                    weights: &weights,
+                    zero: &zero,
+                    input_view: &view,
+                },
+            )
+            .unwrap();
+        scratch.encode(&router, &experts, &command, 2, io).unwrap();
+        raw.commit();
+        raw.waitUntilCompleted();
+        assert_eq!(raw.status(), MTLCommandBufferStatus::Completed);
+        status.with_slice(|b| assert_eq!(b[0], 0));
+        scratch.scores.with_slice(|b| {
+            assert_eq!(&b[..2], &[0, half(1.)]);
+            assert_eq!(&b[4..6], &[half(1.), 0]);
+        });
+        scratch.ids.with_slice(|b| assert_eq!([b[0], b[3]], [1, 0]));
+        delta.with_slice(|b| assert_eq!([b[0], b[8]], [0x430c, 0x3f0c]));
+    });
+}

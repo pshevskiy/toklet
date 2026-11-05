@@ -14,7 +14,7 @@ Use the physical iPhone 14 Pro and each eligible profile. Exercise discovery, ve
 
 ### Sparse MoE resident graph
 
-Reuse the dense attention, KV and transaction path with a layer-level expert branch. Stream pinned BF16 weights into their final Half buffers, then allocate router and expert scratch from a consumed combined plan. Validate numerical stages, actual bytes, budget rejection, chunk equivalence, reset and failed-candidate state with a small independent fixture.
+The shared scratch and compensated Half router projection pass same-command GPU checks. Reuse the dense attention, KV and transaction path with a layer-level expert branch. Stream pinned BF16 weights into their final Half buffers, then allocate router and expert scratch from a consumed combined plan. Validate numerical stages, actual bytes, budget rejection, chunk equivalence, reset and failed-candidate state with a small independent fixture.
 
 ### Sparse MoE real execution
 

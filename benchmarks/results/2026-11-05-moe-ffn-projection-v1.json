@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "counts": {
+    "cpu": 574,
+    "metal": 686,
+    "gpu": 6
+  },
+  "review": "Astra approved final code and rejection controls",
+  "checks": "artifacts/moe-ffn-projection-2026-11-05/checks.json",
+  "gpu": "artifacts/moe-ffn-projection-2026-11-05/final/gpu.stdout",
+  "final_clippy": "artifacts/moe-ffn-projection-2026-11-05/final/clippy.stderr",
+  "scope": "Compensated Half projection, Half score store and same-command routing/expert execution",
+  "p0_input_preflight": "artifacts/todo-execution-2026-11-05/p0-input-preflight.json",
+  "phone_query": "artifacts/todo-execution-2026-11-05/devices.json"
+}

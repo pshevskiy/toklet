@@ -18,7 +18,7 @@ pub(super) struct Plan {
     capacity: usize,
     experts: usize,
     selected: usize,
-    input_stride: usize,
+    pub(super) input_stride: usize,
     output_stride: usize,
     pub(super) input_len: usize,
     pub(super) output_len: usize,
