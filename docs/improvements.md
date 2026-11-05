@@ -10136,3 +10136,9 @@ All 10,000 distributions match bitwise across the two schedules. The
 original target statistics replay exactly and mean loss passes the frozen
 gate. Astra approved after strict checker and mutation validation.
 [Evidence](../benchmarks/results/2026-11-05-m9-affine-loss-v1.json)
+
+## 5 November 2026 — Replay all 100 frozen tasks with tiled prefill
+
+The paired Mac collector preserves every sampled trajectory and literal
+completion. Exact identity reuses the accepted 2/100 grading. Astra and
+strict checks pass. [Evidence](../benchmarks/results/2026-11-05-m9-affine-tasks-v1.json)

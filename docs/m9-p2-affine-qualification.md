@@ -39,3 +39,10 @@ agree. Mean loss is 2.884953696657687, up 0.0012285467282029394 against the
 unchanged 0.05 gate. The paired sampled physical peak is 1,053,263,240 bytes.
 Astra approved the collector and strict checker after four mutation controls.
 [Loss evidence](../benchmarks/results/2026-11-05-m9-affine-loss-v1.json).
+
+All 100 tasks and 6,586 sampled tokens match the accepted Mac collection.
+Baseline and tile compare full distributions and state at each decision.
+The pinned decoder reproduces every accepted literal completion, so the
+existing 2/100 grading result applies under its unchanged gate. The sampled
+physical peak was 851,494,064 bytes. Astra approved the collector and replay.
+[Task evidence](../benchmarks/results/2026-11-05-m9-affine-tasks-v1.json).

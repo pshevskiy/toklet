@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **M9 P2 paired 100-task quality. Independent timing and both 10,000-target loss checks pass.**
+Current task: **M9 P2 real tiled state and failure/replay checks. Independent timing, full loss and 100-task quality pass.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -562,6 +562,7 @@ First delivery: **P0 → one selected P1 candidate → P2**, with independent
 - [x] P1: pass numerical/state and useful prefill screens with Astra review and reverse-order control investigation. [Report](docs/m9-p1-affine-screen.md)
 - [ ] P2: pass unchanged quality, state, memory and app/device gates; collect
   independent performance confirmation and adopt or document rejection.
+  - [x] All 100 task trajectories and literals match the accepted grading. [Evidence](benchmarks/results/2026-11-05-m9-affine-tasks-v1.json)
   - [x] Full 10,000-target legacy and paired tile loss pass. [Evidence](benchmarks/results/2026-11-05-m9-affine-loss-v1.json)
   - [x] Independent Mac timing passes. [Evidence](benchmarks/results/2026-11-05-m9-affine-independent-v1.json)
 - [ ] Publish the M9 decision and update the checklist/improvement record.
@@ -1348,3 +1349,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | P2 tiled loss rows passed | 10,000 complete paired rows match bitwise with active tile dispatch. Mean NLL 2.884954 passes unchanged gate; sampled peak 1.05 GB. | Original chunk-1 replay is in progress. Strict checks and the three shared loss tests pass. [Logs](artifacts/m9-p2-tile4-2026-11-05/quality/) |
 
 | 2026-11-05 | P2 full loss reviewed | 10,000 row hashes match across schedules, archived target bits/greedy/NLL match exactly, and unchanged loss gate passes. | Astra approves after strict checker fix and four rejected mutations. Next frozen 100-task trajectories. [Result](benchmarks/results/2026-11-05-m9-affine-loss-v1.json) |
+
+| 2026-11-05 | P2 full task quality reviewed | 100 tasks and 6,586 sampled tokens match. Pinned decoder reproduces every accepted literal; retain 2/100 grading by exact identity. | Astra approves after strict checks and rejected mutations. Real state/fault and Mac app checks follow. [Result](benchmarks/results/2026-11-05-m9-affine-tasks-v1.json) |

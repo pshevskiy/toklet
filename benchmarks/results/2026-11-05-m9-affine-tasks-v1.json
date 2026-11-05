@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "exact_original_completions": 100,
+  "full_distribution_pair": true,
+  "grading": "reuse after exact archived token, stop and literal identity",
+  "accepted_original_score": 2,
+  "maximum_allowed_drop": 2,
+  "device": "Apple M1 Pro",
+  "sampled_tokens": 6586,
+  "sampled_physical_peak_bytes": 851494064,
+  "review": "Astra approved paired collector and exact literal/archived grading replay",
+  "checks": "artifacts/m9-p2-tile4-2026-11-05/quality/tasks-checks/checks.json",
+  "mutations": "artifacts/m9-p2-tile4-2026-11-05/quality/task-checker-controls.json",
+  "owner": "artifacts/m9-p2-tile4-2026-11-05/quality/tasks-owned.json",
+  "raw": "artifacts/m9-p2-tile4-2026-11-05/quality/tasks.jsonl"
+}
