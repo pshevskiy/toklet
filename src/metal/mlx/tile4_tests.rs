@@ -265,7 +265,7 @@ fn affine_tile4_real_state_witness() {
     });
     tile.scratch.status.with_mut(|b| b.fill(0));
     tile.diagnostic_rows = 0;
-    let result = autoreleasepool(|_| tile.run_chunk(128, 512));
+    let result = autoreleasepool(|_| tile.run_chunk(128, 512, None));
     assert!(matches!(
         tile.finish_chunk(128, result),
         Err(Error::Nonfinite)

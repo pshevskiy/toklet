@@ -158,12 +158,61 @@ fn qwen2_metal_lookup_batches_preserve_serial_decisions() {
             batch.discard_pending();
             assert_eq!(batch.logits().unwrap(), recovered_logits);
         }
+        drop(batch);
+        drop(serial);
+        let mut atomic = open(false);
+        let mut target_rows = vec![f32::NAN; rows.len()];
+        let calls = std::cell::Cell::new(0);
+        assert_eq!(
+            atomic
+                .verify_greedy_round(&proposals, &stop_tokens, &mut target_rows, || {
+                    calls.set(calls.get() + 1);
+                    calls.get() == 2
+                })
+                .unwrap(),
+            None,
+        );
+        assert_eq!(calls.get(), 2);
+        assert_eq!(target_rows, rows);
+        assert_eq!(atomic.history(), prompt);
+        assert_eq!(atomic.logits().unwrap(), base);
+        assert_eq!(atomic.evaluated_len(), prompt.len());
+        assert_eq!(atomic.pending_len(), 0);
+        if !abandon {
+            let actual = atomic
+                .verify_greedy_round(&proposals, &stop_tokens, &mut target_rows, || false)
+                .unwrap();
+            assert_eq!(actual, Some(expected));
+            assert_eq!(&atomic.history()[..prompt.len()], prompt);
+            assert_eq!(
+                &atomic.history()[prompt.len()..atomic.evaluated_len()],
+                &proposals[..accepted]
+            );
+            assert_eq!(atomic.history().last(), Some(&next));
+            assert_eq!(atomic.pending_len(), 1);
+            assert!(atomic.logits().is_none());
+            atomic.discard_pending();
+            assert_eq!(atomic.logits().unwrap(), &rows[accepted * width..][..width]);
+        }
     }
+    let mut limit = open(false);
+    limit.append(&[generated[0]; 120]).unwrap();
+    limit.evaluate().unwrap();
+    assert_eq!(limit.evaluated_len(), 248);
+    let mut no_writes = vec![f32::NAN; 9 * width];
+    assert!(
+        limit
+            .verify_greedy_round(&generated[..8], &[], &mut no_writes, || false)
+            .is_err()
+    );
+    assert!(no_writes.iter().all(|value| value.is_nan()));
+    assert_eq!(limit.evaluated_len(), 248);
+    assert!(limit.logits().is_some());
     println!(
         "LOOKUP_METAL {}",
         serde_json::json!({
             "cases":5,"compared":compared,"greedy_differences":greedy_differences,
-            "minimum_serial_margin":min_margin,"maximum_logit_difference":max_logit_difference
+            "atomic_cancel_cases":5,"atomic_success_cases":4,"minimum_serial_margin":min_margin,"maximum_logit_difference":max_logit_difference
         })
     );
     assert!(

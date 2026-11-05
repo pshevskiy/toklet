@@ -1,0 +1,17 @@
+{
+  "cases": 5,
+  "compared": 6077440,
+  "greedy_differences": [],
+  "atomic_cancel_cases": 5,
+  "atomic_success_cases": 4,
+  "minimum_serial_margin": 0.73323154,
+  "maximum_logit_difference": 0.0,
+  "device": "Apple M1 Pro",
+  "review": "Astra approved the bounded Qwen2 Metal transaction",
+  "scope": "Authenticated Qwen2 MLX8, Mac256/chunk8, ordinary Online and FullLogits.",
+  "completion_failure": "Shared ReplayRequired transition preserved; actual completion failure not injected in this witness.",
+  "checks": "artifacts/m9-p5-metal-round-2026-11-05/retry/checks.json",
+  "owner": "artifacts/m9-p5-metal-round-2026-11-05/retry/owned.json",
+  "initial_compile_failure": "artifacts/m9-p5-metal-round-2026-11-05/metal-clippy.stderr",
+  "integrated_generation": false
+}

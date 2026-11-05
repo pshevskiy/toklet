@@ -1119,7 +1119,7 @@ mod tests {
             let selected = s.selected;
             s.scratch.tokens.with_mut(|b| b[0] = 3);
             s.scratch.status.with_mut(|b| b.fill(0));
-            let timing = autoreleasepool(|_| s.run_chunk(1, 3)).unwrap();
+            let timing = autoreleasepool(|_| s.run_chunk(1, 3, None)).unwrap();
             assert_eq!(timing.command_count, 1);
             assert!(matches!(
                 s.finish_chunk(1, Err(Error::Nonfinite)),

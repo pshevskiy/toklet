@@ -10374,3 +10374,11 @@ graded Reference inputs. The authenticated isolated grade replays to 23
 staged versus 22 original. Astra approved reuse. Explicit session and app
 qualification remain separate.
 [Evidence](../benchmarks/results/2026-11-05-llama-staged-tasks-v1.json)
+
+## 5 November 2026 — Verify atomic Qwen2 Metal proposal publication
+
+The explicit Qwen2 Mac256 round uses the admitted all-row workspace.
+Five cancelled rounds preserve published state and four successful rounds
+publish only the accepted prefix plus a pending target. Astra approved the
+transaction. Bounded Metal generation and performance remain open.
+[Evidence](../benchmarks/results/2026-11-05-m9-qwen2-atomic-round-v1.json)

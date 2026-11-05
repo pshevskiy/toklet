@@ -32,6 +32,8 @@ pub mod gemma_rms;
 pub mod gemma_rotary;
 pub mod lfm2;
 mod llama3_rotary;
+#[cfg(target_os = "macos")]
+mod lookup_round;
 mod memory;
 pub mod mlx;
 mod moe_experts_half;
@@ -1496,7 +1498,7 @@ impl<'m> Session<'m> {
             selection.with_mut(|words| words.fill(u32::MAX));
         }
         self.diagnostic_rows = 0;
-        let result = autoreleasepool(|_| self.run_chunk(n, start));
+        let result = autoreleasepool(|_| self.run_chunk(n, start, None));
         let result = self.finish_chunk(n, result);
         #[cfg(all(feature = "affine-tile4-mac-probe", target_os = "macos"))]
         if result.is_ok()
@@ -1530,16 +1532,24 @@ impl<'m> Session<'m> {
                 Ok(n)
             }
             Err(Error::Completion) => {
-                self.evaluated = 0;
-                self.distribution_valid = false;
-                self.distribution_replay = false;
-                self.replay = true;
+                self.require_replay();
                 Err(Error::Completion)
             }
             Err(e) => Err(e),
         }
     }
-    fn run_chunk(&mut self, n: usize, start: usize) -> Result<Timing> {
+    fn require_replay(&mut self) {
+        self.evaluated = 0;
+        self.distribution_valid = false;
+        self.distribution_replay = false;
+        self.replay = true;
+    }
+    fn run_chunk(
+        &mut self,
+        n: usize,
+        start: usize,
+        target_rows: Option<&mut [f32]>,
+    ) -> Result<Timing> {
         let g = &self.model.gpu;
         let c = &self.model.config;
         let s = &self.scratch;
@@ -2038,10 +2048,10 @@ impl<'m> Session<'m> {
             &s.status,
         )?;
         self.snapshot(&command, None, "final_norm", &s.norm.raw)?;
-        // Ordinary prefill needs only the last causal distribution. Diagnostic
-        // sessions explicitly require every row, retaining the all-row path.
+        // Ordinary prefill needs only the last causal distribution. Diagnostics
+        // and tentative verification can request every row.
         // All views/kernels are admitted and created before numerical execution.
-        let all_logits = !self.diagnostics.is_empty();
+        let all_logits = target_rows.is_some() || !self.diagnostics.is_empty();
         let (logit_rows, logit_input, logit_output, logit_kernel) = if all_logits {
             (n, &v.norm, &v.result_v, &v.hv)
         } else {
@@ -2152,7 +2162,16 @@ impl<'m> Session<'m> {
         if s.status.with_slice(|words| words[0]) != 0 {
             return Err(Error::Nonfinite);
         }
-        if let Some(selection) = &s.selection {
+        if let Some(target_rows) = target_rows {
+            s.floats.with_slice(|words| {
+                for (row, output) in target_rows.chunks_exact_mut(c.vocab_size).enumerate() {
+                    let start = row * self.f.stride;
+                    for (dst, &bits) in output.iter_mut().zip(&words[start..start + c.vocab_size]) {
+                        *dst = f32::from_bits(bits);
+                    }
+                }
+            });
+        } else if let Some(selection) = &s.selection {
             let id = selection.with_slice(|words| {
                 if words[1..].iter().any(|&v| v != u32::MAX) {
                     return Err(Error::Options("greedy output guard changed"));
