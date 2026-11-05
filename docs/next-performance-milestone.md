@@ -1,5 +1,8 @@
 # M9 — Measured performance improvements
 
+The first delivery is complete in the [Mac opt-in scope](m9-mac-affine-decision.md).
+The conditional follow-on queue stays open.
+
 Active Mac work following the [M8 shared-block and capacity work](shared-block-model-plan.md).
 On5November the user deferred iPhone verification and authorized the
 [Mac coverage/performance queue](mac-coverage-performance-next.md); device gaps

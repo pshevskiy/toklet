@@ -10155,3 +10155,9 @@ An isolated diagnostic build verifies actual tiled prefill, Send, Stop,
 New Chat and clean close under the process budget. A separate raw request
 reuses 36 tokens and matches fresh reset. Astra approved the scoped
 controller proof. [Evidence](../benchmarks/results/2026-11-05-m9-affine-app-v1.json)
+
+## 5 November 2026 — Publish the Mac opt-in retain decision
+
+M9 first delivery closes in the pinned M1 Pro scope. Independent prefill
+improves 13.69%, and full quality, state and diagnostic Chat gates pass.
+Managed-default deployment stays separate. [Decision](m9-mac-affine-decision.md)

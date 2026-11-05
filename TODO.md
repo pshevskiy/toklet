@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Publish M9 Mac opt-in decision. The timing, quality, engine state and isolated Mac Chat gates pass in scope.**
+Current task: **Gemma4 1,025-position same-input head and softcap diagnostic. M9 first delivery is complete in its reviewed Mac opt-in scope.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -565,7 +565,7 @@ First delivery: **P0 → one selected P1 candidate → P2**, with independent
   - [x] All 100 task trajectories and literals match the accepted grading. [Evidence](benchmarks/results/2026-11-05-m9-affine-tasks-v1.json)
   - [x] Full 10,000-target legacy and paired tile loss pass. [Evidence](benchmarks/results/2026-11-05-m9-affine-loss-v1.json)
   - [x] Independent Mac timing passes. [Evidence](benchmarks/results/2026-11-05-m9-affine-independent-v1.json)
-- [ ] Publish the M9 decision and update the checklist/improvement record.
+- [x] Publish the M9 Mac opt-in retain decision, measured scope and managed-default defer. [Decision](docs/m9-mac-affine-decision.md)
 
 Conditional follow-ons require their own decision; they do not all block M9:
 
@@ -1357,3 +1357,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Mac tile Chat publication retry | First app run passes tile dispatch, Send, Stop, New Chat and memory. Publication finds ordinary Friendly Chat intentionally resets each turn. | Preserve its policy and add a separate raw exact-prefix command through the same worker. [First run](artifacts/m9-p2-tile4-2026-11-05/app/) |
 
 | 2026-11-05 | P2 Mac Chat probe reviewed | Tile dispatch, managed cached load, Chat, Stop, New Chat and clean close pass. Separate raw command reuses 36 of 63 tokens with exact fresh-reset output/state. | Sampled physical peak 722.6 MB. Astra approves the controller scope. Ordinary Chat resets per turn. Publish scoped M9 decision next. [Result](benchmarks/results/2026-11-05-m9-affine-app-v1.json) |
+
+| 2026-11-05 | M9 first delivery published | Retain the opt-in affine8 tile on the pinned M1 Pro scope. Independent prefill −13.69%, request −6.22%; loss, tasks, state and diagnostic Chat pass. | Managed default, capacity transitions and phone stay separate. Continue Gemma numerical localization. [Decision](docs/m9-mac-affine-decision.md) |
