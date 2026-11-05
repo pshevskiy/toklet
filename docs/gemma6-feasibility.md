@@ -26,3 +26,18 @@ choice against the original BF16 and stock Q4 decisions. A change is evidence
 for investigating the Q6 candidate. The existing full quality gates still
 apply. Native Q6 implementation follows only after a justified stock result.
 [Evidence](../benchmarks/results/2026-11-05-gemma6-feasibility-v1.json).
+
+## Stock decision preflight
+
+The complete 4,708,626,264-byte payload matches its published SHA-256.
+Stock MLX strictly loads 1,096 selected tensors and 278 affine6 modules.
+At all four frozen disputed prefixes, Q6 selects the original BF16 ID.
+The previously measured stock Q4 run selects Toklet's Q4 ID at each prefix.
+Independent replay checks the complete Q6 rows and margins. Peak physical
+footprint is 4,355,542,880 bytes under the 6 GiB worker policy.
+
+Astra reviewed the bounded comparison. Start with one case per category
+and validate sampled tokens, hidden stops and stateless replay before running
+all 100 cases. Reuse the frozen grading literals and 2-point gate against
+original BF16. The full loss gate and native Q6 implementation remain separate.
+[Decision evidence](../benchmarks/results/2026-11-05-gemma6-stock-decisions-v1.json).

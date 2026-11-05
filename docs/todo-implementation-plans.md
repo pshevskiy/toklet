@@ -29,8 +29,9 @@ Reuse the completed [same-input V witness](gemma-v-boundary.md) and the four rej
 Use the failed 100-task collection and the stock decisions to distinguish artifact quality from engine errors. Screen a concrete candidate for combined memory fit before payload acquisition. Freeze candidate, baseline and grading policy. Repeat the unchanged 10,000-target loss and 100-task adoption gates before enabling the route.
 
 The [Q6 feasibility screen](gemma6-feasibility.md) identifies a second candidate.
-Authenticate the payload and run the same four stock decision probes before
-considering native Q6 execution. Preserve the frozen full adoption gates.
+The authenticated Q6 checkpoint matches original BF16 on all four frozen
+stock decision probes. Run a three-category pilot and then the 100-task
+stock quality comparison before native Q6. Preserve the full loss gate.
 
 ### M8 closure audit
 

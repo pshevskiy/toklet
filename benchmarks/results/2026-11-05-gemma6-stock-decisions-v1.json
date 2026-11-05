@@ -1,0 +1,79 @@
+{
+  "passed": true,
+  "replayed": [
+    {
+      "id": "HumanEval/1",
+      "agrees_with": "original",
+      "greedy_id": 236751,
+      "original_id": 236751,
+      "q4_stock_id": 19243,
+      "q4_stock_margin": 5.6875,
+      "top_two_margin": 2.0,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "17dc8ddce43476b06dd31a9df8cc5724bde65515b23fbd0cd72d144c7c69f50a"
+    },
+    {
+      "id": "HumanEval/24",
+      "agrees_with": "original",
+      "greedy_id": 236770,
+      "original_id": 236770,
+      "q4_stock_id": 236778,
+      "q4_stock_margin": 0.25,
+      "top_two_margin": 9.875,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "694501280d6a579667d872a2688ebdd8cd1bb2370f5c7e729076348f3e6db8d7"
+    },
+    {
+      "id": "truthfulqa/row-0",
+      "agrees_with": "original",
+      "greedy_id": 236776,
+      "original_id": 236776,
+      "q4_stock_id": 236780,
+      "q4_stock_margin": 10.625,
+      "top_two_margin": 0.375,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "6a1f864e5ea61a50ba3b8c7c9316d502966ce97a1dfde8372552ad637dc19d8f"
+    },
+    {
+      "id": "truthfulqa/row-3",
+      "agrees_with": "original",
+      "greedy_id": 236796,
+      "original_id": 236796,
+      "q4_stock_id": 236799,
+      "q4_stock_margin": 0.25,
+      "top_two_margin": 3.125,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "1c155753807e6464d61308f44ed97930fcca9d34223dfde57d8b35b1c4cf6b5b"
+    }
+  ],
+  "source_revision": "ebd7756d4e55627e11ae043af9cad8ed6465a2e2",
+  "q4_comparison_evidence": "benchmarks/results/2026-11-04-gemma-mlx-decisions-v1.json",
+  "external_rss_peak_bytes": 1594490880,
+  "task_gate_waived": false,
+  "acquisition": {
+    "passed": true,
+    "model": "models/MLX-Gemma4-E2B-6bit-ebd7756",
+    "revision": "ebd7756d4e55627e11ae043af9cad8ed6465a2e2",
+    "size": 4708626264,
+    "sha256": "c23b5a0822cb62041c23a9ae3cadfe670c7a86e6e2150a06316bf51dbb346288"
+  },
+  "consumed_tensors": 1096,
+  "quantized_modules": 278,
+  "consumed_storage_bytes": 3761052230,
+  "peak_physical_bytes": 4355542880,
+  "process_policy_bytes": 6442450944,
+  "owned_wall_seconds": 23.68911974999355,
+  "reviewed_by": "Astra",
+  "receipts": {
+    "artifacts/gemma6-feasibility-2026-11-05/acquisition.json": "bf04eed6e32f6bc55fca796c7957f29c95c847259dc3aab58ea99cd1368a7a48",
+    "artifacts/gemma6-feasibility-2026-11-05/prepare-stock.py": "498c607730377a4f0cfcaa134005108212af01025c64a11f49e6306e93f718a1",
+    "artifacts/gemma6-feasibility-2026-11-05/stock.py": "4ce6ff3bc7ed640c343176f623d349d04b8c8108b6a56e167f372a13f983b6ed",
+    "artifacts/gemma6-feasibility-2026-11-05/own-stock.py": "fefe3720b9942b6ac4c6b7816d2ed4e150ae7c34e7ab1e51a3aed53cb2ba1b60",
+    "artifacts/gemma6-feasibility-2026-11-05/stock-owned.json": "ded982e010e94d66ec5f129a6e0fc7785fe0054eacc10cda5f18cb7a530064f8",
+    "artifacts/gemma6-feasibility-2026-11-05/stock/result.json": "da77c98e9e81fdad355e269e09d769505b36046a5f0980db4e55950e20e6b89a",
+    "artifacts/gemma6-feasibility-2026-11-05/replay-stock.py": "8bb39d7086b3d501810b5ab884216075086964296991dd86f3c5f63a9429c13d",
+    "artifacts/gemma6-feasibility-2026-11-05/replay.json": "59019d1ab6e23d086c3d15b943b9bbdf7abbabaa2a243a653e5869e58d308145"
+  },
+  "full_quality_qualified": false,
+  "native_implemented": false
+}

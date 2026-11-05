@@ -10241,3 +10241,10 @@ The CPU fixture compares 40 batched target rows to sequential greedy decisions.
 Rollback and replay restore equal logits and valid prefix state at two offsets.
 Astra approved the fixture. Live cancellation and model near-tie gates remain.
 [Evidence](../benchmarks/results/2026-11-05-m9-greedy-transaction-v1.json)
+
+## 5 November 2026 — Check four stock Gemma Q6 decisions
+
+The authenticated Q6 checkpoint changes all four disputed Q4 decisions to
+the original BF16 token. Strict load and independent full-row replay pass
+under the 6 GiB worker policy. Astra approved the bounded result.
+[Report](gemma6-feasibility.md#stock-decision-preflight)
