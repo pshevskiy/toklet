@@ -1,0 +1,15 @@
+{
+  "cases": 5,
+  "compared": 6077440,
+  "greedy_differences": [],
+  "minimum_serial_margin": 0.73323154,
+  "maximum_logit_difference": 0.0,
+  "device": "Apple M1 Pro",
+  "passes_strict_greedy": true,
+  "peak_rss_bytes": 588431360,
+  "numeric_scope": "Maximum logit difference is descriptive. Minimum observed margin does not qualify near ties.",
+  "rollback_scope": "Restore and evaluate after ordinary speculative batch publication; no atomic transaction.",
+  "review": "Astra approved the real-model witness",
+  "owner": "artifacts/m9-p5-metal-parity-2026-11-05/owned.json",
+  "checks": "artifacts/m9-p5-metal-parity-2026-11-05/checks.json"
+}

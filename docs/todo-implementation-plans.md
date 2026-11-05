@@ -103,9 +103,10 @@ before raising capacity. [Existing projection](qwen3-context-admission.md).
 
 Qualify tentative state, exact target decisions and rollback first. Then add the separate lookup proposer and measure accepted tokens, latency and memory. Require identical greedy trajectories across rejection, cancellation and replay cases.
 The [nonstreaming CPU path](../benchmarks/results/2026-11-05-m9-cpu-lookup-v1.json)
-passes authored tie and near-tie controls. Use an isolated real Metal session
-to compare complete batched target decisions against sequential decode before
-implementing a Metal transaction. Keep streaming and throughput separate.
+passes authored tie and near-tie controls. The [real Qwen2 Metal witness](../benchmarks/results/2026-11-05-m9-qwen2-lookup-parity-v1.json)
+passes exact target parity and rollback. Add atomic Metal publication using
+the admitted all-row workspace, preserving the existing Completion replay
+transition. Keep streaming and throughput separate.
 
 ### G2/G3 shared KV and MTP
 

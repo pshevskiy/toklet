@@ -10351,3 +10351,11 @@ Staged SIMD reduces median request time by 43.13% and 43.06% on the pinned
 Mac 128-input/128-decode workload. Decode improves by about 50%. Astra
 approved both worker orders. Full original quality and app gates remain open.
 [Evidence](../benchmarks/results/2026-11-05-llama-staged-timing-v1.json)
+
+## 5 November 2026 — Verify real Qwen2 Metal lookup target parity
+
+Five pinned Qwen2 cases pass exact greedy and replay controls. The test
+observes zero difference across 6,077,440 logit values. Astra approved
+the witness. Its abandonment path restores a published batch, so atomic
+Metal cancellation remains separate.
+[Evidence](../benchmarks/results/2026-11-05-m9-qwen2-lookup-parity-v1.json)
