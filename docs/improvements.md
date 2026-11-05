@@ -10123,3 +10123,9 @@ The 512-token decode difference fell within dispersion. The primary
 control variation are retained. The next qualification preserves the original
 loss recipe and adds paired tiled rows. [P2 plan](m9-p2-affine-qualification.md).
 [Result](../benchmarks/results/2026-11-05-m9-affine-decode-control-v1.json)
+
+## 5 November 2026 — Confirm the Mac prefill gain independently
+
+The fresh matched pair reproduces a 13.69% reduction in 1,024-token prefill
+and 6.22% in total request time. Astra confirms the timing subgate. The
+quality, state and app gates remain active. [P2 plan](m9-p2-affine-qualification.md)

@@ -1,0 +1,169 @@
+{
+  "primary": "prefill_seconds at 1024",
+  "timing": {
+    "128": {
+      "prefill_seconds": {
+        "baseline": {
+          "median": 0.746034625,
+          "mad": 7.391649999999306e-05,
+          "minimum": 0.745854208,
+          "maximum": 0.746290416
+        },
+        "candidate": {
+          "median": 0.633810437,
+          "mad": 7.564650000002615e-05,
+          "minimum": 0.633447292,
+          "maximum": 0.634013
+        },
+        "improvement_fraction": 0.15042758638716,
+        "above_noise": true
+      },
+      "decode_seconds": {
+        "baseline": {
+          "median": 3.8466156665,
+          "mad": 0.0029467919999999204,
+          "minimum": 3.838782333,
+          "maximum": 3.85606725
+        },
+        "candidate": {
+          "median": 3.8347915624999995,
+          "mad": 0.0014749589999998314,
+          "minimum": 3.8289920420000003,
+          "maximum": 3.8506247499999997
+        },
+        "improvement_fraction": 0.0030738979469605004,
+        "above_noise": true
+      },
+      "total_seconds": {
+        "baseline": {
+          "median": 4.5926922085,
+          "mad": 0.003087583499999713,
+          "minimum": 4.584835583,
+          "maximum": 4.60219075
+        },
+        "candidate": {
+          "median": 4.4685995415,
+          "mad": 0.0013713745000001332,
+          "minimum": 4.462879375,
+          "maximum": 4.484489417
+        },
+        "improvement_fraction": 0.027019591421853544,
+        "above_noise": true
+      }
+    },
+    "512": {
+      "prefill_seconds": {
+        "baseline": {
+          "median": 3.1119146245,
+          "mad": 0.0001726039999998541,
+          "minimum": 3.11153175,
+          "maximum": 3.112330666
+        },
+        "candidate": {
+          "median": 2.662551187,
+          "mad": 0.00017872899999993308,
+          "minimum": 2.662333791,
+          "maximum": 2.663722666
+        },
+        "improvement_fraction": 0.14440095302171094,
+        "above_noise": true
+      },
+      "decode_seconds": {
+        "baseline": {
+          "median": 5.545205146,
+          "mad": 0.0055058750000003265,
+          "minimum": 5.534559167,
+          "maximum": 5.556893167
+        },
+        "candidate": {
+          "median": 5.5357037705,
+          "mad": 0.0017162090000009123,
+          "minimum": 5.531283542000001,
+          "maximum": 5.542413833000001
+        },
+        "improvement_fraction": 0.0017134398547642455,
+        "above_noise": true
+      },
+      "total_seconds": {
+        "baseline": {
+          "median": 8.657028937,
+          "mad": 0.005262103999999823,
+          "minimum": 8.646891125,
+          "maximum": 8.668870875
+        },
+        "candidate": {
+          "median": 8.198325854499998,
+          "mad": 0.0017079369999999372,
+          "minimum": 8.194095375,
+          "maximum": 8.204980209
+        },
+        "improvement_fraction": 0.05298620182953437,
+        "above_noise": true
+      }
+    },
+    "1024": {
+      "prefill_seconds": {
+        "baseline": {
+          "median": 6.567728020500001,
+          "mad": 0.0008956250000000665,
+          "minimum": 6.566540084,
+          "maximum": 6.576320084
+        },
+        "candidate": {
+          "median": 5.668887604,
+          "mad": 0.0006177709999999337,
+          "minimum": 5.668205166,
+          "maximum": 5.675965291
+        },
+        "improvement_fraction": 0.13685713136939126,
+        "above_noise": true
+      },
+      "decode_seconds": {
+        "baseline": {
+          "median": 7.911686875499999,
+          "mad": 0.006704270500001108,
+          "minimum": 7.900806292,
+          "maximum": 7.922240542
+        },
+        "candidate": {
+          "median": 7.9097670204999995,
+          "mad": 0.003343624999999406,
+          "minimum": 7.90430875,
+          "maximum": 7.926475207999999
+        },
+        "improvement_fraction": 0.00024266063991294683,
+        "above_noise": false
+      },
+      "total_seconds": {
+        "baseline": {
+          "median": 14.4789480835,
+          "mad": 0.009277020999999941,
+          "minimum": 14.468743333,
+          "maximum": 14.495914667
+        },
+        "candidate": {
+          "median": 13.578886375,
+          "mad": 0.003875333499999911,
+          "minimum": 13.573714625000001,
+          "maximum": 13.602441792
+        },
+        "improvement_fraction": 0.062163473707437224,
+        "above_noise": true
+      }
+    }
+  },
+  "control_regressions": [],
+  "primary_pass": true,
+  "passed": true,
+  "scope": "Independent teacher-forced timing subgate only",
+  "device": "Apple M1 Pro",
+  "review": "Astra confirmed independent timing subgate",
+  "raw": {
+    "time": "artifacts/m9-p2-tile4-2026-11-05/independent/time.jsonl",
+    "time-tile4": "artifacts/m9-p2-tile4-2026-11-05/independent/time-tile4.jsonl"
+  },
+  "owner": {
+    "time": "artifacts/m9-p2-tile4-2026-11-05/independent/time-owned.json",
+    "time-tile4": "artifacts/m9-p2-tile4-2026-11-05/independent/time-tile4-owned.json"
+  }
+}

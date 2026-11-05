@@ -562,6 +562,7 @@ First delivery: **P0 → one selected P1 candidate → P2**, with independent
 - [x] P1: pass numerical/state and useful prefill screens with Astra review and reverse-order control investigation. [Report](docs/m9-p1-affine-screen.md)
 - [ ] P2: pass unchanged quality, state, memory and app/device gates; collect
   independent performance confirmation and adopt or document rejection.
+  - [x] Independent Mac timing passes. [Evidence](benchmarks/results/2026-11-05-m9-affine-independent-v1.json)
 - [ ] Publish the M9 decision and update the checklist/improvement record.
 
 Conditional follow-ons require their own decision; they do not all block M9:
@@ -1340,3 +1341,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | P1 decode control investigated | Reverse order repeats a 13.76% primary gain. The 512-token decode delta falls from +15.669 ms to −0.218 ms. The 128-token delta changes sign across pairs. | Preserve both sets. Begin independent P2 timing and the unchanged quality/state gates. [Result](benchmarks/results/2026-11-05-m9-affine-decode-control-v1.json) |
 
 | 2026-11-05 | P2 timing and quality plan active | Independent owned timing pair started. Prepared original one-token loss replay and a paired chunk-128 all-row check for the changed kernel. | Apply unchanged 10,000-target and 100-task gates, state and Mac app checks. [Plan](docs/m9-p2-affine-qualification.md) |
+
+| 2026-11-05 | P2 independent timing reviewed | 1,024 prefill 6.568→5.669 s, −13.69%. Total request −6.22%. No flagged timing controls. | Astra confirms timing subgate. Full loss replay and changed-prefill row proof next. [Evidence](benchmarks/results/2026-11-05-m9-affine-independent-v1.json) |

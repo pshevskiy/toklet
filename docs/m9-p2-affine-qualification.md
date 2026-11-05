@@ -27,3 +27,8 @@ raw samples and environment. [P1 comparison](m9-p1-affine-prefill.md).
 Astra advised the separation of the original loss recipe from actual
 tile coverage. Keep independent timing, quality, state, measured memory
 and app evidence distinct in the adoption decision.
+
+Independent Mac timing passed. The 1,024-token prefill median was 6.568 s
+baseline and 5.669 s tile. Total request time fell 6.22% and the pair had
+no flagged timing controls. Astra confirmed this timing subgate.
+[Evidence](../benchmarks/results/2026-11-05-m9-affine-independent-v1.json).
