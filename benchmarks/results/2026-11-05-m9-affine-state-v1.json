@@ -1,0 +1,27 @@
+{
+  "capacity": 1152,
+  "chunk": 128,
+  "invalid_candidate_preserves_prefix": true,
+  "completion_requires_replay": true,
+  "cancellation": true,
+  "changed_prefix": true,
+  "overflow_preserved": true,
+  "candidate_memory": {
+    "weights_bytes": 524978590,
+    "kv_bytes": 14156448,
+    "scratch_bytes": 84551260,
+    "history_bytes": 4608,
+    "logits_bytes": 1215488,
+    "metadata_bytes": 16128,
+    "metadata_allowance_bytes": 201326592,
+    "admitted_bytes": 826249114
+  },
+  "passed": true,
+  "device": "Apple M1 Pro",
+  "peak_sampled_physical_bytes": 781698272,
+  "review": "Astra approved real tile state witness and scoped synthetic fault",
+  "checks": "artifacts/m9-p2-tile4-2026-11-05/state/final/checks.json",
+  "initial_checks": "artifacts/m9-p2-tile4-2026-11-05/state/checks.json",
+  "owner": "artifacts/m9-p2-tile4-2026-11-05/state/final/owned.json",
+  "gpu": "artifacts/m9-p2-tile4-2026-11-05/state/final/gpu.stdout"
+}

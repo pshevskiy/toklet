@@ -46,3 +46,10 @@ The pinned decoder reproduces every accepted literal completion, so the
 existing 2/100 grading result applies under its unchanged gate. The sampled
 physical peak was 851,494,064 bytes. Astra approved the collector and replay.
 [Task evidence](../benchmarks/results/2026-11-05-m9-affine-tasks-v1.json).
+
+The real Mac state witness passed after active tiled prefill. It verified
+the charged pipeline allowance, failed publication after a synthetic invalid
+private input, explicit completion replay, changed prefix, cancellation and
+1,152-position rejection. Sampled physical peak was 781,698,272 bytes.
+Astra approved the state and synthetic fault scope.
+[State evidence](../benchmarks/results/2026-11-05-m9-affine-state-v1.json).

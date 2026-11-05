@@ -10142,3 +10142,9 @@ gate. Astra approved after strict checker and mutation validation.
 The paired Mac collector preserves every sampled trajectory and literal
 completion. Exact identity reuses the accepted 2/100 grading. Astra and
 strict checks pass. [Evidence](../benchmarks/results/2026-11-05-m9-affine-tasks-v1.json)
+
+## 5 November 2026 — Qualify tiled prefill state and fault recovery
+
+The real Qwen tile session preserves committed distributions across failure,
+replay, cancellation and capacity checks. The injected input exercises native
+GPU status. Astra and required checks pass. [Evidence](../benchmarks/results/2026-11-05-m9-affine-state-v1.json)
