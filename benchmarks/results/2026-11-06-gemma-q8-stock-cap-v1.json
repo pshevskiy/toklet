@@ -1,0 +1,86 @@
+{
+  "device": "Apple M1 Pro",
+  "full_collection_passed": false,
+  "full_grade_executed": false,
+  "first_attempt_completed_cases": 32,
+  "first_attempt_verified_cases": 31,
+  "first_attempt_trajectory_rejection": {
+    "case": "HumanEval/24",
+    "passed": false,
+    "repairs": 2,
+    "failure": "proposal_cycle"
+  },
+  "first_attempt_stop_reason": "Unclassified; endpoint permission error discarded the primary owner state.",
+  "case32_physical_peak_bytes": 6457283264,
+  "process_limit_bytes": 6442450944,
+  "exceeded_by_bytes": 14832320,
+  "case32_owner": {
+    "plan_sha256": "f9ede6457368b52737677f3f3e74339b2ea6f80faeadbada9a07d45c8c1637fd",
+    "command": [
+      "/usr/bin/time",
+      "-l",
+      "/Users/coloner/work/rust/toklet/.venv/bin/python",
+      "-s",
+      "-B",
+      "/Users/coloner/work/rust/toklet/artifacts/gemma-q8-stock-2026-11-06/case32/stock.py",
+      "/Users/coloner/work/rust/toklet/artifacts/gemma-q8-stock-2026-11-06/case32/stock-plan.json",
+      "f9ede6457368b52737677f3f3e74339b2ea6f80faeadbada9a07d45c8c1637fd",
+      "/Users/coloner/work/rust/toklet/artifacts/gemma-q8-stock-2026-11-06/case32/stock"
+    ],
+    "memory_limit_bytes": 6442450944,
+    "completed": false,
+    "peak_sampled_physical_bytes": 6457283264,
+    "peak_sampled_rss_bytes": 2284503040,
+    "primary_error": "MemoryError('physical=6457283264, resident=1257521152, policy=6442450944')",
+    "cleanup_errors": [],
+    "worker_pid": 99909,
+    "worker_parent": 99817,
+    "worker_group": 99909,
+    "start_ns": 1793920451902541000,
+    "cap_trigger": {
+      "pid": 99912,
+      "physical": 6457283264,
+      "rss": 1257521152,
+      "observed_ns": 1793920476839691000
+    },
+    "exit_code": -9,
+    "remaining_group": [
+      [
+        99912,
+        1,
+        99909
+      ]
+    ],
+    "group_absent": false,
+    "wall_seconds": 24.961722292006016
+  },
+  "later_endpoint": {
+    "command": [
+      "/bin/ps",
+      "-axo",
+      "pid=,ppid=,pgid=,state="
+    ],
+    "recorded_leader": 99909,
+    "recorded_parent": 99817,
+    "recorded_group": 99909,
+    "check_utc": "2026-11-05T23:18:25.419311+00:00",
+    "exit_code": 0,
+    "matching_rows": [],
+    "group_absent": true
+  },
+  "native_app_qualified": false,
+  "review": "Astra approved both the trajectory and memory rejections and deferring the unchanged stock path.",
+  "receipts_sha256": {
+    "artifacts/gemma-q8-stock-2026-11-06/case32/prepare.py": "a21a7beaca490c0cb0ab39bf686c6fe32c1cf7887314b172de305500f8099790",
+    "artifacts/gemma-q8-stock-2026-11-06/case32/own-stock.py": "6d15b89fef5648a4193acc7fd2435c9e7354eb963b7bbac4d487fc700d3308a2",
+    "artifacts/gemma-q8-stock-2026-11-06/case32/stock-plan.json": "f9ede6457368b52737677f3f3e74339b2ea6f80faeadbada9a07d45c8c1637fd",
+    "artifacts/gemma-q8-stock-2026-11-06/case32/checkpoint.json": "f97f69b95c7d11d7abb345125cbe17065ac7ca6ff0d9ebe7f1f8603820d9f9ca",
+    "artifacts/gemma-q8-stock-2026-11-06/case32/stock-owned.json": "dcd470ee5e4be1ab2b95cbf1a4c18969ad3b5e3dba8bc5875e351ef10eea6ae3",
+    "artifacts/gemma-q8-stock-2026-11-06/case32/endpoint-audit.json": "89157f71e83f6b82d6553af62874c388d4bfc2f51f4a9dbc55147f831040839c",
+    "artifacts/gemma-q8-stock-2026-11-06/case32/live-owner.txt": "1a6cd3cc94052024e3e9e5acf461182e050d7f6d8f7e277cc8f27547336209fc",
+    "artifacts/gemma-q8-stock-2026-11-06/full-tasks-receipted/owned.stderr": "aace223aac8617cec52a698cc7c837e7dc9ac2f5dfa29777debfcd08f7c5e289",
+    "artifacts/gemma-q8-stock-2026-11-06/full-tasks-receipted/live-owner.txt": "50545fcc3eda13dd2b767656cf81a7e174d3b990a0253aa19573188db265cc3e",
+    "artifacts/gemma-q8-stock-2026-11-06/full-tasks-receipted/stock/rejected.jsonl": "fa96dfc52e162e90e7437380ed5049b24b4c3b40c247f8de37e798949923dd4e",
+    "artifacts/gemma-q8-stock-2026-11-06/full-tasks-receipted/stock/tasks.jsonl": "130257b46154b074b62f8ff53a3b29905527882c3ae913cdf82bf011bbc9b940"
+  }
+}

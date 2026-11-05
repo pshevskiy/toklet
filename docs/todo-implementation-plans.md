@@ -94,6 +94,10 @@ matches all four original decisions and all77 samples on HumanEval/37,
 without repairs. Peak physical memory is5.89GB. Run the unchanged cold and
 output-limit controls and full100 collection under the same live cap.
 Grade only after every trajectory verifies and the owner exits.
+The [Q8 memory decision](../benchmarks/results/2026-11-06-gemma-q8-stock-cap-v1.json)
+retains 32 completed cases, of which 31 verify. HumanEval/24 reaches a
+proposal cycle. A hardened HumanEval/32 retry exceeds6GiB by14.8MB and
+is stopped. A later group query confirms exit. Grading is withheld.
 
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 

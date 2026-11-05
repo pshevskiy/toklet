@@ -10597,3 +10597,12 @@ The isolated shader fails five mathematical and four staged observations.
 The exact staged oracle also misses two mathematical logit tolerances.
 Astra approved the rejection. Production keeps the previous shader.
 [Evidence](../benchmarks/results/2026-11-06-gemma-affine-full-v1.json)
+
+## 6 November 2026 — Reject full stock Q8 admission
+
+The first attempt retained 32 completed cases and 31 verified trajectories.
+HumanEval/24 cycles after two repairs. The owner receipt fails during the
+endpoint check. The hardened HumanEval/32 retry reaches
+6,457,283,264bytes and is stopped above the 6GiB limit. A separate group
+query confirms exit. Astra approved the scoped rejection. Grading stays open.
+[Evidence](../benchmarks/results/2026-11-06-gemma-q8-stock-cap-v1.json)
