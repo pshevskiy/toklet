@@ -10175,3 +10175,9 @@ Both RMSNorms pass the frozen gates from actual native inputs. Staged
 outputs match the archived V and head operands exactly. Astra approves
 local evidence and retains the full graph rejection.
 [Evidence](../benchmarks/results/2026-11-05-gemma-norm-witness-v1.json)
+
+## 5 November 2026 — Reproduce Llama Online on identical attention inputs
+
+The frozen projection difference follows one Half context word. Both Online
+schedules match and the output is invariant to unused cache poison.
+Astra approved the local diagnostic. [Evidence](../benchmarks/results/2026-11-05-llama-online-witness-v1.json)

@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Reproduce and localize the frozen Llama Online failure. Gemma head and RMSNorm local witnesses pass; the propagated full gate remains open.**
+Current task: **Llama Online same-input arithmetic ablation. The frozen failure reproduces from one Half context word.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -577,6 +577,7 @@ Conditional follow-ons require their own decision; they do not all block M9:
 - [ ] P5: strict-greedy transactional verifier, then measured prompt lookup.
 - [ ] G2/G3: checkpoint-defined shared-KV prefill/MTP after selected Gemma support.
 - [ ] Separate correctness task: reproduce and resolve frozen Llama Online failure.
+  - [x] Reproduce the one-word difference on identical operands. [Result](benchmarks/results/2026-11-05-llama-online-witness-v1.json)
 
 Full-Qwen3-window expansion, old streaming prototypes and unselected techniques
 remain deferred, with historical evidence preserved. They are not silently
@@ -1365,3 +1366,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Gemma head witness reviewed | Exact archived full native row and four same-input outputs pass both frozen contracts. Staged outputs match exactly. | Astra approves local witness. Keep full gate open and check earlier RMSNorm operands. [Result](benchmarks/results/2026-11-05-gemma-head-witness-v1.json) |
 
 | 2026-11-05 | Gemma RMSNorm witnesses reviewed | Both actual-input RMSNorms pass both frozen contracts with exact staged results and archived V/head transfer. | Astra approves local evidence. Full propagated Gemma gate stays open. Continue Llama Online localization. [Result](benchmarks/results/2026-11-05-gemma-norm-witness-v1.json) |
+
+| 2026-11-05 | Llama Online failure localized | Identical operands give one Half context-word change. Single-/two-row paths match and poisoned padding has no effect. Projection 0.006778717 fails against 0.0069007874. | Astra approves witness. Initial test typing failures retained. Compare probability staging and compensated sums next. [Result](benchmarks/results/2026-11-05-llama-online-witness-v1.json) |

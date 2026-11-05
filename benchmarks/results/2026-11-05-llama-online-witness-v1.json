@@ -1,0 +1,36 @@
+{
+  "projection": [
+    0.0069007874,
+    0.006778717,
+    0.006778717
+  ],
+  "differences": [
+    [
+      77,
+      -1.1416016,
+      -1.140625
+    ]
+  ],
+  "online_prefill_single_equal": true,
+  "fp64_maximum_error": [
+    0.00048819999704630135,
+    0.0004883625029536987,
+    0.0004883625029536987
+  ],
+  "poison_invariant": true,
+  "frozen_reference_projection": 0.0069007874,
+  "ordinary_reference_projection": 0.0069007874,
+  "frozen_atol": 0.0001,
+  "frozen_rtol": 0.001,
+  "frozen_online_gate_passed": false,
+  "passed": true,
+  "device": "Apple M1 Pro",
+  "review": "Astra approved the same-input failure localization",
+  "checks": "artifacts/llama-online-witness-2026-11-05/retry/checks.json",
+  "owner": "artifacts/llama-online-witness-2026-11-05/retry/owned.json",
+  "initial_checks": [
+    "artifacts/llama-online-witness-2026-11-05/final/checks.json",
+    "artifacts/llama-online-witness-2026-11-05/checked/checks.json"
+  ],
+  "online_qualified": false
+}

@@ -86,3 +86,11 @@ cargo run --release --features metal -- --model tests/fixtures/mlx-llama-v1/unti
 ```
 
 The four selected IDs are `[3,3,3,3]`; the tied fixture selects `[47,47,47,47]`.
+
+5 November follow-up. The archived tied offset case still fails on M1 Pro.
+Replaying its identical rotated query and valid cache produces one different
+Half context word at row 2/head 1/channel 5. Online one- and two-row
+kernels agree bitwise, and alternate padding poison leaves them unchanged.
+That word changes the projection from 0.0069007874 to 0.006778717.
+The frozen gate and Llama admission remain in force. Astra approved the
+localization. [Evidence](../benchmarks/results/2026-11-05-llama-online-witness-v1.json).
