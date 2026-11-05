@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Qwen1.5B original-weight alignment, then Gemma 1,025 attribution.**
+Current task: **Gemma 1,025 same-input attention attribution. Next: Qwen1.5B full loss.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -484,6 +484,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
 
 - [x] Pinned Qwen2.5-1.5B MLX8 real Mac512 engine execution, stock decisions,
   chunk/reset/overflow/memory checks and Astra review; [report](docs/qwen15-engine-execution.md).
+  - [x] Original-weight short alignment, exact native chunk1/chunk32 scored rows
+    and plain token IDs. [Evidence](benchmarks/results/2026-11-06-qwen15-original-alignment-v1.json).
+  - [ ] Full Qwen1.5B original-weight loss and task gates before managed Chat.
 - [x] SmolLM3 validated per-layer rotary mask, shared CPU/Metal bypass and
   independent nonzero-offset mixed-layer fixture; [block report](docs/smollm3-rotary-schedule.md).
 - [x] SmolLM3 pinned real Mac512 execution, stock comparison, state and memory;
@@ -1437,3 +1440,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | P5 paired timing complete | Both orders match greedy output, state and replayed logits. Repeated contract prompt gains 53.33%/53.76% decode. Code prompt misses 5%. | Keep the explicit API; no default adoption. Corrected a pending-logit error in the initial harness without changing the frozen protocol. [Evidence](benchmarks/results/2026-11-06-m9-qwen2-lookup-timing-v1.json) |
 
 | 2026-11-06 | Staged Llama Mac Chat probe reviewed | Two authenticated sessions and 43 chunks dispatch all 16 staged layers. Send, Stop, New Chat, rejected Apply, unload/reopen and close pass. Physical peak 1.55 GB. | Diagnostic controller scope. Feature recheck passes after ordering admission. [Evidence](benchmarks/results/2026-11-06-llama-staged-app-v1.json) |
+
+| 2026-11-06 | Qwen1.5B short original-weight alignment reviewed | Original baseline replays all 10,000 rows; native chunks 1/32 agree exactly on 32 targets and plain prompt IDs. Short NLL delta +0.005026, physical peak 1.88 GB. | Astra approves descriptive diagnostic scope. Native full loss and task quality remain open. [Evidence](benchmarks/results/2026-11-06-qwen15-original-alignment-v1.json) |

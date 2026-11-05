@@ -49,6 +49,10 @@ name = "qwen15_probe"
 required-features = ["metal"]
 
 [[example]]
+name = "qwen15_quality_loss"
+required-features = ["metal"]
+
+[[example]]
 name = "smollm3_probe"
 required-features = ["metal"]
 

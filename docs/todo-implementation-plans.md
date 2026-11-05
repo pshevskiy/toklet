@@ -40,6 +40,15 @@ still rejects after bounded recovery and an independent causal-prefix
 diagnostic. Defer this checkpoint under the current policy. A different
 candidate needs a new immutable source and unchanged full quality gates.
 
+### Qwen2.5-1.5B MLX8 original-weight quality
+
+The [short alignment](../benchmarks/results/2026-11-06-qwen15-original-alignment-v1.json)
+binds the original FP32 baseline and shows bit equality between native chunk
+schedules. Score the unchanged 10,000 causal targets in 1,025-position blocks,
+then replay and grade the frozen 100 tasks against the matched original
+responses. Keep each owner's observed peak below 6 GiB. Managed Chat requires
+both gates, audited artifact/text admission and a separate Mac journey.
+
 ### M8 closure audit
 
 Join exact artifact, backend, device, context and app receipts to the coverage table. Check commits, reviews and linked verification for each prerequisite. Close only after the remaining M8 gates have their required evidence.

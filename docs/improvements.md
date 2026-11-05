@@ -10415,3 +10415,11 @@ the valid prefix, and Settings Apply rejects the unsupported replacement
 without changing the session. The sampled physical peak is 1.55 GB.
 Astra approved the isolated controller scope.
 [Evidence](../benchmarks/results/2026-11-06-llama-staged-app-v1.json)
+
+## 6 November 2026 — Align Qwen1.5B MLX8 with the original FP32 baseline
+
+The original causal baseline replays all 10,000 rows. The short native run
+scores 32 targets with identical chunk1/chunk32 rows and a +0.005026-nat mean
+difference from original FP32. Both tokenizers reproduce the pinned plain
+prompt. Astra approved the short scope, which precedes both full quality gates.
+[Evidence](../benchmarks/results/2026-11-06-qwen15-original-alignment-v1.json)
