@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Gemma compensated projection experiment and stock Q8.**
+Current task: **Gemma full1,025 shader comparison and Q8 stock100 collection.**
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
 [Evidence](benchmarks/results/2026-11-06-qwen15-mac-app-v1.json).
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
@@ -569,6 +569,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
   - [x] oQ6 matches all four original decisions. HumanEval/37 rejects on a
     cycle after three repairs. Q8 stock-only feasibility passes separately.
     [Evidence](benchmarks/results/2026-11-06-gemma-oq6-stock-v1.json).
+  - [x] Stock Q8 matches all four original decisions and all77 sampled
+    HumanEval/37 decisions. Full stock collection under 6GiB is next.
+    [Evidence](benchmarks/results/2026-11-06-gemma-q8-stock-v1.json).
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).

@@ -84,6 +84,11 @@ stock estimate leaves 205 MB under 6 GiB with no live tokenizer or app.
 Authenticate both shards, verify the strict affine8 text inventory and
 enforce the live memory limit. Run four decisions first and condition the
 frozen single trajectory on that result. The native/app Q8 ledger still fails.
+The [bounded Q8 run](../benchmarks/results/2026-11-06-gemma-q8-stock-v1.json)
+matches all four original decisions and all77 samples on HumanEval/37,
+without repairs. Peak physical memory is5.89GB. Run the unchanged cold and
+output-limit controls and full100 collection under the same live cap.
+Grade only after every trajectory verifies and the owner exits.
 
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 

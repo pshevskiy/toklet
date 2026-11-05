@@ -1,0 +1,78 @@
+{
+  "passed": true,
+  "replayed": [
+    {
+      "id": "HumanEval/1",
+      "agrees_with": "original",
+      "greedy_id": 236751,
+      "original_id": 236751,
+      "q4_stock_id": 19243,
+      "q4_stock_margin": 5.6875,
+      "top_two_margin": 0.5625,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "ae8f4d42ec59766969a71b490a59c86d024b0e71ad07b0be5bd993934e0da604"
+    },
+    {
+      "id": "HumanEval/24",
+      "agrees_with": "original",
+      "greedy_id": 236770,
+      "original_id": 236770,
+      "q4_stock_id": 236778,
+      "q4_stock_margin": 0.25,
+      "top_two_margin": 9.625,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "7f14223bf3ee1ef939d113f6f70209d00ea8f10741e75e45e028d3c3bc42ff56"
+    },
+    {
+      "id": "truthfulqa/row-0",
+      "agrees_with": "original",
+      "greedy_id": 236776,
+      "original_id": 236776,
+      "q4_stock_id": 236780,
+      "q4_stock_margin": 10.625,
+      "top_two_margin": 1.0,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "e0544629ad6cf42823453c45bdc643605b0ff07e01f19461a0cc42266fe54139"
+    },
+    {
+      "id": "truthfulqa/row-3",
+      "agrees_with": "original",
+      "greedy_id": 236796,
+      "original_id": 236796,
+      "q4_stock_id": 236799,
+      "q4_stock_margin": 0.25,
+      "top_two_margin": 4.0,
+      "dtype": "mlx.core.bfloat16",
+      "row_sha256": "958b135a2e15046cad4a46df7f3190522f12652491c4609b76d634b858271c45"
+    }
+  ],
+  "source_revision": "03dcf209f3f549b4075e7191e77cf69b3d48e1b2",
+  "q4_comparison_evidence": "benchmarks/results/2026-11-04-gemma-mlx-decisions-v1.json",
+  "external_rss_peak_bytes": 1977974784,
+  "external_physical_peak_bytes": 5505012368,
+  "task_gate_waived": false,
+  "device": "Apple M1 Pro",
+  "strict_text_tensors": 1096,
+  "affine8_matrices": 278,
+  "case": "HumanEval/37",
+  "sampled_tokens": 77,
+  "repair_count": 0,
+  "trajectory_physical_peak_bytes": 5893198456,
+  "process_limit_bytes": 6442450944,
+  "native_app_qualified": false,
+  "initial_preparation_failure": "Runtime pin guard rejected the system Python before inference. Pinned virtual environment preparation passed.",
+  "review": "Astra approved bounded stock execution and conditional full100 collection.",
+  "receipts_sha256": {
+    "artifacts/gemma-q8-stock-2026-11-06/screen.json": "9b20c6cad706c045c2ecca4b7169b440e4e19d4329317502112e28aec2033648",
+    "artifacts/gemma-q8-stock-2026-11-06/acquisition.json": "2eb9e251c2a7d72dde596b0bcfdd92e14633aba771b6f2dd889a42424d68a6d5",
+    "artifacts/gemma-q8-stock-2026-11-06/prepare.stderr": "94f2f56b0501db0f094ccd50a747aabf245d567dea828241e5dd779fab40f8d5",
+    "artifacts/gemma-q8-stock-2026-11-06/prepare-retry.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/gemma-q8-stock-2026-11-06/stock-plan.json": "82195ba8e65be543de33e0885de1e7bc5e2af0a793c6584c670fe4b457e30d1a",
+    "artifacts/gemma-q8-stock-2026-11-06/stock-owned.json": "7710d970db23101cf0f73125b49b9114d6e4023843b684c77b19c1fc6c26192e",
+    "artifacts/gemma-q8-stock-2026-11-06/stock/result.json": "4edcba0efbf4fff10c3eab409f44ba656cf5c440b15a73e182341862a742383c",
+    "artifacts/gemma-q8-stock-2026-11-06/replay.json": "ad85db6708b8ee230481ceda060254ec2b20509a44e7b073418456e19b4f80b9",
+    "artifacts/gemma-q8-stock-2026-11-06/trajectory37/stock-plan.json": "e0b94236fba9c944acf949db2e7d38954f2b2373ef1f5bf7acbf299f49318cb0",
+    "artifacts/gemma-q8-stock-2026-11-06/trajectory37/stock-owned.json": "0e0b596d19bb3bc64908932278e95a1418080e365b78e9a92eed5654fd74bfd7",
+    "artifacts/gemma-q8-stock-2026-11-06/trajectory37/stock/result.json": "1bd0c1473f8235111aaf8e069ceac513912ebf4021f9bce5bcbb9796ee02580b"
+  }
+}

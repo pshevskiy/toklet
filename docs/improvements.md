@@ -10581,3 +10581,11 @@ staged prefix captures bitwise. The earlier layer3 output and layer4 K/V
 differences disappear. Metal checks and Astra review pass. The full
 1,025-position test is separate.
 [Evidence](../benchmarks/results/2026-11-06-gemma-affine-prefix-v1.json)
+
+## 6 November 2026 — Qualify the bounded stock Q8 checks
+
+Both shards authenticate. Strict affine8 matches all four original
+decisions and all77 HumanEval/37 samples without repairs. Trajectory
+physical peak is5.89GB. Astra approved a memory-limited full stock
+collection. Native/app admission is separate.
+[Evidence](../benchmarks/results/2026-11-06-gemma-q8-stock-v1.json)
