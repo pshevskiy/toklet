@@ -1,0 +1,36 @@
+{
+  "repo": "mlx-community/gemma-4-e2b-it-6bit",
+  "revision": "ebd7756d4e55627e11ae043af9cad8ed6465a2e2",
+  "source_lineage_card_assertion": "70af34e20bd4b7a91f0de6b22675850c43922a03",
+  "quantization": {
+    "group_size": 64,
+    "bits": 6,
+    "mode": "affine"
+  },
+  "text_config_identical_to_q4": true,
+  "tokenizer_sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f",
+  "container_bytes": 4708626264,
+  "container_lfs_sha256": "c23b5a0822cb62041c23a9ae3cadfe670c7a86e6e2150a06316bf51dbb346288",
+  "header_sha256": "6ca5a2ec2a8c4a89cc9ef2b8917ba6dd0120833d8b13e85a024ea0ce3e3d17a6",
+  "selected_tensors": 1096,
+  "excluded_tensors": 1415,
+  "payload_downloaded": false,
+  "ledger": {
+    "terms": {
+      "selected_raw_text_lower_bound": 3761052230,
+      "fp32_kv_and_staging": 20054016,
+      "host_and_backend_scratch": 75925032,
+      "working_and_published_logits": 67108864,
+      "token_histories": 4096,
+      "metadata_and_allowances": 100773408,
+      "codec_and_stream": 1077936128,
+      "friendly_application_and_staging": 285212672
+    },
+    "total_bytes": 5388066446,
+    "policy_bytes": 6442450944,
+    "remaining_bytes": 1054384498
+  },
+  "largest_selected_tensor_bytes": 1761607680,
+  "stock_execution": false,
+  "native_execution": false
+}

@@ -527,7 +527,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Resident original BF16/stockKV reference at511–567positions; [report](docs/gemma-resident-generation.md).
 - [x] Original100-task controller pilot with exact sampled/terminal-stop replay; [report](docs/gemma-task-controller-pilot.md).
 - [x] Complete original/native100-case collections and isolated grading; [task result](docs/gemma-full-tasks.md), `89f0613`.
-- [ ] Gemma4 adoption task gate: rejected52→43/100; stock MLX matches all4selected decisions (`c79fa90`). Higher-precision feasibility decision: [header ledger](docs/gemma8-feasibility.md); no8-bit execution.
+- [ ] Gemma4 adoption task gate: rejected52→43/100; stock MLX matches all4selected decisions (`c79fa90`). Higher-precision feasibility decision: [header ledger](docs/gemma8-feasibility.md); no8-bit execution. [Q6 header screen](docs/gemma6-feasibility.md) leaves estimated headroom; authenticate weights and run the four stock decision probes.
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1370,3 +1370,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Llama Online failure localized | Identical operands give one Half context-word change. Single-/two-row paths match and poisoned padding has no effect. Projection 0.006778717 fails against 0.0069007874. | Astra approves witness. Initial test typing failures retained. Compare probability staging and compensated sums next. [Result](benchmarks/results/2026-11-05-llama-online-witness-v1.json) |
 
 | 2026-11-05 | Llama arithmetic ablation reviewed | Same-input GPU FP32 probability staging and compensated components with a host FP64 quotient recover the expected Half word. fmt, strict Metal Clippy, Metal tests and owned GPU witness pass. | Astra approves the local result. Next run test-only staged attention across the complete frozen graph. [Evidence](benchmarks/results/2026-11-05-llama-online-ablation-v1.json) |
+
+| 2026-11-05 | Gemma Q6 header screen reviewed | Immutable config, tokenizer digest and tensor extents verify. The Mac512/chunk32 estimate is 5,388,066,446 bytes with 1,054,384,498 bytes below the 6 GiB policy. | Astra approves the planning screen. Authenticate the payload and compare the four frozen stock decision probes before native work. [Report](docs/gemma6-feasibility.md) |
