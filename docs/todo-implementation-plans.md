@@ -48,6 +48,12 @@ reproduces all 100 trajectories, but 49/100 versus original 52/100 exceeds
 the two-point limit. Astra advises selecting another candidate only after
 a concrete precision hypothesis and conservative memory fit.
 
+The [distinct oQ6 screen](../benchmarks/results/2026-11-06-gemma-oq6-header-v1.json)
+finds 244 affine6 and 34 affine8 text matrices, with an estimated 927 MB
+margin under 6 GiB. Verify actual strict loading with the assistant absent,
+the known redundant KV projections discarded, and exact per-matrix modes.
+Run the frozen four decisions and HumanEval/37 before any full collection.
+
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 
 The [short alignment](../benchmarks/results/2026-11-06-qwen15-original-alignment-v1.json)

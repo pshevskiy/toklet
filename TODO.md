@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Qwen1.5B managed Mac Chat and native41 package.**
+Current task: **Qwen1.5B managed Mac Chat and bounded Gemma oQ6 stock preflight.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -544,6 +544,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
   - [x] OptiQ HumanEval/37, all 122 cached/stateless decisions, zero repairs. [Evidence](benchmarks/results/2026-11-06-gemma-optiq-trajectory37-v1.json).
   - [x] OptiQ stock experiment complete. All trajectories pass, but 49/100
     versus original52/100 rejects the two-point task gate. [Evidence](benchmarks/results/2026-11-06-gemma-optiq-task-quality-v1.json).
+  - [x] Distinct oQ6 affine6/8 artifact passes a header-only memory screen.
+    [Evidence](benchmarks/results/2026-11-06-gemma-oq6-header-v1.json).
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1474,3 +1476,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | Qwen1.5B audited native owner reviewed | Exact manifest, both plain fixtures and stops, 513 rejection and exact/below admission pass. Final 583 default/695 Metal tests; physical peak 1.80 GB. | Astra approves Reference owner/codec. Swift preview, journey and package are next. [Evidence](benchmarks/results/2026-11-06-qwen15-native-owner-v1.json) |
 
 | 2026-11-06 | Gemma OptiQ task gate rejected | Both stock runs reproduce 100 trajectories, with 24 repairs. Isolated grade is 49/100 vs original52/100. | Astra approves the scoped rejection. The first run lacked live group identity; the receipted repeat and qualified CPU-witness grading pass infrastructure. [Evidence](benchmarks/results/2026-11-06-gemma-optiq-task-quality-v1.json) |
+
+| 2026-11-06 | Gemma oQ6 header screen reviewed | Canonical text inventory, tokenizer and mixed6/8 packing match. Estimated text process 5.52 GB. | Astra approves one no-assistant stock preflight with exact live tensor checks. [Evidence](benchmarks/results/2026-11-06-gemma-oq6-header-v1.json) |

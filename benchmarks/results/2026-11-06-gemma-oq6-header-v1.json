@@ -1,0 +1,34 @@
+{
+  "revision": "16ab042b9961009b7d9741fba2434c659b675b4b",
+  "container_sha256": "d250bd69909d383f2b3f2d074fd7fd780bcdfc39fcfad245023850da6c0b9cd7",
+  "container_bytes": 4851590858,
+  "header_bytes": 336636,
+  "config_git_blob": "7f3bf66cba437f855362c174540b0deeeba228cf",
+  "config_sha256": "94970f50acc09c18e3c172fdf4760eee58641d126c67c2bcc931cdb714a79791",
+  "selected_text_bytes": 3888257606,
+  "selected_text_tensors": 1096,
+  "mixed_matrix_bits": {
+    "8": 34,
+    "6": 244
+  },
+  "shared_kv_redundant_tensors": 140,
+  "modality_tensors": 1415,
+  "tokenizer_sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f",
+  "same_base_text_config_after_excluding_assistant": true,
+  "estimated_total_bytes": 5515271822,
+  "estimated_headroom_bytes": 927179122,
+  "limit_bytes": 6442450944,
+  "scope": "Header feasibility only. Assistant sidecar excluded. No payload acquisition, execution or quality.",
+  "source": "https://huggingface.co/mlx-works/gemma-4-E2B-it-oQ6-mtp/tree/16ab042b9961009b7d9741fba2434c659b675b4b",
+  "review": "Astra approved one bounded no-assistant stock preflight after exact config revision binding.",
+  "metadata_sha256": {
+    "artifacts/gemma-oq6-screen-2026-11-06/config.json": "94970f50acc09c18e3c172fdf4760eee58641d126c67c2bcc931cdb714a79791",
+    "artifacts/gemma-oq6-screen-2026-11-06/config.http": "f007828b92db1ea1c10d1641efdd3ed1d2b5661b78c3f1a1fc8683b76c5db631",
+    "artifacts/gemma-oq6-screen-2026-11-06/first.bin": "cdc0c7357785d83806f3ffacfcd11327301783331d845f2460ab7d1d70fbb828",
+    "artifacts/gemma-oq6-screen-2026-11-06/first.http": "e929b02312874681dec4fc8e76600e8a3f9b2dc4b5a487e1b32702382bdb7391",
+    "artifacts/gemma-oq6-screen-2026-11-06/header.json": "d4c32c9dc261e4fa2e6cc8d753f2b6b9dddf1c0e749898498215eb7cd871d835",
+    "artifacts/gemma-oq6-screen-2026-11-06/header.http": "4dffc28c4cf0d2d4b21f368cb0e10943c77044f297a712f0f474551dcae5ff88",
+    "artifacts/gemma-oq6-screen-2026-11-06/tokenizer.head": "84b6751ffd3043c9efb4cf91a9c7adaeb1f493a916e698f7d60c77dd1cf35d3d",
+    "artifacts/gemma-oq6-screen-2026-11-06/check.py": "118c8e91280dcd80cc0fd1cff637ffed3722d9e0923811ee82051599ce43f854"
+  }
+}

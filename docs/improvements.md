@@ -10497,3 +10497,12 @@ the live process group, and qualified CPU-witness grading resolves all 200
 outcomes. OptiQ scores 49/100 against original 52/100 and misses the two-point
 limit. Astra approved preserving the failed gate and deferring native mixing.
 [Evidence](../benchmarks/results/2026-11-06-gemma-optiq-task-quality-v1.json)
+
+## 6 November 2026 — Screen a distinct Gemma affine6/8 artifact
+
+The pinned oQ6 header has the canonical 1,096 selected text tensors and the
+same tokenizer. The existing ledger estimates 5.52 GB after excluding the
+separate assistant and redundant shared-layer K/V. Astra approved one
+bounded stock preflight. Runtime fit and quality remain unmeasured.
+[Evidence](../benchmarks/results/2026-11-06-gemma-oq6-header-v1.json)
+[Pinned Hub revision](https://huggingface.co/mlx-works/gemma-4-E2B-it-oQ6-mtp/tree/16ab042b9961009b7d9741fba2434c659b675b4b)
