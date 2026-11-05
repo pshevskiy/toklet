@@ -8,6 +8,9 @@
 //! Callback failure preserves a valid KV prefix and the pending sampled token;
 //! callers may continue or discard pending input explicitly.
 
+mod verify;
+pub use verify::{GreedyVerification, VerifiedNext, verify_greedy};
+
 use crate::{
     cpu,
     session::{self, InferenceSession},

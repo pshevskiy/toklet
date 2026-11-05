@@ -10218,3 +10218,11 @@ declared 40,960 positions. The current Mac Chat profile is 512 positions.
 Astra reviewed the estimates and deferred integration until a selected
 larger profile establishes its capacity need.
 [Plan](todo-implementation-plans.md#p4-i8-kv)
+
+## 5 November 2026 — Verify tentative greedy decisions
+
+The comparison leaf checks every target row and returns the accepted visible
+prefix plus a correction, bonus, or hidden stop. Astra approved the code.
+It made zero allocations in 48 calls. A five-row verifier microbenchmark
+at vocabulary 151,936 measured about 2.97 ms per batch on the M1 Pro.
+[Evidence](../benchmarks/results/2026-11-05-m9-strict-greedy-v1.json)

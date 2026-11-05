@@ -1,0 +1,27 @@
+{
+  "vocabulary": 151936,
+  "rows": 5,
+  "seconds_per_batch": [
+    0.00296600390625,
+    0.00302244009375,
+    0.003016673828125,
+    0.00305265559375,
+    0.002980518875,
+    0.0029621204375,
+    0.002949615234375,
+    0.00296505859375,
+    0.00296530078125,
+    0.003028846359375
+  ],
+  "median_seconds": 0.002973261390625,
+  "device": "Apple M1 Pro",
+  "release_tests": 5,
+  "default_tests": 578,
+  "metal_tests": 690,
+  "allocations": 0,
+  "allocation_invocations": 48,
+  "checks": "artifacts/m9-p5-strict-greedy-2026-11-05/checks.json",
+  "review": "Astra approved strict greedy comparison leaf",
+  "includes_model_execution": false,
+  "transaction_qualified": false
+}
