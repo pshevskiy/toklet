@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **M9 P0 Mac baseline for pinned Qwen2.5 MLX8. Granite3.1-1B-A400M Mac512 engine qualification complete in the frozen decision scope.**
+Current task: **M9 P0 metric and comparison freeze. Mac baseline collection and Granite3.1 Mac512 engine qualification are complete in their recorded scopes.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -556,8 +556,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
 First delivery: **P0 → one selected P1 candidate → P2**, with independent
 [Mac1.5B coverage qualification](docs/mac-coverage-performance-next.md). iPhone work is deferred.
 
-- [ ] P0: rebaseline the pinned Qwen2.5 MLX8 workload on the recorded Mac queue revision;
-  collect bounded, correctly labelled profiles and uninstrumented timings.
+- [x] P0: collect pinned Qwen2.5 MLX8 Mac profiles and uninstrumented timings. [Report](docs/m9-mac-baseline.md)
 - [ ] P0: rank normalization/projection costs and freeze a primary metric and
   comparison contract. Record Mac and iPhone evidence independently.
 - [ ] P1: implement one useful candidate: parallel Compensated RMSNorm or a
@@ -1321,3 +1320,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Real Granite MoE qualification active | Verified the 2,669,283,096-byte original and tokenizer files. Stock BF16 returns 38, then stop 0. | Native 512 and route comparison queued behind Rust checks. macOS sleep delayed the suite. P0 draft pending-logit correction is prepared separately. [Evidence](artifacts/granitemoe-real-2026-11-05/) |
 
 | 2026-11-05 | Granite MoE real execution reviewed | Both decisions and final-layer expert sets match. Native chunk 1/32, 512-token state, rejection and reset pass. Native sampled peak physical footprint 2,719,173,152 bytes. | 574 CPU, 686 Metal, strict/release and Astra pass. Full-row drift retained. Next M9 P0. [Report](docs/granite-moe-execution.md) |
+
+| 2026-11-05 | M9 P0 collection active | Restored release-only Mac worker. Astra checked packed embedding/head labels and full prefill/decode parity. Strict checks and release build pass. | Capture separate profile/timing workers and verify raw coverage before selecting a metric. [Evidence](artifacts/m9-p0-mac-2026-11-05/) |
+
+| 2026-11-05 | M9 P0 collection reviewed | 75 profiles and 39 timing requests pass complete-row parity and process limits. At 1,024 tokens the median first distribution is 6.775 s. | Strict checks, release build and Astra pass. Freeze P1 metric from raw prefill times. [Report](docs/m9-mac-baseline.md) |

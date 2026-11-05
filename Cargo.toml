@@ -104,3 +104,7 @@ required-features = ["metal"]
 [[example]]
 name = "granite33_probe"
 required-features = ["metal"]
+
+[[example]]
+name = "mlx_mac_baseline"
+required-features = ["metal"]

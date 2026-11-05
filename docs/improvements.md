@@ -10073,3 +10073,10 @@ expert sets. Native chunk 1/32, 512-token state, capacity rejection and reset
 pass. Sampled native peak physical footprint was 2.72 GB. Astra and required
 checks pass. Full-row drift is recorded, and broader quality and adoption
 remain open. [Report](granite-moe-execution.md)
+
+## 5 November 2026 — Refresh the Mac MLX8 performance baseline
+
+Separate workers collected 75 profiles and 39 timing requests. Affine
+projection dominated 128-row prefill counter time. The 1,024-token median
+first distribution was 6.775 s. Both processes stayed below 2.5 GiB.
+Strict checks, release build and Astra review pass. [Report](m9-mac-baseline.md)
