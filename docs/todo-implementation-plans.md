@@ -44,6 +44,11 @@ finds identical inputs and one misrounded gate projection word. The exact
 dot lies above the midpoint. Replay the lane/tree, then test an isolated
 three-component correction on that row and midpoint/cancellation controls.
 Recheck frozen affine fixtures before any prefix or full-graph experiment.
+The [isolated CPU and Metal probe](../benchmarks/results/2026-11-06-gemma-affine-expansion-v1.json)
+recovers the exact lost term and corrects the captured word. Use a
+source-isolated shader swap for the prefix64 A/B. Require the corrected
+gate and inspect every recorded stage and K/V endpoint. Carry useful
+results to the unchanged full 1,025 comparison and resource checks.
 
 ### Gemma4 adoption task gate
 

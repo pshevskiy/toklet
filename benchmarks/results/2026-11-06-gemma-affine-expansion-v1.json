@@ -1,0 +1,152 @@
+{
+  "passed": true,
+  "row": 2149,
+  "simd_width": 32,
+  "baseline": 0.000951597117818892,
+  "candidate": 0.0009515971760265529,
+  "baseline_components": [
+    0.0009515584097243845,
+    3.873719833791256e-08
+  ],
+  "candidate_components": [
+    0.0009515584097243845,
+    3.873719833791256e-08,
+    1.7763568394002505e-15
+  ],
+  "baseline_expansion_error": -1.7763568394002505e-15,
+  "candidate_expansion_error": 0.0,
+  "authored_and_generated_final_rounds": 692,
+  "frozen_and_authored_projection_runs": 42,
+  "exact_gate_corrected": true,
+  "metal_executed": true,
+  "engine_changed": false,
+  "metal": {
+    "cases": [
+      {
+        "baseline": [
+          981038234
+        ],
+        "candidate": [
+          981038235
+        ],
+        "expected": [
+          981038235
+        ],
+        "name": "real-gate"
+      },
+      {
+        "baseline": [
+          1090650112,
+          3243139072,
+          3223420928,
+          1089323008
+        ],
+        "candidate": [
+          1090650112,
+          3243139072,
+          3223420928,
+          1089323008
+        ],
+        "expected": [
+          1090650112,
+          3243139072,
+          3223420928,
+          1089323008
+        ],
+        "name": "control-0"
+      },
+      {
+        "baseline": [
+          872480768
+        ],
+        "candidate": [
+          872480768
+        ],
+        "expected": [
+          872480768
+        ],
+        "name": "control-1"
+      },
+      {
+        "baseline": [
+          1065353216
+        ],
+        "candidate": [
+          1065353217
+        ],
+        "expected": [
+          1065353217
+        ],
+        "name": "control-2"
+      },
+      {
+        "baseline": [
+          1065353216
+        ],
+        "candidate": [
+          1065353216
+        ],
+        "expected": [
+          1065353216
+        ],
+        "name": "control-3"
+      },
+      {
+        "baseline": [
+          3212836864
+        ],
+        "candidate": [
+          3212836865
+        ],
+        "expected": [
+          3212836865
+        ],
+        "name": "control-4"
+      },
+      {
+        "baseline": [
+          1065353218
+        ],
+        "candidate": [
+          1065353218
+        ],
+        "expected": [
+          1065353218
+        ],
+        "name": "control-5"
+      },
+      {
+        "baseline": [
+          864026624
+        ],
+        "candidate": [
+          864026624
+        ],
+        "expected": [
+          864026624
+        ],
+        "name": "control-6"
+      }
+    ],
+    "device": "Apple M1 Pro",
+    "passed": true,
+    "width": 32
+  },
+  "initial_metal_failure": "nextafter was unavailable in MSL 2.3. The finite-normal bit-neighbor variant passed.",
+  "whole_graph_qualified": false,
+  "review": "Astra approved the bounded corrective result and isolated graph A/B.",
+  "receipts_sha256": {
+    "artifacts/gemma-affine-expansion-2026-11-06/baseline.c": "477a00ce58261256bbdeddc1c42d455a4338473dfc3ffcf4a586c08a17f21276",
+    "artifacts/gemma-affine-expansion-2026-11-06/candidate.c": "6eaa4e1f568c4e1c8875d2e903dd88543d75b5ba4297b7203f25089b8eee142f",
+    "artifacts/gemma-affine-expansion-2026-11-06/replay.py": "8a12ad928b0f93e91f865df2f735931e8286654886b826d41ba5b836f2933f06",
+    "artifacts/gemma-affine-expansion-2026-11-06/replay.json": "76760f5cb41cd7354d3d00915f2504c5b729d060316d6e90a8863dd0ab97e318",
+    "artifacts/gemma-affine-expansion-2026-11-06/baseline.metal": "cf332eb282e123349b0f655c757bb87d877157327d971cb9de73d4a90a8eb118",
+    "artifacts/gemma-affine-expansion-2026-11-06/candidate.metal": "a51f7b5e24e17fe7eb27a091e49b4db9e90b7cb6d92a78c783670397d069f3dc",
+    "artifacts/gemma-affine-expansion-2026-11-06/candidate-v1.metal": "61d3a23b0072e99739c47495bec7319dddc5fe66eb7b436e99cbdea7f13e501f",
+    "artifacts/gemma-affine-expansion-2026-11-06/probe.swift": "3dac5deb13fb5567cef7631fa29babc7bf84254a7826a230e4f2f50b16096253",
+    "artifacts/gemma-affine-expansion-2026-11-06/metal-fixtures.json": "eb36f232d8d311795fcfcbb887dbb77f1c47676aee0a3eacb2aaf66b6e9cffb4",
+    "artifacts/gemma-affine-expansion-2026-11-06/metal-retry.json": "e2a652e132e85bab5ae1707b7326d565abddf4ff5ec5f5c49e9248b5c0c03661",
+    "artifacts/gemma-affine-expansion-2026-11-06/metal.stderr": "ce2b9f8fea136f7c133284bfd9f65871d3d6aae62cfa2baafa3a382f3a5c86a2",
+    "artifacts/gemma-affine-expansion-2026-11-06/metal-retry.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}

@@ -10565,3 +10565,11 @@ An exact rational dot is 1.776e-15 above the midpoint, so the upper FP32
 word is correct. All eight stage comparisons still pass tolerance.
 Metal checks and Astra review pass. A separate rounding experiment follows.
 [Evidence](../benchmarks/results/2026-11-06-gemma-layer3-ff-v1.json)
+
+## 6 November 2026 — Correct the captured Gemma gate in an isolated shader
+
+The baseline lane/tree loses 1.776e-15 of compensation. The third
+component recovers it. Exact CPU controls and the original plus candidate
+Metal projections pass on the M1 Pro. Astra approved an isolated graph
+A/B. Production and full qualification stay unchanged.
+[Evidence](../benchmarks/results/2026-11-06-gemma-affine-expansion-v1.json)

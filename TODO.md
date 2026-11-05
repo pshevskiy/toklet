@@ -535,8 +535,10 @@ uses the existing full saved-conversation reset+prompt path on Send.
     position48 to layer3. FF intermediate replay is next.
     [Evidence](benchmarks/results/2026-11-06-gemma-first-staged-v1.json).
   - [x] Identical FF operands isolate one misrounded projection word.
-    Next replay the lane/tree and test a compensated correction.
     [Evidence](benchmarks/results/2026-11-06-gemma-layer3-ff-v1.json).
+  - [x] Isolated CPU and Metal expansion corrects the captured word.
+    A/B prefix64 and full gates before production selection.
+    [Evidence](benchmarks/results/2026-11-06-gemma-affine-expansion-v1.json).
   - [x] Same-input layer 13 and final RMSNorm pass. [Result](benchmarks/results/2026-11-05-gemma-norm-witness-v1.json)
   - [x] Same-input final head and softcap pass at the four rejected IDs. [Result](benchmarks/results/2026-11-05-gemma-head-witness-v1.json)
   - [x] Layer 12 attention and O projection at position 433 pass same-input replay. [Result](benchmarks/results/2026-11-06-gemma-attention-boundary-v1.json)
