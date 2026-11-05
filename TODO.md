@@ -488,6 +488,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
     and plain token IDs. [Evidence](benchmarks/results/2026-11-06-qwen15-original-alignment-v1.json).
   - [x] Full original-weight 10,000-target loss passes (+0.001528 nats).
     [Evidence](benchmarks/results/2026-11-06-qwen15-full-loss-v1.json).
+  - [x] Three-category raw native task pilot with explicit stops and post-exit
+    decoding. [Evidence](benchmarks/results/2026-11-06-qwen15-task-pilot-v1.json).
   - [ ] Full frozen 100-task quality before managed Chat.
 - [x] SmolLM3 validated per-layer rotary mask, shared CPU/Metal bypass and
   independent nonzero-offset mixed-layer fixture; [block report](docs/smollm3-rotary-schedule.md).
@@ -1452,3 +1454,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | Gemma same-input attention attribution reviewed | Captured K/V spans match the earlier producer-12 archive. Both contracts pass 2,048 context and 1,536 projection values. | Astra approves local scope. The full numerical rejection remains open. [Evidence](benchmarks/results/2026-11-06-gemma-attention-boundary-v1.json) |
 
 | 2026-11-06 | Qwen1.5B full original-weight loss reviewed | All 10,000 targets and ten independent blocks replay. NLL increase +0.001528 ≤0.05, physical peak 1.90 GB. | Astra approves the loss gate. Full task quality follows; the first CLI pilot hit the separate template guard. [Evidence](benchmarks/results/2026-11-06-qwen15-full-loss-v1.json) |
+
+| 2026-11-06 | Qwen1.5B raw task producer reviewed | Three cases pass with exact CLI profile and visible/hidden stop state. The first pilot hit the template guard; raw numerical staging and post-exit decoding pass. | Astra approves bounded producer scope. Run all 100 before isolated grading. [Evidence](benchmarks/results/2026-11-06-qwen15-task-pilot-v1.json) |

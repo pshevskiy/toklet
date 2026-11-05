@@ -1,0 +1,47 @@
+{
+  "passed": true,
+  "device": "Apple M1 Pro",
+  "profile": "Pinned Qwen1.5B MLX8 c7e1ff2, capacity562/chunk32, Reference Compensated FullLogits",
+  "probe": [
+    {
+      "case": "HumanEval/0",
+      "emitted": 8,
+      "reason": {
+        "kind": "output_limit"
+      }
+    },
+    {
+      "case": "truthfulqa/row-0",
+      "emitted": 1,
+      "reason": {
+        "kind": "stop_token",
+        "token_id": 151645
+      }
+    },
+    {
+      "case": "lambada/row-0",
+      "emitted": 8,
+      "reason": {
+        "kind": "output_limit"
+      }
+    }
+  ],
+  "peak_joint_physical_bytes": 1724500224,
+  "verified_original_grade": "11/100 larger FP32",
+  "actual_admission": {
+    "weights_bytes": 1640334262,
+    "kv_bytes": 16114448,
+    "scratch_bytes": 24411348,
+    "history_bytes": 2248,
+    "logits_bytes": 1215488,
+    "metadata_bytes": 4736,
+    "metadata_allowance_bytes": 67108864,
+    "tokenizer_application_allowance_bytes": 134217728
+  },
+  "original_cli_template_rejection": "artifacts/qwen15-quality-tasks-2026-11-06/pilot.stderr",
+  "native": "artifacts/qwen15-quality-tasks-2026-11-06/pilot-raw.json",
+  "portable": "artifacts/qwen15-quality-tasks-2026-11-06/raw-portable.stderr",
+  "build": "artifacts/qwen15-quality-tasks-2026-11-06/build.stderr",
+  "review": "Astra approved default preservation, isolated authenticated raw CLI and post-exit tokenizer.",
+  "scope": "Producer and three-category probe only. Full tasks, literal grading and Chat template remain separate."
+}

@@ -10448,3 +10448,12 @@ once. Original FP32 averages 2.485958 nats and native MLX8 averages 2.487487,
 an increase of 0.001528 against the 0.05 limit. Peak physical memory is
 1.90 GB. Astra approved the result. Literal task grading remains separate.
 [Evidence](../benchmarks/results/2026-11-06-qwen15-full-loss-v1.json)
+
+## 6 November 2026 — Qualify the Qwen1.5B raw task producer
+
+The normal CLI rejects the distinct Chat template. A byte-verified numerical
+clone uses its existing raw-ID mode. After native exit, the pinned tokenizer
+decodes the bounded transcripts. All three pilot cases pass, including hidden
+EOS and output-limit state. Astra approved the producer and original grade
+binding. Full collection and grading follow.
+[Evidence](../benchmarks/results/2026-11-06-qwen15-task-pilot-v1.json)

@@ -153,10 +153,10 @@ def finalized(responses,path,*,model_exited):
     if any(a['visible_text']!=b['visible_text'] or a['visible_text_sha256']!=b['visible_text_sha256'] for a,b in zip(copies,responses,strict=True)):raise ValueError('Native finalized task text differs from independent batch decode')
 
 
-def child(binary,source,model,cases,raw,stderr,check,*,admission_check=None,projection_argument="half-compensated",extra_args=(),before_launch=None):
+def child(binary,source,model,cases,raw,stderr,check,*,admission_check=None,projection_argument="half-compensated",extra_args=(),before_launch=None,capacity=2048,chunk=128,external_tokenizer=None):
     run={'passed':False,'model_exited':False,'cases':[],'idle_usage':[],'cleanup_errors':[]};worker=None;transport=None
     try:
-        command=[str(binary),'--model',str(source),'--backend','metal','--metal-projection',projection_argument,'--interactive','--json','--context-capacity','2048','--prefill-chunk','128',*extra_args];run['command']=command
+        command=[str(binary),'--model',str(source),'--backend','metal','--metal-projection',projection_argument,'--interactive','--json','--context-capacity',str(capacity),'--prefill-chunk',str(chunk),*extra_args];run['command']=command
         if before_launch is not None:before_launch()
         worker=subprocess.Popen(command,stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.PIPE,start_new_session=True);run['worker_pid']=worker.pid
         transport=metal_engine.Transport(worker,raw,stderr,stdout_limit=8*1024**2,event_limit=16000,request_timeout=600,lifetime_timeout=24*3600)
@@ -185,7 +185,15 @@ def child(binary,source,model,cases,raw,stderr,check,*,admission_check=None,proj
             run['cases'].append({'response':response,'native_events':events,'max_output_tokens':request['max_new_tokens']});usage(f'case_{len(run["cases"])}');print(f'{model} {case["id"]}: {len(response["visible_token_ids"])} emitted',flush=True)
         worker.stdin.close();run['exit_code']=transport.finish()
         if run['exit_code']!=0 or transport.pending or transport.events!=1+sum(len(v['native_events']) for v in run['cases']):raise ValueError('Metal task finalization coverage differs')
-        worker.wait(timeout=5);run['model_exited']=True;finalized([v['response'] for v in run['cases']],source/'tokenizer.json',model_exited=True);run['passed']=True
+        worker.wait(timeout=5);run['model_exited']=True
+        responses=[v['response'] for v in run['cases']]
+        if external_tokenizer is None:
+            finalized(responses,source/'tokenizer.json',model_exited=True)
+        else:
+            if any(response['visible_text'] for response in responses):
+                raise ValueError('Raw-only task worker emitted text')
+            reference.finalize(responses,external_tokenizer,model_exited=True)
+        run['passed']=True
     except BaseException as error:run['error']=f'{type(error).__name__}: {error}'
     finally:
         def cleanup(label,action):
