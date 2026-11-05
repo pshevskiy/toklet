@@ -23,6 +23,12 @@ pub use runtime_planning::*;
 pub use transition_planning::*;
 mod context;
 pub use context::*;
+#[cfg(all(
+    feature = "llama-staged-mac-app-probe",
+    target_os = "macos",
+    target_arch = "aarch64"
+))]
+mod llama_staged_app_probe;
 mod text;
 #[cfg(all(
     feature = "affine-tile4-mac-probe",
@@ -784,7 +790,14 @@ pub unsafe extern "C" fn toklet_session_create(
             pointer(model)?;
             owner((*model).owner)?;
             let opts = options(opts)?;
-            out.write(Box::into_raw(create_session(&*model, opts)?));
+            let handle = create_session(&*model, opts)?;
+            #[cfg(all(
+                feature = "llama-staged-mac-app-probe",
+                target_os = "macos",
+                target_arch = "aarch64"
+            ))]
+            let handle = llama_staged_app_probe::configure(handle, opts)?;
+            out.write(Box::into_raw(handle));
             Ok(())
         })
     }

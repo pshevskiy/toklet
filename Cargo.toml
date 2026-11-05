@@ -32,6 +32,7 @@ default = []
 metal = ["dep:objc2", "dep:objc2-foundation", "dep:objc2-metal", "dep:objc2-metal-performance-shaders"]
 affine-tile4-mac-probe = ["metal"]
 llama-staged-mac-probe = ["metal"]
+llama-staged-mac-app-probe = ["llama-staged-mac-probe"]
 
 [target.'cfg(all(any(target_os = "macos", target_os = "ios"), target_arch = "aarch64"))'.dependencies]
 objc2 = { version = "=0.6.5", optional = true }

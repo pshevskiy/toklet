@@ -22,7 +22,13 @@ After the resident graph passes, acquire the pinned original artifact and verify
 
 ### Gemma4 real 1,025 numerical qualification
 
-Reuse the completed [same-input V witness](gemma-v-boundary.md) and the four rejected mathematical logits and eight staged KV observations. Astra selects a same-input final head and softcap replay for vocabulary IDs 1822, 6212, 23958 and 74252 at position 1024. First require exact agreement with the archived native row. Replay the four projections under both frozen contracts before considering an upstream change. Rerun the complete gate and qualified prefix checks for any correction.
+The [same-input V](gemma-v-boundary.md), [head](../benchmarks/results/2026-11-05-gemma-head-witness-v1.json)
+and [RMSNorm](../benchmarks/results/2026-11-05-gemma-norm-witness-v1.json)
+witnesses pass locally. Astra selects one upstream check at layer 12/position
+433. Compare the actual rotated Q, producer-12 K/V intervals and context to
+both independent contracts, and replay O projection from the actual context.
+Bind operands to the archived native capture. A passing witness narrows the
+cause and leaves the full 1,025 rejection intact.
 
 ### Gemma4 adoption task gate
 
@@ -138,5 +144,7 @@ capacity for those workloads. Both isolated gates now pass
 [tasks](../benchmarks/results/2026-11-05-llama-staged-tasks-v1.json)).
 The [explicit audited Mac512 selector](../benchmarks/results/2026-11-05-llama-staged-session-v1.json)
 passes exact workspace accounting, lifecycle controls and isolated-row replay.
-Add a separate opt-in Mac app route. Exercise actual Chat load, Send, Stop,
-reopen and process memory before any managed-default decision.
+The [opt-in Mac app route](../benchmarks/results/2026-11-06-llama-staged-app-v1.json)
+proves the staged dispatch from Chat, with Stop, New Chat, rejected capacity
+replacement, unload/reopen and observed process memory. The original Online
+gate and managed-default decision remain separate.

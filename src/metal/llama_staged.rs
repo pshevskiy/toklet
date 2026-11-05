@@ -122,6 +122,21 @@ impl Pipeline {
 }
 
 impl Session<'_> {
+    #[cfg(feature = "llama-staged-mac-app-probe")]
+    pub(super) fn record_staged_app_chunk(&self, rows: usize, offset: usize) {
+        if let Ok(profile) = self.profile() {
+            let dispatches = profile
+                .events
+                .iter()
+                .filter(|event| event.name == NAME)
+                .count();
+            eprintln!(
+                "TOKLET_LLAMA_STAGED_APP {}",
+                serde_json::json!({"event":"chunk","rows":rows,"offset":offset,"dispatches":dispatches})
+            );
+        }
+    }
+
     /// Report explicit selection independently of the Reference workspace mode.
     pub fn llama3_staged_simd_enabled(&self) -> bool {
         self.llama_staged.is_some()

@@ -370,7 +370,7 @@ impl Model {
     ) -> Option<&crate::mlx::qwen::DenseSourceContentIdentity> {
         self.mlx_dense_profile_content_identity(crate::weights::content::DenseProfile::Mistral)
     }
-    fn mlx_dense_profile_content_identity(
+    pub(crate) fn mlx_dense_profile_content_identity(
         &self,
         profile: crate::weights::content::DenseProfile,
     ) -> Option<&crate::mlx::qwen::QwenSourceContentIdentity> {
@@ -1506,6 +1506,10 @@ impl<'m> Session<'m> {
         self.diagnostic_rows = 0;
         let result = autoreleasepool(|_| self.run_chunk(n, start, None));
         let result = self.finish_chunk(n, result);
+        #[cfg(all(feature = "llama-staged-mac-app-probe", target_os = "macos"))]
+        if result.is_ok() && self.llama_staged.is_some() {
+            self.record_staged_app_chunk(n, start);
+        }
         #[cfg(all(feature = "affine-tile4-mac-probe", target_os = "macos"))]
         if result.is_ok()
             && n >= 4

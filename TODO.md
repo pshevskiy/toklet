@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Staged Llama opt-in Mac app integration. Next: Qwen1.5B original-weight alignment.**
+Current task: **Qwen1.5B original-weight alignment, then Gemma 1,025 attribution.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -580,7 +580,10 @@ Conditional follow-ons require their own decision; they do not all block M9:
   gain on the repeated contract prompt. The code prompt misses the 5% gate.
   Retain the explicit nonstreaming API and reject default adoption.
 - [ ] G2/G3: checkpoint-defined shared-KV prefill/MTP after selected Gemma support.
-- [ ] Separate correctness task: Llama Online remains rejected. [Deeper staged screen](benchmarks/results/2026-11-05-llama-staged-depth-v1.json) passes frozen fixtures and matches ten greedy decisions. [Guarded leaf](benchmarks/results/2026-11-05-llama-staged-leaf-v1.json) passes. [Frozen 511-target screen](benchmarks/results/2026-11-05-llama-staged-corpus-v1.json) passes schedule comparisons. [Completed request timing](benchmarks/results/2026-11-05-llama-staged-timing-v1.json) passes twice. [Full loss gate](benchmarks/results/2026-11-05-llama-staged-loss-v1.json) passes. [Full 100-task gate](benchmarks/results/2026-11-05-llama-staged-tasks-v1.json) passes with identical graded inputs. [Explicit authenticated Mac512 session](benchmarks/results/2026-11-05-llama-staged-session-v1.json) passes admission and lifecycle. Next opt-in Mac app integration.
+- [ ] Separate correctness task: Llama Online remains rejected.
+  [Plan and staged evidence](docs/todo-implementation-plans.md#llama-online-correctness).
+  - [x] Isolated staged Llama Mac512 Chat controller, real prefill/decode,
+    Stop, Settings rejection, unload and reopen. [Evidence](benchmarks/results/2026-11-06-llama-staged-app-v1.json).
   - [x] Reproduce the one-word difference on identical operands. [Result](benchmarks/results/2026-11-05-llama-online-witness-v1.json)
 
 Full-Qwen3-window expansion, old streaming prototypes and unselected techniques
@@ -1432,3 +1435,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | P5 bounded Metal generation reviewed | 583 default and 695 Metal tests pass. Pinned Qwen2 emits exact serial IDs and state on both prompts, with 23 proposals and 15 accepts. | Astra approves explicit nonstreaming Mac256/chunk8 scope. Timing is next. [Evidence](benchmarks/results/2026-11-06-m9-qwen2-metal-generation-v1.json) |
 
 | 2026-11-06 | P5 paired timing complete | Both orders match greedy output, state and replayed logits. Repeated contract prompt gains 53.33%/53.76% decode. Code prompt misses 5%. | Keep the explicit API; no default adoption. Corrected a pending-logit error in the initial harness without changing the frozen protocol. [Evidence](benchmarks/results/2026-11-06-m9-qwen2-lookup-timing-v1.json) |
+
+| 2026-11-06 | Staged Llama Mac Chat probe reviewed | Two authenticated sessions and 43 chunks dispatch all 16 staged layers. Send, Stop, New Chat, rejected Apply, unload/reopen and close pass. Physical peak 1.55 GB. | Diagnostic controller scope. Feature recheck passes after ordering admission. [Evidence](benchmarks/results/2026-11-06-llama-staged-app-v1.json) |
