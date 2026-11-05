@@ -10285,3 +10285,10 @@ FP64 attention rounds to the Online word. FP64 merging of the stored partial
 packets still rounds to the split word. Astra approved deferring the current
 candidate. Future work needs a separately qualified partial reduction.
 [Evidence](../benchmarks/results/2026-11-05-m9-split-kv-witness-v1.json)
+
+## 5 November 2026 — Verify 99 stock Q6 trajectories after bounded recovery
+
+The frozen first-mismatch procedure verifies 99 of 100 cases. HumanEval/37
+hits a proposal cycle, so the complete collection remains ungraded. Astra
+approved the decision and the completed runtime audit.
+[Evidence](../benchmarks/results/2026-11-05-gemma6-stock-recovery-v1.json)

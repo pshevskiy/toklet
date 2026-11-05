@@ -62,3 +62,10 @@ ID in both cases. The first affected operator is unresolved. Astra approved
 applying the established first-mismatch recovery, with whole-trajectory
 verification, a cycle check and an eight-repair bound.
 [Localization evidence](../benchmarks/results/2026-11-05-gemma6-stock-localization-v1.json).
+
+Bounded recovery reproduces all initial journals and verifies 99 cases after
+34 corrections. The first-mismatch rule discards each rejected suffix and
+regenerates with a fresh cache. HumanEval/37 cycles after three corrections
+and stays rejected. Corrected rows record the originating stateless margin.
+The final live-module audit passes and grading remains withheld.
+[Recovery evidence](../benchmarks/results/2026-11-05-gemma6-stock-recovery-v1.json).

@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Gemma Q6 bounded trajectory recovery. P3 evaluated and deferred for the current partial reduction.**
+Current task: **P5 prompt lookup checks and one Gemma Q6 causal-prefix diagnostic. Full Q6 grading is gated by an unresolved trajectory.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -527,7 +527,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Resident original BF16/stockKV reference at511–567positions; [report](docs/gemma-resident-generation.md).
 - [x] Original100-task controller pilot with exact sampled/terminal-stop replay; [report](docs/gemma-task-controller-pilot.md).
 - [x] Complete original/native100-case collections and isolated grading; [task result](docs/gemma-full-tasks.md), `89f0613`.
-- [ ] Gemma4 adoption task gate: rejected52→43/100; stock MLX matches all4selected decisions (`c79fa90`). Higher-precision feasibility decision: [header ledger](docs/gemma8-feasibility.md); no8-bit execution. [Q6 header screen](docs/gemma6-feasibility.md) leaves estimated headroom; [Stock decision replay](benchmarks/results/2026-11-05-gemma6-stock-decisions-v1.json) matches original BF16 in all four probes. [Three-category pilot](benchmarks/results/2026-11-05-gemma6-stock-task-pilot-v1.json) passes 50 exact sampled rows. [Complete stock collection](benchmarks/results/2026-11-05-gemma6-stock-tasks-v1.json) has 26 stateless mismatches across 13 cases. Grading withheld.
+- [ ] Gemma4 adoption task gate: rejected52→43/100; stock MLX matches all4selected decisions (`c79fa90`). Higher-precision feasibility decision: [header ledger](docs/gemma8-feasibility.md); no8-bit execution. [Q6 header screen](docs/gemma6-feasibility.md) leaves estimated headroom; [Stock decision replay](benchmarks/results/2026-11-05-gemma6-stock-decisions-v1.json) matches original BF16 in all four probes. [Three-category pilot](benchmarks/results/2026-11-05-gemma6-stock-task-pilot-v1.json) passes 50 exact sampled rows. [Complete stock collection](benchmarks/results/2026-11-05-gemma6-stock-tasks-v1.json) has 26 stateless mismatches across 13 cases. [Bounded recovery](benchmarks/results/2026-11-05-gemma6-stock-recovery-v1.json) verifies 99, with one proposal cycle. Grading withheld.
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1396,3 +1396,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Gemma Q6 stateless mismatch localized | Fresh cache and complete-stateless rows match both archived hashes at the first two disputes. Prefix-only stateless picks the cached ID in both. | Astra approves bounded evidence and the existing first-mismatch recovery rule. [Evidence](benchmarks/results/2026-11-05-gemma6-stock-localization-v1.json) |
 
 | 2026-11-05 | P3 same-input witness reviewed | Identical real layer-0 inputs differ in one Half word. FP64 attention rounds to Online and even FP64 merge of stored partials rounds to split. | Astra approves scoped defer. Future candidates need separate partial-accumulation qualification. [Evidence](benchmarks/results/2026-11-05-m9-split-kv-witness-v1.json) |
+
+| 2026-11-05 | Gemma Q6 bounded recovery reviewed | Reproduced the complete initial journal. Applied 34 repairs, retained 35 rejected attempts and verified 99 cases. Final runtime audit passes. | Astra approves the failed overall gate. HumanEval/37 cycles after three repairs. Keep grading withheld. [Evidence](benchmarks/results/2026-11-05-gemma6-stock-recovery-v1.json) |

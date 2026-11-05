@@ -1,0 +1,30 @@
+{
+  "cases": 100,
+  "exact_cases": 99,
+  "applied_repairs": 34,
+  "rejected_attempts": 35,
+  "failed": [
+    {
+      "id": "HumanEval/37",
+      "passed": false,
+      "repairs": 3,
+      "failure": "proposal_cycle"
+    }
+  ],
+  "endpoint_audit_passed": true,
+  "grading_started": false,
+  "full_quality_qualified": false,
+  "physical_peak_bytes": 5324165008,
+  "process_limit_bytes": 6442450944,
+  "review": "Astra approved bounded recovery evidence and the failed overall gate",
+  "receipts": {
+    "artifacts/gemma6-feasibility-2026-11-05/recovery/prepare.py": "1b82d847967de9ea3e406485a216b4146c374a880efcda38dcc90ae38bfc9298",
+    "artifacts/gemma6-feasibility-2026-11-05/recovery/recover-loop.py": "828c64d2711280c46a809316b1debf44eb4f804655ea22a85c22fff16b37b1ac",
+    "artifacts/gemma6-feasibility-2026-11-05/recovery/stock.py": "a8d5d8a42c74b715e253f9183f215085a8fe311fc710fb66b7589f7419a818e8",
+    "artifacts/gemma6-feasibility-2026-11-05/recovery/stock-plan.json": "a1ff6792074a5553057b204a1b294f08daa2762b9590a148c7d914394973d857",
+    "artifacts/gemma6-feasibility-2026-11-05/recovery/stock-owned.json": "ec47d0ff4f1654728f2a50447620f8fe9facd4ac31b562ed464938933a524541",
+    "artifacts/gemma6-feasibility-2026-11-05/recovery/stock/tasks.jsonl": "4c9cc205cf25a82d71adb4099b8ac6c40751c6cf02c940dc4fb0d388cc7f241d",
+    "artifacts/gemma6-feasibility-2026-11-05/recovery/stock/rejected.jsonl": "51c610d4afe249937870f2947df915d7688fc962c4fa056127df7857b95f61ca",
+    "artifacts/gemma6-feasibility-2026-11-05/recovery/stock/result.json": "1a76a9e330f05db3586de7507a7d6f9f5fb1a2480fcbb8a88ff831990a702e30"
+  }
+}
