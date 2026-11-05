@@ -1,0 +1,33 @@
+{
+  "passed": true,
+  "records": 97,
+  "records_sha256": "391077f928d1e288c227bc981f42ae505f7b407f9ee854332f9d2d9c3a410c76",
+  "template_delta": "Removed media placeholders only in a tool response branch.",
+  "generation_delta": "Transformers version field only.",
+  "basic_text_reference_exact": true,
+  "native_codec_identity_changed": false,
+  "model_or_chat_qualified": false,
+  "installed_loader": {
+    "passed": true,
+    "parsed_text_args_identical": true,
+    "vocab": 262144,
+    "layers": 35,
+    "default_linear_mode": "affine",
+    "runtime_sources_sha256": {
+      "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/mlx_lm/models/gemma4.py": "7301367b6ffcfb125f036186650c6f56cb55be6d1e0893edae8308d27049eb47",
+      "/Users/coloner/work/rust/toklet/.venv/lib/python3.12/site-packages/mlx_lm/models/gemma4_text.py": "73ffa75e9069ce7b2f864ccd8f0267bb80c5b5d4e2b73102b8a2a93fe03f936d"
+    },
+    "weights_loaded": false,
+    "template_executed": false
+  },
+  "review": "Astra approved the narrow configuration and frozen basic-text portability result.",
+  "explicit_qat_native_identity_required": true,
+  "receipts_sha256": {
+    "artifacts/gemma-qat-screen-2026-11-06/text-check.py": "0ac32395d219c7a57921886a47e648e7aa449148a69971cc1deaa7289b3605ce",
+    "artifacts/gemma-qat-screen-2026-11-06/text-check.json": "7611083401cdcb2826bd0615687be60b649f9e623642c8c84e6538035a45eb6a",
+    "artifacts/gemma-qat-screen-2026-11-06/text-check.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/gemma-qat-screen-2026-11-06/text-records.jsonl": "391077f928d1e288c227bc981f42ae505f7b407f9ee854332f9d2d9c3a410c76",
+    "artifacts/gemma-qat-screen-2026-11-06/loader-check.py": "49278fd7b69d73bfd70ac017ec8122d4fca97190b6d464e9b0249d0601fe22fd",
+    "artifacts/gemma-qat-screen-2026-11-06/installed-loader.json": "7f297b1f8d2eecb955510f3ffc881569a022954ee105aaa71c658035508fa2be"
+  }
+}

@@ -585,6 +585,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
     [Evidence](benchmarks/results/2026-11-06-gemma-chunk-pools-v1.json).
   - [x] Distinct QAT mixed4/8 artifact passes immutable header feasibility.
     [Evidence](benchmarks/results/2026-11-06-gemma-qat-header-v1.json).
+  - [x] QAT installed text geometry and all97 frozen plain-text records match.
+    [Evidence](benchmarks/results/2026-11-06-gemma-qat-text-v1.json).
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).

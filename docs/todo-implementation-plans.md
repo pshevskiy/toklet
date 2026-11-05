@@ -109,6 +109,14 @@ stock headroom. Authenticate the single shard and run strict stock loading
 and frozen raw-token checks. Compare the four saved decisions
 informationally. Run full quality only after the bounded trajectory verifies.
 The changed template and unknown conversion lineage require separate scope.
+The [QAT text witness](../benchmarks/results/2026-11-06-gemma-qat-text-v1.json)
+matches all 97 frozen basic-text records and the installed loader's parsed
+text arguments. It leaves native identity and live mixed loading separate.
+If stock quality passes, extend the existing Gemma FP32 compensated affine
+projection with a statically selected 8-bit leaf. Reuse the packing layout
+as the pool key and derive the admitted pool inventory from the pinned
+matrix policy. Keep graph blocks shared and require a QAT-owned independent
+fidelity reference before using the profile in Chat.
 
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 
@@ -215,7 +223,17 @@ favorable prefixes. Default and streaming adoption stay outside the tested scope
 
 ### G2/G3 shared KV and MTP
 
-Wait for the selected Gemma graph to pass its required gates. Validate checkpoint-defined shared layers and output semantics separately for prefill and MTP. Compare committed state and emitted decisions, then qualify any measured benefit with complete owner accounting.
+**G2 shared-KV prefill.** After a selected Gemma graph passes its gates,
+freeze its checkpoint producer/consumer map. Validate retained local/global
+rows, exact token decisions and transactional rollback across chunk and ring
+boundaries. Compare completed prefill timings and physical owners on the
+same pinned workloads before retaining a scheduling change.
+
+**G3 MTP.** Pin the matching assistant and its target inputs. Keep draft
+state separate and verify proposals using the target's strict greedy
+semantics. Test rejection, partial acceptance, hidden stops, cancellation
+and ring rollback before measuring acceptance rate, latency and memory.
+The target-only path remains the reference for every workload.
 
 ### Llama Online correctness
 

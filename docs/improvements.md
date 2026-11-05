@@ -10631,3 +10631,11 @@ network-denied Qwen1.5B controller and both iOS SDK builds pass. Astra
 approved atomic selection with the previous package preserved. Physical
 iPhone qualification remains deferred.
 [Evidence](../benchmarks/results/2026-11-06-chunk-pools-native41-v1.json)
+
+## 6 November 2026 — Verify QAT basic-text portability
+
+All 97 frozen records and installed loader text arguments match.
+The template difference only affects tool media. Astra approved the
+bounded result and the conditional mixed projection plan. QAT keeps a
+separate native identity and admission gate.
+[Evidence](../benchmarks/results/2026-11-06-gemma-qat-text-v1.json)
