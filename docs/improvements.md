@@ -10307,3 +10307,11 @@ Fresh causal-prefix generation of the sole unresolved case still differs
 on one of 188 sampled IDs in complete replay. Astra approved the bounded
 diagnostic and defer decision. Grading remains withheld.
 [Evidence](../benchmarks/results/2026-11-05-gemma6-stock-prefix37-v1.json)
+
+## 5 November 2026 — Screen deeper staged Llama attention
+
+An isolated SIMD score and staged softmax build passes 1,050 frozen
+snapshots. Ten real Llama 1B decisions match Reference through depth 512
+in one incremental schedule. Full logits differ by up to 0.06174. Astra
+approved the diagnostic. Ordinary Llama continues to use Reference.
+[Evidence](../benchmarks/results/2026-11-05-llama-staged-depth-v1.json)

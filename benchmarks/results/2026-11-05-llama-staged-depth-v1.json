@@ -1,0 +1,154 @@
+{
+  "graph": {
+    "snapshots": 1050,
+    "compared_values": 149568
+  },
+  "real_rows": [
+    {
+      "depth": 16,
+      "greedy": [
+        320,
+        320
+      ],
+      "bitwise": false,
+      "maximum_absolute_error": 0.015199333429336548,
+      "hashes": [
+        "ff1ede974c4f66f913892087387ba7bb5c27bc69cc7b8458a957ee95d8a73fd7",
+        "6033ec8548b8f2eda1455e0acbba7e693ca544ba68dce1de14d9088793c1cf8a"
+      ]
+    },
+    {
+      "depth": 17,
+      "greedy": [
+        2,
+        2
+      ],
+      "bitwise": false,
+      "maximum_absolute_error": 0.0013104677200317383,
+      "hashes": [
+        "f224be10187e2d65cbc5129b4ef5dda98d8f33659e336a70e7353f66f4fd648b",
+        "98aa93f4f681259999726117b5e8b900e368b2c6cc0604d3dbd296a0cd16e558"
+      ]
+    },
+    {
+      "depth": 31,
+      "greedy": [
+        662,
+        662
+      ],
+      "bitwise": false,
+      "maximum_absolute_error": 0.014285564422607422,
+      "hashes": [
+        "e667512c079ed13ac728cfdeab34daf1772fa86c0384ee93665dd22652e111b0",
+        "a46f5239e01a4da724f84e5ed2d61d4c9b2b3bae5a13b90cfa00243bd2dbdb97"
+      ]
+    },
+    {
+      "depth": 32,
+      "greedy": [
+        320,
+        320
+      ],
+      "bitwise": false,
+      "maximum_absolute_error": 0.01659703254699707,
+      "hashes": [
+        "1286d39677a000b56e1ca68acdef565cd15fd523e19cbc86c209eb21e32256ed",
+        "619ceaf014849eb7639281797eced90bfef57e5181f3292bd41eae1a524312c1"
+      ]
+    },
+    {
+      "depth": 33,
+      "greedy": [
+        2,
+        2
+      ],
+      "bitwise": false,
+      "maximum_absolute_error": 0.0016362667083740234,
+      "hashes": [
+        "49048c07fb90b4e5fac49196daca857445dee775392f707da3ac4c24ed648136",
+        "bf4d37ba55b5795855c0f96090e45c42a2bb9b4d72e80bb03b35b2d416b1b7e3"
+      ]
+    },
+    {
+      "depth": 127,
+      "greedy": [
+        662,
+        662
+      ],
+      "bitwise": false,
+      "maximum_absolute_error": 0.019169330596923828,
+      "hashes": [
+        "d78553ff3663ca1fa1d40d7503dc92d82095ce107cbfa77fcf53af87a35174d4",
+        "c384631c2995be0001229ea67bb12bf85f9f7c76d0573c4407bb57f18c1470b0"
+      ]
+    },
+    {
+      "depth": 128,
+      "greedy": [
+        320,
+        320
+      ],
+      "bitwise": false,
+      "maximum_absolute_error": 0.01697564125061035,
+      "hashes": [
+        "bca4d880c3f0fb1f8f9d3977d33b61cf63117ef0c646229d793c611f9f9bbfec",
+        "171c066dfde6027320a87d4178cdf4c132fdb32e55fb14989a3f63caa5c38d5b"
+      ]
+    },
+    {
+      "depth": 129,
+      "greedy": [
+        2,
+        2
+      ],
+      "bitwise": false,
+      "maximum_absolute_error": 0.0010888166725635529,
+      "hashes": [
+        "0aea690fa16b2039486ece2ea0a7438e8150c2e2dc5128f2b51fe03228a3b701",
+        "fbdf5e2265d2165318c37d89ffd171f0abadeceab75fc89dcd8687a1784a6b39"
+      ]
+    },
+    {
+      "depth": 511,
+      "greedy": [
+        662,
+        662
+      ],
+      "bitwise": false,
+      "maximum_absolute_error": 0.031891822814941406,
+      "hashes": [
+        "b0d9d363db92087d3b78d1e6da6ad2f49ee0c6421762e73c2b3b93510f9a25c6",
+        "0c2c5c5b859b858d5951f7a694e065bac98f88aa1baea14cacc2de505080511f"
+      ]
+    },
+    {
+      "depth": 512,
+      "greedy": [
+        320,
+        320
+      ],
+      "bitwise": false,
+      "maximum_absolute_error": 0.06173515319824219,
+      "hashes": [
+        "d32d8afe531664231c22177ed26ed8581baac712837a7896a0e75a89ba4966a4",
+        "6246244ffbb75bb8531b569bab277525a012304ab6425999e8ea87eab40deac7"
+      ]
+    }
+  ],
+  "exact_greedy": true,
+  "exact_rows": 0,
+  "runtime_scope": "Isolated staged SIMD score with existing Reference scratch",
+  "device": "Apple M1 Pro",
+  "production_changed": false,
+  "quality_qualified": false,
+  "performance_measured": false,
+  "schedule": "One incremental mixed-chunk prefix-reuse schedule through 512 positions with a repeated frozen token pattern.",
+  "review": "Astra approved the isolated feasibility evidence",
+  "binary_sha256": {
+    "frozen": "9787bc3071e0b5234b734be2a7eff753279520ce1c258201cc1dfa3725032bcf",
+    "baseline": "1c0ef4a851ab506eba01e4d7fb24d98fc8f802b8699905d4870a96441c808477",
+    "staged": "9e4ae28cdd364f67b8b2134f9e4fc56cfff9405600b80ede6ebfa181ebee22a3"
+  },
+  "patch_sha256": "ec8cd49ffe7ea93c11d0b450135218a41a67df527f89043dc381079012d76986",
+  "evidence": "artifacts/llama-online-depth-2026-11-05"
+}
