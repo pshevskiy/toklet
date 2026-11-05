@@ -10270,3 +10270,10 @@ All 100 stock cases journal successfully. Stateless replay differs on 26
 of 4,036 sampled IDs across 13 cases. The failed assertion skips the final
 live-module audit, so the journal remains diagnostic and ungraded.
 [Evidence](../benchmarks/results/2026-11-05-gemma6-stock-tasks-v1.json)
+
+## 5 November 2026 — Localize two stock Q6 stateless decisions
+
+Fresh cached and complete-sequence rows reproduce the archived hashes.
+Stateless evaluation of only the prefix selects the cached ID in both cases.
+Astra approved the bounded observation and queued exact trajectory recovery.
+[Evidence](../benchmarks/results/2026-11-05-gemma6-stock-localization-v1.json)

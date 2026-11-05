@@ -1,0 +1,68 @@
+{
+  "passed": true,
+  "review": "Astra approved two exact saved-row replays",
+  "full_quality_qualified": false,
+  "localization": "Sequence length affects complete-stateless arithmetic at identical causal prefixes. The responsible operator is unresolved.",
+  "physical_peak_bytes": 4881223568,
+  "cases": [
+    {
+      "id": "HumanEval/5",
+      "sample_index": 1,
+      "prefix_positions": 130,
+      "cached": {
+        "id": 3709,
+        "margin": 0.625,
+        "sha256": "34a35e3566ca9d4ad613ab694d65219207acd9708b213551ac0453673b013fd3"
+      },
+      "stateless_complete": {
+        "id": 584,
+        "margin": 0.0,
+        "sha256": "a1497aba37aeb1342480233c226b0a02d2913f3cc0f59c0352a8c6419bc3b3a8"
+      },
+      "stateless_prefix": {
+        "id": 3709,
+        "margin": 0.125,
+        "sha256": "49eea118575c318bba68070d9ce3f0d32b2e55824959fc50dccbd0c45272a4ce"
+      },
+      "memory": {
+        "rss_peak_bytes": 3512303616,
+        "physical_peak_bytes": 4521627536,
+        "mlx_peak_bytes": 4195725284,
+        "mlx_active_bytes": 3761182308
+      }
+    },
+    {
+      "id": "HumanEval/17",
+      "sample_index": 127,
+      "prefix_positions": 334,
+      "cached": {
+        "id": 7579,
+        "margin": 0.25,
+        "sha256": "13a67b871a2dc0fc3c1c229405697a1939ddd846a7bc8a6e46f7e6dcecb3b254"
+      },
+      "stateless_complete": {
+        "id": 8687,
+        "margin": 0.125,
+        "sha256": "5d02e0fff9c3c7d88782ab5480b724e2ecbf7d05e87dffb0293faad096bd6ae9"
+      },
+      "stateless_prefix": {
+        "id": 7579,
+        "margin": 0.0,
+        "sha256": "b44a0e97d2a2cd34745a24e3d7b4c2750c2cf6293f079c7014ca6bf979630f71"
+      },
+      "memory": {
+        "rss_peak_bytes": 3512303616,
+        "physical_peak_bytes": 4881223568,
+        "mlx_peak_bytes": 4556922612,
+        "mlx_active_bytes": 3761182308
+      }
+    }
+  ],
+  "receipts": {
+    "artifacts/gemma6-feasibility-2026-11-05/localize/prepare.py": "a4bd56e74b39b24240b22985c404627d913957faa4a906236229fcc7d4a71d9f",
+    "artifacts/gemma6-feasibility-2026-11-05/localize/loop.py": "137914bcf1aa54195f2bda11e61001e24eeac5a18489b7a6b9c39b7f28753ff8",
+    "artifacts/gemma6-feasibility-2026-11-05/localize/stock.py": "a394f794ff0e79b799a87eb418216a503eaed462ec4db270d8fe6a09da7a570f",
+    "artifacts/gemma6-feasibility-2026-11-05/localize/stock-owned.json": "09bb1fa4ad61ec19cf21018c7e53664620c66ceeddd1749516b7827a29c0ca40",
+    "artifacts/gemma6-feasibility-2026-11-05/localize/stock/result.json": "6a90b57d99b50e0646906ef3e04f75344362679530dc567b0cc038c7e1e480fe"
+  }
+}

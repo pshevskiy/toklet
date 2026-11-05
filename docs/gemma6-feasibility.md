@@ -55,3 +55,10 @@ outcomes satisfy the recorded token counts. Peak physical footprint is
 trajectory assertion ran before the final live-module audit. Grading remains
 withheld. Astra approved retaining the failed journal as scoped evidence.
 [Collection evidence](../benchmarks/results/2026-11-05-gemma6-stock-tasks-v1.json).
+
+Fresh cached and complete-stateless runs reproduce both archived row hashes
+at the first two disputes. Prefix-only stateless execution selects the cached
+ID in both cases. The first affected operator is unresolved. Astra approved
+applying the established first-mismatch recovery, with whole-trajectory
+verification, a cycle check and an eight-repair bound.
+[Localization evidence](../benchmarks/results/2026-11-05-gemma6-stock-localization-v1.json).

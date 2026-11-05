@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Gemma Q6 stateless trajectory localization and P3 same-input split-KV witness.**
+Current task: **Gemma Q6 bounded trajectory recovery and P3 same-input split-KV witness.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -1392,3 +1392,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | P3 real split-KV session rejected | 6,782,224 of 19,447,808 values exceed the frozen screen across all 128 rows. Greedy differs once at depth 1,049. Budget, trace and short reset/fallback controls pass. | Astra approves rejection. Candidate removed from the engine and archived. Next same-input layer-0 replay. [Evidence](benchmarks/results/2026-11-05-m9-split-kv-session-v1.json) |
 
 | 2026-11-05 | Gemma Q6 full stock trajectory rejected | All 100 cases journaled, 4,036 sampled IDs, 26 stateless differences across 13 cases. Peak 5,244,112,712 bytes, output-limit and 567-position controls pass. | Astra approves failure scope. Final live-module audit was skipped after the gate failed. Withhold grading and localize the first two rows. [Evidence](benchmarks/results/2026-11-05-gemma6-stock-tasks-v1.json) |
+
+| 2026-11-05 | Gemma Q6 stateless mismatch localized | Fresh cache and complete-stateless rows match both archived hashes at the first two disputes. Prefix-only stateless picks the cached ID in both. | Astra approves bounded evidence and the existing first-mismatch recovery rule. [Evidence](benchmarks/results/2026-11-05-gemma6-stock-localization-v1.json) |
