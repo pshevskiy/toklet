@@ -1,0 +1,94 @@
+{
+  "metrics": {
+    "math_fp64": {
+      "ff_up": {
+        "values": 6144,
+        "failed_values": 0,
+        "maximum_gate_ratio": 0.004139939231234975,
+        "examples": []
+      },
+      "ple_gate": {
+        "values": 256,
+        "failed_values": 0,
+        "maximum_gate_ratio": 0.009787167288830022,
+        "examples": []
+      },
+      "ple_projection": {
+        "values": 1536,
+        "failed_values": 0,
+        "maximum_gate_ratio": 0.00863246429064471,
+        "examples": []
+      },
+      "ple_norm": {
+        "values": 1536,
+        "failed_values": 0,
+        "maximum_gate_ratio": 0.004176466267053803,
+        "examples": []
+      },
+      "output": {
+        "values": 1536,
+        "failed_values": 0,
+        "maximum_gate_ratio": 0.014093394579712511,
+        "examples": []
+      }
+    },
+    "staged_fp32": {
+      "ff_up": {
+        "values": 6144,
+        "failed_values": 0,
+        "maximum_gate_ratio": 0.0,
+        "examples": []
+      },
+      "ple_gate": {
+        "values": 256,
+        "failed_values": 0,
+        "maximum_gate_ratio": 0.0,
+        "examples": []
+      },
+      "ple_projection": {
+        "values": 1536,
+        "failed_values": 0,
+        "maximum_gate_ratio": 0.0,
+        "examples": []
+      },
+      "ple_norm": {
+        "values": 1536,
+        "failed_values": 0,
+        "maximum_gate_ratio": 0.0,
+        "examples": []
+      },
+      "output": {
+        "values": 1536,
+        "failed_values": 0,
+        "maximum_gate_ratio": 0.0,
+        "examples": []
+      }
+    }
+  },
+  "archived_boundary_operands_exact": true,
+  "local_passed": true,
+  "whole_graph_qualified": false,
+  "passed": true,
+  "device": "Apple M1 Pro",
+  "layer": 12,
+  "position": 433,
+  "qualified_output_values": 1536,
+  "diagnostic_stage_count": 4,
+  "metal_passes": 695,
+  "framing_mutations_rejected": 7,
+  "process_limit_bytes": 6442450944,
+  "rss_peak_bytes": 3033153536,
+  "physical_peak_bytes": 3024800552,
+  "decision": "Retain the tested tail and stop local layer walking. The full 1025 qualification remains rejected.",
+  "review": "Astra approved the local result and unchanged full gate.",
+  "receipts_sha256": {
+    "artifacts/gemma-layer12-tail-2026-11-06/checks.json": "5baabc799b7c658a1b43d24b293d365b58e17151f7528d7fb75c9cfba45f2a21",
+    "artifacts/gemma-layer12-tail-2026-11-06/checker-controls.json": "8eb12eef7d0989d5369eff71cba36313fe1be0e0c63e72bc609ab8c0a94f9912",
+    "artifacts/gemma-layer12-tail-2026-11-06/gpu.stdout": "3a997f4e34d90af9237f4e3a9d83cdb1b71f792f47b26777a928f13820eda3ac",
+    "artifacts/gemma-layer12-tail-2026-11-06/gpu.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/gemma-layer12-tail-2026-11-06/arrays.bin": "1b5cfeda647535e4cbf29292f49163b6ced8a30e599a8202e03692d1bc3293e7",
+    "artifacts/gemma-layer12-tail-2026-11-06/owned.json": "78ca538c568836cb270b4575eecb6df9e7b2e7080199a4443704dec957d7363d",
+    "artifacts/gemma-layer12-tail-2026-11-06/replay.json": "5e58768edec7ae13de7c7a2541998a50fa05ab56681bc62376723d82c0a0459b",
+    "artifacts/gemma-layer12-tail-2026-11-06/portable.stderr": "d8056b6ff73c5b32714cf0faf9dc2d57e6d3321e75f7306c29f60687e2d4a8b5"
+  }
+}

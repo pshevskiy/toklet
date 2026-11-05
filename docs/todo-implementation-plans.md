@@ -27,10 +27,11 @@ and [RMSNorm](../benchmarks/results/2026-11-05-gemma-norm-witness-v1.json)
 witnesses pass locally. The [layer 12 attention witness](../benchmarks/results/2026-11-06-gemma-attention-boundary-v1.json)
 binds position 433 K/V to the archived capture and passes both independent
 context and output-projection replays. The full 1,025 rejection remains.
-Astra recommends one bounded layer-12 tail replay at position 433. Pin the
-actual incoming hidden, attention output, per-layer input and next hidden.
-Use both existing arithmetic contracts and the unchanged mixed tolerance for
-all 1,536 output values. A pass ends further local layer walking.
+The [layer-12 tail replay](../benchmarks/results/2026-11-06-gemma-layer12-tail-v1.json)
+passes both arithmetic contracts at position 433. Its attention output and
+next hidden match the archived boundary rows exactly. Astra ends the local
+layer walk. Further graph work needs a concrete hypothesis about the source
+or propagated precision differences.
 
 ### Gemma4 adoption task gate
 

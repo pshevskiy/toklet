@@ -122,3 +122,82 @@ fn native_layer12_attention_at_433() {
     );
     capture.finish();
 }
+
+#[test]
+#[ignore = "explicit original E2B layer12 post-attention capture"]
+fn native_layer12_tail_at_433() {
+    const POSITION: usize = 433;
+    const BEFORE: usize = 416;
+    const ROWS: usize = 32;
+    let raw = include_bytes!("../../../../../../benchmarks/gemma-v-boundary-v1/tokens.u32le");
+    let ids: Vec<_> = raw[..(BEFORE + ROWS) * 4]
+        .chunks_exact(4)
+        .map(|value| u32::from_le_bytes(value.try_into().unwrap()))
+        .collect();
+    let (source, file, path, original) = load_original();
+    let owners = resident_snapshot(&source);
+    let norms = hybrid::Norms::new(&source, PROCESS - DIAGNOSTIC).unwrap();
+    let model = norms.model_for_context_probe(1025).unwrap();
+    let context = gemma_affine::Context::new(gemma_affine::CONTEXT_ALLOWANCE_BYTES).unwrap();
+    let mut session = norms
+        .new_session(&model, &context, PROCESS - DIAGNOSTIC)
+        .unwrap();
+    for input in ids[..BEFORE].chunks(ROWS) {
+        session.forward(input).unwrap();
+    }
+    let committed = snapshot(&session);
+    let owned = pointers(&session);
+    let row = POSITION - BEFORE;
+    let h = row * H..(row + 1) * H;
+    let p = row * P..(row + 1) * P;
+    let intermediate = model.layout.layers[12].intermediate;
+    let ff = row * intermediate..(row + 1) * intermediate;
+    let mut capture = capture::Capture::bounded(64 * 1024);
+    emit(
+        "LAYER_TAIL",
+        json!({"layer":12,"position":POSITION,"chunk_start":BEFORE,
+            "chunk_rows":ROWS,"context":1025,"hidden":H,"ple":P,"intermediate":intermediate}),
+    );
+    for layer in [11, 12] {
+        session.fault = Some(layer);
+        assert!(matches!(
+            session.forward(&ids[BEFORE..]),
+            Err(hybrid::Error::Model(Error::InvalidConfig(
+                "injected Gemma layer failure"
+            )))
+        ));
+        assert_eq!(snapshot(&session), committed);
+        assert_eq!(pointers(&session), owned);
+        let s = &session.scratch;
+        if layer == 11 {
+            capture.record("tail.input", &s.hidden[h.clone()], POSITION, 1);
+        } else {
+            for (name, values) in [
+                ("attention", &s.attention[h.clone()]),
+                ("ple", &s.layer_ple[p.clone()]),
+                ("ff_up", &s.up[ff.clone()]),
+                ("ple_gate", &s.gate[p.clone()]),
+                ("ple_projection", &s.dense_work[h.clone()]),
+                ("ple_norm", &s.dense_norm[h.clone()]),
+                ("output", &s.hidden[h.clone()]),
+            ] {
+                capture.record(&format!("tail.{name}"), values, POSITION, 1);
+            }
+        }
+    }
+    session.fault = None;
+    session.forward(&ids[BEFORE..]).unwrap();
+    assert_eq!(session.tokens(), ids);
+    assert_eq!(pointers(&session), owned);
+    assert_eq!(resident_snapshot(&source), owners);
+    assert_eq!(original, identity(&file.metadata().unwrap()));
+    assert_eq!(
+        original,
+        identity(&std::fs::symlink_metadata(path).unwrap())
+    );
+    emit(
+        "LAYER_TAIL_COMPLETE",
+        json!({"committed":ids.len(),"both_faults_preserved_prefix":true}),
+    );
+    capture.finish();
+}

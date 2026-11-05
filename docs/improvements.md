@@ -10515,3 +10515,12 @@ sampled physical memory is 1.88 GB. Strict Swift controls, all three Apple
 package slices and Astra review pass. Native41 is selected and native40 is
 preserved. The model journey used the controller. Physical iPhone is deferred.
 [Evidence](../benchmarks/results/2026-11-06-qwen15-mac-app-v1.json)
+
+## 6 November 2026 — Verify the Gemma layer-12 post-attention tail
+
+Both arithmetic contracts pass all 1,536 output values at position 433.
+Four diagnostic stages also pass, and the archived boundary rows match
+exactly. Metal checks, seven malformed-record controls and Astra review
+pass. Retain the tested tail and end the local layer walk. Full 1,025
+qualification remains rejected.
+[Evidence](../benchmarks/results/2026-11-06-gemma-layer12-tail-v1.json)

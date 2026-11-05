@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Gemma oQ6 stock preflight and layer-12 tail precision witness.**
+Current task: **Gemma oQ6 stock preflight and next source/precision decision.**
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
 [Evidence](benchmarks/results/2026-11-06-qwen15-mac-app-v1.json).
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
@@ -526,6 +526,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Independent real1,025 oracle and native local-cache state/wrap/overflow/reset capture; [report](docs/gemma-hybrid1025.md).
 - [x] Same-input V-projection/RMSNorm and exact cache-transfer witness; [report](docs/gemma-v-boundary.md).
 - [ ] Real1,025 numerical qualification:4mathematical logits and8stagedKV observations remain rejected; local same-input witnesses pass; source/precision decision remains.
+  - [x] Layer12 position433 complete post-attention tail passes both
+    arithmetic contracts. Astra confirms no further local layer walking.
+    [Evidence](benchmarks/results/2026-11-06-gemma-layer12-tail-v1.json).
   - [x] Same-input layer 13 and final RMSNorm pass. [Result](benchmarks/results/2026-11-05-gemma-norm-witness-v1.json)
   - [x] Same-input final head and softcap pass at the four rejected IDs. [Result](benchmarks/results/2026-11-05-gemma-head-witness-v1.json)
   - [x] Layer 12 attention and O projection at position 433 pass same-input replay. [Result](benchmarks/results/2026-11-06-gemma-attention-boundary-v1.json)
