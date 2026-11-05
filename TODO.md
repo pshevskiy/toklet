@@ -539,6 +539,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Complete original/native100-case collections and isolated grading; [task result](docs/gemma-full-tasks.md), `89f0613`.
 - [ ] Gemma4 adoption task gate: rejected52→43/100; stock MLX matches all4selected decisions (`c79fa90`). Higher-precision feasibility decision: [header ledger](docs/gemma8-feasibility.md); no8-bit execution. [Q6 header screen](docs/gemma6-feasibility.md) leaves estimated headroom; [Stock decision replay](benchmarks/results/2026-11-05-gemma6-stock-decisions-v1.json) matches original BF16 in all four probes. [Three-category pilot](benchmarks/results/2026-11-05-gemma6-stock-task-pilot-v1.json) passes 50 exact sampled rows. [Complete stock collection](benchmarks/results/2026-11-05-gemma6-stock-tasks-v1.json) has 26 stateless mismatches across 13 cases. [Bounded recovery](benchmarks/results/2026-11-05-gemma6-stock-recovery-v1.json) verifies 99, with one proposal cycle. [Fresh-prefix replay](benchmarks/results/2026-11-05-gemma6-stock-prefix37-v1.json) also rejects. Current Q6 deferred, grading withheld.
   - [x] OptiQ text payload, strict mixed4/8 stock load and four pinned decisions. [Evidence](benchmarks/results/2026-11-06-gemma-optiq-stock-v1.json).
+  - [x] OptiQ HumanEval/37, all 122 cached/stateless decisions, zero repairs. [Evidence](benchmarks/results/2026-11-06-gemma-optiq-trajectory37-v1.json).
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1463,3 +1464,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | Gemma OptiQ stock preflight reviewed | Strict text-only load audits 142 Q4 and 136 Q8 modules. Four saved decisions replay, one matches original BF16. Physical peak 4.86 GB. | Astra approves feasibility scope. Next HumanEval/37 full trajectory with unchanged policy. [Evidence](benchmarks/results/2026-11-06-gemma-optiq-stock-v1.json) |
 
 | 2026-11-06 | Qwen1.5B full literal task quality reviewed | All 100 native responses replay; isolated grade is 12/100 vs matched FP32 11/100. Zero unresolved cases and stopped VM restored. | Both original-weight gates pass. Next audited codec/owner and Mac Chat. [Evidence](benchmarks/results/2026-11-06-qwen15-task-quality-v1.json) |
+
+| 2026-11-06 | Gemma OptiQ single-case trajectory reviewed | HumanEval/37 replays all 122 decisions including hidden stop106, with zero repairs and final runtime audit. Physical peak 5.32 GB. | Astra approves scope and the full 100-case stock follow-up. [Evidence](benchmarks/results/2026-11-06-gemma-optiq-trajectory37-v1.json) |

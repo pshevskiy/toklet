@@ -42,9 +42,9 @@ candidate needs a new immutable source and unchanged full quality gates.
 
 The [pinned OptiQ stock preflight](../benchmarks/results/2026-11-06-gemma-optiq-stock-v1.json)
 fits the 6 GiB process policy. One of four saved decisions matches original
-BF16 and three match Q4. Run HumanEval/37 with the original prompt, output cap
-and stops. Require complete cached/stateless trajectory parity, using the
-existing first-mismatch, cycle and eight-repair policy if needed.
+BF16 and three match Q4. The [HumanEval/37 trajectory](../benchmarks/results/2026-11-06-gemma-optiq-trajectory37-v1.json)
+passes all 122 decisions with zero repairs. Continue all 100 stock cases under
+the existing first-mismatch, cycle and eight-repair policy before grading.
 
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 

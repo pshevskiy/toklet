@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "device": "Apple M1 Pro",
+  "case": "HumanEval/37",
+  "sampled": 122,
+  "terminal_stop_id": 106,
+  "repairs": 0,
+  "stock_runtime_audit": true,
+  "raw": "artifacts/gemma-optiq-inventory-2026-11-06/trajectory37/stock/result.json",
+  "owner": "artifacts/gemma-optiq-inventory-2026-11-06/trajectory37/stock-owned.json",
+  "plan_sha256": "3e8d7040204dd2c7eb2d7c24c9107b10a445ab14a404c07795618d9a8a495495",
+  "physical_peak_bytes": 5322887392,
+  "policy_limit_bytes": 6442450944,
+  "limits": "One original frozen case only. No task grade, general trajectory or native mixed qualification.",
+  "review": "Astra approved the unchanged one-case trajectory gate and full stock follow-up."
+}

@@ -10474,3 +10474,10 @@ Isolated grading gives 12/100 versus matched original FP32 11/100, with no
 unresolved cases. The VM returns to its stopped state. Both original-weight
 gates pass for this numerical profile. Managed Mac Chat remains a separate task.
 [Evidence](../benchmarks/results/2026-11-06-qwen15-task-quality-v1.json)
+
+## 6 November 2026 — Verify the previously unresolved Gemma trajectory
+
+OptiQ matches all 122 cached and complete stateless decisions on the frozen
+HumanEval/37 case, including hidden EOS106. No repair is needed. Astra approved
+the one-case scope and full stock follow-up.
+[Evidence](../benchmarks/results/2026-11-06-gemma-optiq-trajectory37-v1.json)
