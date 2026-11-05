@@ -1,4 +1,4 @@
-//! Explicit original-weight alignment for the pinned Qwen2.5-1.5B MLX8 model.
+//! Explicit original-weight held-out loss collection for the pinned Qwen2.5-1.5B MLX8 model.
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 #[path = "support/nll.rs"]
 mod nll;
@@ -6,7 +6,6 @@ mod nll;
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 fn run() -> Result<(), Box<dyn std::error::Error>> {
     use serde_json::json;
-    use sha2::{Digest, Sha256};
     use std::path::Path;
     use toklet::{
         metal::{self, AttentionMode, NormalizationMode, ProjectionMode, ReadbackMode},
@@ -16,11 +15,18 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
 
     const BUDGET: usize = 4 * 1024 * 1024 * 1024;
     const VOCAB: usize = 151936;
+    const BLOCK_TARGETS: usize = 1024;
+    let args: Vec<_> = std::env::args().skip(1).collect();
+    let (capacity, limit, chunks): (_, _, &[_]) = match args.as_slice() {
+        [] => (512, 33, &[1, 32]),
+        [mode] if mode == "--full" => (BLOCK_TARGETS + 1, 10_001, &[32]),
+        _ => return Err("usage: qwen15_quality_loss [--full]".into()),
+    };
     let root = Path::new(env!("CARGO_MANIFEST_DIR"));
     let source = root.join("models/Qwen2.5-1.5B-Instruct");
     let candidate = root.join("models/MLX-Qwen2.5-1.5B-Instruct-8bit-c7e1ff2");
     let corpus = include_bytes!("../benchmarks/contract-v1/held_out_loss.u32le");
-    let tokens: Vec<_> = corpus[..33 * 4]
+    let tokens: Vec<_> = corpus[..limit * 4]
         .chunks_exact(4)
         .map(|word| u32::from_le_bytes(word.try_into().unwrap()))
         .collect();
@@ -62,19 +68,19 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
     let model = metal::Model::load_mlx(
         &candidate,
         LoadOptions {
-            context_limit: 512,
+            context_limit: capacity,
             memory_limit_bytes: BUDGET,
         },
     )?;
     let c = model.config();
-    if (c.num_layers, c.hidden_size, c.vocab_size, c.max_positions) != (28, 1536, VOCAB, 512) {
+    if (c.num_layers, c.hidden_size, c.vocab_size, c.max_positions) != (28, 1536, VOCAB, capacity) {
         return Err("Loaded checkpoint geometry differs".into());
     }
-    for chunk in [1, 32] {
+    for &chunk in chunks {
         let mut session = metal::Session::with_attention_mode(
             &model,
             Options {
-                capacity: 512,
+                capacity,
                 prefill_chunk_size: chunk,
                 position_offset: 0,
                 memory_limit_bytes: BUDGET,
@@ -85,44 +91,9 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
             AttentionMode::Reference,
         )?;
         session.enable_diagnostics(&[])?;
-        session.set_tokens(&tokens)?;
-        let mut position = 0;
-        loop {
-            let rows = session.evaluate_next_chunk()?;
-            if rows == 0 {
-                break;
-            }
-            let snapshots = session.diagnostics()?;
-            let logits = snapshots
-                .iter()
-                .find(|d| d.stage == "logits")
-                .ok_or("Missing all-row logits")?;
-            if (logits.rows, logits.columns, logits.values.len()) != (rows, VOCAB, rows * VOCAB) {
-                return Err("Loss row shape differs".into());
-            }
-            for values in logits.values.chunks_exact(VOCAB) {
-                if let Some(&target) = tokens.get(position + 1) {
-                    let (maximum, exp_mass, loss) = nll::statistics(values, target as usize)?;
-                    let mut hash = Sha256::new();
-                    for value in values {
-                        hash.update(value.to_le_bytes());
-                    }
-                    println!(
-                        "QWEN15_LOSS {}",
-                        json!({"chunk":chunk,"position":position,"target":target,
-                        "maximum":maximum,"exp_mass":exp_mass,"loss":loss,"row_sha256":format!("{:x}",hash.finalize())})
-                    );
-                } else {
-                    let _ = nll::statistics(values, 0)?;
-                }
-                position += 1;
-            }
-        }
-        if position != tokens.len()
-            || session.history() != tokens
-            || session.evaluated_len() != tokens.len()
-        {
-            return Err("Causal loss coverage differs".into());
+        for start in (0..tokens.len() - 1).step_by(BLOCK_TARGETS) {
+            let end = (start + BLOCK_TARGETS + 1).min(tokens.len());
+            score_block(&mut session, &tokens[start..end], chunk, start)?;
         }
         session.reset();
         session.set_tokens(prompt.get_ids())?;
@@ -136,10 +107,68 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         }
         println!(
             "QWEN15_COMPLETE {}",
-            json!({"chunk":chunk,"scored":position-1,
-            "admitted_bytes":session.memory().admitted_bytes,"answer":answer,"stop":stop})
+            json!({"chunk":chunk,"scored":tokens.len()-1,
+            "admitted_bytes":session.memory().admitted_bytes,"capacity":capacity,"answer":answer,"stop":stop})
         );
     }
+    Ok(())
+}
+
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+fn score_block(
+    session: &mut toklet::metal::Session<'_>,
+    tokens: &[u32],
+    chunk: usize,
+    start: usize,
+) -> Result<(), Box<dyn std::error::Error>> {
+    use serde_json::json;
+    use sha2::{Digest, Sha256};
+    let vocab = session.vocab_size();
+    session.reset();
+    session.set_tokens(tokens)?;
+    let mut position = 0;
+    loop {
+        let rows = session.evaluate_next_chunk()?;
+        if rows == 0 {
+            break;
+        }
+        let snapshots = session.diagnostics()?;
+        let logits = snapshots
+            .iter()
+            .find(|d| d.stage == "logits")
+            .ok_or("Missing all-row logits")?;
+        if (logits.rows, logits.columns, logits.values.len()) != (rows, vocab, rows * vocab) {
+            return Err("Loss row shape differs".into());
+        }
+        for values in logits.values.chunks_exact(vocab) {
+            if let Some(&target) = tokens.get(position + 1) {
+                let (maximum, exp_mass, loss) = nll::statistics(values, target as usize)?;
+                let mut hash = Sha256::new();
+                for value in values {
+                    hash.update(value.to_le_bytes());
+                }
+                println!(
+                    "QWEN15_LOSS {}",
+                    json!({"chunk":chunk,"position":position,"global_target":start+position,"target":target,
+                    "maximum":maximum,"exp_mass":exp_mass,"target_logit_bits":values[target as usize].to_bits(),"loss":loss,"row_sha256":format!("{:x}",hash.finalize())})
+                );
+            } else {
+                let _ = nll::statistics(values, 0)?;
+            }
+            position += 1;
+        }
+    }
+    if position != tokens.len()
+        || session.history() != tokens
+        || session.evaluated_len() != tokens.len()
+    {
+        return Err("Causal loss coverage differs".into());
+    }
+    println!(
+        "QWEN15_BLOCK {}",
+        json!({"chunk":chunk,"start":start,
+        "targets":tokens.len()-1,"evaluated":session.evaluated_len(),"pending":session.pending_len()})
+    );
     Ok(())
 }
 

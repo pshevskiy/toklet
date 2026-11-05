@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Qwen1.5B full loss and pinned OptiQ Gemma stock preflight.**
+Current task: **Qwen1.5B frozen task quality and pinned OptiQ Gemma stock preflight.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -486,7 +486,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
   chunk/reset/overflow/memory checks and Astra review; [report](docs/qwen15-engine-execution.md).
   - [x] Original-weight short alignment, exact native chunk1/chunk32 scored rows
     and plain token IDs. [Evidence](benchmarks/results/2026-11-06-qwen15-original-alignment-v1.json).
-  - [ ] Full Qwen1.5B original-weight loss and task gates before managed Chat.
+  - [x] Full original-weight 10,000-target loss passes (+0.001528 nats).
+    [Evidence](benchmarks/results/2026-11-06-qwen15-full-loss-v1.json).
+  - [ ] Full frozen 100-task quality before managed Chat.
 - [x] SmolLM3 validated per-layer rotary mask, shared CPU/Metal bypass and
   independent nonzero-offset mixed-layer fixture; [block report](docs/smollm3-rotary-schedule.md).
 - [x] SmolLM3 pinned real Mac512 execution, stock comparison, state and memory;
@@ -1448,3 +1450,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | M9 conditional decisions recorded | Llama raw Online differs at a Half midpoint under the same operands. Existing Mac Qwen3 admission gives I8 KV no selected capacity target. | Astra confirms retained Online rejection and deferred I8 integration. The staged Llama probe is qualified separately. |
 
 | 2026-11-06 | Gemma same-input attention attribution reviewed | Captured K/V spans match the earlier producer-12 archive. Both contracts pass 2,048 context and 1,536 projection values. | Astra approves local scope. The full numerical rejection remains open. [Evidence](benchmarks/results/2026-11-06-gemma-attention-boundary-v1.json) |
+
+| 2026-11-06 | Qwen1.5B full original-weight loss reviewed | All 10,000 targets and ten independent blocks replay. NLL increase +0.001528 ≤0.05, physical peak 1.90 GB. | Astra approves the loss gate. Full task quality follows; the first CLI pilot hit the separate template guard. [Evidence](benchmarks/results/2026-11-06-qwen15-full-loss-v1.json) |

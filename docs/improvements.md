@@ -10440,3 +10440,11 @@ values and 1,536 O-projection values. The staged results are exact and the
 captured K/V matches the archive. Astra approved the local attribution.
 The original 1,025-position numerical rejection remains open.
 [Evidence](../benchmarks/results/2026-11-06-gemma-attention-boundary-v1.json)
+
+## 6 November 2026 — Pass the Qwen1.5B MLX8 full loss gate
+
+The native scorer resets ten frozen blocks and covers all 10,000 targets
+once. Original FP32 averages 2.485958 nats and native MLX8 averages 2.487487,
+an increase of 0.001528 against the 0.05 limit. Peak physical memory is
+1.90 GB. Astra approved the result. Literal task grading remains separate.
+[Evidence](../benchmarks/results/2026-11-06-qwen15-full-loss-v1.json)

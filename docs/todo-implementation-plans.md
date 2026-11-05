@@ -44,9 +44,9 @@ candidate needs a new immutable source and unchanged full quality gates.
 
 The [short alignment](../benchmarks/results/2026-11-06-qwen15-original-alignment-v1.json)
 binds the original FP32 baseline and shows bit equality between native chunk
-schedules. Score the unchanged 10,000 causal targets in 1,025-position blocks,
-then replay and grade the frozen 100 tasks against the matched original
-responses. Keep each owner's observed peak below 6 GiB. Managed Chat requires
+schedules. The [full native loss](../benchmarks/results/2026-11-06-qwen15-full-loss-v1.json)
+passes all 10,000 causal targets with an increase of 0.001528 nats.
+Replay and grade the frozen 100 tasks against the matched original responses. Keep each owner's observed peak below 6 GiB. Managed Chat requires
 both gates, audited artifact/text admission and a separate Mac journey.
 
 ### M8 closure audit
