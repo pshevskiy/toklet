@@ -1338,3 +1338,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | R1 decision reviewed | Position-level P0 replay finds maximum rotary ratios 0.123% prefill and 1.721% decode. Defer the 294,912-byte phase table for this workload. | Astra approves scoped defer. P3 remains open with long decode attention opportunity. [Decision](docs/m9-rotary-opportunity.md) |
 
 | 2026-11-05 | P1 decode control investigated | Reverse order repeats a 13.76% primary gain. The 512-token decode delta falls from +15.669 ms to −0.218 ms. The 128-token delta changes sign across pairs. | Preserve both sets. Begin independent P2 timing and the unchanged quality/state gates. [Result](benchmarks/results/2026-11-05-m9-affine-decode-control-v1.json) |
+
+| 2026-11-05 | P2 timing and quality plan active | Independent owned timing pair started. Prepared original one-token loss replay and a paired chunk-128 all-row check for the changed kernel. | Apply unchanged 10,000-target and 100-task gates, state and Mac app checks. [Plan](docs/m9-p2-affine-qualification.md) |

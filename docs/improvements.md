@@ -10120,5 +10120,6 @@ the phase table for this workload. [Decision](m9-rotary-opportunity.md)
 
 The 512-token decode difference fell within dispersion. The primary
 1,024-token prefill gain repeated at 13.76%. Both pairs and the 128-token
-control variation are retained. Independent P2 gates follow.
+control variation are retained. The next qualification preserves the original
+loss recipe and adds paired tiled rows. [P2 plan](m9-p2-affine-qualification.md).
 [Result](../benchmarks/results/2026-11-05-m9-affine-decode-control-v1.json)
