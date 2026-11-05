@@ -106,7 +106,9 @@ The [nonstreaming CPU path](../benchmarks/results/2026-11-05-m9-cpu-lookup-v1.js
 passes authored tie and near-tie controls. The [real Qwen2 Metal witness](../benchmarks/results/2026-11-05-m9-qwen2-lookup-parity-v1.json)
 passes exact target parity and rollback. The [atomic Metal round](../benchmarks/results/2026-11-05-m9-qwen2-atomic-round-v1.json)
 passes using the admitted all-row workspace and retains Completion replay.
-Integrate bounded Metal generation next. Keep streaming and throughput separate.
+The [bounded Metal generation path](../benchmarks/results/2026-11-06-m9-qwen2-metal-generation-v1.json)
+passes pinned transcript, state, pre-cancel and hidden-stop checks. Measure
+paired latency and acceptance next. Streaming remains outside this scope.
 
 ### G2/G3 shared KV and MTP
 

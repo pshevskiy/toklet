@@ -220,3 +220,122 @@ fn qwen2_metal_lookup_batches_preserve_serial_decisions() {
         "strict target decision mismatch"
     );
 }
+
+#[test]
+#[ignore = "explicit Qwen2.5 MLX8 Metal lookup generation with the pinned model"]
+fn qwen2_metal_lookup_generation_matches_serial_output() {
+    use std::sync::atomic::AtomicBool;
+    use toklet::generation::{self, Input, Request, StopReason};
+
+    let path =
+        Path::new(env!("CARGO_MANIFEST_DIR")).join("models/MLX-Qwen2.5-0.5B-Instruct-8bit-6474d4c");
+    let budget = 1280 * 1024 * 1024;
+    let model = metal::Model::load_mlx_qwen2_audited(
+        &path,
+        LoadOptions {
+            context_limit: 256,
+            memory_limit_bytes: budget,
+        },
+    )
+    .unwrap();
+    let original: Vec<_> = include_bytes!("../benchmarks/contract-v1/prompt_128.u32le")
+        .chunks_exact(4)
+        .map(|word| u32::from_le_bytes(word.try_into().unwrap()))
+        .collect();
+    let cancel = AtomicBool::new(false);
+    let mut proposals = 0;
+    let mut accepted = 0;
+    let mut output = Vec::with_capacity(16);
+    let mut rows = vec![f32::NAN; 9 * model.config().vocab_size];
+    for (prompt, repetitive) in [(&original[..], false), (&[198; 128][..], true)] {
+        let open = || {
+            let mut s = metal::Session::with_attention_mode(
+                &model,
+                Options {
+                    capacity: 256,
+                    prefill_chunk_size: 8,
+                    position_offset: 0,
+                    memory_limit_bytes: budget,
+                },
+                ProjectionMode::MlxAffine,
+                NormalizationMode::Compensated,
+                ReadbackMode::FullLogits,
+                AttentionMode::Online,
+            )
+            .unwrap();
+            s.set_tokens(prompt).unwrap();
+            s.evaluate().unwrap();
+            s
+        };
+        let mut reference = open();
+        let mut actual = open();
+        let stop = [actual.greedy_token().unwrap().unwrap()];
+        let mut expected = Vec::new();
+        let ordinary = generation::generate(
+            &mut reference,
+            Request {
+                input: Input::Continue,
+                max_new_tokens: 16,
+                stop_tokens: &[],
+            },
+            &cancel,
+            |event| {
+                expected.push(event.token_id);
+                Ok(())
+            },
+        )
+        .unwrap();
+        output.clear();
+        let result = generation::generate_metal_lookup(
+            &mut actual,
+            16,
+            &[],
+            &mut output,
+            &mut rows,
+            &cancel,
+        )
+        .unwrap();
+        assert_eq!(result.reason, ordinary.reason);
+        assert_eq!(result.emitted_tokens, expected.len());
+        assert_eq!(output, expected);
+        assert_eq!(actual.history(), reference.history());
+        assert_eq!(actual.evaluated_len(), reference.evaluated_len());
+        assert_eq!(actual.pending_len(), 1);
+        if repetitive {
+            assert!(result.proposed_tokens > 0);
+        }
+        proposals += result.proposed_tokens;
+        accepted += result.accepted_tokens;
+        drop(reference);
+        drop(actual);
+
+        let mut stopped = open();
+        output.clear();
+        let aborted = generation::generate_metal_lookup(
+            &mut stopped,
+            16,
+            &stop,
+            &mut output,
+            &mut rows,
+            &AtomicBool::new(true),
+        )
+        .unwrap();
+        assert_eq!(aborted.reason, StopReason::Cancelled);
+        assert_eq!(stopped.history(), prompt);
+        assert!(output.is_empty());
+        let hidden = generation::generate_metal_lookup(
+            &mut stopped,
+            16,
+            &stop,
+            &mut output,
+            &mut rows,
+            &cancel,
+        )
+        .unwrap();
+        assert_eq!(hidden.reason, StopReason::StopToken { token_id: stop[0] });
+        assert!(output.is_empty());
+        assert_eq!(stopped.pending_len(), 1);
+        assert_eq!(stopped.history().last(), Some(&stop[0]));
+    }
+    println!("LOOKUP_GENERATION {{\"cases\":2,\"proposed\":{proposals},\"accepted\":{accepted}}}");
+}

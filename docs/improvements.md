@@ -10390,3 +10390,11 @@ model-owned pipeline, and reproduces the isolated real Llama row exactly.
 Astra approved admission, cancellation and replay checks. Mac app
 qualification remains separate.
 [Evidence](../benchmarks/results/2026-11-05-llama-staged-session-v1.json)
+
+## 6 November 2026 — Share bounded prompt lookup with audited Qwen2 Metal
+
+The CPU and Metal entry points share one statically dispatched loop. A pinned
+Mac release run matches both serial transcripts and state, including 15 of 23
+accepted proposals. Astra approved the explicit nonstreaming path. The
+paired performance comparison is pending.
+[Evidence](../benchmarks/results/2026-11-06-m9-qwen2-metal-generation-v1.json)

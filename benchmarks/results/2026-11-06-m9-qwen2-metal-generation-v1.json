@@ -1,0 +1,27 @@
+{
+  "device": "Apple M1 Pro",
+  "profile": "Qwen2.5-0.5B-Instruct MLX8 6474d4c, Mac256/chunk8, Online, FullLogits",
+  "scope": "Explicit nonstreaming Metal API. Ordinary app and CPU entry points preserve behavior.",
+  "checks": "artifacts/m9-p5-metal-generation-2026-11-06/checks.json",
+  "default_tests": 583,
+  "metal_tests": 695,
+  "release_real_cases": 2,
+  "proposed_tokens": 23,
+  "accepted_tokens": 15,
+  "exact": [
+    "visible IDs",
+    "stop reason",
+    "sampled history",
+    "evaluated and pending positions"
+  ],
+  "additional_controls": [
+    "pre-cancel preserves prefix",
+    "hidden stop remains pending"
+  ],
+  "owner": "artifacts/m9-p5-metal-generation-2026-11-06/owned.json",
+  "binary_sha256": "fccbac664678c6dff7a41ca4c9d89eb1b93b478c61a6dc8fa0da416c023966c1",
+  "rss_peak_bytes": 577175552,
+  "sampled_physical_peak_bytes": 566412296,
+  "review": "Astra approved static dispatch, profile enforcement, publication, and pending-state rules.",
+  "timing": "Separate paired experiment pending."
+}

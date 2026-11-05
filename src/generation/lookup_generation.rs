@@ -1,14 +1,62 @@
-//! Explicit, nonstreaming CPU generation over the bounded lookup transaction.
-use super::{Error, Input, Request, StopReason, VerifiedNext, lookup, validate_request};
-use crate::{sampling, session::Session};
+//! Explicit nonstreaming generation over bounded lookup transactions.
+use super::{
+    Error, GreedyVerification, Input, Request, StopReason, VerifiedNext, lookup, validate_request,
+};
+use crate::session::{InferenceSession, Session};
 use std::sync::atomic::{AtomicBool, Ordering};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub struct CpuLookupReport {
+pub struct LookupReport {
     pub reason: StopReason,
     pub emitted_tokens: usize,
     pub proposed_tokens: usize,
     pub accepted_tokens: usize,
+}
+
+pub use LookupReport as CpuLookupReport;
+
+type Round = Result<Option<GreedyVerification>, Error>;
+
+trait LookupTarget: InferenceSession {
+    fn chunk_size(&self) -> usize;
+    fn verify_round(
+        &mut self,
+        proposals: &[u32],
+        stops: &[u32],
+        rows: &mut [f32],
+        cancel: impl Fn() -> bool,
+    ) -> Round;
+}
+
+impl LookupTarget for Session<'_> {
+    fn chunk_size(&self) -> usize {
+        self.options().prefill_chunk_size
+    }
+    fn verify_round(
+        &mut self,
+        proposals: &[u32],
+        stops: &[u32],
+        rows: &mut [f32],
+        cancel: impl Fn() -> bool,
+    ) -> Round {
+        self.verify_greedy_round(proposals, stops, rows, cancel)
+    }
+}
+
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+impl LookupTarget for crate::metal::Session<'_> {
+    fn chunk_size(&self) -> usize {
+        self.native_options().prefill_chunk_size
+    }
+    fn verify_round(
+        &mut self,
+        proposals: &[u32],
+        stops: &[u32],
+        rows: &mut [f32],
+        cancel: impl Fn() -> bool,
+    ) -> Round {
+        self.verify_greedy_round(proposals, stops, rows, cancel)
+    }
 }
 
 /// Continue from a fully evaluated CPU prefix using caller-owned output and
@@ -27,6 +75,46 @@ pub fn generate_cpu_lookup(
     target_rows: &mut [f32],
     cancelled: &AtomicBool,
 ) -> Result<CpuLookupReport, Error> {
+    generate_lookup(
+        session,
+        max_new_tokens,
+        stop_tokens,
+        output,
+        target_rows,
+        cancelled,
+    )
+}
+
+/// Continue from the audited Qwen2 Mac256/chunk8 Metal profile. Storage,
+/// cancellation and pending-token rules match [generate_cpu_lookup].
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+pub fn generate_metal_lookup(
+    session: &mut crate::metal::Session<'_>,
+    max_new_tokens: usize,
+    stop_tokens: &[u32],
+    output: &mut Vec<u32>,
+    target_rows: &mut [f32],
+    cancelled: &AtomicBool,
+) -> Result<LookupReport, Error> {
+    session.validate_lookup_profile()?;
+    generate_lookup(
+        session,
+        max_new_tokens,
+        stop_tokens,
+        output,
+        target_rows,
+        cancelled,
+    )
+}
+
+fn generate_lookup(
+    session: &mut impl LookupTarget,
+    max_new_tokens: usize,
+    stop_tokens: &[u32],
+    output: &mut Vec<u32>,
+    target_rows: &mut [f32],
+    cancelled: &AtomicBool,
+) -> Result<LookupReport, Error> {
     validate_request(
         session,
         &Request {
@@ -46,7 +134,7 @@ pub fn generate_cpu_lookup(
     let mut proposal = [0; lookup::MAX_PROPOSAL];
     let limit = proposal
         .len()
-        .min(session.options().prefill_chunk_size)
+        .min(session.chunk_size())
         .min(max_new_tokens.saturating_sub(1));
     let width = session.vocab_size();
     if limit != 0
@@ -59,7 +147,7 @@ pub fn generate_cpu_lookup(
 
     let initial_output = output.len();
     let cancel = || cancelled.load(Ordering::Relaxed);
-    let mut report = CpuLookupReport {
+    let mut report = LookupReport {
         reason: StopReason::OutputLimit,
         emitted_tokens: 0,
         proposed_tokens: 0,
@@ -82,10 +170,12 @@ pub fn generate_cpu_lookup(
         let count =
             lookup::prompt_lookup(session.history(), lookup::MAX_MATCH, &mut proposal[..bound])?;
         let next = if count == 0 {
-            let id = sampling::greedy(session.logits().ok_or(Error::InvalidRequest(
-                "lookup requires a committed distribution",
-            ))?)
-            .map_err(Error::Sampling)?;
+            let id = session
+                .greedy_token()
+                .ok_or(Error::InvalidRequest(
+                    "lookup requires a committed distribution",
+                ))?
+                .map_err(Error::Sampling)?;
             if cancel() {
                 report.reason = StopReason::Cancelled;
                 break;
@@ -98,7 +188,7 @@ pub fn generate_cpu_lookup(
             }
         } else {
             report.proposed_tokens += count;
-            let Some(verified) = session.verify_greedy_round(
+            let Some(verified) = session.verify_round(
                 &proposal[..count],
                 stop_tokens,
                 &mut target_rows[..(count + 1) * width],

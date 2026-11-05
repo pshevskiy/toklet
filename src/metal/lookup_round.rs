@@ -4,6 +4,27 @@ use crate::{generation, session};
 use objc2::rc::autoreleasepool;
 
 impl Session<'_> {
+    pub(crate) fn validate_lookup_profile(&self) -> std::result::Result<(), generation::Error> {
+        if self.model.mlx_qwen2_source_content_identity().is_none()
+            || self.options.capacity != 256
+            || self.options.prefill_chunk_size != 8
+            || self.options.position_offset != 0
+            || self.readback_mode != ReadbackMode::FullLogits
+            || self.projection_mode != ProjectionMode::MlxAffine
+            || self.normalization_mode != NormalizationMode::Compensated
+            || self.attention_mode != AttentionMode::Online
+            || self.affine_tile4.is_some()
+            || self.parallel_reference.is_some()
+            || self.trace.is_some()
+            || !self.diagnostics.is_empty()
+        {
+            return Err(generation::Error::InvalidRequest(
+                "lookup requires the pinned ordinary Qwen2 Metal256 chunk8 profile",
+            ));
+        }
+        Ok(())
+    }
+
     /// Verify one tentative chunk for the pinned Qwen2 MLX8 Metal profile.
     /// Caller rows are (proposals + 1) by vocabulary, with the committed
     /// distribution first. Only the accepted prefix and one pending target
@@ -19,23 +40,7 @@ impl Session<'_> {
         use generation::{Error as GenerationError, VerifiedNext};
         let backend =
             |error: Error| GenerationError::Session(session::Error::Backend(error.to_string()));
-        if self.model.mlx_qwen2_source_content_identity().is_none()
-            || self.options.capacity != 256
-            || self.options.prefill_chunk_size != 8
-            || self.options.position_offset != 0
-            || self.readback_mode != ReadbackMode::FullLogits
-            || self.projection_mode != ProjectionMode::MlxAffine
-            || self.normalization_mode != NormalizationMode::Compensated
-            || self.attention_mode != AttentionMode::Online
-            || self.affine_tile4.is_some()
-            || self.parallel_reference.is_some()
-            || self.trace.is_some()
-            || !self.diagnostics.is_empty()
-        {
-            return Err(GenerationError::InvalidRequest(
-                "lookup requires the pinned ordinary Qwen2 Metal256 chunk8 profile",
-            ));
-        }
+        self.validate_lookup_profile()?;
         let start = self.evaluated;
         let width = self.model.config.vocab_size;
         let current = self.logits().ok_or(GenerationError::InvalidRequest(

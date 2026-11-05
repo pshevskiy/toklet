@@ -8,11 +8,13 @@
 //! Callback failure preserves a valid KV prefix and the pending sampled token;
 //! callers may continue or discard pending input explicitly.
 
-mod cpu_lookup;
 mod lookup;
+mod lookup_generation;
 mod verify;
-pub use cpu_lookup::{CpuLookupReport, generate_cpu_lookup};
 pub use lookup::prompt_lookup;
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+pub use lookup_generation::generate_metal_lookup;
+pub use lookup_generation::{CpuLookupReport, LookupReport, generate_cpu_lookup};
 pub use verify::{GreedyVerification, VerifiedNext, verify_greedy};
 
 use crate::{
