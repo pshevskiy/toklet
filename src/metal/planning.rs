@@ -166,6 +166,41 @@ pub(super) struct SessionPlan {
     pub token_count: usize,
 }
 impl SessionPlan {
+    pub(super) fn with_moe(
+        mut self,
+        ffn_bytes: usize,
+        expert_count: usize,
+        layer_bytes: usize,
+        pipeline_bytes: usize,
+    ) -> Result<Self> {
+        let dense_bytes = self
+            .m
+            .bytes(2)?
+            .checked_mul(4)
+            .ok_or(Error::Options("dense scratch bytes"))?;
+        let zero_count = self.zero_count.max(add(expert_count, 7)?);
+        let extra_zero_bytes = (zero_count - self.zero_count)
+            .checked_mul(2)
+            .ok_or(Error::Options("MoE zero bias bytes"))?;
+        let replace = |bytes: usize| {
+            add(
+                bytes
+                    .checked_sub(dense_bytes)
+                    .ok_or(Error::Options("dense scratch accounting"))?,
+                add(ffn_bytes, extra_zero_bytes)?,
+            )
+        };
+        self.zero_count = zero_count;
+        self.memory.scratch_bytes = replace(self.memory.scratch_bytes)?;
+        self.memory.metadata_bytes = add(self.memory.metadata_bytes, layer_bytes)?;
+        self.memory.metadata_allowance_bytes =
+            add(self.memory.metadata_allowance_bytes, pipeline_bytes)?;
+        self.memory.admitted_bytes = add(
+            replace(self.memory.admitted_bytes)?,
+            add(layer_bytes, pipeline_bytes)?,
+        )?;
+        Ok(self)
+    }
     pub(super) fn with_positional_bytes(mut self, bytes: usize) -> Result<Self> {
         let base = self
             .memory
@@ -1322,6 +1357,23 @@ mod tests {
         assert_eq!(compensated.score_count, reference.score_count);
         assert_eq!(compensated.cache_count, reference.cache_count);
         assert_eq!(compensated.memory, reference.memory);
+        let experts = reference.zero_count + 17;
+        let extra_zero = (experts + 7 - reference.zero_count) * 2;
+        let replaced = reference.m.bytes(2).unwrap() * 4;
+        let moe = make().with_moe(replaced, experts, 64, 128).unwrap();
+        assert_eq!(moe.zero_count, experts + 7);
+        assert_eq!(
+            moe.memory.scratch_bytes,
+            reference.memory.scratch_bytes + extra_zero
+        );
+        assert_eq!(
+            moe.memory.metadata_bytes,
+            reference.memory.metadata_bytes + 64
+        );
+        assert_eq!(
+            moe.memory.admitted_bytes,
+            reference.memory.admitted_bytes + extra_zero + 192
+        );
         for field in 0..10 {
             let mut plan = make();
             match field {

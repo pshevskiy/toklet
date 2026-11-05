@@ -1,8 +1,10 @@
 //! Borrowed resident Half-score router, qualified here before graph integration.
 //! Candidate outputs must be discarded after any nonzero shared status.
+#[cfg(test)]
+use super::memory::validate_buffer_bytes;
 use super::{
     Error, Result,
-    memory::{Buffer, Gpu, validate_buffer_bytes},
+    memory::{Buffer, Gpu},
     profile::Command,
 };
 use objc2::{rc::Retained, runtime::ProtocolObject};
@@ -11,7 +13,7 @@ use objc2_metal::*;
 use std::{mem::size_of, ptr::NonNull};
 const GUARD: usize = 7;
 const STATUS: usize = 1 + GUARD;
-const PIPELINE_RESERVATION: usize = 64 * 1024 * 1024;
+pub(super) const PIPELINE_RESERVATION: usize = 64 * 1024 * 1024;
 
 #[derive(Clone, Copy, Debug)]
 pub(super) struct Plan {
@@ -22,6 +24,7 @@ pub(super) struct Plan {
     output_stride: usize,
     pub(super) input_len: usize,
     pub(super) output_len: usize,
+    #[cfg(test)]
     operand_bytes: usize,
 }
 impl Plan {
@@ -51,6 +54,7 @@ impl Plan {
         };
         let input_len = extent(input_stride, 2)?;
         let output_len = extent(output_stride, 4)?;
+        #[cfg(test)]
         let operand_bytes = input_len
             .checked_mul(2)
             .and_then(|n| output_len.checked_mul(8).and_then(|o| n.checked_add(o)))
@@ -64,9 +68,11 @@ impl Plan {
             output_stride,
             input_len,
             output_len,
+            #[cfg(test)]
             operand_bytes,
         })
     }
+    #[cfg(test)]
     fn admit(self, maximum: usize, budget: usize) -> Result<usize> {
         let required = self
             .operand_bytes
@@ -86,6 +92,7 @@ impl Plan {
 }
 /// Concrete qualification owner consumes the exact guarded allocation plan.
 /// A later session can borrow already-owned score/status resources instead.
+#[cfg(test)]
 struct Resident {
     plan: Plan,
     input: Buffer<u16>,
@@ -93,6 +100,7 @@ struct Resident {
     gates: Buffer<u32>,
     status: Buffer<u32>,
 }
+#[cfg(test)]
 impl Resident {
     fn new(gpu: &Gpu, plan: Plan, budget: usize) -> Result<Self> {
         plan.admit(gpu.device.maxBufferLength(), budget)?;

@@ -1,7 +1,9 @@
 //! Resident correctness leaves for the Granite fused expert layout.
+#[cfg(test)]
+use super::memory::validate_buffer_bytes;
 use super::{
     Error, Result,
-    memory::{Buffer, Gpu, validate_buffer_bytes},
+    memory::{Buffer, Gpu},
     profile::Command,
 };
 use objc2::{rc::Retained, runtime::ProtocolObject};
@@ -10,7 +12,7 @@ use objc2_metal::*;
 use std::{mem::size_of, ptr::NonNull};
 
 const GUARD: usize = 7;
-const PIPELINE_RESERVATION: usize = 64 * 1024 * 1024;
+pub(super) const PIPELINE_RESERVATION: usize = 64 * 1024 * 1024;
 const LABELS: [&str; 4] = [
     "expert_gate_up",
     "expert_glu",
@@ -25,6 +27,7 @@ pub(super) struct Plan {
     // expert values, reduced output, then IDs, FP32 gate words and status.
     pub(super) half: [usize; 8],
     pub(super) word: [usize; 3],
+    #[cfg(test)]
     operand_bytes: usize,
 }
 
@@ -72,6 +75,7 @@ impl Plan {
         ];
         let route = extent(capacity, routing)?;
         let word = [route, route, 1 + GUARD];
+        #[cfg(test)]
         let operand_bytes = half
             .iter()
             .map(|&n| n * 2)
@@ -94,10 +98,12 @@ impl Plan {
             .map(|n| n as u32),
             half,
             word,
+            #[cfg(test)]
             operand_bytes,
         })
     }
 
+    #[cfg(test)]
     fn admit(self, maximum: usize, budget: usize) -> Result<usize> {
         let required = self
             .operand_bytes
@@ -121,11 +127,13 @@ impl Plan {
     }
 }
 
+#[cfg(test)]
 struct Resident {
     plan: Plan,
     half: [Buffer<u16>; 8],
     word: [Buffer<u32>; 3],
 }
+#[cfg(test)]
 impl Resident {
     fn new(gpu: &Gpu, plan: Plan, budget: usize) -> Result<Self> {
         plan.admit(gpu.device.maxBufferLength(), budget)?;

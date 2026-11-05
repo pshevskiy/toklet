@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "device": "Apple M1 Pro",
+  "counts": {
+    "cpu": 574,
+    "metal": 686,
+    "moe_gpu": 7,
+    "dense_gpu": 6
+  },
+  "fixture_reproduced_byte_for_byte": true,
+  "review": "Astra approved production Granite MoE graph after router width and native profile corrections",
+  "checks": "artifacts/moe-session-2026-11-05/final/checks.json",
+  "gpu": "artifacts/moe-session-2026-11-05/final/gpu.json",
+  "first_attempt": "artifacts/moe-session-2026-11-05/gpu.stdout",
+  "scope": "Authenticated BF16 to resident Half, shared attention and KV, fixed MoE arithmetic, combined session admission and tiny fixture",
+  "real_checkpoint_qualified": false
+}

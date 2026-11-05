@@ -24,6 +24,11 @@ impl Session<'_> {
     /// Admit diagnostics before execution; selected layers use row-major stage
     /// snapshots. No additional CPU/GPU wait is introduced. Re-enabling is rejected.
     pub fn enable_diagnostics(&mut self, layers: &[usize]) -> Result<()> {
+        if self.model.moe.is_some() {
+            return Err(Error::Unsupported(
+                "MoE instrumentation requires its own layout",
+            ));
+        }
         if !self.diagnostics.is_empty() || self.evaluated != 0 || self.pending_len() != 0 {
             return Err(Error::Options("enable diagnostics on a fresh session"));
         }

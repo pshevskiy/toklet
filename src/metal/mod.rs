@@ -34,11 +34,8 @@ pub mod lfm2;
 mod llama3_rotary;
 mod memory;
 pub mod mlx;
-#[cfg(test)]
 mod moe_experts_half;
-#[cfg(test)]
 mod moe_ffn;
-#[cfg(test)]
 mod moe_router_half;
 pub mod planning;
 mod profile;
@@ -191,9 +188,18 @@ struct Layer {
     k_bias: Option<Tensor>,
     v_bias: Option<Tensor>,
     qk_norms: Option<(Tensor, Tensor)>,
+    feed_forward: FeedForward,
+}
+struct DenseFeedForward {
     gate: Tensor,
     up: Tensor,
     down: Tensor,
+}
+// Keep both owners inline to avoid a separate allocation for every dense layer.
+#[allow(clippy::large_enum_variant)]
+enum FeedForward {
+    Dense(DenseFeedForward),
+    Moe(moe_ffn::LayerWeights),
 }
 /// Immutable resident Half weights. The embedding allocation is tied to output.
 #[derive(Clone, Copy, Debug)]
@@ -220,6 +226,7 @@ pub struct Model {
     mlx_declared_positions: Option<usize>,
     mlx_source_identity: Option<crate::mlx::qwen::SourceContentIdentity>,
     mlx_dense_source_identity: Option<crate::mlx::qwen::DenseSourceContentIdentity>,
+    moe: Option<moe_ffn::Graph>,
     pub load_timing: LoadTiming,
 }
 impl Model {
@@ -230,6 +237,15 @@ impl Model {
         normalization_mode: NormalizationMode,
         attention_mode: AttentionMode,
     ) -> Result<()> {
+        if self.moe.is_some()
+            && (projection_mode != ProjectionMode::HalfCompensated
+                || normalization_mode != NormalizationMode::Compensated
+                || attention_mode != AttentionMode::Reference)
+        {
+            return Err(Error::Options(
+                "MoE requires compensated Half and Reference attention",
+            ));
+        }
         if self.is_mlx() != (projection_mode == ProjectionMode::MlxAffine) {
             return Err(Error::Options(
                 "MLX artifacts require the explicit MlxAffine projection mode",
@@ -359,7 +375,11 @@ impl Model {
             .then_some(identity)
     }
     pub(crate) fn native_attention_mode(&self) -> AttentionMode {
-        planning::native_attention_mode(self.mlx_architecture)
+        if self.moe.is_some() {
+            AttentionMode::Reference
+        } else {
+            planning::native_attention_mode(self.mlx_architecture)
+        }
     }
 
     pub fn q4_format(&self) -> Option<q4::Format> {
@@ -766,11 +786,34 @@ impl Model {
     fn assemble(
         config: model::Config,
         gpu: Gpu,
+        tensors: BTreeMap<String, Tensor>,
+        weight_bytes: usize,
+        bias_free: bool,
+        untied_output: bool,
+        qk_normalized: bool,
+    ) -> Result<Self> {
+        Self::assemble_with_feed_forward(
+            config,
+            gpu,
+            tensors,
+            weight_bytes,
+            bias_free,
+            untied_output,
+            qk_normalized,
+            None,
+        )
+    }
+
+    #[allow(clippy::too_many_arguments)]
+    fn assemble_with_feed_forward(
+        config: model::Config,
+        gpu: Gpu,
         mut tensors: BTreeMap<String, Tensor>,
         weight_bytes: usize,
         bias_free: bool,
         untied_output: bool,
         qk_normalized: bool,
+        mut moe: Option<std::vec::IntoIter<moe_ffn::LayerWeights>>,
     ) -> Result<Self> {
         let mut take = |name: &str| {
             tensors
@@ -818,12 +861,18 @@ impl Model {
                 } else {
                     None
                 },
-                gate: take(&format!("{p}.mlp.gate_proj.weight"))?,
-                up: take(&format!("{p}.mlp.up_proj.weight"))?,
-                down: take(&format!("{p}.mlp.down_proj.weight"))?,
+                feed_forward: if let Some(layers) = &mut moe {
+                    FeedForward::Moe(layers.next().ok_or(Error::Options("missing MoE layer"))?)
+                } else {
+                    FeedForward::Dense(DenseFeedForward {
+                        gate: take(&format!("{p}.mlp.gate_proj.weight"))?,
+                        up: take(&format!("{p}.mlp.up_proj.weight"))?,
+                        down: take(&format!("{p}.mlp.down_proj.weight"))?,
+                    })
+                },
             });
         }
-        if !tensors.is_empty() {
+        if !tensors.is_empty() || moe.is_some_and(|mut layers| layers.next().is_some()) {
             return Err(Error::Options("unconsumed validated tensor"));
         }
         Ok(Self {
@@ -843,6 +892,7 @@ impl Model {
             mlx_declared_positions: None,
             mlx_source_identity: None,
             mlx_dense_source_identity: None,
+            moe: None,
             load_timing: LoadTiming {
                 load_seconds: 0.,
                 conversion_seconds: 0.,
@@ -865,10 +915,7 @@ struct Scratch {
     v: Buffer<u16>,
     context: Buffer<u16>,
     delta: Buffer<u16>,
-    gate: Buffer<u16>,
-    silu: Buffer<u16>,
-    up: Buffer<u16>,
-    gated: Buffer<u16>,
+    feed_forward: FeedForwardScratch,
     floats: Buffer<u32>,
     scores: Buffer<u32>,
     probs: Buffer<u32>,
@@ -877,22 +924,37 @@ struct Scratch {
     selection: Option<Buffer<u32>>,
     zero: Buffer<u16>,
 }
+struct DenseScratch {
+    gate: Buffer<u16>,
+    silu: Buffer<u16>,
+    up: Buffer<u16>,
+    gated: Buffer<u16>,
+}
+// Both paths allocate their buffers from one admitted scratch owner.
+#[allow(clippy::large_enum_variant)]
+enum FeedForwardScratch {
+    Dense(DenseScratch),
+    Moe(moe_ffn::Scratch),
+}
+struct DenseViews {
+    gated: Retained<MPSMatrix>,
+    result_m: Retained<MPSMatrix>,
+    hm: Retained<MPSMatrixMultiplication>,
+    mh: Retained<MPSMatrixMultiplication>,
+}
 struct Views {
     norm: Retained<MPSMatrix>,
     last_norm: Retained<MPSMatrix>,
     context: Retained<MPSMatrix>,
-    gated: Retained<MPSMatrix>,
     result_h: Retained<MPSMatrix>,
     result_q: Retained<MPSMatrix>,
     result_k: Retained<MPSMatrix>,
-    result_m: Retained<MPSMatrix>,
     result_v: Retained<MPSMatrix>,
     hq: Retained<MPSMatrixMultiplication>,
     qh: Retained<MPSMatrixMultiplication>,
     hk: Retained<MPSMatrixMultiplication>,
-    hm: Retained<MPSMatrixMultiplication>,
-    mh: Retained<MPSMatrixMultiplication>,
     hv: Retained<MPSMatrixMultiplication>,
+    dense: Option<DenseViews>,
 }
 /// Bounded operation-boundary selection. The original path remains the default.
 /// The opt-in tile is experimental: equal-width device measurements establish
@@ -1055,6 +1117,10 @@ impl<'m> Session<'m> {
     }
 
     pub fn new(model: &'m Model, options: session::Options) -> Result<Self> {
+        if model.moe.is_some() {
+            let (projection, normalization) = model.native_session_modes();
+            return Self::with_execution_modes(model, options, projection, normalization);
+        }
         Self::with_projection_mode(model, options, ProjectionMode::Original)
     }
     pub fn with_projection_mode(
@@ -1129,6 +1195,24 @@ impl<'m> Session<'m> {
                 )?
             };
             let plan = plan.with_positional_bytes(model.positional_resident_bytes())?;
+            let moe_plan = model
+                .moe
+                .as_ref()
+                .map(|graph| graph.session_plan(c, options, plan.h))
+                .transpose()?;
+            let plan = if let Some(moe_plan) = moe_plan {
+                plan.with_moe(
+                    moe_plan.admit(
+                        model.gpu.device.maxBufferLength(),
+                        options.memory_limit_bytes,
+                    )?,
+                    moe_plan.expert_count(),
+                    model.allocated_layer_metadata_bytes()?,
+                    moe_ffn::Graph::pipeline_bytes(),
+                )?
+            } else {
+                plan
+            };
             plan.admit(options.memory_limit_bytes)?;
             plan.validate_buffers(model.gpu.device.maxBufferLength())?;
             let planning::SessionPlan {
@@ -1160,10 +1244,20 @@ impl<'m> Session<'m> {
                 v: kb()?,
                 context: qb()?,
                 delta: hb()?,
-                gate: mb()?,
-                silu: mb()?,
-                up: mb()?,
-                gated: mb()?,
+                feed_forward: if let Some(plan) = moe_plan {
+                    FeedForwardScratch::Moe(moe_ffn::Scratch::new(
+                        g,
+                        plan,
+                        options.memory_limit_bytes,
+                    )?)
+                } else {
+                    FeedForwardScratch::Dense(DenseScratch {
+                        gate: mb()?,
+                        silu: mb()?,
+                        up: mb()?,
+                        gated: mb()?,
+                    })
+                },
                 floats: Buffer::new(g, f.elements)?,
                 scores: Buffer::new(g, score_count)?,
                 probs: Buffer::new(g, score_count)?,
@@ -1206,17 +1300,26 @@ impl<'m> Session<'m> {
                         (n - 1) * h.stride,
                     )?,
                     context: matrix(&scratch.context, q.view(n, query_width)?, true)?,
-                    gated: matrix(&scratch.gated, m.view(n, c.intermediate_size)?, true)?,
+                    dense: match &scratch.feed_forward {
+                        FeedForwardScratch::Dense(dense) => Some(DenseViews {
+                            gated: matrix(&dense.gated, m.view(n, c.intermediate_size)?, true)?,
+                            result_m: matrix(
+                                &scratch.floats,
+                                f.view(n, c.intermediate_size)?,
+                                false,
+                            )?,
+                            hm: multiply(g, n, c.hidden_size, c.intermediate_size),
+                            mh: multiply(g, n, c.intermediate_size, c.hidden_size),
+                        }),
+                        FeedForwardScratch::Moe(_) => None,
+                    },
                     result_h,
                     result_q,
                     result_k: matrix(&scratch.floats, f.view(n, c.kv_heads * c.head_dim)?, false)?,
-                    result_m: matrix(&scratch.floats, f.view(n, c.intermediate_size)?, false)?,
                     result_v: matrix(&scratch.floats, f.view(n, c.vocab_size)?, false)?,
                     hq,
                     qh,
                     hk: multiply(g, n, c.hidden_size, c.kv_heads * c.head_dim),
-                    hm: multiply(g, n, c.hidden_size, c.intermediate_size),
-                    mh: multiply(g, n, c.intermediate_size, c.hidden_size),
                     hv: multiply(g, n, c.hidden_size, c.vocab_size),
                 });
             }
@@ -1780,74 +1883,109 @@ impl<'m> Session<'m> {
                 "post_attention_norm",
                 &s.norm.raw,
             )?;
-            project(
-                g,
-                &command,
-                &layer.gate,
-                &s.zero,
-                &v.hm,
-                &v.norm,
-                &v.result_m,
-                &s.floats,
-                &s.gate,
-                self.f,
-                self.m,
-                n,
-                self.projection_mode,
-                &s.status,
-            )?;
-            self.snapshot(&command, Some(layer_index), "gate", &s.gate.raw)?;
-            g.encode(
-                &command,
-                Kernel::Silu,
-                &[&s.gate.raw, &s.silu.raw],
-                &[(n * m) as u32],
-                n * m,
-                Some(&s.status),
-            )?;
-            self.snapshot(&command, Some(layer_index), "silu", &s.silu.raw)?;
-            project(
-                g,
-                &command,
-                &layer.up,
-                &s.zero,
-                &v.hm,
-                &v.norm,
-                &v.result_m,
-                &s.floats,
-                &s.up,
-                self.f,
-                self.m,
-                n,
-                self.projection_mode,
-                &s.status,
-            )?;
-            self.snapshot(&command, Some(layer_index), "up", &s.up.raw)?;
-            g.encode(
-                &command,
-                Kernel::Gating,
-                &[&s.silu.raw, &s.up.raw, &s.gated.raw],
-                &[(n * m) as u32],
-                n * m,
-                Some(&s.status),
-            )?;
-            self.snapshot(&command, Some(layer_index), "gated", &s.gated.raw)?;
-            project(
-                g,
-                &command,
-                &layer.down,
-                &s.zero,
-                &v.mh,
-                &v.gated,
-                &v.result_h,
-                &s.floats,
-                &s.delta,
-                self.f,
-                self.h,
-                n,
-                self.projection_mode,
-                &s.status,
-            )?;
+            match (&layer.feed_forward, &s.feed_forward) {
+                (FeedForward::Dense(weights), FeedForwardScratch::Dense(dense)) => {
+                    let views = v
+                        .dense
+                        .as_ref()
+                        .ok_or(Error::Options("dense FFN views absent"))?;
+                    project(
+                        g,
+                        &command,
+                        &weights.gate,
+                        &s.zero,
+                        &views.hm,
+                        &v.norm,
+                        &views.result_m,
+                        &s.floats,
+                        &dense.gate,
+                        self.f,
+                        self.m,
+                        n,
+                        self.projection_mode,
+                        &s.status,
+                    )?;
+                    self.snapshot(&command, Some(layer_index), "gate", &dense.gate.raw)?;
+                    g.encode(
+                        &command,
+                        Kernel::Silu,
+                        &[&dense.gate.raw, &dense.silu.raw],
+                        &[(n * m) as u32],
+                        n * m,
+                        Some(&s.status),
+                    )?;
+                    self.snapshot(&command, Some(layer_index), "silu", &dense.silu.raw)?;
+                    project(
+                        g,
+                        &command,
+                        &weights.up,
+                        &s.zero,
+                        &views.hm,
+                        &v.norm,
+                        &views.result_m,
+                        &s.floats,
+                        &dense.up,
+                        self.f,
+                        self.m,
+                        n,
+                        self.projection_mode,
+                        &s.status,
+                    )?;
+                    self.snapshot(&command, Some(layer_index), "up", &dense.up.raw)?;
+                    g.encode(
+                        &command,
+                        Kernel::Gating,
+                        &[&dense.silu.raw, &dense.up.raw, &dense.gated.raw],
+                        &[(n * m) as u32],
+                        n * m,
+                        Some(&s.status),
+                    )?;
+                    self.snapshot(&command, Some(layer_index), "gated", &dense.gated.raw)?;
+                    project(
+                        g,
+                        &command,
+                        &weights.down,
+                        &s.zero,
+                        &views.mh,
+                        &views.gated,
+                        &v.result_h,
+                        &s.floats,
+                        &s.delta,
+                        self.f,
+                        self.h,
+                        n,
+                        self.projection_mode,
+                        &s.status,
+                    )?;
+                }
+                (FeedForward::Moe(weights), FeedForwardScratch::Moe(scratch)) => {
+                    let graph = self
+                        .model
+                        .moe
+                        .as_ref()
+                        .ok_or(Error::Options("MoE graph absent"))?;
+                    let io = moe_ffn::LayerIo {
+                        input: &s.norm,
+                        fused: &weights.fused,
+                        down: &weights.down,
+                        delta: &s.delta,
+                        status: &s.status,
+                    };
+                    scratch.project_scores(
+                        g,
+                        &command,
+                        n,
+                        &io,
+                        moe_ffn::RouterProjection {
+                            weights: &weights.router,
+                            zero: &s.zero,
+                            input_view: &v.norm,
+                        },
+                    )?;
+                    scratch.encode(&graph.router, &graph.experts, &command, n, io)?;
+                }
+                _ => return Err(Error::Options("FFN model/scratch mismatch")),
+            }
             self.snapshot(&command, Some(layer_index), "down", &s.delta.raw)?;
             scaled_residual(
                 g,
@@ -2512,6 +2650,9 @@ mod tests {
             .unwrap();
             for index in [0, 1, 23] {
                 let layer = &model.layers[index];
+                let FeedForward::Dense(dense) = &layer.feed_forward else {
+                    panic!("expected dense fixture")
+                };
                 let zero = Buffer::<u16>::new(&model.gpu, model.config.intermediate_size).unwrap();
                 for (name, weight, bias) in [
                     (
@@ -2530,9 +2671,9 @@ mod tests {
                         &layer.v_bias.as_ref().unwrap().buffer,
                     ),
                     ("self_attn.o_proj.weight", &layer.o, &zero),
-                    ("mlp.gate_proj.weight", &layer.gate, &zero),
-                    ("mlp.up_proj.weight", &layer.up, &zero),
-                    ("mlp.down_proj.weight", &layer.down, &zero),
+                    ("mlp.gate_proj.weight", &dense.gate, &zero),
+                    ("mlp.up_proj.weight", &dense.up, &zero),
+                    ("mlp.down_proj.weight", &dense.down, &zero),
                 ] {
                     let data = artifact
                         .read_matrix(&format!("model.layers.{index}.{name}"))

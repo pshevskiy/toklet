@@ -279,6 +279,11 @@ impl Session<'_> {
     /// Diagnostic only. Pre-admit an additional 64MiB allowance for native
     /// counter/pass objects and bounded resolve/export buffers; production has none.
     pub fn enable_profile(&mut self) -> Result<()> {
+        if self.model.moe.is_some() {
+            return Err(Error::Unsupported(
+                "MoE instrumentation requires its own layout",
+            ));
+        }
         if self.trace.is_some() || !self.history.is_empty() || self.evaluated != 0 {
             return Err(Error::Options("enable profile on a fresh session"));
         }

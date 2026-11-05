@@ -4,7 +4,12 @@ use std::mem::size_of;
 
 impl Model {
     pub(crate) fn native_session_modes(&self) -> (ProjectionMode, NormalizationMode) {
-        if self.is_mlx() {
+        if self.moe.is_some() {
+            (
+                ProjectionMode::HalfCompensated,
+                NormalizationMode::Compensated,
+            )
+        } else if self.is_mlx() {
             (ProjectionMode::MlxAffine, NormalizationMode::Compensated)
         } else if self.q4_format().is_some() {
             (
@@ -29,6 +34,11 @@ impl Model {
         &self,
         options: session::Options,
     ) -> Result<(session::Memory, usize, usize)> {
+        if self.moe.is_some() {
+            return Err(Error::Unsupported(
+                "transition planning excludes MoE models",
+            ));
+        }
         if self.qwen3_context_diagnostic {
             return Err(Error::Unsupported(
                 "transition planning excludes context-diagnostic models",
@@ -62,7 +72,8 @@ impl Session<'_> {
         let (projection, normalization) = self.model.native_session_modes();
         // diagnostic_rows is a last-chunk marker even in ordinary execution.
         // Retained diagnostic storage, not that marker, identifies extra owners.
-        if self.model.qwen3_context_diagnostic
+        if self.model.moe.is_some()
+            || self.model.qwen3_context_diagnostic
             || self.projection_mode != projection
             || self.normalization_mode != normalization
             || self.readback_mode != ReadbackMode::FullLogits
@@ -90,10 +101,25 @@ impl Session<'_> {
             kv_bytes = add(kv_bytes, add(bytes(&cache.k)?, bytes(&cache.v)?)?)?;
         }
         let s = &self.scratch;
+        let super::FeedForwardScratch::Dense(dense) = &s.feed_forward else {
+            return Err(Error::Options("dense transition scratch absent"));
+        };
         let mut scratch_bytes = 0;
         for buffer in [
-            &s.x, &s.norm, &s.q, &s.qr, &s.k, &s.kr, &s.v, &s.context, &s.delta, &s.gate, &s.silu,
-            &s.up, &s.gated, &s.zero,
+            &s.x,
+            &s.norm,
+            &s.q,
+            &s.qr,
+            &s.k,
+            &s.kr,
+            &s.v,
+            &s.context,
+            &s.delta,
+            &dense.gate,
+            &dense.silu,
+            &dense.up,
+            &dense.gated,
+            &s.zero,
         ] {
             scratch_bytes = add(scratch_bytes, bytes(buffer)?)?;
         }

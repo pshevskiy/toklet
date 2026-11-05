@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Granite sparse-MoE resident graph wiring and combined session/scratch allocation. Metal router and expert leaves, BF16 import and scalar blocks reviewed. Qwen1.5, SmolLM3 and Granite3.3 scoped Mac engine execution reviewed/complete. New models first; performance secondary; iPhone deferred**.
+Current task: **Pinned Granite3.1-1B-A400M stock/native Mac512 qualification. Resident MoE session and allocation pass checks and Astra review. P0 baseline follows.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -497,7 +497,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Sparse-MoE strict BF16 import and exact tight storage/load planning; [report](docs/moe-bf16-import.md).
 - [x] Sparse-MoE standalone resident Metal router and consumed allocation layout; [report](docs/moe-metal-router.md).
 - [x] Sparse-MoE Metal Half expert projection/reduction and consumed leaf allocation. [Report](docs/moe-metal-experts.md)
-- [ ] Sparse-MoE resident graph wiring and exact combined session/scratch allocation.
+- [x] Sparse-MoE resident graph and exact combined session/scratch allocation. [Result](benchmarks/results/2026-11-05-moe-metal-session-v1.json)
   - [x] Shared scratch and projected router scores in one command. [Evidence](benchmarks/results/2026-11-05-moe-ffn-projection-v1.json)
 - [ ] Sparse-MoE real stock/native execution, state and process-memory checks.
 
@@ -1313,3 +1313,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Shared Metal MoE scratch reviewed | Router and experts consume one checked scratch owner. Five release GPU checks, full Rust checks and Astra pass. | Connect router projection and dense session wiring next. Phone query timed out. [Result](benchmarks/results/2026-11-05-moe-ffn-shared-v1.json) |
 
 | 2026-11-05 | MoE router projection reviewed | Compensated Half scores feed shared routing and expert stages. Six GPU checks include mismatched view and short-buffer rejection. Required checks and Astra pass. | Integrate the reviewed blocks with the existing Metal session. Pinned P0 inputs verified. [Result](benchmarks/results/2026-11-05-moe-ffn-projection-v1.json) |
+
+| 2026-11-05 | MoE session verification in progress | First GPU run passed six leaf checks and reached failure recovery in the full session fixture. Corrected the assertion to use the existing pending-state contract. | Fixed Astra’s router zero-buffer and native-mode findings and the Clippy enum warning. Rerun required and hardware checks. [Logs](artifacts/moe-session-2026-11-05/) |
+
+| 2026-11-05 | MoE resident session reviewed | Authenticated two-layer fixture matches exact logits across chunks 1, 3 and 32. Budget, consumed bytes and pending failure recovery pass. | Astra approves. 574 CPU, 686 Metal and 13 explicit GPU checks pass. Proceed to real stock/native Mac512 qualification. [Result](benchmarks/results/2026-11-05-moe-metal-session-v1.json) |

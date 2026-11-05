@@ -450,14 +450,17 @@ fn projection_replay(
     let d = &a.stages[order];
     let (weight, bias, predecessor, float_output) = if let Some(layer) = d.layer {
         let l = &model.layers[layer];
+        let super::FeedForward::Dense(dense) = &l.feed_forward else {
+            return json!({"skipped":"Dense projection fixture"});
+        };
         let selected = match d.stage {
             "q" => (&l.q, l.q_bias.as_ref(), "input_norm"),
             "k" => (&l.k, l.k_bias.as_ref(), "input_norm"),
             "v" => (&l.v, l.v_bias.as_ref(), "input_norm"),
             "attention_projection" => (&l.o, None, "attention_context"),
-            "gate" => (&l.gate, None, "post_attention_norm"),
-            "up" => (&l.up, None, "post_attention_norm"),
-            "down" => (&l.down, None, "gated"),
+            "gate" => (&dense.gate, None, "post_attention_norm"),
+            "up" => (&dense.up, None, "post_attention_norm"),
+            "down" => (&dense.down, None, "gated"),
             _ => {
                 return json!({"skipped":"First differing operation is not a projection","first":first});
             }

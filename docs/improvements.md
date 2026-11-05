@@ -10056,3 +10056,12 @@ The compensated Half projection writes directly into shared score scratch.
 Six GPU checks verify routing, exact outputs and rejected invalid views or
 buffers. Required checks and Astra review passed.
 [Result](../benchmarks/results/2026-11-05-moe-ffn-projection-v1.json)
+
+
+## 5 November 2026 — Run authenticated Granite MoE in a Metal session
+
+The resident Half graph shares attention, KV and transaction logic with the
+dense path. Its checked plan charges the expert scratch and router bias buffers
+before allocation. The two-layer oracle matches bitwise across three schedules.
+Astra and 13 explicit M1 Pro checks pass. Real checkpoint testing follows.
+[Result](../benchmarks/results/2026-11-05-moe-metal-session-v1.json)
