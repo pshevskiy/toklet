@@ -1,0 +1,49 @@
+{
+  "metrics": {
+    "math_fp64": {
+      "context": {
+        "values": 2048,
+        "failed_values": 0,
+        "maximum_gate_ratio": 0.00945432338171997,
+        "examples": []
+      },
+      "projection": {
+        "values": 1536,
+        "failed_values": 0,
+        "maximum_gate_ratio": 0.0004897345649944142,
+        "examples": []
+      }
+    },
+    "staged_fp32": {
+      "context": {
+        "values": 2048,
+        "failed_values": 0,
+        "maximum_gate_ratio": 0.0,
+        "examples": []
+      },
+      "projection": {
+        "values": 1536,
+        "failed_values": 0,
+        "maximum_gate_ratio": 0.0,
+        "examples": []
+      }
+    }
+  },
+  "exact_archived_operands": true,
+  "local_passed": true,
+  "earlier_full_gate_remains_open": true,
+  "device": "Apple M1 Pro",
+  "layer": 12,
+  "position": 433,
+  "producer": 12,
+  "cache_context": 1025,
+  "checks": "artifacts/gemma-attention-boundary-2026-11-06/checks.json",
+  "portable_controls": "artifacts/gemma-attention-boundary-2026-11-06/portable.stderr",
+  "native_trace": "artifacts/gemma-attention-boundary-2026-11-06/gpu.stdout",
+  "owner": "artifacts/gemma-attention-boundary-2026-11-06/owned.json",
+  "binary_sha256": "87056e7f930ef5bd0cab5f0d8b190669636442351df4f95933cef23d3e37d496",
+  "rss_peak_bytes": 3028418560,
+  "physical_peak_bytes": 3024620304,
+  "review": "Astra approved actual operands, archive identity, causal truncation, projection isolation and local scope.",
+  "verdict": "Local same-input pass; four mathematical logits and eight staged KV observations remain rejected in the full graph."
+}

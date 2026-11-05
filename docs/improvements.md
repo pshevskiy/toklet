@@ -10432,3 +10432,11 @@ and the separately qualified staged path. Defer I8 integration until a
 selected profile needs capacity that FP16 cannot admit under its budget.
 [Decision and evidence](todo-implementation-plans.md#llama-online-correctness)
 [Capacity ledger](todo-implementation-plans.md#p4-i8-kv)
+
+## 6 November 2026 — Replay Gemma attention from the actual operands
+
+Layer 12 at position 433 passes both independent contracts for 2,048 context
+values and 1,536 O-projection values. The staged results are exact and the
+captured K/V matches the archive. Astra approved the local attribution.
+The original 1,025-position numerical rejection remains open.
+[Evidence](../benchmarks/results/2026-11-06-gemma-attention-boundary-v1.json)

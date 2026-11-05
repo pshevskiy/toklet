@@ -15,6 +15,7 @@ const N: usize = 35;
 const HEADS: usize = 8;
 const PROCESS: usize = 6 * 1024 * 1024 * 1024;
 const DIAGNOSTIC: usize = 128 * 1024 * 1024;
+mod attention_boundary;
 mod context_probe;
 mod loss_block;
 mod task_controller;

@@ -24,11 +24,11 @@ After the resident graph passes, acquire the pinned original artifact and verify
 
 The [same-input V](gemma-v-boundary.md), [head](../benchmarks/results/2026-11-05-gemma-head-witness-v1.json)
 and [RMSNorm](../benchmarks/results/2026-11-05-gemma-norm-witness-v1.json)
-witnesses pass locally. Astra selects one upstream check at layer 12/position
-433. Compare the actual rotated Q, producer-12 K/V intervals and context to
-both independent contracts, and replay O projection from the actual context.
-Bind operands to the archived native capture. A passing witness narrows the
-cause and leaves the full 1,025 rejection intact.
+witnesses pass locally. The [layer 12 attention witness](../benchmarks/results/2026-11-06-gemma-attention-boundary-v1.json)
+binds position 433 K/V to the archived capture and passes both independent
+context and output-projection replays. The full 1,025 rejection remains.
+Astra advises requiring a concrete source/precision hypothesis before further
+whole-graph work.
 
 ### Gemma4 adoption task gate
 

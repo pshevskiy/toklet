@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Gemma 1,025 same-input attention attribution. Next: Qwen1.5B full loss.**
+Current task: **Qwen1.5B full loss and pinned OptiQ Gemma stock preflight.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -516,6 +516,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [ ] Real1,025 numerical qualification:4mathematical logits and8stagedKV observations remain rejected; local same-input witnesses pass; source/precision decision remains.
   - [x] Same-input layer 13 and final RMSNorm pass. [Result](benchmarks/results/2026-11-05-gemma-norm-witness-v1.json)
   - [x] Same-input final head and softcap pass at the four rejected IDs. [Result](benchmarks/results/2026-11-05-gemma-head-witness-v1.json)
+  - [x] Layer 12 attention and O projection at position 433 pass same-input replay. [Result](benchmarks/results/2026-11-06-gemma-attention-boundary-v1.json)
 - [x] Measured original-BF16 four-token source/upstream experiment before full-quality scorer; [next task](docs/gemma-original-quality-next.md).
 - [x] Standalone BF16 profiling adapter preparation, tiny equivalence only; [evidence](benchmarks/results/2026-11-04-gemma-bf16-profile-v1.json).
 - [x] Original-BF16 four-token saved-reference reproduction/profiling; [report](docs/gemma-bf16-source-experiment.md).
@@ -1445,3 +1446,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | Qwen1.5B short original-weight alignment reviewed | Original baseline replays all 10,000 rows; native chunks 1/32 agree exactly on 32 targets and plain prompt IDs. Short NLL delta +0.005026, physical peak 1.88 GB. | Astra approves descriptive diagnostic scope. Native full loss and task quality remain open. [Evidence](benchmarks/results/2026-11-06-qwen15-original-alignment-v1.json) |
 
 | 2026-11-06 | M9 conditional decisions recorded | Llama raw Online differs at a Half midpoint under the same operands. Existing Mac Qwen3 admission gives I8 KV no selected capacity target. | Astra confirms retained Online rejection and deferred I8 integration. The staged Llama probe is qualified separately. |
+
+| 2026-11-06 | Gemma same-input attention attribution reviewed | Captured K/V spans match the earlier producer-12 archive. Both contracts pass 2,048 context and 1,536 projection values. | Astra approves local scope. The full numerical rejection remains open. [Evidence](benchmarks/results/2026-11-06-gemma-attention-boundary-v1.json) |
