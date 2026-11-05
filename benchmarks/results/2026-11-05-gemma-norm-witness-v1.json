@@ -1,0 +1,42 @@
+{
+  "local_norms_passed": true,
+  "comparisons": {
+    "norm.13": {
+      "math_fp64": {
+        "values": 1536,
+        "failed_values": 0,
+        "maximum_gate_ratio": 0.0004966365331357269,
+        "examples": []
+      },
+      "staged_fp32": {
+        "values": 1536,
+        "failed_values": 0,
+        "maximum_gate_ratio": 0.0,
+        "examples": []
+      }
+    },
+    "norm.final": {
+      "math_fp64": {
+        "values": 1536,
+        "failed_values": 0,
+        "maximum_gate_ratio": 0.0005684469101808684,
+        "examples": []
+      },
+      "staged_fp32": {
+        "values": 1536,
+        "failed_values": 0,
+        "maximum_gate_ratio": 0.0,
+        "examples": []
+      }
+    }
+  },
+  "archived_head_and_v_inputs_exact": true,
+  "whole_graph_qualified": false,
+  "passed": true,
+  "device": "Apple M1 Pro",
+  "sampled_physical_peak_bytes": 3024816936,
+  "review": "Astra approved both local weighted RMSNorm witnesses",
+  "checks": "artifacts/gemma-norm-witness-2026-11-05/checks.json",
+  "mutation_controls": "artifacts/gemma-norm-witness-2026-11-05/checker-controls.json",
+  "owner": "artifacts/gemma-norm-witness-2026-11-05/owned.json"
+}

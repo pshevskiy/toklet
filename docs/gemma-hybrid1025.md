@@ -68,3 +68,10 @@ packed head and softcap replay passes at all four mathematical failures.
 The staged outputs match exactly. This narrows the investigation to earlier
 boundaries and retains the original whole-graph verdict.
 [Head witness](../benchmarks/results/2026-11-05-gemma-head-witness-v1.json).
+
+The following weighted RMSNorm witness passes from both actual inputs at
+layer 13/position 433 and final position 1,024. Both staged rows match
+exactly, and the outputs bind to the prior V and head captures. Existing
+fault hooks preserve the committed snapshots. The local evidence leaves
+the propagated full-sequence rejection open.
+[RMSNorm witness](../benchmarks/results/2026-11-05-gemma-norm-witness-v1.json).

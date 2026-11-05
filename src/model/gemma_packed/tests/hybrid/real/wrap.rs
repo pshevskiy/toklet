@@ -273,3 +273,92 @@ fn diagnostic1025_same_input_final_head() {
         identity(&std::fs::symlink_metadata(path).unwrap())
     );
 }
+
+#[test]
+#[ignore = "Explicit original E2B same-input RMSNorm witness"]
+fn diagnostic1025_same_input_norms() {
+    let raw = include_bytes!("../../../../../../benchmarks/gemma-e2b-wrap-v1/tokens.u32le");
+    let ids: Vec<u32> = raw
+        .chunks_exact(4)
+        .map(|word| u32::from_le_bytes(word.try_into().unwrap()))
+        .collect();
+    assert_eq!(ids.len(), 1025);
+    let (source, file, path, original) = load_original();
+    let owners = resident_snapshot(&source);
+    let norms = hybrid::Norms::new(&source, PROCESS - DIAGNOSTIC).unwrap();
+    let model = norms.model_for_context_probe(1025).unwrap();
+    let context = gemma_affine::Context::new(gemma_affine::CONTEXT_ALLOWANCE_BYTES).unwrap();
+    let mut session = norms
+        .new_session(&model, &context, PROCESS - DIAGNOSTIC)
+        .unwrap();
+    let mut capture = capture::Capture::bounded(4 * H * 4);
+    let mut offset = 0;
+    for count in [32; 16]
+        .into_iter()
+        .chain([1])
+        .chain([32; 15])
+        .chain([31, 1])
+    {
+        let input = &ids[offset..offset + count];
+        if (offset..offset + count).contains(&433) {
+            let committed = snapshot(&session);
+            let row = 433 - offset;
+            // Producer 12 has swapped its completed output into hidden.
+            // The next producer leaves its normalized projection input in norm.
+            for (fault, name) in [(12, "input"), (13, "output")] {
+                session.fault = Some(fault);
+                assert!(matches!(
+                    session.forward(input),
+                    Err(hybrid::Error::Model(Error::InvalidConfig(
+                        "injected Gemma layer failure"
+                    )))
+                ));
+                assert_eq!(snapshot(&session), committed);
+                let source = if fault == 12 {
+                    &session.scratch.hidden
+                } else {
+                    &session.scratch.norm
+                };
+                capture.record(
+                    &format!("norm.13.{name}"),
+                    &source[row * H..(row + 1) * H],
+                    433,
+                    1,
+                );
+            }
+            session.fault = None;
+        }
+        if offset == 1024 {
+            let committed = snapshot(&session);
+            session.fault = Some(model.layout.layers.len());
+            assert!(matches!(
+                session.forward(input),
+                Err(hybrid::Error::Model(Error::InvalidConfig(
+                    "injected Gemma final norm failure"
+                )))
+            ));
+            assert_eq!(snapshot(&session), committed);
+            capture.record("norm.final.input", &session.scratch.hidden[..H], 1024, 1);
+            capture.record("norm.final.output", &session.scratch.norm[..H], 1024, 1);
+            session.fault = None;
+        }
+        let rows = session.forward(input).unwrap();
+        if offset == 1024 {
+            assert_eq!(rows.len(), 262144);
+            emit(
+                "FINAL_NORM_ROW",
+                json!({"position":1024,"sha256":hash(rows)}),
+            );
+        }
+        offset += count;
+        assert_eq!(session.tokens(), &ids[..offset]);
+    }
+    assert_eq!(offset, 1025);
+    capture.finish();
+    assert_eq!(resident_snapshot(&source), owners);
+    assert_eq!(original, identity(&file.metadata().unwrap()));
+    assert_eq!(
+        original,
+        identity(&std::fs::symlink_metadata(path).unwrap())
+    );
+}

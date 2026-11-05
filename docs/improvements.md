@@ -10168,3 +10168,10 @@ The four rejected output IDs pass both frozen contracts from the actual
 native normalized row. The complete native row matches its archived hash.
 Astra approves the local witness. Earlier propagated errors remain open.
 [Evidence](../benchmarks/results/2026-11-05-gemma-head-witness-v1.json)
+
+## 5 November 2026 — Verify the two Gemma normalization boundaries
+
+Both RMSNorms pass the frozen gates from actual native inputs. Staged
+outputs match the archived V and head operands exactly. Astra approves
+local evidence and retains the full graph rejection.
+[Evidence](../benchmarks/results/2026-11-05-gemma-norm-witness-v1.json)
