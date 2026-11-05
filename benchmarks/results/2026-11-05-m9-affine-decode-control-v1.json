@@ -1,0 +1,182 @@
+{
+  "primary": "prefill_seconds at 1024",
+  "timing": {
+    "128": {
+      "prefill_seconds": {
+        "baseline": {
+          "median": 0.7460454165,
+          "mad": 9.087499999999027e-05,
+          "minimum": 0.745933958,
+          "maximum": 0.746270375
+        },
+        "candidate": {
+          "median": 0.6330403330000001,
+          "mad": 0.00010195849999988793,
+          "minimum": 0.632608875,
+          "maximum": 0.633325084
+        },
+        "improvement_fraction": 0.15147212354732018,
+        "above_noise": true
+      },
+      "decode_seconds": {
+        "baseline": {
+          "median": 3.8380383335,
+          "mad": 0.0034611870000000877,
+          "minimum": 3.827903708,
+          "maximum": 3.8445066249999997
+        },
+        "candidate": {
+          "median": 3.8450133125,
+          "mad": 0.005215583499999843,
+          "minimum": 3.8384093750000003,
+          "maximum": 3.8553648750000002
+        },
+        "improvement_fraction": -0.0018173291650370562,
+        "above_noise": true
+      },
+      "total_seconds": {
+        "baseline": {
+          "median": 4.584158916,
+          "mad": 0.003450063499999878,
+          "minimum": 4.574111333,
+          "maximum": 4.590448208
+        },
+        "candidate": {
+          "median": 4.478129792,
+          "mad": 0.005334958499999765,
+          "minimum": 4.471396334,
+          "maximum": 4.488517792
+        },
+        "improvement_fraction": 0.02312946081121416,
+        "above_noise": true
+      }
+    },
+    "512": {
+      "prefill_seconds": {
+        "baseline": {
+          "median": 3.1115224795,
+          "mad": 0.0001825834999999998,
+          "minimum": 3.111036333,
+          "maximum": 3.11223525
+        },
+        "candidate": {
+          "median": 2.6586662495,
+          "mad": 0.000536270999999866,
+          "minimum": 2.65779825,
+          "maximum": 2.660891917
+        },
+        "improvement_fraction": 0.1455416867413315,
+        "above_noise": true
+      },
+      "decode_seconds": {
+        "baseline": {
+          "median": 5.539576771,
+          "mad": 0.0031536040000004206,
+          "minimum": 5.5356115,
+          "maximum": 5.558175416999999
+        },
+        "candidate": {
+          "median": 5.539358854,
+          "mad": 0.002988478999998989,
+          "minimum": 5.528401165999999,
+          "maximum": 5.5542022499999995
+        },
+        "improvement_fraction": 3.933820380309907e-05,
+        "above_noise": false
+      },
+      "total_seconds": {
+        "baseline": {
+          "median": 8.6512299585,
+          "mad": 0.0033202084999999215,
+          "minimum": 8.647157875,
+          "maximum": 8.669614583
+        },
+        "candidate": {
+          "median": 8.197275999999999,
+          "mad": 0.00364945849999998,
+          "minimum": 8.187416,
+          "maximum": 8.213439084000001
+        },
+        "improvement_fraction": 0.05247276522270489,
+        "above_noise": true
+      }
+    },
+    "1024": {
+      "prefill_seconds": {
+        "baseline": {
+          "median": 6.566537729,
+          "mad": 0.00021547849999992152,
+          "minimum": 6.565671958,
+          "maximum": 6.572749833
+        },
+        "candidate": {
+          "median": 5.662701854,
+          "mad": 0.0010740414999999004,
+          "minimum": 5.659997125,
+          "maximum": 5.6722259170000005
+        },
+        "improvement_fraction": 0.13764268360301388,
+        "above_noise": true
+      },
+      "decode_seconds": {
+        "baseline": {
+          "median": 7.910647062500001,
+          "mad": 0.001968374999999689,
+          "minimum": 7.90836325,
+          "maximum": 7.932452124999999
+        },
+        "candidate": {
+          "median": 7.9095527915,
+          "mad": 0.005998708000000352,
+          "minimum": 7.893287833,
+          "maximum": 7.917956791
+        },
+        "improvement_fraction": 0.00013832888654427547,
+        "above_noise": false
+      },
+      "total_seconds": {
+        "baseline": {
+          "median": 14.4782440835,
+          "mad": 0.002503541500000317,
+          "minimum": 14.474856833,
+          "maximum": 14.499097666
+        },
+        "candidate": {
+          "median": 13.5720453335,
+          "mad": 0.006297728999999919,
+          "minimum": 13.553875375,
+          "maximum": 13.585668458
+        },
+        "improvement_fraction": 0.06259037662120512,
+        "above_noise": true
+      }
+    }
+  },
+  "control_regressions": [
+    {
+      "prompt": 128,
+      "metric": "decode_seconds",
+      "delta_seconds": 0.00697497899999977
+    }
+  ],
+  "primary_pass": true,
+  "device": "Apple M1 Pro",
+  "binary_unchanged": true,
+  "process_order": [
+    "time-tile4",
+    "time"
+  ],
+  "first_control_delta_seconds": 0.015669125,
+  "repeated_512_control_delta_seconds": -0.000217917,
+  "first_screen_retained": true,
+  "decode_intervals": "artifacts/m9-p1-tile4-2026-11-05/reverse-control/decode-intervals.json",
+  "raw": {
+    "time": "artifacts/m9-p1-tile4-2026-11-05/reverse-control/time.jsonl",
+    "time-tile4": "artifacts/m9-p1-tile4-2026-11-05/reverse-control/time-tile4.jsonl"
+  },
+  "owners": {
+    "time": "artifacts/m9-p1-tile4-2026-11-05/reverse-control/time-owned.json",
+    "time-tile4": "artifacts/m9-p1-tile4-2026-11-05/reverse-control/time-tile4-owned.json"
+  },
+  "decision": "512 control did not recur; 128 varies across pairs; independent P2 gates pending"
+}

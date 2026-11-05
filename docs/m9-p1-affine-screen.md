@@ -20,8 +20,15 @@ hashes. [Frozen contract](m9-p1-affine-prefill.md).
 The primary metric passed. The 512-token decode control rose from
 5.546455 s to 5.562124 s, a 15.669 ms or 0.283% increase. That exceeds
 the larger median absolute deviation of 7.938 ms, within overlapping raw
-ranges. The unchanged executable will repeat the comparison in reverse
-process order before P2. The original samples are retained.
+ranges. The unchanged executable repeated the comparison in reverse order. The
+512-token medians were 5.539577 s baseline and 5.539359 s tile, within
+the 3.154 ms dispersion threshold. The 128-token decode control was
+6.975 ms slower in the repeat after running 81.969 ms faster in the
+first pair. The sampled decode kernel and distributions match. The
+decode changes vary across processes and depths, while the repeated
+1,024-token prefill gain was 13.76%. Both timing pairs remain in the
+evidence. Independent P2 confirmation remains separate.
+[Reverse-order evidence](../benchmarks/results/2026-11-05-m9-affine-decode-control-v1.json).
 
 Sampled physical peak was 638,190,624 bytes for the baseline and
 638,485,512 bytes for the candidate. Both exited cleanly under the

@@ -10115,3 +10115,10 @@ collection with reverse-order investigation pending.
 Position-level replay of 75 profiles places rotary at 0.123% of prefill
 and 1.721% of decode at the largest observed ratios. Astra approved deferring
 the phase table for this workload. [Decision](m9-rotary-opportunity.md)
+
+## 5 November 2026 — Repeat the affine decode control in reverse order
+
+The 512-token decode difference fell within dispersion. The primary
+1,024-token prefill gain repeated at 13.76%. Both pairs and the 128-token
+control variation are retained. Independent P2 gates follow.
+[Result](../benchmarks/results/2026-11-05-m9-affine-decode-control-v1.json)
