@@ -10194,3 +10194,11 @@ same word. Astra approved the diagnostic. The complete Llama gate remains open.
 Pinned Q6 metadata leaves 1,054,384,498 bytes of estimated Mac512/chunk32
 headroom. Astra approved the header and ledger. Runtime memory and stock
 decision evidence are the next gates. [Report](gemma6-feasibility.md)
+
+## 5 November 2026 — Replay frozen Llama with staged probabilities
+
+The isolated 32-token build passes 1,050 snapshots and 149,568 frozen
+comparisons across both tied and untied Llama graphs. Astra approved the
+experiment. Production Llama retains Reference attention. A separate deeper
+candidate needs workspace admission and real-checkpoint checks.
+[Evidence](../benchmarks/results/2026-11-05-llama-online-staged-v1.json)

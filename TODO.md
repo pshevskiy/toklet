@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Llama Online test-only global probability staging across the frozen tied/untied graph schedules.**
+Current task: **P3 split-KV decode primitive on Mac and Gemma Q6 authenticated stock preflight. The Llama staged result queues a separately admitted deeper variant.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -1372,3 +1372,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Llama arithmetic ablation reviewed | Same-input GPU FP32 probability staging and compensated components with a host FP64 quotient recover the expected Half word. fmt, strict Metal Clippy, Metal tests and owned GPU witness pass. | Astra approves the local result. Next run test-only staged attention across the complete frozen graph. [Evidence](benchmarks/results/2026-11-05-llama-online-ablation-v1.json) |
 
 | 2026-11-05 | Gemma Q6 header screen reviewed | Immutable config, tokenizer digest and tensor extents verify. The Mac512/chunk32 estimate is 5,388,066,446 bytes with 1,054,384,498 bytes below the 6 GiB policy. | Astra approves the planning screen. Authenticate the payload and compare the four frozen stock decision probes before native work. [Report](docs/gemma6-feasibility.md) |
+
+| 2026-11-05 | Llama staged graph reviewed | Isolated depth-32 experiment passes 1,050 snapshots and 149,568 frozen values across tied/untied schedules. | Astra approves the result. Queue bounded FP32 score workspace with separate admission and real Mac512 comparison. [Evidence](benchmarks/results/2026-11-05-llama-online-staged-v1.json) |

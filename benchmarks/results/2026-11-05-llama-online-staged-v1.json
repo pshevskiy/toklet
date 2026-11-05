@@ -1,0 +1,15 @@
+{
+  "snapshots": 1050,
+  "compared_values": 149568,
+  "passed": true,
+  "device": "Apple M1 Pro",
+  "maximum_context_tokens": 32,
+  "scope": "Isolated build with same SIMD scores and ascending probability-weighted V accumulation. Production sources and Llama admission preserved.",
+  "review": "Astra approved isolated arithmetic experiment",
+  "base_commit": "816577ae",
+  "source_patch_sha256": "0324e0420da3b15402e05c2177f650a9de86bc41d43aad9b7b356d3156e8d9fd",
+  "binary_sha256": "2212cc3f5539cb96c07ebc869998c3c6a81460c1cef96e6740e068f528ed4c5e",
+  "evidence": "artifacts/llama-online-staged-2026-11-05",
+  "production_qualified": false,
+  "real_checkpoint_tested": false
+}

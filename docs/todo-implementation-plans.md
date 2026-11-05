@@ -83,3 +83,5 @@ Wait for the selected Gemma graph to pass its required gates. Validate checkpoin
 ### Llama Online correctness
 
 Reproduce the tied model at offset 5 with tokens 7, 13 and 3. The first rejected value is layer 1 attention projection, row 2 and channel 4. Astra selects a same-operand Reference, Online prefill and Online one-row replay of rotated Q and valid KV. Check causal lengths 1/2/3 with poisoned unused storage, then project each resulting context. Rerun the original gate and boundaries before qualification.
+
+[The depth-32 staged screen](../benchmarks/results/2026-11-05-llama-online-staged-v1.json) passes the frozen graphs. The next candidate uses separately admitted FP32 scores and an ascending normalized-V pass. Check depth boundaries, state and the real Mac512 checkpoint against Reference before retention.
