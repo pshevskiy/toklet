@@ -1,0 +1,642 @@
+{
+  "source": "artifacts/m9-p0-mac-2026-11-05/profile.jsonl",
+  "model": "Qwen2.5-0.5B MLX8",
+  "device": "Apple M1 Pro",
+  "positions": 1152,
+  "head_width": 64,
+  "fp32_phase_table_payload_bytes": 294912,
+  "maxima": {
+    "prefill": 0.0012264002070422435,
+    "decode": 0.017209244053473665
+  },
+  "groups": [
+    {
+      "prompt_tokens": 128,
+      "phase": "decode",
+      "absolute_input_position": 128,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.004836709999999987,
+          "rotary_seconds": 0.0004724960000000167
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.004863254999999997,
+          "rotary_seconds": 0.0004794990000000082
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.0049032489999999915,
+          "rotary_seconds": 0.00048337399999996006
+        }
+      ],
+      "attention_median_seconds": 0.004863254999999997,
+      "rotary_median_seconds": 0.0004794990000000082,
+      "descriptive_rotary_share": 0.015537800923395692
+    },
+    {
+      "prompt_tokens": 128,
+      "phase": "decode",
+      "absolute_input_position": 159,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.005988416999999996,
+          "rotary_seconds": 0.00046116800000001873
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.005946707000000009,
+          "rotary_seconds": 0.0009200819999999887
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.005935832999999988,
+          "rotary_seconds": 0.0004796689999999812
+        }
+      ],
+      "attention_median_seconds": 0.005946707000000009,
+      "rotary_median_seconds": 0.0004796689999999812,
+      "descriptive_rotary_share": 0.015543309644282613
+    },
+    {
+      "prompt_tokens": 128,
+      "phase": "decode",
+      "absolute_input_position": 191,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.007041664999999989,
+          "rotary_seconds": 0.0006166689999999864
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.006940956999999998,
+          "rotary_seconds": 0.0004538770000000053
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.007067581999999982,
+          "rotary_seconds": 0.0005310799999999824
+        }
+      ],
+      "attention_median_seconds": 0.007041664999999989,
+      "rotary_median_seconds": 0.0005310799999999824,
+      "descriptive_rotary_share": 0.017209244053473665
+    },
+    {
+      "prompt_tokens": 128,
+      "phase": "decode",
+      "absolute_input_position": 254,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.009274790000000033,
+          "rotary_seconds": 0.00048183300000000095
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.009334917999999984,
+          "rotary_seconds": 0.00047470999999999625
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.009377709999999984,
+          "rotary_seconds": 0.0004780840000000383
+        }
+      ],
+      "attention_median_seconds": 0.009334917999999984,
+      "rotary_median_seconds": 0.0004780840000000383,
+      "descriptive_rotary_share": 0.015491948923065896
+    },
+    {
+      "prompt_tokens": 128,
+      "phase": "prefill",
+      "absolute_input_position": 0,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.012745000000000117,
+          "rotary_seconds": 0.000767626999999993
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.013113749999999369,
+          "rotary_seconds": 0.000757542000000222
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.012777539999999754,
+          "rotary_seconds": 0.0007646249999996302
+        }
+      ],
+      "attention_median_seconds": 0.012777539999999754,
+      "rotary_median_seconds": 0.0007646249999996302,
+      "descriptive_rotary_share": 0.0009925458474083196
+    },
+    {
+      "prompt_tokens": 512,
+      "phase": "decode",
+      "absolute_input_position": 512,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.018406167000000015,
+          "rotary_seconds": 0.0004602030000000132
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.018750290999999995,
+          "rotary_seconds": 0.0004822929999999878
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.018846415000000005,
+          "rotary_seconds": 0.00047295800000001637
+        }
+      ],
+      "attention_median_seconds": 0.018750290999999995,
+      "rotary_median_seconds": 0.00047295800000001637,
+      "descriptive_rotary_share": 0.01065730916786634
+    },
+    {
+      "prompt_tokens": 512,
+      "phase": "decode",
+      "absolute_input_position": 543,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.019723832999999975,
+          "rotary_seconds": 0.00048216400000000714
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.01995170799999999,
+          "rotary_seconds": 0.0007305410000000012
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.01973345699999999,
+          "rotary_seconds": 0.00047333100000000045
+        }
+      ],
+      "attention_median_seconds": 0.01973345699999999,
+      "rotary_median_seconds": 0.00048216400000000714,
+      "descriptive_rotary_share": 0.010864750818497635
+    },
+    {
+      "prompt_tokens": 512,
+      "phase": "decode",
+      "absolute_input_position": 575,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.02081400300000001,
+          "rotary_seconds": 0.00109141599999997
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.020595208999999996,
+          "rotary_seconds": 0.0004586210000000132
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.02077853899999999,
+          "rotary_seconds": 0.0004721670000000025
+        }
+      ],
+      "attention_median_seconds": 0.02077853899999999,
+      "rotary_median_seconds": 0.0004721670000000025,
+      "descriptive_rotary_share": 0.010639485319761582
+    },
+    {
+      "prompt_tokens": 512,
+      "phase": "decode",
+      "absolute_input_position": 638,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.022697621000000015,
+          "rotary_seconds": 0.0005210430000000266
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.022855124999999983,
+          "rotary_seconds": 0.00046408300000001096
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.023150084,
+          "rotary_seconds": 0.0004767519999999831
+        }
+      ],
+      "attention_median_seconds": 0.022855124999999983,
+      "rotary_median_seconds": 0.0004767519999999831,
+      "descriptive_rotary_share": 0.010742800545499299
+    },
+    {
+      "prompt_tokens": 512,
+      "phase": "prefill",
+      "absolute_input_position": 0,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.013483627000000054,
+          "rotary_seconds": 0.00077508400000037
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.012730042999999691,
+          "rotary_seconds": 0.0007629190000002506
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.012754043000000048,
+          "rotary_seconds": 0.0007639159999999201
+        }
+      ],
+      "attention_median_seconds": 0.012754043000000048,
+      "rotary_median_seconds": 0.0007639159999999201,
+      "descriptive_rotary_share": 0.0009516551427895607
+    },
+    {
+      "prompt_tokens": 512,
+      "phase": "prefill",
+      "absolute_input_position": 128,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.034159498000000066,
+          "rotary_seconds": 0.0007886209999999894
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.03419767000000018,
+          "rotary_seconds": 0.000781542000000246
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.034129374999999795,
+          "rotary_seconds": 0.0007907070000001681
+        }
+      ],
+      "attention_median_seconds": 0.034159498000000066,
+      "rotary_median_seconds": 0.0007886209999999894,
+      "descriptive_rotary_share": 0.0009824316159916988
+    },
+    {
+      "prompt_tokens": 512,
+      "phase": "prefill",
+      "absolute_input_position": 256,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.05651758299999987,
+          "rotary_seconds": 0.0007750010000001639
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.05682325099999985,
+          "rotary_seconds": 0.0007782519999999238
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.05552116500000015,
+          "rotary_seconds": 0.0007753749999999116
+        }
+      ],
+      "attention_median_seconds": 0.05651758299999987,
+      "rotary_median_seconds": 0.0007753749999999116,
+      "descriptive_rotary_share": 0.0009659302938287046
+    },
+    {
+      "prompt_tokens": 512,
+      "phase": "prefill",
+      "absolute_input_position": 384,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.07837295999999994,
+          "rotary_seconds": 0.0007881220000003353
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.07821995600000031,
+          "rotary_seconds": 0.0007793730000000831
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.07787566700000015,
+          "rotary_seconds": 0.0007810430000000368
+        }
+      ],
+      "attention_median_seconds": 0.07821995600000031,
+      "rotary_median_seconds": 0.0007810430000000368,
+      "descriptive_rotary_share": 0.0009729912551771395
+    },
+    {
+      "prompt_tokens": 1024,
+      "phase": "decode",
+      "absolute_input_position": 1024,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.037242543,
+          "rotary_seconds": 0.00048520700000001526
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.03714429499999998,
+          "rotary_seconds": 0.00047949800000002263
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.036922833,
+          "rotary_seconds": 0.0004685430000000157
+        }
+      ],
+      "attention_median_seconds": 0.03714429499999998,
+      "rotary_median_seconds": 0.00047949800000002263,
+      "descriptive_rotary_share": 0.007592419473482769
+    },
+    {
+      "prompt_tokens": 1024,
+      "phase": "decode",
+      "absolute_input_position": 1055,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.03832804000000001,
+          "rotary_seconds": 0.0004762029999999945
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.03844162300000001,
+          "rotary_seconds": 0.0004844630000000322
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.03827812699999998,
+          "rotary_seconds": 0.00047920799999999486
+        }
+      ],
+      "attention_median_seconds": 0.03832804000000001,
+      "rotary_median_seconds": 0.00047920799999999486,
+      "descriptive_rotary_share": 0.0075878275843664
+    },
+    {
+      "prompt_tokens": 1024,
+      "phase": "decode",
+      "absolute_input_position": 1087,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.03948825,
+          "rotary_seconds": 0.00048516699999996693
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.03907345599999999,
+          "rotary_seconds": 0.0004632040000000087
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.03954158700000003,
+          "rotary_seconds": 0.00048387300000000966
+        }
+      ],
+      "attention_median_seconds": 0.03948825,
+      "rotary_median_seconds": 0.00048387300000000966,
+      "descriptive_rotary_share": 0.007661693662731498
+    },
+    {
+      "prompt_tokens": 1024,
+      "phase": "decode",
+      "absolute_input_position": 1150,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.041651747,
+          "rotary_seconds": 0.0004854990000000142
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.04184616700000002,
+          "rotary_seconds": 0.0004802539999999994
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.041451334000000034,
+          "rotary_seconds": 0.0005187940000000724
+        }
+      ],
+      "attention_median_seconds": 0.041651747,
+      "rotary_median_seconds": 0.0004854990000000142,
+      "descriptive_rotary_share": 0.007687439909981574
+    },
+    {
+      "prompt_tokens": 1024,
+      "phase": "prefill",
+      "absolute_input_position": 0,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.012856040000000069,
+          "rotary_seconds": 0.0007558749999997394
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.013020249000000317,
+          "rotary_seconds": 0.0007953699999999619
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.013166081000000052,
+          "rotary_seconds": 0.0009399539999995765
+        }
+      ],
+      "attention_median_seconds": 0.013020249000000317,
+      "rotary_median_seconds": 0.0007953699999999619,
+      "descriptive_rotary_share": 0.0009391304536837273
+    },
+    {
+      "prompt_tokens": 1024,
+      "phase": "prefill",
+      "absolute_input_position": 128,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.03417187099999963,
+          "rotary_seconds": 0.0007742899999997332
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.03524307999999998,
+          "rotary_seconds": 0.0012091280000010585
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.034573833999999914,
+          "rotary_seconds": 0.0007743739999999111
+        }
+      ],
+      "attention_median_seconds": 0.034573833999999914,
+      "rotary_median_seconds": 0.0007743739999999111,
+      "descriptive_rotary_share": 0.0009143394972664723
+    },
+    {
+      "prompt_tokens": 1024,
+      "phase": "prefill",
+      "absolute_input_position": 256,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.057396294000000014,
+          "rotary_seconds": 0.0007817570000003826
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.05773104199999979,
+          "rotary_seconds": 0.0008295820000002729
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.05630879299999969,
+          "rotary_seconds": 0.0007818309999998441
+        }
+      ],
+      "attention_median_seconds": 0.057396294000000014,
+      "rotary_median_seconds": 0.0007818309999998441,
+      "descriptive_rotary_share": 0.0009231443249480002
+    },
+    {
+      "prompt_tokens": 1024,
+      "phase": "prefill",
+      "absolute_input_position": 384,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.07889520799999983,
+          "rotary_seconds": 0.000780292999999932
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.07859112499999998,
+          "rotary_seconds": 0.0007998340000001658
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.07924983499999994,
+          "rotary_seconds": 0.000788498999999776
+        }
+      ],
+      "attention_median_seconds": 0.07889520799999983,
+      "rotary_median_seconds": 0.000788498999999776,
+      "descriptive_rotary_share": 0.0009310175435319291
+    },
+    {
+      "prompt_tokens": 1024,
+      "phase": "prefill",
+      "absolute_input_position": 512,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.10078625200000002,
+          "rotary_seconds": 0.0012385419999999536
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.10032266800000045,
+          "rotary_seconds": 0.0010386649999997166
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.10054533300000024,
+          "rotary_seconds": 0.0007905809999997349
+        }
+      ],
+      "attention_median_seconds": 0.10054533300000024,
+      "rotary_median_seconds": 0.0010386649999997166,
+      "descriptive_rotary_share": 0.0012264002070422435
+    },
+    {
+      "prompt_tokens": 1024,
+      "phase": "prefill",
+      "absolute_input_position": 640,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.12359150000000008,
+          "rotary_seconds": 0.0012255819999996698
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.12155441700000025,
+          "rotary_seconds": 0.0007853730000001446
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.12229553999999987,
+          "rotary_seconds": 0.0007675429999999261
+        }
+      ],
+      "attention_median_seconds": 0.12229553999999987,
+      "rotary_median_seconds": 0.0007853730000001446,
+      "descriptive_rotary_share": 0.0009273265295411207
+    },
+    {
+      "prompt_tokens": 1024,
+      "phase": "prefill",
+      "absolute_input_position": 768,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.14496525199999988,
+          "rotary_seconds": 0.0007919149999996433
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.14412345900000012,
+          "rotary_seconds": 0.0007847109999995494
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.148106042,
+          "rotary_seconds": 0.0007776670000000374
+        }
+      ],
+      "attention_median_seconds": 0.14496525199999988,
+      "rotary_median_seconds": 0.0007847109999995494,
+      "descriptive_rotary_share": 0.0009265448752658807
+    },
+    {
+      "prompt_tokens": 1024,
+      "phase": "prefill",
+      "absolute_input_position": 896,
+      "samples": [
+        {
+          "trial": 0,
+          "attention_seconds": 0.1678907489999999,
+          "rotary_seconds": 0.0007842509999999026
+        },
+        {
+          "trial": 1,
+          "attention_seconds": 0.1685928299999998,
+          "rotary_seconds": 0.0007830880000003759
+        },
+        {
+          "trial": 2,
+          "attention_seconds": 0.1667333719999997,
+          "rotary_seconds": 0.0007774200000004727
+        }
+      ],
+      "attention_median_seconds": 0.1678907489999999,
+      "rotary_median_seconds": 0.0007830880000003759,
+      "descriptive_rotary_share": 0.0009246285234729383
+    }
+  ],
+  "decision": "defer rotary table for the pinned workload",
+  "review": "Astra approved the pinned-workload defer decision and payload arithmetic",
+  "implemented": false
+}

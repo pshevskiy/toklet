@@ -10109,3 +10109,9 @@ All 13 prefill and 381 decode distributions match bitwise. The primary
 The 512-token decode control rises 15.669 ms, so Astra approved the
 collection with reverse-order investigation pending.
 [Report](m9-p1-affine-screen.md)
+
+## 5 November 2026 — Defer rotary phase storage for the pinned workload
+
+Position-level replay of 75 profiles places rotary at 0.123% of prefill
+and 1.721% of decode at the largest observed ratios. Astra approved deferring
+the phase table for this workload. [Decision](m9-rotary-opportunity.md)

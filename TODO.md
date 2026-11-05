@@ -567,7 +567,7 @@ First delivery: **P0 → one selected P1 candidate → P2**, with independent
 Conditional follow-ons require their own decision; they do not all block M9:
 
 - [ ] P3: split-KV attention after measured demand and qualified Online support.
-- [ ] R1: rotary reuse if profiling justifies its cost and storage.
+- [x] R1: evaluate rotary reuse and defer the table for pinned Qwen2.5 MLX8 on M1 Pro. [Decision](docs/m9-rotary-opportunity.md)
 - [ ] P4: integrated I8 KV for a defined capacity requirement, with an actual codec.
 - [ ] P5: strict-greedy transactional verifier, then measured prompt lookup.
 - [ ] G2/G3: checkpoint-defined shared-KV prefill/MTP after selected Gemma support.
@@ -1334,3 +1334,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | P1 real parity passed | All 13 prefill chunks dispatch the tile. All 381 decode distributions and committed states match bitwise. | Separate matched timing processes running. Usefulness remains open. [Evidence](artifacts/m9-p1-tile4-2026-11-05/screen/) |
 
 | 2026-11-05 | P1 primary screen reviewed | 1,024 prefill 6.567→5.666 s and total request −6.28%. Bitwise state/distributions and memory pass. | Astra approves collection. The +15.669 ms 512-token decode control triggers reverse-order repeat before P2. [Report](docs/m9-p1-affine-screen.md) |
+
+| 2026-11-05 | R1 decision reviewed | Position-level P0 replay finds maximum rotary ratios 0.123% prefill and 1.721% decode. Defer the 294,912-byte phase table for this workload. | Astra approves scoped defer. P3 remains open with long decode attention opportunity. [Decision](docs/m9-rotary-opportunity.md) |
