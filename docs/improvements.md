@@ -10589,3 +10589,11 @@ decisions and all77 HumanEval/37 samples without repairs. Trajectory
 physical peak is5.89GB. Astra approved a memory-limited full stock
 collection. Native/app admission is separate.
 [Evidence](../benchmarks/results/2026-11-06-gemma-q8-stock-v1.json)
+
+## 6 November 2026 — Reject the expansion in the full Gemma graph
+
+Both schedules pass state, reset, overflow and the historical prefix.
+The isolated shader fails five mathematical and four staged observations.
+The exact staged oracle also misses two mathematical logit tolerances.
+Astra approved the rejection. Production keeps the previous shader.
+[Evidence](../benchmarks/results/2026-11-06-gemma-affine-full-v1.json)

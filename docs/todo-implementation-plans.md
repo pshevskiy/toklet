@@ -52,6 +52,11 @@ results to the unchanged full 1,025 comparison and resource checks.
 The [isolated prefix result](../benchmarks/results/2026-11-06-gemma-affine-prefix-v1.json)
 matches all 25 staged comparisons bitwise. The full run retains the historical
 32-row digest requirement alongside the numerical and state gates.
+The [full comparison](../benchmarks/results/2026-11-06-gemma-affine-full-v1.json)
+preserves state and the historical digest, but fails 5 mathematical and
+4 staged observations. The frozen staged oracle itself exceeds the
+mathematical tolerance at two final-logit coordinates. Defer the expansion
+as a broad correction and preserve both contracts.
 
 ### Gemma4 adoption task gate
 

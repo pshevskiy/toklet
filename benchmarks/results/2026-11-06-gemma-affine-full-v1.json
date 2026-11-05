@@ -1,0 +1,217 @@
+{
+  "state_passed": true,
+  "historical_prefix_exact": true,
+  "numerical_passed": false,
+  "combined_gate_passed": false,
+  "numerical": {
+    "math_fp64": {
+      "compared_values": 24123392,
+      "failed_values": 5,
+      "maximum_gate_ratio": 1.488500573704729
+    },
+    "staged_fp32": {
+      "compared_values": 24123392,
+      "failed_values": 4,
+      "maximum_gate_ratio": 1.7964967021228135
+    }
+  },
+  "failure_coordinates": [
+    {
+      "kind": "logits",
+      "position": 1024,
+      "owner": null,
+      "committed": null,
+      "contracts": {
+        "math_fp64": {
+          "values": 262144,
+          "failed_values": 3,
+          "maximum_gate_ratio": 1.361521880803851,
+          "examples": [
+            {
+              "index": 6212,
+              "actual": 0.018533358350396156,
+              "reference": 0.018547336039576694,
+              "gate_ratio": 1.179080833657111
+            },
+            {
+              "index": 23958,
+              "actual": 0.009425719268620014,
+              "reference": 0.009440619848477258,
+              "gate_ratio": 1.361521880803851
+            },
+            {
+              "index": 74252,
+              "actual": 0.03370624780654907,
+              "reference": 0.03372019886248971,
+              "gate_ratio": 1.0433020635114103
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "v",
+      "position": null,
+      "owner": 13,
+      "committed": 1024,
+      "contracts": {
+        "staged_fp32": {
+          "values": 131072,
+          "failed_values": 1,
+          "maximum_gate_ratio": 1.0104218338524218,
+          "examples": [
+            {
+              "index": 124410,
+              "actual": 0.035100433975458145,
+              "reference": 0.03508678451180458,
+              "gate_ratio": 1.0104218338524218,
+              "absolute_position": 997,
+              "component": 250
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "v",
+      "position": null,
+      "owner": 14,
+      "committed": 1024,
+      "contracts": {
+        "math_fp64": {
+          "values": 524288,
+          "failed_values": 1,
+          "maximum_gate_ratio": 1.488500573704729,
+          "examples": [
+            {
+              "index": 510687,
+              "actual": 0.0004999194061383605,
+              "reference": 0.0004849622137479743,
+              "gate_ratio": 1.488500573704729,
+              "absolute_position": 997,
+              "component": 223
+            }
+          ]
+        },
+        "staged_fp32": {
+          "values": 524288,
+          "failed_values": 1,
+          "maximum_gate_ratio": 1.7964967021228135,
+          "examples": [
+            {
+              "index": 510687,
+              "actual": 0.0004999194061383605,
+              "reference": 0.00048186787171289325,
+              "gate_ratio": 1.7964967021228135,
+              "absolute_position": 997,
+              "component": 223
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "v",
+      "position": null,
+      "owner": 13,
+      "committed": 1025,
+      "contracts": {
+        "staged_fp32": {
+          "values": 131072,
+          "failed_values": 1,
+          "maximum_gate_ratio": 1.0104218338524218,
+          "examples": [
+            {
+              "index": 124154,
+              "actual": 0.035100433975458145,
+              "reference": 0.03508678451180458,
+              "gate_ratio": 1.0104218338524218,
+              "absolute_position": 997,
+              "component": 250
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "v",
+      "position": null,
+      "owner": 14,
+      "committed": 1025,
+      "contracts": {
+        "math_fp64": {
+          "values": 524800,
+          "failed_values": 1,
+          "maximum_gate_ratio": 1.488500573704729,
+          "examples": [
+            {
+              "index": 510687,
+              "actual": 0.0004999194061383605,
+              "reference": 0.0004849622137479743,
+              "gate_ratio": 1.488500573704729,
+              "absolute_position": 997,
+              "component": 223
+            }
+          ]
+        },
+        "staged_fp32": {
+          "values": 524800,
+          "failed_values": 1,
+          "maximum_gate_ratio": 1.7964967021228135,
+          "examples": [
+            {
+              "index": 510687,
+              "actual": 0.0004999194061383605,
+              "reference": 0.00048186787171289325,
+              "gate_ratio": 1.7964967021228135,
+              "absolute_position": 997,
+              "component": 223
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "baseline_failures": {
+    "math_fp64": 4,
+    "staged_fp32": 8
+  },
+  "exact_staged_vs_math": [
+    {
+      "kind": "logits",
+      "owner": 1024,
+      "position": 1024,
+      "component": 6212,
+      "native": 0.018533358350396156,
+      "staged": 0.018534939736127853,
+      "math": 0.018547336039576694
+    },
+    {
+      "kind": "logits",
+      "owner": 1024,
+      "position": 1024,
+      "component": 23958,
+      "native": 0.009425719268620014,
+      "staged": 0.00942726619541645,
+      "math": 0.009440619848477258
+    }
+  ],
+  "owned_physical_peak_bytes": 3067120472,
+  "elapsed_seconds": 323.8841499169939,
+  "production_shader_changed": false,
+  "device": "Apple M1 Pro",
+  "review": "Astra approved the unchanged-gate rejection and scoped evidence.",
+  "framing": "Raw events and payload unchanged. Default libtest name/completion framing and one timeout notice were normalized to the frozen serial checker format.",
+  "receipts_sha256": {
+    "artifacts/gemma-affine-expansion-2026-11-06/graph-build.json": "18cbaf8c39ba20d437e9aeb830365278385a2a1732b9f829b8a320e1665db0d1",
+    "artifacts/gemma-affine-expansion-2026-11-06/graph-full/owned.json": "fc362f3af9b9a929cb0402106db2db468d6c46359e7ad824e1cdbf8e86a46293",
+    "artifacts/gemma-affine-expansion-2026-11-06/graph-full/gpu.stdout": "f0f2a749849f137512dd7bdb6f8723315fd6a2bb7e266b5cbc0a3b74ba0d8619",
+    "artifacts/gemma-affine-expansion-2026-11-06/graph-full/arrays.bin": "f5f9d27e204540b024e8d6681e70c1e33b44ed2aca77f3fa79c5ce3d5887d511",
+    "artifacts/gemma-affine-expansion-2026-11-06/graph-full.py": "9d11f4e3815dd206cbedefb1093d479a58de1567d566c05c4d1210d5db6b4fee",
+    "artifacts/gemma-affine-expansion-2026-11-06/graph-full.stderr": "7fa3cd641da757e7ee4ba01371580fbe158a13bfbf2360e7dd63b40cb08a4727",
+    "artifacts/gemma-affine-expansion-2026-11-06/graph-full-retry.stderr": "4b6412b1b7fb221fe54ceac4566052799db89b09aff381febfdbcc040da1b585",
+    "artifacts/gemma-affine-expansion-2026-11-06/graph-full-checked.json": "1101e9f99fa2d61e6d1299c587118fccd32208e3d279992c24614cdabb990e8b",
+    "artifacts/gemma-affine-expansion-2026-11-06/cross-contract.py": "ab3e2e4cdf59a848eca4e236150429f73a6efb09d6de89a05ceb8cca9c6092ac",
+    "artifacts/gemma-affine-expansion-2026-11-06/cross-contract.json": "aadf4de6b211817ae091d4f5c16269b06329bd8c469d5bbd13e5b9ed7af306b5"
+  }
+}
