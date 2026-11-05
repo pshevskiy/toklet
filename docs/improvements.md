@@ -10557,3 +10557,11 @@ selected package. Added Granite MoE to the diagnostic coverage table. Gemma
 and deferred iPhone gates keep M8 open. The selected package predates the
 test-only Gemma edits.
 [Audit evidence](../benchmarks/results/2026-11-06-m8-mac-audit-v1.json)
+
+## 6 November 2026 — Identify one misrounded Gemma feed-forward projection
+
+The same 32-row execution with identical FF inputs isolates gate row2149.
+An exact rational dot is 1.776e-15 above the midpoint, so the upper FP32
+word is correct. All eight stage comparisons still pass tolerance.
+Metal checks and Astra review pass. A separate rounding experiment follows.
+[Evidence](../benchmarks/results/2026-11-06-gemma-layer3-ff-v1.json)

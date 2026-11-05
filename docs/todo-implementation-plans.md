@@ -39,6 +39,11 @@ The [authenticated prefix64 replay](../benchmarks/results/2026-11-06-gemma-first
 localizes the first observed position48 propagation to layer3. Attention
 and FF up are exact. The first captured difference is the per-layer gate.
 Replay the remaining FF stages using the same operands and 32-row shape.
+The [FF replay](../benchmarks/results/2026-11-06-gemma-layer3-ff-v1.json)
+finds identical inputs and one misrounded gate projection word. The exact
+dot lies above the midpoint. Replay the lane/tree, then test an isolated
+three-component correction on that row and midpoint/cancellation controls.
+Recheck frozen affine fixtures before any prefix or full-graph experiment.
 
 ### Gemma4 adoption task gate
 

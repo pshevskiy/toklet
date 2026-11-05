@@ -1,0 +1,94 @@
+{
+  "passed": true,
+  "first_bit_difference": "mlp.gate_proj",
+  "stages": {
+    "post_attention_residual": {
+      "bit_differences": 0,
+      "values": 1536,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "pre_feedforward_layernorm": {
+      "bit_differences": 0,
+      "values": 1536,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0,
+      "examples": []
+    },
+    "mlp.gate_proj": {
+      "bit_differences": 1,
+      "values": 6144,
+      "failed_values": 0,
+      "maximum_gate_ratio": 5.765897969100211e-06,
+      "examples": []
+    },
+    "ff_product": {
+      "bit_differences": 1,
+      "values": 6144,
+      "failed_values": 0,
+      "maximum_gate_ratio": 5.786996416206984e-06,
+      "examples": []
+    },
+    "mlp.down_proj": {
+      "bit_differences": 2,
+      "values": 1536,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0003640128747276847,
+      "examples": []
+    },
+    "post_feedforward_layernorm": {
+      "bit_differences": 2,
+      "values": 1536,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0005932699715466535,
+      "examples": []
+    },
+    "post_ff_residual": {
+      "bit_differences": 1,
+      "values": 1536,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0007277613171105826,
+      "examples": []
+    },
+    "per_layer_input_gate": {
+      "bit_differences": 8,
+      "values": 256,
+      "failed_values": 0,
+      "maximum_gate_ratio": 0.0009248858233075555,
+      "examples": []
+    }
+  },
+  "archived_gate_exact": true,
+  "whole_graph_qualified": false,
+  "exact_gate": {
+    "row": 2149,
+    "native": "0x3a79749a",
+    "staged": "0x3a79749b",
+    "exact_dot": 0.0009515971469244988,
+    "midpoint": 0.0009515971469227225,
+    "signed_margin_above_midpoint": 1.7763568394002505e-15,
+    "exact_fraction": [
+      535701569537,
+      562949953421312
+    ],
+    "native_error": -2.9105606813573104e-11,
+    "staged_error": 2.9102054099894303e-11
+  },
+  "device": "Apple M1 Pro",
+  "metal_passes": 695,
+  "checker_mutations_rejected": 7,
+  "physical_peak_bytes": 3025046312,
+  "review": "Astra approved the replay and exact rational rounding finding. Full qualification remains rejected.",
+  "receipts_sha256": {
+    "artifacts/gemma-layer3-ff-2026-11-06/checks.json": "408b0476a7b594cbc93e37f2cd10f18dcc80deeb279d7fe9260b5ab275eb877b",
+    "artifacts/gemma-layer3-ff-2026-11-06/checker-controls.json": "e2e248633a3ea055fb36aac6c9a89a8ce56bb40be6d0f44eeb23a422285a02c7",
+    "artifacts/gemma-layer3-ff-2026-11-06/gpu.stdout": "9401d123634f2d26f05309b37eeb8bdac310b3fe11c0f16d46f2bdfb22116347",
+    "artifacts/gemma-layer3-ff-2026-11-06/arrays.bin": "cbbc92383a3dbb0c4fd332a9356de1da289be37dcb3a34193e35c4a685ce9e2c",
+    "artifacts/gemma-layer3-ff-2026-11-06/owned.json": "d2da825b9e6a19a4c45c0c0d86ccb1b36160e4e3e6e5a75a440aae3f79ab313b",
+    "artifacts/gemma-layer3-ff-2026-11-06/replay.json": "98f93c6562e23c6d142a6176e441c73c99901c972782bf676d36619d2655c422",
+    "artifacts/gemma-layer3-ff-2026-11-06/prior-replay.json": "0d5e4013b6319024c5b4a9a87a4cd29e238e524622f2a4dd53baa7affd7013a0",
+    "artifacts/gemma-layer3-ff-2026-11-06/exact-gate.py": "f21a23d4ee740e3e72700b30be88b24f9f0373e0687550bb22009823d47d306e",
+    "artifacts/gemma-layer3-ff-2026-11-06/exact-gate.json": "d828c10257d2332148f91b73e8a9ed41397883fed0559d04c36d2e28aab8121c"
+  }
+}

@@ -27,12 +27,16 @@ def sha(raw):
 def capture(log, body):
     fields = FIELDS + [(f'layer.{i}.{name}', 512 if i == 4 else 256)
                        for i in range(5) for _, name in KV]
+    return capture_records(log, body, fields, 'FIRST_STAGED')
+
+
+def capture_records(log, body, fields, event):
     events = []
     for line in log.decode().splitlines():
         if 'GEMMA_HYBRID_' in line:
             name, value = line.split('GEMMA_HYBRID_', 1)[1].split(' ', 1)
             events.append((name, json.loads(value)))
-    expected = [('REAL_FIRST_STAGED', dict(position=POSITION, prefix=64, chunk=32, context=1025))]
+    expected = [('REAL_' + event, dict(position=POSITION, prefix=64, chunk=32, context=1025))]
     rows, offset = {}, 0
     for index, (name, count) in enumerate(fields):
         raw = body[offset:offset + 4 * count]
@@ -44,7 +48,7 @@ def capture(log, body):
         rows[name] = raw
         offset += len(raw)
     expected.extend([
-        ('REAL_FIRST_STAGED_COMPLETE', dict(committed=64, faults_preserved_prefix=True)),
+        ('REAL_' + event + '_COMPLETE', dict(committed=64, faults_preserved_prefix=True)),
         ('CAPTURE', dict(records=len(fields), bytes=offset, sha256=sha(body),
                          whole_e2b_qualified=False)),
     ])

@@ -205,6 +205,16 @@ fn native_layer12_tail_at_433() {
 #[test]
 #[ignore = "explicit original E2B earliest retained staged difference"]
 fn native_prefix64_at_48() {
+    capture_prefix64(false);
+}
+
+#[test]
+#[ignore = "explicit original E2B layer3 same-input feed-forward replay"]
+fn native_layer3_ff_at_48() {
+    capture_prefix64(true);
+}
+
+fn capture_prefix64(replay_ff: bool) {
     const POSITION: usize = 48;
     const ROWS: usize = 32;
     let raw = include_bytes!("../../../../../../benchmarks/gemma-v-boundary-v1/tokens.u32le");
@@ -227,10 +237,15 @@ fn native_prefix64_at_48() {
     let at = |width| row * width..(row + 1) * width;
     let mut capture = capture::Capture::bounded(256 * 1024);
     emit(
-        "FIRST_STAGED",
+        if replay_ff {
+            "LAYER3_FF"
+        } else {
+            "FIRST_STAGED"
+        },
         json!({"position":POSITION,"prefix":ids.len(),"chunk":ROWS,"context":1025}),
     );
-    for layer in [2, 3, 4] {
+    let layers: &[usize] = if replay_ff { &[3] } else { &[2, 3, 4] };
+    for &layer in layers {
         session.fault = Some(layer);
         assert!(matches!(
             session.forward(&ids[ROWS..]),
@@ -242,6 +257,58 @@ fn native_prefix64_at_48() {
         assert_eq!(pointers(&session), owned);
         let s = &session.scratch;
         let g = &model.layout.layers[layer];
+        if replay_ff {
+            let w = &model.weights.layers[layer];
+            let h = ROWS * H;
+            let ff = ROWS * g.intermediate;
+            let mut residual = vec![0.; h];
+            let mut normalized = vec![0.; h];
+            let mut gate = vec![0.; ff];
+            let mut product = vec![0.; ff];
+            let mut down = vec![0.; h];
+            let mut after_ff = vec![0.; h];
+            let mut ple_gate = vec![0.; ROWS * P];
+            let ops = &mut session.operations;
+            // After finish swaps the buffers, next holds the incoming hidden.
+            cpu::rmsnorm(
+                &s.attention[..h],
+                w.post_attention_norm,
+                &mut residual,
+                ROWS,
+                H,
+                EPSILON,
+            )
+            .unwrap();
+            cpu::residual_add(&mut residual, &s.next[..h]).unwrap();
+            cpu::rmsnorm(&residual, w.pre_ff_norm, &mut normalized, ROWS, H, EPSILON).unwrap();
+            ops.project(&normalized, &w.ff_gate, &mut gate, ROWS)
+                .unwrap();
+            cpu::gated_gelu_tanh(&gate, &s.up[..ff], &mut product).unwrap();
+            ops.project(&product, &w.ff_down, &mut down, ROWS).unwrap();
+            cpu::rmsnorm(&down, w.post_ff_norm, &mut after_ff, ROWS, H, EPSILON).unwrap();
+            for (name, values) in [
+                ("post_attention_residual", &residual[at(H)]),
+                ("pre_feedforward_layernorm", &normalized[at(H)]),
+                ("mlp.gate_proj", &gate[at(g.intermediate)]),
+                ("ff_product", &product[at(g.intermediate)]),
+                ("mlp.down_proj", &down[at(H)]),
+                ("post_feedforward_layernorm", &after_ff[at(H)]),
+            ] {
+                capture.record(name, values, POSITION, 1);
+            }
+            cpu::residual_add(&mut after_ff, &residual).unwrap();
+            ops.project(&after_ff, &w.ple_gate, &mut ple_gate, ROWS)
+                .unwrap();
+            // PLE only overwrites the first ROWS*P slots of gate/product.
+            let ff_row = at(g.intermediate);
+            assert!(ff_row.start >= ROWS * P);
+            assert_eq!(gate[ff_row.clone()], s.gate[ff_row.clone()]);
+            assert_eq!(product[ff_row.clone()], s.product[ff_row]);
+            assert_eq!(ple_gate, s.gate[..ROWS * P]);
+            capture.record("post_ff_residual", &after_ff[at(H)], POSITION, 1);
+            capture.record("per_layer_input_gate", &ple_gate[at(P)], POSITION, 1);
+            continue;
+        }
         if layer == 3 {
             let q = HEADS * g.head_dim;
             for (stage, values) in [
@@ -309,7 +376,11 @@ fn native_prefix64_at_48() {
         identity(&std::fs::symlink_metadata(path).unwrap())
     );
     emit(
-        "FIRST_STAGED_COMPLETE",
+        if replay_ff {
+            "LAYER3_FF_COMPLETE"
+        } else {
+            "FIRST_STAGED_COMPLETE"
+        },
         json!({"committed":ids.len(),"faults_preserved_prefix":true}),
     );
     capture.finish();
