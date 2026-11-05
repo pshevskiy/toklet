@@ -25,6 +25,8 @@ This is the live progress index for [PLAN.md](PLAN.md), the
 acceptance; checked items here require evidence. Broad architecture coverage is
 the goal, not a claim that arbitrary Hugging Face models already run.
 
+The [implementation plans](docs/todo-implementation-plans.md) cover all 19 open items, their dependencies and acceptance evidence.
+
 ## Update after every iteration
 
 - Update the affected checkboxes, current task and any blockers before closing
@@ -1306,3 +1308,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Metal router leaf reviewed | Apple M1 Pro:45 launches/1,527 slots pass, exact IDs, bounded gates, OR-only failure/guards and zero Rust encode allocations. 574CPU/684Metal, strict/release and Astra pass. | Commit test-gated router; next Half expert projections/reduction and combined session layout. [Report](docs/moe-metal-router.md). |
 
 | 2026-11-05 | Metal expert leaves reviewed | Added independent gate/up rounding witnesses after the initial fixture coverage check. Final M1 Pro run matched 45,612 stage words with zero Rust encode allocations. 574 CPU and 685 Metal-feature tests, strict checks and Astra review pass. | Commit standalone leaves. Combined session wiring and allocation follow. [Report](docs/moe-metal-experts.md) |
+
+| 2026-11-05 | Shared Metal MoE scratch reviewed | Router and experts consume one checked scratch owner. Five release GPU checks, full Rust checks and Astra pass. | Connect router projection and dense session wiring next. Phone query timed out. [Result](benchmarks/results/2026-11-05-moe-ffn-shared-v1.json) |

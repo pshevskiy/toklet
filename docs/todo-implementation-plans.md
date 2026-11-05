@@ -1,0 +1,81 @@
+# Implementation plans for open TODO items
+
+These plans map to the 19 items open in [TODO.md](../TODO.md) on 5 November 2026. Start with MoE wiring and stock/native validation. M9 follows the new-model priority, with its first delivery in order. The phone track retains its deferment. Follow-on work requires the stated prerequisites. Preserve failed gates and attach receipts to the relevant checkbox.
+
+For each code task, freeze the acceptance criteria, check the affected path and required Rust configurations, send Astra one diff and evidence review, then commit. Reuse unchanged evidence by identity. Store full logs in artifacts and record only the decision and evidence link in the tracker.
+
+### Phone Settings runtime
+
+Build the current approved package, install on the physical iPhone 14 Pro, and exercise the rendered context and KV controls. Capture Preview, Apply, rejection and restoration with the bundle and device identities. Close on observed runtime evidence. Keep the existing hardware deferment until the device is available for testing.
+
+### Physical iPhone journeys
+
+Use the physical iPhone 14 Pro and each eligible profile. Exercise discovery, verified download, Chat, Stop, restart, and network-denied reuse. Record process limits and exact profile eligibility independently from Mac results. Close when all eligible journeys have device receipts.
+
+### Sparse MoE resident graph
+
+Reuse the dense attention, KV and transaction path with a layer-level expert branch. Stream pinned BF16 weights into their final Half buffers, then allocate router and expert scratch from a consumed combined plan. Validate numerical stages, actual bytes, budget rejection, chunk equivalence, reset and failed-candidate state with a small independent fixture.
+
+### Sparse MoE real execution
+
+After the resident graph passes, acquire the pinned original artifact and verify its digest. Freeze the prompt, stop and stock trajectory. Compare complete decision rows and routing sets independently, exercise the admitted 512-position boundary, and collect process peaks in separate owned processes.
+
+### Gemma4 real 1,025 numerical qualification
+
+Reuse the completed [same-input V witness](gemma-v-boundary.md) and the four rejected mathematical logits and eight staged KV observations. State a new source or arithmetic hypothesis and test it on a discriminating control before changing code. Freeze the supported policy, apply the smallest correction, and rerun the complete gate and qualified prefix checks.
+
+### Gemma4 adoption task gate
+
+Use the failed 100-task collection and the stock decisions to distinguish artifact quality from engine errors. Screen a concrete candidate for combined memory fit before payload acquisition. Freeze candidate, baseline and grading policy. Repeat the unchanged 10,000-target loss and 100-task adoption gates before enabling the route.
+
+### M8 closure audit
+
+Join exact artifact, backend, device, context and app receipts to the coverage table. Check commits, reviews and linked verification for each prerequisite. Close only after the remaining M8 gates have their required evidence.
+
+### P0 baseline collection
+
+Use the pinned Mac MLX8 workload and release build in the performance plan. Separate completed uninstrumented timings from bounded profile events. Label each chunk and sampled decode position, verify parity and retain raw samples and memory facts.
+
+### P0 metric selection
+
+Rank projection and normalization costs from the completed work. Choose one primary end-to-end metric, comparison recipe, fallback and minimum useful effect before coding. Record the device-specific evidence and contract.
+
+### P1 implementation
+
+Implement the single kernel candidate selected by P0. Dispatch only for its admitted shapes and keep the existing qualified fallback. Measure representative projection or normalization shapes and retain the change only if the candidate passes the next screen.
+
+### P1 numerical and usefulness screen
+
+Compare fixed intermediates, full decision rows and transactional state against the baseline. Run the frozen timing comparison. Close with Astra's decision and raw results showing the candidate meets the screen, or record rejection and select the next measured candidate.
+
+### P2 confirmation and adoption
+
+Reproduce the effect in an independent run. Execute unchanged quality, state, memory and app/device gates for the proposed deployment scope. Bind the adoption or rejection decision to the exact configuration and evidence.
+
+### M9 publication
+
+Record the baseline, candidate, independent result, scope and decision after P2. Link the evidence and update the checklist and improvement record.
+
+### P3 split KV
+
+Confirm a decode attention bottleneck and qualified Online mode. Implement partitioned accumulation and stable merging with a checked workspace plan. Verify masking, GQA, boundaries and end-to-end improvement before enabling the selected route.
+
+### R1 rotary reuse
+
+Measure repeated rotary work and size the retained phase data. If the benefit justifies the memory, implement reuse keyed by positional semantics and compare offsets, resets, and end-to-end latency. Close with a measured retain or defer decision.
+
+### P4 I8 KV
+
+Specify the target capacity and codec, including scale and storage layout. Implement writes and reads with fused reconstruction, then bind the solver to real allocation. Qualify quality, state, memory peaks and device behavior before exposing the option.
+
+### P5 strict greedy verifier and prompt lookup
+
+Qualify tentative state, exact target decisions and rollback first. Then add the separate lookup proposer and measure accepted tokens, latency and memory. Require identical greedy trajectories across rejection, cancellation and replay cases.
+
+### G2/G3 shared KV and MTP
+
+Wait for the selected Gemma graph to pass its required gates. Validate checkpoint-defined shared layers and output semantics separately for prefill and MTP. Compare committed state and emitted decisions, then qualify any measured benefit with complete owner accounting.
+
+### Llama Online correctness
+
+Replay the frozen failing case in Reference and Online, capture the first differing attention state and correct the affected arithmetic or indexing. Rerun the original gate and boundary cases before qualifying that configuration.

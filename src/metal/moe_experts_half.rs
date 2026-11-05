@@ -19,17 +19,17 @@ const LABELS: [&str; 4] = [
 ];
 
 #[derive(Clone, Copy)]
-struct Plan {
+pub(super) struct Plan {
     shape: [u32; 10],
     // Binding order: input, fused weights, down weights, gate, up, GLU,
     // expert values, reduced output, then IDs, FP32 gate words and status.
-    half: [usize; 8],
-    word: [usize; 3],
+    pub(super) half: [usize; 8],
+    pub(super) word: [usize; 3],
     operand_bytes: usize,
 }
 
 impl Plan {
-    fn new(geometry: [usize; 5], strides: [usize; 5]) -> Result<Self> {
+    pub(super) fn new(geometry: [usize; 5], strides: [usize; 5]) -> Result<Self> {
         let [capacity, experts, selected, hidden, intermediate] = geometry;
         let [input, routing, activation, values, output] = strides;
         if !(1..=32).contains(&capacity)
@@ -159,18 +159,18 @@ impl Resident {
 }
 
 #[derive(Clone, Copy)]
-struct Invocation<'a> {
-    half: [&'a Buffer<u16>; 8],
-    word: [&'a Buffer<u32>; 3],
+pub(super) struct Invocation<'a> {
+    pub(super) half: [&'a Buffer<u16>; 8],
+    pub(super) word: [&'a Buffer<u32>; 3],
 }
 
-struct Operation {
+pub(super) struct Operation {
     pipelines: [Retained<ProtocolObject<dyn MTLComputePipelineState>>; 4],
     widths: [usize; 4],
 }
 
 impl Operation {
-    fn new(gpu: &Gpu, budget: usize) -> Result<Self> {
+    pub(super) fn new(gpu: &Gpu, budget: usize) -> Result<Self> {
         let required = PIPELINE_RESERVATION + size_of::<Self>();
         if budget < required {
             return Err(Error::Budget {
@@ -222,7 +222,7 @@ impl Operation {
     }
 
     /// The caller owns shared status and discards all candidates after failure.
-    fn encode(
+    pub(super) fn encode(
         &self,
         command: &Command<'_>,
         plan: Plan,

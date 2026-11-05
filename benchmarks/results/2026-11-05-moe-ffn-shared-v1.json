@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "counts": {
+    "test": 574,
+    "metal-test": 686,
+    "gpu": 5
+  },
+  "guarded_scratch_buffer_bytes": 282,
+  "checks": "artifacts/moe-ffn-shared-2026-11-05/checks.json",
+  "gpu_log": "artifacts/moe-ffn-shared-2026-11-05/gpu.stdout",
+  "review": "Astra approved subject to required checks, now passed",
+  "scope": "Same-command test-gated router and expert stages with shared route/status ownership"
+}

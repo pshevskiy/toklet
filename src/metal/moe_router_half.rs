@@ -14,18 +14,18 @@ const STATUS: usize = 1 + GUARD;
 const PIPELINE_RESERVATION: usize = 64 * 1024 * 1024;
 
 #[derive(Clone, Copy, Debug)]
-struct Plan {
+pub(super) struct Plan {
     capacity: usize,
     experts: usize,
     selected: usize,
     input_stride: usize,
     output_stride: usize,
-    input_len: usize,
-    output_len: usize,
+    pub(super) input_len: usize,
+    pub(super) output_len: usize,
     operand_bytes: usize,
 }
 impl Plan {
-    fn new(
+    pub(super) fn new(
         capacity: usize,
         experts: usize,
         selected: usize,
@@ -113,18 +113,18 @@ impl Resident {
         }
     }
 }
-struct Invocation<'a> {
-    input: &'a Buffer<u16>,
-    ids: &'a Buffer<u32>,
-    gates: &'a Buffer<u32>,
-    status: &'a Buffer<u32>,
+pub(super) struct Invocation<'a> {
+    pub(super) input: &'a Buffer<u16>,
+    pub(super) ids: &'a Buffer<u32>,
+    pub(super) gates: &'a Buffer<u32>,
+    pub(super) status: &'a Buffer<u32>,
 }
-struct Operation {
+pub(super) struct Operation {
     pipeline: Retained<ProtocolObject<dyn MTLComputePipelineState>>,
     width: usize,
 }
 impl Operation {
-    fn new(gpu: &Gpu, budget: usize) -> Result<Self> {
+    pub(super) fn new(gpu: &Gpu, budget: usize) -> Result<Self> {
         let required = PIPELINE_RESERVATION + size_of::<Self>();
         if budget < required {
             return Err(Error::Budget {
@@ -166,7 +166,7 @@ impl Operation {
         Ok(Self { pipeline, width })
     }
     /// No upload, readback, allocation, wait or status reset in this encode.
-    fn encode(
+    pub(super) fn encode(
         &self,
         command: &Command<'_>,
         plan: Plan,

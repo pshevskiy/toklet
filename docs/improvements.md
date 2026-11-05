@@ -10042,3 +10042,10 @@ Resident Half expert stages consume a checked allocation plan and preserve
 ordered FP32 reduction. The M1 Pro matched 45,612 stage words with zero measured
 Rust encode allocations. Full checks and Astra review passed. Combined session
 wiring follows. [Report](moe-metal-experts.md)
+
+## 5 November 2026 — Share Metal MoE routing scratch
+
+One scratch owner supplies route IDs and gates to both stages in the same
+command. The GPU verified exact outputs, planned bytes and late failure status.
+Astra review and required checks passed.
+[Result](../benchmarks/results/2026-11-05-moe-ffn-shared-v1.json)
