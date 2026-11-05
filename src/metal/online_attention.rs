@@ -459,3 +459,6 @@ mod llama_witness;
 
 #[cfg(target_os = "macos")]
 mod split_kv;
+
+#[cfg(target_os = "macos")]
+mod staged;

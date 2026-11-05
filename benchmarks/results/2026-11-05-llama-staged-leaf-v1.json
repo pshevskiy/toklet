@@ -1,0 +1,18 @@
+{
+  "comparisons": 116800,
+  "max_abs_error": 0.0004887660954466799,
+  "cases": 18,
+  "device": "Apple M1 Pro",
+  "gate": {
+    "atol": 0.0001,
+    "rtol": 0.001
+  },
+  "metal_tests": 693,
+  "review": "Astra approved the guarded test-only leaf",
+  "checks": "artifacts/llama-staged-leaf-2026-11-05/checks.json",
+  "owner": "artifacts/llama-staged-leaf-2026-11-05/owned.json",
+  "schedule_scope": "One-row and up-to-32-row leaf dispatches and scratch reset on identical Half operands",
+  "workspace": "Separate FP32 scores and unnormalized exponentials, each [query_heads, 32, capacity] plus seven guard words",
+  "production_changed": false,
+  "real_quality_qualified": false
+}

@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Llama staged leaf workspace, status, and schedule controls. The current Gemma Q6 candidate is deferred and P5 backend integration remains.**
+Current task: **P5 explicit CPU verification transaction. Llama staged leaf passes its guarded fixture. Real-model adoption still needs a prospective quality contract.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -576,7 +576,7 @@ Conditional follow-ons require their own decision; they do not all block M9:
 - [ ] P4: integrated I8 KV for a defined capacity requirement, with an actual codec. Astra reviewed the current Mac profile. [Capacity trigger](docs/todo-implementation-plans.md#p4-i8-kv) remains open.
 - [ ] P5: strict-greedy transactional verifier, then measured prompt lookup. [Comparison leaf](benchmarks/results/2026-11-05-m9-strict-greedy-v1.json) passes. [CPU transaction witness](benchmarks/results/2026-11-05-m9-greedy-transaction-v1.json) passes. [Prompt lookup proposer](benchmarks/results/2026-11-05-m9-prompt-lookup-v1.json) passes. Next qualify backend-integrated tentative state and near-tie decisions.
 - [ ] G2/G3: checkpoint-defined shared-KV prefill/MTP after selected Gemma support.
-- [ ] Separate correctness task: Llama Online remains rejected. [Deeper staged screen](benchmarks/results/2026-11-05-llama-staged-depth-v1.json) passes frozen fixtures and matches ten greedy decisions. Next guarded workspace and schedule controls.
+- [ ] Separate correctness task: Llama Online remains rejected. [Deeper staged screen](benchmarks/results/2026-11-05-llama-staged-depth-v1.json) passes frozen fixtures and matches ten greedy decisions. [Guarded leaf](benchmarks/results/2026-11-05-llama-staged-leaf-v1.json) passes. Next freeze a real-model numerical and quality contract before session promotion.
   - [x] Reproduce the one-word difference on identical operands. [Result](benchmarks/results/2026-11-05-llama-online-witness-v1.json)
 
 Full-Qwen3-window expansion, old streaming prototypes and unselected techniques
@@ -1404,3 +1404,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Gemma Q6 current candidate deferred | Fresh causal-prefix generation for the sole unresolved case yields 188 samples and one complete-stateless mismatch. Runtime audit passes. | Astra approves defer. Preserve Q4 and Q6 rejections, full quality requirements, and pending Gemma integration. [Evidence](benchmarks/results/2026-11-05-gemma6-stock-prefix37-v1.json) |
 
 | 2026-11-05 | Deeper Llama staged screen reviewed | Isolated staged SIMD passes 1,050 frozen snapshots and all ten real greedy decisions through depth 512. Full rows differ by up to 0.06174. | Astra approves diagnostic scope. Next guarded workspace, poison/status, and chunk1/chunk32/reset controls. [Evidence](benchmarks/results/2026-11-05-llama-staged-depth-v1.json) |
+
+| 2026-11-05 | Llama guarded staged leaf reviewed | 18 cases and 116,800 FP64 comparisons pass, including one-row/batch equality, scratch reuse, GQA, poisoned tails and active nonfinite status. | Astra approves test-only scope. Real-model admission and quality remain open. [Evidence](benchmarks/results/2026-11-05-llama-staged-leaf-v1.json) |

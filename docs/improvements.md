@@ -10315,3 +10315,10 @@ snapshots. Ten real Llama 1B decisions match Reference through depth 512
 in one incremental schedule. Full logits differ by up to 0.06174. Astra
 approved the diagnostic. Ordinary Llama continues to use Reference.
 [Evidence](../benchmarks/results/2026-11-05-llama-staged-depth-v1.json)
+
+## 5 November 2026 — Verify staged Llama workspace and schedules
+
+The isolated leaf passes 116,800 FP64 comparisons on the M1 Pro. Single-row
+and batched output bits match on identical inputs. Astra approved workspace
+guards, status handling and scratch reset. Real-model qualification remains open.
+[Evidence](../benchmarks/results/2026-11-05-llama-staged-leaf-v1.json)

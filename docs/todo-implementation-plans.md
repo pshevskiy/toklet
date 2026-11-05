@@ -115,6 +115,7 @@ Reproduce the tied model at offset 5 with tokens 7, 13 and 3. The first rejected
 
 The [deeper staged experiment](../benchmarks/results/2026-11-05-llama-staged-depth-v1.json)
 matches ten greedy IDs through depth 512 on one reused-prefix schedule.
-Qualify guarded workspace, finite/status handling, poisoned unused KV, GQA,
-and chunk1/chunk32/reset. The current scratch stores unnormalized weights.
+The [guarded leaf](../benchmarks/results/2026-11-05-llama-staged-leaf-v1.json)
+passes finite/status, poisoned KV, GQA and single-row/batch scratch-reset controls.
+The scratch stores unnormalized exponentials.
 Freeze a real numerical and quality contract before any session promotion.
