@@ -1,0 +1,210 @@
+{
+  "cases": 100,
+  "sampled": 4036,
+  "exact_cases": 87,
+  "mismatches": 26,
+  "stop_counts": {
+    "stop_token": 73,
+    "output_limit": 27
+  },
+  "rejected": [
+    {
+      "id": "HumanEval/5",
+      "count": 1,
+      "first": {
+        "index": 1,
+        "absolute_row": 129,
+        "expected_id": 3709,
+        "stateless_id": 584,
+        "incremental_margin": 0.625,
+        "stateless_margin": 0.0,
+        "stateless_row_sha256": "a1497aba37aeb1342480233c226b0a02d2913f3cc0f59c0352a8c6419bc3b3a8"
+      }
+    },
+    {
+      "id": "HumanEval/17",
+      "count": 3,
+      "first": {
+        "index": 127,
+        "absolute_row": 333,
+        "expected_id": 7579,
+        "stateless_id": 8687,
+        "incremental_margin": 0.25,
+        "stateless_margin": 0.125,
+        "stateless_row_sha256": "5d02e0fff9c3c7d88782ab5480b724e2ecbf7d05e87dffb0293faad096bd6ae9"
+      }
+    },
+    {
+      "id": "HumanEval/19",
+      "count": 1,
+      "first": {
+        "index": 178,
+        "absolute_row": 316,
+        "expected_id": 24439,
+        "stateless_id": 11251,
+        "incremental_margin": 0.3125,
+        "stateless_margin": 0.25,
+        "stateless_row_sha256": "acd65d256eb57d4d87c86194944baa51a0e24671d2d9b1e478dbb60d3d236b68"
+      }
+    },
+    {
+      "id": "HumanEval/20",
+      "count": 2,
+      "first": {
+        "index": 229,
+        "absolute_row": 430,
+        "expected_id": 563,
+        "stateless_id": 236764,
+        "incremental_margin": 0.0,
+        "stateless_margin": 0.125,
+        "stateless_row_sha256": "70cc204be5165bceb756b57650575ebb517d3911cc36a65ac727ff3c1a757297"
+      }
+    },
+    {
+      "id": "HumanEval/21",
+      "count": 2,
+      "first": {
+        "index": 9,
+        "absolute_row": 169,
+        "expected_id": 108,
+        "stateless_id": 107,
+        "incremental_margin": 0.5,
+        "stateless_margin": 0.0,
+        "stateless_row_sha256": "eddfa9615cda6d876d2418911144b0f62acbd06546c21227ad4dc921ad6f822a"
+      }
+    },
+    {
+      "id": "HumanEval/32",
+      "count": 6,
+      "first": {
+        "index": 30,
+        "absolute_row": 340,
+        "expected_id": 518,
+        "stateless_id": 603,
+        "incremental_margin": 0.0625,
+        "stateless_margin": 0.125,
+        "stateless_row_sha256": "92c22c3c5b4280c76785a8bc9577d1d1d30f95ae10e34516e3b47d8a4f81b1a0"
+      }
+    },
+    {
+      "id": "HumanEval/33",
+      "count": 3,
+      "first": {
+        "index": 72,
+        "absolute_row": 256,
+        "expected_id": 31493,
+        "stateless_id": 9181,
+        "incremental_margin": 0.125,
+        "stateless_margin": 0.0,
+        "stateless_row_sha256": "6586d54463911598b42608b52af3a35e7995bd9f25baf6b064af586d31bfe879"
+      }
+    },
+    {
+      "id": "HumanEval/37",
+      "count": 2,
+      "first": {
+        "index": 1,
+        "absolute_row": 158,
+        "expected_id": 20952,
+        "stateless_id": 236749,
+        "incremental_margin": 0.1875,
+        "stateless_margin": 0.1875,
+        "stateless_row_sha256": "93d3b68672ff9a4a4aa96a101ec67752c2d7466b6855fa191cd6c92674c57ef4"
+      }
+    },
+    {
+      "id": "HumanEval/38",
+      "count": 2,
+      "first": {
+        "index": 130,
+        "absolute_row": 330,
+        "expected_id": 107,
+        "stateless_id": 1637,
+        "incremental_margin": 0.125,
+        "stateless_margin": 0.125,
+        "stateless_row_sha256": "62b0e4300ede5a07904a9950b0c501a94a0acb1f7c28e397425ab8b339168d08"
+      }
+    },
+    {
+      "id": "lambada/row-3",
+      "count": 1,
+      "first": {
+        "index": 7,
+        "absolute_row": 67,
+        "expected_id": 24406,
+        "stateless_id": 623,
+        "incremental_margin": 0.375,
+        "stateless_margin": 0.09375,
+        "stateless_row_sha256": "fe24a4a1c095e1a4d41d30536e29b7448bb7e9d1ab1131fe9dd290bcbc6a1ee4"
+      }
+    },
+    {
+      "id": "lambada/row-4",
+      "count": 1,
+      "first": {
+        "index": 0,
+        "absolute_row": 99,
+        "expected_id": 21543,
+        "stateless_id": 8178,
+        "incremental_margin": 0.0625,
+        "stateless_margin": 0.03125,
+        "stateless_row_sha256": "894092479fdc0a9a8df9e51fdf49e4af1b4d652ad450bf415627000c3c0a96c6"
+      }
+    },
+    {
+      "id": "lambada/row-12",
+      "count": 1,
+      "first": {
+        "index": 6,
+        "absolute_row": 68,
+        "expected_id": 4247,
+        "stateless_id": 6535,
+        "incremental_margin": 0.3125,
+        "stateless_margin": 2.0625,
+        "stateless_row_sha256": "b091a29a68e2b11ded7a2bba826b8d082127030a9c2388806c249f13538f9354"
+      }
+    },
+    {
+      "id": "lambada/row-25",
+      "count": 1,
+      "first": {
+        "index": 2,
+        "absolute_row": 93,
+        "expected_id": 531,
+        "stateless_id": 236761,
+        "incremental_margin": 0.0,
+        "stateless_margin": 0.125,
+        "stateless_row_sha256": "0fbe4f99204981287df6e1c75a5fc96ce83d652a8656d76d24eb2b2cf0d247c1"
+      }
+    }
+  ],
+  "cold_controls": {
+    "output_limit": true,
+    "full_replay_positions": 567,
+    "memory": {
+      "rss_peak_bytes": 1921908736,
+      "physical_peak_bytes": 5244112712,
+      "mlx_peak_bytes": 4923226648,
+      "mlx_active_bytes": 4058453604
+    }
+  },
+  "physical_peak_bytes": 5244112712,
+  "complete_journal": true,
+  "stateless_gate_passed": false,
+  "grading_started": false,
+  "review": "Astra approved scoped failed trajectory evidence",
+  "process_group_absent": true,
+  "final_live_module_audit_ran": false,
+  "final_guard_status": "The numerical assertion exited before the final live-module audit. The journal and failure are preserved.",
+  "evidence": "artifacts/gemma6-feasibility-2026-11-05/full-tasks",
+  "receipts": {
+    "artifacts/gemma6-feasibility-2026-11-05/full-tasks/prepare.py": "d6b9d73dca93cbb5ab4751edb558e150ef7062dc1f73d8b0291d26604361c112",
+    "artifacts/gemma6-feasibility-2026-11-05/full-tasks/journal-loop.py": "bf1985450bb2f7d6f37572210756dbccf45c3f157059899fa95f21f2e0143fa2",
+    "artifacts/gemma6-feasibility-2026-11-05/full-tasks/stock.py": "ff6fdd0c378e23719f2c120cc76bb75e1b045feca8a0a7099d7163e461cab638",
+    "artifacts/gemma6-feasibility-2026-11-05/full-tasks/stock-plan.json": "fa6de98bcb1ff67a3bf401da861cce0817f55a90ab6f8b96f06c7fed187ed0bf",
+    "artifacts/gemma6-feasibility-2026-11-05/full-tasks/stock-owned.json": "c1fd78c8c6cf686de19e62e122571073e40f1399f136b4d1101f1cc0eebc17d2",
+    "artifacts/gemma6-feasibility-2026-11-05/full-tasks/stock/tasks.jsonl": "5d9ec50d7783915a927864e4b4b84c9c1d6773fdc699c4184f083cbf78999c6e",
+    "artifacts/gemma6-feasibility-2026-11-05/full-tasks/stock/result.json": "4d9204dbf91b3d81c2afb18b75d8751916cec6ae9a7f09a3d743dcf9ce39a5e6",
+    "artifacts/gemma6-feasibility-2026-11-05/full-tasks/replay.json": "02d04eb45eae86742d95db2bbf324f24231afbbaa6142c326d77f0b2fb36995a"
+  }
+}

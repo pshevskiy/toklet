@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **5 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Gemma Q6 complete stock task collection. P3 real split-KV numerical rejection awaits a same-input witness.**
+Current task: **Gemma Q6 stateless trajectory localization and P3 same-input split-KV witness.**
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -527,7 +527,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Resident original BF16/stockKV reference at511–567positions; [report](docs/gemma-resident-generation.md).
 - [x] Original100-task controller pilot with exact sampled/terminal-stop replay; [report](docs/gemma-task-controller-pilot.md).
 - [x] Complete original/native100-case collections and isolated grading; [task result](docs/gemma-full-tasks.md), `89f0613`.
-- [ ] Gemma4 adoption task gate: rejected52→43/100; stock MLX matches all4selected decisions (`c79fa90`). Higher-precision feasibility decision: [header ledger](docs/gemma8-feasibility.md); no8-bit execution. [Q6 header screen](docs/gemma6-feasibility.md) leaves estimated headroom; [Stock decision replay](benchmarks/results/2026-11-05-gemma6-stock-decisions-v1.json) matches original BF16 in all four probes. [Three-category pilot](benchmarks/results/2026-11-05-gemma6-stock-task-pilot-v1.json) passes 50 exact sampled rows. Next run the 100-task quality gate.
+- [ ] Gemma4 adoption task gate: rejected52→43/100; stock MLX matches all4selected decisions (`c79fa90`). Higher-precision feasibility decision: [header ledger](docs/gemma8-feasibility.md); no8-bit execution. [Q6 header screen](docs/gemma6-feasibility.md) leaves estimated headroom; [Stock decision replay](benchmarks/results/2026-11-05-gemma6-stock-decisions-v1.json) matches original BF16 in all four probes. [Three-category pilot](benchmarks/results/2026-11-05-gemma6-stock-task-pilot-v1.json) passes 50 exact sampled rows. [Complete stock collection](benchmarks/results/2026-11-05-gemma6-stock-tasks-v1.json) has 26 stateless mismatches across 13 cases. Grading withheld.
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1390,3 +1390,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Gemma Q6 task pilot reviewed | Three frozen categories, 50 exact cached and stateless sampled IDs, three hidden EOS and process peak 4,645,900,128 bytes pass. | Astra approves scoped pilot. Add output-limit and long-replay controls before complete collection. [Evidence](benchmarks/results/2026-11-05-gemma6-stock-task-pilot-v1.json) |
 
 | 2026-11-05 | P3 real split-KV session rejected | 6,782,224 of 19,447,808 values exceed the frozen screen across all 128 rows. Greedy differs once at depth 1,049. Budget, trace and short reset/fallback controls pass. | Astra approves rejection. Candidate removed from the engine and archived. Next same-input layer-0 replay. [Evidence](benchmarks/results/2026-11-05-m9-split-kv-session-v1.json) |
+
+| 2026-11-05 | Gemma Q6 full stock trajectory rejected | All 100 cases journaled, 4,036 sampled IDs, 26 stateless differences across 13 cases. Peak 5,244,112,712 bytes, output-limit and 567-position controls pass. | Astra approves failure scope. Final live-module audit was skipped after the gate failed. Withhold grading and localize the first two rows. [Evidence](benchmarks/results/2026-11-05-gemma6-stock-tasks-v1.json) |

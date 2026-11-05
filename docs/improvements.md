@@ -10263,3 +10263,10 @@ frozen numerical gate. One greedy token changes at depth 1,049. Astra
 approved the rejection, and the session candidate was removed from the
 engine. The operation timing remains a fixture result.
 [Evidence](../benchmarks/results/2026-11-05-m9-split-kv-session-v1.json)
+
+## 5 November 2026 — Retain the failed Q6 stock trajectory gate
+
+All 100 stock cases journal successfully. Stateless replay differs on 26
+of 4,036 sampled IDs across 13 cases. The failed assertion skips the final
+live-module audit, so the journal remains diagnostic and ungraded.
+[Evidence](../benchmarks/results/2026-11-05-gemma6-stock-tasks-v1.json)

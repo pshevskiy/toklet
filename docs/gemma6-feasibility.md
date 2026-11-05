@@ -47,3 +47,11 @@ verifies three terminal EOS predictions. The M1 Pro physical peak is
 4,645,900,128 bytes. Astra approved this run. The next collector checks the
 output-limit path, bounds long replay, and journals each complete case.
 [Pilot evidence](../benchmarks/results/2026-11-05-gemma6-stock-task-pilot-v1.json).
+
+The complete collection writes 100 cases and 4,036 sampled IDs. There are
+26 stateless disagreements in 13 cases. All 73 hidden-stop and 27 output-limit
+outcomes satisfy the recorded token counts. Peak physical footprint is
+5,244,112,712 bytes, including the 567-position cold control. The failed
+trajectory assertion ran before the final live-module audit. Grading remains
+withheld. Astra approved retaining the failed journal as scoped evidence.
+[Collection evidence](../benchmarks/results/2026-11-05-gemma6-stock-tasks-v1.json).
