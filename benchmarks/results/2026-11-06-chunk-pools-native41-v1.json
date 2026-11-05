@@ -1,0 +1,37 @@
+{
+  "passed": true,
+  "engine_change": "dcdfbdea",
+  "arm64_slices": 3,
+  "c_exports_per_slice": 41,
+  "selection": {
+    "passed": true,
+    "prior": "../../artifacts/qwen15-native41-2026-11-06/Toklet.xcframework",
+    "selected": "../../artifacts/chunk-pools-native41-2026-11-06/Toklet.xcframework",
+    "prior_preserved": true,
+    "package_sha256": "68edb4d767518d20099f6fef5a9dfafb583c389ee4f9c977bb6f24f896b27666",
+    "app_sha256": "d61f906589904fa13416879a6f1a48b1cfd92c1d642c56c10d390c6e1a5452f6",
+    "ios_executable_sha256": {
+      "iphonesimulator": "68233152241ee93d8a2464a4ce86fcf5c7d2c1ee82e44ab6f1868e715399b15b",
+      "iphoneos": "34a2d33abc9cf14b671301ddbfab4b8b713046e698bec94859d476cf3f382a1c"
+    },
+    "physical_iphone_contacted": false
+  },
+  "mac_product_signed_verified": true,
+  "mac_network_denied_controller_passed": true,
+  "mac_controller_physical_peak_bytes": 1880393720,
+  "unsigned_iphoneos_build": true,
+  "ios_simulator_build": true,
+  "physical_iphone_qualified": false,
+  "review": "Astra approved the current-source package, isolated app checks and guarded selection.",
+  "receipts_sha256": {
+    "artifacts/chunk-pools-package-checks-2026-11-06/select.py": "fce3867aed8fcfb65d9be20bc189500c3cce4044ec34136382d4fde95211fe1e",
+    "artifacts/chunk-pools-package-checks-2026-11-06/selection.json": "9ec3046866ce506ba6065ff31c8cbacf080b4681637c79a5a36d860fdafd2ac2",
+    "artifacts/chunk-pools-package-checks-2026-11-06/controller-pins.json": "75d125aaad3c0a3361a1e7d88508661f8e3ce44b4fa81f51c190270095c9b428",
+    "artifacts/chunk-pools-package-checks-2026-11-06/offline-enforced/app-result.json": "47df0c753e12632d7ecdeea55be75811ae563948de5cbe4edb361e9c5c2712a8",
+    "artifacts/chunk-pools-package-checks-2026-11-06/offline-enforced/app-owned.json": "7dd8e19e60de02598db89fd5a04c633b060fd46a99e878c67642b50f9e4b4dd5",
+    "artifacts/chunk-pools-package-checks-2026-11-06/ios-copy/iphonesimulator.stdout": "299f17b1256f9d37739f4f75ba5924e6c5b0bdd80659ba8e8811fdd3798874d3",
+    "artifacts/chunk-pools-package-checks-2026-11-06/ios-copy/iphoneos.stdout": "2ebb9e1c8963f6ae2554a4ac739b0c72537c883b1f1ae64e5af5d70b81e82335",
+    "artifacts/chunk-pools-native41-2026-11-06/build.json": "68edb4d767518d20099f6fef5a9dfafb583c389ee4f9c977bb6f24f896b27666",
+    "artifacts/chunk-pools-mac-product-2026-11-06/build.json": "d61f906589904fa13416879a6f1a48b1cfd92c1d642c56c10d390c6e1a5452f6"
+  }
+}

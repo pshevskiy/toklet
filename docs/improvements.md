@@ -10623,3 +10623,11 @@ and generation settings differ. Astra approved a bounded raw-token stock
 test. Parent revision and conversion recipe remain unknown.
 [Evidence](../benchmarks/results/2026-11-06-gemma-qat-header-v1.json)
 [Google quickstart](https://gemma.ai/get-started/)
+
+## 6 November 2026 — Refresh the source-matched Apple package
+
+All three arm64 slices retain 41 C exports. The linked Mac app,
+network-denied Qwen1.5B controller and both iOS SDK builds pass. Astra
+approved atomic selection with the previous package preserved. Physical
+iPhone qualification remains deferred.
+[Evidence](../benchmarks/results/2026-11-06-chunk-pools-native41-v1.json)

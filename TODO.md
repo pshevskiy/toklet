@@ -1,7 +1,9 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Refresh the source-matched Apple package and run bounded Gemma QAT stock checks.**
+Current task: **Bounded Gemma QAT stock checks on Mac.**
+Completed: source-matched native41 package selected, with Mac offline regression
+and both iOS SDK builds. [Evidence](benchmarks/results/2026-11-06-chunk-pools-native41-v1.json).
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
 [Evidence](benchmarks/results/2026-11-06-qwen15-mac-app-v1.json).
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).

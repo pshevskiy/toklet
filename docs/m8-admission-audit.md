@@ -74,3 +74,7 @@ the later test-only Gemma capture edits. Rebuild for the next source-matched
 Apple package validation. The remaining Gemma and phone gates keep the
 aggregate TODO open.
 [Current audit evidence](../benchmarks/results/2026-11-06-m8-mac-audit-v1.json).
+
+The later source-matched refresh selects a new 41-export package after the
+chunk-pool change. It passes an offline Mac controller run and both iOS SDK
+builds. [Refresh evidence](../benchmarks/results/2026-11-06-chunk-pools-native41-v1.json).
