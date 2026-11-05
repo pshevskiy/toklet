@@ -571,7 +571,7 @@ First delivery: **P0 → one selected P1 candidate → P2**, with independent
 
 Conditional follow-ons require their own decision; they do not all block M9:
 
-- [ ] P3: split-KV attention. [Primitive passes](benchmarks/results/2026-11-05-m9-split-kv-primitive-v1.json). [Paired operation timing](benchmarks/results/2026-11-05-m9-split-kv-timing-v1.json) passes at four long depths. Next wire an explicit Qwen2 session experiment at 1,025–1,152 valid positions.
+- [ ] P3: split-KV attention. [Primitive passes](benchmarks/results/2026-11-05-m9-split-kv-primitive-v1.json). [Paired operation timing](benchmarks/results/2026-11-05-m9-split-kv-timing-v1.json) passes at four long depths. [Real session rejected](benchmarks/results/2026-11-05-m9-split-kv-session-v1.json) across 128 rows, with one greedy divergence. Run one same-input layer-0 witness before deciding whether to defer.
 - [x] R1: evaluate rotary reuse and defer the table for pinned Qwen2.5 MLX8 on M1 Pro. [Decision](docs/m9-rotary-opportunity.md)
 - [ ] P4: integrated I8 KV for a defined capacity requirement, with an actual codec. Astra reviewed the current Mac profile. [Capacity trigger](docs/todo-implementation-plans.md#p4-i8-kv) remains open.
 - [ ] P5: strict-greedy transactional verifier, then measured prompt lookup. [Comparison leaf](benchmarks/results/2026-11-05-m9-strict-greedy-v1.json) passes. [CPU transaction witness](benchmarks/results/2026-11-05-m9-greedy-transaction-v1.json) passes. Next qualify backend-integrated tentative state and near-tie decisions.
@@ -1388,3 +1388,5 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-05 | Gemma Q6 stock preflight reviewed | Full pinned payload SHA verifies. Stock strict MLX matches original BF16 at all four disputed decisions, and full-row replay passes. Peak physical 4,355,542,880 bytes. | Astra approves bounded evidence. Next three-category stock task pilot, then unchanged task and loss gates. [Evidence](benchmarks/results/2026-11-05-gemma6-stock-decisions-v1.json) |
 
 | 2026-11-05 | Gemma Q6 task pilot reviewed | Three frozen categories, 50 exact cached and stateless sampled IDs, three hidden EOS and process peak 4,645,900,128 bytes pass. | Astra approves scoped pilot. Add output-limit and long-replay controls before complete collection. [Evidence](benchmarks/results/2026-11-05-gemma6-stock-task-pilot-v1.json) |
+
+| 2026-11-05 | P3 real split-KV session rejected | 6,782,224 of 19,447,808 values exceed the frozen screen across all 128 rows. Greedy differs once at depth 1,049. Budget, trace and short reset/fallback controls pass. | Astra approves rejection. Candidate removed from the engine and archived. Next same-input layer-0 replay. [Evidence](benchmarks/results/2026-11-05-m9-split-kv-session-v1.json) |

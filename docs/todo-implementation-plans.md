@@ -71,6 +71,13 @@ single-token decode. Admit and reuse guarded partials, keep existing Online
 outside the selected range, and qualify complete numerical decisions, state,
 quality and uninstrumented requests before considering adoption.
 
+The [first real session experiment](../benchmarks/results/2026-11-05-m9-split-kv-session-v1.json)
+failed all 128 complete rows and one greedy decision. Replay identical
+layer-0 operands at depth 1,025, compare both paths and the partition packets
+to FP64, and identify the first Half rounding boundary. Defer this route if
+the witness shows ordinary reassociation without an implementation defect.
+
+
 ### R1 rotary reuse
 
 Measure repeated rotary work and size the retained phase data. If the benefit justifies the memory, implement reuse keyed by positional semantics and compare offsets, resets, and end-to-end latency. Close with a measured retain or defer decision.

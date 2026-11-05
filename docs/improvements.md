@@ -10255,3 +10255,11 @@ Three frozen cases pass all 50 cached and stateless greedy comparisons,
 including terminal EOS. Peak physical memory is 4.65 GB. Astra approved
 the pilot. Full task grading and loss remain open.
 [Evidence](../benchmarks/results/2026-11-05-gemma6-stock-task-pilot-v1.json)
+
+## 5 November 2026 — Reject the first real split-KV session candidate
+
+On the pinned Qwen2.5 workload, all 128 complete decode rows exceed the
+frozen numerical gate. One greedy token changes at depth 1,049. Astra
+approved the rejection, and the session candidate was removed from the
+engine. The operation timing remains a fixture result.
+[Evidence](../benchmarks/results/2026-11-05-m9-split-kv-session-v1.json)

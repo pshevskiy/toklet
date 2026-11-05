@@ -1,0 +1,45 @@
+{
+  "positions": 128,
+  "compared": 19447808,
+  "maximum_absolute_error": 0.05340766906738281,
+  "maximum_gate_ratio": 16.711032100400487,
+  "workspace_bytes": 18512,
+  "admitted_bytes": 759158786,
+  "greedy_differences": [
+    [
+      1049,
+      25,
+      220
+    ]
+  ],
+  "rejected_values": 6782224,
+  "rejected_rows": 128,
+  "first_rejection": [
+    1025,
+    94,
+    0.34389182925224304,
+    0.3478339910507202,
+    1.4666960958720305
+  ],
+  "qualified": false,
+  "decision": "Reject this session candidate under the frozen diagnostic gate",
+  "code_retained": false,
+  "gate": {
+    "absolute": 0.002,
+    "relative": 0.002,
+    "greedy": "exact"
+  },
+  "exercised": [
+    "exact and one-byte-low admission",
+    "long split tracing",
+    "short Online fallback and reset",
+    "over-capacity rejection and evaluated length"
+  ],
+  "review": "Astra approved the rejection evidence and a bounded same-input follow-up",
+  "evidence": "artifacts/m9-p3-splitkv-2026-11-05/session/full-screen",
+  "candidate": {
+    "candidate/tracked.patch": "fae382fcd963e3bb040078d8f062c2c3afd6d09dcabdd4492e71796ab7855d3e",
+    "candidate/tests/qwen2_split_kv_metal.rs": "243823d2cb86425c7ab96f8ead0c1a6b79ad2fc061c037fcdd859af83ab28486",
+    "candidate/src/metal/split_kv.rs": "9fb8f6e5d10405de658f055fe4a93f1c03a134302a0759ed932856dfcd6074e7"
+  }
+}
