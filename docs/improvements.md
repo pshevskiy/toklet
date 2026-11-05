@@ -10614,3 +10614,12 @@ Exact/minus-one budgets, full-logit parity, rejection and reset pass.
 Default and Metal checks and Astra review pass. No throughput or Q8
 qualification follows from the ownership savings.
 [Evidence](../benchmarks/results/2026-11-06-gemma-chunk-pools-v1.json)
+
+## 6 November 2026 — Screen a distinct Gemma QAT artifact
+
+The pinned header contains 173 affine4 and 105 affine8 text matrices, with
+1.74GB estimated stock headroom. The tokenizer and stop IDs match. Template
+and generation settings differ. Astra approved a bounded raw-token stock
+test. Parent revision and conversion recipe remain unknown.
+[Evidence](../benchmarks/results/2026-11-06-gemma-qat-header-v1.json)
+[Google quickstart](https://gemma.ai/get-started/)

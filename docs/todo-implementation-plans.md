@@ -103,6 +103,12 @@ reduces Mac512 resident admission by130.7MB at chunk3 and139.7MB at chunk1.
 Applying those Q4 savings to the historical Q8 estimate leaves 28MB and
 37MB before Q8-specific costs. The stock trajectory and memory rejections
 remain in force.
+The [QAT header](../benchmarks/results/2026-11-06-gemma-qat-header-v1.json)
+contains 173 affine4 and 105 affine8 matrices and leaves 1.74GB of estimated
+stock headroom. Authenticate the single shard and run strict stock loading
+and frozen raw-token checks. Compare the four saved decisions
+informationally. Run full quality only after the bounded trajectory verifies.
+The changed template and unknown conversion lineage require separate scope.
 
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 

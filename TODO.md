@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Refresh the source-matched Apple package and review remaining Gemma acceptance.**
+Current task: **Refresh the source-matched Apple package and run bounded Gemma QAT stock checks.**
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
 [Evidence](benchmarks/results/2026-11-06-qwen15-mac-app-v1.json).
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
@@ -581,6 +581,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
   - [x] Size resident Metal pools to the admitted chunk. Mac512 Q4 saves
     139.7MB at chunk1 with exact output parity and budgets.
     [Evidence](benchmarks/results/2026-11-06-gemma-chunk-pools-v1.json).
+  - [x] Distinct QAT mixed4/8 artifact passes immutable header feasibility.
+    [Evidence](benchmarks/results/2026-11-06-gemma-qat-header-v1.json).
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
