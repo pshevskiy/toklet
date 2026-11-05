@@ -1,7 +1,7 @@
 # Exact model coverage
 
 Coverage is artifact-, backend-, route- and device-specific. The ordinary Mac
-catalog has five pinned profiles; iOS has four. Catalog membership selects a
+catalog has six pinned profiles. iOS has four. Catalog membership selects a
 managed route, while consumed-byte model/codec identity and fresh admission
 still authorize loading. Other Hugging Face results remain discoverable without
 becoming executable. Model declarations are shared input/history/output windows,
@@ -10,7 +10,7 @@ not tokens per second or a promise that the engine can use that whole window.
 | Pinned artifact (revision prefix) | Backend / route | Declared positions | Qualified or tested scope | Ordinary app |
 | --- | --- | ---: | --- | --- |
 | Qwen2.5-0.5B-Instruct-8bit (`6474d4c`) | Native Metal dense, managed | 32,768 | Mac load/session growth and rendered Chat through1,024; larger values require separate qualification | Mac/iOS catalog; next-load upper512 or1,024, initial KV512 |
-| Qwen2.5-1.5B-Instruct-8bit (`c7e1ff2`) | Native Metal dense, diagnostic | 32,768 | Mac512/chunks1,32; stock greedy/stop agreement, boundary/reset/overflow and process-memory checks | No managed Chat/catalog adoption |
+| Qwen2.5-1.5B-Instruct-8bit (`c7e1ff2`) | Native Metal dense, managed Reference | 32,768 | Mac512/chunks1,32, original loss and task gates, fresh download and network-denied Chat controller | Mac catalog, up to512, 3GiB process allowance |
 | Qwen3-0.6B-8bit (`11de968`) | Native Metal dense with Q/K norm, managed | 40,960 | Mac512 route; original relative loss/task gates accepted, but separate C512 numerical fidelity gate remains rejected | Mac/iOS catalog,512; experimental accuracy label |
 | SmolLM2-135M-Instruct-8bit (`0f0d9b8`) | Native Metal dense Llama-family, managed | 8,192 | Mac512, fresh download and network-denied offline Chat; authenticated preferences | Mac/iOS catalog,512 |
 | Mistral-7B-Instruct-v0.3-4bit (`a4b8f87`) | Native Metal dense, managed | 32,768 | Recorded bounded Mac route and authenticated preferences; no family-wide/window claim | Mac/iOS catalog,512; independent memory admission |
@@ -60,17 +60,22 @@ unknown. A numerical fit is not a reservation or a whole-device guarantee.
 Physical iPhone14Pro is currently unavailable. Earlier device receipts keep their
 original scope; the new Settings, Llama, wider context and diagnostic adapters
 have no new phone qualification. Mac compilation or a different Pro Max cannot
-substitute for it. Fresh production transfer/Stop/offline evidence now covers all five adopted Mac
-profiles; [journey report](mac-hub-journeys.md). Phone evidence remains separate.
+substitute for it. The five earlier Mac profiles have fresh production
+transfer/Stop/offline evidence. [Journey report](mac-hub-journeys.md).
+The sixth profile has isolated Mac controller evidence and a linked Mac product.
+[Qwen2.5-1.5B evidence](../benchmarks/results/2026-11-06-qwen15-mac-app-v1.json).
 
 The [representative production Mac Qwen2 journey](mac-production-memory.md)
 measures lifetimeRSS816,709,632bytes and greatest observed pre-exit physical
 high-water728,090,064bytes below its1.5GiB profile allowance at512/chunk32/
-reply128. The other four managed profiles have no new production-app peaks.
+reply128. The Qwen2.5-1.5B controller's fresh-download journey measured peak
+RSS2,007,515,136bytes and sampled physical high-water1,884,473,456bytes.
 
-[Qwen2.5-1.5B execution](qwen15-engine-execution.md) adds a second real dense
-geometry without a numerical kernel change. Its two decision rows are not a
-full fidelity or held-out quality gate.
+The initial [Qwen2.5-1.5B execution](qwen15-engine-execution.md) adds a second
+real dense geometry. The adopted profile also passes the
+[10,000-target loss](../benchmarks/results/2026-11-06-qwen15-full-loss-v1.json)
+and [100-task quality](../benchmarks/results/2026-11-06-qwen15-task-quality-v1.json)
+gates against the matched original FP32 reference.
 
 [SmolLM3 real execution](smollm3-engine-execution.md) adds the validated per-layer
 rotary mask to the shared dense blocks. Stock BF16/native Half row differences

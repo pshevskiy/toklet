@@ -90,7 +90,7 @@ struct NativeResourcePlan: Decodable, Sendable {
     }
     // Exact numerical budget, after the native owner allowance. Native policy2
     // resolves attention; the app does not interpret architecture names.
-    static func inspect(directory: String, capacity: UInt32, chunk: UInt32, budget: UInt64, context: UInt32? = nil) throws -> Self {
+    static func inspect(directory: String, capacity: UInt32, chunk: UInt32, budget: UInt64, context: UInt32? = nil, attention: NativeCapacityPlan.AttentionPolicy = .nativeFactory) throws -> Self {
         let context = context ?? capacity
         let path = Array(directory.utf8)
         guard !path.isEmpty, path.count <= 16384, !path.contains(0),
@@ -98,7 +98,7 @@ struct NativeResourcePlan: Decodable, Sendable {
               budget > 0, budget <= 6 * 1024 * 1024 * 1024 else { throw failure("Invalid runtime inspection request") }
         var options = TokletRuntimePlanningOptions(abi_version:TOKLET_ABI_VERSION,
             struct_size:UInt32(MemoryLayout<TokletRuntimePlanningOptions>.size),context_limit:context,
-            capacity:capacity,chunk:chunk,position_offset:0,normalization:1,readback:0,attention:2,reserved:0,
+            capacity:capacity,chunk:chunk,position_offset:0,normalization:1,readback:0,attention:attention.raw,reserved:0,
             load_memory_limit_bytes:budget,session_memory_limit_bytes:budget)
         var owner: OpaquePointer?; var error = TokletError()
         func checked(_ code: UInt32) throws {
@@ -116,6 +116,10 @@ struct NativeResourcePlan: Decodable, Sendable {
         var bytes = [UInt8](repeating:0,count:count)
         try bytes.withUnsafeMutableBufferPointer { try checked(toklet_mlx_inspect_json(owner,$0.baseAddress,$0.count,&count,&error)) }
         guard count == bytes.count else { throw failure("Runtime report size changed") }
-        return try decode(Data(bytes),capacity:capacity,chunk:chunk,budget:budget,context:context)
+        let plan = try decode(Data(bytes),capacity:capacity,chunk:chunk,budget:budget,context:context)
+        if let expected = attention.expected, plan.attention != expected {
+            throw failure("Runtime plan attention differs from the request")
+        }
+        return plan
     }
 }

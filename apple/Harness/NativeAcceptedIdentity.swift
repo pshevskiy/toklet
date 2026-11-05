@@ -6,13 +6,14 @@ import CToklet
 // Ordinary remains the default for Expert, external folders and other profiles.
 enum NativeLoadIdentity: String, Sendable, Equatable {
     case ordinary
+    case managedQwen15 = "managed_qwen15_audited_v1"
     case managedQwen2 = "managed_qwen2_audited_v1"
     case managedQwen3 = "managed_qwen3_audited_v1"
     case managedSmol = "managed_smol_audited_v1"
     case managedMistral = "managed_mistral_audited_v1"
     case managedLlama3 = "managed_llama3_audited_v1"
     var identityProfile: NativeAcceptedIdentity.Profile? {
-        switch self { case .ordinary: nil; case .managedQwen2: .qwen2; case .managedQwen3: .qwen3; case .managedSmol: .smol; case .managedMistral: .mistral; case .managedLlama3: .llama3 }
+        switch self { case .ordinary: nil; case .managedQwen2: .qwen2; case .managedQwen15: .qwen15; case .managedQwen3: .qwen3; case .managedSmol: .smol; case .managedMistral: .mistral; case .managedLlama3: .llama3 }
     }
 }
 
@@ -31,20 +32,21 @@ struct NativeAcceptedIdentity: Equatable, Sendable {
     // A concrete engine-policy allowlist, shared by wire decoding and preferences.
     // Profile recognition selects a route; only the native report proves pairing.
     enum Profile: CaseIterable, Equatable, Sendable {
-        case qwen2, qwen3, smol, mistral, llama3
+        case qwen2, qwen15, qwen3, smol, mistral, llama3
         var repository: String {
-            switch self { case .qwen2: "mlx-community/Qwen2.5-0.5B-Instruct-8bit"; case .qwen3: "mlx-community/Qwen3-0.6B-8bit"; case .smol: "mlx-community/SmolLM2-135M-Instruct-8bit"; case .mistral: "mlx-community/Mistral-7B-Instruct-v0.3-4bit"; case .llama3: "mlx-community/Llama-3.2-1B-Instruct-8bit" }
+            switch self { case .qwen2: "mlx-community/Qwen2.5-0.5B-Instruct-8bit"; case .qwen15: "mlx-community/Qwen2.5-1.5B-Instruct-8bit"; case .qwen3: "mlx-community/Qwen3-0.6B-8bit"; case .smol: "mlx-community/SmolLM2-135M-Instruct-8bit"; case .mistral: "mlx-community/Mistral-7B-Instruct-v0.3-4bit"; case .llama3: "mlx-community/Llama-3.2-1B-Instruct-8bit" }
         }
         var revision: String {
-            switch self { case .qwen2: "6474d4c1a05bd7bd634a9c993560e4e7272eda3d"; case .qwen3: "11de96878523501bcaa86104e3c186de07ff9068"; case .smol: "0f0d9b8218915bc34d401e1a340b8c049d300d5e"; case .mistral: "a4b8f870474b0eb527f466a03fbc187830d271f5"; case .llama3: "d48cdf0a4ea22d893b7c63a99d6a693e24822795" }
+            switch self { case .qwen2: "6474d4c1a05bd7bd634a9c993560e4e7272eda3d"; case .qwen15: "c7e1ff25efda4a2c8f7ee312380557fb42e145a2"; case .qwen3: "11de96878523501bcaa86104e3c186de07ff9068"; case .smol: "0f0d9b8218915bc34d401e1a340b8c049d300d5e"; case .mistral: "a4b8f870474b0eb527f466a03fbc187830d271f5"; case .llama3: "d48cdf0a4ea22d893b7c63a99d6a693e24822795" }
         }
         var manifestSHA256: String {
-            switch self { case .qwen2: "e92e6d359697d8ada4714ff4f5ff618ba8d9fc69d7abc24bfb4ec905eae6c59b"; case .qwen3: "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51"; case .smol: "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce"; case .mistral: "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26"; case .llama3: "61bd958bbd437cdce22122d01297318a672c605f000fedd6bb53af9ddd8ce5ff" }
+            switch self { case .qwen2: "e92e6d359697d8ada4714ff4f5ff618ba8d9fc69d7abc24bfb4ec905eae6c59b"; case .qwen15: "775a61717b5785783a75a19a6a472fb8eb9ea1e5a8efbbf4c919330e7c6c209c"; case .qwen3: "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51"; case .smol: "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce"; case .mistral: "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26"; case .llama3: "61bd958bbd437cdce22122d01297318a672c605f000fedd6bb53af9ddd8ce5ff" }
         }
         var namespace: Namespace {
             let load: String, text: String
             switch self {
             case .qwen2: load = "qwen2_audited_v1"; text = "qwen-chatml-v1"
+            case .qwen15: load = "qwen15_audited_v1"; text = "qwen-chatml-v1"
             case .qwen3: load = "qwen3_audited_v1"; text = "qwen3-plain-nonthinking-v1"
             case .smol: load = "smol_witness_audited_v1"; text = "smol-chatml-v1"
             case .mistral: load = "mistral_audited_v1"; text = "mistral-instruct-v1"
@@ -55,7 +57,7 @@ struct NativeAcceptedIdentity: Equatable, Sendable {
         }
         var modelRoles: [String] {
             switch self {
-            case .qwen2, .qwen3, .mistral, .llama3: ["source_bytes_delivered_to_assembled_model"]
+            case .qwen2, .qwen15, .qwen3, .mistral, .llama3: ["source_bytes_delivered_to_assembled_model"]
             case .smol: ["source_bytes_delivered_to_assembled_model","reference_container_digest_anchor"]
             }
         }

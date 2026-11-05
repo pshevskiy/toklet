@@ -1,0 +1,465 @@
+{
+  "passed": true,
+  "repository": "mlx-community/Qwen2.5-1.5B-Instruct-8bit",
+  "revision": "c7e1ff25efda4a2c8f7ee312380557fb42e145a2",
+  "hardware": "Apple M1 Pro",
+  "attention": "reference",
+  "maximum_context_positions": 512,
+  "verified_applied_context_positions": 256,
+  "process_limit_bytes": 3221225472,
+  "controller_journeys": {
+    "offline": {
+      "receipt": "artifacts/qwen15-mac-admission-plan-2026-11-06/offline/app-result.json",
+      "process_receipt": "artifacts/qwen15-mac-admission-plan-2026-11-06/offline/app-owned.json",
+      "rss_peak_bytes": 1860288512,
+      "sampled_physical_peak_bytes": 1882425384,
+      "network_denied": false,
+      "events": [
+        {
+          "event": "loaded",
+          "fields": {
+            "admitted_bytes": 1747624474,
+            "downloaded": false,
+            "repository": "mlx-community/Qwen2.5-1.5B-Instruct-8bit",
+            "revision": "c7e1ff25efda4a2c8f7ee312380557fb42e145a2"
+          }
+        },
+        {
+          "event": "continuation",
+          "fields": {
+            "first_emitted": 9,
+            "second_emitted": 9
+          }
+        },
+        {
+          "event": "stopped",
+          "fields": {
+            "emitted": 1,
+            "evaluated": 41,
+            "history": 41,
+            "pending": 0
+          }
+        },
+        {
+          "event": "reset_reply",
+          "fields": {
+            "emitted": 10
+          }
+        },
+        {
+          "event": "applied",
+          "fields": {
+            "capacity": 256
+          }
+        },
+        {
+          "event": "unloaded",
+          "fields": {}
+        },
+        {
+          "event": "reopened",
+          "fields": {
+            "capacity": 256,
+            "emitted": 9
+          }
+        },
+        {
+          "event": "complete",
+          "fields": {
+            "closed": true,
+            "ui_rendered": false
+          }
+        }
+      ]
+    },
+    "network": {
+      "receipt": "artifacts/qwen15-mac-admission-plan-2026-11-06/network/app-result.json",
+      "process_receipt": "artifacts/qwen15-mac-admission-plan-2026-11-06/network/app-owned.json",
+      "rss_peak_bytes": 2007515136,
+      "sampled_physical_peak_bytes": 1884473456,
+      "network_denied": false,
+      "events": [
+        {
+          "event": "loaded",
+          "fields": {
+            "admitted_bytes": 1747624474,
+            "downloaded": true,
+            "repository": "mlx-community/Qwen2.5-1.5B-Instruct-8bit",
+            "revision": "c7e1ff25efda4a2c8f7ee312380557fb42e145a2"
+          }
+        },
+        {
+          "event": "continuation",
+          "fields": {
+            "first_emitted": 9,
+            "second_emitted": 9
+          }
+        },
+        {
+          "event": "stopped",
+          "fields": {
+            "emitted": 1,
+            "evaluated": 41,
+            "history": 41,
+            "pending": 0
+          }
+        },
+        {
+          "event": "reset_reply",
+          "fields": {
+            "emitted": 10
+          }
+        },
+        {
+          "event": "applied",
+          "fields": {
+            "capacity": 256
+          }
+        },
+        {
+          "event": "unloaded",
+          "fields": {}
+        },
+        {
+          "event": "reopened",
+          "fields": {
+            "capacity": 256,
+            "emitted": 9
+          }
+        },
+        {
+          "event": "complete",
+          "fields": {
+            "closed": true,
+            "ui_rendered": false
+          }
+        }
+      ]
+    },
+    "offline-enforced": {
+      "receipt": "artifacts/qwen15-mac-admission-plan-2026-11-06/offline-enforced/app-result.json",
+      "process_receipt": "artifacts/qwen15-mac-admission-plan-2026-11-06/offline-enforced/app-owned.json",
+      "rss_peak_bytes": 1896300544,
+      "sampled_physical_peak_bytes": 1877690384,
+      "network_denied": true,
+      "events": [
+        {
+          "event": "loaded",
+          "fields": {
+            "admitted_bytes": 1747624474,
+            "downloaded": false,
+            "repository": "mlx-community/Qwen2.5-1.5B-Instruct-8bit",
+            "revision": "c7e1ff25efda4a2c8f7ee312380557fb42e145a2"
+          }
+        },
+        {
+          "event": "continuation",
+          "fields": {
+            "first_emitted": 9,
+            "second_emitted": 9
+          }
+        },
+        {
+          "event": "stopped",
+          "fields": {
+            "emitted": 1,
+            "evaluated": 41,
+            "history": 41,
+            "pending": 0
+          }
+        },
+        {
+          "event": "reset_reply",
+          "fields": {
+            "emitted": 10
+          }
+        },
+        {
+          "event": "applied",
+          "fields": {
+            "capacity": 256
+          }
+        },
+        {
+          "event": "unloaded",
+          "fields": {}
+        },
+        {
+          "event": "reopened",
+          "fields": {
+            "capacity": 256,
+            "emitted": 9
+          }
+        },
+        {
+          "event": "complete",
+          "fields": {
+            "closed": true,
+            "ui_rendered": false
+          }
+        }
+      ]
+    }
+  },
+  "mac_product_built": true,
+  "new_model_rendered_ui_qualified": false,
+  "physical_iphone_qualified": false,
+  "apple_package": {
+    "arm64_slices": 3,
+    "c_exports_per_slice": 41,
+    "passed": true,
+    "previous": "../../artifacts/llama3-native40-2026-11-03/Toklet.xcframework",
+    "selected": "../../artifacts/qwen15-native41-2026-11-06/Toklet.xcframework",
+    "package_sha256": "20dd33a1d2e7fc099009fca6de5f38e25b4138a07b85ddb4a95a53cf0a0d0ae9",
+    "app_sha256": "f2c88ab9e37521a6ff92c40929892d2afa7c708754ec821e9e451656426d2e26",
+    "prior_package_preserved": true,
+    "physical_iphone_contacted": false
+  },
+  "controls": {
+    "settings_planning": 57,
+    "settings_apply": 28,
+    "catalog": 28,
+    "portable_package": 17,
+    "mobile_commands": [
+      {
+        "label": "compile",
+        "command": [
+          "xcrun",
+          "swiftc",
+          "-sdk",
+          "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX27.0.sdk",
+          "-target",
+          "arm64-apple-macos15.0",
+          "-swift-version",
+          "6",
+          "-strict-concurrency=complete",
+          "-warnings-as-errors",
+          "-parse-as-library",
+          "-O",
+          "-I",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/include",
+          "-module-cache-path",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/ModuleCache",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/ChatContent.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/ChatWorkspace.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/ExpertHarness.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/FriendlyChatStore.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/FriendlyHarness.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/FriendlyModelPreference.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/FriendlyPlanningDraft.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/FriendlyPlanningSection.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/GenerationCapabilities.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/GenerationResponse.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/HarnessStore.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/HubStore.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/HubTransfer.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/ModelHub.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeAcceptedIdentity.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeCapacityPlan.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeChatCheck.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeCompatibility.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeContext.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeContextLimits.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeLifecycle.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeLifecycleRun.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeLifecycleSignals.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeMeasurement.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativePlanningPreview.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeProcessMemory.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeQuality.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeResourcePlan.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeSessionTransition.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeStateRun.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeTaskResponse.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeTasks.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeTeacherForcing.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeWorker.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/tests/swift/WorkerChecks.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/tests/swift/MobileMain.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-native41-2026-11-06/target/aarch64-apple-darwin/release/libtoklet.a",
+          "-framework",
+          "Metal",
+          "-framework",
+          "MetalPerformanceShaders",
+          "-framework",
+          "Security",
+          "-lobjc",
+          "-liconv",
+          "-lresolv",
+          "-lc++",
+          "-o",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/mobile-check"
+        ],
+        "exit_code": 0
+      },
+      {
+        "label": "regressions",
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/mobile-check"
+        ],
+        "exit_code": 0
+      },
+      {
+        "label": "render",
+        "command": [
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/mobile-check",
+          "--render",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/previews"
+        ],
+        "exit_code": 0
+      },
+      {
+        "label": "iphoneos",
+        "command": [
+          "xcrun",
+          "swiftc",
+          "-sdk",
+          "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS27.1.sdk",
+          "-target",
+          "arm64-apple-ios18.0",
+          "-swift-version",
+          "6",
+          "-strict-concurrency=complete",
+          "-warnings-as-errors",
+          "-parse-as-library",
+          "-O",
+          "-I",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/include",
+          "-module-cache-path",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/ModuleCache",
+          "-emit-module",
+          "-module-name",
+          "TokletMobileCheck",
+          "-emit-module-path",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/iphoneos.swiftmodule",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/ChatContent.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/ChatWorkspace.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/ExpertHarness.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/FriendlyChatStore.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/FriendlyHarness.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/FriendlyModelPreference.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/FriendlyPlanningDraft.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/FriendlyPlanningSection.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/GenerationCapabilities.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/GenerationResponse.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/HarnessApp.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/HarnessStore.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/HubStore.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/HubTransfer.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/ModelHub.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeAcceptedIdentity.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeCapacityPlan.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeChatCheck.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeCompatibility.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeContext.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeContextLimits.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeLifecycle.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeLifecycleRun.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeLifecycleSignals.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeMeasurement.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativePlanningPreview.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeProcessMemory.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeQuality.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeResourcePlan.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeSessionTransition.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeStateRun.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeTaskResponse.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeTasks.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeTeacherForcing.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeWorker.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/tests/swift/WorkerChecks.swift"
+        ],
+        "exit_code": 0
+      },
+      {
+        "label": "iphonesimulator",
+        "command": [
+          "xcrun",
+          "swiftc",
+          "-sdk",
+          "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator27.1.sdk",
+          "-target",
+          "arm64-apple-ios18.0-simulator",
+          "-swift-version",
+          "6",
+          "-strict-concurrency=complete",
+          "-warnings-as-errors",
+          "-parse-as-library",
+          "-O",
+          "-I",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/include",
+          "-module-cache-path",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/ModuleCache",
+          "-emit-module",
+          "-module-name",
+          "TokletMobileCheck",
+          "-emit-module-path",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/iphonesimulator.swiftmodule",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/ChatContent.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/ChatWorkspace.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/ExpertHarness.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/FriendlyChatStore.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/FriendlyHarness.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/FriendlyModelPreference.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/FriendlyPlanningDraft.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/FriendlyPlanningSection.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/GenerationCapabilities.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/GenerationResponse.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/HarnessApp.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/HarnessStore.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/HubStore.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/HubTransfer.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/ModelHub.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeAcceptedIdentity.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeCapacityPlan.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeChatCheck.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeCompatibility.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeContext.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeContextLimits.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeLifecycle.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeLifecycleRun.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeLifecycleSignals.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeMeasurement.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativePlanningPreview.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeProcessMemory.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeQuality.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeResourcePlan.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeSessionTransition.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeStateRun.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeTaskResponse.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeTasks.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeTeacherForcing.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/Harness/NativeWorker.swift",
+          "/Users/coloner/work/rust/toklet/artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/source-snapshot/apple/tests/swift/WorkerChecks.swift"
+        ],
+        "exit_code": 0
+      }
+    ],
+    "unsigned_iphoneos_link": true,
+    "iphonesimulator_link": true
+  },
+  "corrections": [
+    "Mac ranking and discovery controls updated for six pinned profiles.",
+    "Initial unsigned product fixture omitted Swift check sources; corrected isolated copy builds both SDK products."
+  ],
+  "review": "Astra approved Mac scope and guarded package selection after focused controls.",
+  "evidence_sha256": {
+    "artifacts/qwen15-mac-admission-plan-2026-11-06/controller-pins.json": "69edca177d10eae0b936d3b0f6f6570fd5eeebe7b42eda7065221fd3ff89db07",
+    "artifacts/qwen15-mac-admission-plan-2026-11-06/selection.json": "e4ee88e90a229b1e1491c3c6168f2a5a349519f04147521be1000df30a601082",
+    "artifacts/qwen15-mac-admission-plan-2026-11-06/mobile-check/check.json": "b2b9c86d93033c8731c5e85f0e7edf2ac9bb5cfc81d46456b79c583fb3e54054",
+    "artifacts/qwen15-mac-admission-plan-2026-11-06/catalog.stdout": "37899a15513b144a201c39d2e3fb4e152e8c12174c7f2bf86a87c35e31d8d41f",
+    "artifacts/qwen15-mac-admission-plan-2026-11-06/FriendlyPlanningMain.stdout": "0cc002d868bf6dca88a9a243ced25aa44e9fe0b5f741e3b734716c519612c41a",
+    "artifacts/qwen15-mac-admission-plan-2026-11-06/FriendlyApplyMain.stdout": "ef684a4567975201d67d00ad8948a3390c9b69ddee2485e571a97862ad23b372",
+    "artifacts/qwen15-mac-admission-plan-2026-11-06/package-portable.stderr": "ab177393375d55bf628c3bd61f629bc8ad904439f8ca33955d6deffafaf78a5e",
+    "artifacts/qwen15-mac-admission-plan-2026-11-06/ios-copy/iphoneos-retry.stdout": "c793421f4114f5462cf27281f730eec143b8e0fab5f8c28f4dbca00b8a7ff13d",
+    "artifacts/qwen15-mac-admission-plan-2026-11-06/ios-copy/iphonesimulator-retry.stdout": "003a3ef27914a43b9103b8cc16f5ff9fc6f101c0bc44e1ba34f83f513b25c8b6",
+    "artifacts/qwen15-native41-2026-11-06/build.json": "20dd33a1d2e7fc099009fca6de5f38e25b4138a07b85ddb4a95a53cf0a0d0ae9",
+    "artifacts/qwen15-mac-product-2026-11-06/build.json": "f2c88ab9e37521a6ff92c40929892d2afa7c708754ec821e9e451656426d2e26",
+    "artifacts/qwen15-mac-admission-plan-2026-11-06/offline/app-result.json": "9751c98f7a181b242fc6387e696c785cad77d49e7d99dac8a7828fbaa204ae9c",
+    "artifacts/qwen15-mac-admission-plan-2026-11-06/offline/app-owned.json": "9e1966cf363b98a0bdf2cbc8d9fd95b9146911ab1ff4411ac50eacbe7a8a66d7",
+    "artifacts/qwen15-mac-admission-plan-2026-11-06/network/app-result.json": "9a090d61536deaca9617a5d58a95596c98bbb950706c5d5038e5f56019240d1d",
+    "artifacts/qwen15-mac-admission-plan-2026-11-06/network/app-owned.json": "4bfff0bd5cd42092d2b9ab4a7ac9971e9613f9e73784cf7832ddd8af83709ca8",
+    "artifacts/qwen15-mac-admission-plan-2026-11-06/offline-enforced/app-result.json": "62e186dc295dd28125d7f340afad49e7f35147fa660c8228accc85a6f4c59642",
+    "artifacts/qwen15-mac-admission-plan-2026-11-06/offline-enforced/app-owned.json": "f0d3b8ac8e04049a6fa9e7602e29e53f31c1651967cac4b5e5230d97101b3362"
+  }
+}

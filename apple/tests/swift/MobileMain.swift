@@ -137,13 +137,15 @@ struct MobileMain {
         try require(GenerationMetrics(state).firstTokenSeconds == nil && GenerationMetrics(state).totalSeconds == nil,"reversed clock observations never underflow")
         let generous = HubAdmission(unifiedGPU:true,physicalMemory:8 << 30,availableMemory:6 << 30)
         #if os(macOS)
-        let generousOrder: [HubProfile] = [.mistral,.llama3,.qwen,.qwen3,.smol]
+        let generousOrder: [HubProfile] = [.mistral,.qwen15,.llama3,.qwen,.qwen3]
+        let catalogNotice = false
         let llamaRoom = HubAdmission(unifiedGPU:true,physicalMemory:8 << 30,availableMemory:HubProfile.llama3.processAllowance)
         let belowLlama = HubAdmission(unifiedGPU:true,physicalMemory:8 << 30,availableMemory:HubProfile.llama3.processAllowance - 1)
         try require(HubRecommendations.ranked(llamaRoom).contains(where:{ $0.profile == .llama3 })
             && !HubRecommendations.ranked(belowLlama).contains(where:{ $0.profile == .llama3 }),"Llama requires its3GiB process allowance")
         #else
         let generousOrder: [HubProfile] = [.mistral,.qwen,.qwen3,.smol]
+        let catalogNotice = true
         #endif
         try require(HubRecommendations.ranked(generous).map(\.profile) == generousOrder,"balanced ranking includes Qwen3 and balances capacity with current headroom")
         let phone = HubAdmission(unifiedGPU:true,physicalMemory:6 << 30,availableMemory:2 << 30)
@@ -177,7 +179,8 @@ struct MobileMain {
         let offline: HubFetch = { _,_,_,_ in throw HubFailure("Injected offline connection") }
         let hub = HubStore(hub:ModelHub(root:root,fetch:offline),admission:{ phone }); hub.findBest()
         await hub.waitForIdle()
-        try require(hub.recommendations.map(\.profile) == [.qwen,.smol] && (HubProfile.catalog.count == 5 ? !hub.recommendationMessage.contains("downloadable chat models") : hub.recommendationMessage.contains("4 downloadable")),"shortlist explains why fewer than five are available")
+        try require(hub.recommendations.map(\.profile) == [.qwen,.smol] &&
+            hub.recommendationMessage.contains("4 downloadable chat models") == catalogNotice,"shortlist reports the four-model catalog on iOS")
         hub.findBest(task:.fast)
         try require(hub.recommendations.first?.profile == .smol && hub.recommendationTask == .fast,"controller publishes the selected preference and reranks")
         hub.findBest()
@@ -278,7 +281,7 @@ struct MobileMain {
     }
     static func discovery() async throws {
         #if os(macOS)
-        let expectedPages = 6
+        let expectedPages = 7
         #else
         let expectedPages = 5
         #endif

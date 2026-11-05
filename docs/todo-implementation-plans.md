@@ -27,8 +27,10 @@ and [RMSNorm](../benchmarks/results/2026-11-05-gemma-norm-witness-v1.json)
 witnesses pass locally. The [layer 12 attention witness](../benchmarks/results/2026-11-06-gemma-attention-boundary-v1.json)
 binds position 433 K/V to the archived capture and passes both independent
 context and output-projection replays. The full 1,025 rejection remains.
-Astra advises requiring a concrete source/precision hypothesis before further
-whole-graph work.
+Astra recommends one bounded layer-12 tail replay at position 433. Pin the
+actual incoming hidden, attention output, per-layer input and next hidden.
+Use both existing arithmetic contracts and the unchanged mixed tolerance for
+all 1,536 output values. A pass ends further local layer walking.
 
 ### Gemma4 adoption task gate
 
@@ -73,9 +75,10 @@ passes after isolating numerical assets and decoding after native exit.
    memory plans and replacements. Preserve the existing smaller Qwen policy.
    Verify actual mode, exact and below-budget admission, owner mismatch,
    mutated assets and generation state through the additive native boundary.
-4. Verify the managed Mac download, open, Send/Stop, context Apply and offline
-   reopen under measured model, codec and process budgets. Keep the physical
-   iPhone evidence as a separate deferred task.
+4. The [managed Mac controller and package](../benchmarks/results/2026-11-06-qwen15-mac-app-v1.json)
+   verify fresh download, open, Send/Stop, context Apply and network-denied
+   reopen under the 3 GiB process allowance. The reviewed native41 selection
+   preserves native40. Physical iPhone evidence remains deferred.
 
 ### M8 closure audit
 

@@ -1,7 +1,9 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Qwen1.5B managed Mac Chat and bounded Gemma oQ6 stock preflight.**
+Current task: **Gemma oQ6 stock preflight and layer-12 tail precision witness.**
+Completed: Qwen1.5B managed Mac Chat and native41 package selection.
+[Evidence](benchmarks/results/2026-11-06-qwen15-mac-app-v1.json).
 Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
@@ -494,7 +496,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
     [Evidence](benchmarks/results/2026-11-06-qwen15-task-quality-v1.json).
   - [x] Audited Reference owner, plain codec and exact/below Mac512 admission.
     [Evidence](benchmarks/results/2026-11-06-qwen15-native-owner-v1.json).
-  - [ ] Managed Mac Chat, matching preview/Apply and verified package.
+  - [x] Managed Mac512 Chat, matching preview/Apply and guarded native41
+    package. Fresh Hub download and network-denied restart pass.
+    [Evidence](benchmarks/results/2026-11-06-qwen15-mac-app-v1.json).
 - [x] SmolLM3 validated per-layer rotary mask, shared CPU/Metal bypass and
   independent nonzero-offset mixed-layer fixture; [block report](docs/smollm3-rotary-schedule.md).
 - [x] SmolLM3 pinned real Mac512 execution, stock comparison, state and memory;

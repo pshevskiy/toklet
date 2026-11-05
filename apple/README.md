@@ -28,10 +28,12 @@ Destinations must be new. The builder verifies exact archive/source/header pins,
 creates `apple/Binaries/Toklet.xcframework` and `apple/Generated/Tiny`, then builds
 release simulator and unsigned device apps. It refuses foreign or differently
 linked generated inputs. The current generated library link selects
-`artifacts/llama3-native40-2026-11-03/Toklet.xcframework`, with all 40 C
+`artifacts/qwen15-native41-2026-11-06/Toklet.xcframework`, with all 41 C
 exports and complete Mac/iOS/simulator app compile/link evidence. Its native
 build receipt SHA256 is
-`ae536dded3bf393047a8cb322b078d60c570ed9f4568f3a254d97600727cc696`.
+`20dd33a1d2e7fc099009fca6de5f38e25b4138a07b85ddb4a95a53cf0a0d0ae9`.
+The prior native40 package is preserved.
+[Qwen2.5-1.5B Mac controller and package evidence](../benchmarks/results/2026-11-06-qwen15-mac-app-v1.json).
 The [shared Mistral integration](../docs/mistral-managed-preferences.md),
 [Qwen2.5 integration](../docs/qwen2-managed-preferences.md) and earlier
 [Smol/Qwen3 integration](../docs/smol-managed-preferences.md) record strict decoding,

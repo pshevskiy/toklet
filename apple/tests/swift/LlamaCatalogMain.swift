@@ -20,13 +20,19 @@ struct LlamaCatalogMain {
         let enabled = false
         #endif
         try check(HubProfile.catalog.contains(.llama3) == enabled,"Platform catalog admission")
-        try check(HubProfile.catalog.count == (enabled ? 5 : 4),"Platform catalog size")
+        try check(HubProfile.catalog.count == (enabled ? 6 : 4),"Platform catalog size")
+        try check(HubProfile.catalog.contains(.qwen15) == enabled,"Larger Qwen platform catalog admission")
+        try check(HubProfile.matching("Qwen2.5-1.5B").contains(.qwen15) == enabled,"Larger Qwen search bypassed gate")
+        try check(!FriendlyLoadRequest.matches(.ordinary,profile:.qwen15),"Ordinary path admitted larger Qwen")
+        try check(!FriendlyLoadRequest.matches(.managedQwen2,profile:.qwen15),"Qwen size profiles were conflated")
         try check((HubProfile.named("llama3") != nil) == enabled,"Named lookup bypassed gate")
         try check(!HubProfile.matching("Llama-3.2-1B").isEmpty == enabled,"Search bypassed gate")
         #if os(macOS)
         try check(try FriendlyLoadRequest.managedMode(.llama3) == .managedLlama3,"Audited route missing")
+        try check(try FriendlyLoadRequest.managedMode(.qwen15) == .managedQwen15,"Larger Qwen audited route missing")
         #else
         try rejects { _ = try FriendlyLoadRequest.managedMode(.llama3) }
+        try rejects { _ = try FriendlyLoadRequest.managedMode(.qwen15) }
         #endif
         try check(FriendlyLoadRequest.matches(.managedLlama3,profile:.llama3),"Exact route mismatch")
         try check(!FriendlyLoadRequest.matches(.ordinary,profile:.llama3),"Ordinary folder path admitted Llama")
@@ -71,7 +77,7 @@ struct LlamaCatalogMain {
         wrong = wire; wrong["revision"] = HubProfile.smol.revision
         try rejects { _ = try decode(wrong) }
         let keys = try NativeAcceptedIdentity.Profile.allCases.map { try FriendlyModelPreference.filename($0.namespace) }
-        try check(Set(keys).count == 5,"Preference namespaces collide")
+        try check(Set(keys).count == keys.count,"Preference namespaces collide")
         let preference = FriendlyModelPreference(namespace:n,capacity:256,chunk:16,reply:32,wholeBudget:HubProfile.llama3.numericalBudget)
         let bytes = try preference.encoded()
         try check(try FriendlyModelPreference.decode(bytes,namespace:n) == preference,"Preference roundtrip")

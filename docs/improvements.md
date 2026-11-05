@@ -10506,3 +10506,12 @@ separate assistant and redundant shared-layer K/V. Astra approved one
 bounded stock preflight. Runtime fit and quality remain unmeasured.
 [Evidence](../benchmarks/results/2026-11-06-gemma-oq6-header-v1.json)
 [Pinned Hub revision](https://huggingface.co/mlx-works/gemma-4-E2B-it-oQ6-mtp/tree/16ab042b9961009b7d9741fba2434c659b675b4b)
+
+## 6 November 2026 — Adopt Qwen1.5B in managed Mac Chat
+
+The exact MLX8 profile uses Reference attention and a 512-position load cap.
+Fresh download, Send/Stop, Apply256 and network-denied reopen pass. Peak
+sampled physical memory is 1.88 GB. Strict Swift controls, all three Apple
+package slices and Astra review pass. Native41 is selected and native40 is
+preserved. The model journey used the controller. Physical iPhone is deferred.
+[Evidence](../benchmarks/results/2026-11-06-qwen15-mac-app-v1.json)

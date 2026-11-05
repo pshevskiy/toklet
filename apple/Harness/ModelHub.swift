@@ -63,18 +63,26 @@ struct HubProfile: Codable, Equatable, Sendable {
             HubFile(name:"tokenizer.json",bytes:9085657,sha256:"79e3e522635f3171300913bb421464a87de6222182a0570b9b2ccba2a964b2b4"),
             HubFile(name:"tokenizer_config.json",bytes:54528,sha256:"9823dcfdc1121869029da45192238e85cf44f0b232a6d9dc20e4fe6f4242a14e"),
             HubFile(name:"special_tokens_map.json",bytes:296,sha256:"6f38c73729248f6c127296386e3cdde96e254636cc58b4169d3fd32328d9a8ec")])
+    static let qwen15 = HubProfile(repository:"mlx-community/Qwen2.5-1.5B-Instruct-8bit",
+        revision:"c7e1ff25efda4a2c8f7ee312380557fb42e145a2",files:[
+            HubFile(name:"config.json",bytes:784,sha256:"a939169f5c833fd4c1d872dc07f521c6e5098075ac53bf007b8595343e980937"),
+            HubFile(name:"model.safetensors",bytes:1640414038,sha256:"8b76d08a5a70261b9ba4da5c06ac28bf09ee848e2322bae901e84764b7bba8e8"),
+            HubFile(name:"model.safetensors.index.json",bytes:51570,sha256:"b885e07bdf11ca668b338f4bceed9ac0000dfcab56abe4b92670b748291d3643"),
+            HubFile(name:"tokenizer.json",bytes:7031673,sha256:"a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf"),
+            HubFile(name:"tokenizer_config.json",bytes:7308,sha256:"f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7"),
+            HubFile(name:"special_tokens_map.json",bytes:613,sha256:"76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd")])
     // Mac qualification is bounded to512 positions; iOS awaits physical validation.
     static let catalog: [HubProfile] = {
         var profiles: [HubProfile] = [.smol,.qwen,.qwen3,.mistral]
         #if os(macOS)
-        profiles.append(.llama3)
+        profiles.append(contentsOf:[.llama3,.qwen15])
         #endif
         return profiles
     }()
     static let qwen3AccuracyNotice = "The pinned Qwen3-0.6B 8-bit profile is experimental and has not passed Toklet’s accuracy checks."
     var supportNotice: String? {
         if self == Self.qwen3 { return Self.qwen3AccuracyNotice }
-        if self == Self.llama3 { return "Mac chat window: 512 tokens." }
+        if self == Self.llama3 || self == Self.qwen15 { return "Mac chat window: 512 tokens." }
         return nil
     }
     static func matching(_ query: String) -> [HubProfile] {
@@ -97,13 +105,13 @@ struct HubProfile: Codable, Equatable, Sendable {
         case Self.qwen.repository: 1024 * 1024 * 1024
         case Self.qwen3.repository: 1536 * 1024 * 1024
         case Self.mistral.repository: 5 * 1024 * 1024 * 1024
-        case Self.llama3.repository: 2 * 1024 * 1024 * 1024
+        case Self.llama3.repository, Self.qwen15.repository: 2 * 1024 * 1024 * 1024
         default: 512 * 1024 * 1024
         }
     }
     var textBudget: UInt64 {
         switch repository {
-        case Self.qwen.repository: 128 * 1024 * 1024
+        case Self.qwen.repository, Self.qwen15.repository: 128 * 1024 * 1024
         case Self.qwen3.repository, Self.llama3.repository: 256 * 1024 * 1024
         default: 64 * 1024 * 1024
         }
@@ -113,13 +121,13 @@ struct HubProfile: Codable, Equatable, Sendable {
         case Self.qwen.repository: 1536 * 1024 * 1024
         case Self.qwen3.repository: 2304 * 1024 * 1024
         case Self.mistral.repository: 5632 * 1024 * 1024
-        case Self.llama3.repository: 3 * 1024 * 1024 * 1024
+        case Self.llama3.repository, Self.qwen15.repository: 3 * 1024 * 1024 * 1024
         default: 768 * 1024 * 1024
         }
     }
     var vocabulary: UInt32 {
         switch repository {
-        case Self.qwen.repository: 151936
+        case Self.qwen.repository, Self.qwen15.repository: 151936
         case Self.qwen3.repository: 151936
         case Self.mistral.repository: 32768
         case Self.llama3.repository: 128256

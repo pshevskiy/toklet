@@ -12,6 +12,7 @@ struct FriendlyPlanningTarget: Equatable {
     var configuration: NativeSessionConfiguration? = nil
     var coexistenceBudget: UInt64 = 0
     var residentUpper: UInt32? = nil
+    var attention: NativeCapacityPlan.AttentionPolicy = .nativeFactory
 }
 
 // Created only after accepted load enqueue, promoted only at its completed
@@ -34,7 +35,7 @@ struct FriendlyPlanningLoad {
         return FriendlyPlanningTarget(worker:worker,modelInstance:instance,conversation:conversation,
             modelKey:loadedKey,directory:settings.directory,profile:settings.loadIdentity == .managedSmol ? .smolAudited : .ordinary,
             wholeBudget:configuration?.wholeSessionBudget ?? settings.numericalBudget,textBudget:settings.textBudget,
-            configuration:configuration,coexistenceBudget:coexistenceBudget,residentUpper:residentUpper)
+            configuration:configuration,coexistenceBudget:coexistenceBudget,residentUpper:residentUpper,attention:settings.planningAttention)
     }
 }
 
@@ -111,6 +112,7 @@ struct FriendlyPlanningState {
         do {
             guard let selection, let target else { throw NativeContextFailure("Open this conversation’s model before previewing.") }
             var next = try draft.request(selection:selection)
+            next.attention = target.attention
             if target.profile == .smolAudited, let configuration = target.configuration, let upper = target.residentUpper {
                 next.estimator = .residentAdvisory
                 next.resident = .init(modelInstance:target.modelInstance,sessionInstance:configuration.sessionInstance,loadedUpper:upper)
@@ -168,7 +170,10 @@ struct FriendlyApplyState {
         let advisory = target.profile == .smolAudited && requested.estimator == .residentAdvisory
             && requested.matchesResident(current) && target.residentUpper == requested.resident?.loadedUpper
             && plan.resources.attention == .reference
-        guard ordinary || advisory else { throw NativeContextFailure("Preview again using the current model’s supported estimator.") }
+        guard (ordinary || advisory), requested.attention == target.attention,
+              capacityRequest.attention == target.attention else {
+            throw NativeContextFailure("Preview again using the current model’s supported estimator.")
+        }
         try requested.validate()
         if advisory {
             guard let resident = requested.resident, capacityRequest.context <= resident.loadedUpper,

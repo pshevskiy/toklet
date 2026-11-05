@@ -20,6 +20,10 @@ struct NativeSettings: Sendable {
     var chunk: UInt32 = 3
     var numericalBudget: UInt64 = 128 * 1024 * 1024
 
+    var planningAttention: NativeCapacityPlan.AttentionPolicy {
+        loadIdentity == .managedQwen15 ? .reference : .nativeFactory
+    }
+
     func admittedLoadUpper() throws -> UInt32 {
         guard let loadUpper else { return capacity }
         guard loadIdentity == .managedQwen2, metal, mlx, chat, packedDirectory.isEmpty,
@@ -1109,7 +1113,7 @@ private final class Engine {
                 }
                 // Ordinary numerical metadata only, including for audited Smol.
                 // Actual audited source/model/session admission remains final.
-                let plan = try NativeResourcePlan.inspect(directory:requested.directory,capacity:requested.capacity,chunk:requested.chunk,budget:budget,context:loadUpper)
+                let plan = try NativeResourcePlan.inspect(directory:requested.directory,capacity:requested.capacity,chunk:requested.chunk,budget:budget,context:loadUpper,attention:requested.planningAttention)
                 runtimePlan = plan
                 guard plan.fitsRequestedBudgets else {
                     throw NSError(domain:"TokletResourcePlan",code:Int(TOKLET_LOAD_ERROR),userInfo:[NSLocalizedDescriptionKey:plan.summary])
@@ -1123,6 +1127,7 @@ private final class Engine {
                 packed.withUnsafeBufferPointer { packed in
                     requested.loadIdentity == .managedSmol ? toklet_model_load_mlx_smol_audited(path.baseAddress,path.count,&options,&model,&error)
                     : requested.loadIdentity == .managedQwen2 ? toklet_model_load_mlx_qwen2_audited(path.baseAddress,path.count,&options,&model,&error)
+                    : requested.loadIdentity == .managedQwen15 ? toklet_model_load_mlx_qwen15_audited(path.baseAddress,path.count,&options,&model,&error)
                     : requested.loadIdentity == .managedQwen3 ? toklet_model_load_mlx_qwen3_audited(path.baseAddress,path.count,&options,&model,&error)
                     : requested.loadIdentity == .managedLlama3 ? toklet_model_load_mlx_llama3_audited(path.baseAddress,path.count,&options,&model,&error)
                     : requested.loadIdentity == .managedMistral ? toklet_model_load_mlx_mistral_audited(path.baseAddress,path.count,&options,&model,&error)
@@ -1137,10 +1142,15 @@ private final class Engine {
             do {
                 try createSession()
                 if requested.chat {
-                    let chatCode = requested.loadIdentity == .managedSmol || requested.loadIdentity == .managedQwen2 || requested.loadIdentity == .managedMistral || requested.loadIdentity == .managedLlama3
-                        ? toklet_chat_create_complete_audited(model,requested.textBudget,&chat,&error)
-                        : requested.loadIdentity == .managedQwen3 ? toklet_chat_create_qwen3_audited(model,requested.textBudget,&chat,&error)
-                        : toklet_chat_create(model,requested.textBudget,&chat,&error)
+                    let chatCode: UInt32
+                    switch requested.loadIdentity {
+                    case .ordinary:
+                        chatCode = toklet_chat_create(model,requested.textBudget,&chat,&error)
+                    case .managedQwen3:
+                        chatCode = toklet_chat_create_qwen3_audited(model,requested.textBudget,&chat,&error)
+                    case .managedSmol, .managedQwen2, .managedQwen15, .managedMistral, .managedLlama3:
+                        chatCode = toklet_chat_create_complete_audited(model,requested.textBudget,&chat,&error)
+                    }
                     try requireOK(chatCode,&error)
                     var stops = [UInt32](repeating:0,count:8); var count = 0
                     let code = stops.withUnsafeMutableBufferPointer { buffer in
