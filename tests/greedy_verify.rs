@@ -143,3 +143,95 @@ fn verifier_release_screen() {
         "GREEDY_VERIFY {{\"vocabulary\":{VOCABULARY},\"rows\":5,\"seconds_per_batch\":{samples:?}}}"
     );
 }
+
+#[test]
+fn prompt_lookup_prefers_longest_then_latest_disjoint_continuation() {
+    use toklet::generation::prompt_lookup;
+
+    for (history, expected) in [
+        (&[1, 2, 7, 8, 1, 2][..], &[7, 8][..]),
+        (&[1, 2, 7, 1, 2, 8, 1, 2], &[8]),
+        (&[7, 8, 42, 8, 13, 7, 8], &[42, 8, 13]),
+        (&[1, 2, 1, 2], &[1]),
+        (&[1, 1, 1, 1, 1], &[1]),
+    ] {
+        let mut proposal = [u32::MAX; 10];
+        let count = prompt_lookup(history, 8, &mut proposal).unwrap();
+        assert_eq!(&proposal[..count], expected);
+        assert!(proposal[count..].iter().all(|&token| token == u32::MAX));
+    }
+    let mut proposal = [u32::MAX; 10];
+    assert_eq!(
+        prompt_lookup(&[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 1, 2], 8, &mut proposal).unwrap(),
+        8
+    );
+    assert_eq!(proposal, [3, 4, 5, 6, 7, 8, 9, 10, u32::MAX, u32::MAX]);
+}
+
+#[test]
+fn prompt_lookup_handles_short_or_missing_matches_without_writing() {
+    use toklet::generation::prompt_lookup;
+
+    let mut output = [999; 2];
+    for (history, length) in [
+        (&[][..], 8),
+        (&[1], 8),
+        (&[1, 1], 8),
+        (&[1, 2, 3, 4, 5, 6], 8),
+        (&[1, 2, 7, 1, 2], 0),
+    ] {
+        assert_eq!(prompt_lookup(history, length, &mut output).unwrap(), 0);
+        assert_eq!(output, [999; 2]);
+    }
+    assert!(prompt_lookup(&[1, 9, 1], 9, &mut output).is_err());
+    assert_eq!(output, [999; 2]);
+    assert_eq!(prompt_lookup(&[1, 9, 1], 8, &mut []).unwrap(), 0);
+    assert_eq!(
+        prompt_lookup(&[1, 2, 7, 8, 1, 2], 8, &mut output[..1]).unwrap(),
+        1
+    );
+    assert_eq!(output, [7, 999]);
+}
+
+#[test]
+#[ignore = "Explicit release prompt lookup throughput and allocations"]
+fn prompt_lookup_release_screen() {
+    use toklet::generation::prompt_lookup;
+
+    const REPEATS: usize = 2_048;
+    for length in [128usize, 512, 1024] {
+        for found in [false, true] {
+            let mut history: Vec<_> = (0..u32::try_from(length).unwrap()).collect();
+            if found {
+                history[length - 8..].copy_from_slice(&[0, 1, 2, 3, 4, 5, 6, 7]);
+            }
+            let mut output = [0; 8];
+            let mut samples = Vec::with_capacity(10);
+            for trial in 0..13 {
+                ALLOCATIONS.with(|count| count.set(0));
+                let start = Instant::now();
+                TRACK.with(|track| track.set(true));
+                for _ in 0..REPEATS {
+                    let count =
+                        prompt_lookup(black_box(&history), 8, black_box(&mut output)).unwrap();
+                    assert_eq!(count, usize::from(found) * 8);
+                    black_box(&output);
+                }
+                TRACK.with(|track| track.set(false));
+                let elapsed = start.elapsed().as_secs_f64();
+                assert_eq!(ALLOCATIONS.with(Cell::get), 0);
+                if trial >= 3 {
+                    samples.push(elapsed / REPEATS as f64);
+                }
+            }
+            let scanned = if found {
+                length - 16
+            } else {
+                (1..=8).map(|n| length - 2 * n).sum()
+            };
+            println!(
+                "PROMPT_LOOKUP {{\"history\":{length},\"found\":{found},\"scanned\":{scanned},\"seconds_per_call\":{samples:?}}}"
+            );
+        }
+    }
+}

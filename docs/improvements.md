@@ -10292,3 +10292,11 @@ The frozen first-mismatch procedure verifies 99 of 100 cases. HumanEval/37
 hits a proposal cycle, so the complete collection remains ungraded. Astra
 approved the decision and the completed runtime audit.
 [Evidence](../benchmarks/results/2026-11-05-gemma6-stock-recovery-v1.json)
+
+## 5 November 2026 — Measure the prompt lookup proposer
+
+The bounded lookup copies up to eight known continuation IDs into caller
+storage. Astra approved the deterministic disjoint-match policy and checks.
+At 1,024 tokens, the authored hit and miss medians are 1.67 µs and 15.87 µs.
+Live acceptance and generation speed remain open.
+[Evidence](../benchmarks/results/2026-11-05-m9-prompt-lookup-v1.json)
