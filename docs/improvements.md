@@ -10101,3 +10101,11 @@ while retaining independent compensated sums. The M1 Pro fixture matches
 the baseline and independent calculation, including tails and overflow.
 Astra and required checks pass. The matched performance screen follows.
 [Result](../benchmarks/results/2026-11-05-m9-affine-tile4-v1.json)
+
+## 5 November 2026 — Measure affine tile parity and first performance screen
+
+All 13 prefill and 381 decode distributions match bitwise. The primary
+1,024-token prefill drops 13.71% and total request time drops 6.28%.
+The 512-token decode control rises 15.669 ms, so Astra approved the
+collection with reverse-order investigation pending.
+[Report](m9-p1-affine-screen.md)

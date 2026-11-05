@@ -123,7 +123,11 @@ mod apple {
     fn check_parity(base: &metal::Session<'_>, profiled: &metal::Session<'_>) -> Result<()> {
         let a = base.logits().ok_or("missing baseline logits")?;
         let b = profiled.logits().ok_or("missing profiled logits")?;
-        if a.len() != b.len() || a.iter().zip(b).any(|(a, b)| a.to_bits() != b.to_bits()) {
+        if base.history() != profiled.history()
+            || base.evaluated_len() != profiled.evaluated_len()
+            || a.len() != b.len()
+            || a.iter().zip(b).any(|(a, b)| a.to_bits() != b.to_bits())
+        {
             return Err("profiling changed complete logits".into());
         }
         Ok(())
@@ -191,9 +195,18 @@ mod apple {
 
     pub fn run() -> Result<()> {
         let args: Vec<_> = std::env::args().collect();
-        if args.len() != 4 || !matches!(args[1].as_str(), "time" | "profile") {
-            return Err("usage: mlx_mac_baseline time|profile MODEL CONTRACT".into());
+        if args.len() != 4
+            || !matches!(
+                args[1].as_str(),
+                "time" | "profile" | "time-tile4" | "check-tile4"
+            )
+        {
+            return Err(
+                "usage: mlx_mac_baseline time|profile|time-tile4|check-tile4 MODEL CONTRACT".into(),
+            );
         }
+        let mode = args[1].as_str();
+        let compare_tile = mode == "check-tile4";
         let root = Path::new(&args[3]);
         let manifest: serde_json::Value =
             serde_json::from_slice(&fs::read(root.join("manifest.json"))?)?;
@@ -221,11 +234,17 @@ mod apple {
             return Err("token outside model vocabulary".into());
         }
         let mut base = session(&model, BUDGET)?;
-        let mut profiled = if args[1] == "profile" {
+        if mode == "time-tile4" {
+            base.enable_affine_prefill_tile4()?;
+        }
+        let mut profiled = if mode == "profile" || compare_tile {
             let remaining = BUDGET
                 .checked_sub(base.memory().admitted_bytes - model.model_resident_bytes()?)
                 .ok_or("combined budget")?;
             let mut s = session(&model, remaining)?;
+            if compare_tile {
+                s.enable_affine_prefill_tile4()?;
+            }
             s.enable_profile()?;
             Some(s)
         } else {
@@ -254,7 +273,8 @@ mod apple {
                 }
             }
             if let Some(p) = &mut profiled {
-                for trial in 0..3 {
+                let trials = if compare_tile { 1 } else { 3 };
+                for trial in 0..trials {
                     base.reset();
                     p.reset();
                     for tokens in prompt.chunks(CHUNK) {
@@ -266,7 +286,27 @@ mod apple {
                             return Err("profile row count differs".into());
                         }
                         check_parity(&base, p)?;
-                        export(p, trial, prompt.len(), "prefill", offset, rows)?;
+                        if compare_tile {
+                            let count = p
+                                .profile()?
+                                .events
+                                .iter()
+                                .filter(|e| e.name == "mlx_product_tile4")
+                                .count();
+                            if count != 24 * 7 {
+                                return Err(
+                                    "tile4 did not dispatch for all audited projections".into()
+                                );
+                            }
+                            println!(
+                                "{}",
+                                json!({"event":"tile4-prefill","prompt_tokens":prompt.len(),
+                                                    "offset":offset,"rows":rows,"tile_dispatches":count,
+                                                    "logits_sha256":hash(p)?})
+                            );
+                        } else {
+                            export(p, trial, prompt.len(), "prefill", offset, rows)?;
+                        }
                     }
                     for (index, id) in output[..127].iter().enumerate() {
                         base.append(&[*id])?;
@@ -276,9 +316,26 @@ mod apple {
                         }
                         check_parity(&base, p)?;
                         // Trace all completed operations, export only declared samples.
-                        if [0, 31, 63, 126].contains(&index) {
+                        if compare_tile
+                            && index == 0
+                            && p.profile()?
+                                .events
+                                .iter()
+                                .any(|e| e.name == "mlx_product_tile4")
+                        {
+                            return Err("tile4 used on decode".into());
+                        }
+                        if !compare_tile && [0, 31, 63, 126].contains(&index) {
                             export(p, trial, prompt.len(), "decode", prompt.len() + index, 1)?;
                         }
+                    }
+                    if compare_tile {
+                        println!(
+                            "{}",
+                            json!({"event":"tile4-decode","prompt_tokens":prompt.len(),
+                                                "positions":127,"committed":p.evaluated_len(),
+                                                "logits_sha256":hash(p)?})
+                        );
                     }
                 }
             }

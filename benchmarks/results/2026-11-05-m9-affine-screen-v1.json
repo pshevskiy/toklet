@@ -1,0 +1,181 @@
+{
+  "primary": "prefill_seconds at 1024",
+  "timing": {
+    "128": {
+      "prefill_seconds": {
+        "baseline": {
+          "median": 0.7727488335,
+          "mad": 0.00020960450000001574,
+          "minimum": 0.745939333,
+          "maximum": 0.77388725
+        },
+        "candidate": {
+          "median": 0.6334238539999999,
+          "mad": 8.908299999998981e-05,
+          "minimum": 0.633044625,
+          "maximum": 0.633829042
+        },
+        "improvement_fraction": 0.1802978839436839,
+        "above_noise": true
+      },
+      "decode_seconds": {
+        "baseline": {
+          "median": 3.9323432295,
+          "mad": 0.0026690205000003964,
+          "minimum": 3.8576545839999996,
+          "maximum": 4.044239375
+        },
+        "candidate": {
+          "median": 3.8503740415,
+          "mad": 0.0025110420000000744,
+          "minimum": 3.8401857919999998,
+          "maximum": 3.856750334
+        },
+        "improvement_fraction": 0.02084487116614752,
+        "above_noise": true
+      },
+      "total_seconds": {
+        "baseline": {
+          "median": 4.705575937,
+          "mad": 0.00230789549999999,
+          "minimum": 4.603594208,
+          "maximum": 4.8175125
+        },
+        "candidate": {
+          "median": 4.4836983125,
+          "mad": 0.0027063335000003796,
+          "minimum": 4.473608334,
+          "maximum": 4.49017625
+        },
+        "improvement_fraction": 0.047152065436958275,
+        "above_noise": true
+      }
+    },
+    "512": {
+      "prefill_seconds": {
+        "baseline": {
+          "median": 3.1122414165,
+          "mad": 0.0005882919999999903,
+          "minimum": 3.111589541,
+          "maximum": 3.120354875
+        },
+        "candidate": {
+          "median": 2.6620037085,
+          "mad": 0.0005340620000002794,
+          "minimum": 2.661020667,
+          "maximum": 2.662852125
+        },
+        "improvement_fraction": 0.14466670407154128,
+        "above_noise": true
+      },
+      "decode_seconds": {
+        "baseline": {
+          "median": 5.546454562499999,
+          "mad": 0.0079377079999996,
+          "minimum": 5.5321915,
+          "maximum": 5.573366416000001
+        },
+        "candidate": {
+          "median": 5.5621236875,
+          "mad": 0.0014890629999997351,
+          "minimum": 5.543279833000001,
+          "maximum": 5.571524707999999
+        },
+        "improvement_fraction": -0.0028250704704119727,
+        "above_noise": true
+      },
+      "total_seconds": {
+        "baseline": {
+          "median": 8.661042229500001,
+          "mad": 0.009448271500001937,
+          "minimum": 8.646669708,
+          "maximum": 8.68782775
+        },
+        "candidate": {
+          "median": 8.2241934585,
+          "mad": 0.0010158125000003793,
+          "minimum": 8.205458625,
+          "maximum": 8.233975875
+        },
+        "improvement_fraction": 0.05043836058344911,
+        "above_noise": true
+      }
+    },
+    "1024": {
+      "prefill_seconds": {
+        "baseline": {
+          "median": 6.567059499999999,
+          "mad": 0.00032302100000070055,
+          "minimum": 6.566510666,
+          "maximum": 6.5682416660000005
+        },
+        "candidate": {
+          "median": 5.666488479,
+          "mad": 0.001110958499999981,
+          "minimum": 5.664384417,
+          "maximum": 5.674094125
+        },
+        "improvement_fraction": 0.13713459136467385,
+        "above_noise": true
+      },
+      "decode_seconds": {
+        "baseline": {
+          "median": 7.922339604,
+          "mad": 0.0019921044999997584,
+          "minimum": 7.914024375,
+          "maximum": 7.931853875
+        },
+        "candidate": {
+          "median": 7.913158062500001,
+          "mad": 0.0016172085000007996,
+          "minimum": 7.90470425,
+          "maximum": 7.920505791999999
+        },
+        "improvement_fraction": 0.001158943185844194,
+        "above_noise": true
+      },
+      "total_seconds": {
+        "baseline": {
+          "median": 14.4891047915,
+          "mad": 0.002382270999999214,
+          "minimum": 14.481015083,
+          "maximum": 14.498762125
+        },
+        "candidate": {
+          "median": 13.5788610415,
+          "mad": 0.003511021000000447,
+          "minimum": 13.571258375,
+          "maximum": 13.587341458000001
+        },
+        "improvement_fraction": 0.06282263556641494,
+        "above_noise": true
+      }
+    }
+  },
+  "control_regressions": [
+    {
+      "prompt": 512,
+      "metric": "decode_seconds",
+      "delta_seconds": 0.015669125000000506
+    }
+  ],
+  "primary_pass": true,
+  "device": "Apple M1 Pro",
+  "engine_revision": "397905a3",
+  "review": "Astra approved screen code and evidence. Flagged control requires investigation before P2.",
+  "prefill_parity_rows": 13,
+  "decode_parity_rows": 381,
+  "checks": "artifacts/m9-p1-tile4-2026-11-05/screen/checks.json",
+  "raw": {
+    "check-tile4": "artifacts/m9-p1-tile4-2026-11-05/screen/check-tile4.jsonl",
+    "time": "artifacts/m9-p1-tile4-2026-11-05/screen/time.jsonl",
+    "time-tile4": "artifacts/m9-p1-tile4-2026-11-05/screen/time-tile4.jsonl"
+  },
+  "owner": {
+    "check-tile4": "artifacts/m9-p1-tile4-2026-11-05/screen/check-tile4-owned.json",
+    "time": "artifacts/m9-p1-tile4-2026-11-05/screen/time-owned.json",
+    "time-tile4": "artifacts/m9-p1-tile4-2026-11-05/screen/time-tile4-owned.json"
+  },
+  "p2_ready": false,
+  "app_adopted": false
+}
