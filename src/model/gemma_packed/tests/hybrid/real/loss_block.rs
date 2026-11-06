@@ -22,6 +22,77 @@ fn diagnostic1025_remaining_loss_blocks() {
 }
 
 fn run_blocks(blocks: &[usize]) {
+    let (source, file, path, original) = load_original();
+    let owners = resident_snapshot(&source);
+    let norms = hybrid::Norms::new(&source, PROCESS - DIAGNOSTIC).unwrap();
+    let model = norms.model_for_context_probe(1025).unwrap();
+    assert!(model.content_identity().is_none());
+    let context = gemma_affine::Context::new(gemma_affine::CONTEXT_ALLOWANCE_BYTES).unwrap();
+    let mut session = norms
+        .new_session(&model, &context, PROCESS - DIAGNOSTIC)
+        .unwrap();
+    score_blocks(blocks, &mut session, 271117548, || {
+        assert_eq!(resident_snapshot(&source), owners);
+    });
+    assert_eq!(identity(&file.metadata().unwrap()), original);
+    assert_eq!(
+        identity(&std::fs::symlink_metadata(path).unwrap()),
+        original
+    );
+}
+
+#[test]
+#[ignore = "explicit mixed QAT first original-loss block"]
+fn mixed_qat_first_loss_block() {
+    run_qat_blocks(&[0]);
+}
+
+#[test]
+#[ignore = "explicit mixed QAT remaining nine original-loss blocks"]
+fn mixed_qat_remaining_loss_blocks() {
+    run_qat_blocks(&(1..10).collect::<Vec<_>>());
+}
+
+fn run_qat_blocks(blocks: &[usize]) {
+    use crate::metal::gemma_affine::MixedContext;
+    use hybrid::test_support::qat_resident_snapshot;
+
+    println!();
+    let (source, file, path, original) = super::qat::load_qat();
+    let owners = qat_resident_snapshot(&source);
+    let budget = PROCESS - DIAGNOSTIC;
+    let norms = hybrid::QatNorms::new(&source, budget).unwrap();
+    let model = norms.model_for_quality_probe(1025).unwrap();
+    let context = MixedContext::new(super::qat::MIXED_ALLOWANCE).unwrap();
+    let warm = norms.new_session(&model, &context, 32, budget).unwrap();
+    let owned = warm.allocated_bytes().unwrap();
+    let required = model.model_bytes() + owned;
+    drop(warm);
+    assert!(matches!(
+        norms.new_session(&model, &context, 32, required - 1),
+        Err(hybrid::Error::Metal(crate::metal::Error::Budget { required: r, limit }))
+        if r == required && limit == required - 1
+    ));
+    let mut session = norms.new_session(&model, &context, 32, required).unwrap();
+    emit(
+        "QAT_LOSS_ADMISSION",
+        json!({"required_bytes":required,"session_bytes":owned}),
+    );
+    score_blocks(blocks, &mut session, owned, || {});
+    assert_eq!(qat_resident_snapshot(&source), owners);
+    assert_eq!(identity(&file.metadata().unwrap()), original);
+    assert_eq!(
+        identity(&std::fs::symlink_metadata(path).unwrap()),
+        original
+    );
+}
+
+fn score_blocks(
+    blocks: &[usize],
+    session: &mut hybrid::Session<'_, '_, '_, '_>,
+    expected_allocated: usize,
+    verify_owners: impl Fn(),
+) {
     let frozen =
         include_bytes!("../../../../../../benchmarks/gemma-quality-v1/held_out_loss.u32le");
     let prefix = include_bytes!("../../../../../../benchmarks/gemma-e2b-wrap-v1/tokens.u32le");
@@ -32,18 +103,9 @@ fn run_blocks(blocks: &[usize]) {
         .map(|v| u32::from_le_bytes(v.try_into().unwrap()))
         .collect();
     let mut capture = capture::Capture::bounded(DIAGNOSTIC);
-    let (source, file, path, original) = load_original();
-    let owners = resident_snapshot(&source);
-    let norms = hybrid::Norms::new(&source, PROCESS - DIAGNOSTIC).unwrap();
-    let model = norms.model_for_context_probe(1025).unwrap();
-    assert!(model.content_identity().is_none());
-    let context = gemma_affine::Context::new(gemma_affine::CONTEXT_ALLOWANCE_BYTES).unwrap();
-    let mut session = norms
-        .new_session(&model, &context, PROCESS - DIAGNOSTIC)
-        .unwrap();
-    let pointers_before = pointers(&session);
+    let pointers_before = pointers(session);
     let allocated = session.allocated_bytes().unwrap();
-    assert_eq!(allocated, 271117548);
+    assert_eq!(allocated, expected_allocated);
     let anchors = [0, 31, 255, 511, 512, 767, 1023, 1024];
     let mut total = nll::Sum::default();
     let mut scored = 0;
@@ -102,11 +164,11 @@ fn run_blocks(blocks: &[usize]) {
                 scored += 1;
             }
             assert_eq!(session.tokens(), &ids[..end]);
-            assert_eq!(pointers(&session), pointers_before);
+            assert_eq!(pointers(session), pointers_before);
             assert_eq!(session.allocated_bytes().unwrap(), allocated);
         }
         assert_eq!(session.tokens(), ids);
-        assert_eq!(resident_snapshot(&source), owners);
+        verify_owners();
     }
     assert_eq!(
         scored,
@@ -115,12 +177,7 @@ fn run_blocks(blocks: &[usize]) {
             .map(|&b| ((b + 1) * 1024).min(10000) - b * 1024)
             .sum::<usize>()
     );
-    assert_eq!(resident_snapshot(&source), owners);
-    assert_eq!(identity(&file.metadata().unwrap()), original);
-    assert_eq!(
-        identity(&std::fs::symlink_metadata(&path).unwrap()),
-        original
-    );
+    verify_owners();
     emit(
         "LOSS_SUMMARY",
         json!({"targets":scored,"mean_nll":total.value/scored as f64,

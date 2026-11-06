@@ -10721,3 +10721,12 @@ admission is3.72GB and peak physical memory is3.85GB. The legacy Q4
 capture remains bitwise identical. Astra approved the state probe. Both
 independent numerical contracts and adoption quality remain open.
 [Evidence](../benchmarks/results/2026-11-06-gemma-qat-wrap-state-v1.json)
+
+## 6 November 2026 — Qualify the QAT quality collection pilots
+
+Fresh raw replay verifies all62 decisions in three task categories,
+including hidden stops. The first1,024 loss targets and eight wrap
+anchors pass the score checks. Legacy Q4 reproduces the same task IDs,
+loss rows and raw capture. Astra approved the workers. Full original
+quality and the independent long fidelity gate remain open.
+[Evidence](../benchmarks/results/2026-11-06-gemma-qat-quality-pilot-v1.json)

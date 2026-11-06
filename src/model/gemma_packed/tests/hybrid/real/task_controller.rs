@@ -5,6 +5,8 @@ use serde::Deserialize;
 use sha2::{Digest, Sha256};
 use std::{io::Read, sync::atomic::AtomicBool};
 
+mod qat;
+
 #[test]
 #[ignore = "explicit original E2B resident chunk admission"]
 fn generation_pools_follow_admitted_chunk() {
@@ -200,6 +202,28 @@ fn run(pilot: bool) {
             },
         )
         .unwrap();
+    let count = run_tasks(&tasks, &mut session, pilot, || {
+        assert_eq!(resident_snapshot(&source), owners);
+    });
+    assert_eq!(identity(&file.metadata().unwrap()), original);
+    assert_eq!(
+        identity(&std::fs::symlink_metadata(&path).unwrap()),
+        original
+    );
+    assert_eq!(identity(&inputs.metadata().unwrap()), input_identity);
+    assert_eq!(
+        identity(&std::fs::symlink_metadata(&input_path).unwrap()),
+        input_identity
+    );
+    emit_summary(count, pilot, session.memory().admitted_bytes);
+}
+
+fn run_tasks(
+    tasks: &[Task],
+    session: &mut hybrid::GenerationSession<'_, '_, '_, '_>,
+    pilot: bool,
+    verify_owners: impl Fn(),
+) -> usize {
     let admitted = session.memory().admitted_bytes;
     assert!(admitted + DIAGNOSTIC <= PROCESS);
     let cancelled = AtomicBool::new(false);
@@ -214,7 +238,7 @@ fn run(pilot: bool) {
         assert!(session.logits().is_none());
         let mut visible = Vec::with_capacity(task.max_output_tokens);
         let report = generation::generate(
-            &mut session,
+            session,
             generation::Request {
                 input: generation::Input::Reset(&task.prompt_tokens),
                 max_new_tokens: task.max_output_tokens,
@@ -263,20 +287,14 @@ fn run(pilot: bool) {
         assert!(session.history().is_empty());
         assert_eq!((session.evaluated_len(), session.pending_len()), (0, 0));
         assert!(session.logits().is_none());
-        assert_eq!(resident_snapshot(&source), owners);
+        verify_owners();
         count += 1;
     }
     assert_eq!(count, if pilot { 3 } else { 97 });
-    assert_eq!(identity(&file.metadata().unwrap()), original);
-    assert_eq!(
-        identity(&std::fs::symlink_metadata(&path).unwrap()),
-        original
-    );
-    assert_eq!(identity(&inputs.metadata().unwrap()), input_identity);
-    assert_eq!(
-        identity(&std::fs::symlink_metadata(&input_path).unwrap()),
-        input_identity
-    );
+    count
+}
+
+fn emit_summary(count: usize, pilot: bool, admitted: usize) {
     emit(
         "TASK_SUMMARY",
         json!({"cases":count,"pilot":pilot,"capacity":567,"chunk_capacity":32,

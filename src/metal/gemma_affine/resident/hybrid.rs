@@ -405,6 +405,17 @@ impl<'weights> QatNorms<'weights> {
         self.0.model_for_format(position_limit, true)
     }
 
+    #[cfg(test)]
+    pub(crate) fn new_quality_generation_session<'model, 'a, 'context>(
+        &'a self,
+        model: &'model Model<'a, 'weights>,
+        context: &'context MixedContext,
+        options: Options,
+    ) -> std::result::Result<GenerationSession<'model, 'a, 'weights, 'context>, session::Error>
+    {
+        self.0.new_generation_session(model, &context.0, options)
+    }
+
     pub fn new_session<'model, 'a, 'context>(
         &'a self,
         model: &'model Model<'a, 'weights>,

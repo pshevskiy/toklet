@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Run the QAT quality pilot and join the independent 1,025-token references.**
+Current task: **Finish QAT full loss, tasks and independent 1,025-token fidelity.**
 Completed: source-matched native41 package selected, with Mac offline regression
 and both iOS SDK builds. [Evidence](benchmarks/results/2026-11-06-chunk-pools-native41-v1.json).
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
@@ -615,8 +615,11 @@ uses the existing full saved-conversation reset+prompt path on Send.
   - [x] Quality-only 1,025-token state passes two chunk schedules and all
     four retained-KV milestones. Exact budget, reset/replay and legacy
     Q4 bitwise evidence pass. [Evidence](benchmarks/results/2026-11-06-gemma-qat-wrap-state-v1.json).
-  - [ ] Complete independent QAT math/staged wrap comparison, then
-    finish the original-relative 10,000-target and 100-task gates.
+  - [x] Three QAT pilot cases replay all62 decisions with zero mismatches.
+    First1,024 loss rows, eight frozen wrap anchors, legacy Q4 and Astra
+    pass. [Evidence](benchmarks/results/2026-11-06-gemma-qat-quality-pilot-v1.json).
+  - [ ] Finish both QAT math/staged wrap comparisons and the original-relative
+    10,000-target and 100-task gates before adoption.
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1559,3 +1562,4 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | Gemma QAT prefix fidelity | Both actual213/71 prefixes pass7,331,840 comparisons and8 exact greedy observations, with chunk and future state parity. | Astra approved; frozen1025 oracle collection and quality-only state probe next. [Evidence](benchmarks/results/2026-11-06-gemma-qat-prefix-parity-v1.json). |
 | 2026-11-06 | Gemma QAT quality-only KV wrap | Two 1,025-token schedules, all logits, ring states, overflow and reset pass. Legacy Q4 reproduces136 raw records. | Astra approved; 698 Metal tests and exact budget pass. [Evidence](benchmarks/results/2026-11-06-gemma-qat-wrap-state-v1.json). |
 | 2026-11-06 | G2 last-row prefill design | Astra reviewed the producer/consumer boundary, PLE slice, absolute query position and transactional commit invariants. | [Plan](docs/todo-implementation-plans.md#g2g3-shared-kv-and-mtp); implementation follows selected Gemma qualification. |
+| 2026-11-06 | Gemma QAT original-quality pilots | Fresh raw replay verifies62 sampled decisions in three cases. First1,024 loss targets and historical Q4 regressions pass. | Astra approved; full loss and tasks run with independent wrap fidelity pending. [Evidence](benchmarks/results/2026-11-06-gemma-qat-quality-pilot-v1.json). |

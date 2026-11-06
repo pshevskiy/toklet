@@ -1,0 +1,75 @@
+{
+  "passed": true,
+  "tested_base": "0f9645ff",
+  "checks": {
+    "fmt": true,
+    "strict_metal_clippy": true,
+    "metal_tests": 698,
+    "release_lib": true,
+    "unchanged_default_tests_reused": 584,
+    "log": "artifacts/gemma-qat-quality-2026-11-06/checks.json"
+  },
+  "workers": {
+    "task-pilot": {
+      "receipt": "artifacts/gemma-qat-quality-2026-11-06/task-pilot/owned.json",
+      "receipt_sha256": "62aec882cca8dea285ee8d5ba96de165bb91fd517f38c72bcee856b4120308ed",
+      "binary_sha256": "62a22fca7e86ad9b011468ae21143ab7de2ed569ffa3888935a6cfd1ac2256e6",
+      "peak_physical_bytes": 3726724360
+    },
+    "replay-pilot": {
+      "receipt": "artifacts/gemma-qat-quality-2026-11-06/replay-pilot/owned.json",
+      "receipt_sha256": "550ba79a751eda433b7d71e9ccfcb2a8a261a7c67cc4485f497c15dabcc9ac25",
+      "binary_sha256": "62a22fca7e86ad9b011468ae21143ab7de2ed569ffa3888935a6cfd1ac2256e6",
+      "peak_physical_bytes": 3693464816
+    },
+    "loss-first": {
+      "receipt": "artifacts/gemma-qat-quality-2026-11-06/loss-first/owned.json",
+      "receipt_sha256": "fa6ef9e363442bdd3fe61173d18d763d073606a7014f30a3cb32b811dda7ee72",
+      "binary_sha256": "62a22fca7e86ad9b011468ae21143ab7de2ed569ffa3888935a6cfd1ac2256e6",
+      "peak_physical_bytes": 3703753992
+    },
+    "q4-task-pilot": {
+      "receipt": "artifacts/gemma-qat-quality-2026-11-06/q4-task-pilot/owned.json",
+      "receipt_sha256": "f16c469e84dd876d932be1e3a0ecbda5fb75c526cc5a5f9eea2c4b01f37216ab",
+      "binary_sha256": "62a22fca7e86ad9b011468ae21143ab7de2ed569ffa3888935a6cfd1ac2256e6",
+      "peak_physical_bytes": 2900560584
+    },
+    "q4-loss-first": {
+      "receipt": "artifacts/gemma-qat-quality-2026-11-06/q4-loss-first/owned.json",
+      "receipt_sha256": "18eaaaa28a2abaa7b709b59163a5b8a4496fe38913b0c2a5ea89078bd4aad0d3",
+      "binary_sha256": "62a22fca7e86ad9b011468ae21143ab7de2ed569ffa3888935a6cfd1ac2256e6",
+      "peak_physical_bytes": 2907179744
+    }
+  },
+  "q4_regression": {
+    "same_pilot_cases": 3,
+    "same_loss_rows": 1024,
+    "capture_sha256": "48c72f91a7ac0aaa776074c5f092aed1526e407235b45d02c86ceb7410fe075d"
+  },
+  "task_pilot": {
+    "cases": 3,
+    "decisions": 62,
+    "mismatches": 0,
+    "session_allocated_bytes": 331658692,
+    "trajectory_sha256": "e628c544cfd5f72b603b8f4ec5336025bfe17e785e4a1a261021fb0a56720bd5",
+    "independent_raw_replay": true
+  },
+  "loss_pilot": {
+    "passed": true,
+    "targets": 1024,
+    "paired_mean_delta": -2.5953710705664657,
+    "admission": {
+      "required_bytes": 3722626652,
+      "session_bytes": 338226412
+    },
+    "full_gate_pending": true
+  },
+  "scripts_sha256": {
+    "artifacts/gemma-qat-quality-2026-11-06/hardware.py": "abcebcd0971a5125171da1dc3b600f58731afbcb5383f89f9728eba54b2a6339",
+    "artifacts/gemma-qat-quality-2026-11-06/task_collect.py": "faf9dc4b33cef8138999d1f3999d497f2529f2701f3a416664d9754ceee389c8",
+    "artifacts/gemma-qat-quality-2026-11-06/loss_compare.py": "ba9b3fabe4711b79a792134cf89b56f4941b6e5521dc6bd5763c88f742d8f62a",
+    "artifacts/gemma-qat-quality-2026-11-06/assemble_grade.py": "d82a2c50ac06a3000ba51e1c9f278d3c222744f4d3867c56481746353d76aafe"
+  },
+  "review": "Astra approved after the first-loss Q4 regression passed. Full grading requires the exact same sampled journal, all100 fresh replays and zero mismatches.",
+  "scope": "Quality-only workers and pilots. Full numerical fidelity, adoption quality and Chat stay separate."
+}

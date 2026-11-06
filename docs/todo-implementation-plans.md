@@ -156,6 +156,17 @@ full run. Collect the exact10,000 targets against the authenticated original
 loss baseline. Recheck every sampled task decision with a fresh native
 teacher-forced replay, including hidden EOS and lowest-ID greedy ties,
 then grade all100 new completions against the existing original52/100.
+The [quality pilots](../benchmarks/results/2026-11-06-gemma-qat-quality-pilot-v1.json)
+pass. Complete both collections and the separate wrap fidelity gate before
+adoption.
+
+If all gates pass, add a private owned QAT adapter to the existing native
+model/session dispatch. Preserve the drop order from session through graph,
+norms and authenticated weights. Bind one exact QAT artifact and a distinct
+basic-text codec receipt, including the combined codec/engine budget.
+After owner and codec checks, add the managed Mac profile and verify fresh
+download, offline Chat, cancellation and state preservation before selecting
+a source-matched app package.
 
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 
