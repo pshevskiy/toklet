@@ -13,6 +13,7 @@ private struct HubCleanupFailure: LocalizedError {
 private struct HubNetworkFailure: LocalizedError {
     let code: URLError.Code
     let detail: String
+    let partialRangeBytes: Int64
     var errorDescription: String? { detail }
 }
 
@@ -53,7 +54,10 @@ final class HubTransfer: NSObject, URLSessionDataDelegate, @unchecked Sendable {
     static func fetch(_ url: URL,_ destination: URL,_ maximum: Int64,
                       _ progress: @escaping @Sendable (Int64) -> Void) async throws {
         if maximum >= 1024 * 1024 * 1024 {
-            try await ranged(url,destination,maximum,progress)
+            let official = HubProfile.gemmaBF16Shard
+            let exact = maximum == official.bytes && url == HubAPI.fileURL(HubProfile.gemmaBF16,official)
+            let chunkBytes: Int64 = (exact ? 4 : 16) * 1024 * 1024
+            try await ranged(url,destination,maximum,progress,chunkBytes:chunkBytes,resumesPartialRanges:exact)
         } else {
             let metadata = url.host == "huggingface.co" && url.path.hasPrefix("/api/models") && maximum <= HubAPI.metadataLimit
             try await whole(url,destination,maximum,progress,resourceTimeout:metadata ? .seconds(20) : .seconds(7200))
@@ -170,7 +174,7 @@ final class HubTransfer: NSObject, URLSessionDataDelegate, @unchecked Sendable {
         var result = failure ?? error
         if let network = result as? URLError {
             let span = range.map { "bytes \($0.lowerBound)-\($0.upperBound - 1)/\(total!)" } ?? "whole file"
-            result = HubNetworkFailure(code:network.code,detail:"Network transfer failed (NSURLErrorDomain \(network.code.rawValue); attempt \(attempt); \(span); received \(received)/\(maximum) bytes; elapsed \(started.duration(to:.now))).")
+            result = HubNetworkFailure(code:network.code,detail:"Network transfer failed (NSURLErrorDomain \(network.code.rawValue); attempt \(attempt); \(span); received \(received)/\(maximum) bytes; elapsed \(started.duration(to:.now))).",partialRangeBytes:range != nil && accepted && received < maximum ? received : 0)
         }
         if result == nil && !accepted { result = HubFailure("Missing download response.") }
         if result == nil && range != nil && received != maximum { result = HubFailure("Download range was incomplete.") }
@@ -225,19 +229,20 @@ extension HubTransfer {
     // another child; the wrapper crosses only this coarse structured-task boundary.
     private struct SessionOptions: @unchecked Sendable { let value: URLSessionConfiguration }
 
-    // Large immutable files use four bounded 16 MiB streams. A connection loss
-    // retries only that chunk, at most three attempts. Final full-file SHA remains
-    // ModelHub's publication gate; successful ranges alone never publish a model.
+    // Large immutable files use four bounded streams. A connection loss
+    // allows at most three attempts for the current chunk. The exact official Gemma
+    // shard uses 4 MiB chunks and retains accepted prefixes within this call.
+    // ModelHub still authenticates the complete file before publication.
     static func ranged(_ url: URL,_ destination: URL,_ total: Int64,
                        _ progress: @escaping @Sendable (Int64) -> Void,
                        chunkBytes: Int64 = 16 * 1024 * 1024,parallelism: Int = 4,
                        configuration: URLSessionConfiguration = .ephemeral,
                        closeHandle: @escaping @Sendable (FileHandle) throws -> Void = { try $0.close() },
-                       resourceTimeout: Duration = .seconds(7200)) async throws {
+                       resourceTimeout: Duration = .seconds(7200),resumesPartialRanges: Bool = false) async throws {
         let options = SessionOptions(value:configuration.copy() as! URLSessionConfiguration)
         try await withDeadline(resourceTimeout) {
             try await assembleRanges(url,destination,total,progress,chunkBytes:chunkBytes,parallelism:parallelism,
-                                     configuration:options.value,closeHandle:closeHandle)
+                                     configuration:options.value,closeHandle:closeHandle,resumesPartialRanges:resumesPartialRanges)
         }
     }
 
@@ -300,7 +305,7 @@ extension HubTransfer {
                        _ progress: @escaping @Sendable (Int64) -> Void,
                        chunkBytes: Int64 = 16 * 1024 * 1024,parallelism: Int = 4,
                        configuration: URLSessionConfiguration = .ephemeral,
-                       closeHandle: @escaping @Sendable (FileHandle) throws -> Void = { try $0.close() }) async throws {
+                       closeHandle: @escaping @Sendable (FileHandle) throws -> Void = { try $0.close() },resumesPartialRanges: Bool) async throws {
         guard allowed(url), admitsRangeTotal(total,from:url),
               chunkBytes > 0, chunkBytes <= 16 * 1024 * 1024, (1...4).contains(parallelism) else {
             throw HubFailure("Invalid ranged transfer request.")
@@ -324,42 +329,53 @@ extension HubTransfer {
             while committed < total {
                 try Task.checkCancellation()
                 let start = committed
-                let pieces = try await withThrowingTaskGroup(of:(Int64,URL).self) { group in
+                let pieces = try await withThrowingTaskGroup(of:[(Int64,URL,Int64)].self) { group in
                     for index in 0..<parallelism {
                         let lower = start + Int64(index) * chunkBytes
                         if lower >= total { break }
                         let upper = min(total,lower + chunkBytes)
                         let options = SessionOptions(value:configuration.copy() as! URLSessionConfiguration)
                         group.addTask {
+                            var cursor = lower
+                            var pieces: [(Int64,URL,Int64)] = []
                             for attempt in 0..<3 {
                                 try Task.checkCancellation()
                                 let path = directory.appendingPathComponent("part-\(lower)-\(attempt)")
                                 do {
-                                    try await run(url,path,upper - lower,{ _ in },configuration:options.value.copy() as! URLSessionConfiguration,
-                                                  range:lower..<upper,total:total,attempt:attempt + 1,closeHandle:closeHandle)
-                                    return (lower,path)
+                                    try await run(url,path,upper - cursor,{ _ in },configuration:options.value.copy() as! URLSessionConfiguration,
+                                                  range:cursor..<upper,total:total,attempt:attempt + 1,closeHandle:closeHandle)
+                                    pieces.append((cursor,path,upper - cursor))
+                                    return pieces
                                 } catch {
-                                    var cause = error
-                                    do { if FileManager.default.fileExists(atPath:path.path) { try FileManager.default.removeItem(at:path) } }
-                                    catch { cause = cleanupFailure(cause,"chunk removal: " + error.localizedDescription) }
-                                    if cause is HubCleanupFailure { throw cause }
+                                    let canRetry = attempt < 2 && transient(error)
+                                    let received = (error as? HubNetworkFailure)?.partialRangeBytes ?? 0
+                                    if resumesPartialRanges && canRetry && received > 0 {
+                                        // The accepted 206 declared this exact interval. The sink
+                                        // has closed. Keep only its bounded prefix and request the rest.
+                                        pieces.append((cursor,path,received)); cursor += received
+                                    } else {
+                                        let original = error
+                                        do { if FileManager.default.fileExists(atPath:path.path) { try FileManager.default.removeItem(at:path) } }
+                                        catch { throw cleanupFailure(original,"chunk removal: " + error.localizedDescription) }
+                                    }
+                                    if error is HubCleanupFailure { throw error }
                                     try Task.checkCancellation()
-                                    guard attempt < 2, transient(cause) else { throw cause }
+                                    guard canRetry else { throw error }
                                     try await Task.sleep(for:.milliseconds(250 * (attempt + 1)))
                                 }
                             }
                             throw HubFailure("Range attempts exhausted.")
                         }
                     }
-                    var pieces: [(Int64,URL)] = []
-                    do { for try await piece in group { pieces.append(piece) } }
+                    var pieces: [(Int64,URL,Int64)] = []
+                    do { for try await chunk in group { pieces.append(contentsOf:chunk) } }
                     catch { try await finishGroup(&group,primary:error) }
                     return pieces.sorted { $0.0 < $1.0 }
                 }
-                for (lower,path) in pieces {
+                for (lower,path,bytes) in pieces {
                     try Task.checkCancellation()
                     guard lower == committed else { throw HubFailure("Noncontiguous range assembly.") }
-                    guard try ModelHub.diskSpace(destination.deletingLastPathComponent()) >= ModelHub.reserve + min(chunkBytes,total - lower) else {
+                    guard try ModelHub.diskSpace(destination.deletingLastPathComponent()) >= ModelHub.reserve + bytes else {
                         throw HubFailure("Storage became full during range assembly. Free space and retry.")
                     }
                     let input = try FileHandle(forReadingFrom:path)
@@ -367,9 +383,10 @@ extension HubTransfer {
                     do {
                         while let data = try input.read(upToCount:64 * 1024), !data.isEmpty {
                             try Task.checkCancellation()
-                            guard Int64(data.count) <= total - committed else { throw HubFailure("Range assembly exceeded file limit.") }
+                            guard Int64(data.count) <= lower + bytes - committed else { throw HubFailure("Range assembly exceeded piece limit.") }
                             try sink.write(contentsOf:data); committed += Int64(data.count)
                         }
+                        guard committed == lower + bytes else { throw HubFailure("Range assembly piece was truncated.") }
                     } catch { pieceError = error }
                     do { try input.close() } catch { pieceError = cleanupFailure(pieceError,"assembly input close: " + error.localizedDescription) }
                     if let pieceError { throw pieceError }

@@ -114,7 +114,7 @@ private final class RangeHubProtocol: URLProtocol, @unchecked Sendable {
             var headers = ["Content-Length":String(upper - lower + 1),"Content-Range":"bytes \(lower)-\(upper)/\(payload.count)"]
             var body = payload.subdata(in:lower..<(upper + 1)); var code = 206
             if mode == "wrong-start" { headers["Content-Range"] = "bytes \(lower + 1)-\(upper)/\(payload.count)" }
-            if mode == "wrong-total" { headers["Content-Range"] = "bytes \(lower)-\(upper)/\(payload.count + 1)" }
+            if mode == "wrong-total" || (mode == "resume-wrong" && lower != 0) { headers["Content-Range"] = "bytes \(lower)-\(upper)/\(payload.count + 1)" }
             if mode == "conflict" { headers["Content-Range"]! += ", bytes \(lower)-\(upper)/\(payload.count)" }
             if mode == "encoding" { headers["Content-Encoding"] = "gzip" }
             if mode == "wrong-length" { headers["Content-Length"] = String(body.count + 1) }
@@ -124,7 +124,9 @@ private final class RangeHubProtocol: URLProtocol, @unchecked Sendable {
             if mode == "overlong" { body.append(0) }
             if mode == "ignored" { code = 200 }
             if mode == "denied" { code = 403 }
-            return (code,headers,body,mode == "always-loss" || (mode == "one-loss" && lower == 0 && attempt == 1),mode == "slow")
+            let loses = mode == "always-loss" || mode == "resume-terminal" ||
+                (["one-loss","resume-loss","resume-wrong"].contains(mode) && lower == 0 && attempt == 1)
+            return (code,headers,body,loses,mode == "slow" || mode.hasPrefix("resume-"))
         }
         func started() { lock.lock(); let signal = signal; lock.unlock(); signal?() }
         func valid() -> Bool { lock.lock(); defer { lock.unlock() }; return !invalidHeader }
@@ -142,8 +144,15 @@ private final class RangeHubProtocol: URLProtocol, @unchecked Sendable {
         let response = HTTPURLResponse(url:request.url!,statusCode:code,httpVersion:"HTTP/1.1",headerFields:headers)!
         client?.urlProtocol(self,didReceive:response,cacheStoragePolicy:.notAllowed)
         if fail {
-            client?.urlProtocol(self,didLoad:data.prefix(2))
-            client?.urlProtocol(self,didFailWithError:URLError(.networkConnectionLost,userInfo:[NSURLErrorFailingURLErrorKey:request.url!,NSLocalizedDescriptionKey:"signed-url private-marker"])); return
+            client?.urlProtocol(self,didLoad:data.prefix(slow ? min(1024 * 1024,data.count - 1) : 2))
+            let failTransport: @Sendable () -> Void = { [self] in
+                lock.lock(); let active = !stopped; lock.unlock()
+                guard active else { return }
+                client?.urlProtocol(self,didFailWithError:URLError(.networkConnectionLost,userInfo:[NSURLErrorFailingURLErrorKey:request.url!,NSLocalizedDescriptionKey:"signed-url private-marker"]))
+            }
+            if slow { DispatchQueue.global().asyncAfter(deadline:.now() + 0.2,execute:failTransport) }
+            else { failTransport() }
+            return
         }
         if slow {
             client?.urlProtocol(self,didLoad:data.prefix(2)); Self.plan.started()
@@ -499,6 +508,30 @@ struct HubMain {
             try require(RangeHubProtocol.plan.valid(),"identity and exact request ranges")
             let counts = RangeHubProtocol.plan.counts()
             try require(counts.count == 5 && counts[0] == (mode == "good" ? 1 : 2) && counts.values.reduce(0,+) == (mode == "good" ? 5 : 6),"only lost chunk retried")
+        }
+        let mebibyte = 1024 * 1024
+        var resumeBytes = Data(repeating:10,count:mebibyte)
+        resumeBytes.append(Data(repeating:20,count:2 * mebibyte))
+        resumeBytes.append(Data(repeating:30,count:2 * mebibyte))
+        let resumedBytes = Int64(resumeBytes.count)
+        RangeHubProtocol.plan.set("resume-loss",resumeBytes)
+        let resumed = directory.appendingPathComponent("resumed")
+        try await HubTransfer.ranged(url,resumed,resumedBytes,{ _ in },chunkBytes:resumedBytes,parallelism:1,
+            configuration:configuration,resumesPartialRanges:true)
+        try require(try Data(contentsOf:resumed) == resumeBytes,"resumed exact bytes")
+        let resumedAttempts = RangeHubProtocol.plan.counts()
+        try require(resumedAttempts == [0:1,mebibyte:1],"resumed only the remaining suffix \(resumedAttempts)")
+        for (mode,attempts) in [("resume-terminal",[0:1,mebibyte:1,2 * mebibyte:1]),("resume-wrong",[0:1,mebibyte:1])] {
+            RangeHubProtocol.plan.set(mode,resumeBytes)
+            let destination = directory.appendingPathComponent(mode)
+            try await rejects(mode) {
+                try await HubTransfer.ranged(url,destination,resumedBytes,{ _ in },chunkBytes:resumedBytes,parallelism:1,
+                    configuration:configuration,resumesPartialRanges:true)
+            }
+            try require(RangeHubProtocol.plan.counts() == attempts,"bounded resume attempts for " + mode)
+            try require((try Data(contentsOf:destination)).isEmpty,"failed batch preserves no published bytes")
+            try require(try !FileManager.default.contentsOfDirectory(atPath:directory.path).contains { $0.hasPrefix(".ranges-") },
+                        "failed resume cleans its parts")
         }
         for mode in ["wrong-start","wrong-total","conflict","encoding","wrong-length","duplicate-length","conflicting-length","truncated","overlong","ignored","denied","always-loss"] {
             RangeHubProtocol.plan.set(mode,bytes)

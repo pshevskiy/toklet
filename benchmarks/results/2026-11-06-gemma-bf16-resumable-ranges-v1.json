@@ -1,0 +1,38 @@
+{
+  "format": "toklet-official-gemma-resumable-ranges-v1",
+  "scope": "Only exact Mac official Gemma shard starts with 4 MiB ranges and retains accepted prefixes within bounded transient retries. Complete public download remains open.",
+  "chunk_bytes": 4194304,
+  "generic_chunk_bytes": 16777216,
+  "parallel_streams": 4,
+  "max_attempts_per_chunk": 3,
+  "publication_full_sha_unchanged": true,
+  "transient_controls": [
+    "accepted prefix plus suffix reassembles exact bytes",
+    "terminal failures clean retained parts",
+    "wrong suffix metadata rejects without another retry"
+  ],
+  "swift_checks": [
+    "compile",
+    "regressions",
+    "worker-revision",
+    "render",
+    "iphoneos",
+    "iphonesimulator"
+  ],
+  "signed_mac": "artifacts/gemma-bf16-resume-2026-11-06/signed-mac/Toklet.app",
+  "iPhone_physical_tested": false,
+  "prior_failures": [
+    "Sandbox storage query reported zero. Owned filesystem rerun passed.",
+    "Two-byte fixture did not reliably deliver its accepted prefix before loss. One MiB fixture delivered the prefix and proved the exact suffix request."
+  ],
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-resume-2026-11-06/hub.stdout": "7bfd7d0a323c96e1906ecab02be3d3c1592e39cdde5366c2e16cc15677e54fd2",
+    "artifacts/gemma-bf16-resume-2026-11-06/swift/check.json": "801151fcfdad9f235d66081f2a601fb7fd8fec0a591ca4069d63d78f441de22a",
+    "artifacts/gemma-bf16-resume-2026-11-06/signed-mac/build.json": "b43cd19271047673aab6e6c4e1c759ac19235b02d193cadf7de5821ea0b1c648",
+    "artifacts/gemma-bf16-resume-draft-2026-11-06/test.stderr": "77fc0d63b839b3e7e002103c2e55e51716e0c4686cf1a4e4764965efcc85bda8",
+    "artifacts/gemma-bf16-resume-draft-2026-11-06/test-owned.stderr": "f06625c689be2c6c299a0b433e9e089800819222b83371bb00e47fdd66409de7",
+    "artifacts/gemma-bf16-public-adaptive-2026-11-06/resume-receipt.json": "2374f645575a47a593d118fcebeed9eec43a1f69b56c96f6efc8435c92e6e68f",
+    "artifacts/gemma-bf16-public-adaptive-2026-11-06/xet-stopped.json": "e405087bf0d16620e00cbeb9ee41141ec6d6fb5ec03decaf826474ed61a21386"
+  },
+  "review": "Astra approves scoped partial-prefix retention, exact suffix requests, bounded retry and cleanup. Complete public transfer remains open."
+}

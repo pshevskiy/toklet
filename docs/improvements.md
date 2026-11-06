@@ -11041,3 +11041,11 @@ request time falls 21.4% at 128+32 and rises 5.9% at 384+32. Peak physical
 memory is 5.18 GB. Strict checks and Astra pass. Production retention awaits
 the frozen longer-output primary and guard.
 [Evidence](../benchmarks/results/2026-11-06-gemma-assistant-mtp-pilot-v1.json)
+
+## 6 November 2026 — Resume accepted Gemma download ranges
+
+The exact official Mac shard uses 4 MiB ranges. A transient failure retries
+from the accepted prefix within the original three-attempt bound. Swift
+controls verify exact assembly, malformed suffix rejection and cleanup. The
+signed Mac build and Astra pass. Complete public transfer remains open.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-resumable-ranges-v1.json)
