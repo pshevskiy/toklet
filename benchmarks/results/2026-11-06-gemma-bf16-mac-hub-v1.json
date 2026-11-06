@@ -1,0 +1,85 @@
+{
+  "format": "toklet-gemma-bf16-mac-hub-v1",
+  "scope": "Exact managed Mac catalog, authenticated transport policy and offline Chat. Full public transfer timed out and remains a separate acceptance.",
+  "repository": "google/gemma-4-E2B-it",
+  "revision": "70af34e20bd4b7a91f0de6b22675850c43922a03",
+  "total_bytes": 10278816137,
+  "shard_bytes": 10246621918,
+  "unchanged_generic_limits": [
+    4294967296,
+    6442450944
+  ],
+  "live_exact_ranges": [
+    [
+      4294967296,
+      4294967312
+    ],
+    [
+      10246621902,
+      10246621918
+    ]
+  ],
+  "full_public_transfer": {
+    "complete": false,
+    "assembled_shard_bytes_at_capture": 268435456,
+    "outcome": "Timed out on three attempts after 256 MiB assembled.",
+    "confirmed_bytes": 268435456,
+    "staging_removed": true,
+    "failed_range": [
+      318767104,
+      335544320
+    ],
+    "direct_curl_bytes": 278276,
+    "direct_curl_seconds": 90.041545
+  },
+  "offline_managed_peak_physical_bytes": 4926853368,
+  "app_native_budget_bytes": 5905580032,
+  "app_additional_allowance_bytes": 285212672,
+  "process_headroom_required_bytes": 6190792704,
+  "initial_failure": "The first managed open required 6 GiB of headroom from a policy already subtracting current process footprint. The corrected engine plus app reserve passed the offline journey.",
+  "checks": {
+    "mac_catalog_controls": 38,
+    "hub_transport_controls": true,
+    "both_ios_sdk_typechecks": true,
+    "native_c_exports_per_slice": 43,
+    "signed_mac_bundle": true,
+    "physical_ios_tested": false,
+    "mobile_interface": [
+      "compile",
+      "regressions",
+      "worker-revision",
+      "render",
+      "iphoneos",
+      "iphonesimulator"
+    ]
+  },
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-native43-package-2026-11-06/build.json": "bf0f96044339925965e2e6ea13de9127054c7fba1bc624aa37f8943105d1c01b",
+    "artifacts/gemma-bf16-managed-mac-app-final-2026-11-06/build.json": "93731c40eb829dc3e46a00c6cde9459ccabc5e79a20846ad7b74c33e493208c2",
+    "artifacts/gemma-bf16-mac-hub-2026-11-06/package-selection.json": "5a73063be4843b0965b2d79ca7acf80bb53f597afb5ceafa33bc524cfe03e69e",
+    "artifacts/gemma-bf16-mac-hub-2026-11-06/final-checks.txt": "634c058b7fd8765837d2fc4158e274a7f45a85e65be8d744b04c47fef7da66a3",
+    "artifacts/gemma-bf16-mac-hub-2026-11-06/identity-checks.txt": "07a3741a6f756eb65534660a70fdb80be50de4fa3b8dd5ff07defee2772e38e6",
+    "artifacts/gemma-bf16-mac-hub-2026-11-06/controls-identity.stdout": "7bfd7d0a323c96e1906ecab02be3d3c1592e39cdde5366c2e16cc15677e54fd2",
+    "artifacts/gemma-bf16-mac-hub-2026-11-06/mac-catalog-final.stdout": "e36b2d5e8b145caded22595bf41010b34b2d919c5b3d83aafc2f1681c8781e8b",
+    "artifacts/gemma-bf16-mac-hub-2026-11-06/offline-live/owned.json": "abfc4732c3239b9ede5ac7d48fdd0e5421e28e413383d62f1cdeefd483828f0c",
+    "artifacts/gemma-bf16-mac-hub-2026-11-06/offline-live/gpu.stderr": "bd9d7e5bfa8b0cb3d965aa02d3206688ee187250bccbfe1eac0aa185dffbec50",
+    "artifacts/gemma-bf16-mac-hub-2026-11-06/offline-final/owned.json": "dd15b2b143411dc74e1de9adf3f52bff760ca0109f11b9ce969138d54094122f",
+    "artifacts/gemma-bf16-mac-hub-2026-11-06/offline-final/gpu.stdout": "e7f577122faf2bf55c4a2155fc2707714ed126250a8c870184c9ef30402a84fd",
+    "artifacts/gemma-bf16-mac-hub-draft-2026-11-06/range-live.stdout": "70652eacc4a58406b4451979c684789e255b06267f58c419d8ca66b8d0ed23bf",
+    "artifacts/gemma-bf16-mac-hub-draft-2026-11-06/live-range/range-0": "3879a9369dc0a53afbc73def2e90aeb28e4953e67eb4b057635c6a37ba477946",
+    "artifacts/gemma-bf16-mac-hub-draft-2026-11-06/live-range/range-1": "c83a72ab1875d4b22dc2bc96b675b3bf865fc78fdd1c4562e26b977048b0af44",
+    "artifacts/gemma-bf16-mobile-regression-2026-11-06/check.json": "2a51a0c564f352e6d83971867a59a8d8b345ff00498efd358b3390d3df56b27b",
+    "artifacts/gemma-bf16-mobile-regression-2026-11-06/regressions.stdout": "baf5e1ba8a14f14b61c14fb25d2b6b033e476fe0d0d078e17860efb23aefbfe5",
+    "artifacts/gemma-bf16-mac-hub-2026-11-06/cached-publication.stdout": "c3f26ec10f5ded4eb07aa5e8d89e703f874fee6fca9d97d82413918dad33810e",
+    "artifacts/gemma-bf16-mac-hub-2026-11-06/live.stdout": "ee7ceb2445627f5a4e2d93c7779d33c5dea6af435a73584e9fcc9e6645fe6f83",
+    "artifacts/gemma-bf16-mac-hub-2026-11-06/live.stderr": "1d6e550b7d9f03ee80d77eb61405e7f7c5f5321e80b89309f0f10a8b06f74fd1",
+    "artifacts/gemma-bf16-mac-hub-2026-11-06/direct-range.stdout": "637ffe747451873e0aaedafb3267c535f8aff2e326303b6705b57e8176ec8cc1",
+    "artifacts/gemma-bf16-mac-hub-2026-11-06/direct-range.stderr": "3cb410a687afd7608be85e9ec5422081635e5de92d3445f1f63667c6e2307fd8"
+  },
+  "cached_publication": {
+    "published_and_reopened": true,
+    "bytes": 10278816137,
+    "source": "exact authenticated local files and public inventory response"
+  },
+  "review": "Astra approves the scoped catalog, exact transport policy, ranking/discovery controls, cached publication and offline Chat. Full public transfer remains open."
+}

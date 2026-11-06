@@ -59,13 +59,21 @@ final class HubTransfer: NSObject, URLSessionDataDelegate, @unchecked Sendable {
             try await whole(url,destination,maximum,progress,resourceTimeout:metadata ? .seconds(20) : .seconds(7200))
         }
     }
+    // One exact, revision-pinned official shard has a separate large range
+    // ceiling. Its published contents still require the complete profile SHA.
+    static func admitsRangeTotal(_ total: Int64, from url: URL) -> Bool {
+        if (1...HubProfile.maximumFileBytes).contains(total) { return true }
+        let profile = HubProfile.gemmaBF16, shard = HubProfile.gemmaBF16Shard
+        return HubProfile.catalog.contains(profile) && total == shard.bytes &&
+            url.absoluteString == HubAPI.fileURL(profile,shard).absoluteString
+    }
     static func run(_ url: URL,_ destination: URL,_ maximum: Int64,
                     _ progress: @escaping @Sendable (Int64) -> Void,configuration: URLSessionConfiguration,
                     range: Range<Int64>? = nil,total: Int64? = nil,attempt: Int = 1,
                     closeHandle: @escaping @Sendable (FileHandle) throws -> Void = { try $0.close() }) async throws {
         guard allowed(url), maximum > 0, maximum <= HubProfile.maximumFileBytes, (1...3).contains(attempt) else { throw HubFailure("Invalid transfer request.") }
         if let range {
-            guard let total, total > 0, total <= HubProfile.maximumFileBytes, range.lowerBound >= 0, range.upperBound <= total,
+            guard let total, admitsRangeTotal(total,from:url), range.lowerBound >= 0, range.upperBound <= total,
                   range.upperBound - range.lowerBound == maximum else { throw HubFailure("Invalid range request.") }
         } else if total != nil { throw HubFailure("Missing range request.") }
         let transfer = HubTransfer(destination:destination,maximum:maximum,progress:progress,range:range,total:total,attempt:attempt,closeHandle:closeHandle)
@@ -293,7 +301,7 @@ extension HubTransfer {
                        chunkBytes: Int64 = 16 * 1024 * 1024,parallelism: Int = 4,
                        configuration: URLSessionConfiguration = .ephemeral,
                        closeHandle: @escaping @Sendable (FileHandle) throws -> Void = { try $0.close() }) async throws {
-        guard allowed(url), total > 0, total <= HubProfile.maximumFileBytes,
+        guard allowed(url), admitsRangeTotal(total,from:url),
               chunkBytes > 0, chunkBytes <= 16 * 1024 * 1024, (1...4).contains(parallelism) else {
             throw HubFailure("Invalid ranged transfer request.")
         }

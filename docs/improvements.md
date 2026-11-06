@@ -10940,3 +10940,12 @@ pass at 4.92 GB peak, with 20.05 MB of KV buffers. The first witness used the
 test binary's session size, 16 bytes above production. The corrected checks,
 both iOS SDK builds and Astra review pass.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-mac-worker-v1.json)
+
+## 6 November 2026 — Add the exact Mac Gemma BF16 Hub profile
+
+The signed Mac build uses the selected native43 package. Exact online ranges
+above 4 GiB, authenticated cached publication and network-denied Chat pass.
+The offline managed process peaks at 4.93 GB. Astra approves after both iOS
+SDK builds and the Mac ranking/discovery regressions. The full public transfer
+timed out after 256 MiB and cleaned staging. That acceptance stays open.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-mac-hub-v1.json)

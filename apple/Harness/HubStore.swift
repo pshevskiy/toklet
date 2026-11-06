@@ -239,7 +239,7 @@ final class HubStore: ObservableObject {
                     let supported = HubProfile.matching(query).map { HubModel(id:$0.repository) }
                     let pinned = Set(supported.map(\.id))
                     results = supported + rows.filter { !pinned.contains($0.id) }
-                    if results.isEmpty { message = "No public MLX models found. Try a different name." }
+                    if results.isEmpty { message = "No matching public models found. Try a different name." }
                 case .discover(let active):
                     let saved = try await hub.savedProfiles()
                     try Task.checkCancellation()
@@ -249,7 +249,7 @@ final class HubStore: ObservableObject {
                     try Task.checkCancellation()
                     guard operation == id else { throw CancellationError() }
                     discoveredModels = discovery.models
-                    discoveryMessage = "Hugging Face: \(discovery.models.count) public MLX models found. "
+                    discoveryMessage = "Hugging Face: \(discovery.models.count) public models found. "
                         + (discovery.models.isEmpty ? "Try searching by name below. " : "Compatibility and memory determine which can run. ")
                         + (discovery.failedRequests > 0 ? "Some searches failed; tap Find best model to retry." : "Updated " + Date().formatted(date:.omitted,time:.shortened) + ".")
                     rank(active:active)

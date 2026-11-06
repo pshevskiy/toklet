@@ -22,7 +22,20 @@ struct LlamaCatalogMain {
         let expectedQwen15: HubProfile? = nil
         #endif
         try check(HubProfile.catalog.contains(.llama3) == enabled,"Platform catalog admission")
-        try check(HubProfile.catalog.count == (enabled ? 6 : 4),"Platform catalog size")
+        #if os(macOS) && arch(arm64)
+        let gemmaEnabled = true
+        #else
+        let gemmaEnabled = false
+        #endif
+        try check(HubProfile.catalog.count == (enabled ? 6 : 4) + (gemmaEnabled ? 1 : 0),"Platform catalog size")
+        try check(HubProfile.catalog.contains(.gemmaBF16) == gemmaEnabled,"Official Gemma platform catalog admission")
+        try check(HubProfile.matching("Gemma 4 E2B").contains(.gemmaBF16) == gemmaEnabled,"Official Gemma search bypassed gate")
+        try check(!FriendlyLoadRequest.matches(.ordinary,profile:.gemmaBF16),"Ordinary route admitted official Gemma")
+        #if os(macOS) && arch(arm64)
+        try check(try FriendlyLoadRequest.managedMode(.gemmaBF16) == .managedGemmaBF16,"Official Gemma route is missing")
+        #else
+        try rejects { _ = try FriendlyLoadRequest.managedMode(.gemmaBF16) }
+        #endif
         try check(HubProfile.catalog.contains(.qwen15) == enabled,"Larger Qwen platform catalog admission")
         try check(HubProfile.matching("Qwen2.5-1.5B").contains(.qwen15) == enabled,"Larger Qwen search bypassed gate")
         try check(HubProfile.qwen15.name == "Qwen2.5-1.5B · 8-bit","Larger Qwen display name changed")

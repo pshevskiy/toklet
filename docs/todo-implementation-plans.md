@@ -233,8 +233,14 @@ The other text tensors require4,559,518,278 raw bytes. [Official source inventor
      [Worker evidence](../benchmarks/results/2026-11-06-gemma-bf16-mac-worker-v1.json).
    - Scope Hub discovery and large transfer to the pinned Mac profile. Check
      search, SHA-verified publication, cancel, disk limits and network-denied
-     reopen. Keep generic transfer bounds and iPhone eligibility.
-   - Qualify context/KV tuning, rejected settings and late PLE corruption.
+     reopen. Keep generic transfer bounds and iPhone eligibility. The
+     [Mac Hub checks](../benchmarks/results/2026-11-06-gemma-bf16-mac-hub-v1.json)
+     qualify exact live ranges and cached publication. A full public transfer
+     timed out. Repeat it independently of the qualified offline journey.
+   - Expose exact cold FP32 KV buffer bytes from the shared layout for the
+     supported Mac capacity and chunk. Check the prediction against real
+     owners, then qualify next-load controls, rejected settings and late
+     PLE corruption.
      Build the source-matched Mac package and measure the app process. Keep
      append-only text delivery as a separate gate from visible-prefix Chat.
 

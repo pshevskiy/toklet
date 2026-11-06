@@ -1,12 +1,14 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Add exact Mac Hub discovery and authenticated transfer for official Gemma BF16.**
-Completed: source-matched native41 package selected, with Mac offline regression
-and both iOS SDK builds. [Evidence](benchmarks/results/2026-11-06-chunk-pools-native41-v1.json).
+Current task: **Plan exact Gemma BF16 KV bytes before opening a Mac session.**
+Selected native43 package and signed Mac build. Official BF16 passed exact
+cached publication and network-denied Chat at 4.93 GB peak. The full public
+transfer timed out after 256 MiB and remains open.
+[Evidence](benchmarks/results/2026-11-06-gemma-bf16-mac-hub-v1.json).
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
 [Evidence](benchmarks/results/2026-11-06-qwen15-mac-app-v1.json).
-Mac adopted-profile journeys are reviewed and complete; [report](docs/mac-hub-journeys.md).
+The six earlier Mac profile journeys are reviewed and complete. [Report](docs/mac-hub-journeys.md).
 Device work explicitly deferred by user on5November; the paired physical iPhone14Pro is disconnected; a different Pro Max is not substituted. [Latest query](artifacts/m8-phone-availability-2026-11-04/availability.json).
 Completed B5h1: opt-in conditional load-process peak reporting; [evidence](benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
 Completed B5g2: physical KV ceiling in Preview/Apply; [evidence](benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
@@ -698,8 +700,13 @@ uses the existing full saved-conversation reset+prompt path on Send.
     - [x] Integrate Mac Swift Chat, exact identity, context and live memory.
       Real Stop and replay, Mac and both iOS SDK checks, and Astra pass.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-mac-worker-v1.json).
-    - [ ] Add exact Mac Hugging Face discovery, verified transfer and offline use.
-    - [ ] Verify context/KV tuning, lifecycle and the source-matched Mac app.
+    - [x] Add exact Mac Hub discovery and transport policy. Real byte ranges,
+      cached publication, offline Chat and Astra pass.
+      [Evidence](benchmarks/results/2026-11-06-gemma-bf16-mac-hub-v1.json).
+    - [ ] Complete a full public Gemma download and reopen from its publication.
+      First attempt timed out after three range attempts and cleaned staging.
+    - [ ] Add exact cold KV planning, then wire and qualify Mac context/KV
+      tuning, lifecycle and the source-matched app.
     - [x] Complete replay and isolated grading for the frozen100 tasks.
       All4,149 sampled decisions match. The grade is51/100 versus52/100,
       within the2pp gate. Astra confirms both original-quality results.

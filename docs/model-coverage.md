@@ -1,7 +1,7 @@
 # Exact model coverage
 
-Coverage is artifact-, backend-, route- and device-specific. The ordinary Mac
-catalog has six pinned profiles. iOS has four. Catalog membership selects a
+Coverage is artifact-, backend-, route- and device-specific. The ordinary Apple Silicon Mac
+catalog has seven pinned profiles. iOS has four. Catalog membership selects a
 managed route, while consumed-byte model/codec identity and fresh admission
 still authorize loading. Other Hugging Face results remain discoverable without
 becoming executable. Model declarations are shared input/history/output windows,
@@ -15,6 +15,7 @@ not tokens per second or a promise that the engine can use that whole window.
 | SmolLM2-135M-Instruct-8bit (`0f0d9b8`) | Native Metal dense Llama-family, managed | 8,192 | Mac512, fresh download and network-denied offline Chat; authenticated preferences | Mac/iOS catalog,512 |
 | Mistral-7B-Instruct-v0.3-4bit (`a4b8f87`) | Native Metal dense, managed | 32,768 | Recorded bounded Mac route and authenticated preferences; no family-wide/window claim | Mac/iOS catalog,512; independent memory admission |
 | Llama-3.2-1B-Instruct-8bit (`d48cdf0`) | Native Metal scaled RoPE, managed | 131,072 | Original10k-target/100-task quality passes; diagnostic loss1,025/task566; actual Mac512 UI and fresh/offline journey | Default Mac catalog,512; excluded from iOS |
+| google/gemma-4-E2B-it BF16 (`70af34e`) | Native Metal BF16 with shared local/global KV and file-backed PLE, managed | 131,072 | Corrected numerical and original-quality gates pass. Mac512 basic Chat, exact cache identity and offline use pass. Full live transfer remains open. | Apple Silicon Mac catalog, up to512; 10.28 GB snapshot |
 | SmolLM3-3B-4bit (`d3a7e05`) | Native Metal dense with per-layer RoPE bypass, diagnostic | 65,536 | Mac512/chunks1,32; seven stock greedy decisions, state/reset/overflow and process-memory checks | No managed Chat/catalog adoption |
 | granite-3.3-2b-instruct-8bit (`37b9855`) | Native Metal dense with checkpoint scales, diagnostic | 131,072 | Mac512/chunks1,32; stock decisions, full-cache/reset/overflow and process-memory checks | No managed Chat/catalog adoption |
 | granite-3.1-1b-a400m-instruct BF16 (`0da7a48`) | Native Metal sparse MoE, resident compensated Half | 131,072 | Mac512/chunks1,32; two stock decisions, selected expert sets, state and process memory | No managed Chat/catalog adoption |
@@ -30,6 +31,7 @@ reports: [Qwen2 context](context-app-integration.md),
 [Llama adoption](llama3-mac-adoption.md), [Phi3](phi3-real-model.md),
 [Gemma3](gemma3-real-native.md), [Gemma3 conformance](gemma3-native-conformance.md),
 [LFM2](lfm2-real-native.md), [Gemma4 hybrid](gemma-hybrid-real.md), [Gemma512 boundary](gemma-hybrid512.md),
+[Official Gemma Mac Hub](../benchmarks/results/2026-11-06-gemma-bf16-mac-hub-v1.json),
 [Gemma1,025 admission](gemma-context1025-probe.md), [Gemma1,025 diagnostics](gemma-hybrid1025.md).
 This table indexes those scopes; it does not expand them.
 

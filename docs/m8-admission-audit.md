@@ -1,17 +1,20 @@
 # M8 capability and admission audit
 
-**6 November 2026 update. Mac has six managed profiles and iOS has four.
-M8 remains open for Gemma numerical and task qualification and deferred
-physical iPhone 14 Pro Settings and journeys.** The representative
-production Mac process-memory requirement passes. See the exact artifact
-and route index for diagnostic model coverage. [Coverage](model-coverage.md).
+**6 November 2026 update. Apple Silicon Mac has seven managed profiles and
+iOS has four. M8 remains open for the full public Gemma BF16 transfer and
+context controls, plus the deferred physical iPhone 14 Pro checks.**
+The official BF16 path passed corrected numerical and original-quality gates.
+Its Mac offline managed process peaked at 4.93 GB. [Coverage](model-coverage.md).
 
 The [coverage table](model-coverage.md) is the current artifact/route/device
 index. Match it against `ModelHub.swift` and `NativeAcceptedIdentity.swift`,
 using exact model and codec identities. The catalog contains Qwen2.5 0.5B,
-Qwen3, SmolLM2, Mistral and two Mac-only profiles, Llama3 and Qwen2.5 1.5B.
+Qwen3, SmolLM2, Mistral and three Mac-only profiles, Llama3, Qwen2.5 1.5B
+and official Gemma 4 E2B BF16.
 The five earlier profiles have production fresh download/Stop/offline evidence.
 The sixth has a linked Mac product and isolated controller evidence.
+Official Gemma has a signed Mac build, verified cached publication and
+network-denied Chat. [Gemma Hub evidence](../benchmarks/results/2026-11-06-gemma-bf16-mac-hub-v1.json).
 [Production journeys](mac-hub-journeys.md).
 [Qwen2.5 1.5B controller](../benchmarks/results/2026-11-06-qwen15-mac-app-v1.json).
 
@@ -24,6 +27,7 @@ The sixth has a linked Mac product and isolated controller evidence.
 | Llama3 managed, Mac only | Original10k NLL and100-task gates pass; Mac512 managed adoption/download/offline evidence is complete. No131072-window or iPhone claim. |
 | Phi3, Gemma3, LFM2 diagnostic | Bounded adapter/block/state/reference qualifications exist. Original full adoption quality and ordinary app admission do not; they stay out of the catalog. |
 | Gemma4 Q4 rejected for adoption | Original/native full collections and grading complete. NLL passes, tasks52→43/100 fail. Historical mathematical-logit/KV failures remain; four stock-MLX decisions agree with Toklet but cannot waive those failures. |
+| Official Gemma 4 E2B BF16 managed, Mac only | Corrected numerical and original10k/100 quality gates pass. Shared512 window, exact six assets, cached publication and offline Chat pass. Full public transfer timed out; retry remains open. |
 | Gemma4 alternative weights | OptiQ passes stock trajectories and fails the task limit at49/100 vs original52/100. Uniform Q6 and oQ6 reject on a proposal cycle. Separate stock-only Q8 screen proceeds under a measured 6GiB gate. Native/app Q8 still exceeds its estimated allowance. |
 | Physical iPhone14Pro outstanding | Four-profile catalog is not new-device evidence. Current Settings, journeys, wider context and diagnostic adapters lack a fresh phone run; Llama3 is excluded. |
 

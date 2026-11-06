@@ -28,11 +28,12 @@ struct FriendlyLoadRequest: Equatable, Sendable {
         case .smol: return .managedSmol
         case .mistral: return .managedMistral
         case .llama3: return .managedLlama3
+        case .gemmaBF16: return .managedGemmaBF16
         default: return .ordinary
         }
     }
     static func matches(_ mode: NativeLoadIdentity, profile: HubProfile) -> Bool {
-        guard let expected = mode.identityProfile else { return profile != .llama3 && profile != .qwen15 }
+        guard let expected = mode.identityProfile else { return profile != .llama3 && profile != .qwen15 && profile != .gemmaBF16 }
         switch expected {
         case .qwen2: return profile == .qwen
         case .qwen15: return profile == .qwen15
@@ -40,7 +41,7 @@ struct FriendlyLoadRequest: Equatable, Sendable {
         case .smol: return profile == .smol
         case .mistral: return profile == .mistral
         case .llama3: return profile == .llama3
-        case .gemmaBF16: return profile.repository == expected.repository && profile.revision == expected.revision
+        case .gemmaBF16: return profile == .gemmaBF16
         }
     }
 }
@@ -437,7 +438,7 @@ final class FriendlyChatStore: ObservableObject {
         var settings = NativeSettings(directory:folder.path)
         settings.loadIdentity = request.mode; settings.loadRequestID = request.id
         settings.measureLoadingMemory = request.measureLoadingMemory
-        settings.metal = true; settings.mlx = true; settings.chat = true
+        settings.metal = true; settings.mlx = request.mode != .managedGemmaBF16; settings.chat = true
         settings.capacity = NativeSettings.chatContextPositions; settings.chunk = 32; settings.loadUpper = request.loadUpper
         settings.numericalBudget = profile.numericalBudget; settings.textBudget = profile.textBudget
         if worker.submit(.load(settings)) {
@@ -457,6 +458,7 @@ final class FriendlyChatStore: ObservableObject {
     private func planningTarget(_ state: NativeSnapshot, requireVisible: Bool = true) -> FriendlyPlanningTarget? {
         guard (!requireVisible || planningVisible), let harness, !harness.expert, !loadingModel,
               let worker = harness.worker, let accepted = planningLoad,
+              accepted.settings.loadIdentity != .managedGemmaBF16,
               accepted.worker == ObjectIdentifier(worker), state.hasModel, state.chatEnabled, !state.closed,
               let instance = state.modelContext?.modelInstance, instance > 0,
               instance == loadedModelInstance, !loadedKey.isEmpty, loadedKey == workspace.current.modelKey else { return nil }
@@ -638,6 +640,7 @@ final class FriendlyChatStore: ObservableObject {
               actual.acceptedLoadRequestID == planningLoad?.settings.loadRequestID,
               let context = actual.modelContext, identity.matches(context), let live = actual.liveContext,
               let accepted = planningLoad, accepted.worker == ObjectIdentifier(worker),
+              accepted.settings.loadIdentity != .managedGemmaBF16,
               accepted.settings.loadIdentity.identityProfile == identity.profile, identity.profile != nil,
               let loadID = actual.acceptedLoadRequestID, loadID == accepted.settings.loadRequestID else { return }
         do {

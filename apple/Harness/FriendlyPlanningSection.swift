@@ -34,6 +34,9 @@ struct FriendlyPlanningSection: View {
                     Text("Replacement policy reserves 272 MiB for app work, including 16 MiB for staging. This is an allowance, not a measurement of allocated memory.")
                     Text("Preview working allowance: \(bytes(UInt64(NativePreviewResult.requiredApplicationAllowance))). This is outside the engine estimate.")
                 }.font(.footnote).foregroundStyle(.secondary)
+            } else if store.state.acceptedIdentity?.profile == .gemmaBF16 {
+                Text("Gemma opens with a 512-token shared window. Its active cache size is shown below.")
+                    .font(.footnote).foregroundStyle(.secondary)
             } else {
                 Text("Open this conversation’s model before previewing. No model is selected or downloaded here.")
                     .font(.footnote).foregroundStyle(.secondary)

@@ -136,21 +136,29 @@ struct MobileMain {
         state.requestStartedUptimeNanoseconds = 2_000_000_000
         try require(GenerationMetrics(state).firstTokenSeconds == nil && GenerationMetrics(state).totalSeconds == nil,"reversed clock observations never underflow")
         let generous = HubAdmission(unifiedGPU:true,physicalMemory:8 << 30,availableMemory:6 << 30)
-        #if os(macOS)
+        #if os(macOS) && arch(arm64)
+        let generousOrder: [HubProfile] = [.gemmaBF16,.qwen15,.mistral,.llama3,.qwen]
+        let constrainedOrder: [HubProfile] = [.smol,.qwen]
+        #elseif os(macOS)
         let generousOrder: [HubProfile] = [.mistral,.qwen15,.llama3,.qwen,.qwen3]
+        let constrainedOrder: [HubProfile] = [.qwen,.smol]
+        #else
+        let generousOrder: [HubProfile] = [.mistral,.qwen,.qwen3,.smol]
+        let constrainedOrder: [HubProfile] = [.qwen,.smol]
+        #endif
+        #if os(macOS)
         let catalogNotice = false
         let llamaRoom = HubAdmission(unifiedGPU:true,physicalMemory:8 << 30,availableMemory:HubProfile.llama3.processAllowance)
         let belowLlama = HubAdmission(unifiedGPU:true,physicalMemory:8 << 30,availableMemory:HubProfile.llama3.processAllowance - 1)
         try require(HubRecommendations.ranked(llamaRoom).contains(where:{ $0.profile == .llama3 })
             && !HubRecommendations.ranked(belowLlama).contains(where:{ $0.profile == .llama3 }),"Llama requires its3GiB process allowance")
         #else
-        let generousOrder: [HubProfile] = [.mistral,.qwen,.qwen3,.smol]
         let catalogNotice = true
         #endif
-        try require(HubRecommendations.ranked(generous).map(\.profile) == generousOrder,"balanced ranking includes Qwen3 and balances capacity with current headroom")
+        try require(HubRecommendations.ranked(generous).map(\.profile) == generousOrder,"balanced ranking matches the platform catalog and headroom")
         let phone = HubAdmission(unifiedGPU:true,physicalMemory:6 << 30,availableMemory:2 << 30)
-        try require(HubRecommendations.ranked(phone).map(\.profile) == [.qwen,.smol],"phone allowance excludes over-budget Mistral")
-        try require(HubRecommendations.ranked(phone,task:.fast).map(\.profile) == [.smol,.qwen],"fast-reply preference changes ordering among admitted models")
+        try require(HubRecommendations.ranked(phone).map(\.profile) == constrainedOrder,"low headroom excludes over-budget profiles")
+        try require(HubRecommendations.ranked(phone,task:.fast).map(\.profile) == [.smol,.qwen],"fast-reply preference favors smaller admitted models")
         try require(HubRecommendations.ranked(phone,task:.coding).first?.profile == .qwen,"coding preference favors capacity without admitting an over-budget model")
         let qwen3Room = HubAdmission(unifiedGPU:true,physicalMemory:6 << 30,availableMemory:HubProfile.qwen3.processAllowance)
         try require(HubRecommendations.ranked(qwen3Room).contains(where:{ $0.profile == .qwen3 }),"Qwen3 is ranked only when its separate process allowance fits")
@@ -179,7 +187,7 @@ struct MobileMain {
         let offline: HubFetch = { _,_,_,_ in throw HubFailure("Injected offline connection") }
         let hub = HubStore(hub:ModelHub(root:root,fetch:offline),admission:{ phone }); hub.findBest()
         await hub.waitForIdle()
-        try require(hub.recommendations.map(\.profile) == [.qwen,.smol] &&
+        try require(hub.recommendations.map(\.profile) == constrainedOrder &&
             hub.recommendationMessage.contains("4 downloadable chat models") == catalogNotice,"shortlist reports the four-model catalog on iOS")
         hub.findBest(task:.fast)
         try require(hub.recommendations.first?.profile == .smol && hub.recommendationTask == .fast,"controller publishes the selected preference and reranks")
@@ -280,7 +288,9 @@ struct MobileMain {
         try require(HubProfile.matching("not-a-profile").isEmpty,"unsupported search stays explicit")
     }
     static func discovery() async throws {
-        #if os(macOS)
+        #if os(macOS) && arch(arm64)
+        let expectedPages = 8
+        #elseif os(macOS)
         let expectedPages = 7
         #else
         let expectedPages = 5
@@ -307,7 +317,7 @@ struct MobileMain {
         await gate.release(); await store.waitForIdle()
         let requestCount = await requests.count()
         try require(requestCount == expectedPages && !store.findingBest && store.discoveryMessage.hasPrefix("Hugging Face: \(expectedPages)"),"sheet inventory and preference changes cannot cancel discovery")
-        try require(store.discoveredModels.count == expectedPages && store.discoveredModels.last?.profile == nil,"online results are deduplicated; Gemma discovery never grants compatibility")
+        try require(store.discoveredModels.count == expectedPages && store.discoveredModels.last?.profile == nil,"online results are deduplicated; the unpinned Gemma variant remains unsupported")
         try require(store.recommendations.first?.profile == .smol,"latest preference is used when online search completes")
         try require(HubAPI.discoveryURLs.count == expectedPages && HubAPI.discoveryURLs.allSatisfy { URLComponents(url:$0,resolvingAgainstBaseURL:false)?.queryItems?.contains(URLQueryItem(name:"limit",value:"20")) == true },"discovery requests are bounded to platform-specific twenty-row pages")
         let noMemory = HubStore(hub:service,admission:{ HubAdmission(unifiedGPU:true,physicalMemory:6 << 30,availableMemory:0) })

@@ -71,17 +71,36 @@ struct HubProfile: Codable, Equatable, Sendable {
             HubFile(name:"tokenizer.json",bytes:7031673,sha256:"a8506e7111b80c6d8635951a02eab0f4e1a8e4e5772da83846579e97b16f61bf"),
             HubFile(name:"tokenizer_config.json",bytes:7308,sha256:"f7c61e32b7a17d19bf8e7037dcb74079a833e53ea9801f24008cac68458f03b7"),
             HubFile(name:"special_tokens_map.json",bytes:613,sha256:"76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd")])
+    static let gemmaBF16Shard = HubFile(name:"model.safetensors",bytes:10_246_621_918,
+        sha256:"2db5482b20d746879bb3ef79b5203e9075a2e2b98f54ec7c2f281c1477ddc550")
+    private static let gemmaEngineBudget: UInt64 = 5_632 * 1024 * 1024
+    // Additional headroom beyond the engine and its included codec. The
+    // existing Mac process policy already subtracts the current footprint.
+    private static let gemmaApplicationAllowance: UInt64 = 272 * 1024 * 1024
+    static let gemmaBF16 = HubProfile(repository:"google/gemma-4-E2B-it",
+        revision:"70af34e20bd4b7a91f0de6b22675850c43922a03",files:[
+            HubFile(name:"chat_template.jinja",bytes:17_336,sha256:"2f1b4d75d067bae3fe44e676721c7f077d243bc007156cb9c2f8b5836613d082"),
+            HubFile(name:"config.json",bytes:4_954,sha256:"1b28f3d2c3100f6c594754b81107428bd7b822a7f48272ca681dae9d2ec38330"),
+            HubFile(name:"generation_config.json",bytes:208,sha256:"d4226bbe3117d2d253ba4609720ba82c6c4ce4627a9a6ae05387c78983ac03de"),
+            gemmaBF16Shard,
+            HubFile(name:"tokenizer.json",bytes:32_169_626,sha256:"cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"),
+            HubFile(name:"tokenizer_config.json",bytes:2_095,sha256:"90c3a3ba5bf53818383a58e1a776cbcacd2a038d4812eaa373e1522f2d06f3df")
+        ])
     // Mac qualification is bounded to512 positions; iOS awaits physical validation.
     static let catalog: [HubProfile] = {
         var profiles: [HubProfile] = [.smol,.qwen,.qwen3,.mistral]
         #if os(macOS)
         profiles.append(contentsOf:[.llama3,.qwen15])
+        #if arch(arm64)
+        profiles.append(.gemmaBF16)
+        #endif
         #endif
         return profiles
     }()
     static let qwen3AccuracyNotice = "The pinned Qwen3-0.6B 8-bit profile is experimental and has not passed Toklet’s accuracy checks."
     var supportNotice: String? {
         if self == Self.qwen3 { return Self.qwen3AccuracyNotice }
+        if self == Self.gemmaBF16 { return "Mac basic-text chat up to 512 tokens. Downloads 10.28 GB." }
         if self == Self.llama3 || self == Self.qwen15 { return "Mac chat window: 512 tokens." }
         return nil
     }
@@ -98,6 +117,7 @@ struct HubProfile: Codable, Equatable, Sendable {
         case Self.qwen3.repository: "Qwen3-0.6B · 8-bit · non-thinking"
         case Self.mistral.repository: "Mistral-7B-Instruct-v0.3 · 4-bit"
         case Self.llama3.repository: "Llama-3.2-1B · 8-bit"
+        case Self.gemmaBF16.repository: "Gemma 4 E2B · BF16"
         default: "SmolLM2-135M · 8-bit (Llama family)"
         }
     }
@@ -106,6 +126,7 @@ struct HubProfile: Codable, Equatable, Sendable {
         case Self.qwen.repository: 1024 * 1024 * 1024
         case Self.qwen3.repository: 1536 * 1024 * 1024
         case Self.mistral.repository: 5 * 1024 * 1024 * 1024
+        case Self.gemmaBF16.repository: Self.gemmaEngineBudget
         case Self.llama3.repository, Self.qwen15.repository: 2 * 1024 * 1024 * 1024
         default: 512 * 1024 * 1024
         }
@@ -114,6 +135,7 @@ struct HubProfile: Codable, Equatable, Sendable {
         switch repository {
         case Self.qwen.repository, Self.qwen15.repository: 128 * 1024 * 1024
         case Self.qwen3.repository, Self.llama3.repository: 256 * 1024 * 1024
+        case Self.gemmaBF16.repository: 0
         default: 64 * 1024 * 1024
         }
     }
@@ -122,6 +144,7 @@ struct HubProfile: Codable, Equatable, Sendable {
         case Self.qwen.repository: 1536 * 1024 * 1024
         case Self.qwen3.repository: 2304 * 1024 * 1024
         case Self.mistral.repository: 5632 * 1024 * 1024
+        case Self.gemmaBF16.repository: Self.gemmaEngineBudget + Self.gemmaApplicationAllowance
         case Self.llama3.repository, Self.qwen15.repository: 3 * 1024 * 1024 * 1024
         default: 768 * 1024 * 1024
         }
@@ -132,6 +155,7 @@ struct HubProfile: Codable, Equatable, Sendable {
         case Self.qwen3.repository: 151936
         case Self.mistral.repository: 32768
         case Self.llama3.repository: 128256
+        case Self.gemmaBF16.repository: 262144
         default: 49152
         }
     }
@@ -142,6 +166,7 @@ struct HubProfile: Codable, Equatable, Sendable {
         case Self.qwen3.repository: "qwen3"
         case Self.mistral.repository: "mistral"
         case Self.llama3.repository: "llama3"
+        case Self.gemmaBF16.repository: "gemma-bf16"
         default: "smol"
         }
     }
@@ -152,6 +177,7 @@ struct HubProfile: Codable, Equatable, Sendable {
         case Self.qwen3.repository: "Qwen3-0.6B-8bit"
         case Self.mistral.repository: "Mistral-7B-Instruct-v0.3-4bit"
         case Self.llama3.repository: "Llama-3.2-1B-Instruct-8bit"
+        case Self.gemmaBF16.repository: repository
         default: "SmolLM2-135M"
         }
     }
@@ -171,12 +197,15 @@ struct HubProfile: Codable, Equatable, Sendable {
     func validate() throws {
         guard HubAPI.validRepository(repository), revision.count == 40, revision.allSatisfy({ $0.isHexDigit && $0.isASCII }),
               !files.isEmpty, files.count <= 16, Set(files.map(\.name)).count == files.count else { throw HubFailure("Invalid download profile.") }
+        let largeOfficial = self == Self.gemmaBF16 && Self.catalog.contains(Self.gemmaBF16)
+        let totalLimit = largeOfficial ? Self.gemmaBF16.totalBytes : Self.maximumTotalBytes
         var total: Int64 = 0
         for file in files {
-            guard HubAPI.safeComponent(file.name), file.name != "snapshot.json", file.bytes > 0, file.bytes <= Self.maximumFileBytes,
+            let fileLimit = largeOfficial && file == Self.gemmaBF16Shard ? file.bytes : Self.maximumFileBytes
+            guard HubAPI.safeComponent(file.name), file.name != "snapshot.json", file.bytes > 0, file.bytes <= fileLimit,
                   file.sha256.count == 64, file.sha256.allSatisfy({ $0.isHexDigit && $0.isASCII }) else { throw HubFailure("Invalid file inventory.") }
             let sum = total.addingReportingOverflow(file.bytes)
-            guard !sum.overflow, sum.partialValue <= Self.maximumTotalBytes else { throw HubFailure("Download inventory is too large.") }
+            guard !sum.overflow, sum.partialValue <= totalLimit else { throw HubFailure("Download inventory is too large.") }
             total = sum.partialValue
         }
     }
@@ -207,7 +236,11 @@ enum HubAPI {
         let query = query.trimmingCharacters(in:.whitespacesAndNewlines)
         guard !query.isEmpty, query.utf8.count <= 128 else { throw HubFailure("Enter up to128 bytes of model name.") }
         var url = URLComponents(string:"https://huggingface.co/api/models")!
-        url.queryItems = [URLQueryItem(name:"search",value:query),URLQueryItem(name:"filter",value:"mlx"),URLQueryItem(name:"limit",value:"20")]
+        let official = HubProfile.gemmaBF16
+        let exactOfficial = HubProfile.catalog.contains(official) && query.caseInsensitiveCompare(official.repository) == .orderedSame
+        url.queryItems = [URLQueryItem(name:"search",value:exactOfficial ? official.repository : query),
+            URLQueryItem(name:"limit",value:"20")]
+        if !exactOfficial { url.queryItems?.append(URLQueryItem(name:"filter",value:"mlx")) }
         return url.url!
     }
     // One popular MLX listing plus the supported families. A popular listing
@@ -246,6 +279,9 @@ enum HubAPI {
               Set(inventory.siblings.map(\.rfilename)).count == inventory.siblings.count else { throw HubFailure("Model revision or inventory changed.") }
         for file in profile.files {
             guard let entry = inventory.siblings.first(where:{ $0.rfilename == file.name }), entry.size == file.bytes else { throw HubFailure("Required model file is missing or changed.") }
+            if profile == .gemmaBF16, file == HubProfile.gemmaBF16Shard, entry.lfs == nil {
+                throw HubFailure("Official model weight identity is missing.")
+            }
             if let lfs = entry.lfs, lfs.size != file.bytes || lfs.sha256 != file.sha256 { throw HubFailure("Model weight identity changed.") }
         }
     }
@@ -256,7 +292,7 @@ struct HubAdmission: Sendable {
     let physicalMemory: UInt64
     let availableMemory: UInt64
     func check(_ profile: HubProfile = .smol) throws {
-        guard unifiedGPU else { throw HubFailure("This device cannot run Toklet’s MLX Metal model.") }
+        guard unifiedGPU else { throw HubFailure("This device cannot run Toklet’s Metal model.") }
         guard physicalMemory >= 2 * 1024 * 1024 * 1024, availableMemory >= profile.processAllowance else {
             throw HubFailure("Not enough memory available. Unload the current model or close other apps, then retry.")
         }

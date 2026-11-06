@@ -329,6 +329,47 @@ struct HubMain {
         try await rejects("file above four GiB") { try profile([HubProfile.maximumFileBytes + 1]).validate() }
         try await rejects("inventory above six GiB") { try profile([HubProfile.maximumFileBytes,2 * 1024 * 1024 * 1024 + 1]).validate() }
         try await rejects("extreme signed file size") { try profile([Int64.max]).validate() }
+        let official = HubProfile.gemmaBF16, shard = HubProfile.gemmaBF16Shard
+        let exactURL = HubAPI.fileURL(official,shard)
+        let alternate = HubProfile(repository:official.repository,revision:String(repeating:"a",count:40),files:official.files)
+        try await rejects("large shard cannot extend another revision") { try alternate.validate() }
+        try require(!HubTransfer.admitsRangeTotal(shard.bytes,from:HubAPI.fileURL(alternate,shard)),"large alternate URL admitted")
+        try require(!HubTransfer.admitsRangeTotal(shard.bytes - 1,from:exactURL),"large shard accepted a changed length")
+        try require(!HubTransfer.admitsRangeTotal(shard.bytes,from:exactURL.appendingPathComponent("other")),"large alternate path admitted")
+        #if os(macOS) && arch(arm64)
+        try official.validate()
+        try require(official.totalBytes == 10_278_816_137,"official manifest byte count changed")
+        let budget = official.processAllowance
+        try require(budget > official.numericalBudget && budget < 6 * 1024 * 1024 * 1024,
+                    "official budget must leave baseline Mac process headroom")
+        try HubAdmission(unifiedGPU:true,physicalMemory:16 << 30,availableMemory:budget).check(official)
+        try await rejects("official profile one byte below admission") {
+            try HubAdmission(unifiedGPU:true,physicalMemory:16 << 30,availableMemory:budget - 1).check(official)
+        }
+        try require(HubTransfer.admitsRangeTotal(shard.bytes,from:exactURL),"official 64-bit range total rejected")
+        func inventory(shardDigest: String?) throws -> Data {
+            let entries: [[String:Any]] = official.files.map { file in
+                var row: [String:Any] = ["rfilename":file.name,"size":file.bytes]
+                if file == shard, let shardDigest { row["lfs"] = ["sha256":shardDigest,"size":file.bytes] as [String:Any] }
+                return row
+            }
+            return try JSONSerialization.data(withJSONObject:["sha":official.revision,"siblings":entries])
+        }
+        try HubAPI.admitInventory(inventory(shardDigest:shard.sha256),profile:official)
+        try await rejects("missing official shard digest") {
+            try HubAPI.admitInventory(inventory(shardDigest:nil),profile:official)
+        }
+        try await rejects("wrong official shard digest") {
+            try HubAPI.admitInventory(inventory(shardDigest:hash),profile:official)
+        }
+        let officialSearch = try HubAPI.searchURL(official.repository.lowercased())
+        let officialQuery = URLComponents(url:officialSearch,resolvingAgainstBaseURL:false)?.queryItems
+        try require(officialQuery?.first?.value == official.repository && officialQuery?.contains { $0.name == "filter" } == false,
+                    "official search remained restricted to MLX")
+        #else
+        try await rejects("official oversized Mac manifest on other platform") { try official.validate() }
+        try require(!HubTransfer.admitsRangeTotal(shard.bytes,from:exactURL),"non-Mac accepted official large transfer")
+        #endif
         let destination = root.appendingPathComponent("large-transfer-admission")
         let configuration = URLSessionConfiguration.ephemeral; configuration.protocolClasses = [HubProtocol.self]
         HubProtocol.plan.set(403,["Content-Length":"0"],Data())
