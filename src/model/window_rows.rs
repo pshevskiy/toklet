@@ -31,8 +31,13 @@ pub(crate) fn view_start(offset: usize, window: Option<usize>) -> usize {
 pub(crate) fn old_spans(capacity: usize, offset: usize, window: Option<usize>) -> [OldSpan; 2] {
     debug_assert!(capacity > 0);
     debug_assert!(window.map_or(offset <= capacity, |w| w == capacity));
-    let start = view_start(offset, window);
-    let old = offset - start;
+    spans(capacity, view_start(offset, window), offset)
+}
+
+/// Physical intervals for an admitted absolute range of at most one ring.
+pub(crate) fn spans(capacity: usize, start: usize, end: usize) -> [OldSpan; 2] {
+    debug_assert!(capacity > 0 && start <= end && end - start <= capacity);
+    let old = end - start;
     let slot = start % capacity;
     let first = old.min(capacity - slot);
     [

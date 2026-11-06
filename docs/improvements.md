@@ -11017,3 +11017,11 @@ and all 78 pairs match token IDs. Timed physical peak is 4.92 GB. Multirow
 rollback/retry, native and Swift Chat, strict checks and Astra pass. The
 signed Mac package is selected for the exact official BF16 profile.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-g2-retention-v1.json)
+
+## 6 November 2026 — Run a scalar Gemma assistant proposal over committed KV
+
+The official BF16 assistant borrows chronological target KV and uses shared
+CPU numerical blocks. At real Mac position 14, all 4,096 IDs and logits and
+1,536 projected hidden values match the independent staged FP32 reference.
+Peak physical memory is 5.07 GB. Strict checks and Astra pass.
+[Evidence](../benchmarks/results/2026-11-06-gemma-official-assistant-scalar-v1.json)

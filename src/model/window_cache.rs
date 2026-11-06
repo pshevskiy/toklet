@@ -188,6 +188,41 @@ impl WindowKvCache {
         (position >= self.offset.saturating_sub(self.capacity)).then_some(position)
     }
 
+    /// Chronological immutable committed rows, including the oldest valid
+    /// local slot at a full window. No pending rows or uninitialized capacity
+    /// are exposed. The owner cannot be mutated while these views are live.
+    pub fn committed_segments(&self) -> [cpu::AttentionKvSegment<'_>; 3] {
+        let start = self.window.map_or(0, |w| self.offset.saturating_sub(w));
+        self.segments_for(window_rows::spans(self.capacity, start, self.offset))
+    }
+
+    fn segments_for(&self, spans: [window_rows::OldSpan; 2]) -> [cpu::AttentionKvSegment<'_>; 3] {
+        let empty = cpu::AttentionKvSegment {
+            k: &[],
+            v: &[],
+            keys: 0,
+            head_stride: 0,
+            key_start: self.offset,
+        };
+        let mut segments = [empty; 3];
+        let stride = self.capacity * self.dims;
+        for (index, span) in spans.into_iter().enumerate() {
+            if span.rows == 0 {
+                continue;
+            }
+            let begin = span.slot * self.dims;
+            let end = (self.heads - 1) * stride + begin + span.rows * self.dims;
+            segments[index] = cpu::AttentionKvSegment {
+                k: &self.k[begin..end],
+                v: &self.v[begin..end],
+                keys: span.rows,
+                head_stride: stride,
+                key_start: span.position,
+            };
+        }
+        segments
+    }
+
     /// All lengths, finite new values and admission arithmetic are checked
     /// before creating a proposal. Empty sequences make no prepare/commit call.
     pub fn prepare<'a>(
@@ -353,30 +388,9 @@ impl KvView<'_, '_> {
     /// Borrow all heads as two old-ring intervals and a differently strided new
     /// chunk. Empty intervals have empty slices; no old KV is linearized/copied.
     pub fn segments(&self) -> [crate::cpu::AttentionKvSegment<'_>; 3] {
-        let empty = crate::cpu::AttentionKvSegment {
-            k: &[],
-            v: &[],
-            keys: 0,
-            head_stride: 0,
-            key_start: self.cache.offset,
-        };
-        let mut segments = [empty; 3];
-        let stride = self.cache.capacity * self.cache.dims;
-        let old = window_rows::old_spans(self.cache.capacity, self.cache.offset, self.cache.window);
-        for (index, span) in old.into_iter().enumerate() {
-            if span.rows == 0 {
-                continue;
-            }
-            let begin = span.slot * self.cache.dims;
-            let end = (self.cache.heads - 1) * stride + begin + span.rows * self.cache.dims;
-            segments[index] = crate::cpu::AttentionKvSegment {
-                k: &self.cache.k[begin..end],
-                v: &self.cache.v[begin..end],
-                keys: span.rows,
-                head_stride: stride,
-                key_start: span.position,
-            };
-        }
+        let spans =
+            window_rows::old_spans(self.cache.capacity, self.cache.offset, self.cache.window);
+        let mut segments = self.cache.segments_for(spans);
         segments[2] = crate::cpu::AttentionKvSegment {
             k: self.k,
             v: self.v,

@@ -548,3 +548,38 @@ fn multihead_segments_and_copy_runs_preserve_bits_across_chunk_partitions() {
         }
     }
 }
+
+#[test]
+fn committed_segments_exclude_staging_and_keep_every_retained_ring_row() {
+    let mut cache = WindowKvCache::new(2, 1, 3, 8, Some(3)).unwrap();
+    let words = [0., 1., 2., 3., 10., 11., 12., 13.];
+    let initial = cache.prepare(&words, &words, 4).unwrap();
+    cache.commit(&initial).unwrap();
+    let pending = [4., 14.];
+    let proposal = cache.prepare(&pending, &pending, 1).unwrap();
+    let segments = cache.committed_segments();
+    assert_eq!(segments.map(|s| s.keys), [2, 1, 0]);
+    assert_eq!(
+        segments[..2]
+            .iter()
+            .map(|s| s.key_start)
+            .collect::<Vec<_>>(),
+        [1, 3]
+    );
+    for head in 0..2 {
+        let gathered = segments
+            .iter()
+            .filter(|s| s.keys != 0)
+            .flat_map(|s| {
+                let start = head * s.head_stride;
+                &s.k[start..start + s.keys]
+            })
+            .copied()
+            .collect::<Vec<_>>();
+        assert_eq!(gathered, words[head * 4 + 1..head * 4 + 4]);
+    }
+    assert_eq!(cache.view(&proposal).unwrap().start(), 2);
+    reset_batch(std::slice::from_mut(&mut cache)).unwrap();
+    assert!(cache.committed_segments().iter().all(|s| s.keys == 0));
+    assert!(cache.view(&proposal).is_err());
+}

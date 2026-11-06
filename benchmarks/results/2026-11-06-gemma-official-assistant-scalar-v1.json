@@ -1,0 +1,58 @@
+{
+  "format": "toklet-gemma-official-assistant-scalar-v1",
+  "scope": "Pinned BF16-weight FP32 activation scalar proposals over borrowed committed target KV. No multi-token verification, speed or app promotion.",
+  "default_tests": 592,
+  "metal_tests": 711,
+  "strict_checks": true,
+  "synthetic_positions": [
+    0,
+    31,
+    513
+  ],
+  "reference_source": "Independent NumPy staged-FP32 contract, full official shard SHA",
+  "real_target": {
+    "passed": true,
+    "assistant_sha256": "93682eb1c97639d18f007704dc880bd74cbe530adaf7b1bb561213863fdad2a6",
+    "position": 14,
+    "native": {
+      "position": 14,
+      "token": 107,
+      "assistant_winner": 818,
+      "target_winner": 818,
+      "load_allowance_bytes": 159408024,
+      "scratch_bytes": 103480,
+      "target_snapshot_sha256": "6e61ba4da84f991ff730a01ba940b07b5eb0e715cd0a2c74a12ed178b9aa169a",
+      "assistant_result_sha256": "3b1c70bde6f891ffec7b326ae66032a33d97ac2e8fada8664b4ba13687cf0c16"
+    },
+    "winner": 818,
+    "reference_margin": 8.494980096817017,
+    "exact_ids": 4096,
+    "errors": {
+      "post_projection": {
+        "elements": 1536,
+        "max_abs_error": 0.0
+      },
+      "logits": {
+        "elements": 4096,
+        "max_abs_error": 0.0
+      }
+    }
+  },
+  "real_mac_peak_bytes": 5073605024,
+  "initial_launch": "Isolated release cache returned a stale binary with zero selected tests. Test registry preflight and a fresh main-checkout release pass.",
+  "evidence_sha256": {
+    "artifacts/gemma-g3-scalar-2026-11-06/checks.json": "2cd19798834294278a43abb3753008da2236267ed293b014bc6a0d83916998b8",
+    "artifacts/gemma-g3-scalar-2026-11-06/cpu-test.stdout": "8c976a7bcbe9643b9f792c8f248d6c5a98ea8ee459241c7f03686bd041c62faf",
+    "artifacts/gemma-g3-scalar-2026-11-06/metal-test.stdout": "905b170dac1c010d2386a42098d5a533c10f7f3d872d7081776e4f1eeb0e420e",
+    "artifacts/gemma-g3-scalar-2026-11-06/reference.stdout": "753930590452fd2cd346e124901a38e13a98644a0708c64b2ea545e617bf0d70",
+    "artifacts/gemma-g3-scalar-2026-11-06/target-snapshot/comparison.json": "48d1bfe4a93e6963f0bee381619a9da8935f77a7f971c5a23427e2cc263484d5",
+    "artifacts/gemma-g3-scalar-2026-11-06/target-snapshot/owned.json": "85e1f68df0179f4b5850541dc8787b61543e29ff66bf5570654ec36d13b4db1b",
+    "artifacts/gemma-g3-scalar-2026-11-06/target-snapshot/gpu.stdout": "27460b55b41e53132c6ebe158686cdd6c758a8fd14a62714e962b213727294c1",
+    "artifacts/gemma-g3-scalar-2026-11-06/target-snapshot/target-input.bin": "6e61ba4da84f991ff730a01ba940b07b5eb0e715cd0a2c74a12ed178b9aa169a",
+    "artifacts/gemma-g3-scalar-2026-11-06/target-snapshot/assistant-output.bin": "3b1c70bde6f891ffec7b326ae66032a33d97ac2e8fada8664b4ba13687cf0c16",
+    "artifacts/gemma-g3-scalar-2026-11-06/reference-final-replay/receipt.json": "2636bb944fe6774b2801525083df2887833afc40f86167a4598860a133c4694c",
+    "artifacts/gemma-g3-assistant-draft-2026-11-06/overlay-release/target-snapshot/owned.json": "9e56200a2b715ce94cb15dae6310bdaf214e065d21b4c6b89513b5fa013625d3",
+    "tools/reference/gemma4_assistant_reference.py": "42a6e10f117e2a86c3e6d89a6ea51f65575846b425086283bd4f65cf2a229691"
+  },
+  "review": "Astra approves scoped scalar arithmetic and committed-only KV input. Multi-round verification and performance remain separate."
+}

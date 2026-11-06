@@ -11,6 +11,7 @@ use std::fmt;
 mod cache;
 mod dense_scales;
 pub mod gemma3;
+pub mod gemma_assistant;
 pub mod gemma_packed;
 pub mod gemma_reference;
 pub mod lfm2;
