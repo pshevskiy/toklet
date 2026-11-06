@@ -24,6 +24,8 @@ mod projection;
 pub mod resident;
 mod weights;
 pub use bf16::{Bf16Context, Bf16Projection};
+#[cfg(target_os = "macos")]
+pub use bf16::{Bf16LoadReport, Bf16Weights};
 pub use partitioned::{Gather, PartitionedAffine};
 pub use projection::Projection;
 pub use weights::Weights;

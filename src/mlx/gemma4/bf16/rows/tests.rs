@@ -13,10 +13,10 @@ const WORDS: [u16; 8] = [
     0x3f80, 0x4000, 0xbf80, 0x0001, 0x4180, 0xc000, 0x0000, 0x8000,
 ];
 
-struct TestFile(PathBuf);
+pub(super) struct TestFile(PathBuf);
 
 impl TestFile {
-    fn new() -> Self {
+    pub(super) fn new() -> Self {
         static NEXT: AtomicU64 = AtomicU64::new(0);
         let path = std::env::temp_dir().join(format!(
             "toklet-bf16-ple-{}-{}",
@@ -27,7 +27,7 @@ impl TestFile {
         Self(path)
     }
 
-    fn path(&self) -> PathBuf {
+    pub(super) fn path(&self) -> PathBuf {
         self.0.join("source")
     }
 }

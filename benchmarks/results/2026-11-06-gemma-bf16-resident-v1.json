@@ -1,0 +1,43 @@
+{
+  "passed": true,
+  "storage": {
+    "retained_bytes": 4568520520,
+    "admitted_load_bytes": 4644086600,
+    "source_retained_bytes": 8388712,
+    "maximum_abs_coefficient": 1.2109375,
+    "matrices": 277,
+    "vectors": 262
+  },
+  "owned": {
+    "bf16-real": {
+      "receipt": "artifacts/gemma-bf16-resident-2026-11-06/bf16-real/owned.json",
+      "receipt_sha256": "f4778da00aafae0338caf474ab660fe6c4b420e4328f6c89b071f02a7293c757",
+      "physical_peak_bytes": 4586868576
+    },
+    "ple-real": {
+      "receipt": "artifacts/gemma-bf16-resident-2026-11-06/ple-real/owned.json",
+      "receipt_sha256": "88a9fc4227a3b0c62df5dba527c45bc0ea51ae55d196680e6510c455e04b2631",
+      "physical_peak_bytes": 12976584
+    },
+    "q4-real": {
+      "receipt": "artifacts/gemma-bf16-resident-2026-11-06/q4-real/owned.json",
+      "receipt_sha256": "8259c688379d6b8ad52d8a5ab90a91a8325e757b5ea219f039dc96b038b119d7",
+      "physical_peak_bytes": 2901297864
+    },
+    "qat-short": {
+      "receipt": "artifacts/gemma-bf16-resident-2026-11-06/qat-short/owned.json",
+      "receipt_sha256": "c1807947f0d617fd6c96d567bc21a556ff48a9bdbdeee166f9f44db47ccbc3b4",
+      "physical_peak_bytes": 3744501000
+    }
+  },
+  "checks": {
+    "fmt": true,
+    "strict_default_and_metal_clippy": true,
+    "default_tests": 588,
+    "metal_tests": 706,
+    "release_lib": true,
+    "initial_metal_lint": "artifacts/gemma-bf16-resident-2026-11-06/initial/metal-clippy.stderr"
+  },
+  "review": "Astra approved single-pass full authentication and exact delivery to private buffers after all same-build regressions passed.",
+  "scope": "Full official BF16 storage and tied/Ple rows only. Model/session fidelity and app eligibility remain separate."
+}

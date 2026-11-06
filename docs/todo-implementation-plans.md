@@ -189,6 +189,7 @@ The other text tensors require4,559,518,278 raw bytes. [Official source inventor
    resident BF16 buffers from the same bytes included in the whole-file SHA,
    hash PLE rows and publish only after exact extent and endpoint checks.
    Reuse role bindings and add BF16 embedding lookup before graph integration.
+   [Full storage result](../benchmarks/results/2026-11-06-gemma-bf16-resident-v1.json).
 4. Validate exact memory, numerical contracts, long cache state, raw
    trajectories and original-relative quality before factory or app work.
    Measure the codec/engine peak separately under6GiB.

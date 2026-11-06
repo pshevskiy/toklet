@@ -3,7 +3,7 @@ use super::*;
 use crate::mlx::gemma4::{ModalityPolicy, QAT_CONTAINER_BYTES};
 use std::io::{Read, Seek};
 
-mod bindings;
+pub(super) mod bindings;
 pub mod hybrid;
 mod plan;
 mod source;

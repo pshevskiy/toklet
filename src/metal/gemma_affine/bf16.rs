@@ -1,6 +1,11 @@
 //! Precise projection from original row-major BF16 Metal coefficients.
 use super::*;
 
+#[cfg(target_os = "macos")]
+mod resident;
+#[cfg(target_os = "macos")]
+pub use resident::{Bf16LoadReport, Bf16Weights};
+
 /// Dedicated BF16 projection pipeline and device/queue owner.
 pub struct Bf16Context(Context);
 

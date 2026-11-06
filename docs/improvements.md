@@ -1,6 +1,6 @@
 # Toklet improvement record
 
-Updated 4 November 2026. This records implemented capabilities, measured benefits,
+Updated 6 November 2026. This records implemented capabilities, measured benefits,
 and the decisions that limit their use. Detailed reports retain exact revisions,
 artifact hashes, raw samples, checks and Astra reviews. M0–M6 are complete in their
 qualified scopes: M5 selects the small compensated Half and frozen larger group8
@@ -10786,3 +10786,12 @@ residuals and real attention/feed-forward rows pass, with exact budgets
 and atomic guard failure. Q4 and mixed QAT captures remain bitwise.
 Astra approved. Whole-model fit and throughput remain open.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-projection-v1.json)
+
+## 6 November 2026 — Retain the official BF16 projection storage
+
+The pinned shard authenticates while writing277 matrices directly into
+guarded buffers and widening262 norm vectors. PLE stays file-backed.
+Exact requested load is4.644GB and peak physical memory is4.587GB.
+Legacy captures match bitwise. Astra approved storage; graph fidelity,
+quality and Chat remain separate.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-resident-v1.json)

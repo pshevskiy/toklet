@@ -1,5 +1,5 @@
 //! Authenticated official BF16 per-layer embedding rows over a held descriptor.
-use super::{CONTAINER_BYTES, HEADER_BYTES, ModalityPolicy, add_bytes, inspect, invalid};
+use super::{CONTAINER_BYTES, HEADER_BYTES, ModalityPolicy, TextPlan, add_bytes, inspect, invalid};
 use crate::weights::Error;
 use sha2::{Digest, Sha256};
 use std::{
@@ -68,36 +68,7 @@ impl Source {
         config: &[u8],
         available_bytes: usize,
     ) -> Result<Self, Error> {
-        let before = file_identity(&file)?;
-        if before[2] != CONTAINER_BYTES {
-            return Err(invalid("Gemma4 BF16 source length differs"));
-        }
-        admit(
-            memory(super::super::VOCAB, SCAN_BYTES)?.load_bytes,
-            available_bytes,
-        )?;
-        let table = {
-            let mut len = [0u8; 8];
-            read(&file, &mut len, 0)?;
-            if u64::from_le_bytes(len) != HEADER_BYTES as u64 {
-                return Err(invalid("Gemma4 BF16 source header length differs"));
-            }
-            let mut header = reserved(HEADER_BYTES)?;
-            header.resize(HEADER_BYTES, 0);
-            read(&file, &mut header, 8)?;
-            let plan = inspect(config, &header, before[2], ModalityPolicy::TextOnly)?;
-            let ple = plan.per_layer_embedding();
-            let table = Table::new(
-                add_bytes(plan.payload_offset(), ple.range.start)? as u64,
-                ple.shape[0],
-                ple.shape[1],
-                before[2],
-            )?;
-            if table.end != add_bytes(plan.payload_offset(), ple.range.end)? as u64 {
-                return Err(invalid("Gemma4 BF16 PLE source range differs"));
-            }
-            table
-        };
+        let (before, _, table) = read_plan(&file, config, available_bytes)?;
         authenticate(file, before, table, CONTAINER_SHA256, available_bytes)
     }
 
@@ -179,6 +150,41 @@ impl Workspace {
     }
 }
 
+fn read_plan(
+    file: &File,
+    config: &[u8],
+    available_bytes: usize,
+) -> Result<([u64; 7], TextPlan, Table), Error> {
+    let before = file_identity(file)?;
+    if before[2] != CONTAINER_BYTES {
+        return Err(invalid("Gemma4 BF16 source length differs"));
+    }
+    admit(
+        memory(super::super::VOCAB, SCAN_BYTES)?.load_bytes,
+        available_bytes,
+    )?;
+    let mut len = [0u8; 8];
+    read(file, &mut len, 0)?;
+    if u64::from_le_bytes(len) != HEADER_BYTES as u64 {
+        return Err(invalid("Gemma4 BF16 source header length differs"));
+    }
+    let mut header = reserved(HEADER_BYTES)?;
+    header.resize(HEADER_BYTES, 0);
+    read(file, &mut header, 8)?;
+    let plan = inspect(config, &header, before[2], ModalityPolicy::TextOnly)?;
+    let ple = plan.per_layer_embedding();
+    let table = Table::new(
+        add_bytes(plan.payload_offset(), ple.range.start)? as u64,
+        ple.shape[0],
+        ple.shape[1],
+        before[2],
+    )?;
+    if table.end != add_bytes(plan.payload_offset(), ple.range.end)? as u64 {
+        return Err(invalid("Gemma4 BF16 PLE source range differs"));
+    }
+    Ok((before, plan, table))
+}
+
 fn memory(digest_capacity: usize, scan_bytes: usize) -> Result<Memory, Error> {
     let digests = digest_capacity
         .checked_mul(ROW_DIGEST_BYTES)
@@ -199,46 +205,83 @@ fn authenticate(
     expected: &str,
     available_bytes: usize,
 ) -> Result<Source, Error> {
-    admit(memory(table.rows, SCAN_BYTES)?.load_bytes, available_bytes)?;
-    let mut row_digests = reserved(table.rows)?;
-    let mut scratch = reserved(SCAN_BYTES)?;
-    let memory = memory(row_digests.capacity(), scratch.capacity())?;
-    admit(memory.load_bytes, available_bytes)?;
-    scratch.resize(SCAN_BYTES, 0);
-    let mut digest = Sha256::new();
-    hash_span(&file, &mut scratch, 0..table.start, &mut digest)?;
+    let mut scan = Scan::new(table.rows, available_bytes)?;
+    hash_span(&file, &mut scan.scratch, 0..table.start, &mut scan.digest)?;
+    scan.ple(&file, table)?;
+    hash_span(
+        &file,
+        &mut scan.scratch,
+        table.end..before[2],
+        &mut scan.digest,
+    )?;
+    scan.finish(file, before, table, expected)
+}
 
-    let batch_bytes = SCAN_BYTES / table.row_bytes * table.row_bytes;
-    let mut offset = table.start;
-    while offset < table.end {
-        let bytes = (table.end - offset).min(batch_bytes as u64) as usize;
-        let block = &mut scratch[..bytes];
-        read(&file, block, offset)?;
-        digest.update(&*block);
-        for row in block.chunks_exact(table.row_bytes) {
-            if row
-                .chunks_exact(2)
-                .any(|v| u16::from_le_bytes([v[0], v[1]]) & 0x7f80 == 0x7f80)
-            {
-                return Err(invalid("nonfinite Gemma4 BF16 PLE row"));
+struct Scan {
+    scratch: Vec<u8>,
+    row_digests: Vec<[u8; 32]>,
+    digest: Sha256,
+    memory: Memory,
+}
+
+impl Scan {
+    fn new(rows: usize, available_bytes: usize) -> Result<Self, Error> {
+        admit(memory(rows, SCAN_BYTES)?.load_bytes, available_bytes)?;
+        let row_digests = reserved(rows)?;
+        let mut scratch = reserved(SCAN_BYTES)?;
+        let memory = memory(row_digests.capacity(), scratch.capacity())?;
+        admit(memory.load_bytes, available_bytes)?;
+        scratch.resize(SCAN_BYTES, 0);
+        Ok(Self {
+            scratch,
+            row_digests,
+            digest: Sha256::new(),
+            memory,
+        })
+    }
+
+    fn ple(&mut self, file: &File, table: Table) -> Result<(), Error> {
+        let batch_bytes = SCAN_BYTES / table.row_bytes * table.row_bytes;
+        let mut offset = table.start;
+        while offset < table.end {
+            let bytes = (table.end - offset).min(batch_bytes as u64) as usize;
+            let block = &mut self.scratch[..bytes];
+            read(file, block, offset)?;
+            self.digest.update(&*block);
+            for row in block.chunks_exact(table.row_bytes) {
+                if row
+                    .chunks_exact(2)
+                    .any(|v| u16::from_le_bytes([v[0], v[1]]) & 0x7f80 == 0x7f80)
+                {
+                    return Err(invalid("nonfinite Gemma4 BF16 PLE row"));
+                }
+                self.row_digests.push(Sha256::digest(row).into());
             }
-            row_digests.push(Sha256::digest(row).into());
+            offset += bytes as u64;
         }
-        offset += bytes as u64;
+        Ok(())
     }
-    hash_span(&file, &mut scratch, table.end..before[2], &mut digest)?;
-    if row_digests.len() != table.rows
-        || format!("{:x}", digest.finalize()) != expected
-        || file_identity(&file)? != before
-    {
-        return Err(invalid("Gemma4 BF16 source authentication differs"));
+
+    fn finish(
+        self,
+        file: File,
+        before: [u64; 7],
+        table: Table,
+        expected: &str,
+    ) -> Result<Source, Error> {
+        if self.row_digests.len() != table.rows
+            || format!("{:x}", self.digest.finalize()) != expected
+            || file_identity(&file)? != before
+        {
+            return Err(invalid("Gemma4 BF16 source authentication differs"));
+        }
+        Ok(Source {
+            file,
+            table,
+            row_digests: self.row_digests,
+            memory: self.memory,
+        })
     }
-    Ok(Source {
-        file,
-        table,
-        row_digests,
-        memory,
-    })
 }
 
 fn hash_span(
@@ -299,6 +342,9 @@ fn admit(required: usize, limit: usize) -> Result<(), Error> {
     }
     Ok(())
 }
+
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+pub(crate) mod delivery;
 
 #[cfg(test)]
 mod tests;

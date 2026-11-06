@@ -25,7 +25,7 @@ struct LayerBindings {
     scalar: usize,
     kv: Option<KvBindings>,
 }
-pub(super) struct Bindings {
+pub(in crate::metal::gemma_affine) struct Bindings {
     embedding: usize,
     ple_embedding: usize,
     ple_projection: usize,
@@ -59,12 +59,40 @@ impl Bindings {
                 _ => Err(Error::Options("Gemma resident named vector differs")),
             }
         };
-        let prefix = "language_model.model.";
+        Self::resolve(cold.layers(), "language_model.model.", matrix, vector)
+    }
+
+    #[cfg(target_os = "macos")]
+    pub(in crate::metal::gemma_affine) fn bf16(
+        cold: &crate::mlx::gemma4::bf16::TextPlan,
+    ) -> Result<Self> {
+        let selected = cold.text_tensors();
+        let find = |name: &str, shape: &[usize]| {
+            selected
+                .iter()
+                .filter(|(_, tensor)| tensor.shape.len() == shape.len())
+                .position(|(key, tensor)| key == name && tensor.shape == shape)
+                .ok_or(Error::Options("Gemma BF16 named tensor differs"))
+        };
+        Self::resolve(
+            cold.layers(),
+            "model.language_model.",
+            |name, rows, columns| find(name, &[rows, columns]),
+            |name, values| find(name, &[values]),
+        )
+    }
+
+    fn resolve(
+        geometry: &[LayerPlan; 35],
+        prefix: &str,
+        matrix: impl Fn(&str, usize, usize) -> Result<usize>,
+        vector: impl Fn(&str, usize) -> Result<usize>,
+    ) -> Result<Self> {
         let mut layers = Vec::new();
         layers
             .try_reserve_exact(35)
             .map_err(|_| Error::Native("Gemma role reservation failed".into()))?;
-        for (index, &geometry) in cold.layers().iter().enumerate() {
+        for (index, &geometry) in geometry.iter().enumerate() {
             let base = format!("{prefix}layers.{index}.");
             let m =
                 |name: &str, rows, columns| matrix(&format!("{base}{name}.weight"), rows, columns);
@@ -172,10 +200,10 @@ impl Bindings {
         }
         Ok(())
     }
-    pub(super) fn embedding_index(&self) -> usize {
+    pub(in crate::metal::gemma_affine) fn embedding_index(&self) -> usize {
         self.embedding
     }
-    pub(super) fn ple_embedding_index(&self) -> usize {
+    pub(in crate::metal::gemma_affine) fn ple_embedding_index(&self) -> usize {
         self.ple_embedding
     }
     pub(super) fn geometry(&self) -> [LayerPlan; 35] {
