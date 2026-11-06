@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Finish QAT full task replay and independent 1,025-token fidelity.**
+Current task: **Admit the exact official BF16 plan and bound file-backed PLE rows.**
 Completed: source-matched native41 package selected, with Mac offline regression
 and both iOS SDK builds. [Evidence](benchmarks/results/2026-11-06-chunk-pools-native41-v1.json).
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
@@ -621,11 +621,18 @@ uses the existing full saved-conversation reset+prompt path on Send.
   - [x] QAT original-relative loss passes all10,000 targets. Delta
     −3.930859 nats against the +0.05 limit. Astra verified the result.
     [Evidence](benchmarks/results/2026-11-06-gemma-qat-full-loss-v1.json).
-  - [ ] Finish both QAT math/staged wrap comparisons and the original-relative
-    100-task gate before adoption.
+  - [x] QAT native full task gate rejects46/100 vs original52/100. All
+    3,631 decisions replay exactly and grading completes under the existing
+    two-point limit. QAT stays diagnostic.
+    [Evidence](benchmarks/results/2026-11-06-gemma-qat-full-quality-v1.json).
+  - [ ] Finish the guarded independent QAT wrap repeat for diagnostic fidelity.
     Initial wrap values all match. Process-audit permission prevented the
     final owner receipts. Both same-pin workers are repeating with corrected
     tracking. [Evidence](benchmarks/results/2026-11-06-gemma-qat-wrap-initial-v1.json).
+  - [ ] Screen the official BF16 source with only PLE lookup file-backed.
+    Full selected text9.26GB exceeds the6GiB policy. Projected resident
+    text4.56GB plus bounded row integrity and exact owner accounting may fit.
+    Keep all existing native and original-quality gates.
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1574,3 +1581,4 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | G3 prospective QAT assistant | Bounded header checks,24 affine4 matrices and all base piece IDs match the expected inventory. Target-only video control identified. | Astra approved metadata scope. [Evidence](benchmarks/results/2026-11-06-gemma-qat-assistant-header-v1.json); interface and actual proposal checks await target selection. |
 | 2026-11-06 | Gemma QAT full loss gate | All10,000 aligned targets pass. Native6.064917 vs original9.995776 nats; peak3.713GB. | Astra approved the loss-only result. [Evidence](benchmarks/results/2026-11-06-gemma-qat-full-loss-v1.json). |
 | 2026-11-06 | Gemma QAT initial wrap oracle audit | All52,441,088 values and32 greedy checks match. Sandbox blocked both final process receipts. | Astra scoped the result as preliminary. Same-pin guarded repeats started. [Evidence](benchmarks/results/2026-11-06-gemma-qat-wrap-initial-v1.json). |
+| 2026-11-06 | Gemma QAT full task gate | All100 tasks and3,631 replayed decisions verify. Isolated grade46/100 vs52 exceeds the2pp loss limit. | Astra approved diagnostic retention and an official BF16 file-backed PLE feasibility path. [Evidence](benchmarks/results/2026-11-06-gemma-qat-full-quality-v1.json). |

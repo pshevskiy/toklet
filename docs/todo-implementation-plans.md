@@ -169,6 +169,25 @@ After owner and codec checks, add the managed Mac profile and verify fresh
 download, offline Chat, cancellation and state preservation before selecting
 a source-matched app package.
 
+### Official Gemma BF16 fallback
+
+The [QAT task gate](../benchmarks/results/2026-11-06-gemma-qat-full-quality-v1.json)
+rejects46/100 versus52/100. QAT remains diagnostic. Use the exact official
+source with BF16 coefficients and a file-backed PLE lookup. Full text
+requires9,257,138,758 bytes. The PLE table accounts for4,697,620,480.
+The other text tensors require4,559,518,278 raw bytes. [Official source inventory](../docs/gemma-bf16-reader.md).
+
+1. Admit the pinned BF16 config and header, classify selected and excluded
+   ranges, and prove the exact PLE and resident byte totals.
+2. Authenticate the whole source descriptor and hash PLE rows while
+   streaming. Verify each bounded row on demand before publishing output.
+   Count integrity metadata, gather scratch and concurrent source buffers.
+3. Add a dedicated BF16-storage projection and embedding gather. Keep
+   packed affine behavior. Reuse the Gemma graph and static backend routing.
+4. Validate exact memory, numerical contracts, long cache state, raw
+   trajectories and original-relative quality before factory or app work.
+   Measure the codec/engine peak separately under6GiB.
+
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 
 The [short alignment](../benchmarks/results/2026-11-06-qwen15-original-alignment-v1.json)

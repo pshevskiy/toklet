@@ -10746,3 +10746,11 @@ initial owner failed to save the memory and exit receipts after a sandbox
 denial. Astra verified the scoped comparison. Same-pin guarded repeats
 are running and the numerical gate remains open.
 [Evidence](../benchmarks/results/2026-11-06-gemma-qat-wrap-initial-v1.json)
+
+## 6 November 2026 — Preserve the native Gemma QAT task rejection
+
+All100 native responses complete and all3,631 decisions verify. Isolated
+grading scores46/100 versus original52/100, a six-point drop against the
+two-point limit. Astra confirmed the rejection. QAT stays diagnostic.
+Official BF16 with file-backed PLE is the next feasibility candidate.
+[Evidence](../benchmarks/results/2026-11-06-gemma-qat-full-quality-v1.json)

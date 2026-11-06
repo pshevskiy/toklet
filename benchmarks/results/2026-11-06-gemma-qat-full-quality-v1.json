@@ -1,0 +1,80 @@
+{
+  "collection_passed": true,
+  "decision": {
+    "complete": true,
+    "baseline_tasks": {
+      "cases": 100,
+      "passed": 52,
+      "pass_rate": 0.52,
+      "aggregation": "100_equal_weight_binary_cases",
+      "categories": {
+        "code": {
+          "cases": 40,
+          "passed": 33
+        },
+        "prose": {
+          "cases": 30,
+          "passed": 19
+        },
+        "continuation": {
+          "cases": 30,
+          "passed": 0
+        }
+      }
+    },
+    "native_tasks": {
+      "cases": 100,
+      "passed": 46,
+      "pass_rate": 0.46,
+      "aggregation": "100_equal_weight_binary_cases",
+      "categories": {
+        "code": {
+          "cases": 40,
+          "passed": 29
+        },
+        "prose": {
+          "cases": 30,
+          "passed": 17
+        },
+        "continuation": {
+          "cases": 30,
+          "passed": 0
+        }
+      }
+    },
+    "task_pass_rate_loss_percentage_points": 6,
+    "task_limit_percentage_points": 2,
+    "task_gate_passed": false,
+    "full_quality_qualified": false,
+    "app_discovery_qualified": false,
+    "device_qualified": false
+  },
+  "replay": {
+    "cases": 100,
+    "decisions": 3631,
+    "mismatches": 0,
+    "session_allocated_bytes": 331658692,
+    "trajectory_sha256": "0c84926d90b1e8bd80bb9db728721bde9060e4a12f7814d7c938319dc2f532fc",
+    "independent_raw_replay": true
+  },
+  "grading_vm_restored_stopped": true,
+  "generated_code_runs_on_host": false,
+  "owned_peak_physical_bytes": {
+    "task-pilot": 3726724360,
+    "task-rest": 3709897968,
+    "replay-all": 3694513392
+  },
+  "receipts_sha256": {
+    "artifacts/gemma-qat-quality-2026-11-06/task-pilot/owned.json": "62aec882cca8dea285ee8d5ba96de165bb91fd517f38c72bcee856b4120308ed",
+    "artifacts/gemma-qat-quality-2026-11-06/task-rest/owned.json": "bdfe9fdfdf1660382ad0dc2232f93b7319297e33dbaf6098fb5b9bd7f46759d3",
+    "artifacts/gemma-qat-quality-2026-11-06/replay-all/owned.json": "dcf9109499473d4a726e7c2986d2ddd7c6fa8cf37cdefd8ffd40405dcede56e0",
+    "artifacts/gemma-qat-quality-2026-11-06/collection.json": "1d1fda223c0106d994cad114e01fd884451b88489973e730ca341c2a4a37e32d",
+    "artifacts/gemma-qat-quality-2026-11-06/native-tasks.jsonl": "e28bb751e99db3b331f0bdec246452eade369c84328b7b6e6c976887a8b1953c",
+    "artifacts/gemma-qat-quality-2026-11-06/replay-all.u32.jsonl": "0c84926d90b1e8bd80bb9db728721bde9060e4a12f7814d7c938319dc2f532fc",
+    "artifacts/gemma-qat-quality-2026-11-06/grade/result.json": "2ca07b584db5d8409b99a38d63e79964053463846f7b697e51c3826bb4e13311",
+    "artifacts/gemma-qat-quality-2026-11-06/grade/inner/result.json": "a36842fc241ed412bb6af83191093918a5d8b934997ad182916cac8897c2f77e",
+    "artifacts/gemma-qat-quality-2026-11-06/grade/inner/grading.jsonl": "e3e6e8e70e49d27424cb1be313352e7fde011342071e4ab656e0406b33ce681f"
+  },
+  "review": "Astra verified the complete grade and unchanged 2pp acceptance limit.",
+  "disposition": "Retain QAT for diagnostics. Evaluate official BF16 with resident projections and bounded authenticated file-backed PLE rows."
+}
