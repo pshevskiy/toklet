@@ -1,0 +1,72 @@
+{
+  "format": "toklet-qwen15-catalog-repair-v1",
+  "engine_package": "chunk-pools-native41-2026-11-06",
+  "checks": [
+    {
+      "name": "LlamaCatalogMain-build",
+      "exit_code": 0,
+      "seconds": 20.4267778750218
+    },
+    {
+      "name": "LlamaCatalogMain",
+      "exit_code": 0,
+      "seconds": 0.7298446670174599
+    },
+    {
+      "name": "HubProfileMain-build",
+      "exit_code": 0,
+      "seconds": 19.354692125023575
+    },
+    {
+      "name": "HubProfileMain",
+      "exit_code": 0,
+      "seconds": 0.9499022079980932
+    },
+    {
+      "name": "CompatibilityProfilesMain-build",
+      "exit_code": 0,
+      "seconds": 20.393737792008324
+    },
+    {
+      "name": "iphoneos-app",
+      "exit_code": 0,
+      "seconds": 10.791241291997721
+    },
+    {
+      "name": "iphoneos-catalog",
+      "exit_code": 0,
+      "seconds": 10.941615749994526
+    },
+    {
+      "name": "iphonesimulator-app",
+      "exit_code": 0,
+      "seconds": 15.97654041700298
+    },
+    {
+      "name": "iphonesimulator-catalog",
+      "exit_code": 0,
+      "seconds": 10.09634874999756
+    }
+  ],
+  "mac_catalog_checks": 34,
+  "mac_config_profiles": 6,
+  "live_discovery_matches": 1,
+  "ios_sdk_compiled": true,
+  "physical_iphone_tested": false,
+  "mac_bundle_verified": true,
+  "read_only_metadata_request": true,
+  "prior_check_failures": [
+    "Strict Swift warned about a compile-time ternary branch in the added test. The final test uses platform-conditional expected values.",
+    "The first standalone iOS command omitted the existing WorkerChecks.swift target input. The final command includes it."
+  ],
+  "artifacts": {
+    "artifacts/qwen15-catalog-repair-2026-11-06/checks.json": "5ff41f1f57d66d5e022adec95485262c76aa0bd1bc378d8cd2d7ca60441fff3a",
+    "artifacts/qwen15-catalog-repair-2026-11-06/initial/checks.json": "cdc35d9142999460a5b753d4655f446e06cc227bbd4963d7501f6883df4f97ea",
+    "artifacts/qwen15-catalog-repair-2026-11-06/second/checks.json": "c9b65c0d063fdf93dc59f71df4194a1de44f41b5bf1699a6d4447e6f49a34e2f",
+    "artifacts/qwen15-catalog-repair-2026-11-06/hub-query.json": "2f2b825a48f3cb0807c73504df051323773b8b91adb0c50f32bddca85c7fec49",
+    "artifacts/qwen15-catalog-repair-2026-11-06/mac-app/build.json": "4f2f9134aa50644fc1ae77ad4f6b8e8e79410eded2a3c1ac9d8f30868550af49",
+    "artifacts/qwen15-catalog-repair-2026-11-06/LlamaCatalogMain.stdout": "df11633a5f93cd0c1a438d4ecb66e4d25630c6b2f2f32baa999891581ab911ef",
+    "artifacts/qwen15-catalog-repair-2026-11-06/HubProfileMain.stdout": "ac568a3c54fcc7eedafb5e01afd27a0b9b871799694924ec03c516f3a71b3a5b"
+  },
+  "review": "Astra approves the exact catalog identity correction, collision controls and ordinary versus audited test scope."
+}

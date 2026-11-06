@@ -10827,3 +10827,11 @@ Fresh replay includes hidden stop tokens. Astra approves after588 default
 and706 Metal tests and six owned Mac checks. Historical Q4 loss and
 Q4/QAT task controls match. Full quality and long fidelity remain open.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-quality-pilot-v1.json)
+
+## 6 November 2026 — Correct Qwen2.5-1.5B catalog identity
+
+The Mac profile now has its own display name, lookup key and discovery query.
+The exact repository returned from Hugging Face. Astra approved after the
+strict Swift checks and Mac bundle verification. Initial test warning and
+missing iOS runner input were corrected. Physical iPhone work stays deferred.
+[Evidence](../benchmarks/results/2026-11-06-qwen15-catalog-repair-v1.json)

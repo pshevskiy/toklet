@@ -16,13 +16,24 @@ struct LlamaCatalogMain {
         }
         #if os(macOS)
         let enabled = true
+        let expectedQwen15: HubProfile? = .qwen15
         #else
         let enabled = false
+        let expectedQwen15: HubProfile? = nil
         #endif
         try check(HubProfile.catalog.contains(.llama3) == enabled,"Platform catalog admission")
         try check(HubProfile.catalog.count == (enabled ? 6 : 4),"Platform catalog size")
         try check(HubProfile.catalog.contains(.qwen15) == enabled,"Larger Qwen platform catalog admission")
         try check(HubProfile.matching("Qwen2.5-1.5B").contains(.qwen15) == enabled,"Larger Qwen search bypassed gate")
+        try check(HubProfile.qwen15.name == "Qwen2.5-1.5B · 8-bit","Larger Qwen display name changed")
+        try check(HubProfile.named("qwen15") == expectedQwen15,"Larger Qwen named lookup changed")
+        try check(!HubProfile.matching("SmolLM2").contains(.qwen15),"Smol search returned larger Qwen")
+        let queries = HubAPI.discoveryURLs.compactMap { url in
+            URLComponents(url:url,resolvingAgainstBaseURL:false)?.queryItems?.first { $0.name == "search" }?.value
+        }
+        try check(queries.contains("Qwen2.5-1.5B-Instruct-8bit") == enabled,"Larger Qwen discovery query changed")
+        try check(Set(queries).count == HubProfile.catalog.count,"Catalog discovery queries collide")
+        try check(Set(HubProfile.catalog.map(\.key)).count == HubProfile.catalog.count,"Catalog keys collide")
         try check(!FriendlyLoadRequest.matches(.ordinary,profile:.qwen15),"Ordinary path admitted larger Qwen")
         try check(!FriendlyLoadRequest.matches(.managedQwen2,profile:.qwen15),"Qwen size profiles were conflated")
         try check((HubProfile.named("llama3") != nil) == enabled,"Named lookup bypassed gate")

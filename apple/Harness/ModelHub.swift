@@ -94,6 +94,7 @@ struct HubProfile: Codable, Equatable, Sendable {
     var name: String {
         switch repository {
         case Self.qwen.repository: "Qwen2.5-0.5B · 8-bit"
+        case Self.qwen15.repository: "Qwen2.5-1.5B · 8-bit"
         case Self.qwen3.repository: "Qwen3-0.6B · 8-bit · non-thinking"
         case Self.mistral.repository: "Mistral-7B-Instruct-v0.3 · 4-bit"
         case Self.llama3.repository: "Llama-3.2-1B · 8-bit"
@@ -137,6 +138,7 @@ struct HubProfile: Codable, Equatable, Sendable {
     var key: String {
         switch repository {
         case Self.qwen.repository: "qwen"
+        case Self.qwen15.repository: "qwen15"
         case Self.qwen3.repository: "qwen3"
         case Self.mistral.repository: "mistral"
         case Self.llama3.repository: "llama3"
@@ -146,6 +148,7 @@ struct HubProfile: Codable, Equatable, Sendable {
     var searchQuery: String {
         switch repository {
         case Self.qwen.repository: "Qwen2.5-0.5B"
+        case Self.qwen15.repository: "Qwen2.5-1.5B-Instruct-8bit"
         case Self.qwen3.repository: "Qwen3-0.6B-8bit"
         case Self.mistral.repository: "Mistral-7B-Instruct-v0.3-4bit"
         case Self.llama3.repository: "Llama-3.2-1B-Instruct-8bit"

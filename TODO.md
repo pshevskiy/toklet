@@ -684,6 +684,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
   the improvement record. Do not infer support from a family name alone.
   - [x] Reconcile six Mac and four iOS catalog identities, selected package
     and open gates. [Audit](benchmarks/results/2026-11-06-m8-mac-audit-v1.json).
+  - [x] Give Qwen2.5-1.5B its own Mac display name, lookup key and discovery
+    query. Live metadata, strict Swift checks, Mac build and Astra pass.
+    [Evidence](benchmarks/results/2026-11-06-qwen15-catalog-repair-v1.json).
 
 ## M9 — Next performance milestone
 
