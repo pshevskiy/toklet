@@ -216,6 +216,15 @@ The other text tensors require4,559,518,278 raw bytes. [Official source inventor
    10,278,816,137 bytes, exceeding the current Hub file and snapshot limits.
    Scope larger transfer bounds to this exact Mac manifest and resolved shard
    URL. Keep 64-bit range, cancellation, disk admission and publication checks.
+   - Add the Mac-only audited owner with stable graph and weight allocations.
+     Reuse generation dispatch and preserve drop order through the source
+     descriptor. Bind codec and model identity, handle fallible poisoned reset,
+     and check exact load, session and transition budgets before publication.
+   - Exercise a bounded Mac Chat journey through the additive native bridge.
+     Report the checkpoint declaration separately from loaded capacity, chunk
+     and remaining output. Measure the combined codec, app and engine process,
+     then verify cancellation, reopen, failed Apply and late PLE corruption.
+     Treat streaming text and the exact large-transfer path as separate gates.
 
 #### Prospective ordered BF16 arithmetic gate
 
@@ -260,6 +269,11 @@ exact dot is `17/2^53` above the midpoint. Add a BF16-only third expansion term
 and midpoint-aware store. Keep affine4/8 separate. Verify authored widths,
 cancellation and subnormals, this dot and the frozen96-token prefix first.
 Retain a passing candidate only after full fidelity, state and quality reruns.
+
+The [fresh numerical evidence](../benchmarks/results/2026-11-06-gemma-bf16-rounding-numerical-v1.json)
+passes all45,000,704 values and32 greedy checks across the wrap and distinct
+holdout. The original dual-reference rejection remains. Keep the core repair
+uncommitted until the corrected full quality gate passes.
 
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 

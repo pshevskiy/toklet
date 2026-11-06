@@ -10885,3 +10885,12 @@ context. Producer0 output column1093 at position70 differs by one FP32 word.
 The exact dot is `17/2^53` above the midpoint. Astra confirms the measured
 32-lane replay and the need for a BF16-specific rounding candidate.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-first-drift-v1.json)
+
+## 6 November 2026 — Pass the ordered BF16 numerical subgates
+
+The third compensation term and midpoint-aware store correct the real dot.
+All1,085,440 prefix values are bitwise exact. Fresh wrap and holdout pass
+45,000,704 values, all32 greedy checks and both state schedules. Legacy Q4/QAT
+reproduce their saved bytes. Astra approves the code and numerical evidence.
+The corrected quality rerun remains required before retention.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-rounding-numerical-v1.json)

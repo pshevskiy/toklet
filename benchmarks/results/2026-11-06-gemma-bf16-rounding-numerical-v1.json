@@ -1,0 +1,89 @@
+{
+  "format": "toklet-gemma-bf16-rounding-v1",
+  "passed_named_numerical_gate": true,
+  "scope": "Corrected BF16 arithmetic on Mac. Managed app adoption and corrected original quality are separate.",
+  "prior_dual_gate_rejection_preserved": true,
+  "retained_terms_final_rounding_only": true,
+  "full_arbitrary_dot_guarantee": false,
+  "proof": {
+    "normal_width_controls": 3456,
+    "subnormal_controls": 384,
+    "rational_retained_terms": 8747,
+    "real_dot_corrected": "3f826159",
+    "prefix_exact": 1085440
+  },
+  "cases": {
+    "wrap": {
+      "values": 26220544,
+      "failed": 0,
+      "greedy": 16,
+      "source_provider": {
+        "passed": true,
+        "rne": true,
+        "binary64_subnormal_preserved": true,
+        "fp32_product_quantum_exact": true,
+        "expected_provider": "pinned binary64 BLAS and separate Python binary64 trigonometry",
+        "rational_dot_checks": 24,
+        "exact_fallback_checks": 24
+      },
+      "process_peaks_bytes": {
+        "native": 4859269200,
+        "reference": 486950352
+      },
+      "evidence_sha256": {
+        "artifacts/gemma-bf16-ordered-reference-2026-11-06/v4/comparison-qualified-wrap.json": "2196f99f43f3151fd8d34403b3094f809b145b3c436150fff436e1c185b03d58",
+        "artifacts/gemma-bf16-rounding-2026-11-06/bf16-wrap/owned.json": "7703c7f5867fbd9d19602ee7eba362042b8ec696022692e81d2e24b5953ecee4",
+        "artifacts/gemma-bf16-ordered-reference-2026-11-06/v4/qualified-wrap/owned.json": "862e11f276568473b9941d3d16aacb20707f4f631dda7b9a418759cdec2069a3",
+        "artifacts/gemma-bf16-ordered-reference-2026-11-06/v4/qualified-wrap/plan.json": "b7531887fc595e0550f35bc06ad122655a13f385536fe7072b5dd4d94b198792",
+        "artifacts/gemma-bf16-ordered-reference-2026-11-06/v4/qualified-wrap/reference.json": "dd248255e11341358ff357118a71b8336f6cb12ab9765096653392b3f586d83e"
+      }
+    },
+    "holdout": {
+      "values": 18780160,
+      "failed": 0,
+      "greedy": 16,
+      "source_provider": {
+        "passed": true,
+        "rne": true,
+        "binary64_subnormal_preserved": true,
+        "fp32_product_quantum_exact": true,
+        "expected_provider": "pinned binary64 BLAS and separate Python binary64 trigonometry",
+        "rational_dot_checks": 24,
+        "exact_fallback_checks": 24
+      },
+      "process_peaks_bytes": {
+        "native": 4877029432,
+        "reference": 335955240
+      },
+      "evidence_sha256": {
+        "artifacts/gemma-bf16-holdout-2026-11-06/comparison-qualified-holdout.json": "9f030705e312d28eb5564ec5cd83c05186b81bcd611ea7d1190ea898a0a1cf26",
+        "artifacts/gemma-bf16-holdout-2026-11-06/holdout/owned.json": "62f5b98af721ea62202a85621f4348395caa5c6c0ff0a3b789370f4289029cb5",
+        "artifacts/gemma-bf16-ordered-reference-2026-11-06/v4/qualified-holdout/owned.json": "206e77cce95f9a086e3b3f9f411cabf7bcbd4c44d7ed99c3341a54bfeeb85fda",
+        "artifacts/gemma-bf16-ordered-reference-2026-11-06/v4/qualified-holdout/plan.json": "95c08712998196e55575c7d384d10db9c27e1cb3de733b59d441942b1db8da94",
+        "artifacts/gemma-bf16-ordered-reference-2026-11-06/v4/qualified-holdout/reference.json": "8eab8e4919fb595391209cf0d69ab84559cece85cb8aeec0b9365c7b6dce3a2e"
+      }
+    }
+  },
+  "quality_rerun_status": "running",
+  "app_qualified": false,
+  "check_evidence_sha256": {
+    "artifacts/gemma-bf16-rounding-2026-11-06/checks.json": "a2e35da988580b9f65574854a673bf251d8fc37e7988ead2faa2803c71d6e926",
+    "artifacts/gemma-bf16-rounding-2026-11-06/store-controls.json": "024a8c939a7b5cbc59ea4442ec5e8c4eafb5f45989025b6356458642dab1833b",
+    "artifacts/gemma-bf16-rounding-2026-11-06/legacy-comparison.json": "f4f22fba0377c3a78ed87d43fca084408e5941778b0861441904484ce50d7699",
+    "artifacts/gemma-bf16-rounding-2026-11-06/comparison-first.json": "1dbbe282db4bb1202b251f97daf1369e659018b9c9f338cc4c45ddceecac8f28",
+    "artifacts/gemma-bf16-rounding-2026-11-06/comparison-prefix.json": "b51b33370aa3d3c962082e15727667e36acd7c8ae2773ad120f7f49b664e3bf8",
+    "artifacts/gemma-bf16-rounding-2026-11-06/comparison.json": "dfad7677f4b714b466958b320db6e244afe309a627d9f7538c3dc290d0fefef5",
+    "artifacts/gemma-bf16-rounding-2026-11-06/initial/widths/owned.json": "f789bc79c19cf0d5f4466a9aec7ebefd653afd334aa304e42ee0357a5cbe1180",
+    "artifacts/gemma-bf16-rounding-2026-11-06/subnormal-before.txt": "22dbe6b7b70a64966e31813e597db3e863492d341bee2fb05c0e8864773387af",
+    "artifacts/gemma-bf16-rounding-2026-11-06/subnormal-after.txt": "22dbe6b7b70a64966e31813e597db3e863492d341bee2fb05c0e8864773387af",
+    "artifacts/gemma-bf16-rounding-2026-11-06/widths/owned.json": "1bf6dc6ecec5ed0eeca359fd3d92b721b23f6d944b2346f341115412df822149",
+    "artifacts/gemma-bf16-rounding-2026-11-06/leaf/owned.json": "4d3d9781ef320e69cf2f7c5282c37012e3ca3eea5d8beac9cafb33e16587f9f1",
+    "artifacts/gemma-bf16-rounding-2026-11-06/real-leaf/owned.json": "54e39ff44c8335a4e42c90d8bee8d8e0437bb905c5390fc5dec939669436ef75",
+    "artifacts/gemma-bf16-rounding-2026-11-06/first/owned.json": "2de3b5c800b54987536f0c744b78067405319b7ac51754c7f1c80fdcbb007f3c",
+    "artifacts/gemma-bf16-rounding-2026-11-06/producer/owned.json": "5f73199fe2ca85152797e227121dc895edd6879158e20942f724732b46e96e60",
+    "artifacts/gemma-bf16-rounding-2026-11-06/bf16-wrap/owned.json": "7703c7f5867fbd9d19602ee7eba362042b8ec696022692e81d2e24b5953ecee4",
+    "artifacts/gemma-bf16-rounding-2026-11-06/q4-wrap/owned.json": "dc0a4cb4bba3cd7f29e05e6c6315b8652e0e0b9ca98170d09c55bbdafd955d9e",
+    "artifacts/gemma-bf16-rounding-2026-11-06/qat-replay-pilot/owned.json": "d093cf4913309d60f51f92abfe0ed1a6edc9a1f5f04d87ee73f885731a6875d5"
+  },
+  "review": "Astra approves the isolated shader diff and confirms both fresh numerical subgates. Retention waits for the corrected full original-quality result."
+}
