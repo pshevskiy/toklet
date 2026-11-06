@@ -10762,3 +10762,11 @@ The real metadata probe reads263,960 bytes. The raw split is4.56GB
 resident candidates and4.70GB file-backed PLE. Astra approved. Payload
 authentication, full memory admission and execution remain separate.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-cold-v1.json)
+
+## 6 November 2026 — Authenticate file-backed BF16 PLE rows
+
+The official shard authenticates and five real rows widen bitwise.
+Per-row integrity retains8,388,712 requested bytes, and chunk32 gathers
+need573,480 bytes. Late read or digest failures preserve caller output.
+Astra approved. Full model residency and latency remain open.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-ple-source-v1.json)

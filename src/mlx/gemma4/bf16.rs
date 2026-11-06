@@ -8,6 +8,9 @@ use serde_json::json;
 use sha2::{Digest, Sha256};
 use std::collections::BTreeMap;
 
+#[cfg(unix)]
+pub mod rows;
+
 pub const CONTAINER_BYTES: u64 = 10_246_621_918;
 const PREFIX: &str = "model.language_model.";
 const PLE_TABLE: &str = "model.language_model.embed_tokens_per_layer.weight";

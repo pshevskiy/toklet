@@ -1,0 +1,27 @@
+{
+  "passed": true,
+  "container_bytes": 10246621918,
+  "container_sha256": "2db5482b20d746879bb3ef79b5203e9075a2e2b98f54ec7c2f281c1477ddc550",
+  "requested": {
+    "retained_bytes": 8388712,
+    "load_bytes": 16842856,
+    "workspace_bytes": 573480,
+    "verified_rows": 5
+  },
+  "physical_peak_bytes": 13861320,
+  "process_limit_bytes": 134217728,
+  "checks": {
+    "fmt": true,
+    "strict_clippy_default_and_metal": true,
+    "default_tests": 588,
+    "metal_tests": 702,
+    "release_lib": true
+  },
+  "receipts_sha256": {
+    "artifacts/gemma-bf16-source-2026-11-06/checks.json": "1b65b59c0e19aedbb53a5884b0fdc2ef900e41451ea6ac45e1bebd5d0e3548b3",
+    "artifacts/gemma-bf16-source-2026-11-06/source-real/owned.json": "afbc4833b134da3480f9a748e10d007b29e16ae468d7766f54ce659dd530acf3",
+    "artifacts/gemma-bf16-source-2026-11-06/source-real/gpu.stdout": "54ef704424d4cc6ded5f5719f22aa00802dae3d93c5f55b0aad1fbc3c746991c"
+  },
+  "review": "Astra approved held-file integrity, same-pass row digests, capacity accounting and atomic caller publication.",
+  "scope": "File-backed BF16 PLE access and exact source identity. No resident projection or full-graph fit, throughput or Chat claim."
+}

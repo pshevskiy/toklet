@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Authenticate the official BF16 descriptor and bounded PLE row reads.**
+Current task: **Qualify the original BF16 Metal projection leaf.**
 Completed: source-matched native41 package selected, with Mac offline regression
 and both iOS SDK builds. [Evidence](benchmarks/results/2026-11-06-chunk-pools-native41-v1.json).
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
@@ -636,6 +636,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
     - [x] Official BF16 cold plan matches all540 selected ranges and both
       excluded inventories. Default586, Metal700, real metadata and Astra pass.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-cold-v1.json).
+    - [x] Whole official shard and each requested PLE row authenticate.
+      Exact/minus-one, late failure and independent real rows pass.
+      [Evidence](benchmarks/results/2026-11-06-gemma-bf16-ple-source-v1.json).
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1586,3 +1589,4 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | Gemma QAT initial wrap oracle audit | All52,441,088 values and32 greedy checks match. Sandbox blocked both final process receipts. | Astra scoped the result as preliminary. Same-pin guarded repeats started. [Evidence](benchmarks/results/2026-11-06-gemma-qat-wrap-initial-v1.json). |
 | 2026-11-06 | Gemma QAT full task gate | All100 tasks and3,631 replayed decisions verify. Isolated grade46/100 vs52 exceeds the2pp loss limit. | Astra approved diagnostic retention and an official BF16 file-backed PLE feasibility path. [Evidence](benchmarks/results/2026-11-06-gemma-qat-full-quality-v1.json). |
 | 2026-11-06 | Official BF16 cold plan | Exact config/header and all2,011 intervals pass. Real probe reads263,960 bytes, no payload. | Astra approved; file-backed PLE authentication next. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-cold-v1.json). |
+| 2026-11-06 | Official BF16 authenticated PLE | Full source SHA, 5 exact original rows, transaction controls and memory budgets pass. Physical peak13.86MB. | Astra approved after588/702 tests and owned Mac run. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-ple-source-v1.json). |

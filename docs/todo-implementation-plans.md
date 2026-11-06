@@ -183,6 +183,7 @@ The other text tensors require4,559,518,278 raw bytes. [Official source inventor
 2. Authenticate the whole source descriptor and hash PLE rows while
    streaming. Verify each bounded row on demand before publishing output.
    Count integrity metadata, gather scratch and concurrent source buffers.
+   [Authenticated PLE source result](../benchmarks/results/2026-11-06-gemma-bf16-ple-source-v1.json).
 3. Add a dedicated BF16-storage projection and embedding gather. Keep
    packed affine behavior. Reuse the Gemma graph and static backend routing.
 4. Validate exact memory, numerical contracts, long cache state, raw
