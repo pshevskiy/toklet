@@ -397,6 +397,14 @@ impl<'weights> QatNorms<'weights> {
         self.0.model_for_format(position_limit, true)
     }
 
+    #[cfg(test)]
+    pub(crate) fn model_for_quality_probe(
+        &self,
+        position_limit: usize,
+    ) -> HybridResult<Model<'_, 'weights>> {
+        self.0.model_for_format(position_limit, true)
+    }
+
     pub fn new_session<'model, 'a, 'context>(
         &'a self,
         model: &'model Model<'a, 'weights>,

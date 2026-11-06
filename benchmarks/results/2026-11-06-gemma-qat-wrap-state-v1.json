@@ -1,0 +1,101 @@
+{
+  "passed": true,
+  "tested_base": "3b7d6c03",
+  "required_checks": {
+    "fmt": true,
+    "metal_clippy": true,
+    "metal_tests": 698,
+    "release_lib": true,
+    "reused_default_tests": 584,
+    "reuse_reason": "All code changes are Metal-only or inside its test-only modules. Default inputs unchanged.",
+    "log": "artifacts/gemma-qat-wrap-state-2026-11-06/checks.json"
+  },
+  "qat_admission": {
+    "required_bytes": 3722626652,
+    "session_bytes": 338226412
+  },
+  "owned_witnesses": {
+    "qat-wrap": {
+      "owned": "artifacts/gemma-qat-wrap-state-2026-11-06/qat-wrap/owned.json",
+      "binary_sha256": "fbd393e251d950c68078be3f67e2d019e433871535dd204df29194aa3a384db0",
+      "peak_physical_bytes": 3846163864,
+      "capture": {
+        "records": 136,
+        "bytes": 104882176,
+        "sha256": "60556f0863eda9bf408de567cebc8e7d0324a20c8220e0468bb0d4b3d559103c",
+        "whole_e2b_qualified": false
+      },
+      "states": [
+        {
+          "schedule": 0,
+          "committed": 1025,
+          "overflow_preserved": true,
+          "reset_all32_rows_exact": true,
+          "reset_all15_valid_kv_prefixes_exact": true,
+          "allocated_bytes": 338226412,
+          "cross_schedule_endpoints": [
+            256,
+            1025
+          ]
+        },
+        {
+          "schedule": 1,
+          "committed": 1025,
+          "overflow_preserved": true,
+          "reset_all32_rows_exact": true,
+          "reset_all15_valid_kv_prefixes_exact": true,
+          "allocated_bytes": 338226412,
+          "cross_schedule_endpoints": [
+            256,
+            1025
+          ]
+        }
+      ]
+    },
+    "q4-wrap": {
+      "owned": "artifacts/gemma-qat-wrap-state-2026-11-06/q4-wrap/owned.json",
+      "binary_sha256": "fbd393e251d950c68078be3f67e2d019e433871535dd204df29194aa3a384db0",
+      "peak_physical_bytes": 3106540424,
+      "capture": {
+        "records": 136,
+        "bytes": 104882176,
+        "sha256": "e36b124bc8954d78b5e8d9d72da44e24eb1ba66dbddcc919a3b979a85c5b6a6c",
+        "whole_e2b_qualified": false
+      },
+      "states": [
+        {
+          "schedule": 0,
+          "committed": 1025,
+          "overflow_preserved": true,
+          "reset_all32_rows_exact": true,
+          "reset_all15_valid_kv_prefixes_exact": true,
+          "allocated_bytes": 271117548,
+          "cross_schedule_endpoints": [
+            256,
+            1025
+          ]
+        },
+        {
+          "schedule": 1,
+          "committed": 1025,
+          "overflow_preserved": true,
+          "reset_all32_rows_exact": true,
+          "reset_all15_valid_kv_prefixes_exact": true,
+          "allocated_bytes": 271117548,
+          "cross_schedule_endpoints": [
+            256,
+            1025
+          ]
+        }
+      ]
+    }
+  },
+  "retained_milestones": [
+    512,
+    513,
+    1024,
+    1025
+  ],
+  "review": "Astra approved conditional on same-build legacy Q4 wrap. That run passed and reproduced all136 historical raw records bitwise.",
+  "scope": "Quality-only 1,025-position state and exact allocation; independent math/staged fidelity and original quality remain pending. Public diagnostic remains at512."
+}

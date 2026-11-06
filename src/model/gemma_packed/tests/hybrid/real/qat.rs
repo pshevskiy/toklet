@@ -2,15 +2,13 @@
 use super::*;
 use crate::metal::gemma_affine::{MixedContext, resident::QatWeights};
 use sha2::{Digest, Sha256};
-use std::io::Read;
+use std::{io::Read, path::PathBuf};
 
 const VOCAB: usize = 262144;
-const MIXED_ALLOWANCE: usize = 2 * gemma_affine::CONTEXT_ALLOWANCE_BYTES;
+pub(super) const MIXED_ALLOWANCE: usize = 2 * gemma_affine::CONTEXT_ALLOWANCE_BYTES;
 
-#[test]
-#[ignore = "explicit mixed Gemma QAT real-model Metal session"]
-fn mixed_qat_prefix_is_stable_across_chunks_reset_and_future() {
-    let root = std::path::PathBuf::from(std::env::var_os("TOKLET_GEMMA_QAT_METADATA").unwrap());
+pub(super) fn load_qat() -> (QatWeights, std::fs::File, PathBuf, [u64; 7]) {
+    let root = PathBuf::from(std::env::var_os("TOKLET_GEMMA_QAT_METADATA").unwrap());
     let config = std::fs::read(root.join("config.json")).unwrap();
     let index = std::fs::read(root.join("model.safetensors.index.json")).unwrap();
     let path = root.join("model/model.safetensors");
@@ -21,6 +19,22 @@ fn mixed_qat_prefix_is_stable_across_chunks_reset_and_future() {
         .unwrap();
     let before = identity(&file.metadata().unwrap());
     assert_eq!(before, identity(&std::fs::symlink_metadata(&path).unwrap()));
+    let budget = PROCESS - DIAGNOSTIC;
+    let source = autoreleasepool(|_| {
+        let loader = gemma_affine::Context::new(gemma_affine::CONTEXT_ALLOWANCE_BYTES).unwrap();
+        let affine8 =
+            crate::mlx::affine::Layout::new(2, 64, 8, 64, crate::mlx::affine::MetadataDtype::BF16)
+                .unwrap();
+        assert!(loader.projection_session(affine8, 2, 1, budget).is_err());
+        QatWeights::load_text_only(&loader, &config, &index, &mut file, budget).unwrap()
+    });
+    (source, file, path, before)
+}
+
+#[test]
+#[ignore = "explicit mixed Gemma QAT real-model Metal session"]
+fn mixed_qat_prefix_is_stable_across_chunks_reset_and_future() {
+    let (source, file, path, before) = load_qat();
     let ids = std::env::var_os("TOKLET_GEMMA_QAT_PREFIX").map_or_else(
         || IDS.to_vec(),
         |path| {
@@ -39,14 +53,6 @@ fn mixed_qat_prefix_is_stable_across_chunks_reset_and_future() {
     );
     assert!((2..=510).contains(&ids.len()));
     let budget = PROCESS - DIAGNOSTIC;
-    let source = autoreleasepool(|_| {
-        let loader = gemma_affine::Context::new(gemma_affine::CONTEXT_ALLOWANCE_BYTES).unwrap();
-        let affine8 =
-            crate::mlx::affine::Layout::new(2, 64, 8, 64, crate::mlx::affine::MetadataDtype::BF16)
-                .unwrap();
-        assert!(loader.projection_session(affine8, 2, 1, budget).is_err());
-        QatWeights::load_text_only(&loader, &config, &index, &mut file, budget).unwrap()
-    });
     let warm = hybrid::QatNorms::new(&source, budget).unwrap();
     let norms_budget = source.report().resident_requested_bytes + warm.owned_bytes();
     drop(warm);

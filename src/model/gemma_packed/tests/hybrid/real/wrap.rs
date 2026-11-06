@@ -13,6 +13,79 @@ fn hash(values: &[f32]) -> String {
 #[test]
 #[ignore = "explicit real E2B diagnostic1025 local eviction/wrap capture"]
 fn diagnostic1025_wrap_schedules_overflow_and_reset() {
+    let (source, file, path, original) = load_original();
+    let owners = resident_snapshot(&source);
+    let norms = hybrid::Norms::new(&source, PROCESS - DIAGNOSTIC).unwrap();
+    let model = norms.model_for_context_probe(1025).unwrap();
+    assert!(model.content_identity().is_none());
+    let context = gemma_affine::Context::new(gemma_affine::CONTEXT_ALLOWANCE_BYTES).unwrap();
+    run_wrap(
+        &model,
+        || {
+            norms
+                .new_session(&model, &context, PROCESS - DIAGNOSTIC)
+                .unwrap()
+        },
+        271117548,
+        || {
+            assert_eq!(resident_snapshot(&source), owners);
+            assert_source_unchanged(&file, &path, original);
+        },
+    );
+}
+
+#[test]
+#[ignore = "explicit mixed QAT 1025-position quality-only state probe"]
+fn mixed_qat_wrap_schedules_overflow_and_reset() {
+    use crate::metal::gemma_affine::MixedContext;
+    use hybrid::test_support::qat_resident_snapshot;
+
+    let (source, file, path, original) = super::qat::load_qat();
+    let owners = qat_resident_snapshot(&source);
+    let budget = PROCESS - DIAGNOSTIC;
+    let norms = hybrid::QatNorms::new(&source, budget).unwrap();
+    assert!(norms.model(1025).is_err());
+    let model = norms.model_for_quality_probe(1025).unwrap();
+    assert!(model.content_identity().is_none());
+    let context = MixedContext::new(super::qat::MIXED_ALLOWANCE).unwrap();
+    let warm = norms.new_session(&model, &context, 32, budget).unwrap();
+    let owned = warm.allocated_bytes().unwrap();
+    drop(warm);
+    let required = model.model_bytes() + owned;
+    assert!(matches!(
+        norms.new_session(&model, &context, 32, required - 1),
+        Err(hybrid::Error::Metal(crate::metal::Error::Budget { required: r, limit }))
+        if r == required && limit == required - 1
+    ));
+    emit(
+        "QAT_WRAP_ADMISSION",
+        json!({"required_bytes":required,"session_bytes":owned}),
+    );
+    run_wrap(
+        &model,
+        || norms.new_session(&model, &context, 32, required).unwrap(),
+        owned,
+        || {
+            assert_eq!(qat_resident_snapshot(&source), owners);
+            assert_source_unchanged(&file, &path, original);
+        },
+    );
+}
+
+fn assert_source_unchanged(file: &std::fs::File, path: &std::path::Path, original: [u64; 7]) {
+    assert_eq!(original, identity(&file.metadata().unwrap()));
+    assert_eq!(
+        original,
+        identity(&std::fs::symlink_metadata(path).unwrap())
+    );
+}
+
+fn run_wrap<'model, 'weights, 'source, 'context>(
+    model: &'model hybrid::Model<'weights, 'source>,
+    new_session: impl Fn() -> hybrid::Session<'model, 'weights, 'source, 'context>,
+    expected_allocated: usize,
+    verify_source: impl FnOnce(),
+) {
     let raw = include_bytes!("../../../../../../benchmarks/gemma-e2b-wrap-v1/tokens.u32le");
     let ids: Vec<u32> = raw
         .chunks_exact(4)
@@ -32,31 +105,28 @@ fn diagnostic1025_wrap_schedules_overflow_and_reset() {
     assert_eq!(second.iter().sum::<usize>(), 1025);
     let selected = [0, 31, 255, 511, 512, 767, 1023, 1024];
     let mut capture = capture::Capture::bounded(DIAGNOSTIC);
-    let (source, file, path, original) = load_original();
-    let owners = resident_snapshot(&source);
-    let norms = hybrid::Norms::new(&source, PROCESS - DIAGNOSTIC).unwrap();
-    let model = norms.model_for_context_probe(1025).unwrap();
-    assert!(model.content_identity().is_none());
-    let context = gemma_affine::Context::new(gemma_affine::CONTEXT_ALLOWANCE_BYTES).unwrap();
     let mut expected256 = None;
     let mut expected1025 = None;
     let mut prefix_hash = None;
+    let mut all_rows = None;
     let mut prefix_caches: Vec<(Vec<u32>, Vec<u32>)> = Vec::new();
     for (schedule_index, schedule) in [first, second].into_iter().enumerate() {
         emit(
             "WRAP_SCHEDULE",
             json!({"index":schedule_index,"chunks":schedule}),
         );
-        let mut session = norms
-            .new_session(&model, &context, PROCESS - DIAGNOSTIC)
-            .unwrap();
+        let mut session = new_session();
         assert_eq!((session.capacity(), session.chunk_capacity()), (1025, 32));
         let allocated = session.allocated_bytes().unwrap();
-        assert_eq!(allocated, 271117548);
+        assert_eq!(allocated, expected_allocated);
         let pointers_before = pointers(&session);
         let mut offset = 0;
+        let mut full_digest = Sha256::new();
         for (step, &count) in schedule.iter().enumerate() {
             let rows = session.forward(&ids[offset..offset + count]).unwrap();
+            for value in rows {
+                full_digest.update(value.to_le_bytes());
+            }
             if offset == 0 {
                 assert_eq!(count, 32);
                 let actual = hash(rows);
@@ -155,6 +225,12 @@ fn diagnostic1025_wrap_schedules_overflow_and_reset() {
             assert_eq!(session.allocated_bytes().unwrap(), allocated);
         }
         assert_eq!(offset, 1025);
+        let complete_rows = full_digest.finalize();
+        if let Some(prior) = all_rows {
+            assert_eq!(complete_rows, prior);
+        } else {
+            all_rows = Some(complete_rows);
+        }
         let before = snapshot(&session);
         assert!(matches!(
             session.forward(&[ids[0]]),
@@ -216,12 +292,7 @@ fn diagnostic1025_wrap_schedules_overflow_and_reset() {
         );
     }
     assert!(expected256.is_some() && expected1025.is_some());
-    assert_eq!(resident_snapshot(&source), owners);
-    assert_eq!(original, identity(&file.metadata().unwrap()));
-    assert_eq!(
-        original,
-        identity(&std::fs::symlink_metadata(path).unwrap())
-    );
+    verify_source();
     capture.finish();
     emit(
         "WRAP_COMPLETE",

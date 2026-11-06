@@ -219,6 +219,10 @@ impl Uploaded<'_> {
 }
 
 // Bounded diagnostic hashes of complete immutable buffers, never full copies.
+pub(crate) fn qat_resident_snapshot(source: &QatWeights) -> Vec<serde_json::Value> {
+    resident_snapshot(&source.0)
+}
+
 pub(crate) fn resident_snapshot(source: &E2bWeights) -> Vec<serde_json::Value> {
     use sha2::{Digest, Sha256};
     let buffer = |b: &Buffer<u32>| {
