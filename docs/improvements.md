@@ -10662,3 +10662,11 @@ variants agree bitwise. Changing only padded length flips both disputed
 decisions. Astra approved a separate native diagnostic plan. The frozen
 stock trajectory gate remains rejected.
 [Evidence](../benchmarks/results/2026-11-06-gemma-qat-shape-v1.json)
+
+## 6 November 2026 — Qualify the standalone Gemma affine8 projection
+
+The separate context preserves FP32 compensated arithmetic. All 256
+codes, exact budgets and residual-sensitive dots pass. Frozen Q4
+projection and real-prefix output remain exact. Astra approved the leaf.
+Mixed resident loading and Chat stay outside this result.
+[Evidence](../benchmarks/results/2026-11-06-gemma-affine8-leaf-v1.json)

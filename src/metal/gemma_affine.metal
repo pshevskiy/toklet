@@ -2,7 +2,7 @@
 using namespace metal;
 #pragma clang fp contract(off)
 
-// Direct FP32 affine reconstruction, original packed4/group64/BF16 storage.
+// Direct FP32 affine reconstruction, original packed group64/BF16 storage.
 // Cold admission excludes flushed metadata/weights. FP32 input subnormal loss
 // is bounded below the absolute numerical gate by the admitted weight domain.
 float gemma_coefficient(device const uint* words, uint index) {
@@ -16,19 +16,14 @@ void gemma_add(thread float2& sum, float value) {
 }
 // Shape [active tokens, input width, output rows]. One queried SIMD group per
 // token/output row. No dense expansion, padded tensor rows or linear bias.
-kernel void gemma_affine_product(
-    device const uint* codes [[buffer(0)]],
-    device const uint* scales [[buffer(1)]],
-    device const uint* biases [[buffer(2)]],
-    device const uint* input [[buffer(3)]],
-    device uint* output [[buffer(4)]],
-    constant uint* shape [[buffer(5)]],
-    device atomic_uint* status [[buffer(6)]],
-    uint group [[threadgroup_position_in_grid]],
-    uint lane [[thread_index_in_simdgroup]],
-    uint lanes [[threads_per_simdgroup]]) {
+template <uint Bits>
+void gemma_product(device const uint* codes, device const uint* scales,
+    device const uint* biases, device const uint* input, device uint* output,
+    constant uint* shape, device atomic_uint* status, uint group, uint lane, uint lanes) {
     uint token = group / shape[2], row = group % shape[2];
     if (token >= shape[0]) return;
+    constexpr uint codes_per_word = 32 / Bits;
+    constexpr uint code_mask = (1u << Bits) - 1;
     uint columns = shape[1], groups = columns / 64;
     float2 sum = float2(0.0f);
     for (uint g = 0; g < groups; ++g) {
@@ -37,8 +32,8 @@ kernel void gemma_affine_product(
         float bias = gemma_coefficient(biases, index);
         for (uint j = lane; j < 64; j += lanes) {
             uint column = g * 64 + j;
-            uint word = codes[row * (columns / 8) + column / 8];
-            uint code = (word >> (4 * (column % 8))) & 15u;
+            uint word = codes[row * (columns / codes_per_word) + column / codes_per_word];
+            uint code = (word >> (Bits * (column % codes_per_word))) & code_mask;
             float weight = fma(scale, float(code), bias);
             float x = as_type<float>(input[token * columns + column]);
             float product = weight * x;
@@ -60,4 +55,32 @@ kernel void gemma_affine_product(
         output[token * shape[2] + row] = as_type<uint>(value);
         if (!isfinite(value)) atomic_fetch_or_explicit(status, 1u, memory_order_relaxed);
     }
+}
+
+kernel void gemma_affine_product(
+    device const uint* codes [[buffer(0)]],
+    device const uint* scales [[buffer(1)]],
+    device const uint* biases [[buffer(2)]],
+    device const uint* input [[buffer(3)]],
+    device uint* output [[buffer(4)]],
+    constant uint* shape [[buffer(5)]],
+    device atomic_uint* status [[buffer(6)]],
+    uint group [[threadgroup_position_in_grid]],
+    uint lane [[thread_index_in_simdgroup]],
+    uint lanes [[threads_per_simdgroup]]) {
+    gemma_product<4>(codes, scales, biases, input, output, shape, status, group, lane, lanes);
+}
+
+kernel void gemma_affine_product_8(
+    device const uint* codes [[buffer(0)]],
+    device const uint* scales [[buffer(1)]],
+    device const uint* biases [[buffer(2)]],
+    device const uint* input [[buffer(3)]],
+    device uint* output [[buffer(4)]],
+    constant uint* shape [[buffer(5)]],
+    device atomic_uint* status [[buffer(6)]],
+    uint group [[threadgroup_position_in_grid]],
+    uint lane [[thread_index_in_simdgroup]],
+    uint lanes [[threads_per_simdgroup]]) {
+    gemma_product<8>(codes, scales, biases, input, output, shape, status, group, lane, lanes);
 }

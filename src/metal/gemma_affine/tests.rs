@@ -6,6 +6,7 @@ mod fixture;
 mod l1_fixture;
 use serde_json::{Value, json};
 
+mod affine8;
 mod native_arithmetic;
 mod real;
 
@@ -20,7 +21,7 @@ fn frozen_l1_fallback_rows_bounds_and_fast_path_without_gpu() {
     assert_eq!(L1_CALLS.with(std::cell::Cell::get), before);
     let mut new = 0;
     for case in l1_fixture::cases() {
-        let maximum = codebook(&case.scales, &case.biases).unwrap();
+        let maximum = codebook(&case.scales, &case.biases, 4).unwrap();
         Matrix::from_le_bytes(case.layout, &case.codes, &case.scales, &case.biases).unwrap();
         let k = case.layout.columns();
         for (row, expected) in case
@@ -133,7 +134,11 @@ fn bounded_shapes_codebooks_and_upward_admission_without_gpu() {
     for fixture in fixture::fixtures() {
         for case in &fixture.cases {
             let layout = fixture.layout(case);
-            let result = codebook(fixture.bytes(case, "scales"), fixture.bytes(case, "biases"));
+            let result = codebook(
+                fixture.bytes(case, "scales"),
+                fixture.bytes(case, "biases"),
+                4,
+            );
             if case["constructor"]["admitted"] == true {
                 let max_weight = result.unwrap();
                 if let Some(expected) = case["constructor"]["max_weight"].as_f64() {

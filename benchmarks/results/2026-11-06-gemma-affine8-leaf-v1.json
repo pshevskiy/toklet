@@ -1,0 +1,36 @@
+{
+  "passed": true,
+  "device": "Apple M1 Pro",
+  "formats": "standalone affine8 group64 BF16 metadata with FP32 input and output",
+  "authored_codes_covered": 256,
+  "authored_groups": 9,
+  "batches": [
+    1,
+    3,
+    32
+  ],
+  "independent_dots_bitwise_equal": true,
+  "residual_sensitive_exact": true,
+  "exact_minus_one_budget": true,
+  "q4_frozen_projection_passed": true,
+  "q4_real_prefix_equal": true,
+  "metal_test_passes": 696,
+  "runtime_abi_changed": false,
+  "resident_mixed_qualified": false,
+  "app_qualified": false,
+  "performance_claim": false,
+  "initial_check_failure": "Partitioned validation referred to a child-local layout name. Corrected to the already admitted parent matrix layout.",
+  "review": "Astra approved the standalone leaf and preserved affine4 resident/gather boundary.",
+  "receipts_sha256": {
+    "artifacts/gemma-affine8-leaf-2026-11-06/retry/checks.json": "48b550472758e58d7ff52948bdc16fb7f132f947856faff9ee82753cec6e7459",
+    "artifacts/gemma-affine8-leaf-2026-11-06/retry/metal-test.stdout": "4f5bc631b2c5610a3ec9f0bd037cb72d7fc41bfcaeb06386995c0eb119892651",
+    "artifacts/gemma-affine8-leaf-2026-11-06/retry/metal-clippy.stderr": "f0cfb3fd0e2f10fe420aa50daae95e38f1cefeca4c86dfd7825225ad1fedc785",
+    "artifacts/gemma-affine8-leaf-2026-11-06/metal-clippy.stderr": "24f35f077970321b2615ff6546ebd94842d065e8adb28d8c3372ac0a2721d345",
+    "artifacts/gemma-affine8-leaf-2026-11-06/q8/owned.json": "f9fa79d6fb125abfe91e9817d4c0dd16d8e0260850c22273cb8889577f3eb198",
+    "artifacts/gemma-affine8-leaf-2026-11-06/q8/gpu.stdout": "4aafb13cb8054080661e248514df2e7ebfa98e2fe7bf2287a97fb1e77d29e2b9",
+    "artifacts/gemma-affine8-leaf-2026-11-06/q4/owned.json": "8ccc6d285a0a1e7186a2c40a04c5bc2fde69d10f8b13982fe1504ff9e1a12be3",
+    "artifacts/gemma-affine8-leaf-2026-11-06/q4/gpu.stdout": "9cda56c2aafbfaf61afd4b64486396641b427fc19d38a5f387fc5212274390ad",
+    "artifacts/gemma-affine8-leaf-2026-11-06/q4-prefix/owned.json": "eb98c92a2b42af4202caae985c20a3f253deb0f7adf5cfb353bb76f828b0e1fa",
+    "artifacts/gemma-affine8-leaf-2026-11-06/q4-prefix/arrays.bin": "e062f4109c5dfb237f2e939a8e5df3e27063976ca3dc739f3b74ef1190904ac2"
+  }
+}

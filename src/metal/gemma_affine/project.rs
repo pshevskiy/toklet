@@ -18,6 +18,9 @@ pub(super) fn run(
     output: &mut [f32],
     tokens: usize,
 ) -> Result<()> {
+    if weights.layout.bits() != context.projection_bits {
+        return Err(Error::Options("Gemma affine projection width"));
+    }
     autoreleasepool(|_| {
         buffers.input.with_mut(|out| {
             out.fill(SENTINEL);

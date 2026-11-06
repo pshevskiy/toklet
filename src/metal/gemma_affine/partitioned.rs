@@ -145,7 +145,7 @@ impl Context {
             }
         }
         let (_, scales, biases) = matrix.original_tensors();
-        codebook(scales, biases)?;
+        codebook(scales, biases, matrix.layout().bits())?;
         let mut chunks = Vec::new();
         chunks
             .try_reserve_exact(plan.chunks)

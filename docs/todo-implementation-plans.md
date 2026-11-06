@@ -128,6 +128,7 @@ authored original-code fixtures. Keep group64/BF16 storage and the current
 FP32 compensation. Validate the full byte codebook, guarded budgets,
 residual-sensitive dots and affine4 parity. Keep the resident loader and
 catalog out of this task.
+[Standalone affine8 evidence](../benchmarks/results/2026-11-06-gemma-affine8-leaf-v1.json).
 
 **Pinned native QAT diagnostic.** Verify the mixed cold tensor plan and
 consumed byte identity. Reuse the affine layout as the pool key, admit

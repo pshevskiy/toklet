@@ -243,7 +243,7 @@ impl Context {
             let biases = &mut biases[..child.metadata_bytes()];
             fill(first, child, codes, scales, biases)?;
             Matrix::from_le_bytes(child, codes, scales, biases).map_err(|e| Error::Options(e.0))?;
-            max_weight = max_weight.max(codebook(scales, biases)?);
+            max_weight = max_weight.max(codebook(scales, biases, child.bits())?);
             chunks.push(Chunk {
                 layout: child,
                 codes: loading::upload(&self.gpu, codes)?,

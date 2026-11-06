@@ -1,4 +1,4 @@
-//! Resident packed4/group64/BF16 projection with FP32 activations and outputs.
+//! Resident packed group64/BF16 projection with FP32 activations and outputs.
 //!
 //! Standalone bounded correctness surface, not a whole Gemma graph or a tuned
 //! GEMM. Direct affine reconstruction and dot accumulation have independent
@@ -32,16 +32,26 @@ const SENTINEL: u32 = 0x5a17_0031;
 const MAX_WEIGHT: f32 = 4294967296.;
 const ORDERED_ERROR_LIMIT: f64 = 1e-5 / 16.;
 
-/// One cached device/queue, existing default pipelines and one precise packed
-/// projection pipeline. Context allowance is policy, not measured residency;
+/// One cached device/queue and precise affine4 projection pipeline.
+/// Context allowance is policy, not measured residency;
 /// admit caller storage and each owner's actual buffers separately.
 pub struct Context {
     gpu: Gpu,
     pipeline: Retained<ProtocolObject<dyn MTLComputePipelineState>>,
     width: usize,
+    projection_bits: u8,
 }
 impl Context {
     pub fn new(available_bytes: usize) -> Result<Self> {
+        Self::with_projection_pipeline(available_bytes, 4)
+    }
+
+    fn with_projection_pipeline(available_bytes: usize, projection_bits: u8) -> Result<Self> {
+        let name = match projection_bits {
+            4 => "gemma_affine_product",
+            8 => "gemma_affine_product_8",
+            _ => return Err(Error::Options("Gemma affine projection width")),
+        };
         if available_bytes < CONTEXT_ALLOWANCE_BYTES {
             return Err(Error::Budget {
                 required: CONTEXT_ALLOWANCE_BYTES,
@@ -68,7 +78,7 @@ impl Context {
                 )
                 .map_err(|e| Error::Native(e.to_string()))?;
             let function = library
-                .newFunctionWithName(&NSString::from_str("gemma_affine_product"))
+                .newFunctionWithName(&NSString::from_str(name))
                 .ok_or_else(|| Error::Native("Gemma affine kernel absent".into()))?;
             let pipeline = gpu
                 .device
@@ -85,16 +95,18 @@ impl Context {
                 gpu,
                 pipeline,
                 width,
+                projection_bits,
             })
         })
     }
+
     pub fn device_name(&self) -> String {
         self.gpu.device.name().to_string()
     }
 
     /// Upload original contiguous packed tensors once. Batches1..capacity reuse
-    /// the same weights and scratch; no dense matrix is expanded. Fixed format
-    /// is4-bit/group64/BF16, outputs1..16384, columns64..12288, capacity1..32.
+    /// the same weights and scratch; no dense matrix is expanded. The format is
+    /// affine4/group64/BF16, outputs1..16384, columns64..12288 and capacity1..32.
     pub fn affine(
         &self,
         layout: Layout,
@@ -104,7 +116,10 @@ impl Context {
         capacity: usize,
         available_owned_bytes: usize,
     ) -> Result<Affine<'_>> {
-        let sizes = Sizes::new(layout, capacity)?;
+        if layout.bits() != self.projection_bits {
+            return Err(Error::Options("Gemma affine projection width"));
+        }
+        let sizes = Sizes::projection(layout, capacity)?;
         if sizes.owned > available_owned_bytes {
             return Err(Error::Budget {
                 required: sizes.owned,
@@ -112,7 +127,7 @@ impl Context {
             });
         }
         Matrix::from_le_bytes(layout, weights, scales, biases).map_err(|e| Error::Options(e.0))?;
-        let max_weight = codebook(scales, biases)?;
+        let max_weight = codebook(scales, biases, layout.bits())?;
         for words in sizes.buffers() {
             validate_buffer_bytes((words + GUARD) * 4, self.gpu.device.maxBufferLength())?;
         }
@@ -131,6 +146,38 @@ impl Context {
             poisoned: false,
             pending: None,
         })
+    }
+}
+
+/// Standalone affine8 projection context. It owns one pipeline under the same
+/// context allowance as affine4. Its distinct type keeps the existing
+/// affine4 resident and gather entry points outside this capability.
+pub struct Affine8Context(Context);
+
+impl Affine8Context {
+    pub fn new(available_bytes: usize) -> Result<Self> {
+        Context::with_projection_pipeline(available_bytes, 8).map(Self)
+    }
+
+    /// Upload original packed affine8/group64/BF16 rows and admit guarded
+    /// FP32 scratch for the selected batch capacity.
+    pub fn affine(
+        &self,
+        layout: Layout,
+        weights: &[u8],
+        scales: &[u8],
+        biases: &[u8],
+        capacity: usize,
+        available_owned_bytes: usize,
+    ) -> Result<Affine<'_>> {
+        self.0.affine(
+            layout,
+            weights,
+            scales,
+            biases,
+            capacity,
+            available_owned_bytes,
+        )
     }
 }
 #[derive(Clone, Copy)]
@@ -153,7 +200,15 @@ impl Sizes {
         ]
     }
     fn new(layout: Layout, capacity: usize) -> Result<Self> {
-        if layout.bits() != 4
+        if layout.bits() != 4 {
+            return Err(Error::Options(
+                "Gemma affine fixed geometry/format outside bounds",
+            ));
+        }
+        Self::projection(layout, capacity)
+    }
+    fn projection(layout: Layout, capacity: usize) -> Result<Self> {
+        if !matches!(layout.bits(), 4 | 8)
             || layout.group_size() != 64
             || layout.metadata_dtype() != MetadataDtype::BF16
             || layout.rows() > 16384
@@ -187,7 +242,7 @@ impl Sizes {
 }
 // Called only after exact BF16 lengths/finiteness pass Matrix admission. Bound
 // all possible codes, including unused ones, without expanding packed weights.
-fn codebook(scales: &[u8], biases: &[u8]) -> Result<f64> {
+fn codebook(scales: &[u8], biases: &[u8], bits: u8) -> Result<f64> {
     let read = |bytes: &[u8]| {
         f32::from_bits(u32::from(u16::from_le_bytes(bytes.try_into().unwrap())) << 16)
     };
@@ -197,7 +252,7 @@ fn codebook(scales: &[u8], biases: &[u8]) -> Result<f64> {
         if scale.is_subnormal() || bias.is_subnormal() {
             return Err(Error::Unsupported("Gemma affine metadata domain"));
         }
-        for code in 0..16 {
+        for code in 0..(1u32 << bits) {
             let value = (f64::from(scale) * f64::from(code) + f64::from(bias)) as f32;
             if !value.is_finite() {
                 return Err(Error::Unsupported(
