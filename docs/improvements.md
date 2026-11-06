@@ -10903,3 +10903,6 @@ exactly, and the earlier trajectory bytes match. Astra approves retention
 with the fresh numerical, state, legacy and late-failure evidence. Managed
 Mac ownership and app adoption remain separate.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-rounding-quality-v1.json)
+
+The separate holdout fixture reuses the wrap checks for the first eviction.
+Astra approves the test refactor and exact regression of the original capture.

@@ -681,6 +681,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
       cases, legacy and late failure checks, corrected10k loss and51/100
       task grade pass. All4,149 sampled decisions replay exactly. Astra approves.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-rounding-quality-v1.json).
+    - [x] Keep the reviewed651-token holdout fixture. The shared test path
+      reproduces the original wrap capture byte for byte.
+      [Evidence](benchmarks/results/2026-11-06-gemma-bf16-rounding-numerical-v1.json).
     - [ ] Add the audited Mac owner, paired codec and complete memory facts.
       Verify the Rust and app lifecycles before enabling discovery or transport.
     - [x] Complete replay and isolated grading for the frozen100 tasks.

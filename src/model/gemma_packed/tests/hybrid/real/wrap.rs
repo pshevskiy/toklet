@@ -84,11 +84,37 @@ fn assert_source_unchanged(file: &std::fs::File, path: &std::path::Path, origina
 #[test]
 #[ignore = "explicit official BF16 1025-position quality-only state probe"]
 fn official_bf16_wrap_schedules_overflow_and_reset() {
+    official_bf16_wrap(original_wrap_fixture());
+}
+
+#[cfg(target_os = "macos")]
+#[test]
+#[ignore = "explicit official BF16 pre-frozen 651-token arithmetic holdout"]
+fn official_bf16_holdout_wrap() {
+    let raw = include_bytes!("../../../../../../benchmarks/gemma-quality-v1/held_out_loss.u32le");
+    let ids = wrap_ids(&raw[2048 * 4..2699 * 4]);
+    let mut first = vec![32; 16];
+    first.extend([1, 32, 32, 32, 32, 10]);
+    let mut second = vec![32; 8];
+    second.extend([31; 8]);
+    second.extend([32, 32, 32, 32, 19]);
+    assert_eq!(ids.len(), 651);
+    official_bf16_wrap(WrapFixture {
+        ids,
+        schedules: [first, second],
+        selected: [0, 31, 127, 433, 511, 512, 649, 650],
+        milestones: &[512, 513, 651],
+    });
+}
+
+#[cfg(target_os = "macos")]
+fn official_bf16_wrap(fixture: WrapFixture) {
     let (source, context, path, original) = super::bf16::load_official();
     let owner = source.test_retained_digest();
     let budget = PROCESS - DIAGNOSTIC;
-    assert!(source.model(1025).is_err());
-    let model = source.model_for_quality_probe(1025).unwrap();
+    let capacity = fixture.ids.len();
+    assert!(source.model(capacity).is_err());
+    let model = source.model_for_quality_probe(capacity).unwrap();
     assert!(model.content_identity().is_none());
     let warm = source.new_session(&model, &context, 32, budget).unwrap();
     let owned = warm.allocated_bytes().unwrap();
@@ -103,10 +129,11 @@ fn official_bf16_wrap_schedules_overflow_and_reset() {
         "BF16_WRAP_ADMISSION",
         json!({"required_bytes":required,"session_bytes":owned}),
     );
-    run_wrap(
+    run_wrap_fixture(
         &model,
         || source.new_session(&model, &context, 32, required).unwrap(),
         owned,
+        fixture,
         || {
             assert_eq!(source.test_retained_digest(), owner);
             assert_eq!(
@@ -126,11 +153,32 @@ fn run_wrap<'model, 'weights, M, B>(
     M: MatrixSource,
     B: Operations<M, Error = hybrid::Error>,
 {
+    run_wrap_fixture(
+        model,
+        new_session,
+        expected_allocated,
+        original_wrap_fixture(),
+        verify_source,
+    );
+}
+
+struct WrapFixture {
+    ids: Vec<u32>,
+    schedules: [Vec<usize>; 2],
+    selected: [usize; 8],
+    milestones: &'static [usize],
+}
+
+fn wrap_ids(raw: &[u8]) -> Vec<u32> {
+    assert!(raw.len().is_multiple_of(4));
+    raw.chunks_exact(4)
+        .map(|word| u32::from_le_bytes(word.try_into().unwrap()))
+        .collect()
+}
+
+fn original_wrap_fixture() -> WrapFixture {
     let raw = include_bytes!("../../../../../../benchmarks/gemma-e2b-wrap-v1/tokens.u32le");
-    let ids: Vec<u32> = raw
-        .chunks_exact(4)
-        .map(|v| u32::from_le_bytes(v.try_into().unwrap()))
-        .collect();
+    let ids = wrap_ids(raw);
     assert_eq!(ids.len(), 1025);
     let mut first = vec![32; 16];
     first.push(1);
@@ -141,22 +189,52 @@ fn run_wrap<'model, 'weights, M, B>(
     second.push(32); // 504 -> 536 crosses the first eviction in one call.
     second.extend([32; 15]);
     second.push(9); // 1016 -> 1025 crosses the second wrap in one call.
-    assert_eq!(first.iter().sum::<usize>(), 1025);
-    assert_eq!(second.iter().sum::<usize>(), 1025);
-    let selected = [0, 31, 255, 511, 512, 767, 1023, 1024];
+    WrapFixture {
+        ids,
+        schedules: [first, second],
+        selected: [0, 31, 255, 511, 512, 767, 1023, 1024],
+        milestones: &[512, 513, 1024, 1025],
+    }
+}
+
+fn run_wrap_fixture<'model, 'weights, M, B>(
+    model: &'model Model<'weights, M>,
+    new_session: impl Fn() -> Session<'model, 'weights, M, B>,
+    expected_allocated: usize,
+    fixture: WrapFixture,
+    verify_source: impl FnOnce(),
+) where
+    M: MatrixSource,
+    B: Operations<M, Error = hybrid::Error>,
+{
+    let WrapFixture {
+        ids,
+        schedules,
+        selected,
+        milestones,
+    } = fixture;
+    let position_limit = ids.len();
+    assert!(
+        schedules
+            .iter()
+            .all(|s| s.iter().sum::<usize>() == position_limit)
+    );
     let mut capture = capture::Capture::bounded(DIAGNOSTIC);
     let mut expected256 = None;
-    let mut expected1025 = None;
+    let mut expected_final = None;
     let mut prefix_hash = None;
     let mut all_rows = None;
     let mut prefix_caches: Vec<(Vec<u32>, Vec<u32>)> = Vec::new();
-    for (schedule_index, schedule) in [first, second].into_iter().enumerate() {
+    for (schedule_index, schedule) in schedules.into_iter().enumerate() {
         emit(
             "WRAP_SCHEDULE",
             json!({"index":schedule_index,"chunks":schedule}),
         );
         let mut session = new_session();
-        assert_eq!((session.capacity(), session.chunk_capacity()), (1025, 32));
+        assert_eq!(
+            (session.capacity(), session.chunk_capacity()),
+            (position_limit, 32)
+        );
         let allocated = session.allocated_bytes().unwrap();
         assert_eq!(allocated, expected_allocated);
         let pointers_before = pointers(&session);
@@ -192,9 +270,9 @@ fn run_wrap<'model, 'weights, M, B>(
             for (owner, cache) in session.caches.iter().enumerate() {
                 let layer = &model.layout.layers[owner];
                 let capacity = if layer.kind == KvKind::Full {
-                    1025
+                    position_limit
                 } else {
-                    512
+                    model.layout.window
                 };
                 let (k, v) = cache.committed();
                 assert_eq!(
@@ -213,7 +291,7 @@ fn run_wrap<'model, 'weights, M, B>(
                         (position < offset).then_some(position)
                     );
                 }
-                if schedule_index == 0 && [512, 513, 1024, 1025].contains(&offset) {
+                if schedule_index == 0 && milestones.contains(&offset) {
                     let slots: Vec<_> = (0..capacity)
                         .map(|slot| cache.position_in_slot(slot))
                         .collect();
@@ -264,7 +342,7 @@ fn run_wrap<'model, 'weights, M, B>(
             assert_eq!(pointers(&session), pointers_before);
             assert_eq!(session.allocated_bytes().unwrap(), allocated);
         }
-        assert_eq!(offset, 1025);
+        assert_eq!(offset, position_limit);
         let complete_rows = full_digest.finalize();
         if let Some(prior) = all_rows {
             assert_eq!(complete_rows, prior);
@@ -275,17 +353,17 @@ fn run_wrap<'model, 'weights, M, B>(
         assert!(matches!(
             session.forward(&[ids[0]]),
             Err(hybrid::Error::Model(Error::Capacity {
-                offset: 1025,
+                offset,
                 tokens: 1,
-                limit: 1025
-            }))
+                limit
+            })) if offset == position_limit && limit == position_limit
         ));
         assert_eq!(snapshot(&session), before);
         let final_state = canonical(before, 262144);
-        if let Some(expected) = &expected1025 {
+        if let Some(expected) = &expected_final {
             assert_eq!(&final_state, expected);
         } else {
-            expected1025 = Some(final_state);
+            expected_final = Some(final_state);
         }
         session.reset().unwrap();
         assert!(session.tokens().is_empty() && session.logits().is_empty());
@@ -326,18 +404,18 @@ fn run_wrap<'model, 'weights, M, B>(
         assert_eq!(session.allocated_bytes().unwrap(), allocated);
         emit(
             "WRAP_STATE",
-            json!({"schedule":schedule_index,"committed":1025,
+            json!({"schedule":schedule_index,"committed":position_limit,
             "overflow_preserved":true,"reset_all32_rows_exact":true,"reset_all15_valid_kv_prefixes_exact":true,
-            "allocated_bytes":allocated,"cross_schedule_endpoints":[256,1025]}),
+            "allocated_bytes":allocated,"cross_schedule_endpoints":[256,position_limit]}),
         );
     }
-    assert!(expected256.is_some() && expected1025.is_some());
+    assert!(expected256.is_some() && expected_final.is_some());
     verify_source();
     capture.finish();
     emit(
         "WRAP_COMPLETE",
         json!({"state_passed":true,"numerical_decision":"separate reference replay",
-        "positions":1025,"selected_positions":selected,"retained_milestones":[512,513,1024,1025],
+        "positions":position_limit,"selected_positions":selected,"retained_milestones":milestones,
         "prior_precision_failures_waived":false,"app_qualified":false,"phone_qualified":false}),
     );
 }
