@@ -222,9 +222,17 @@ fn producer<'a, M: MatrixSource, B: Operations<M>>(
     Ok(frame)
 }
 
+#[derive(Clone, Copy)]
+pub(super) enum OutputRows {
+    All,
+    #[cfg(test)]
+    Last,
+}
+
 pub(super) fn run<M: MatrixSource, B: Operations<M>>(
     session: &mut Session<'_, '_, M, B>,
     tokens: &[u32],
+    output: OutputRows,
 ) -> Result<(), B::Error> {
     cpu::nonzero(tokens.len(), "Gemma chunk")?;
     if tokens.len() > session.chunk_rows {
@@ -316,16 +324,30 @@ pub(super) fn run<M: MatrixSource, B: Operations<M>>(
         }
     }
     debug_assert!(!frames.spilled());
+    let (tail_count, tail_offset) = match output {
+        OutputRows::All => (count, offset),
+        #[cfg(test)]
+        OutputRows::Last => {
+            // Producers staged every token. Only the final hidden and its full
+            // token-major PLE row advance through the consumer-only tail.
+            if count > 1 {
+                s.hidden.copy_within(h - l.hidden..h, 0);
+                s.ple.copy_within(p - l.layers.len() * l.ple..p, 0);
+            }
+            (1, after - 1)
+        }
+    };
+    let h = tail_count * l.hidden;
     for index in l.producers..l.layers.len() {
-        queries(ops, index, model, s, count, offset)?;
+        queries(ops, index, model, s, tail_count, tail_offset)?;
         finish(
             ops,
             index,
             model,
             s,
             session.plan.view(index, &session.caches, &frames)?,
-            count,
-            offset,
+            tail_count,
+            tail_offset,
         )?;
         #[cfg(test)]
         if session.fault == Some(index) {
@@ -336,7 +358,7 @@ pub(super) fn run<M: MatrixSource, B: Operations<M>>(
         &s.hidden[..h],
         model.weights.final_norm,
         &mut s.norm[..h],
-        count,
+        tail_count,
         l.hidden,
         EPSILON,
     )?;
@@ -347,14 +369,14 @@ pub(super) fn run<M: MatrixSource, B: Operations<M>>(
     ops.project(
         &s.norm[..h],
         &model.weights.embedding,
-        &mut s.logits[..count * l.vocab],
-        count,
+        &mut s.logits[..tail_count * l.vocab],
+        tail_count,
     )?;
     #[cfg(test)]
     if session.fault == Some(l.layers.len() + 1) {
         return Err(Error::InvalidConfig("injected Gemma head failure").into());
     }
-    cpu::logit_softcap(&mut s.logits[..count * l.vocab], 30.)?;
+    cpu::logit_softcap(&mut s.logits[..tail_count * l.vocab], 30.)?;
     #[cfg(test)]
     if session.fault == Some(l.layers.len() + 2) {
         return Err(Error::InvalidConfig("injected Gemma final failure").into());
@@ -364,7 +386,7 @@ pub(super) fn run<M: MatrixSource, B: Operations<M>>(
     session.plan.commit(&mut session.caches, &frames)?;
     session.history[offset..after].copy_from_slice(tokens);
     session.committed = after;
-    session.published_rows = count;
+    session.published_rows = tail_count;
     std::mem::swap(&mut s.logits, &mut s.published);
     Ok(())
 }

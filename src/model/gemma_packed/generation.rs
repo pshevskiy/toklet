@@ -248,6 +248,16 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
     /// reset failure keeps needs_replay=true, evaluated_len0 and logits hidden.
     /// A later forward failure preserves the now-valid committed inner prefix.
     pub fn evaluate_next_chunk(&mut self) -> Result<usize, session::Error> {
+        self.evaluate_next_chunk_rows(forward::OutputRows::All)
+    }
+    #[cfg(test)]
+    pub(crate) fn evaluate_next_chunk_last_row(&mut self) -> Result<usize, session::Error> {
+        self.evaluate_next_chunk_rows(forward::OutputRows::Last)
+    }
+    fn evaluate_next_chunk_rows(
+        &mut self,
+        output: forward::OutputRows,
+    ) -> Result<usize, session::Error> {
         let count = self.pending_len().min(self.chunk);
         if count == 0 {
             return Ok(0);
@@ -257,8 +267,7 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
             self.needs_replay = false;
         }
         let start = self.inner.tokens().len();
-        self.inner
-            .forward(&self.history[start..start + count])
+        forward::run(&mut self.inner, &self.history[start..start + count], output)
             .map_err(Into::into)?;
         Ok(count)
     }

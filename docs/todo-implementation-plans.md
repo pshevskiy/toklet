@@ -420,18 +420,32 @@ failure and cancellation across chunk and ring boundaries. Repeat with the
 selected checkpoint. Compare completed prefill timing and physical owners
 on the same pinned workloads before retaining the change.
 
-**G3 MTP.** The prospective QAT assistant has24 affine4 matrices and a
-262,144-entry ordering tensor. The target and draft share every base piece
-ID. The target adds a video control. Pairing to this target revision needs
-an interface and proposal check. [Header evidence](../benchmarks/results/2026-11-06-gemma-qat-assistant-header-v1.json)
-and [pinned assistant](https://huggingface.co/mlx-community/gemma-4-E2B-it-qat-assistant-4bit/tree/7acb8d02364777be103dbf8c8dcb007f55f717e6).
+The [test-only candidate](../benchmarks/results/2026-11-06-gemma-bf16-g2-candidate-v1.json)
+matches real BF16 last logits and all physical KV at chunk1/33, chunk3/65 and
+chunk32/512. The timed workload uses the frozen loss token IDs. Primary is
+384 input plus128 output, with128+128 and511+1 controls. Use three warmups
+and ten paired samples per workload, then repeat with the order reversed.
+Retain only a primary gain of at least5% beyond variation and no unexplained
+control regression. Add multirow tail/head failure controls before promotion.
 
-Pin the installed interface, target embedding/hidden state and shared
-local/global KV inputs. Authenticate the draft and independently check the
-complete token permutation, centroid top32 ties and output IDs. Use the
-target tokenizer and keep draft state separate. Verify exact target greedy,
-rejection, partial acceptance, hidden stops, cancellation and ring
-rollback before measuring acceptance rate, latency and memory. [Reference interface](https://huggingface.co/docs/transformers/model_doc/gemma4_assistant).
+**G3 MTP.** Use the official E2B assistant paired with the selected BF16
+target. The exact157,565,344-byte shard has49 BF16 tensors and one I64
+permutation. The bounded header is sealed. Prior QAT metadata stays separate.
+[Assistant revision](https://huggingface.co/google/gemma-4-E2B-it-assistant/tree/2d874ef7d29f9a30599a1e4b3c1cbc9595f005df)
+and [header evidence](../benchmarks/results/2026-11-06-gemma-official-assistant-header-v1.json).
+
+Authenticate the payload and validate all262,144 canonical token IDs before
+loading its ordered head. Check top32 centroid selection and 4,096 candidate
+IDs. The first draft consumes the scaled target embedding and final hidden
+state. Later proposals use the assistant's projected hidden state. Borrow
+target producers13 and14 without writes, at the fixed last committed position
+within each round. [Official interface](https://huggingface.co/docs/transformers/model_doc/gemma4_assistant).
+
+First qualify one proposal on captured target inputs. Then verify bounded
+multi-token proposals against exact target greedy IDs. Retain the target's
+full-row verification path for intermediate decisions. Commit only the
+accepted cache prefix. Exercise rejection, hidden stop, cancellation and
+local-ring rollback before measuring acceptance, latency and memory.
 
 ### Llama Online correctness
 

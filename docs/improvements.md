@@ -10984,3 +10984,11 @@ process peaks at 4.96 GB. AppKit, dense regressions, both iOS SDKs and Astra
 pass. A late corrupted PLE row preserves 15 committed tokens.
 [Settings evidence](../benchmarks/results/2026-11-06-gemma-bf16-live-window-v1.json)
 [PLE evidence](../benchmarks/results/2026-11-06-gemma-bf16-late-ple-v1.json)
+
+## 6 November 2026 — Qualify the last-row Gemma prefill candidate for timing
+
+The test-only path matches real last logits and all KV bits through 512
+positions. Tiny schedules and fault controls pass with 590 default and
+709 Metal tests. Astra approves the candidate and timing runner. Paired
+measurements and multirow failure coverage precede runtime selection.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-g2-candidate-v1.json)

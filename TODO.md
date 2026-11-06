@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **G2 last-row shared-KV prefill parity and Mac performance.**
+Current task: **Measure G2 paired Mac performance and prepare the G3 assistant import.**
 The native45 Mac build passed active same-owner context/KV changes and
 rendered Settings. Full public Gemma transfer remains open after two
 timeouts; cached publication and offline Chat pass.
@@ -784,7 +784,15 @@ Conditional follow-ons require their own decision; they do not all block M9:
   gain on the repeated contract prompt. The code prompt misses the 5% gate.
   Retain the explicit nonstreaming API and reject default adoption.
 - [ ] G2: qualify checkpoint-defined last-row shared-KV prefill on Mac.
+  - [x] Test-only candidate, exact tiny and real parity, frozen paired runner
+    and Astra. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-g2-candidate-v1.json).
+  - [ ] Finish both timing orders and test tail/head failure after multirow
+    compaction before selecting the runtime route.
 - [ ] G3: authenticate and qualify the official Gemma assistant for MTP.
+  - [x] Pin the compatible official assistant and upstream interface.
+    [Header evidence](benchmarks/results/2026-11-06-gemma-official-assistant-header-v1.json).
+  - [ ] Authenticate the full artifact, then qualify ordered-head selection,
+    draft forward, shared-KV verification and representative Mac timing.
   [Last-row prefill and assistant plans](docs/todo-implementation-plans.md#g2g3-shared-kv-and-mtp).
   The prospective assistant header and target token-ID comparison pass.
   [Evidence](benchmarks/results/2026-11-06-gemma-qat-assistant-header-v1.json).

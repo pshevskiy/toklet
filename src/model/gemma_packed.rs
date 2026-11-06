@@ -828,7 +828,7 @@ impl<M: MatrixSource, B: Operations<M>> Session<'_, '_, M, B> {
     /// Append within the admitted context and chunk bounds. Failure preserves all
     /// committed KV/history and the prior public logits; scratch is discardable.
     pub fn forward(&mut self, tokens: &[u32]) -> Result<&[f32], B::Error> {
-        forward::run(self, tokens)?;
+        forward::run(self, tokens, forward::OutputRows::All)?;
         Ok(self.logits())
     }
 }

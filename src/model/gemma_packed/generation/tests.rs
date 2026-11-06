@@ -8,6 +8,8 @@ use std::{
 };
 
 mod capacity;
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+mod g2;
 
 fn options() -> Options {
     Options {
@@ -395,3 +397,60 @@ fn warmed_history_evaluation_replay_reset_and_discard_allocate_nothing() {
 }
 
 mod long_context;
+
+#[test]
+fn last_row_prefill_matches_full_tail_and_preserves_transactional_cache() {
+    let data = fixture::Fixture::new();
+    let model = Model::new(data.weights()).unwrap();
+    for chunk in [1, 3, 32] {
+        let options = Options {
+            prefill_chunk_size: chunk,
+            ..options()
+        };
+        let mut full = model.new_generation_session(options).unwrap();
+        let mut last = model.new_generation_session(options).unwrap();
+        let ids: Vec<_> = data.ids.iter().copied().cycle().take(31).collect();
+        for session in [&mut full, &mut last] {
+            session.append(&ids).unwrap();
+        }
+        while full.pending_len() > 0 {
+            let rows = full.evaluate_next_chunk().unwrap();
+            let measured = Measurement::start();
+            let actual = last.evaluate_next_chunk_last_row().unwrap();
+            assert_eq!(measured.finish(), 0);
+            assert_eq!(rows, actual);
+            assert_eq!(last.inner.tokens(), full.inner.tokens());
+            assert_eq!(last.inner.logits().len(), VOCAB_SIZE);
+            let expected = full.inner.logits();
+            assert!(
+                expected[expected.len() - VOCAB_SIZE..]
+                    .iter()
+                    .map(|x| x.to_bits())
+                    .eq(last.inner.logits().iter().map(|x| x.to_bits()))
+            );
+            for (a, b) in full.inner.caches.iter().zip(&last.inner.caches) {
+                assert_eq!((a.offset(), a.generation()), (b.offset(), b.generation()));
+                let (ak, av) = a.committed();
+                let (bk, bv) = b.committed();
+                assert!(
+                    ak.iter()
+                        .chain(av)
+                        .map(|x| x.to_bits())
+                        .eq(bk.iter().chain(bv).map(|x| x.to_bits()))
+                );
+            }
+        }
+        let before = snapshot(&last.inner);
+        last.append(&ids[..1]).unwrap();
+        assert!(last.append(&ids[..1]).is_err());
+        for fault in [model.layout.producers, model.layout.layers.len() + 1] {
+            last.inner.fault = Some(fault);
+            assert!(last.evaluate_next_chunk_last_row().is_err());
+            assert_eq!(snapshot(&last.inner), before);
+            assert_eq!(last.pending_len(), 1);
+        }
+        last.inner.fault = None;
+        assert_eq!(last.evaluate_next_chunk_last_row().unwrap(), 1);
+        assert_eq!(last.evaluated_len(), 32);
+    }
+}

@@ -1,0 +1,20 @@
+{
+  "repository": "google/gemma-4-E2B-it-assistant",
+  "revision": "2d874ef7d29f9a30599a1e4b3c1cbc9595f005df",
+  "config_bytes": 2315,
+  "config_sha256": "7f42f559a6a69ffaeaf6b61a1ece3a562a2ed5ad00b8d30f16917ba5ab1bcbe9",
+  "header_bytes": 5520,
+  "header_sha256": "6179f5c61f819bf278f6199e454d2fe5b5846dda74a6cd7adb93672c492960a3",
+  "tensor_count": 50,
+  "container_bytes": 157565344,
+  "container_sha256": "93682eb1c97639d18f007704dc880bd74cbe530adaf7b1bb561213863fdad2a6",
+  "format": "toklet-gemma-official-assistant-header-v1",
+  "whole_payload_verified": false,
+  "transformers_revision": "9fa60240cda17fa4a4de951c6fe92c2bff5524a1",
+  "scope": "Exact bounded config and header, plus primary-source pairing. No numerical qualification.",
+  "evidence_sha256": {
+    "artifacts/gemma-official-assistant-2026-11-06/config.json": "7f42f559a6a69ffaeaf6b61a1ece3a562a2ed5ad00b8d30f16917ba5ab1bcbe9",
+    "artifacts/gemma-official-assistant-2026-11-06/header.json": "6179f5c61f819bf278f6199e454d2fe5b5846dda74a6cd7adb93672c492960a3",
+    "artifacts/gemma-official-assistant-2026-11-06/source-sha.txt": "84639ac522b545fec0a2b3629cba542649e73395534b8f076d8efcb9169a1740"
+  }
+}

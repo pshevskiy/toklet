@@ -1,0 +1,42 @@
+{
+  "format": "toklet-gemma-bf16-g2-candidate-v1",
+  "scope": "Test-only generation last-row candidate. Full-row ordinary generation, diagnostic scoring, and signed Mac app remain on the existing path.",
+  "tiny_exact": true,
+  "failed_tail_and_head_preserve_committed_prefix": true,
+  "real_exact_cases": [
+    {
+      "chunk": 1,
+      "positions": 33,
+      "kv_bytes": 18911232
+    },
+    {
+      "chunk": 3,
+      "positions": 65,
+      "kv_bytes": 18984960
+    },
+    {
+      "chunk": 32,
+      "positions": 512,
+      "kv_bytes": 20054016
+    }
+  ],
+  "peak_physical_bytes": 5033824624,
+  "checks": {
+    "default": 590,
+    "metal": 709,
+    "ios_rust_targets": 2
+  },
+  "paired_driver_smoke": true,
+  "performance_qualification_complete": false,
+  "initial_failure": "Benchmark harness called the generation entry point by the wrong name. Corrected before all final runs.",
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-g2-2026-11-06/checks.json": "949016478f1bfbba3838bc8af5f60ea51dca86e08f0c5a5f80646d02851d4ea6",
+    "artifacts/gemma-bf16-g2-2026-11-06/cross-checks.txt": "e38d2d034da3036fab6f35a62dd37d2e1c3785ef69f0b92b8d22e1518c96174e",
+    "artifacts/gemma-bf16-g2-2026-11-06/initial.stderr": "b427222e723b83e8cc5b87b96db5535e605a41ae1c1f306f0267d4b84702bf14",
+    "artifacts/gemma-bf16-g2-2026-11-06/targeted.stdout": "c8591cb3d7590cce771b24784827a3f30e480bb036530ef080828b19d28fd589",
+    "artifacts/gemma-bf16-g2-2026-11-06/parity/owned.json": "970c9551bb311cb3d04c38b6aec289b2d6fcf2c1f3152f153f7b1c6672c536b9",
+    "artifacts/gemma-bf16-g2-2026-11-06/parity/gpu.stdout": "3b150e81436d2f997f121cc9e32cce1d8f061ea4e17c63655346c8974b409e50",
+    "artifacts/gemma-bf16-g2-2026-11-06/paired-smoke.json": "04f4403ed3a6eb85f4163438ff0ede863ec59dc8b64e98f6c78d9acaf0b83a72"
+  },
+  "review": "Astra approves test-only exact parity and paired runner. Retention requires full timings and an injected failure after multirow compaction."
+}
