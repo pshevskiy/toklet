@@ -286,11 +286,18 @@ failure and cancellation across chunk and ring boundaries. Repeat with the
 selected checkpoint. Compare completed prefill timing and physical owners
 on the same pinned workloads before retaining the change.
 
-**G3 MTP.** Pin the matching assistant and its target inputs. Keep draft
-state separate and verify proposals using the target's strict greedy
-semantics. Test rejection, partial acceptance, hidden stops, cancellation
-and ring rollback before measuring acceptance rate, latency and memory.
-The target-only path remains the reference for every workload.
+**G3 MTP.** The prospective QAT assistant has24 affine4 matrices and a
+262,144-entry ordering tensor. The target and draft share every base piece
+ID. The target adds a video control. Pairing to this target revision needs
+an interface and proposal check. [Header evidence](../benchmarks/results/2026-11-06-gemma-qat-assistant-header-v1.json)
+and [pinned assistant](https://huggingface.co/mlx-community/gemma-4-E2B-it-qat-assistant-4bit/tree/7acb8d02364777be103dbf8c8dcb007f55f717e6).
+
+Pin the installed interface, target embedding/hidden state and shared
+local/global KV inputs. Authenticate the draft and independently check the
+complete token permutation, centroid top32 ties and output IDs. Use the
+target tokenizer and keep draft state separate. Verify exact target greedy,
+rejection, partial acceptance, hidden stops, cancellation and ring
+rollback before measuring acceptance rate, latency and memory. [Reference interface](https://huggingface.co/docs/transformers/model_doc/gemma4_assistant).
 
 ### Llama Online correctness
 

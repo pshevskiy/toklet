@@ -676,6 +676,8 @@ Conditional follow-ons require their own decision; they do not all block M9:
   Retain the explicit nonstreaming API and reject default adoption.
 - [ ] G2/G3: checkpoint-defined shared-KV prefill/MTP after selected Gemma support.
   [Last-row prefill and assistant plans](docs/todo-implementation-plans.md#g2g3-shared-kv-and-mtp).
+  The prospective assistant header and target token-ID comparison pass.
+  [Evidence](benchmarks/results/2026-11-06-gemma-qat-assistant-header-v1.json).
 - [x] Llama Online investigation: retain rejection under the frozen numerical gate.
   [Arithmetic decision and separate staged evidence](docs/todo-implementation-plans.md#llama-online-correctness).
   - [x] Isolated staged Llama Mac512 Chat controller, real prefill/decode,
@@ -1563,3 +1565,4 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | Gemma QAT quality-only KV wrap | Two 1,025-token schedules, all logits, ring states, overflow and reset pass. Legacy Q4 reproduces136 raw records. | Astra approved; 698 Metal tests and exact budget pass. [Evidence](benchmarks/results/2026-11-06-gemma-qat-wrap-state-v1.json). |
 | 2026-11-06 | G2 last-row prefill design | Astra reviewed the producer/consumer boundary, PLE slice, absolute query position and transactional commit invariants. | [Plan](docs/todo-implementation-plans.md#g2g3-shared-kv-and-mtp); implementation follows selected Gemma qualification. |
 | 2026-11-06 | Gemma QAT original-quality pilots | Fresh raw replay verifies62 sampled decisions in three cases. First1,024 loss targets and historical Q4 regressions pass. | Astra approved; full loss and tasks run with independent wrap fidelity pending. [Evidence](benchmarks/results/2026-11-06-gemma-qat-quality-pilot-v1.json). |
+| 2026-11-06 | G3 prospective QAT assistant | Bounded header checks,24 affine4 matrices and all base piece IDs match the expected inventory. Target-only video control identified. | Astra approved metadata scope. [Evidence](benchmarks/results/2026-11-06-gemma-qat-assistant-header-v1.json); interface and actual proposal checks await target selection. |

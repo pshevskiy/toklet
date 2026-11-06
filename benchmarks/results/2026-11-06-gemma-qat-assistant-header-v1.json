@@ -1,0 +1,77 @@
+{
+  "repository": "mlx-community/gemma-4-E2B-it-qat-assistant-4bit",
+  "revision": "7acb8d02364777be103dbf8c8dcb007f55f717e6",
+  "advertised_shard": {
+    "rfilename": "model.safetensors",
+    "blobId": "0eedfa065682ebd9924a99d0f980edbc0f991eb3",
+    "size": 44790955,
+    "lfs": {
+      "sha256": "41b9c66bde3a37eef7f59c32f5b97f8b2e1ebaa5150aecd549f39e12626d9cb8",
+      "size": 44790955,
+      "pointerSize": 133
+    }
+  },
+  "header_bytes": 10395,
+  "tensor_count": 98,
+  "tensor_dtypes": {
+    "I32": 1,
+    "BF16": 73,
+    "U32": 24
+  },
+  "affine_matrix_widths": {
+    "4": 24
+  },
+  "geometry": {
+    "model_type": "gemma4_assistant",
+    "backbone_hidden_size": 1536,
+    "num_centroids": 2048,
+    "centroid_intermediate_top_k": 32,
+    "use_ordered_embeddings": true,
+    "hidden_size": 256,
+    "num_hidden_layers": 4,
+    "num_attention_heads": 4,
+    "head_dim": 256,
+    "global_head_dim": 512,
+    "layer_types": [
+      "sliding_attention",
+      "sliding_attention",
+      "sliding_attention",
+      "full_attention"
+    ],
+    "vocab_size": 262144
+  },
+  "tokenizer": {
+    "target_sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f",
+    "assistant_sha256": "75a6583c1a418e2bbd79c60d95d28e0f5bf549ad3f2990b5bdb5238c6c2bf70c",
+    "target_vocabulary": 262144,
+    "assistant_vocabulary": 262144,
+    "piece_id_differences": 0,
+    "added_id_differences": 1,
+    "changed_top_level_fields": [
+      "added_tokens"
+    ],
+    "added_token_difference": {
+      "target_only": "<|video|>",
+      "id": 258884
+    }
+  },
+  "range_bytes": 131072,
+  "sha256": {
+    "config.json": "d33c99ed9cb54146d0175ab96110cbebd7217050d4fece83062d4ff243db4e8b",
+    "model.safetensors.index.json": "fc05f5da6014e13ad13b684a770d23270dcac716c6c12b799268686d0b291cc6",
+    "header.json": "9e45107d862f178bdd310d3bb4e5612abba1d1b5d8a053cad1a024631901efaf"
+  },
+  "checks": [
+    "Config and index match advertised Git blobs",
+    "Bounded 206 header response and all ordered tensor spans match the index and advertised container extent",
+    "Both exact tokenizer hashes verified; base piece-to-ID mapping compared"
+  ],
+  "initial_check": "Whole tokenizer digest equality rejects. Mapping comparison localizes the difference to one target-only video control.",
+  "review": "Astra approved the bounded metadata result and required a pinned interface, authenticated payload, complete token permutation and exact target verification before use.",
+  "scope": "Prospective assistant metadata and tokenizer inventory. Training pairing, strict live load, target binding and speed remain open.",
+  "sources": {
+    "published_mlx_artifact": "https://huggingface.co/mlx-community/gemma-4-E2B-it-qat-assistant-4bit/tree/7acb8d02364777be103dbf8c8dcb007f55f717e6",
+    "declared_drafter_source": "https://huggingface.co/google/gemma-4-E2B-it-qat-q4_0-unquantized-assistant",
+    "reference_interface": "https://huggingface.co/docs/transformers/model_doc/gemma4_assistant"
+  }
+}
