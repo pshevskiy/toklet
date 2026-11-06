@@ -1,7 +1,7 @@
 //! Cold structural adapter for the inspected Gemma4 E2B MLX candidate.
 //!
 //! This is separate from the executable dense-family registry. It describes
-//! exactly one graph/representation, excludes modalities only by explicit policy,
+//! the inspected E2B graph and named representations, excludes modalities only by explicit policy,
 //! and validates config/index/header bytes without allocating tensor payloads.
 //! A plan grants no payload integrity, numerical execution, position capacity,
 //! text profile, device fit or download/Chat eligibility.
@@ -10,6 +10,7 @@ use super::affine::{Layout, MetadataDtype};
 use crate::model::shared_kv::KvKind;
 use crate::weights::Error;
 use serde_json::{Value, json};
+use sha2::{Digest, Sha256};
 use std::collections::BTreeMap;
 
 pub mod payload;
@@ -23,6 +24,39 @@ const LAYERS: usize = 35;
 const PRODUCERS: usize = 15;
 const PLE: usize = 256;
 const MAX_HEADER_TENSORS: usize = 4096;
+const FEED_FORWARD: [&str; 3] = ["mlp.gate_proj", "mlp.up_proj", "mlp.down_proj"];
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Format {
+    Affine4,
+    QatMixed,
+}
+
+impl Format {
+    fn quantization(self) -> Value {
+        let mut quant = json!({"group_size":64,"bits":4,"mode":"affine"});
+        if self == Self::QatMixed {
+            for layer in 0..LAYERS {
+                for name in FEED_FORWARD {
+                    quant[format!("language_model.model.layers.{layer}.{name}")] =
+                        json!({"group_size":64,"bits":8});
+                }
+            }
+        }
+        quant
+    }
+
+    fn matrix_bits(self, tensor: &str) -> u8 {
+        let feed_forward = tensor
+            .strip_suffix(".weight")
+            .is_some_and(|name| FEED_FORWARD.iter().any(|role| name.ends_with(role)));
+        if self == Self::QatMixed && feed_forward {
+            8
+        } else {
+            4
+        }
+    }
+}
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ModalityPolicy {
@@ -113,7 +147,7 @@ fn expected_text_config() -> Value {
         "vocab_size":VOCAB,"vocab_size_per_layer_input":VOCAB})
 }
 
-fn config(value: &Value, policy: ModalityPolicy) -> Result<(), Error> {
+fn config(value: &Value, policy: ModalityPolicy, format: Format) -> Result<(), Error> {
     let object = value
         .as_object()
         .ok_or_else(|| invalid("Gemma4 wrapper object required"))?;
@@ -172,13 +206,20 @@ fn config(value: &Value, policy: ModalityPolicy) -> Result<(), Error> {
             ));
         }
     }
-    let quant = json!({"group_size":64,"bits":4,"mode":"affine"});
+    let quant = format.quantization();
     if value["quantization"] != quant || value["quantization_config"] != quant {
-        return Err(invalid(
-            "Gemma4 E2B requires matching four-bit/group64 affine declarations",
-        ));
+        return Err(invalid(match format {
+            Format::Affine4 => "Gemma4 E2B requires matching four-bit/group64 affine declarations",
+            Format::QatMixed => "Gemma4 QAT requires its exact mixed group64 affine declarations",
+        }));
     }
-    if !same_semantics(&value["text_config"], &expected_text_config()) {
+    let mut expected_text = expected_text_config();
+    if format == Format::QatMixed {
+        let text = expected_text.as_object_mut().unwrap();
+        text.remove("expert_intermediate_size");
+        text.insert("moe_intermediate_size".into(), Value::Null);
+    }
+    if !same_semantics(&value["text_config"], &expected_text) {
         return Err(invalid(
             "unsupported or incomplete Gemma4 E2B text graph semantics",
         ));
@@ -207,7 +248,7 @@ fn layer_plans() -> [LayerPlan; LAYERS] {
     })
 }
 
-fn logical(layers: &[LayerPlan; LAYERS]) -> Result<Vec<TensorPlan>, Error> {
+fn logical(layers: &[LayerPlan; LAYERS], format: Format) -> Result<Vec<TensorPlan>, Error> {
     let mut result = Vec::new();
     result
         .try_reserve_exact(540)
@@ -216,8 +257,14 @@ fn logical(layers: &[LayerPlan; LAYERS]) -> Result<Vec<TensorPlan>, Error> {
         let storage = match shape {
             Shape::Vector(_) => Storage::Bf16Vector,
             Shape::Matrix { rows, columns } => Storage::Affine(
-                Layout::new(rows, columns, 4, 64, MetadataDtype::BF16)
-                    .map_err(|error| invalid(error.to_string()))?,
+                Layout::new(
+                    rows,
+                    columns,
+                    format.matrix_bits(&name),
+                    64,
+                    MetadataDtype::BF16,
+                )
+                .map_err(|error| invalid(error.to_string()))?,
             ),
         };
         result.push(TensorPlan {
@@ -260,9 +307,9 @@ fn logical(layers: &[LayerPlan; LAYERS]) -> Result<Vec<TensorPlan>, Error> {
         for (name, rows, columns) in [
             ("self_attn.q_proj", 8 * layer.head_dim, HIDDEN),
             ("self_attn.o_proj", HIDDEN, 8 * layer.head_dim),
-            ("mlp.gate_proj", layer.intermediate, HIDDEN),
-            ("mlp.up_proj", layer.intermediate, HIDDEN),
-            ("mlp.down_proj", HIDDEN, layer.intermediate),
+            (FEED_FORWARD[0], layer.intermediate, HIDDEN),
+            (FEED_FORWARD[1], layer.intermediate, HIDDEN),
+            (FEED_FORWARD[2], HIDDEN, layer.intermediate),
             ("per_layer_input_gate", PLE, HIDDEN),
             ("per_layer_projection", HIDDEN, PLE),
         ] {
@@ -300,8 +347,65 @@ pub fn inspect(
     container_bytes: u64,
     policy: ModalityPolicy,
 ) -> Result<E2bPlan, Error> {
+    inspect_format(
+        config_bytes,
+        index_bytes,
+        header_bytes,
+        container_bytes,
+        policy,
+        Format::Affine4,
+    )
+}
+
+/// Inspect only the pinned mixed affine4/8 QAT metadata. The advertised
+/// container identity remains separate from the actual payload bytes.
+pub fn inspect_qat(
+    config_bytes: &[u8],
+    index_bytes: &[u8],
+    header_bytes: &[u8],
+    policy: ModalityPolicy,
+) -> Result<E2bPlan, Error> {
+    for (bytes, size, digest) in [
+        (
+            config_bytes,
+            31_198,
+            "e996bc6f3887d18d1176438680b17c24e988576d5c15a43ccf3a482a737a8f7e",
+        ),
+        (
+            index_bytes,
+            218_323,
+            "8ee3112362c6dfa13a26df2da4592c0a9aa541013918469accd86d7e8a54b11a",
+        ),
+        (
+            header_bytes,
+            320_311,
+            "330a4034f42da2ba124b7ac37925225a1959f0f2e5c08eb62c4132851773dea6",
+        ),
+    ] {
+        if bytes.len() != size || format!("{:x}", Sha256::digest(bytes)) != digest {
+            return Err(invalid("Gemma4 QAT pinned metadata differs"));
+        }
+    }
+    inspect_format(
+        config_bytes,
+        index_bytes,
+        header_bytes,
+        4_329_240_325,
+        policy,
+        Format::QatMixed,
+    )
+}
+
+fn inspect_format(
+    config_bytes: &[u8],
+    index_bytes: &[u8],
+    header_bytes: &[u8],
+    container_bytes: u64,
+    policy: ModalityPolicy,
+    format: Format,
+) -> Result<E2bPlan, Error> {
     let document = super::qwen::parse_json(config_bytes)?;
-    config(&document, policy)?;
+    config(&document, policy, format)?;
     let index = super::qwen::parse_json(index_bytes)?;
     let header = super::qwen::parse_json(header_bytes)?;
     let container =
@@ -330,7 +434,7 @@ pub fn inspect(
         ));
     }
     let layers = layer_plans();
-    let logical = logical(&layers)?;
+    let logical = logical(&layers, format)?;
     let expected = expected_physical(&logical);
     let mut text = BTreeMap::new();
     let mut excluded = BTreeMap::new();

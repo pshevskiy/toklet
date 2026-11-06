@@ -26,6 +26,66 @@ fn edited_header(header: Value, index: Value) -> Result<E2bPlan, Error> {
 }
 
 #[test]
+fn mixed_policy_is_exact_and_keeps_the_affine4_inspector_separate() {
+    let mut doc: Value = serde_json::from_slice(CONFIG).unwrap();
+    let quant = Format::QatMixed.quantization();
+    assert_eq!(quant.as_object().unwrap().len(), 108);
+    doc["quantization"] = quant.clone();
+    doc["quantization_config"] = quant;
+    let text = doc["text_config"].as_object_mut().unwrap();
+    text.remove("expert_intermediate_size");
+    text.insert("moe_intermediate_size".into(), Value::Null);
+    assert!(config(&doc, ModalityPolicy::TextOnly, Format::QatMixed).is_ok());
+    assert!(config(&doc, ModalityPolicy::TextOnly, Format::Affine4).is_err());
+    assert!(inspect_qat(CONFIG, INDEX, HEADER, ModalityPolicy::TextOnly).is_err());
+    let tensors = logical(&layer_plans(), Format::QatMixed).unwrap();
+    let mut widths = [0; 2];
+    for tensor in tensors {
+        if let Storage::Affine(layout) = tensor.storage {
+            match layout.bits() {
+                4 => widths[0] += 1,
+                8 => {
+                    widths[1] += 1;
+                    assert!(tensor.name.contains(".mlp."));
+                }
+                _ => panic!("unexpected Gemma QAT bit width"),
+            }
+        }
+    }
+    assert_eq!(widths, [173, 105]);
+    let role = "language_model.model.layers.0.mlp.gate_proj";
+    doc["quantization"][role]["bits"] = json!(4);
+    doc["quantization_config"][role]["bits"] = json!(4);
+    assert!(config(&doc, ModalityPolicy::TextOnly, Format::QatMixed).is_err());
+}
+
+#[test]
+#[ignore = "explicit pinned QAT metadata buffers, no model payload"]
+fn pinned_qat_metadata_and_mutations() {
+    let root = std::path::PathBuf::from(std::env::var_os("TOKLET_GEMMA_QAT_METADATA").unwrap());
+    let names = [
+        "config.json",
+        "model.safetensors.index.json",
+        "weight-header.json",
+    ];
+    let mut buffers = names.map(|name| std::fs::read(root.join(name)).unwrap());
+    let inspect =
+        |bytes: &[Vec<u8>; 3], policy| inspect_qat(&bytes[0], &bytes[1], &bytes[2], policy);
+    let mixed = inspect(&buffers, ModalityPolicy::TextOnly).unwrap();
+    assert_eq!(mixed.layers(), plan().layers());
+    assert_eq!(mixed.text_tensors().len(), 1096);
+    assert_eq!(mixed.excluded_tensors().len(), 1415);
+    assert_eq!(mixed.text_payload_bytes(), 3_382_549_062);
+    assert_eq!(mixed.payload_bytes(), 4_328_920_006);
+    assert!(inspect(&buffers, ModalityPolicy::Reject).is_err());
+    for index in 0..buffers.len() {
+        buffers[index][0] ^= 1;
+        assert!(inspect(&buffers, ModalityPolicy::TextOnly).is_err());
+        buffers[index][0] ^= 1;
+    }
+}
+
+#[test]
 fn frozen_candidate_metadata_identity_layout_counts_bytes_and_layer_routes() {
     let raw = include_bytes!("../../../tests/fixtures/gemma4-e2b-metadata-v1/manifest.json");
     assert_eq!(

@@ -138,6 +138,9 @@ chunk1/32 and causal-invariance witnesses, state/reset and actual process
 peaks before running the real model. Compare the original 10k/100 gates
 only after native trajectory and fidelity qualify. Chat and G2/G3 still
 require their separate acceptance evidence.
+The [exact cold plan](../benchmarks/results/2026-11-06-gemma-qat-cold-v1.json)
+now passes for the real pinned metadata. Next authenticate the payload
+and verify guarded resident storage before enabling mixed projection use.
 
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 

@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "scope": "exact pinned Gemma QAT raw config, index and header metadata",
+  "revision": "42f62737af7a9fd8c1d55d79666c1a217be4e2e2",
+  "text_tensors": 1096,
+  "excluded_tensors": 1415,
+  "text_payload_bytes": 3382549062,
+  "container_bytes_advertised": 4329240325,
+  "packed_layouts": {
+    "4": 173,
+    "8": 105
+  },
+  "mutated_metadata_rejected": 3,
+  "explicit_modality_exclusion": true,
+  "default_test_passes": 584,
+  "metal_test_passes": 697,
+  "optimized_build": true,
+  "payload_authenticated": false,
+  "resident_execution": false,
+  "app_qualified": false,
+  "first_real_check": "Shared descriptor assumed four-bit U32 row width. Validation now derives it from the packed layout.",
+  "review": "Astra approved the cold metadata path, exact pin checks and Q4 isolation.",
+  "receipts_sha256": {
+    "artifacts/gemma-qat-cold-2026-11-06/metadata-real.stdout": "685860355ea73cac45c8d3900c2695b9ed3190b74d8b7a061aab02bcdddc6893",
+    "artifacts/gemma-qat-cold-2026-11-06/retry/checks.json": "6d537d87a1139f410864e236294df7d15b9b59a5766978154c259340d2c18534",
+    "artifacts/gemma-qat-cold-2026-11-06/retry/metadata-real.stdout": "89dad1b6bcbb0665060cbe8a4331fd32bfd899f54957887971c3fb28cf78691f",
+    "artifacts/gemma-qat-cold-2026-11-06/retry/default-test.stdout": "27e339a04c2cb8739ff29fb4deed84990d92c2ab3d13a981128cae75de67d4a8",
+    "artifacts/gemma-qat-cold-2026-11-06/retry/metal-test.stdout": "977bc1150075cf45670703dccfc3df1198734051314008ccdd48f73e48073ccb"
+  }
+}

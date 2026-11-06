@@ -89,7 +89,11 @@ pub(super) fn expected_physical(
             (Shape::Matrix { rows, columns }, Storage::Affine(layout)) => {
                 result.insert(
                     tensor.name.clone(),
-                    (Dtype::U32, vec![rows, columns / 8], layout.weight_bytes()),
+                    (
+                        Dtype::U32,
+                        vec![rows, layout.row_bytes() / size_of::<u32>()],
+                        layout.weight_bytes(),
+                    ),
                 );
                 let base = tensor.name.strip_suffix(".weight").unwrap();
                 for name in ["scales", "biases"] {
@@ -97,7 +101,7 @@ pub(super) fn expected_physical(
                         format!("{base}.{name}"),
                         (
                             Dtype::Bf16,
-                            vec![rows, columns / 64],
+                            vec![rows, columns / layout.group_size()],
                             layout.metadata_bytes(),
                         ),
                     );

@@ -10670,3 +10670,11 @@ codes, exact budgets and residual-sensitive dots pass. Frozen Q4
 projection and real-prefix output remain exact. Astra approved the leaf.
 Mixed resident loading and Chat stay outside this result.
 [Evidence](../benchmarks/results/2026-11-06-gemma-affine8-leaf-v1.json)
+
+## 6 November 2026 — Admit the pinned QAT cold tensor layout
+
+The raw config, index and header pins select the mixed layout explicitly.
+The shared physical descriptor now uses the packed byte stride and group
+size. Real metadata, mutation controls, default and Metal checks and
+Astra review pass. Payload authentication and execution remain separate.
+[Evidence](../benchmarks/results/2026-11-06-gemma-qat-cold-v1.json)
