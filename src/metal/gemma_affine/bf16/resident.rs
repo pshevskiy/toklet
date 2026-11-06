@@ -313,14 +313,14 @@ fn read(reader: &mut impl Read, bytes: &mut [u8]) -> Result<()> {
     })
 }
 
-fn check_budget(required: usize, limit: usize) -> Result<()> {
+pub(super) fn check_budget(required: usize, limit: usize) -> Result<()> {
     if required > limit {
         return Err(Error::Budget { required, limit });
     }
     Ok(())
 }
 
-fn add(a: usize, b: usize) -> Result<usize> {
+pub(super) fn add(a: usize, b: usize) -> Result<usize> {
     a.checked_add(b)
         .ok_or(Error::Options("Gemma BF16 storage byte overflow"))
 }

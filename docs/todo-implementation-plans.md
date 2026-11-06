@@ -220,6 +220,9 @@ The other text tensors require4,559,518,278 raw bytes. [Official source inventor
      Reuse generation dispatch and preserve drop order through the source
      descriptor. Bind codec and model identity, handle fallible poisoned reset,
      and check exact load, session and transition budgets before publication.
+     The [safe Rust owner](../benchmarks/results/2026-11-06-gemma-bf16-official-mac-owner-v1.json)
+     pairs both assets with borrowed graph and session lifetimes. The additive
+     native bridge must retain these owners through every live handle.
    - Exercise a bounded Mac Chat journey through the additive native bridge.
      Report the checkpoint declaration separately from loaded capacity, chunk
      and remaining output. Measure the combined codec, app and engine process,

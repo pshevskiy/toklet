@@ -1,0 +1,46 @@
+{
+  "format": "toklet-gemma-bf16-official-mac-owner-v1",
+  "scope": "Rust owner with exact official basic text. Native app bridge and transport separate.",
+  "observations": {
+    "load_admitted_bytes": 5717833442,
+    "session_admitted_bytes": 5814071440,
+    "codec_allowance_bytes": 1073741824,
+    "kv_owned_bytes": 20054016,
+    "declared_positions": 131072,
+    "position_limit": 512,
+    "prompt_tokens": 15,
+    "visible_ids": [
+      818,
+      5279,
+      529,
+      7001,
+      563,
+      5213,
+      50429,
+      84750
+    ],
+    "stop_ids": [
+      1,
+      106,
+      50
+    ]
+  },
+  "measured_process_peaks": {
+    "owner": 5031547248,
+    "task_pilot": 4700557248
+  },
+  "exact_minus_one_load_and_session": true,
+  "reset_replay_and_cancel": true,
+  "output_reserve_boundary_512": true,
+  "corrected_quality_pilot_records_identical": 4,
+  "check_evidence": {
+    "artifacts/gemma-bf16-official-owner-2026-11-06/checks.json": "93739a71255bd35e3f0a2be320c3d91d741bcd5f44921f3441e5c3909ae677a2",
+    "artifacts/gemma-bf16-official-owner-2026-11-06/initial/checks.json": "4ca2a6c217377f27c425738d8970e009074d6d9c35db7fa20f54241f80eb866e",
+    "artifacts/gemma-bf16-official-owner-2026-11-06/owner/owned.json": "856dafc52c40d9ec73a4ee50aa682a76ebde10631bce3e86cfbce1579b71d6e1",
+    "artifacts/gemma-bf16-official-owner-2026-11-06/owner/gpu.stdout": "df6a7bb1a186c95b83e02355106563fed9e092b74bfc6754c8c391470717c531",
+    "artifacts/gemma-bf16-official-owner-2026-11-06/task-pilot/owned.json": "10546276dc359ced3aff9bce9dfcf45550ccada6d63774edd9bdb154d880a8d3"
+  },
+  "offline_source_receipt_sha256": "a052271fb82580d994ee61ba89ae67f0cadf091a6e12d9ef16e3b7f212cdcf87",
+  "initial_failure": "Metal compile could not see two existing budget helpers. Scoped imports fixed and rechecked.",
+  "review": "Astra approves borrowed graph/session ownership, exact combined admission, regular pinned assets and the scoped real Mac generation evidence."
+}

@@ -14,9 +14,10 @@ pub mod rows;
 pub const CONTAINER_BYTES: u64 = 10_246_621_918;
 const PREFIX: &str = "model.language_model.";
 const PLE_TABLE: &str = "model.language_model.embed_tokens_per_layer.weight";
-const CONFIG_BYTES: usize = 4_954;
+pub(crate) const CONFIG_BYTES: usize = 4_954;
 const HEADER_BYTES: usize = 263_952;
-const CONFIG_SHA256: &str = "1b28f3d2c3100f6c594754b81107428bd7b822a7f48272ca681dae9d2ec38330";
+pub(crate) const CONFIG_SHA256: &str =
+    "1b28f3d2c3100f6c594754b81107428bd7b822a7f48272ca681dae9d2ec38330";
 const HEADER_SHA256: &str = "12740d6fe7a66b316040fa4d77471a8e1809498a71992b3364a6d5417d10662e";
 
 /// Checked shapes and relative payload ranges. The PLE table stays a distinct

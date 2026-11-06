@@ -10906,3 +10906,11 @@ Mac ownership and app adoption remain separate.
 
 The separate holdout fixture reuses the wrap checks for the first eviction.
 Astra approves the test refactor and exact regression of the original capture.
+
+## 6 November 2026 — Pair the official BF16 source and codec on Mac
+
+The safe Rust owner passes exact load5.718GB and session5.814GB admission,
+one byte below each, and real generation at capacity512. The combined
+process peaks at5.032GB. Reset, cancellation and the old task pilot pass.
+Astra approves after strict checks. The native and app routes remain separate.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-official-mac-owner-v1.json)

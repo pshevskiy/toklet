@@ -106,6 +106,14 @@ fn bounded_regular(path: &Path, limit: usize) -> io::Result<Vec<u8>> {
     }
     Ok(bytes)
 }
+
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+pub(super) fn pinned_regular(path: &Path, limit: usize, expected: &str) -> io::Result<Vec<u8>> {
+    let bytes = bounded_regular(path, limit)?;
+    authenticate(&bytes, expected)?;
+    Ok(bytes)
+}
+
 fn authenticate(bytes: &[u8], expected: &str) -> io::Result<[u8; 32]> {
     let digest = Sha256::digest(bytes).into();
     if !matches(digest, expected) {

@@ -197,27 +197,43 @@ impl Codec {
                     "080d9e1aff284e2f6043889cd05367966f7c7b80e025fbc0b06745e218158656",
                 ),
             ],
+            pinned,
         )
     }
 
     /// Admit the exact official BF16 text assets. The tokenizer, template and
     /// stop metadata are identical to the established basic-text profile.
     pub fn load_official_bf16(directory: &Path, available_bytes: usize) -> io::Result<Self> {
+        Self::load_official(directory, available_bytes, pinned)
+    }
+
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    pub(crate) fn load_official_bf16_regular(
+        directory: &Path,
+        available_bytes: usize,
+    ) -> io::Result<Self> {
+        Self::load_official(directory, available_bytes, super::content::pinned_regular)
+    }
+
+    fn load_official(
+        directory: &Path,
+        available_bytes: usize,
+        capture: impl Fn(&Path, usize, &str) -> io::Result<Vec<u8>>,
+    ) -> io::Result<Self> {
+        use crate::mlx::gemma4::bf16::{CONFIG_BYTES, CONFIG_SHA256};
+
         Self::load_pinned(
             directory,
             available_bytes,
             [
-                (
-                    "config.json",
-                    4954,
-                    "1b28f3d2c3100f6c594754b81107428bd7b822a7f48272ca681dae9d2ec38330",
-                ),
+                ("config.json", CONFIG_BYTES, CONFIG_SHA256),
                 (
                     "tokenizer_config.json",
                     2095,
                     "90c3a3ba5bf53818383a58e1a776cbcacd2a038d4812eaa373e1522f2d06f3df",
                 ),
             ],
+            capture,
         )
     }
 
@@ -225,6 +241,7 @@ impl Codec {
         directory: &Path,
         available_bytes: usize,
         profile: [(&str, usize, &str); 2],
+        capture: impl Fn(&Path, usize, &str) -> io::Result<Vec<u8>>,
     ) -> io::Result<Self> {
         if available_bytes < ALLOWANCE_BYTES {
             return Err(invalid("Gemma text allowance exceeds available bytes"));
@@ -241,9 +258,9 @@ impl Codec {
                 "2f1b4d75d067bae3fe44e676721c7f077d243bc007156cb9c2f8b5836613d082",
             ),
         ]) {
-            pinned(&directory.join(name), bytes, sha)?;
+            capture(&directory.join(name), bytes, sha)?;
         }
-        let bytes = pinned(
+        let bytes = capture(
             &directory.join("tokenizer.json"),
             32169626,
             "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f",

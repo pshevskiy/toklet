@@ -2,11 +2,15 @@
 use super::*;
 
 #[cfg(target_os = "macos")]
+mod official;
+#[cfg(target_os = "macos")]
 mod resident;
+#[cfg(target_os = "macos")]
+pub use official::{OfficialBf16, OfficialBf16Memory};
 #[cfg(all(test, target_os = "macos"))]
 pub(crate) use resident::graph::Fault as Bf16GraphFault;
 #[cfg(target_os = "macos")]
-pub use resident::graph::{Bf16Model, Bf16Session};
+pub use resident::graph::{Bf16GenerationSession, Bf16Model, Bf16Session};
 #[cfg(target_os = "macos")]
 pub use resident::{Bf16LoadReport, Bf16Weights};
 

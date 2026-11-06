@@ -31,19 +31,19 @@ fn generate(pilot: bool) {
         position_offset: 0,
     };
     let warm = source
-        .new_quality_generation_session(&model, &context, options)
+        .new_generation_session(&model, &context, options)
         .unwrap();
     let memory = warm.memory();
     drop(warm);
     options.memory_limit_bytes = memory.admitted_bytes - 1;
     assert!(matches!(
-        source.new_quality_generation_session(&model, &context, options),
+        source.new_generation_session(&model, &context, options),
         Err(session::Error::MemoryBudget { required, limit })
         if required == memory.admitted_bytes && limit == required - 1
     ));
     options.memory_limit_bytes = memory.admitted_bytes;
     let mut session = source
-        .new_quality_generation_session(&model, &context, options)
+        .new_generation_session(&model, &context, options)
         .unwrap();
     assert_eq!(session.memory(), memory);
     if pilot {

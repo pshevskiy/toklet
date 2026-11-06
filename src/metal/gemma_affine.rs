@@ -27,7 +27,10 @@ mod weights;
 pub(crate) use bf16::Bf16GraphFault;
 pub use bf16::{Bf16Context, Bf16Projection};
 #[cfg(target_os = "macos")]
-pub use bf16::{Bf16LoadReport, Bf16Model, Bf16Session, Bf16Weights};
+pub use bf16::{
+    Bf16GenerationSession, Bf16LoadReport, Bf16Model, Bf16Session, Bf16Weights, OfficialBf16,
+    OfficialBf16Memory,
+};
 pub use partitioned::{Gather, PartitionedAffine};
 pub use projection::Projection;
 pub use weights::Weights;

@@ -14,8 +14,7 @@ pub type Bf16Model<'weights> = graph::Model<'weights, MatrixRef<'weights>>;
 pub type Bf16Session<'model, 'weights, 'context> =
     graph::Session<'model, 'weights, MatrixRef<'weights>, Backend<'weights, 'context>>;
 
-#[cfg(test)]
-type QualitySession<'model, 'weights, 'context> =
+pub type Bf16GenerationSession<'model, 'weights, 'context> =
     graph::GenerationSession<'model, 'weights, MatrixRef<'weights>, Backend<'weights, 'context>>;
 
 pub struct MatrixRef<'weights> {
@@ -64,7 +63,10 @@ impl Bf16Weights {
         self.build_model(position_limit)
     }
 
-    fn build_model(&self, position_limit: usize) -> GraphResult<Bf16Model<'_>> {
+    pub(in crate::metal::gemma_affine::bf16) fn build_model(
+        &self,
+        position_limit: usize,
+    ) -> GraphResult<Bf16Model<'_>> {
         let weights = self.bindings.graph_weights_for(
             |index| {
                 Ok(MatrixRef {
@@ -119,13 +121,12 @@ impl Bf16Weights {
         model.session_with_backend_for_chunk(backend, chunk_rows, budget)
     }
 
-    #[cfg(test)]
-    pub(crate) fn new_quality_generation_session<'model, 'weights, 'context>(
+    pub(crate) fn new_generation_session<'model, 'weights, 'context>(
         &'weights self,
         model: &'model Bf16Model<'weights>,
         context: &'context Bf16Context,
         options: crate::session::Options,
-    ) -> std::result::Result<QualitySession<'model, 'weights, 'context>, crate::session::Error>
+    ) -> std::result::Result<Bf16GenerationSession<'model, 'weights, 'context>, crate::session::Error>
     {
         use crate::session::Error as SessionError;
         graph::generation::validate_options(model, options)?;
@@ -134,9 +135,10 @@ impl Bf16Weights {
                 options.capacity,
                 options.prefill_chunk_size,
             )?;
-        let wrapper =
-            QualitySession::<'model, 'weights, 'context>::planned_wrapper_bytes(options.capacity)
-                .map_err(GraphError::from)?;
+        let wrapper = Bf16GenerationSession::<'model, 'weights, 'context>::planned_wrapper_bytes(
+            options.capacity,
+        )
+        .map_err(GraphError::from)?;
         let fixed = add(
             model.model_bytes(),
             add(numerical, wrapper).map_err(GraphError::from)?,
