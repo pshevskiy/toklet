@@ -660,6 +660,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
       The original numerical gate rejects and 61 coordinates admit no common
       FP32 value. Loss passes all10,000 targets. Astra confirms both results.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-long-decision-v1.json).
+    - [x] Trace the frozen96-token producer prefix. All1,435,648 staged
+      comparisons pass and 120 K/V vectors reproduce the wrap bytes.
+      [Evidence](benchmarks/results/2026-11-06-gemma-bf16-producer-trace-v1.json).
     - [ ] Trace the staged value-cache deviations at508 and826. Use the
       result to define a complete independent native arithmetic reference.
     - [ ] Complete replay and isolated grading for the frozen100 tasks.

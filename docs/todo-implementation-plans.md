@@ -208,6 +208,11 @@ The other text tensors require4,559,518,278 raw bytes. [Official source inventor
    positions508 and826, with adjacent passing controls and exact cache transfer.
    Use this attribution to specify a complete, independently propagated native
    arithmetic reference at the unchanged tolerance. Continue the100-task gate.
+5. After numerical and quality acceptance, measure the combined owner and
+   codec, then exercise the managed Mac profile. The six pinned files total
+   10,278,816,137 bytes, exceeding the current Hub file and snapshot limits.
+   Scope larger transfer bounds to this exact Mac manifest and resolved shard
+   URL. Keep 64-bit range, cancellation, disk admission and publication checks.
 
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 

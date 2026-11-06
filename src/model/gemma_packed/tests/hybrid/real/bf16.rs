@@ -126,3 +126,88 @@ fn official_bf16_short_graph_preserves_state_and_causal_rows() {
         json!({"committed_state_passed":true,"positions":4,"sequences":2,"app_qualified":false}),
     );
 }
+
+#[test]
+#[ignore = "explicit official BF16 producer trace for the frozen 96-token prefix"]
+fn official_bf16_producer_trace() {
+    const CHUNK: usize = 32;
+    const POSITIONS: [usize; 4] = [31, 38, 94, 95];
+    let ids: Vec<u32> =
+        include_bytes!("../../../../../../benchmarks/gemma-e2b-wrap-v1/tokens.u32le")
+            .chunks_exact(4)
+            .take(96)
+            .map(|word| u32::from_le_bytes(word.try_into().unwrap()))
+            .collect();
+    assert_eq!(ids.len(), 96);
+    let (source, context, path, original) = load_official();
+    let owner = source.test_retained_digest();
+    let model = source.model_for_quality_probe(ids.len()).unwrap();
+    let mut session = source.new_session(&model, &context, CHUNK, BUDGET).unwrap();
+    let allocated = session.allocated_bytes().unwrap();
+    let owners = pointers(&session);
+    let mut capture = capture::Capture::bounded(8 * 1024 * 1024);
+    for (chunk, input) in ids.chunks_exact(CHUNK).enumerate() {
+        let before = chunk * CHUNK;
+        let positions = || {
+            POSITIONS
+                .into_iter()
+                .filter(|p| (before..before + CHUNK).contains(p))
+        };
+        let committed = snapshot(&session);
+        for index in 0..model.layout.producers {
+            session.fault = Some(index);
+            assert!(matches!(
+                session.forward(input),
+                Err(hybrid::Error::Model(Error::InvalidConfig(
+                    "injected Gemma layer failure"
+                )))
+            ));
+            assert_eq!(snapshot(&session), committed);
+            let scratch = &session.scratch;
+            let dim = model.layout.layers[index].head_dim;
+            for position in positions() {
+                let row = position - before;
+                for (stage, values, width) in [
+                    ("input_layernorm", &scratch.norm[..], H),
+                    ("self_attn.v_proj", &scratch.kv[..], dim),
+                    ("self_attn.v_norm", &session.staging[index].v[..], dim),
+                    ("k_rotary", &session.staging[index].k[..], dim),
+                    ("context", &scratch.context[..], model.layout.heads * dim),
+                    ("output", &scratch.hidden[..], H),
+                ] {
+                    capture.record(
+                        &format!("layer.{index}.{stage}"),
+                        &values[row * width..(row + 1) * width],
+                        position,
+                        1,
+                    );
+                }
+            }
+        }
+        session.fault = None;
+        let logits = session.forward(input).unwrap();
+        for position in positions() {
+            let row = position - before;
+            capture.record(
+                "logits",
+                &logits[row * VOCAB..(row + 1) * VOCAB],
+                position,
+                1,
+            );
+        }
+        assert_eq!(session.tokens(), &ids[..before + CHUNK]);
+        assert_eq!(pointers(&session), owners);
+        assert_eq!(session.allocated_bytes().unwrap(), allocated);
+    }
+    assert_eq!(source.test_retained_digest(), owner);
+    assert_eq!(
+        identity(&std::fs::symlink_metadata(&path).unwrap()),
+        original
+    );
+    capture.finish();
+    emit(
+        "BF16_PRODUCER_TRACE",
+        json!({"positions":POSITIONS,"prefix":ids.len(),"session_bytes":allocated,
+            "faults_preserved_committed_state":true,"diagnostic_only":true}),
+    );
+}

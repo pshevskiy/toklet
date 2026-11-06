@@ -1,0 +1,34 @@
+{
+  "format": "toklet-gemma-bf16-producer-trace-v1",
+  "engine_base": "255930a1",
+  "comparisons": {
+    "records": 364,
+    "prior_wrap_exact": true,
+    "compared_values": 1435648,
+    "exceeded": 0
+  },
+  "peak_physical_bytes": {
+    "native": 4752904152,
+    "reference": 125305648
+  },
+  "first_observed_bit_difference": {
+    "31": "logits",
+    "38": "logits",
+    "94": "layer.1.context",
+    "95": "layer.1.context"
+  },
+  "exact_prior_kv_vectors": 120,
+  "exact_prior_logit_schedules": 2,
+  "diagnostic_only": true,
+  "runtime_claim": "No qualification change. This prefix does not include the staged deviations at 508 and 826.",
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-v-trace-2026-11-06/checks.json": "c19ab3d1b506125eab6253df821cb5c6ae07f97b4cea140d804a4d84e1409366",
+    "artifacts/gemma-bf16-v-trace-2026-11-06/reference/plan.json": "3f607f01d762520d6dae0cc06c5b62b48b75a695181eba682c1b1fc7a3a45905",
+    "artifacts/gemma-bf16-v-trace-2026-11-06/reference/owned.json": "8f6c385e0617efa02ff69acbf3f626f7f6119355bfcc8a2cfa129cd590408f81",
+    "artifacts/gemma-bf16-v-trace-2026-11-06/reference/reference.json": "511caa960fc9f935a0960691f1b84bd287151df3e76e3480e6bad22722d4e6af",
+    "artifacts/gemma-bf16-v-trace-2026-11-06/producer/owned.json": "2e2c5abbf5b43ad079b8d0eda612fe35850419c386add9057bc2347c62503b77",
+    "artifacts/gemma-bf16-v-trace-2026-11-06/comparison.json": "fb91fc8c8b58979b53d5d9320809c652d923b5dabb52942dcab96206a8f7c524",
+    "artifacts/gemma-bf16-v-trace-2026-11-06/prospective-mac-inventory.json": "fedee3c42a78c73c168ee4136b551a94fe681c6d5c3bde0ede818e249643c58e"
+  },
+  "review": "Astra approves test-only frozen-prefix diagnostic, live stage bounds, committed rollback and exact prior-wrap comparison."
+}

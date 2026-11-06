@@ -10844,3 +10844,11 @@ leave61 unique coordinates with no common FP32 result. Astra confirmed the
 rejection and the separate original-relative loss pass of−0.03085 nats across
 10,000 targets. Task grading and native arithmetic qualification remain open.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-long-decision-v1.json)
+
+## 6 November 2026 — Trace the official BF16 producer prefix
+
+The staged96-token trace passes1,435,648 comparisons and reproduces120
+prior K/V rows. The first captured bit differences at94 and95 are in
+layer1 attention context. Astra approves this test-only diagnostic.
+The staged cache failures at508 and826 require their own cause witness.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-producer-trace-v1.json)
