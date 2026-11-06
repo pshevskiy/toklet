@@ -672,6 +672,7 @@ Conditional follow-ons require their own decision; they do not all block M9:
   gain on the repeated contract prompt. The code prompt misses the 5% gate.
   Retain the explicit nonstreaming API and reject default adoption.
 - [ ] G2/G3: checkpoint-defined shared-KV prefill/MTP after selected Gemma support.
+  [Last-row prefill and assistant plans](docs/todo-implementation-plans.md#g2g3-shared-kv-and-mtp).
 - [x] Llama Online investigation: retain rejection under the frozen numerical gate.
   [Arithmetic decision and separate staged evidence](docs/todo-implementation-plans.md#llama-online-correctness).
   - [x] Isolated staged Llama Mac512 Chat controller, real prefill/decode,
@@ -1557,3 +1558,4 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | Gemma QAT mixed session | Four-token chunk1/3/32 and appended future parity pass. Q4 historical 3,016 records are bitwise identical. | Astra approved after584/698 tests and four Mac runs. [Evidence](benchmarks/results/2026-11-06-gemma-qat-session-v1.json). |
 | 2026-11-06 | Gemma QAT prefix fidelity | Both actual213/71 prefixes pass7,331,840 comparisons and8 exact greedy observations, with chunk and future state parity. | Astra approved; frozen1025 oracle collection and quality-only state probe next. [Evidence](benchmarks/results/2026-11-06-gemma-qat-prefix-parity-v1.json). |
 | 2026-11-06 | Gemma QAT quality-only KV wrap | Two 1,025-token schedules, all logits, ring states, overflow and reset pass. Legacy Q4 reproduces136 raw records. | Astra approved; 698 Metal tests and exact budget pass. [Evidence](benchmarks/results/2026-11-06-gemma-qat-wrap-state-v1.json). |
+| 2026-11-06 | G2 last-row prefill design | Astra reviewed the producer/consumer boundary, PLE slice, absolute query position and transactional commit invariants. | [Plan](docs/todo-implementation-plans.md#g2g3-shared-kv-and-mtp); implementation follows selected Gemma qualification. |

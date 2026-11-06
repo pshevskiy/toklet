@@ -263,10 +263,17 @@ favorable prefixes. Default and streaming adoption stay outside the tested scope
 ### G2/G3 shared KV and MTP
 
 **G2 shared-KV prefill.** After a selected Gemma graph passes its gates,
-freeze its checkpoint producer/consumer map. Validate retained local/global
-rows, exact token decisions and transactional rollback across chunk and ring
-boundaries. Compare completed prefill timings and physical owners on the
-same pinned workloads before retaining a scheduling change.
+freeze its producer/consumer map and test a last-row generation path.
+Execute all rows through the final KV producer. In the consumer tail,
+preserve the staged KV view and absolute query position, and carry the last
+hidden row with its token-major PLE slice. Publish every admitted token and
+producer proposal only after the tail and head succeed. Keep full-row
+forward for scoring and fresh trajectory replay.
+
+Start with exact tiny-graph last logits, retained KV, overflow, tail/head
+failure and cancellation across chunk and ring boundaries. Repeat with the
+selected checkpoint. Compare completed prefill timing and physical owners
+on the same pinned workloads before retaining the change.
 
 **G3 MTP.** Pin the matching assistant and its target inputs. Keep draft
 state separate and verify proposals using the target's strict greedy
