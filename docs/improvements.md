@@ -10877,3 +10877,11 @@ passes51/100 versus52/100, and the VM is restored stopped. The same
 numerical binary passes10,000 loss targets. Astra confirms this quality
 result. Independent long fidelity and managed app adoption remain open.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-original-quality-v1.json)
+
+## 6 November 2026 — Locate the first official BF16 rounding error
+
+Six same-input attention rows reproduce exact scores, probabilities and
+context. Producer0 output column1093 at position70 differs by one FP32 word.
+The exact dot is `17/2^53` above the midpoint. Astra confirms the measured
+32-lane replay and the need for a BF16-specific rounding candidate.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-first-drift-v1.json)

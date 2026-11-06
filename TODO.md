@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Capture the first official BF16 cache drift at position70.**
+Current task: **Repair the witnessed official BF16 projection midpoint rounding.**
 Completed: source-matched native41 package selected, with Mac offline regression
 and both iOS SDK builds. [Evidence](benchmarks/results/2026-11-06-chunk-pools-native41-v1.json).
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
@@ -673,6 +673,11 @@ uses the existing full saved-conversation reset+prompt path on Send.
       at69/70/71 next, with the holdout still unused.
       [Policy](docs/todo-implementation-plans.md#prospective-ordered-bf16-arithmetic-gate).
       [Exploratory evidence](benchmarks/results/2026-11-06-gemma-bf16-ordered-exploratory-v1.json).
+    - [x] Locate the first cache drift in the producer0 output projection at70.
+      The exact dot rounds one word above the measured32-lane native result.
+      [Evidence](benchmarks/results/2026-11-06-gemma-bf16-first-drift-v1.json).
+    - [ ] Validate a BF16-only expansion and final rounding against exact dots
+      and the frozen prefix. Rerun fidelity and original quality if retained.
     - [x] Complete replay and isolated grading for the frozen100 tasks.
       All4,149 sampled decisions match. The grade is51/100 versus52/100,
       within the2pp gate. Astra confirms both original-quality results.

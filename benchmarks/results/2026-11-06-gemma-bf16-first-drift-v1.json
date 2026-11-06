@@ -1,0 +1,32 @@
+{
+  "format": "toklet-gemma-bf16-first-drift-v1",
+  "diagnostic_only": true,
+  "position": 70,
+  "producer": 0,
+  "stage": "self_attn.o_proj",
+  "same_input_attention_rows": 6,
+  "short_trace_exact": true,
+  "exact_dot": {
+    "column": 1093,
+    "native_word": "3f826158",
+    "correct_word": "3f826159",
+    "emulated_native_word": "3f826158",
+    "lane_width": 32,
+    "exact_minus_midpoint": "17/9007199254740992",
+    "two_component_words": [
+      "3f826159",
+      "b3800000"
+    ]
+  },
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-first-drift-2026-11-06/build/checks.json": "eb1de922801f7642e74d1eaafbefdd6f1475f28ae97de998b4c3c704cee632f5",
+    "artifacts/gemma-bf16-first-drift-2026-11-06/first/owned.json": "5a6df4bfa64c87aefcf90ee49ad3da4b4cd59d2c554e072da70b012a8c10826c",
+    "artifacts/gemma-bf16-first-drift-2026-11-06/producer/owned.json": "7bd047de392c8ac99db29747d10745a5921175ac66fd3f9f68a4dad3cec4e0a0",
+    "artifacts/gemma-bf16-first-drift-2026-11-06/comparison.json": "61dd2c026dc21aaa07c48263a7617e41167c7b0edd0b0621f7115bdee465d535",
+    "artifacts/gemma-bf16-first-drift-2026-11-06/dot/plan.json": "9acc53cbcac1577acb5b96ccb8c33ac7185069712cf9e61ceccd6d1152a3eb4a",
+    "artifacts/gemma-bf16-first-drift-2026-11-06/dot/owned.json": "a6d039f86bb4a4eaaaddf31f42a88daeea82fcee25f47dbe9d2f475cefec94ff",
+    "artifacts/gemma-bf16-first-drift-2026-11-06/dot/reference.json": "5b5a66c2ad7b91d5b7bc6040ee5907518e4546e1d5af1557c0dda2bc7f0f3067",
+    "artifacts/gemma-bf16-first-drift-2026-11-06/pipeline-width.txt": "2115cdb6bfcfb008eb2bab2bb79347cb064a48e4e7c4115ccbe4469c787bb6c4"
+  },
+  "review": "Astra approves the transactional trace, exact same-input attention, and witnessed BF16 projection midpoint rounding error."
+}

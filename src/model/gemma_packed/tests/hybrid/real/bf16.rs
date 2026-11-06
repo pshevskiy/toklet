@@ -130,16 +130,27 @@ fn official_bf16_short_graph_preserves_state_and_causal_rows() {
 #[test]
 #[ignore = "explicit official BF16 producer trace for the frozen 96-token prefix"]
 fn official_bf16_producer_trace() {
-    trace_producers(&[31, 38, 94, 95], 96, 0..15);
+    trace_producers(&[31, 38, 94, 95], 96, 0..15, false);
 }
 
 #[test]
 #[ignore = "explicit official BF16 local V trace at the staged cache deviations"]
 fn official_bf16_late_v_trace() {
-    trace_producers(&[507, 508, 825, 826, 827], 832, 12..15);
+    trace_producers(&[507, 508, 825, 826, 827], 832, 12..15, false);
 }
 
-fn trace_producers(positions: &[usize], prefix: usize, producers: std::ops::Range<usize>) {
+#[test]
+#[ignore = "explicit official BF16 two-producer trace before the first changed cache row"]
+fn official_bf16_first_drift_trace() {
+    trace_producers(&[69, 70, 71], 96, 0..2, true);
+}
+
+fn trace_producers(
+    positions: &[usize],
+    prefix: usize,
+    producers: std::ops::Range<usize>,
+    attention_details: bool,
+) {
     const CHUNK: usize = 32;
     let ids: Vec<u32> =
         include_bytes!("../../../../../../benchmarks/gemma-e2b-wrap-v1/tokens.u32le")
@@ -191,6 +202,35 @@ fn trace_producers(positions: &[usize], prefix: usize, producers: std::ops::Rang
                         position,
                         1,
                     );
+                }
+                if attention_details {
+                    for (stage, values, width) in [
+                        ("q_rotary", &scratch.q[..], model.layout.heads * dim),
+                        ("self_attn.o_proj", &scratch.attention[..], H),
+                        ("ple_input", &scratch.layer_ple[..], P),
+                    ] {
+                        capture.record(
+                            &format!("layer.{index}.{stage}"),
+                            &values[row * width..(row + 1) * width],
+                            position,
+                            1,
+                        );
+                    }
+                    // Both layers are local and this prefix precedes eviction.
+                    // The proposal is chronological through the full chunk.
+                    let key_count = before + CHUNK;
+                    assert!(key_count <= model.layout.window);
+                    for (stage, values) in [
+                        ("attention_scores", &scratch.scores[..]),
+                        ("attention_probabilities", &scratch.probabilities[..]),
+                    ] {
+                        let mut causal = Vec::with_capacity(model.layout.heads * (position + 1));
+                        for head in 0..model.layout.heads {
+                            let start = (head * CHUNK + row) * key_count;
+                            causal.extend_from_slice(&values[start..start + position + 1]);
+                        }
+                        capture.record(&format!("layer.{index}.{stage}"), &causal, position, 1);
+                    }
                 }
             }
         }

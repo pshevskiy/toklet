@@ -254,6 +254,13 @@ context, O projection, PLE input and layer output. Bind causal K/V to the
 authenticated wrap and localize the first divergent operation before changing
 any engine arithmetic. Keep the651-token holdout unused.
 
+The [exact witness](../benchmarks/results/2026-11-06-gemma-bf16-first-drift-v1.json)
+locates the first difference at producer0 output projection column1093. The
+exact dot is `17/2^53` above the midpoint. Add a BF16-only third expansion term
+and midpoint-aware store. Keep affine4/8 separate. Verify authored widths,
+cancellation and subnormals, this dot and the frozen96-token prefix first.
+Retain a passing candidate only after full fidelity, state and quality reruns.
+
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 
 The [short alignment](../benchmarks/results/2026-11-06-qwen15-original-alignment-v1.json)
