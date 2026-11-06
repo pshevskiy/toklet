@@ -755,8 +755,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Representative production Mac Qwen2 load→reply→quit process-memory check;
   exact bundle/profile/config, external peaks and Astra review pass.
   [Report](docs/mac-production-memory.md). Other four production-profile peaks remain unmeasured.
-- [ ] Confirm required checks/reviews/commits and update this checklist and
-  the improvement record. Do not infer support from a family name alone.
+- [x] Confirm scoped code checks, reviews, commits and source-matched package.
+  Public transfer and deferred device evidence stay separate.
+  [Current audit](benchmarks/results/2026-11-06-m8-mac-audit-v3.json).
   - [x] Reconcile seven Apple Silicon Mac and four iOS catalog identities,
     selected native45 package and open gates. [Audit](benchmarks/results/2026-11-06-m8-mac-audit-v2.json).
   - [x] Give Qwen2.5-1.5B its own Mac display name, lookup key and discovery
@@ -828,6 +829,7 @@ completed or prerequisites for the active breadth-first queue.
 
 | Date | Iteration | Result, checks and review | Commit / next action |
 | --- | --- | --- | --- |
+| 2026-11-06 | Source-matched Mac code audit | Current code pins, 45 exports per slice, six Swift checks, signed build and Astra pass. Previous package preserved. | Production public download is running. [Evidence](benchmarks/results/2026-11-06-m8-mac-audit-v3.json). |
 | 2026-11-06 | G3 frozen Mac retention decision | All 26 pairs exact. Primary gain21.33%, longer guard regression21.06%, peak5.18GB. Strict checks and Astra pass. | Retain G2 default, keep G3 test-only. [Evidence](benchmarks/results/2026-11-06-gemma-assistant-mtp-retention-v1.json). |
 | 2026-11-06 | Official Gemma older 4 MiB public trial | Confirmed 2.01 GB before the two-hour deadline, empty staging after failure. Xet diagnostic stopped separately without full SHA. | Production resumption retry queued after G3. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-public-4m-v1.json). |
 | 2026-11-06 | Official Gemma bounded range resumption | Exact Mac shard uses 4 MiB chunks and keeps accepted partial bytes for transient retries. Owned Hub controls, both SDKs, signed build and Astra pass. | Full public transfer remains open. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-resumable-ranges-v1.json). |

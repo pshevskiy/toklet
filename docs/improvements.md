@@ -11059,3 +11059,10 @@ At 128+128, median complete request time is 34.99 seconds ordinary and
 pairs preserve exact tokens and state and peak physical memory is 5.18 GB.
 Astra approves stopping at the failed guard. Ordinary G2 remains selected.
 [Decision](../benchmarks/results/2026-11-06-gemma-assistant-mtp-retention-v1.json)
+
+## 6 November 2026 — Select the source-matched Mac package
+
+The current checked source produces 45 exports per arm64 slice and a signed
+Mac app with retained G2 prefill and scoped Gemma range resumption. Six
+Swift checks and Astra pass. The previous native package remains available.
+[Audit](../benchmarks/results/2026-11-06-m8-mac-audit-v3.json)

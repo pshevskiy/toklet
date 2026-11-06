@@ -83,8 +83,14 @@ The later source-matched refresh selects a new 41-export package after the
 chunk-pool change. It passes an offline Mac controller run and both iOS SDK
 builds. [Refresh evidence](../benchmarks/results/2026-11-06-chunk-pools-native41-v1.json).
 
-The current review checks all seven catalog and native identity pairs, the
+The preceding review checks all seven catalog and native identity pairs, the
 selected 45-export package and the signed Gemma Settings evidence. The package
 source predates the test-only G2 candidate. Full public target transfer and
 physical iPhone checks keep M8 open.
-[Current audit](../benchmarks/results/2026-11-06-m8-mac-audit-v2.json).
+[Pre-G2 audit](../benchmarks/results/2026-11-06-m8-mac-audit-v2.json).
+
+The selected source-matched package now includes retained G2 and resumable
+Gemma ranges. All 45 exports per slice, the signed Mac app and six Swift
+checks match the current checked source. G3 remains test-only after its
+longer guard failed. The full production public transfer is in progress.
+[Current audit](../benchmarks/results/2026-11-06-m8-mac-audit-v3.json).

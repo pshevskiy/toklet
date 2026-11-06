@@ -1,0 +1,75 @@
+{
+  "passed": true,
+  "scope": "Source-matched code, package and SDK checks for scoped Mac delivery. Public completion and deferred phone remain separate.",
+  "audited_revision": "4aab208f",
+  "commit_ancestors": [
+    "1dc25ce5",
+    "07ddac54",
+    "0e18f48f",
+    "d8f6abd0",
+    "18b15ef0",
+    "e8563344",
+    "d202d38a",
+    "43cf1ef2",
+    "4aab208f"
+  ],
+  "mac_catalog": {
+    "smol": [
+      "mlx-community/SmolLM2-135M-Instruct-8bit",
+      "0f0d9b8218915bc34d401e1a340b8c049d300d5e"
+    ],
+    "qwen": [
+      "mlx-community/Qwen2.5-0.5B-Instruct-8bit",
+      "6474d4c1a05bd7bd634a9c993560e4e7272eda3d"
+    ],
+    "qwen3": [
+      "mlx-community/Qwen3-0.6B-8bit",
+      "11de96878523501bcaa86104e3c186de07ff9068"
+    ],
+    "mistral": [
+      "mlx-community/Mistral-7B-Instruct-v0.3-4bit",
+      "a4b8f870474b0eb527f466a03fbc187830d271f5"
+    ],
+    "llama3": [
+      "mlx-community/Llama-3.2-1B-Instruct-8bit",
+      "d48cdf0a4ea22d893b7c63a99d6a693e24822795"
+    ],
+    "qwen15": [
+      "mlx-community/Qwen2.5-1.5B-Instruct-8bit",
+      "c7e1ff25efda4a2c8f7ee312380557fb42e145a2"
+    ],
+    "gemmaBF16": [
+      "google/gemma-4-E2B-it",
+      "70af34e20bd4b7a91f0de6b22675850c43922a03"
+    ]
+  },
+  "ios_catalog": [
+    "smol",
+    "qwen",
+    "qwen3",
+    "mistral"
+  ],
+  "native_exports_per_slice": 45,
+  "native_sha256": "37703f5838e8f6948c344a54f168271c61679425e4181c12e1178bfe865a33b4",
+  "app_sha256": "17c5e2cd1e8bbc60b7e7e0d524b76818e27e3a093488aa1c17ad04474d2dec5f",
+  "swift_sha256": "a26de05e4a5a6f8a9a6ded947f4208ee8fddc89619d41b7ad1922e47a1922f60",
+  "default_tests": 594,
+  "metal_tests": 713,
+  "g2_selected": true,
+  "g3_test_only": true,
+  "phone_deferred": true,
+  "public_download_qualified": false,
+  "format": "toklet-m8-mac-admission-audit-v3",
+  "selection": {
+    "passed": true,
+    "selected": "../../artifacts/toklet-mac-qualified-2026-11-06/native/Toklet.xcframework",
+    "previous": "../../artifacts/gemma-bf16-g2-native45-package-2026-11-06/Toklet.xcframework",
+    "previous_preserved": true
+  },
+  "review": "Astra approves scoped current code, package and SDK checklist closure. The complete public transfer, deferred physical phone and aggregate M8 remain open.",
+  "evidence_sha256": {
+    "artifacts/toklet-mac-qualified-2026-11-06/audit.py": "7c050ceda29e43a9dc4151d714e5d603dd52f9df2639babfd068f434c275aee8",
+    "artifacts/toklet-mac-qualified-2026-11-06/audit-preflight.json": "c2af4798782b04e734be9bd1500e297e6f30323372f63093c2a0aec175d62b43",
+    "artifacts/toklet-mac-qualified-2026-11-06/selection.json": "83cb0affd4ad798629b5492fe3960ff439f1cda4d0a5380b51252280f5a64a2c"
+  }
+}
