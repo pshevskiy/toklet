@@ -1,0 +1,85 @@
+{
+  "format": "toklet-gemma-official-assistant-import-v1",
+  "scope": "Pinned cold assistant import and ordered vocabulary routing. Numerical draft and target verification are separate.",
+  "repository": "google/gemma-4-E2B-it-assistant",
+  "revision": "2d874ef7d29f9a30599a1e4b3c1cbc9595f005df",
+  "acquisition": {
+    "bytes": 157565344,
+    "sha256": "93682eb1c97639d18f007704dc880bd74cbe530adaf7b1bb561213863fdad2a6",
+    "ranges": 115
+  },
+  "ordering": {
+    "shard_bytes": 157565344,
+    "sha256": "93682eb1c97639d18f007704dc880bd74cbe530adaf7b1bb561213863fdad2a6",
+    "ordering_ids": 262144,
+    "permutation": true,
+    "selected_centroids": [
+      14,
+      45,
+      76,
+      107,
+      138,
+      169,
+      200,
+      231,
+      262,
+      293,
+      324,
+      355,
+      386,
+      417,
+      448,
+      479,
+      510,
+      541,
+      572,
+      603,
+      634,
+      665,
+      696,
+      727,
+      758,
+      789,
+      820,
+      851,
+      882,
+      913,
+      944,
+      975
+    ],
+    "candidate_u32le_sha256": "6d0f784e3eaee5dada1224fc63b5b2312ad8e3beb1f7adb6cbbc35dc61ad8df7",
+    "centroids_sha256": "481fc5c561b2ac12f0f971d66a631d1ab260c62b9785a638e091a73679786054",
+    "layer_scalars": [
+      0.041748046875,
+      0.24609375,
+      0.42578125,
+      0.1201171875
+    ]
+  },
+  "checks": {
+    "default": 591,
+    "metal": 710,
+    "fmt": true,
+    "default_clippy": true,
+    "metal_clippy": true,
+    "real_source": 2,
+    "synthetic_ordering": 1
+  },
+  "prior_checks": [
+    "First lint found an unused import and single-range Vec initialization; both fixed.",
+    "A timed warmup slot ended before the first full Metal suite completed; the cached rerun passed 710 with no failures."
+  ],
+  "evidence_sha256": {
+    "artifacts/gemma-g3-assistant-draft-2026-11-06/warmup-checks/checks.json": "c2a3fc236b2774bdb7392838a82d9ccfa6bae468f133b3c88af61941a14a8bba",
+    "artifacts/gemma-g3-assistant-draft-2026-11-06/warmup-checks/clippy.stderr": "b52f248534e0978a65702b2bf0067d201f1c56d0da1ac5161ec7e5e8254150d2",
+    "artifacts/gemma-g3-assistant-draft-2026-11-06/warmup-retry/checks.json": "56eb9d6617e1857029fed6b007940839ef521b93f4a2041dac7b0fb0ef6c1b5b",
+    "artifacts/gemma-g3-assistant-draft-2026-11-06/warmup-retry/real-source.stdout": "34a81357963a513d29668b7e9bcbc54c85d08288bd20890f01c22ee8adbd900f",
+    "artifacts/gemma-g3-assistant-draft-2026-11-06/standard-checks/checks.json": "c6bddaeeab6e44e143bc79707c66dc47cf9f2ea853a717c91b60563d0c92c2f6",
+    "artifacts/gemma-g3-assistant-draft-2026-11-06/standard-checks/cpu-test.stdout": "4880aa6dff65d8da63d983190dde34d9f819c3a694d6634db19801d40693f7fe",
+    "artifacts/gemma-g3-assistant-draft-2026-11-06/standard-retry/checks.json": "a255e66208dc6e4fd9fc9413c61e6b2b66e9b11d7630f1c1e3ecc8bc684b7b87",
+    "artifacts/gemma-g3-assistant-draft-2026-11-06/standard-retry/metal-test.stdout": "4705af7b90c1a5d5ce35a86be46fbe61d502eabca6e79c6f0c8e849bd2fe5e91",
+    "artifacts/gemma-official-assistant-2026-11-06/verified/download.json": "41576c85728bd6615d2ca22fd32e3adbccc5e6007f19aa81985742e6f754dff5",
+    "artifacts/gemma-official-assistant-2026-11-06/verified-ordering.json": "ee07a9a39b121e7638236932fa6d99b671efd4f74e65077a9a239d7b0829a304"
+  },
+  "review": "Astra approves cold authenticated delivery and deterministic canonical vocabulary routing. The numerical draft, stock tie semantics, target pairing and app eligibility remain separate."
+}

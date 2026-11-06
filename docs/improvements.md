@@ -11000,3 +11000,11 @@ checked evidence. The audit corrects the Q8 rejection link and identifies
 transient Gemma Settings. Astra and 49 local links pass. Full public target
 transfer and deferred physical iPhone checks keep M8 open.
 [Evidence](../benchmarks/results/2026-11-06-m8-mac-audit-v2.json)
+
+## 6 November 2026 — Authenticate the official Gemma assistant
+
+The complete 157.6 MB shard passes its pinned SHA-256. The importer checks
+49 BF16 tensors and every canonical token ID. The real ordered head matches
+4,096 independently selected IDs. Astra, 591 default and 710 Metal tests
+pass. Scalar proposal, target verification and app eligibility stay separate.
+[Evidence](../benchmarks/results/2026-11-06-gemma-official-assistant-import-v1.json)

@@ -1,9 +1,10 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Measure G2 paired Mac performance and prepare the G3 assistant import.**
-G2 paired timings are running. G3 recovered and authenticated the complete
-public assistant shard. Native cold checks and proposal comparison are next.
+Current task: **Finish G2 paired Mac performance and qualify the G3 scalar proposal.**
+G2 primary repeats at 60.9% and 60.8% lower prefill time. Reverse controls
+are running. The authenticated G3 cold importer passed 591 default and 710
+Metal tests, real-file checks and Astra review.
 The native45 Mac build passed active same-owner context/KV changes and
 rendered Settings. Full public Gemma transfer remains open after two
 timeouts; cached publication and offline Chat pass.
@@ -793,8 +794,10 @@ Conditional follow-ons require their own decision; they do not all block M9:
 - [ ] G3: authenticate and qualify the official Gemma assistant for MTP.
   - [x] Pin the compatible official assistant and upstream interface.
     [Header evidence](benchmarks/results/2026-11-06-gemma-official-assistant-header-v1.json).
-  - [ ] Authenticate the full artifact, then qualify ordered-head selection,
-    draft forward, shared-KV verification and representative Mac timing.
+  - [x] Authenticate the full public artifact and qualify ordered-head selection.
+    [Evidence](benchmarks/results/2026-11-06-gemma-official-assistant-import-v1.json).
+  - [ ] Qualify scalar draft forward against independent real-weight and target
+    snapshot references, then strict shared-KV verification and Mac timing.
   [Last-row prefill and assistant plans](docs/todo-implementation-plans.md#g2g3-shared-kv-and-mtp).
   The prospective assistant header and target token-ID comparison pass.
   [Evidence](benchmarks/results/2026-11-06-gemma-qat-assistant-header-v1.json).
@@ -812,6 +815,7 @@ completed or prerequisites for the active breadth-first queue.
 
 | Date | Iteration | Result, checks and review | Commit / next action |
 | --- | --- | --- | --- |
+| 2026-11-06 | G3 official assistant cold import | Complete public SHA, all 262,144 IDs and 4,096 exact candidates pass. Initial lint fixed. Metal warmup cutoff rerun passes; 591 default and 710 Metal tests with Astra approval. | Scalar proposal next. [Evidence](benchmarks/results/2026-11-06-gemma-official-assistant-import-v1.json). |
 | 2026-11-06 | M8 current Mac audit | Seven Mac and four iOS catalog identities, 45 exports per slice, 49 links and Astra pass. Historical Q8 rejections and transient Gemma Settings are explicit. | Public target transfer and deferred iPhone checks remain. [Evidence](benchmarks/results/2026-11-06-m8-mac-audit-v2.json). |
 | 2026-11-06 | G2 timings and G3 assistant import in progress | G2 measured pairs retain identical token IDs so far. Astra confirmed canonical assistant head rows, final target normalization and read-only producers13/14. The public assistant passed full SHA-256 after large transfers timed out and smaller ranges recovered the missing bytes. | Finish paired timing and native cold checks before runtime changes. |
 | 2026-10-28 | Active plan and M9 architecture | Astra approved shared-block and performance boundaries; local links/whitespace passed. | `1d673e0`; B0 core. |
