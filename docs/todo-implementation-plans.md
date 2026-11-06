@@ -145,8 +145,8 @@ is frozen. The [mixed diagnostic session](../benchmarks/results/2026-11-06-gemma
 passes exact short state and legacy controls. The [two-prefix fidelity gate](../benchmarks/results/2026-11-06-gemma-qat-prefix-parity-v1.json)
 passes both numerical contracts, chunk sizes1/3/32 and the causal future
 extension. The [quality-only wrap](../benchmarks/results/2026-11-06-gemma-qat-wrap-state-v1.json)
-passes both schedules and exact state. Independent math/staged reference
-workers are running. The public diagnostic remains capped at512.
+passes both schedules and exact state. The [guarded math and staged references](../benchmarks/results/2026-11-06-gemma-qat-wrap-parity-v1.json)
+pass every retained comparison. The public diagnostic remains capped at512.
 
 If the native prefix gate passes, reuse the existing raw Gemma loss and
 task loops with QAT-bound source identity and measured owner plans. Admit
@@ -158,8 +158,8 @@ teacher-forced replay, including hidden EOS and lowest-ID greedy ties,
 then grade all100 new completions against the existing original52/100.
 The [quality pilots](../benchmarks/results/2026-11-06-gemma-qat-quality-pilot-v1.json)
 pass. The [full loss gate](../benchmarks/results/2026-11-06-gemma-qat-full-loss-v1.json)
-passes all10,000 targets. Complete full task collection and the separate
-wrap fidelity gate before adoption.
+passes all10,000 targets. The full task score rejects QAT for adoption,
+so the owned application route remains conditional on another target.
 
 If all gates pass, add a private owned QAT adapter to the existing native
 model/session dispatch. Preserve the drop order from session through graph,

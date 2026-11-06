@@ -1,0 +1,258 @@
+{
+  "native_state_passed": true,
+  "numerical_gate_passed": true,
+  "reference_owner_confirmed": true,
+  "atol": 1e-05,
+  "rtol": 0.0001,
+  "contracts": [
+    {
+      "contract": "math_fp64",
+      "values": 26220544,
+      "failed": 0,
+      "failed_parts": [],
+      "greedy": [
+        {
+          "position": 0,
+          "run": 0,
+          "actual": 578,
+          "expected": 578
+        },
+        {
+          "position": 0,
+          "run": 1,
+          "actual": 578,
+          "expected": 578
+        },
+        {
+          "position": 31,
+          "run": 0,
+          "actual": 532,
+          "expected": 532
+        },
+        {
+          "position": 31,
+          "run": 1,
+          "actual": 532,
+          "expected": 532
+        },
+        {
+          "position": 255,
+          "run": 0,
+          "actual": 236771,
+          "expected": 236771
+        },
+        {
+          "position": 255,
+          "run": 1,
+          "actual": 236771,
+          "expected": 236771
+        },
+        {
+          "position": 511,
+          "run": 0,
+          "actual": 783,
+          "expected": 783
+        },
+        {
+          "position": 511,
+          "run": 1,
+          "actual": 783,
+          "expected": 783
+        },
+        {
+          "position": 512,
+          "run": 0,
+          "actual": 108,
+          "expected": 108
+        },
+        {
+          "position": 512,
+          "run": 1,
+          "actual": 108,
+          "expected": 108
+        },
+        {
+          "position": 767,
+          "run": 0,
+          "actual": 1348,
+          "expected": 1348
+        },
+        {
+          "position": 767,
+          "run": 1,
+          "actual": 1348,
+          "expected": 1348
+        },
+        {
+          "position": 1023,
+          "run": 0,
+          "actual": 236764,
+          "expected": 236764
+        },
+        {
+          "position": 1023,
+          "run": 1,
+          "actual": 236764,
+          "expected": 236764
+        },
+        {
+          "position": 1024,
+          "run": 0,
+          "actual": 623,
+          "expected": 623
+        },
+        {
+          "position": 1024,
+          "run": 1,
+          "actual": 623,
+          "expected": 623
+        }
+      ],
+      "passed": true
+    },
+    {
+      "contract": "staged_fp32",
+      "values": 26220544,
+      "failed": 0,
+      "failed_parts": [],
+      "greedy": [
+        {
+          "position": 0,
+          "run": 0,
+          "actual": 578,
+          "expected": 578
+        },
+        {
+          "position": 0,
+          "run": 1,
+          "actual": 578,
+          "expected": 578
+        },
+        {
+          "position": 31,
+          "run": 0,
+          "actual": 532,
+          "expected": 532
+        },
+        {
+          "position": 31,
+          "run": 1,
+          "actual": 532,
+          "expected": 532
+        },
+        {
+          "position": 255,
+          "run": 0,
+          "actual": 236771,
+          "expected": 236771
+        },
+        {
+          "position": 255,
+          "run": 1,
+          "actual": 236771,
+          "expected": 236771
+        },
+        {
+          "position": 511,
+          "run": 0,
+          "actual": 783,
+          "expected": 783
+        },
+        {
+          "position": 511,
+          "run": 1,
+          "actual": 783,
+          "expected": 783
+        },
+        {
+          "position": 512,
+          "run": 0,
+          "actual": 108,
+          "expected": 108
+        },
+        {
+          "position": 512,
+          "run": 1,
+          "actual": 108,
+          "expected": 108
+        },
+        {
+          "position": 767,
+          "run": 0,
+          "actual": 1348,
+          "expected": 1348
+        },
+        {
+          "position": 767,
+          "run": 1,
+          "actual": 1348,
+          "expected": 1348
+        },
+        {
+          "position": 1023,
+          "run": 0,
+          "actual": 236764,
+          "expected": 236764
+        },
+        {
+          "position": 1023,
+          "run": 1,
+          "actual": 236764,
+          "expected": 236764
+        },
+        {
+          "position": 1024,
+          "run": 0,
+          "actual": 623,
+          "expected": 623
+        },
+        {
+          "position": 1024,
+          "run": 1,
+          "actual": 623,
+          "expected": 623
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "comparisons": 52441088,
+  "greedy_matches": 32,
+  "reference_owners": {
+    "math_fp64": {
+      "peak_physical_bytes": 1156859656,
+      "rss_peak_bytes": 1480654848,
+      "limit_bytes": 6442450944,
+      "samples": 13521,
+      "group_absent": true
+    },
+    "staged_fp32": {
+      "peak_physical_bytes": 931071464,
+      "rss_peak_bytes": 1140146176,
+      "limit_bytes": 6442450944,
+      "samples": 12050,
+      "group_absent": true
+    }
+  },
+  "initial_audit_failure_repeated_bitwise": true,
+  "receipts_sha256": {
+    "artifacts/gemma-qat-wrap-state-2026-11-06/comparison.json": "fcd635c45267836e2fdea1819b684687315b1d9a4027f17799e5c12bcd9567af",
+    "artifacts/gemma-qat-wrap-state-2026-11-06/compare.py": "48a0ccc78aefb9e05a5b62fa412153bf4b999a702202510a8dd0e2f2029783e0",
+    "artifacts/gemma-qat-wrap-state-2026-11-06/qat-wrap/owned.json": "c33b1c4b95a23092841f4766c6b9797b86295371b0832de7e6e2fcb3f6fd46d8",
+    "artifacts/gemma-qat-wrap-state-2026-11-06/qat-wrap/arrays.bin": "60556f0863eda9bf408de567cebc8e7d0324a20c8220e0468bb0d4b3d559103c",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/math_fp64/plan.json": "e8ccaba0407cf9a740d49b2677bf33289e5f88d1b7864c1eb552802e54e951ea",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/math_fp64/owned.json": "0494a0722d06ac2691c5021849fd2398d15bc1b68fb38ae24371ebbdd3c77876",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/math_fp64/owned-reaped.json": "72e43c65c9e3bcec98d68fef0632c1ab1ffec5619788fcd2c46a4f2b1d86620d",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/math_fp64/owned.py": "7220781b131431627158618174bc4ac110b7aba4771d61d44ca825a5d4d1d5c4",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/math_fp64/reference.json": "b76fd48e4bafc2050a09d0894f0bf2ab89b758584af23e12932e9b8d394efd33",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/math_fp64/rows.bin": "319585217e85d896658ab79a5e2e1a95ade92867826c55640fc9fcc16a120be4",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/staged_fp32/plan.json": "d53942063329c8b851c39b7ff5b67db66ca78908974ba0b3332745445f7b557f",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/staged_fp32/owned.json": "5ed4c267eb45c80730d07e2cac5ea9a96425b06bf9f3fbce2715839dd188fd3d",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/staged_fp32/owned-reaped.json": "c33498f45a9c9b2d7ed714e156d5b33b65bc9ae0dd580e8358f73d108b011e56",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/staged_fp32/owned.py": "7220781b131431627158618174bc4ac110b7aba4771d61d44ca825a5d4d1d5c4",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/staged_fp32/reference.json": "c1324c7295ebd161c5ebfe070c20a725d0ffb5b02f4a5041b90633ba5af41ad4",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/staged_fp32/rows.bin": "742d74bdf21d1c1931177dd491f5e616cbde569dc524b6c1f00502bd03e5cad3"
+  },
+  "review": "Astra verified both guarded owners, same-pin repeated bytes and complete numerical match under both frozen contracts.",
+  "scope": "Frozen QAT 1,025-token diagnostic fidelity. Original-relative task quality remains rejected and QAT is ineligible for Chat."
+}

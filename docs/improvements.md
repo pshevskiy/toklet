@@ -10770,3 +10770,11 @@ Per-row integrity retains8,388,712 requested bytes, and chunk32 gathers
 need573,480 bytes. Late read or digest failures preserve caller output.
 Astra approved. Full model residency and latency remain open.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-ple-source-v1.json)
+
+## 6 November 2026 — Close frozen QAT wrap fidelity
+
+The guarded math and staged repeats reproduce the initial bytes and
+complete their independent memory and exit checks. Native passes all
+52,441,088 values and32 greedy observations. Astra verified the result.
+The QAT task rejection still governs adoption.
+[Evidence](../benchmarks/results/2026-11-06-gemma-qat-wrap-parity-v1.json)

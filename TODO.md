@@ -625,10 +625,10 @@ uses the existing full saved-conversation reset+prompt path on Send.
     3,631 decisions replay exactly and grading completes under the existing
     two-point limit. QAT stays diagnostic.
     [Evidence](benchmarks/results/2026-11-06-gemma-qat-full-quality-v1.json).
-  - [ ] Finish the guarded independent QAT wrap repeat for diagnostic fidelity.
-    Initial wrap values all match. Process-audit permission prevented the
-    final owner receipts. Both same-pin workers are repeating with corrected
-    tracking. [Evidence](benchmarks/results/2026-11-06-gemma-qat-wrap-initial-v1.json).
+  - [x] Guarded QAT repeats match all52,441,088 wrap comparisons and32
+    greedy observations. Both owners verify. Task rejection remains.
+    [Final evidence](benchmarks/results/2026-11-06-gemma-qat-wrap-parity-v1.json)
+    and [initial audit failure](benchmarks/results/2026-11-06-gemma-qat-wrap-initial-v1.json).
   - [ ] Screen the official BF16 source with only PLE lookup file-backed.
     Full selected text9.26GB exceeds the6GiB policy. Projected resident
     text4.56GB plus bounded row integrity and exact owner accounting may fit.
@@ -1590,3 +1590,4 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | Gemma QAT full task gate | All100 tasks and3,631 replayed decisions verify. Isolated grade46/100 vs52 exceeds the2pp loss limit. | Astra approved diagnostic retention and an official BF16 file-backed PLE feasibility path. [Evidence](benchmarks/results/2026-11-06-gemma-qat-full-quality-v1.json). |
 | 2026-11-06 | Official BF16 cold plan | Exact config/header and all2,011 intervals pass. Real probe reads263,960 bytes, no payload. | Astra approved; file-backed PLE authentication next. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-cold-v1.json). |
 | 2026-11-06 | Official BF16 authenticated PLE | Full source SHA, 5 exact original rows, transaction controls and memory budgets pass. Physical peak13.86MB. | Astra approved after588/702 tests and owned Mac run. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-ple-source-v1.json). |
+| 2026-11-06 | Gemma QAT wrap fidelity | Both guarded same-pin repeats reproduce initial bytes. All52,441,088 values and32 decisions pass; both owners exit. | Astra approved diagnostic fidelity. [Evidence](benchmarks/results/2026-11-06-gemma-qat-wrap-parity-v1.json); task rejection stands. |
