@@ -114,13 +114,18 @@ fn utf8_message_count_and_canonical_byte_admission_precede_output() {
 #[test]
 fn codec_allowance_rejects_before_opening_assets() {
     let missing = Path::new("/nonexistent-toklet-gemma-codec-admission-test");
-    let error = Codec::load(missing, ALLOWANCE_BYTES - 1).err().unwrap();
-    assert_eq!(error.kind(), io::ErrorKind::InvalidInput);
-    assert!(error.to_string().contains("allowance"));
-    assert_eq!(
-        Codec::load(missing, ALLOWANCE_BYTES).err().unwrap().kind(),
-        io::ErrorKind::NotFound
-    );
+    for load in [
+        Codec::load as fn(&Path, usize) -> io::Result<Codec>,
+        Codec::load_official_bf16,
+    ] {
+        let error = load(missing, ALLOWANCE_BYTES - 1).err().unwrap();
+        assert_eq!(error.kind(), io::ErrorKind::InvalidInput);
+        assert!(error.to_string().contains("allowance"));
+        assert_eq!(
+            load(missing, ALLOWANCE_BYTES).err().unwrap().kind(),
+            io::ErrorKind::NotFound
+        );
+    }
 }
 
 #[test]

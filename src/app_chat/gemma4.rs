@@ -182,20 +182,54 @@ impl Codec {
     /// Admit the allowance before opening any asset. Hash and parse the same
     /// captured tokenizer bytes; earlier small assets select this exact profile.
     pub fn load(directory: &Path, available_bytes: usize) -> io::Result<Self> {
+        Self::load_pinned(
+            directory,
+            available_bytes,
+            [
+                (
+                    "config.json",
+                    6395,
+                    "6397cb6eca41b911d1dcab74e17941351057bd759284052a2331918ff6f9246c",
+                ),
+                (
+                    "tokenizer_config.json",
+                    2740,
+                    "080d9e1aff284e2f6043889cd05367966f7c7b80e025fbc0b06745e218158656",
+                ),
+            ],
+        )
+    }
+
+    /// Admit the exact official BF16 text assets. The tokenizer, template and
+    /// stop metadata are identical to the established basic-text profile.
+    pub fn load_official_bf16(directory: &Path, available_bytes: usize) -> io::Result<Self> {
+        Self::load_pinned(
+            directory,
+            available_bytes,
+            [
+                (
+                    "config.json",
+                    4954,
+                    "1b28f3d2c3100f6c594754b81107428bd7b822a7f48272ca681dae9d2ec38330",
+                ),
+                (
+                    "tokenizer_config.json",
+                    2095,
+                    "90c3a3ba5bf53818383a58e1a776cbcacd2a038d4812eaa373e1522f2d06f3df",
+                ),
+            ],
+        )
+    }
+
+    fn load_pinned(
+        directory: &Path,
+        available_bytes: usize,
+        profile: [(&str, usize, &str); 2],
+    ) -> io::Result<Self> {
         if available_bytes < ALLOWANCE_BYTES {
             return Err(invalid("Gemma text allowance exceeds available bytes"));
         }
-        for (name, bytes, sha) in [
-            (
-                "config.json",
-                6395,
-                "6397cb6eca41b911d1dcab74e17941351057bd759284052a2331918ff6f9246c",
-            ),
-            (
-                "tokenizer_config.json",
-                2740,
-                "080d9e1aff284e2f6043889cd05367966f7c7b80e025fbc0b06745e218158656",
-            ),
+        for (name, bytes, sha) in profile.into_iter().chain([
             (
                 "generation_config.json",
                 208,
@@ -206,7 +240,7 @@ impl Codec {
                 17336,
                 "2f1b4d75d067bae3fe44e676721c7f077d243bc007156cb9c2f8b5836613d082",
             ),
-        ] {
+        ]) {
             pinned(&directory.join(name), bytes, sha)?;
         }
         let bytes = pinned(

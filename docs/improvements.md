@@ -10811,3 +10811,11 @@ KV and rollback/reset behavior. All resident matrix, guard and norm bytes
 remain exact. Peak physical memory is4.858GB. Astra and the unchanged Q4
 capture pass. Independent long fidelity and quality remain open.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-wrap-state-v1.json)
+
+## 6 November 2026 — Verify the official BF16 basic-text codec
+
+Exact official config pins select the same tokenizer, template and
+stops. All97 frozen records match and both crossed profiles reject.
+Peak physical memory is488.2MB under the existing1GiB policy. Astra
+approved standalone text. Combined model/codec admission remains open.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-codec-v1.json)

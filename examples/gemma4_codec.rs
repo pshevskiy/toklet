@@ -128,7 +128,7 @@ fn check(expected: &Value, actual: &Value) -> Result<(), Box<dyn Error>> {
     }
     Ok(())
 }
-fn run(root: PathBuf, output: PathBuf) -> Result<(), Box<dyn Error>> {
+fn run(root: PathBuf, output: PathBuf, official_bf16: bool) -> Result<(), Box<dyn Error>> {
     std::fs::create_dir(&output)?;
     let mut observations = OpenOptions::new()
         .write(true)
@@ -139,13 +139,20 @@ fn run(root: PathBuf, output: PathBuf) -> Result<(), Box<dyn Error>> {
         "append_only_streaming_qualified":false,"app_eligibility_changed":false,
         "codec_allowance_bytes":gemma4::ALLOWANCE_BYTES,"text_bytes":gemma4::MAX_TEXT_BYTES,
         "codec_token_bound":gemma4::MAX_CODEC_TOKENS,"numerical_positions_unchanged":32});
+    if official_bf16 {
+        report["source_profile"] = "official-bf16".into();
+    }
     let result = (|| -> Result<(), Box<dyn Error>> {
         if format!("{:x}", Sha256::digest(WITNESS.as_bytes()))
             != "391077f928d1e288c227bc981f42ae505f7b407f9ee854332f9d2d9c3a410c76"
         {
             return Err("frozen text witness identity differs".into());
         }
-        let codec = Codec::load(&root, gemma4::ALLOWANCE_BYTES)?;
+        let codec = if official_bf16 {
+            Codec::load_official_bf16(&root, gemma4::ALLOWANCE_BYTES)?
+        } else {
+            Codec::load(&root, gemma4::ALLOWANCE_BYTES)?
+        };
         for (index, line) in WITNESS.lines().enumerate() {
             let expected: Value = serde_json::from_str(line)?;
             let observation = observe(&codec, &expected);
@@ -182,11 +189,13 @@ fn run(root: PathBuf, output: PathBuf) -> Result<(), Box<dyn Error>> {
 }
 fn main() -> Result<(), Box<dyn Error>> {
     let mut args = std::env::args_os().skip(1);
-    let usage = "usage: gemma4_codec CHECKPOINT_DIRECTORY NEW_OUTPUT_DIRECTORY";
+    let usage = "usage: gemma4_codec CHECKPOINT_DIRECTORY NEW_OUTPUT_DIRECTORY [--official-bf16]";
     let root = PathBuf::from(args.next().ok_or(usage)?);
     let output = PathBuf::from(args.next().ok_or(usage)?);
-    if args.next().is_some() {
-        return Err(usage.into());
-    }
-    run(root, output)
+    let official_bf16 = match args.next() {
+        None => false,
+        Some(arg) if arg == "--official-bf16" && args.next().is_none() => true,
+        Some(_) => return Err(usage.into()),
+    };
+    run(root, output, official_bf16)
 }
