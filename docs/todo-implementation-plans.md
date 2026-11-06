@@ -243,6 +243,14 @@ exploratory output is diagnostic evidence.
   numerical engine and require both before managed Mac adoption. Any
   exploratory rejection calls for localization on identical operands.
 
+The [ordered exploratory run](../benchmarks/results/2026-11-06-gemma-bf16-ordered-exploratory-v1.json)
+sealed and reproduced the same26 V failures. The first captured cache drift
+appears at producer1, position70. Preserve the original chunk64–95 and
+trace producers0–1 at69/70/71, including normalized input, rotated Q,
+context, O projection, PLE input and layer output. Bind causal K/V to the
+authenticated wrap and localize the first divergent operation before changing
+any engine arithmetic. Keep the651-token holdout unused.
+
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 
 The [short alignment](../benchmarks/results/2026-11-06-qwen15-original-alignment-v1.json)

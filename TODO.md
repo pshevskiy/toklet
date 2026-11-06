@@ -666,9 +666,11 @@ uses the existing full saved-conversation reset+prompt path on Send.
     - [ ] Trace the staged value-cache deviations at508 and826. Use the
       result to define a complete independent native arithmetic reference.
     - [ ] Evaluate the prospective ordered BF16 gate on the frozen wrap and
-      distinct651-token holdout. Initial runtime and projection-width failures
-      are retained. The corrected exploratory prefix passes.
+      distinct651-token holdout. The exploratory wrap still rejects on the
+      same26 V observations. Astra approved the rejection. Capture producers0–1
+      at69/70/71 next, with the holdout still unused.
       [Policy](docs/todo-implementation-plans.md#prospective-ordered-bf16-arithmetic-gate).
+      [Exploratory evidence](benchmarks/results/2026-11-06-gemma-bf16-ordered-exploratory-v1.json).
     - [ ] Complete replay and isolated grading for the frozen100 tasks.
 
 - [x] Reconcile completed adapters and exact supported configurations with the

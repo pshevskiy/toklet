@@ -1,0 +1,48 @@
+{
+  "format": "toklet-gemma-bf16-ordered-exploratory-v1",
+  "passed": false,
+  "holdout_unused": true,
+  "qualification_claimed": false,
+  "retained_values": 26220544,
+  "failed": 26,
+  "same_failed_parts_as_staged": true,
+  "all_selected_logits_and_greedy_pass": true,
+  "first_changed_producer_row": [
+    1,
+    70
+  ],
+  "first512_producer_0_kv_exact": true,
+  "stage_trace": {
+    "records": 364,
+    "values": 1435648,
+    "exceeded": 0
+  },
+  "projection": {
+    "projected": 976125952,
+    "exact_dots": 10182083
+  },
+  "physical_peak_bytes": 513181160,
+  "cpu_reference_seconds": 1181.5951857499895,
+  "earlier_attempts": [
+    "Cold runtime blocked eager NumPy import before inference.",
+    "Two superseded worker groups were retired cleanly.",
+    "Width8192 excluded the real FF down width12288. The corrected plan seals."
+  ],
+  "review": "Astra confirms the scoped exploratory rejection and the producer0\u21921 trace on rows69/70/71 as the next bounded discriminator.",
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-ordered-reference-2026-11-06/prefix/owned.json": "78e9ef775735fb6a5caa3cda0dca1347df0f5fd10a9b925f949dcbf439b503f4",
+    "artifacts/gemma-bf16-ordered-reference-2026-11-06/v1/prefix/owned.json": "18a5fc9840420a6cc6c6d537cb1086a941a185a16dd8c86296f4bedd7d988a7f",
+    "artifacts/gemma-bf16-ordered-reference-2026-11-06/v2/prefix/owned.json": "f3b2847d0b226db475555ba1c87cb63021000515b7daf4370ad833c0612c04bd",
+    "artifacts/gemma-bf16-ordered-reference-2026-11-06/v3/prefix/owned.json": "6d82b954ddd89e0044efb08249d8099052b89a3fd7da7f70b9782997d0c32845",
+    "artifacts/gemma-bf16-ordered-reference-2026-11-06/prototype-check.json": "95cdae1d6245147b696de091e2b75eaa4732aed1787dbc4ac11060f43ee0efb5",
+    "artifacts/gemma-bf16-ordered-reference-2026-11-06/v4/width-controls.json": "31343bbe36c8abb68b2b6e98ae519b54ec0e383d0793cc3c2029921c7ce4d3e0",
+    "artifacts/gemma-bf16-ordered-reference-2026-11-06/v4/comparison-prefix.json": "c3a91c93c887fc446c3c73865b8aa254251c9f44d0e67720b9e9552d7f9d9be9",
+    "artifacts/gemma-bf16-ordered-reference-2026-11-06/v4/comparison.json": "3a7cc80f00420a25e7fee2c9d553008cf32bde9b4f8eefe85e06f46056766339",
+    "artifacts/gemma-bf16-ordered-reference-2026-11-06/v4/comparison-trace.json": "a7bedc7b205bd28c5957976a0b16e12266b1206d733be74c91de1cba01d61713",
+    "artifacts/gemma-bf16-ordered-reference-2026-11-06/v4/wrap/owned.json": "071bc98a62018407cb8b76827171fbdbd8a975c719466a5aa97ff5973d3c3d63",
+    "artifacts/gemma-bf16-ordered-reference-2026-11-06/v4/wrap/plan.json": "e65ad8d115597c0a6de1a1f9b24167a89e8f69e841535640058d70b2f30e16ad",
+    "artifacts/gemma-bf16-ordered-reference-2026-11-06/v4/wrap/reference.json": "a986ef9c231727b1811b21fde2a96a3742ea9c5b5846e4532e4f3a29078914b9",
+    "artifacts/gemma-bf16-ordered-reference-2026-11-06/v4/trace-prefix/owned.json": "ed523bc9f09d1e07eee345d06016807dffb5fe9f1c2263d0c017df47d2e25751",
+    "artifacts/gemma-bf16-ordered-reference-2026-11-06/v4/trace-prefix/plan.json": "14ee0b6146921cddd5ed520b6c00fc2ab037819d3c59c12dc75ebc9dfe7558f5"
+  }
+}

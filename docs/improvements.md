@@ -10852,3 +10852,12 @@ prior K/V rows. The first captured bit differences at94 and95 are in
 layer1 attention context. Astra approves this test-only diagnostic.
 The staged cache failures at508 and826 require their own cause witness.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-producer-trace-v1.json)
+
+## 6 November 2026 — Screen the ordered BF16 reference
+
+The sealed chronological reference reproduces the same26 V failures across
+26,220,544 values. All selected logits and greedy checks pass. The earliest
+captured cache drift is producer1 at position70. Astra approved the scoped
+rejection and the next two-producer trace. Initial prototype failures are
+retained, and the separate holdout remains unused.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-ordered-exploratory-v1.json)
