@@ -13,6 +13,7 @@ use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 use std::collections::BTreeMap;
 
+pub mod bf16;
 pub mod payload;
 
 #[cfg(test)]
@@ -254,7 +255,7 @@ fn logical(layers: &[LayerPlan; LAYERS], format: Format) -> Result<Vec<TensorPla
     result
         .try_reserve_exact(540)
         .map_err(|_| Error::Allocation)?;
-    let mut add = |name: String, shape: Shape| -> Result<(), Error> {
+    visit_text_tensors(layers, "language_model.model.", |name, shape| {
         let storage = match shape {
             Shape::Vector(_) => Storage::Bf16Vector,
             Shape::Matrix { rows, columns } => Storage::Affine(
@@ -274,8 +275,15 @@ fn logical(layers: &[LayerPlan; LAYERS], format: Format) -> Result<Vec<TensorPla
             storage,
         });
         Ok(())
-    };
-    let prefix = "language_model.model.";
+    })?;
+    Ok(result)
+}
+
+fn visit_text_tensors(
+    layers: &[LayerPlan; LAYERS],
+    prefix: &str,
+    mut add: impl FnMut(String, Shape) -> Result<(), Error>,
+) -> Result<(), Error> {
     for (name, rows, columns) in [
         ("embed_tokens", VOCAB, HIDDEN),
         ("embed_tokens_per_layer", VOCAB, LAYERS * PLE),
@@ -335,7 +343,7 @@ fn logical(layers: &[LayerPlan; LAYERS], format: Format) -> Result<Vec<TensorPla
             }
         }
     }
-    Ok(result)
+    Ok(())
 }
 
 /// Inspect three exact in-memory JSON buffers. Each is bounded to 1 MiB and

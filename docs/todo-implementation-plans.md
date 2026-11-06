@@ -179,6 +179,7 @@ The other text tensors require4,559,518,278 raw bytes. [Official source inventor
 
 1. Admit the pinned BF16 config and header, classify selected and excluded
    ranges, and prove the exact PLE and resident byte totals.
+   [Cold plan result](../benchmarks/results/2026-11-06-gemma-bf16-cold-v1.json).
 2. Authenticate the whole source descriptor and hash PLE rows while
    streaming. Verify each bounded row on demand before publishing output.
    Count integrity metadata, gather scratch and concurrent source buffers.

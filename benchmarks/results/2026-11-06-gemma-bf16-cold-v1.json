@@ -1,0 +1,30 @@
+{
+  "passed": true,
+  "official_revision": "70af34e20bd4b7a91f0de6b22675850c43922a03",
+  "container_bytes": 10246621918,
+  "checked_metadata": {
+    "header_bytes_read": 263960,
+    "text_tensors": 540,
+    "resident_tensor_bytes": 4559518278,
+    "file_backed_ple_bytes": 4697620480,
+    "media_excluded_bytes": 951458176,
+    "unused_shared_kv_excluded_bytes": 37761024
+  },
+  "excluded_counts": {
+    "unused_shared_kv": 60,
+    "media": 1411
+  },
+  "checks": {
+    "fmt": true,
+    "strict_clippy_default_and_metal": true,
+    "default_tests": 586,
+    "metal_tests": 700,
+    "release_lib": true
+  },
+  "receipts_sha256": {
+    "artifacts/gemma-bf16-cold-2026-11-06/checks.json": "4ea8b93cb6a7f66bd97eb58fd0d6861c4b774cf33b988536a270213ac236dda0",
+    "artifacts/gemma-bf16-cold-2026-11-06/real-metadata.stdout": "84342e5e81a2518ec896a7c3160e909fc8fd906b2e62e95a87f6ef880d714381"
+  },
+  "review": "Astra approved exact pins, complete interval coverage, fixture reconciliation and unchanged affine graph shape visitation.",
+  "scope": "Cold header and raw storage split. No source payload authentication, full memory fit, or numerical execution."
+}

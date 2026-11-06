@@ -10754,3 +10754,11 @@ grading scores46/100 versus original52/100, a six-point drop against the
 two-point limit. Astra confirmed the rejection. QAT stays diagnostic.
 Official BF16 with file-backed PLE is the next feasibility candidate.
 [Evidence](../benchmarks/results/2026-11-06-gemma-qat-full-quality-v1.json)
+
+## 6 November 2026 — Admit the official Gemma BF16 cold plan
+
+The pinned config and all2,011 tensor intervals match the inventory.
+The real metadata probe reads263,960 bytes. The raw split is4.56GB
+resident candidates and4.70GB file-backed PLE. Astra approved. Payload
+authentication, full memory admission and execution remain separate.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-cold-v1.json)
