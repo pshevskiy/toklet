@@ -1,0 +1,91 @@
+{
+  "format": "toklet-gemma-bf16-rounding-quality-v1",
+  "numerical_and_original_quality_passed": true,
+  "app_qualified": false,
+  "previous_dual_gate_rejection_preserved": true,
+  "driver_sha256": "6dc61b4edec8522bb75b244c7c01f042d7a35178f1921948ab4215bbdad3b25e",
+  "shader_sha256": "27de2af5e64cdc2ac086d93f64cbf9667c435e332fedb97725377fd1a8ef3efd",
+  "loss": {
+    "targets": 10000,
+    "original_mean_nll": 9.995776113844665,
+    "native_mean_nll": 9.964928817371142,
+    "native_minus_original": -0.03084729647352269,
+    "mean_nll_increase_limit": 0.05
+  },
+  "grade": {
+    "native_tasks": {
+      "cases": 100,
+      "passed": 51,
+      "pass_rate": 0.51,
+      "aggregation": "100_equal_weight_binary_cases",
+      "categories": {
+        "code": {
+          "cases": 40,
+          "passed": 32
+        },
+        "prose": {
+          "cases": 30,
+          "passed": 19
+        },
+        "continuation": {
+          "cases": 30,
+          "passed": 0
+        }
+      }
+    },
+    "baseline_tasks": {
+      "cases": 100,
+      "passed": 52,
+      "pass_rate": 0.52,
+      "aggregation": "100_equal_weight_binary_cases",
+      "categories": {
+        "code": {
+          "cases": 40,
+          "passed": 33
+        },
+        "prose": {
+          "cases": 30,
+          "passed": 19
+        },
+        "continuation": {
+          "cases": 30,
+          "passed": 0
+        }
+      }
+    },
+    "task_pass_rate_loss_percentage_points": 1,
+    "task_limit_percentage_points": 2
+  },
+  "replay": {
+    "cases": 100,
+    "decisions": 4149,
+    "mismatches": 0,
+    "trajectory_sha256": "0b343ddf85288008cddd534c1e197ce1ea15ae37556e2d9dd1f9cd58e5de6ad2"
+  },
+  "previous_trajectory_bytes_identical": true,
+  "owned_physical_peak_bytes": {
+    "loss-first": 4709371840,
+    "loss-rest": 4719153112,
+    "task-pilot": 4697427856,
+    "task-rest": 4703063952,
+    "replay-pilot": 4692332480,
+    "replay-all": 4692479912
+  },
+  "evidence_sha256": {
+    "benchmarks/results/2026-11-06-gemma-bf16-rounding-numerical-v1.json": "428032a8d1b3fc4d788f9964ae6bda9636b0fdf058a0dde19554f6c4bb8854d2",
+    "artifacts/gemma-bf16-rounding-2026-11-06/short/owned.json": "9a848faaa1be7c1ae0bbf429a2ccfa83e753bc9c024e28f1594f910b27eace7a",
+    "artifacts/gemma-bf16-holdout-2026-11-06/bf16-wrap/owned.json": "98a32c347493a202eca8f73b335674b14a4431ca3755491703a5426ed03c9cb4",
+    "artifacts/gemma-bf16-rounding-quality-2026-11-06/loss-full-comparison.json": "51d908f0083752c9cbd035967cd49fd963a732cc553cd10222b75b07b6a98052",
+    "artifacts/gemma-bf16-rounding-quality-2026-11-06/collection.json": "3a814f90852449cca14787d079ba8661224c3b49cc21deddfb1cfab6268cdd4f",
+    "artifacts/gemma-bf16-rounding-quality-2026-11-06/replay-all.u32.jsonl": "0b343ddf85288008cddd534c1e197ce1ea15ae37556e2d9dd1f9cd58e5de6ad2",
+    "artifacts/gemma-bf16-rounding-quality-2026-11-06/grade/result.json": "c27bfe3c7cb1769c6f095eaacde029e3517fbcb803e29f7087f39ed6ae4ba0aa",
+    "artifacts/gemma-bf16-rounding-quality-2026-11-06/grade/inner/result.json": "867d9fbd5bf893d31935053caec4b6863b6d05d58dfde4bbdccd86f443134cd9",
+    "artifacts/gemma-bf16-rounding-quality-2026-11-06/loss-first/owned.json": "b021081a49e98cb8c1a068beed6a7c061a82646b5e97c8f9d8b0802d130cd3fb",
+    "artifacts/gemma-bf16-rounding-quality-2026-11-06/loss-rest/owned.json": "9adda24b4d2fb062f6fe3ac66fd9c5b4657f533acda247b861f7648c536564a8",
+    "artifacts/gemma-bf16-rounding-quality-2026-11-06/task-pilot/owned.json": "07870524396122b4207830cf72db7ba6af5817c763cf19ede5dabdfe4a48a59c",
+    "artifacts/gemma-bf16-rounding-quality-2026-11-06/task-rest/owned.json": "f8ce1674cd681ca6f836cc345c9e2df1a1fe1c870a8f3647eadc79dce18a69ad",
+    "artifacts/gemma-bf16-rounding-quality-2026-11-06/replay-pilot/owned.json": "43761d216ec16e1d3b6d7149c054c19f9651d298756efc24d4def5fa14fd419f",
+    "artifacts/gemma-bf16-rounding-quality-2026-11-06/replay-all/owned.json": "84e3f779054af6e0d05e51e3b721285249bb336da2edb1ca9e5b5b45238fcd42"
+  },
+  "review": "Astra approves retaining the BF16-only repair after fresh numerical, state, mutation, legacy and both corrected original-quality gates. The app remains separate."
+}

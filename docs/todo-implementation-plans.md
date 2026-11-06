@@ -272,8 +272,10 @@ Retain a passing candidate only after full fidelity, state and quality reruns.
 
 The [fresh numerical evidence](../benchmarks/results/2026-11-06-gemma-bf16-rounding-numerical-v1.json)
 passes all45,000,704 values and32 greedy checks across the wrap and distinct
-holdout. The original dual-reference rejection remains. Keep the core repair
-uncommitted until the corrected full quality gate passes.
+holdout. The original dual-reference rejection remains. The [corrected quality
+gate](../benchmarks/results/2026-11-06-gemma-bf16-rounding-quality-v1.json)
+also passes all10,000 loss targets and51/100 versus52/100. Retain the numerical
+repair and proceed to the audited owner. Managed Mac acceptance stays separate.
 
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 

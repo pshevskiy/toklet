@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Finish original quality and regression checks for the BF16 rounding candidate.**
+Current task: **Add an audited official BF16 Mac owner and exact memory admission.**
 Completed: source-matched native41 package selected, with Mac offline regression
 and both iOS SDK builds. [Evidence](benchmarks/results/2026-11-06-chunk-pools-native41-v1.json).
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
@@ -677,10 +677,12 @@ uses the existing full saved-conversation reset+prompt path on Send.
     - [x] Locate the first cache drift in the producer0 output projection at70.
       The exact dot rounds one word above the measured32-lane native result.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-first-drift-v1.json).
-    - [ ] Validate a BF16-only expansion and final rounding against exact dots
-      and the frozen prefix. Arithmetic, fresh numerical gates and legacy
-      Q4/QAT pass. Retention waits for corrected full quality. The holdout
-      helper's byte-for-byte wrap regression and late-failure checks are queued.
+    - [x] Retain the BF16-only expansion and final store. Both fresh numerical
+      cases, legacy and late failure checks, corrected10k loss and51/100
+      task grade pass. All4,149 sampled decisions replay exactly. Astra approves.
+      [Evidence](benchmarks/results/2026-11-06-gemma-bf16-rounding-quality-v1.json).
+    - [ ] Add the audited Mac owner, paired codec and complete memory facts.
+      Verify the Rust and app lifecycles before enabling discovery or transport.
     - [x] Complete replay and isolated grading for the frozen100 tasks.
       All4,149 sampled decisions match. The grade is51/100 versus52/100,
       within the2pp gate. Astra confirms both original-quality results.

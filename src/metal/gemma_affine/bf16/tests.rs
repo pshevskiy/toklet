@@ -116,6 +116,72 @@ fn bf16_projection_preserves_residuals_chunks_and_guards() {
 }
 
 #[test]
+#[ignore = "explicit Metal BF16 midpoint and SIMD merge controls"]
+fn bf16_projection_resolves_three_term_midpoints() {
+    let context = Bf16Context::new(CONTEXT_ALLOWANCE_BYTES).unwrap();
+    let lanes = context.0.width;
+    let half_ulp = 2_f32.powi(-24);
+    let tail = 2_f32.powi(-60);
+    let next = 1_f32.next_up();
+    let subnormal = f32::from_bits(1);
+    // The first two terms put the exact dot on a midpoint. The last term
+    // distinguishes both sides of that midpoint without changing either
+    // adjacent FP32 word. Include signed, cancellation and tiny controls.
+    let cases = [
+        ([1., half_ulp, tail], next),
+        ([1., half_ulp, 0.], 1.),
+        ([1., half_ulp, -tail], 1.),
+        ([-1., -half_ulp, -tail], -next),
+        ([-1., -half_ulp, tail], -1.),
+        ([next, half_ulp, -tail], next),
+        ([next, half_ulp, 0.], next.next_up()),
+        ([next, half_ulp, tail], next.next_up()),
+        ([1., -1., f32::MIN_POSITIVE], f32::MIN_POSITIVE),
+        ([1., -1., -subnormal], -subnormal),
+    ];
+    let count = 2 * cases.len();
+    for columns in (64..=12288).step_by(64) {
+        let weights = 1_f32.to_bits().to_le_bytes()[2..].repeat(columns);
+        let within_lane = if 2 * lanes < columns {
+            [0, lanes, 2 * lanes]
+        } else {
+            [0, 1, 2]
+        };
+        let across_lanes = [0, 1, columns - 1];
+        let mut input = vec![0.; count * columns];
+        let mut expected = Vec::with_capacity(count);
+        for (row, (positions, (values, answer))) in [within_lane, across_lanes]
+            .into_iter()
+            .flat_map(|positions| cases.map(|case| (positions, case)))
+            .enumerate()
+        {
+            for (column, value) in positions.into_iter().zip(values) {
+                input[row * columns + column] = value;
+            }
+            expected.push(answer.to_bits());
+        }
+        let bytes = Bf16Projection::minimum_owned_bytes(1, columns, count).unwrap();
+        let mut projection = context
+            .projection(1, columns, &weights, count, bytes)
+            .unwrap();
+        let mut actual = vec![0.; count];
+        projection.apply(&input, &mut actual, count).unwrap();
+        for (row, (value, bits)) in actual.into_iter().zip(expected).enumerate() {
+            // Precise Metal may flush FP32 subnormals. Accept only the
+            // exact subnormal or zero for the existing subnormal control.
+            if f32::from_bits(bits).is_subnormal() && value == 0.0 {
+                continue;
+            }
+            assert_eq!(value.to_bits(), bits, "width {columns}, authored row {row}");
+        }
+    }
+    println!(
+        "BF16_MIDPOINTS lanes={lanes} widths=192 normal_exact={} subnormal_controls=384",
+        192 * (count - 2)
+    );
+}
+
+#[test]
 #[ignore = "explicit original BF16 source rows and independent Metal dot check"]
 fn original_bf16_attention_and_feed_forward_rows() {
     use crate::mlx::gemma4::{ModalityPolicy, bf16 as source};

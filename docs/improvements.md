@@ -10894,3 +10894,12 @@ All1,085,440 prefix values are bitwise exact. Fresh wrap and holdout pass
 reproduce their saved bytes. Astra approves the code and numerical evidence.
 The corrected quality rerun remains required before retention.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-rounding-numerical-v1.json)
+
+## 6 November 2026 — Retain the official BF16 rounding repair
+
+The corrected binary passes all10,000 loss targets at−0.03085 nats and the
+isolated task gate at51/100 versus52/100. All4,149 sampled decisions replay
+exactly, and the earlier trajectory bytes match. Astra approves retention
+with the fresh numerical, state, legacy and late-failure evidence. Managed
+Mac ownership and app adoption remain separate.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-rounding-quality-v1.json)

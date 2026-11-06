@@ -90,6 +90,56 @@ kernel void gemma_affine_product_8(
     gemma_product<8>(codes, scales, biases, input, output, shape, status, group, lane, lanes);
 }
 
+float gemma_bf16_add_error(float a, float b, float rounded) {
+    return abs(a) >= abs(b) ? (a - rounded) + b : (b - rounded) + a;
+}
+
+void gemma_bf16_add(thread float3& sum, float value) {
+    float high = sum.x + value;
+    float error = gemma_bf16_add_error(sum.x, value, high);
+    float middle = sum.y + error;
+    sum.z += gemma_bf16_add_error(sum.y, error, middle);
+    sum.x = high;
+    sum.y = middle;
+}
+
+// Round the retained three terms together. Collect nonoverlapping partials
+// in increasing magnitude, then round once at the first inexact addition.
+// A smaller partial on the same side distinguishes a rounded midpoint.
+float gemma_bf16_round(float3 sum) {
+    if (sum.z == 0.0f) return sum.x + sum.y;
+    float parts[3];
+    uint count = 0;
+    for (uint term = 0; term < 3; ++term) {
+        float value = sum[term];
+        uint kept = 0;
+        for (uint i = 0; i < count; ++i) {
+            float next = value + parts[i];
+            float error = gemma_bf16_add_error(value, parts[i], next);
+            if (error != 0.0f) parts[kept++] = error;
+            value = next;
+        }
+        parts[kept++] = value;
+        count = kept;
+    }
+    float value = parts[--count];
+    while (count != 0) {
+        float part = parts[--count];
+        float next = value + part;
+        float error = gemma_bf16_add_error(value, part, next);
+        value = next;
+        if (error == 0.0f) continue;
+        if (count != 0 && ((error > 0.0f && parts[count - 1] > 0.0f)
+            || (error < 0.0f && parts[count - 1] < 0.0f))) {
+            float twice = error + error;
+            float adjusted = value + twice;
+            if (adjusted - value == twice) value = adjusted;
+        }
+        break;
+    }
+    return value;
+}
+
 // Row-major BF16 coefficients widen exactly for multiplication. The device
 // needs FP32 arithmetic and aligned ushort loads, not a native BF16 ALU.
 kernel void gemma_bf16_product(
@@ -104,13 +154,27 @@ kernel void gemma_bf16_product(
     uint token = group / shape[2], row = group % shape[2];
     if (token >= shape[0]) return;
     uint columns = shape[1];
-    float2 sum = float2(0.0f);
+    float3 sum = float3(0.0f);
     for (uint column = lane; column < columns; column += lanes) {
         float weight = gemma_coefficient(coefficients, row * columns + column);
         float x = as_type<float>(input[token * columns + column]);
         float product = weight * x;
-        gemma_add(sum, product);
-        gemma_add(sum, fma(weight, x, -product));
+        gemma_bf16_add(sum, product);
+        gemma_bf16_add(sum, fma(weight, x, -product));
     }
-    gemma_store_dot(sum, output, status, token * shape[2] + row, lane, lanes);
+    for (uint hop = 1; hop < lanes; hop *= 2) {
+        float high = simd_shuffle_down(sum.x, hop);
+        float middle = simd_shuffle_down(sum.y, hop);
+        float low = simd_shuffle_down(sum.z, hop);
+        if (lane % (2 * hop) == 0 && lane + hop < lanes) {
+            gemma_bf16_add(sum, high);
+            gemma_bf16_add(sum, middle);
+            gemma_bf16_add(sum, low);
+        }
+    }
+    if (lane == 0) {
+        float value = gemma_bf16_round(sum);
+        output[token * shape[2] + row] = as_type<uint>(value);
+        if (!isfinite(value)) atomic_fetch_or_explicit(status, 1u, memory_order_relaxed);
+    }
 }
