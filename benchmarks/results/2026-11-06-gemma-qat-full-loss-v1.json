@@ -1,0 +1,45 @@
+{
+  "completed": true,
+  "targets": 10000,
+  "original_mean_nll": 9.995776113844665,
+  "native_mean_nll": 6.064917364322857,
+  "native_minus_original": -3.930858749521808,
+  "mean_nll_increase_limit": 0.05,
+  "loss_gate_passed": true,
+  "paired_mean_delta": -3.9308587495218075,
+  "task_gate_pending": true,
+  "full_quality_qualified": false,
+  "earlier_fidelity_failures_waived": false,
+  "admission": {
+    "required_bytes": 3722626652,
+    "session_bytes": 338226412
+  },
+  "source_targets_sha256": "45b8bf9a149425ff9131aa58dd328797e97335c0eb42435b4a96f87a9b45403c",
+  "native_workers": {
+    "loss-first": {
+      "binary_sha256": "62a22fca7e86ad9b011468ae21143ab7de2ed569ffa3888935a6cfd1ac2256e6",
+      "physical_peak_bytes": 3703753992,
+      "limit_bytes": 6442450944,
+      "group_absent": true
+    },
+    "loss-rest": {
+      "binary_sha256": "62a22fca7e86ad9b011468ae21143ab7de2ed569ffa3888935a6cfd1ac2256e6",
+      "physical_peak_bytes": 3713453320,
+      "limit_bytes": 6442450944,
+      "group_absent": true
+    }
+  },
+  "source_receipt": "benchmarks/results/2026-11-04-gemma-full-loss-v1.json",
+  "receipts_sha256": {
+    "artifacts/gemma-qat-quality-2026-11-06/loss_compare.py": "ba9b3fabe4711b79a792134cf89b56f4941b6e5521dc6bd5763c88f742d8f62a",
+    "artifacts/gemma-qat-quality-2026-11-06/loss-full-comparison.json": "e60c84115e07cb0f70787328c28d909786e41c1af7efbddfbf6a91e02a7a4d4d",
+    "artifacts/gemma-qat-quality-2026-11-06/loss-first/owned.json": "fa6ef9e363442bdd3fe61173d18d763d073606a7014f30a3cb32b811dda7ee72",
+    "artifacts/gemma-qat-quality-2026-11-06/loss-first/gpu.stdout": "3bd624662e104a1883198264f1b97268c5e4ce7257a2f999e0c073aa7e36a514",
+    "artifacts/gemma-qat-quality-2026-11-06/loss-first/arrays.bin": "cc440afc4670176a134eab4a128d639b592803211237738f81493e4ef2787d80",
+    "artifacts/gemma-qat-quality-2026-11-06/loss-rest/owned.json": "b9a8d8b3af4632828f707d6b54fcdde9028706f41ab1943b5c91d8b8c1460269",
+    "artifacts/gemma-qat-quality-2026-11-06/loss-rest/gpu.stdout": "d71cf230b720c715ae9b03c406c70c0cb0377ae2599069fef201b4938a02c5b6",
+    "artifacts/gemma-qat-quality-2026-11-06/loss-rest/arrays.bin": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "review": "Astra independently reproduced both means, original journal identity, ten-block coverage, clean owned exits and the unchanged gate.",
+  "scope": "Original-relative loss on the frozen 10,000 targets. QAT source fidelity and task grading remain separate."
+}

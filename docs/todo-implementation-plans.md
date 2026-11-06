@@ -157,8 +157,9 @@ loss baseline. Recheck every sampled task decision with a fresh native
 teacher-forced replay, including hidden EOS and lowest-ID greedy ties,
 then grade all100 new completions against the existing original52/100.
 The [quality pilots](../benchmarks/results/2026-11-06-gemma-qat-quality-pilot-v1.json)
-pass. Complete both collections and the separate wrap fidelity gate before
-adoption.
+pass. The [full loss gate](../benchmarks/results/2026-11-06-gemma-qat-full-loss-v1.json)
+passes all10,000 targets. Complete full task collection and the separate
+wrap fidelity gate before adoption.
 
 If all gates pass, add a private owned QAT adapter to the existing native
 model/session dispatch. Preserve the drop order from session through graph,

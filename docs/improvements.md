@@ -10730,3 +10730,11 @@ anchors pass the score checks. Legacy Q4 reproduces the same task IDs,
 loss rows and raw capture. Astra approved the workers. Full original
 quality and the independent long fidelity gate remain open.
 [Evidence](../benchmarks/results/2026-11-06-gemma-qat-quality-pilot-v1.json)
+
+## 6 November 2026 — Pass original-relative Gemma QAT loss
+
+All 10,000 frozen targets score. Mean NLL is6.064917 versus9.995776 for
+the archived original baseline. The difference passes the unchanged
++0.05 limit. Mac peak physical memory is3.713GB. Astra verified the
+result. Task grading and independent long fidelity remain open.
+[Evidence](../benchmarks/results/2026-11-06-gemma-qat-full-loss-v1.json)
