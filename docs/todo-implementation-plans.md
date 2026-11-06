@@ -207,7 +207,10 @@ The other text tensors require4,559,518,278 raw bytes. [Official source inventor
    Replay complete V projection and norm on the observed native operands at
    positions508 and826, with adjacent passing controls and exact cache transfer.
    Use this attribution to specify a complete, independently propagated native
-   arithmetic reference at the unchanged tolerance. Continue the100-task gate.
+   arithmetic reference at the unchanged tolerance.
+   Both [original-quality gates](../benchmarks/results/2026-11-06-gemma-bf16-original-quality-v1.json)
+   pass for the same binary. Fresh replay verifies4,149 decisions and
+   isolated grading is51/100 against52/100. Numerical fidelity stays separate.
 5. After numerical and quality acceptance, measure the combined owner and
    codec, then exercise the managed Mac profile. The six pinned files total
    10,278,816,137 bytes, exceeding the current Hub file and snapshot limits.

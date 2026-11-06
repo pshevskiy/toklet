@@ -1,0 +1,88 @@
+{
+  "format": "toklet-gemma-official-bf16-original-quality-v1",
+  "native_binary_sha256": "d89eb336c68baaf759788f32b005a509af125a5ee7f6bc6fd77bc900dfaea667",
+  "original_quality_gates_passed": true,
+  "full_adoption_qualified": false,
+  "independent_fidelity_pending": true,
+  "original_loss": {
+    "targets": 10000,
+    "original_mean_nll": 9.995776113844665,
+    "native_mean_nll": 9.964928683222988,
+    "native_minus_original": -0.030847430621676608,
+    "mean_nll_increase_limit": 0.05
+  },
+  "task_result": {
+    "baseline_tasks": {
+      "cases": 100,
+      "passed": 52,
+      "pass_rate": 0.52,
+      "aggregation": "100_equal_weight_binary_cases",
+      "categories": {
+        "code": {
+          "cases": 40,
+          "passed": 33
+        },
+        "prose": {
+          "cases": 30,
+          "passed": 19
+        },
+        "continuation": {
+          "cases": 30,
+          "passed": 0
+        }
+      }
+    },
+    "native_tasks": {
+      "cases": 100,
+      "passed": 51,
+      "pass_rate": 0.51,
+      "aggregation": "100_equal_weight_binary_cases",
+      "categories": {
+        "code": {
+          "cases": 40,
+          "passed": 32
+        },
+        "prose": {
+          "cases": 30,
+          "passed": 19
+        },
+        "continuation": {
+          "cases": 30,
+          "passed": 0
+        }
+      }
+    },
+    "task_pass_rate_loss_percentage_points": 1,
+    "task_limit_percentage_points": 2
+  },
+  "replay": {
+    "cases": 100,
+    "decisions": 4149,
+    "mismatches": 0,
+    "trajectory_sha256": "0b343ddf85288008cddd534c1e197ce1ea15ae37556e2d9dd1f9cd58e5de6ad2"
+  },
+  "process_peaks_bytes": {
+    "loss-first": 4728049624,
+    "loss-rest": 4727738328,
+    "task-pilot": 4694577088,
+    "task-rest": 4711206824,
+    "replay-all": 4695035840
+  },
+  "isolated_cpu_grader_clean_exit": true,
+  "review": "Astra confirms both original-quality gates for the same numerical binary, with separate fidelity, app and device gates.",
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-quality-2026-11-06/collection.json": "d5bab0443e99e8d83453e68cf5db09d3e22f09cf9494dd96001b019a33dfbde9",
+    "artifacts/gemma-bf16-quality-2026-11-06/grade/execution-plan.json": "8a9283d768da96907c302d0c2c53a2111a04d29b3a7a1d85cb0b03c537553f0f",
+    "artifacts/gemma-bf16-quality-2026-11-06/grade/result.json": "68e189187758faad7fe18088f5ff830a96f31425efe1be7cd76f7df9ba140261",
+    "artifacts/gemma-bf16-quality-2026-11-06/grade/inner/result.json": "873020731fb0438b9f5d01256fa5846e38a113fcbf3e695d605d6b89be1d5a33",
+    "artifacts/gemma-bf16-quality-2026-11-06/replay-all/gpu.stdout": "00aab27768c7ed589eeea9f5f2289d6a3774947399e64e87a0c3ed6dd02dd830",
+    "artifacts/gemma-bf16-quality-2026-11-06/loss-full-comparison.json": "bb527933139a575bc3fc8d6bd6ed7f4efad212aebb10cd6988a58f0d3f1e483e",
+    "artifacts/gemma-bf16-quality-2026-11-06/native-tasks.jsonl": "2262df26240d35c9592a4ffe81e4fe58e2b9e449889db266f4e72563ab0dd02d",
+    "artifacts/gemma-bf16-quality-2026-11-06/replay-all.u32.jsonl": "0b343ddf85288008cddd534c1e197ce1ea15ae37556e2d9dd1f9cd58e5de6ad2",
+    "artifacts/gemma-bf16-quality-2026-11-06/loss-first/owned.json": "24ce81c73d76f33371ba05627bd49a9ae704631db8b2bc19f0b19ccefa442f66",
+    "artifacts/gemma-bf16-quality-2026-11-06/loss-rest/owned.json": "873b1d2deb2ba350bd825624bd79be049414d4db069292948d2bccafeffa6bbc",
+    "artifacts/gemma-bf16-quality-2026-11-06/task-pilot/owned.json": "a7e0e017f97a23f4e4926cb8f8d4c5636df7e82b70df13e42b84163cbd666221",
+    "artifacts/gemma-bf16-quality-2026-11-06/task-rest/owned.json": "9b20936d06db3d640ceae1d4eddb934c44cc4249ab62953461955421e69be209",
+    "artifacts/gemma-bf16-quality-2026-11-06/replay-all/owned.json": "be1b7d26955c29dd926f2bc0fca7a115925f38ed56f960ae6c8f5145f6d00219"
+  }
+}

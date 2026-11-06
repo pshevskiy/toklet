@@ -10869,3 +10869,11 @@ are bitwise exact on actual inputs. The first verifier exceeded the source
 row bound. The bounded retry, old short trace and Astra pass. The original
 long rejection remains, with the source of these differences upstream.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-late-v-attribution-v1.json)
+
+## 6 November 2026 — Pass both official BF16 original-quality gates
+
+Fresh replay matches all4,149 decisions from100 tasks. Isolated grading
+passes51/100 versus52/100, and the VM is restored stopped. The same
+numerical binary passes10,000 loss targets. Astra confirms this quality
+result. Independent long fidelity and managed app adoption remain open.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-original-quality-v1.json)
