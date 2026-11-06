@@ -60,11 +60,13 @@ impl<'a, M: MatrixSource> Model<'a, M> {
         geometry: &[crate::mlx::gemma4::LayerPlan],
         backing: Backing,
         position_limit: usize,
+        qat_mixed: bool,
     ) -> Result<Self, Error> {
-        let result = Self::with_storage(
+        let result = Self::with_storage_format(
             weights,
             Layout::e2b_layers_for_limit(geometry, position_limit)?,
             Some(backing),
+            if qat_mixed { 8 } else { 4 },
         )?;
         for (index, layer) in geometry.iter().enumerate() {
             if result.plan.producer_for(index)? != layer.producer {

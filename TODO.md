@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Explicit mixed QAT diagnostic session and frozen prefix comparison.**
+Current task: **Compare the mixed QAT session against both frozen prefix references.**
 Completed: source-matched native41 package selected, with Mac offline regression
 and both iOS SDK builds. [Evidence](benchmarks/results/2026-11-06-chunk-pools-native41-v1.json).
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
@@ -606,6 +606,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
   - [x] Independent QAT math and staged references captured both disputed
     prefixes. Astra verified all124 records and the owned exit.
     [Evidence](benchmarks/results/2026-11-06-gemma-qat-native-reference-v1.json).
+  - [x] Explicit mixed diagnostic session passes four-token chunk, future,
+    reset and exact-budget checks. Astra and Q4 regressions pass.
+    [Evidence](benchmarks/results/2026-11-06-gemma-qat-session-v1.json).
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1540,3 +1543,7 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | Gemma OptiQ task gate rejected | Both stock runs reproduce 100 trajectories, with 24 repairs. Isolated grade is 49/100 vs original52/100. | Astra approves the scoped rejection. The first run lacked live group identity; the receipted repeat and qualified CPU-witness grading pass infrastructure. [Evidence](benchmarks/results/2026-11-06-gemma-optiq-task-quality-v1.json) |
 
 | 2026-11-06 | Gemma oQ6 header screen reviewed | Canonical text inventory, tokenizer and mixed6/8 packing match. Estimated text process 5.52 GB. | Astra approves one no-assistant stock preflight with exact live tensor checks. [Evidence](benchmarks/results/2026-11-06-gemma-oq6-header-v1.json) |
+
+| 2026-11-06 | Gemma QAT authenticated storage | Default584/Metal698, four hardware witnesses and Astra pass. Exact requested load policy3.60GB, physical peak3.53GB. | `85514ff5`; [evidence](benchmarks/results/2026-11-06-gemma-qat-resident-v1.json). |
+| 2026-11-06 | Gemma QAT independent prefix oracle | 124 rows/state records and576 exact rational controls pass. Astra independently verified all record hashes. | `92e27501`; [evidence](benchmarks/results/2026-11-06-gemma-qat-native-reference-v1.json). |
+| 2026-11-06 | Gemma QAT mixed session | Four-token chunk1/3/32 and appended future parity pass. Q4 historical 3,016 records are bitwise identical. | Astra approved after584/698 tests and four Mac runs. [Evidence](benchmarks/results/2026-11-06-gemma-qat-session-v1.json). |

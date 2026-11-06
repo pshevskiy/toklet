@@ -10695,3 +10695,12 @@ the 213- and 71-token causal prefixes. All576 authored rational controls
 pass and peak physical memory is268MB. Astra verified the row hashes,
 runtime pins and owned exit. Native fidelity still requires comparison.
 [Evidence](../benchmarks/results/2026-11-06-gemma-qat-native-reference-v1.json)
+
+## 6 November 2026 — Admit an explicit mixed Gemma QAT session
+
+One device and queue retain both precise pipelines. Affine8 is confined to
+the feed-forward projections. Four-token logits and KV match across three
+chunk sizes and the causal future extension. Exact admission and reset
+pass, and the original Q4 capture remains bitwise identical. Astra
+approved the diagnostic code. Longer fidelity and Chat remain open.
+[Evidence](../benchmarks/results/2026-11-06-gemma-qat-session-v1.json)

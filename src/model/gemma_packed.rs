@@ -130,11 +130,16 @@ fn check(values: &[f32], expected: usize, name: &'static str) -> Result<(), Erro
     finite(name, values)?;
     Ok(())
 }
-fn matrix(value: &impl MatrixSource, rows: usize, columns: usize) -> Result<usize, Error> {
+fn matrix(
+    value: &impl MatrixSource,
+    rows: usize,
+    columns: usize,
+    bits: u8,
+) -> Result<usize, Error> {
     let l = value.layout();
     if l.rows() != rows
         || l.columns() != columns
-        || l.bits() != 4
+        || l.bits() != bits
         || l.group_size() != 64
         || l.metadata_dtype() != MetadataDtype::BF16
     {
@@ -231,6 +236,14 @@ impl<'a, M: MatrixSource> Model<'a, M> {
         l: Layout,
         retained: Option<Backing>,
     ) -> Result<Self, Error> {
+        Self::with_storage_format(weights, l, retained, 4)
+    }
+    fn with_storage_format(
+        weights: Weights<'a, M>,
+        l: Layout,
+        retained: Option<Backing>,
+        ff_bits: u8,
+    ) -> Result<Self, Error> {
         // A bounded proposal frame must never spill to the heap during forward.
         // Public admission selects only the frozen witness or named E2B geometry.
         if l.producers == 0
@@ -261,7 +274,7 @@ impl<'a, M: MatrixSource> Model<'a, M> {
                 l.hidden,
             ),
         ] {
-            bytes = add_bytes(bytes, matrix(m, r, c)?)?;
+            bytes = add_bytes(bytes, matrix(m, r, c, 4)?)?;
         }
         for (v, n) in [
             (weights.per_layer_norm, l.ple),
@@ -271,16 +284,16 @@ impl<'a, M: MatrixSource> Model<'a, M> {
             bytes = add_bytes(bytes, allocation_bytes(v.len())?)?;
         }
         for (i, (w, g)) in weights.layers.iter().zip(&l.layers).enumerate() {
-            for (m, r, c) in [
-                (&w.q, l.heads * g.head_dim, l.hidden),
-                (&w.o, l.hidden, l.heads * g.head_dim),
-                (&w.ff_gate, g.intermediate, l.hidden),
-                (&w.ff_up, g.intermediate, l.hidden),
-                (&w.ff_down, l.hidden, g.intermediate),
-                (&w.ple_gate, l.ple, l.hidden),
-                (&w.ple_projection, l.hidden, l.ple),
+            for (m, r, c, bits) in [
+                (&w.q, l.heads * g.head_dim, l.hidden, 4),
+                (&w.o, l.hidden, l.heads * g.head_dim, 4),
+                (&w.ff_gate, g.intermediate, l.hidden, ff_bits),
+                (&w.ff_up, g.intermediate, l.hidden, ff_bits),
+                (&w.ff_down, l.hidden, g.intermediate, ff_bits),
+                (&w.ple_gate, l.ple, l.hidden, 4),
+                (&w.ple_projection, l.hidden, l.ple, 4),
             ] {
-                bytes = add_bytes(bytes, matrix(m, r, c)?)?;
+                bytes = add_bytes(bytes, matrix(m, r, c, bits)?)?;
             }
             for (v, n) in [
                 (w.input_norm, l.hidden),
@@ -295,8 +308,8 @@ impl<'a, M: MatrixSource> Model<'a, M> {
             }
             match (&w.kv, i < l.producers) {
                 (Some(kv), true) => {
-                    bytes = add_bytes(bytes, matrix(&kv.k, g.head_dim, l.hidden)?)?;
-                    bytes = add_bytes(bytes, matrix(&kv.v, g.head_dim, l.hidden)?)?;
+                    bytes = add_bytes(bytes, matrix(&kv.k, g.head_dim, l.hidden, 4)?)?;
+                    bytes = add_bytes(bytes, matrix(&kv.v, g.head_dim, l.hidden, 4)?)?;
                     check(kv.k_norm, g.head_dim, "Gemma packed K norm")?;
                     bytes = add_bytes(bytes, allocation_bytes(kv.k_norm.len())?)?;
                 }

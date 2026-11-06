@@ -18,6 +18,7 @@ const DIAGNOSTIC: usize = 128 * 1024 * 1024;
 mod attention_boundary;
 mod context_probe;
 mod loss_block;
+mod qat;
 mod task_controller;
 mod v_boundary;
 mod wrap;

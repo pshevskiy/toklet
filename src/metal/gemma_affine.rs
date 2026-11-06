@@ -27,19 +27,23 @@ pub use projection::Projection;
 pub use weights::Weights;
 
 pub const CONTEXT_ALLOWANCE_BYTES: usize = 64 * 1024 * 1024;
+const MIXED_CONTEXT_ALLOWANCE_BYTES: usize = 2 * CONTEXT_ALLOWANCE_BYTES;
 const GUARD: usize = 7;
 const SENTINEL: u32 = 0x5a17_0031;
 const MAX_WEIGHT: f32 = 4294967296.;
 const ORDERED_ERROR_LIMIT: f64 = 1e-5 / 16.;
+
+type Pipeline = Retained<ProtocolObject<dyn MTLComputePipelineState>>;
 
 /// One cached device/queue and precise affine4 projection pipeline.
 /// Context allowance is policy, not measured residency;
 /// admit caller storage and each owner's actual buffers separately.
 pub struct Context {
     gpu: Gpu,
-    pipeline: Retained<ProtocolObject<dyn MTLComputePipelineState>>,
+    pipeline: Pipeline,
     width: usize,
     projection_bits: u8,
+    affine8: Option<(Pipeline, usize)>,
 }
 impl Context {
     pub fn new(available_bytes: usize) -> Result<Self> {
@@ -52,9 +56,23 @@ impl Context {
             8 => "gemma_affine_product_8",
             _ => return Err(Error::Options("Gemma affine projection width")),
         };
-        if available_bytes < CONTEXT_ALLOWANCE_BYTES {
+        Self::compile(available_bytes, name, projection_bits, false)
+    }
+
+    fn compile(
+        available_bytes: usize,
+        name: &str,
+        projection_bits: u8,
+        mixed: bool,
+    ) -> Result<Self> {
+        let allowance = if mixed {
+            MIXED_CONTEXT_ALLOWANCE_BYTES
+        } else {
+            CONTEXT_ALLOWANCE_BYTES
+        };
+        if available_bytes < allowance {
             return Err(Error::Budget {
-                required: CONTEXT_ALLOWANCE_BYTES,
+                required: allowance,
                 limit: available_bytes,
             });
         }
@@ -77,27 +95,55 @@ impl Context {
                     Some(&options),
                 )
                 .map_err(|e| Error::Native(e.to_string()))?;
-            let function = library
-                .newFunctionWithName(&NSString::from_str(name))
-                .ok_or_else(|| Error::Native("Gemma affine kernel absent".into()))?;
-            let pipeline = gpu
-                .device
-                .newComputePipelineStateWithFunction_error(&function)
-                .map_err(|e| Error::Native(e.to_string()))?;
-            let width = pipeline.threadExecutionWidth();
-            if width == 0
-                || width > pipeline.maxTotalThreadsPerThreadgroup()
-                || width > u16::MAX as usize
-            {
-                return Err(Error::Unsupported("Gemma affine launch width unavailable"));
-            }
+            let compile_pipeline = |entry: &str| -> Result<(Pipeline, usize)> {
+                let function = library
+                    .newFunctionWithName(&NSString::from_str(entry))
+                    .ok_or_else(|| Error::Native("Gemma affine kernel absent".into()))?;
+                let pipeline = gpu
+                    .device
+                    .newComputePipelineStateWithFunction_error(&function)
+                    .map_err(|e| Error::Native(e.to_string()))?;
+                let width = pipeline.threadExecutionWidth();
+                if width == 0
+                    || width > pipeline.maxTotalThreadsPerThreadgroup()
+                    || width > u16::MAX as usize
+                {
+                    return Err(Error::Unsupported("Gemma affine launch width unavailable"));
+                }
+                Ok((pipeline, width))
+            };
+            let (pipeline, width) = compile_pipeline(name)?;
+            let affine8 = mixed
+                .then(|| compile_pipeline("gemma_affine_product_8"))
+                .transpose()?;
             Ok(Self {
                 gpu,
                 pipeline,
                 width,
                 projection_bits,
+                affine8,
             })
         })
+    }
+
+    fn projection_pipeline(&self, bits: u8) -> Result<(&Pipeline, usize)> {
+        if bits == self.projection_bits {
+            return Ok((&self.pipeline, self.width));
+        }
+        if bits == 8
+            && let Some((pipeline, width)) = &self.affine8
+        {
+            return Ok((pipeline, *width));
+        }
+        Err(Error::Options("Gemma affine projection width"))
+    }
+
+    fn allowance_bytes(&self) -> usize {
+        if self.affine8.is_some() {
+            MIXED_CONTEXT_ALLOWANCE_BYTES
+        } else {
+            CONTEXT_ALLOWANCE_BYTES
+        }
     }
 
     pub fn device_name(&self) -> String {
@@ -180,6 +226,20 @@ impl Affine8Context {
         )
     }
 }
+/// One device and queue with both precise projection pipelines. This context
+/// is reserved for the explicit mixed QAT diagnostic session.
+pub struct MixedContext(Context);
+
+impl MixedContext {
+    pub fn new(available_bytes: usize) -> Result<Self> {
+        Context::compile(available_bytes, "gemma_affine_product", 4, true).map(Self)
+    }
+
+    pub fn device_name(&self) -> String {
+        self.0.device_name()
+    }
+}
+
 #[derive(Clone, Copy)]
 struct Sizes {
     codes: usize,

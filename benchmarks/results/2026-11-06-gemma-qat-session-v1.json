@@ -1,0 +1,81 @@
+{
+  "passed": true,
+  "tested_base": "92e27501",
+  "hardware": {
+    "qat-short": {
+      "receipt": "artifacts/gemma-qat-session-2026-11-06/qat-short/owned.json",
+      "physical_peak_bytes": 3720809760
+    },
+    "q4-tiny": {
+      "receipt": "artifacts/gemma-qat-session-2026-11-06/q4-tiny/owned.json",
+      "physical_peak_bytes": 10044088
+    },
+    "q4-pools": {
+      "receipt": "artifacts/gemma-qat-session-2026-11-06/q4-pools/owned.json",
+      "physical_peak_bytes": 2902493896
+    },
+    "q4-real": {
+      "receipt": "artifacts/gemma-qat-session-2026-11-06/q4-real/owned.json",
+      "physical_peak_bytes": 2905459424
+    }
+  },
+  "checks": {
+    "fmt": true,
+    "clippy_default_and_metal": true,
+    "default_tests": 584,
+    "metal_tests": 698,
+    "release_lib": true,
+    "log": "artifacts/gemma-qat-session-2026-11-06/checks.json",
+    "initial_failed_test_compile": "artifacts/gemma-qat-session-2026-11-06/hardware-check.log"
+  },
+  "qat_short": [
+    {
+      "run": 0,
+      "tokens": 4,
+      "causal_tokens": 4,
+      "chunk_rows": 32,
+      "state_sha256": "3112bfe48c5bd472c80d9012107b5d09e23bff330485d97a4dd420c0e3d75477",
+      "required_bytes": 3715270232,
+      "session_bytes": 330869992
+    },
+    {
+      "run": 1,
+      "tokens": 4,
+      "causal_tokens": 4,
+      "chunk_rows": 3,
+      "state_sha256": "3112bfe48c5bd472c80d9012107b5d09e23bff330485d97a4dd420c0e3d75477",
+      "required_bytes": 3584577904,
+      "session_bytes": 200177664
+    },
+    {
+      "run": 2,
+      "tokens": 4,
+      "causal_tokens": 4,
+      "chunk_rows": 1,
+      "state_sha256": "3112bfe48c5bd472c80d9012107b5d09e23bff330485d97a4dd420c0e3d75477",
+      "required_bytes": 3575564640,
+      "session_bytes": 191164400
+    },
+    {
+      "run": 3,
+      "tokens": 6,
+      "causal_tokens": 4,
+      "chunk_rows": 32,
+      "state_sha256": "3112bfe48c5bd472c80d9012107b5d09e23bff330485d97a4dd420c0e3d75477",
+      "required_bytes": 3715270232,
+      "session_bytes": 330869992
+    }
+  ],
+  "legacy_q4": {
+    "identical_pool_reports": 3,
+    "historical_capture": {
+      "records": 3016,
+      "bytes": 66600960,
+      "sha256": "b4c9ee3f1fcd1c312c26d50056d537acbc6be817f89b0d2b7749fe2294327075",
+      "whole_e2b_qualified": false
+    },
+    "reference": "benchmarks/results/2026-10-26-gemma-hybrid-real-v1.json"
+  },
+  "review": "Astra approved bounded diagnostic infrastructure after required checks and real Mac/Q4 witnesses",
+  "scope": "Exact mixed session admission up to the diagnostic ceiling and four-token causal state parity. Longer numerical fidelity, quality and app support remain open."
+}

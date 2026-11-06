@@ -163,6 +163,10 @@ impl Context {
     }
 }
 impl Gather<'_> {
+    pub(in crate::metal::gemma_affine) fn context_allowance_bytes(&self) -> usize {
+        self.context.allowance_bytes()
+    }
+
     pub(crate) fn minimum_admitted_bytes(columns: usize, capacity: usize) -> Result<usize> {
         Ok(Sizes::new(columns, capacity, usize::MAX)?.minimum_admitted)
     }
@@ -210,7 +214,10 @@ impl Gather<'_> {
         output: &mut [f32],
     ) -> Result<()> {
         self.check_request(weights.layout().rows(), ids, output.len())?;
-        if weights.layout().columns() != self.columns || !weights.same_device(self.context) {
+        if weights.layout().bits() != 4
+            || weights.layout().columns() != self.columns
+            || !weights.same_device(self.context)
+        {
             return Err(Error::Options(
                 "Gemma table gather weights device/shape mismatch",
             ));

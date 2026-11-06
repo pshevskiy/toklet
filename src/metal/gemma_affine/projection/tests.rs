@@ -19,8 +19,12 @@ fn projection_plan_separates_all_scratch_from_weights_and_admits_actual_capaciti
     for (maximum, capacity) in [(0, 3), (16385, 3), (8, 0), (8, 33), (usize::MAX, 3)] {
         assert!(Plan::new(layout, maximum, capacity, usize::MAX).is_err());
     }
-    let wrong = Layout::new(19, 128, 8, 64, MetadataDtype::BF16).unwrap();
-    assert!(Plan::new(wrong, 8, 3, usize::MAX).is_err());
+    let affine8 = Layout::new(19, 128, 8, 64, MetadataDtype::BF16).unwrap();
+    assert_ne!(affine8, layout);
+    assert_eq!(
+        Plan::new(affine8, 8, 3, required).unwrap().minimum_owned,
+        required
+    );
     let head = Layout::new(262144, 1536, 4, 64, MetadataDtype::BF16).unwrap();
     let head = Plan::new(head, 16384, 4, usize::MAX).unwrap();
     assert_eq!(head.input_values, 6144);
@@ -37,6 +41,8 @@ fn every_child_including_late_oversized_chunk_is_checked_before_staging() {
     assert!(!plan.accepts([layout(7, 64), layout(7, 64)].into_iter()));
     assert!(!plan.accepts([layout(7, 64), layout(7, 64), layout(2, 64)].into_iter()));
     assert!(!plan.accepts(std::iter::empty()));
+    let affine8 = Layout::new(7, 64, 8, 64, MetadataDtype::BF16).unwrap();
+    assert!(!plan.accepts([layout(7, 64), affine8, layout(1, 64)].into_iter()));
 }
 
 use super::super::partitioned::tests::fixture;

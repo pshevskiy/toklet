@@ -141,7 +141,19 @@ require their separate acceptance evidence.
 The [exact cold plan](../benchmarks/results/2026-11-06-gemma-qat-cold-v1.json)
 passes for the pinned metadata. [Authenticated resident storage](../benchmarks/results/2026-11-06-gemma-qat-resident-v1.json)
 passes the exact budget and original-byte checks. The [independent prefix oracle](../benchmarks/results/2026-11-06-gemma-qat-native-reference-v1.json)
-is frozen. Next admit a separate mixed session and compare all records.
+is frozen. The [mixed diagnostic session](../benchmarks/results/2026-11-06-gemma-qat-session-v1.json)
+passes exact short state and legacy controls. Compare captured logits and producer KV under both contracts,
+including chunk sizes1, 3 and32 and the causal future extension. Keep any
+failure with its coordinate and tolerance ratio.
+
+If the native prefix gate passes, reuse the existing raw Gemma loss and
+task loops with QAT-bound source identity and measured owner plans. Admit
+the loss context at1,025 and tasks at567 separately under6GiB. Verify the
+three-category pilot and reset, capacity and failure behavior before the
+full run. Collect the exact10,000 targets against the authenticated original
+loss baseline. Recheck every sampled task decision with a fresh native
+teacher-forced replay, including hidden EOS and lowest-ID greedy ties,
+then grade all100 new completions against the existing original52/100.
 
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 

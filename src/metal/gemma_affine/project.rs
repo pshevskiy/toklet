@@ -18,9 +18,7 @@ pub(super) fn run(
     output: &mut [f32],
     tokens: usize,
 ) -> Result<()> {
-    if weights.layout.bits() != context.projection_bits {
-        return Err(Error::Options("Gemma affine projection width"));
-    }
+    let (pipeline, width) = context.projection_pipeline(weights.layout.bits())?;
     autoreleasepool(|_| {
         buffers.input.with_mut(|out| {
             out.fill(SENTINEL);
@@ -37,7 +35,7 @@ pub(super) fn run(
         let encoder = raw
             .computeCommandEncoder()
             .ok_or_else(|| Error::Native("Gemma affine encoder absent".into()))?;
-        encoder.setComputePipelineState(&context.pipeline);
+        encoder.setComputePipelineState(pipeline);
         let shape = [
             tokens as u32,
             weights.layout.columns() as u32,
@@ -64,7 +62,7 @@ pub(super) fn run(
                 depth: 1,
             },
             MTLSize {
-                width: context.width,
+                width,
                 height: 1,
                 depth: 1,
             },

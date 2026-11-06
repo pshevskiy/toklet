@@ -31,7 +31,7 @@ impl Plan {
             layout.metadata_dtype(),
         )
         .map_err(|e| Error::Options(e.0))?;
-        let child_sizes = Sizes::new(child, capacity)?;
+        let child_sizes = Sizes::projection(child, capacity)?;
         let mut plan = Self {
             layout,
             capacity,
@@ -121,6 +121,7 @@ impl Context {
         capacity: usize,
         available_owned_bytes: usize,
     ) -> Result<Projection<'_>> {
+        self.projection_pipeline(layout.bits())?;
         let plan = Plan::new(layout, maximum_chunk_rows, capacity, available_owned_bytes)?;
         for words in plan.buffers() {
             let bytes = words

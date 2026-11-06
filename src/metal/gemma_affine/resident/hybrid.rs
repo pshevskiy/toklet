@@ -86,6 +86,37 @@ pub struct Norms<'weights> {
 }
 impl<'weights> Norms<'weights> {
     pub fn new(source: &'weights E2bWeights, available_bytes: usize) -> Result<Self> {
+        Self::new_for(source, available_bytes, false)
+    }
+
+    fn new_for(source: &'weights E2bWeights, available_bytes: usize, mixed: bool) -> Result<Self> {
+        let gathers = [
+            source.bindings.embedding_index(),
+            source.bindings.ple_embedding_index(),
+        ];
+        let matrices = &source.storage.matrices;
+        if gathers
+            .iter()
+            .any(|&index| matrices[index].layout().bits() != 4)
+        {
+            return Err(super::Error::Options("Gemma hybrid gather format"));
+        }
+        let shape_capacity = if mixed {
+            // An exact cold count before reserving. Layout equality includes
+            // the packing width, so otherwise equal shapes keep distinct slots.
+            matrices
+                .iter()
+                .enumerate()
+                .filter(|(i, matrix)| {
+                    *i != gathers[1]
+                        && !matrices[..*i].iter().enumerate().any(|(prior, other)| {
+                            prior != gathers[1] && other.layout() == matrix.layout()
+                        })
+                })
+                .count()
+        } else {
+            14
+        };
         let payload = source
             .storage
             .vectors
@@ -95,7 +126,7 @@ impl<'weights> Norms<'weights> {
             size_of::<Self>(),
             multiply(262, size_of::<Vec<f32>>())?,
             multiply(278, size_of::<usize>())?,
-            multiply(14, size_of::<crate::mlx::affine::Layout>())?,
+            multiply(shape_capacity, size_of::<crate::mlx::affine::Layout>())?,
         ]
         .into_iter()
         .try_fold(0, add)?;
@@ -105,7 +136,7 @@ impl<'weights> Norms<'weights> {
             available_bytes,
         )?;
         let mut values = owner_vec::<Vec<f32>>(262)?;
-        let mut shapes = owner_vec::<crate::mlx::affine::Layout>(14)?;
+        let mut shapes = owner_vec::<crate::mlx::affine::Layout>(shape_capacity)?;
         let mut slots = owner_vec::<usize>(278)?;
         let metadata = add(
             size_of::<Self>(),
@@ -142,11 +173,7 @@ impl<'weights> Norms<'weights> {
             });
             values.push(copy);
         }
-        let gathers = [
-            source.bindings.embedding_index(),
-            source.bindings.ple_embedding_index(),
-        ];
-        for (index, matrix) in source.storage.matrices.iter().enumerate() {
+        for (index, matrix) in matrices.iter().enumerate() {
             if index == gathers[1] {
                 slots.push(usize::MAX);
                 continue;
@@ -155,7 +182,7 @@ impl<'weights> Norms<'weights> {
             let slot = if let Some(slot) = shapes.iter().position(|v| *v == layout) {
                 slot
             } else {
-                if shapes.len() == 14 {
+                if shapes.len() == shape_capacity {
                     return Err(super::Error::Options(
                         "Gemma hybrid geometry inventory differs",
                     ));
@@ -165,14 +192,15 @@ impl<'weights> Norms<'weights> {
             };
             slots.push(slot);
         }
-        if shapes.len() != 13 {
+        let expected_shapes = if mixed { shape_capacity } else { 13 };
+        if shapes.len() != expected_shapes {
             return Err(super::Error::Options(
                 "Gemma hybrid projection geometry count",
             ));
         }
         Ok(Self {
             source: Some(source),
-            matrices: &source.storage.matrices,
+            matrices,
             values,
             shapes,
             slots,
@@ -197,6 +225,14 @@ impl<'weights> Norms<'weights> {
     pub fn model_for_context_probe(
         &self,
         position_limit: usize,
+    ) -> HybridResult<Model<'_, 'weights>> {
+        self.model_for_format(position_limit, false)
+    }
+
+    fn model_for_format(
+        &self,
+        position_limit: usize,
+        mixed: bool,
     ) -> HybridResult<Model<'_, 'weights>> {
         if !(1..=graph::MAX_E2B_DIAGNOSTIC_POSITIONS).contains(&position_limit) {
             return Err(
@@ -230,6 +266,7 @@ impl<'weights> Norms<'weights> {
             &source.bindings.geometry(),
             backing,
             position_limit,
+            mixed,
         )?)
     }
     pub(super) fn matrix(&self, index: usize) -> Result<MatrixRef<'_, 'weights>> {
@@ -262,19 +299,31 @@ impl<'weights> Norms<'weights> {
         context: &'context Context,
         budget: usize,
     ) -> HybridResult<Session<'model, 'a, 'weights, 'context>> {
+        self.new_session_for_chunk(model, context, model.default_chunk_rows(), budget)
+    }
+
+    fn new_session_for_chunk<'model, 'a, 'context>(
+        &'a self,
+        model: &'model Model<'a, 'weights>,
+        context: &'context Context,
+        chunk_rows: usize,
+        budget: usize,
+    ) -> HybridResult<Session<'model, 'a, 'weights, 'context>> {
         self.check_model(model)?;
-        let chunk_rows = model.default_chunk_rows();
-        let numerical = model.planned_backend_session_bytes::<Backend<'a, 'weights, 'context>>()?;
+        let numerical = model
+            .planned_backend_session_bytes_for_chunk::<Backend<'a, 'weights, 'context>>(
+                chunk_rows,
+            )?;
         admit(
             add(
                 add(model.model_bytes(), numerical)?,
-                Backend::minimum_bytes(self, chunk_rows)?,
+                Backend::minimum_bytes(self, context, chunk_rows)?,
             )?,
             budget,
         )?;
         let remaining = subtract(budget, add(model.model_bytes(), numerical)?)?;
         let backend = Backend::new(self, context, chunk_rows, remaining)?;
-        model.session_with_backend(backend, budget)
+        model.session_with_backend_for_chunk(backend, chunk_rows, budget)
     }
     pub fn new_generation_session<'model, 'a, 'context>(
         &'a self,
@@ -302,7 +351,7 @@ impl<'weights> Norms<'weights> {
             .map_err(session::Error::from)?;
         let full = add(
             required,
-            Backend::minimum_bytes(self, options.prefill_chunk_size)
+            Backend::minimum_bytes(self, context, options.prefill_chunk_size)
                 .map_err(Error::from)
                 .map_err(session::Error::from)?,
         )
@@ -323,6 +372,40 @@ impl<'weights> Norms<'weights> {
         let backend = Backend::new(self, context, options.prefill_chunk_size, remaining)
             .map_err(session::Error::from)?;
         graph::GenerationSession::with_backend(model, backend, options)
+    }
+}
+
+/// Small norm copy for the authenticated mixed QAT text diagnostic. This
+/// wrapper grants only the explicit mixed-context session.
+pub struct QatNorms<'weights>(Norms<'weights>);
+
+impl<'weights> QatNorms<'weights> {
+    pub const MAX_POSITIONS: usize = 512;
+
+    pub fn new(source: &'weights QatWeights, available_bytes: usize) -> Result<Self> {
+        Norms::new_for(&source.0, available_bytes, true).map(Self)
+    }
+
+    pub fn owned_bytes(&self) -> usize {
+        self.0.owned_bytes()
+    }
+
+    pub fn model(&self, position_limit: usize) -> HybridResult<Model<'_, 'weights>> {
+        if position_limit > Self::MAX_POSITIONS {
+            return Err(crate::model::Error::InvalidConfig("Gemma QAT diagnostic limit").into());
+        }
+        self.0.model_for_format(position_limit, true)
+    }
+
+    pub fn new_session<'model, 'a, 'context>(
+        &'a self,
+        model: &'model Model<'a, 'weights>,
+        context: &'context MixedContext,
+        chunk_rows: usize,
+        budget: usize,
+    ) -> HybridResult<Session<'model, 'a, 'weights, 'context>> {
+        self.0
+            .new_session_for_chunk(model, &context.0, chunk_rows, budget)
     }
 }
 

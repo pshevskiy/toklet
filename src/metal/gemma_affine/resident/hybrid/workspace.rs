@@ -3,9 +3,13 @@
 use super::*;
 
 impl<'a, 'weights, 'context> Backend<'a, 'weights, 'context> {
-    pub(super) fn minimum_bytes(source: &Norms<'_>, chunk_rows: usize) -> Result<usize> {
+    pub(super) fn minimum_bytes(
+        source: &Norms<'_>,
+        context: &Context,
+        chunk_rows: usize,
+    ) -> Result<usize> {
         let mut bytes = add(
-            CONTEXT_ALLOWANCE_BYTES,
+            context.allowance_bytes(),
             multiply(source.shapes.len(), size_of::<Projection<'_>>())?,
         )?;
         for &layout in &source.shapes {
@@ -42,7 +46,7 @@ impl<'a, 'weights, 'context> Backend<'a, 'weights, 'context> {
                 super::super::Error::Options("Gemma hybrid Context device mismatch").into(),
             );
         }
-        let minimum = Self::minimum_bytes(source, chunk_rows)?;
+        let minimum = Self::minimum_bytes(source, context, chunk_rows)?;
         admit(minimum, budget)?;
         let mut projections = owner_vec::<Projection<'context>>(source.shapes.len())?;
         let slot_extra = multiply(
@@ -51,13 +55,13 @@ impl<'a, 'weights, 'context> Backend<'a, 'weights, 'context> {
         )?;
         admit(add(minimum, slot_extra)?, budget)?;
         let mut actual = add(
-            CONTEXT_ALLOWANCE_BYTES,
+            context.allowance_bytes(),
             multiply(projections.capacity(), size_of::<Projection<'_>>())?,
         )?;
         let mut remaining = subtract(
             minimum,
             add(
-                CONTEXT_ALLOWANCE_BYTES,
+                context.allowance_bytes(),
                 multiply(source.shapes.len(), size_of::<Projection<'_>>())?,
             )?,
         )?;
@@ -136,7 +140,10 @@ impl<'a, 'weights, 'context> Backend<'a, 'weights, 'context> {
         Ok(BackendMemory {
             scratch_bytes: scratch,
             metadata_bytes: multiply(self.projections.capacity(), size_of::<Projection<'_>>())?,
-            metadata_allowance_bytes: add(CONTEXT_ALLOWANCE_BYTES, multiply(2, pipeline)?)?,
+            metadata_allowance_bytes: add(
+                self.gathers[0].context_allowance_bytes(),
+                multiply(2, pipeline)?,
+            )?,
         })
     }
 }
