@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Frozen Gemma QAT stock100 collection on Mac.**
+Current task: **Standalone Gemma affine8 projection leaf on Mac.**
 Completed: source-matched native41 package selected, with Mac offline regression
 and both iOS SDK builds. [Evidence](benchmarks/results/2026-11-06-chunk-pools-native41-v1.json).
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
@@ -590,6 +590,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
   - [x] QAT strict stock load and HumanEval/37 verify all144 samples after
     one bounded repair. Full quality is next.
     [Evidence](benchmarks/results/2026-11-06-gemma-qat-stock-v1.json).
+  - [x] QAT full stock trajectory rejects two proposal cycles. Grading and
+    loss remain withheld.
+    [Evidence](benchmarks/results/2026-11-06-gemma-qat-full-tasks-v1.json).
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).

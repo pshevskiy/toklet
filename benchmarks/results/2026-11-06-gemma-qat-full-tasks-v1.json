@@ -1,0 +1,38 @@
+{
+  "device": "Apple M1 Pro",
+  "cases": 100,
+  "trajectory_verified": 98,
+  "trajectory_rejections": [
+    {
+      "id": "HumanEval/4",
+      "passed": false,
+      "repairs": 2,
+      "failure": "proposal_cycle"
+    },
+    {
+      "id": "lambada/row-29",
+      "passed": false,
+      "repairs": 2,
+      "failure": "proposal_cycle"
+    }
+  ],
+  "full_collection_passed": false,
+  "quality_passed": false,
+  "graded": false,
+  "full_loss_executed": false,
+  "physical_peak_bytes": 4982214232,
+  "process_limit_bytes": 6442450944,
+  "clean_group_exit": true,
+  "endpoint_audit_passed": true,
+  "native_app_qualified": false,
+  "review": "Astra approved the frozen trajectory rejection and withheld quality.",
+  "receipts_sha256": {
+    "artifacts/gemma-qat-screen-2026-11-06/full-tasks/stock-owned.json": "db99efa526bb24d4fb090661eb63f106eb462650212f7826b28c6f9ecdb26949",
+    "artifacts/gemma-qat-screen-2026-11-06/full-tasks/checkpoint.json": "de7c3ef63e363724ddbad7644e1dd32928a22bf13e1040cb9d5a45889ba894dc",
+    "artifacts/gemma-qat-screen-2026-11-06/full-tasks/live-owner.txt": "375840d2b9f7339d75b31bc69004da38cda24113e860e9f1bbe56e4544890c2d",
+    "artifacts/gemma-qat-screen-2026-11-06/full-tasks/stock-plan.json": "bd1197058b5b354667e4eaa2835fce5eb09897ec5ea2cc59a1ca2cbd0a49031c",
+    "artifacts/gemma-qat-screen-2026-11-06/full-tasks/stock/result.json": "a7fc10314b0eaa6f7dec09b1b12a206b6e1d1b9700a4c21f22e8267320eadb87",
+    "artifacts/gemma-qat-screen-2026-11-06/full-tasks/stock/tasks.jsonl": "c7b0ab26bdb62b27c690a2710cac078073f9790bda85e96da96dad7c2469c3b8",
+    "artifacts/gemma-qat-screen-2026-11-06/full-tasks/stock/rejected.jsonl": "bc29ced188b03bb80b756a4a8c1d26c17274b987e71bf97ffe266c32db4c2244"
+  }
+}
