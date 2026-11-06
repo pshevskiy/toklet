@@ -470,3 +470,34 @@ fn ordered_publication_supports_sequential_execution_and_rejects_late_bad_frames
 }
 
 mod long_context;
+
+#[test]
+fn prefix_commit_keeps_proposal_head_stride_and_rejects_extra_rows() {
+    let geometry = |kind| LayerKvGeometry {
+        kind,
+        heads: 2,
+        head_dim: 1,
+    };
+    let local = geometry(KvKind::Sliding);
+    let full = geometry(KvKind::Full);
+    let plan = SharedKvPlan::new(&[local, full, local, full], 2, 3, 8, 8).unwrap();
+    let mut candidate = plan.new_caches().unwrap();
+    let mut serial = plan.new_caches().unwrap();
+    let prefix = [0., 1., 2., 3., 10., 11., 12., 13.];
+    for caches in [&mut candidate, &mut serial] {
+        let frames = proposal(&plan, caches, &prefix, 4);
+        plan.commit(caches, &frames).unwrap();
+    }
+    let proposed = [4., 5., 6., 7., 14., 15., 16., 17.];
+    let frames = proposal(&plan, &candidate, &proposed, 4);
+    let before = snapshot(&candidate);
+    assert!(plan.commit_prefix(&mut candidate, &frames, 5).is_err());
+    plan.commit_prefix(&mut candidate, &frames, 0).unwrap();
+    assert_eq!(snapshot(&candidate), before);
+    plan.commit_prefix(&mut candidate, &frames, 2).unwrap();
+    assert!(plan.commit_prefix(&mut candidate, &frames, 1).is_err());
+    let accepted = [4., 5., 14., 15.];
+    let frames = proposal(&plan, &serial, &accepted, 2);
+    plan.commit(&mut serial, &frames).unwrap();
+    assert_eq!(snapshot(&candidate), snapshot(&serial));
+}

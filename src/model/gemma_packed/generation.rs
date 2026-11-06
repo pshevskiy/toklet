@@ -280,6 +280,80 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
             .map_err(Into::into)?;
         Ok(count)
     }
+    /// Experimental nonstreaming round. Proposals are read-only until the
+    /// strict target verifier and last cancellation check succeed. A hidden
+    /// stop or correction is pending and will be evaluated before another draft.
+    #[cfg(test)]
+    pub(crate) fn verify_greedy_round(
+        &mut self,
+        proposals: &[u32],
+        stop_tokens: &[u32],
+        committed_hidden: &mut [f32],
+        cancelled: impl Fn() -> bool,
+    ) -> Result<Option<crate::generation::GreedyVerification>, crate::generation::Error> {
+        use crate::generation::{self, Error as GenerationError, VerifiedNext};
+        let start = self.evaluated_len();
+        let current = self.logits().ok_or(GenerationError::InvalidRequest(
+            "Gemma verification requires a committed distribution",
+        ))?;
+        if proposals.len() > self.chunk || committed_hidden.len() != self.inner.model.layout.hidden
+        {
+            return Err(GenerationError::InvalidRequest(
+                "Gemma verification chunk or hidden shape differs",
+            ));
+        }
+        self.validate(proposals, start)
+            .map_err(GenerationError::Session)?;
+        if start + proposals.len() == self.capacity {
+            return Err(GenerationError::InvalidRequest(
+                "no room for the pending target token",
+            ));
+        }
+        if stop_tokens
+            .iter()
+            .any(|&id| id as usize >= self.vocab_size())
+        {
+            return Err(GenerationError::InvalidRequest(
+                "Gemma stop token outside vocabulary",
+            ));
+        }
+        if cancelled() {
+            return Ok(None);
+        }
+        let verified = if proposals.is_empty() {
+            let result = generation::verify_greedy(proposals, current, current.len(), stop_tokens)?;
+            if cancelled() {
+                return Ok(None);
+            }
+            result
+        } else {
+            let offside = forward::prepare(&mut self.inner, proposals, forward::OutputRows::All)
+                .map_err(|error| GenerationError::Session(error.into()))?;
+            let current = offside.current().expect("committed distribution validated");
+            let result = generation::verify_greedy_segments(
+                proposals,
+                current,
+                offside.staged(),
+                stop_tokens,
+            )?;
+            if cancelled() {
+                return Ok(None);
+            }
+            offside
+                .commit_with_hidden(result.accepted, Some(committed_hidden))
+                .map_err(|error| GenerationError::Session(error.into()))?;
+            result
+        };
+        let pending = match verified.next {
+            VerifiedNext::Token(id) | VerifiedNext::Stop(id) => id,
+        };
+        let accepted_end = start + verified.accepted;
+        self.history[start..accepted_end].copy_from_slice(&proposals[..verified.accepted]);
+        self.history[accepted_end] = pending;
+        self.len = accepted_end + 1;
+        Ok(Some(verified))
+    }
+
     pub fn discard_pending(&mut self) {
         self.len = self.evaluated_len();
     }

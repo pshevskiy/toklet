@@ -37,6 +37,44 @@ pub fn verify_greedy(
     {
         return Err(Error::InvalidRequest("invalid target logits shape"));
     }
+    verify_rows(
+        proposals,
+        logits.chunks_exact(vocabulary),
+        vocabulary,
+        stop_tokens,
+    )
+}
+
+/// Same strict verifier over a committed row and separately staged rows.
+/// Shape validation precedes sampling. The target retains ownership of both.
+#[cfg(test)]
+pub(crate) fn verify_greedy_segments(
+    proposals: &[u32],
+    current: &[f32],
+    staged: &[f32],
+    stop_tokens: &[u32],
+) -> Result<GreedyVerification, Error> {
+    let vocabulary = current.len();
+    if vocabulary == 0
+        || vocabulary - 1 > u32::MAX as usize
+        || proposals.len().checked_mul(vocabulary) != Some(staged.len())
+    {
+        return Err(Error::InvalidRequest("invalid target logits shape"));
+    }
+    verify_rows(
+        proposals,
+        std::iter::once(current).chain(staged.chunks_exact(vocabulary)),
+        vocabulary,
+        stop_tokens,
+    )
+}
+
+fn verify_rows<'a>(
+    proposals: &[u32],
+    rows: impl Iterator<Item = &'a [f32]>,
+    vocabulary: usize,
+    stop_tokens: &[u32],
+) -> Result<GreedyVerification, Error> {
     if proposals
         .iter()
         .chain(stop_tokens)
@@ -47,7 +85,7 @@ pub fn verify_greedy(
         ));
     }
     let mut outcome = None;
-    for (index, row) in logits.chunks_exact(vocabulary).enumerate() {
+    for (index, row) in rows.enumerate() {
         let selected = sampling::greedy(row).map_err(Error::Sampling)?;
         if outcome.is_some() {
             continue;

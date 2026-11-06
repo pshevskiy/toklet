@@ -43,6 +43,13 @@ pub struct PreparedKv<'a> {
     tokens: usize,
 }
 
+#[cfg(test)]
+impl PreparedKv<'_> {
+    pub(super) fn tokens(&self) -> usize {
+        self.tokens
+    }
+}
+
 /// A checked immutable attention union, separate from the final committed ring.
 pub struct KvView<'cache, 'input> {
     cache: &'cache WindowKvCache,
@@ -331,14 +338,16 @@ impl WindowKvCache {
     }
 
     pub(super) fn commit_validated(&mut self, frame: &PreparedKv<'_>) {
-        // All owners were validated before any writes. Each backend applies
-        // the same row descriptors to its own head strides and scalar storage.
-        let runs = window_rows::copy_runs(
-            self.capacity,
-            self.offset,
-            frame.tokens,
-            self.window.is_some(),
-        );
+        self.commit_prefix_validated(frame, frame.tokens);
+    }
+
+    /// The routing owner has validated the complete frame and prefix bound.
+    /// Source head stride still uses all proposed tokens. Local destination
+    /// runs depend on accepted rows, so a rejected suffix cannot overwrite KV.
+    pub(super) fn commit_prefix_validated(&mut self, frame: &PreparedKv<'_>, accepted: usize) {
+        debug_assert!((1..=frame.tokens).contains(&accepted));
+        let runs =
+            window_rows::copy_runs(self.capacity, self.offset, accepted, self.window.is_some());
         for head in 0..self.heads {
             for run in runs {
                 if run.rows == 0 {
@@ -351,7 +360,7 @@ impl WindowKvCache {
                 self.v[target..target + count].copy_from_slice(&frame.v[source..source + count]);
             }
         }
-        self.offset += frame.tokens;
+        self.offset += accepted;
         self.generation += 1;
     }
 }

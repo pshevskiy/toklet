@@ -232,11 +232,107 @@ pub(super) enum OutputRows {
     Last,
 }
 
+/// Offside graph result. Frames borrow the staged K/V and can publish only
+/// while all matching cache owners and public state are exclusively borrowed.
+pub(super) struct Prepared<'state, 'tokens> {
+    plan: &'state SharedKvPlan,
+    caches: &'state mut [WindowKvCache],
+    frames: SmallVec<[PreparedKv<'state>; MAX_PRODUCERS]>,
+    scratch: &'state mut Scratch,
+    history: &'state mut [u32],
+    committed: &'state mut usize,
+    published_rows: &'state mut usize,
+    tokens: &'tokens [u32],
+    output_rows: usize,
+    #[cfg(test)]
+    hidden: usize,
+    #[cfg(test)]
+    vocab: usize,
+}
+
+impl Prepared<'_, '_> {
+    #[cfg(test)]
+    pub(super) fn current(&self) -> Option<&[f32]> {
+        let end = *self.published_rows * self.vocab;
+        (end > 0).then(|| &self.scratch.published[end - self.vocab..end])
+    }
+
+    #[cfg(test)]
+    pub(super) fn staged(&self) -> &[f32] {
+        &self.scratch.logits[..self.output_rows * self.vocab]
+    }
+
+    fn commit_all(mut self) -> Result<(), Error> {
+        self.plan.commit(self.caches, &self.frames)?;
+        self.publish(self.tokens.len());
+        Ok(())
+    }
+
+    fn publish(&mut self, accepted: usize) {
+        let offset = *self.committed;
+        self.history[offset..offset + accepted].copy_from_slice(&self.tokens[..accepted]);
+        *self.committed = offset + accepted;
+        *self.published_rows = self.output_rows.min(accepted);
+        std::mem::swap(&mut self.scratch.logits, &mut self.scratch.published);
+    }
+
+    /// Optionally copy the target hidden row for the last accepted proposal.
+    /// The destination changes only after the complete cache commit succeeds.
+    #[cfg(test)]
+    pub(super) fn commit_with_hidden(
+        mut self,
+        accepted: usize,
+        hidden: Option<&mut [f32]>,
+    ) -> Result<(), Error> {
+        let hidden_row = if let Some(hidden) = hidden.as_ref().filter(|_| accepted != 0) {
+            let dropped = self.tokens.len() - self.output_rows;
+            let row = accepted
+                .checked_sub(dropped + 1)
+                .filter(|&row| row < self.output_rows)
+                .ok_or(Error::InvalidConfig(
+                    "accepted Gemma hidden row is unavailable",
+                ))?;
+            length("Gemma draft target hidden", hidden.len(), self.hidden)?;
+            Some(row * self.hidden..(row + 1) * self.hidden)
+        } else {
+            None
+        };
+        if accepted == self.tokens.len() {
+            self.plan.commit(self.caches, &self.frames)?;
+        } else {
+            if accepted != 0 && self.output_rows != self.tokens.len() {
+                return Err(Error::InvalidConfig(
+                    "partial Gemma commit requires complete output rows",
+                ));
+            }
+            self.plan
+                .commit_prefix(self.caches, &self.frames, accepted)?;
+        }
+        if accepted != 0 {
+            self.publish(accepted);
+        }
+        if let (Some(destination), Some(row)) = (hidden, hidden_row) {
+            destination.copy_from_slice(&self.scratch.norm[row]);
+        }
+        Ok(())
+    }
+}
+
 pub(super) fn run<M: MatrixSource, B: Operations<M>>(
     session: &mut Session<'_, '_, M, B>,
     tokens: &[u32],
     output: OutputRows,
 ) -> Result<(), B::Error> {
+    prepare(session, tokens, output)?
+        .commit_all()
+        .map_err(Into::into)
+}
+
+pub(super) fn prepare<'state, 'tokens, M: MatrixSource, B: Operations<M>>(
+    session: &'state mut Session<'_, '_, M, B>,
+    tokens: &'tokens [u32],
+    output: OutputRows,
+) -> Result<Prepared<'state, 'tokens>, B::Error> {
     cpu::nonzero(tokens.len(), "Gemma chunk")?;
     if tokens.len() > session.chunk_rows {
         return Err(Error::InvalidConfig("Gemma chunk exceeds scratch capacity").into());
@@ -387,12 +483,19 @@ pub(super) fn run<M: MatrixSource, B: Operations<M>>(
     if session.fault == Some(l.layers.len() + 2) {
         return Err(Error::InvalidConfig("injected Gemma final failure").into());
     }
-    // No fallible operation follows publication: every producer is validated
-    // before any cache writes, then history and public logits advance together.
-    session.plan.commit(&mut session.caches, &frames)?;
-    session.history[offset..after].copy_from_slice(tokens);
-    session.committed = after;
-    session.published_rows = tail_count;
-    std::mem::swap(&mut s.logits, &mut s.published);
-    Ok(())
+    Ok(Prepared {
+        plan: &session.plan,
+        caches: &mut session.caches,
+        frames,
+        scratch: s,
+        history: &mut session.history,
+        committed: &mut session.committed,
+        published_rows: &mut session.published_rows,
+        tokens,
+        output_rows: tail_count,
+        #[cfg(test)]
+        hidden: l.hidden,
+        #[cfg(test)]
+        vocab: l.vocab,
+    })
 }

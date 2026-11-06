@@ -362,6 +362,27 @@ impl SharedKvPlan {
         self.validate_batch(caches, frames)?;
         commit_batch(caches, frames)
     }
+    /// Publish only the accepted prefix of a fully validated staged chunk.
+    /// Zero leaves all owners and generations unchanged. The consumer may
+    /// safely keep using the previous committed distribution at zero.
+    #[cfg(test)]
+    pub(crate) fn commit_prefix(
+        &self,
+        caches: &mut [WindowKvCache],
+        frames: &[PreparedKv<'_>],
+        accepted: usize,
+    ) -> Result<(), Error> {
+        self.validate_batch(caches, frames)?;
+        if accepted > frames[0].tokens() {
+            return Err(Error::InvalidConfig("accepted KV prefix exceeds proposal"));
+        }
+        if accepted != 0 {
+            for (cache, frame) in caches.iter_mut().zip(frames) {
+                cache.commit_prefix_validated(frame, accepted);
+            }
+        }
+        Ok(())
+    }
 }
 
 #[cfg(test)]

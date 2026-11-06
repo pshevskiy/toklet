@@ -117,3 +117,93 @@ fn official_target_assistant_proposal_snapshot() {
         })
     );
 }
+
+#[test]
+#[ignore = "explicit Mac official BF16 strict target publication"]
+fn official_target_verifies_prefix_before_publishing() {
+    use crate::generation::{GreedyVerification, VerifiedNext};
+    use crate::sampling::greedy;
+    use std::cell::Cell;
+
+    let capacity = 128;
+    let budget = crate::weights::INITIAL_MEMORY_LIMIT_BYTES;
+    let owner =
+        OfficialBf16::load(&path("TOKLET_GEMMA_OFFICIAL_DIRECTORY"), capacity, budget).unwrap();
+    let graph = owner.model().unwrap();
+    let options = Options {
+        capacity,
+        prefill_chunk_size: 4,
+        position_offset: 0,
+        memory_limit_bytes: budget,
+    };
+    let mut expected = owner.new_session(&graph, options).unwrap();
+    let mut actual = owner.new_session(&graph, options).unwrap();
+    let prompt = owner
+        .codec()
+        .encode_chat(
+            br#"[{"role":"user","content":"Name the capital of France."}]"#,
+            RenderOptions {
+                enable_thinking: false,
+                add_generation_prompt: true,
+            },
+        )
+        .unwrap();
+    for state in [&mut actual, &mut expected] {
+        state.use_last_row_prefill();
+        state.append(&prompt).unwrap();
+        while state.pending_len() != 0 {
+            state.evaluate_next_chunk().unwrap();
+        }
+    }
+    let last_hidden = |state: &crate::metal::gemma_affine::Bf16GenerationSession<'_, '_, '_>| {
+        let end = state.inner.published_rows * TARGET_HIDDEN;
+        state.inner.scratch.norm[end - TARGET_HIDDEN..end].to_vec()
+    };
+    let before = snapshot(&actual.inner);
+    let mut anchor = last_hidden(&actual);
+    let old_anchor = anchor.clone();
+    let first = greedy(expected.logits().unwrap()).unwrap();
+    expected.append(&[first]).unwrap();
+    expected.evaluate_next_chunk().unwrap();
+    let correction = greedy(expected.logits().unwrap()).unwrap();
+    let wrong = (correction + 1) % actual.vocab_size() as u32;
+    let proposals = [first, wrong];
+    let checks = Cell::new(0);
+    assert!(
+        actual
+            .verify_greedy_round(&proposals, &[], &mut anchor, || {
+                let current = checks.get();
+                checks.set(current + 1);
+                current == 1
+            })
+            .unwrap()
+            .is_none()
+    );
+    assert_eq!(anchor, old_anchor);
+    assert_eq!(snapshot(&actual.inner), before);
+    assert_eq!(
+        actual
+            .verify_greedy_round(&proposals, &[], &mut anchor, || false)
+            .unwrap(),
+        Some(GreedyVerification {
+            accepted: 1,
+            next: VerifiedNext::Token(correction)
+        })
+    );
+    assert_eq!(anchor, last_hidden(&expected));
+    assert_eq!(snapshot(&actual.inner), snapshot(&expected.inner));
+    assert_eq!(actual.pending_len(), 1);
+    assert_eq!(actual.history().last(), Some(&correction));
+    expected.append(&[correction]).unwrap();
+    expected.evaluate_next_chunk().unwrap();
+    actual.evaluate_next_chunk().unwrap();
+    assert_eq!(snapshot(&actual.inner), snapshot(&expected.inner));
+    assert_eq!(last_hidden(&actual), last_hidden(&expected));
+    println!(
+        "OFFICIAL_GEMMA_STRICT_PREFIX {}",
+        json!({
+            "prompt":prompt.len(),"accepted":1,"corrected":correction,"cancellation_preserved":true,
+            "final_history":actual.history(),"exact_cache_and_hidden":true
+        })
+    );
+}

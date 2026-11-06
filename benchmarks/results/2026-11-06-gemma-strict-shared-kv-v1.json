@@ -1,0 +1,48 @@
+{
+  "format": "toklet-gemma-strict-shared-kv-v1",
+  "scope": "Experimental staged target verification. The ordinary complete publication and G2 last-row generation use the same checked full-commit behavior.",
+  "default_tests": 594,
+  "metal_tests": 713,
+  "strict_checks": true,
+  "real_target": {
+    "prompt": 15,
+    "accepted": 1,
+    "corrected": 5279,
+    "cancellation_preserved": true,
+    "final_history": [
+      2,
+      105,
+      2364,
+      107,
+      1567,
+      506,
+      5279,
+      529,
+      7001,
+      236761,
+      106,
+      107,
+      105,
+      4368,
+      107,
+      818,
+      5279
+    ],
+    "exact_cache_and_hidden": true
+  },
+  "peak_bytes": {
+    "strict": 4922593504,
+    "parity": 5029744960
+  },
+  "evidence_sha256": {
+    "artifacts/gemma-g3-verification-2026-11-06/checks.json": "d581047f540baea7af2242c82f55efb2c60d066175fe30f497c8a0f2bbff1233",
+    "artifacts/gemma-g3-verification-2026-11-06/cpu-test.stdout": "fc93f0a4cd816f46cd4368d0e1fbc9a73f364aa8d18540b7ecdcf8236425e518",
+    "artifacts/gemma-g3-verification-2026-11-06/metal-test.stdout": "6ca01eb851d3f401bad5e651d502bb858e99f98b4fd9d8a249fe5123624f9149",
+    "artifacts/gemma-g3-verification-2026-11-06/targeted.stdout": "b3d73f26c7cb44bf08eb0e33eed1d342d76904693f256d34c8ae9d8e9e45bb51",
+    "artifacts/gemma-g3-verification-2026-11-06/strict/owned.json": "53e7082f5f2510e098a28d7f3f8d9a125e9b13c77953f99352ed26d0f5da3f96",
+    "artifacts/gemma-g3-verification-2026-11-06/strict/gpu.stdout": "d32f405e7042b570b381ce39dccce2c011c59b0195c98deb1ca90fad88dd1fa0",
+    "artifacts/gemma-g3-verification-2026-11-06/parity/owned.json": "14811299d756194142d6a450f9e8560237fadfb99a49a0f604d04243009587b3",
+    "artifacts/gemma-g3-verification-2026-11-06/parity/gpu.stdout": "e2db68d0d7097f81d6b81c29d71954bb003b0ac91d994666d6c6914603488fd3"
+  },
+  "review": "Astra approves scoped strict staged verification. Frame validation, original head stride, pending correction and EOS, and committed anchor preservation pass."
+}

@@ -11025,3 +11025,11 @@ CPU numerical blocks. At real Mac position 14, all 4,096 IDs and logits and
 1,536 projected hidden values match the independent staged FP32 reference.
 Peak physical memory is 5.07 GB. Strict checks and Astra pass.
 [Evidence](../benchmarks/results/2026-11-06-gemma-official-assistant-scalar-v1.json)
+
+## 6 November 2026 — Verify only the accepted Gemma target prefix
+
+The staged verifier keeps the original proposal stride and publishes the
+accepted KV, logits and target hidden. Corrections and stops remain pending.
+Real cancellation and serial parity pass, as do the two-head wrap case,
+G2 regression, strict checks and Astra. The speculative route is test-only.
+[Evidence](../benchmarks/results/2026-11-06-gemma-strict-shared-kv-v1.json)
