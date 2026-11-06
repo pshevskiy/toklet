@@ -10738,3 +10738,11 @@ the archived original baseline. The difference passes the unchanged
 +0.05 limit. Mac peak physical memory is3.713GB. Astra verified the
 result. Task grading and independent long fidelity remain open.
 [Evidence](../benchmarks/results/2026-11-06-gemma-qat-full-loss-v1.json)
+
+## 6 November 2026 — Preserve the first QAT wrap oracle outcome
+
+Both independent calculations match the complete native capture. The
+initial owner failed to save the memory and exit receipts after a sandbox
+denial. Astra verified the scoped comparison. Same-pin guarded repeats
+are running and the numerical gate remains open.
+[Evidence](../benchmarks/results/2026-11-06-gemma-qat-wrap-initial-v1.json)

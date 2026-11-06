@@ -1,0 +1,19 @@
+{
+  "numerical_gate_passed": false,
+  "preliminary_matches": 52441088,
+  "greedy_matches": 32,
+  "owner_failure": "Sandbox denied final /bin/ps. Both producers emitted complete, endpoint-checked records. Initial aggregate peaks and process-group absence were unavailable.",
+  "receipts_sha256": {
+    "artifacts/gemma-qat-wrap-state-2026-11-06/comparison-preliminary.json": "f878ddbd35bca247238fc1008d6e23080493b498caba988d54f4fa6d248ea2c1",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/math_fp64/initial-owner-failure/owned.py": "05afb8e811d1c779dcde6f03c60452066ff8af3e39181ff4bf66487ffe803e6e",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/math_fp64/initial-owner-failure/reference.json": "b76fd48e4bafc2050a09d0894f0bf2ab89b758584af23e12932e9b8d394efd33",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/math_fp64/initial-owner-failure/rows.bin": "319585217e85d896658ab79a5e2e1a95ade92867826c55640fc9fcc16a120be4",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/math_fp64/initial-owner-failure/failure.txt": "6f406618797ac9b901b7cb92834004ee50fc74d5e338ee71c222268c311fe4c1",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/staged_fp32/initial-owner-failure/owned.py": "05afb8e811d1c779dcde6f03c60452066ff8af3e39181ff4bf66487ffe803e6e",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/staged_fp32/initial-owner-failure/reference.json": "c1324c7295ebd161c5ebfe070c20a725d0ffb5b02f4a5041b90633ba5af41ad4",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/staged_fp32/initial-owner-failure/rows.bin": "742d74bdf21d1c1931177dd491f5e616cbde569dc524b6c1f00502bd03e5cad3",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/staged_fp32/initial-owner-failure/failure.txt": "6f406618797ac9b901b7cb92834004ee50fc74d5e338ee71c222268c311fe4c1"
+  },
+  "rerun": "Unchanged plan, artifact, reference source and operator pins. Both preflighted owned reruns start with durable live and reaping receipts.",
+  "review": "Astra checked scope, unchanged numerical policy, complete per-record comparison and the monitored repeat. Gate remains open until both rerun owners pass."
+}

@@ -623,6 +623,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
     [Evidence](benchmarks/results/2026-11-06-gemma-qat-full-loss-v1.json).
   - [ ] Finish both QAT math/staged wrap comparisons and the original-relative
     100-task gate before adoption.
+    Initial wrap values all match. Process-audit permission prevented the
+    final owner receipts. Both same-pin workers are repeating with corrected
+    tracking. [Evidence](benchmarks/results/2026-11-06-gemma-qat-wrap-initial-v1.json).
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1570,3 +1573,4 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | Gemma QAT original-quality pilots | Fresh raw replay verifies62 sampled decisions in three cases. First1,024 loss targets and historical Q4 regressions pass. | Astra approved; full loss and tasks run with independent wrap fidelity pending. [Evidence](benchmarks/results/2026-11-06-gemma-qat-quality-pilot-v1.json). |
 | 2026-11-06 | G3 prospective QAT assistant | Bounded header checks,24 affine4 matrices and all base piece IDs match the expected inventory. Target-only video control identified. | Astra approved metadata scope. [Evidence](benchmarks/results/2026-11-06-gemma-qat-assistant-header-v1.json); interface and actual proposal checks await target selection. |
 | 2026-11-06 | Gemma QAT full loss gate | All10,000 aligned targets pass. Native6.064917 vs original9.995776 nats; peak3.713GB. | Astra approved the loss-only result. [Evidence](benchmarks/results/2026-11-06-gemma-qat-full-loss-v1.json). |
+| 2026-11-06 | Gemma QAT initial wrap oracle audit | All52,441,088 values and32 greedy checks match. Sandbox blocked both final process receipts. | Astra scoped the result as preliminary. Same-pin guarded repeats started. [Evidence](benchmarks/results/2026-11-06-gemma-qat-wrap-initial-v1.json). |
