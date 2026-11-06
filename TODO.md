@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Run G3 frozen 128+128 and 384+128 timing gates.**
+Current task: **Run the production public Gemma download and isolated reopen.**
 G2 is retained on the signed official BF16 Mac route. Both primary runs
 reduce prefill time by about 61% and request time by about 28%.
 [Timing and runtime checks](benchmarks/results/2026-11-06-gemma-bf16-g2-retention-v1.json).
@@ -711,8 +711,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-mac-hub-v1.json).
     - [ ] Complete a full public Gemma download and reopen from its publication.
       Both 16 MiB attempts timed out. The older 4 MiB trial reached 2.01 GB
-      before its deadline and cleaned staging. The production retry is queued
-      after the isolated G3 timing.
+      before its deadline and cleaned staging. The production retry is running.
       [4 MiB trial](benchmarks/results/2026-11-06-gemma-bf16-public-4m-v1.json).
     - [x] Resume accepted range prefixes for the exact Mac Gemma shard.
       Swift controls, signed app and Astra pass.
@@ -797,7 +796,7 @@ Conditional follow-ons require their own decision; they do not all block M9:
   - [x] Both timing orders, multirow tail/head rollback and exact retry,
     native and Swift Chat, signed app, and Astra review pass.
     [Retention](benchmarks/results/2026-11-06-gemma-bf16-g2-retention-v1.json).
-- [ ] G3: authenticate and qualify the official Gemma assistant for MTP.
+- [x] G3: authenticate the official Gemma assistant and decide MTP retention.
   - [x] Pin the compatible official assistant and upstream interface.
     [Header evidence](benchmarks/results/2026-11-06-gemma-official-assistant-header-v1.json).
   - [x] Authenticate the full public artifact and qualify ordered-head selection.
@@ -809,7 +808,9 @@ Conditional follow-ons require their own decision; they do not all block M9:
     [Evidence](benchmarks/results/2026-11-06-gemma-strict-shared-kv-v1.json).
   - [x] Run the exact real assistant-loop pilot. Short prompts improve and
     the 384+32 control regresses. [Evidence](benchmarks/results/2026-11-06-gemma-assistant-mtp-pilot-v1.json).
-  - [ ] Run the frozen representative timing and decide retention.
+  - [x] The 128+128 primary passes and the 384+128 guard regresses 21.1%.
+    Keep G3 test-only and retain ordinary G2 generation.
+    [Decision](benchmarks/results/2026-11-06-gemma-assistant-mtp-retention-v1.json).
   [Last-row prefill and assistant plans](docs/todo-implementation-plans.md#g2g3-shared-kv-and-mtp).
   The prospective assistant header and target token-ID comparison pass.
   [Evidence](benchmarks/results/2026-11-06-gemma-qat-assistant-header-v1.json).
@@ -827,6 +828,7 @@ completed or prerequisites for the active breadth-first queue.
 
 | Date | Iteration | Result, checks and review | Commit / next action |
 | --- | --- | --- | --- |
+| 2026-11-06 | G3 frozen Mac retention decision | All 26 pairs exact. Primary gain21.33%, longer guard regression21.06%, peak5.18GB. Strict checks and Astra pass. | Retain G2 default, keep G3 test-only. [Evidence](benchmarks/results/2026-11-06-gemma-assistant-mtp-retention-v1.json). |
 | 2026-11-06 | Official Gemma older 4 MiB public trial | Confirmed 2.01 GB before the two-hour deadline, empty staging after failure. Xet diagnostic stopped separately without full SHA. | Production resumption retry queued after G3. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-public-4m-v1.json). |
 | 2026-11-06 | Official Gemma bounded range resumption | Exact Mac shard uses 4 MiB chunks and keeps accepted partial bytes for transient retries. Owned Hub controls, both SDKs, signed build and Astra pass. | Full public transfer remains open. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-resumable-ranges-v1.json). |
 | 2026-11-06 | G3 real assistant-loop pilot | Ten exact paired requests. At128+32 median gain is21.4%; at384+32 loss is5.9%. Peak5.18GB. First runner move error fixed, 594 default/713 Metal and Astra pass. | Confirm128+128 and384+128 under frozen gates. [Evidence](benchmarks/results/2026-11-06-gemma-assistant-mtp-pilot-v1.json). |

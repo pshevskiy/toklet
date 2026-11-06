@@ -462,6 +462,9 @@ request distributions. Require exact IDs, history, pending count, last logits
 and physical KV, with both owners below 6 GiB. Repeat in the opposite order
 only when the first run meets both timing gates. A failed gate keeps the
 assistant test-only. A context-specific policy needs its own prospective scope.
+The [frozen result](../benchmarks/results/2026-11-06-gemma-assistant-mtp-retention-v1.json)
+passes the primary at21.33% gain and fails the guard at21.06% regression.
+All 26 pairs match. The reverse order is skipped and G3 stays test-only.
 
 ### Llama Online correctness
 

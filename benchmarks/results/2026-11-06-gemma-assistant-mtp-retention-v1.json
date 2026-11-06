@@ -1,0 +1,105 @@
+{
+  "format": "toklet-gemma-assistant-mtp-retention-v1",
+  "scope": "Scoped G3 experiment. Standard official Mac Gemma retains ordinary G2 generation.",
+  "paired_requests": 26,
+  "measured_pairs": 20,
+  "exact_tokens_and_state": true,
+  "result": {
+    "order": "ordinary-first",
+    "peak_bytes": 5184066000,
+    "workloads": {
+      "128": {
+        "samples": 10,
+        "base_median_seconds": 34.9882852085,
+        "candidate_median_seconds": 27.53638425,
+        "median_paired_gain": 0.21331175001939723,
+        "gain_range": [
+          0.20878023961490655,
+          0.21631684916090532
+        ],
+        "relative_mad_noise": 0.0021177972739830574,
+        "gate": true,
+        "accepted": [
+          91,
+          91,
+          91,
+          91,
+          91,
+          91,
+          91,
+          91,
+          91,
+          91
+        ],
+        "proposed": [
+          123,
+          123,
+          123,
+          123,
+          123,
+          123,
+          123,
+          123,
+          123,
+          123
+        ],
+        "ids_sha256": "c70fb108649f29d4a38878778c6be7193f3b4ed00f324782935edd37ca98ea55"
+      },
+      "384": {
+        "samples": 10,
+        "base_median_seconds": 50.572198271,
+        "candidate_median_seconds": 61.051519792,
+        "median_paired_gain": -0.21064348385998521,
+        "gain_range": [
+          -0.21655216350132367,
+          -0.20142060124785832
+        ],
+        "relative_mad_noise": 0.003705746536217203,
+        "gate": false,
+        "accepted": [
+          72,
+          72,
+          72,
+          72,
+          72,
+          72,
+          72,
+          72,
+          72,
+          72
+        ],
+        "proposed": [
+          187,
+          187,
+          187,
+          187,
+          187,
+          187,
+          187,
+          187,
+          187,
+          187
+        ],
+        "ids_sha256": "cabc476ab224713d3e6abce62f683cb1154ca9a01d78193f3e93579630d18078"
+      }
+    },
+    "passed": false
+  },
+  "decision": "Keep the assistant experiment test-only. The primary passes and the longer guard fails beyond observed variation.",
+  "reverse_order_executed": false,
+  "default_tests": 594,
+  "metal_tests": 713,
+  "strict_checks": true,
+  "log_parser": "The shared runner kept its prior event tag. The grader reads that tag and independently checks the frozen lengths, sample order, warmups and IDs.",
+  "evidence_sha256": {
+    "artifacts/gemma-g3-confirmation-2026-11-06/checks.json": "06962a4ed5ec9a9e1daab07227a76e05f291224f9cb051d0a4e4f8f8656c703c",
+    "artifacts/gemma-g3-confirmation-2026-11-06/cpu-test.stdout": "f4e6b189ce98ecaa80e2ff7edf071c6679f46c57f1d3fbe5b933c3870d436a86",
+    "artifacts/gemma-g3-confirmation-2026-11-06/metal-test.stdout": "811bacd92f7fc0c7952f70013858d436370f83836f1756b751448ae47cab4a87",
+    "artifacts/gemma-g3-confirmation-2026-11-06/power.txt": "be4cba2cac0bdaae0de54d12848f5f278cf4822bd00e67f6ca5f7704cc986e19",
+    "artifacts/gemma-g3-confirmation-2026-11-06/grade.py": "91e55086f2c08ccda75ba7b1383a8cd2256ee34dd9110ef0322599b83e8f0d28",
+    "artifacts/gemma-g3-confirmation-2026-11-06/ordinary-first-grade.json": "57ddc45ae2aeb0c70138becbcab504a2b7948888fce9e24d89b6ffd2ff261db6",
+    "artifacts/gemma-g3-confirmation-2026-11-06/ordinary-first/owned.json": "8d7005c3bc8053431176eebaac2f94bc7b06fc2048bf03a31f891cabc6af74ff",
+    "artifacts/gemma-g3-confirmation-2026-11-06/ordinary-first/gpu.stdout": "4282fd3e8d21b86485afdfdc1f396647770ee226e889e5e85dd000c187ad6e0d"
+  },
+  "review": "Astra approves the checked test-only confirmation runner and rejection decision. The guard regression exceeds its frozen noise allowance. Ordinary G2 remains selected."
+}

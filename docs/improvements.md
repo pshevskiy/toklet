@@ -11051,3 +11051,11 @@ signed Mac build and Astra pass. Complete public transfer remains open.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-resumable-ranges-v1.json)
 The older 4 MiB trial assembled 2.01 GB before its deadline and cleared staging.
 [Trial](../benchmarks/results/2026-11-06-gemma-bf16-public-4m-v1.json)
+
+## 6 November 2026 — Keep Gemma assistant generation experimental
+
+At 128+128, median complete request time is 34.99 seconds ordinary and
+27.54 seconds assisted. At 384+128, it is 50.57 and 61.05 seconds. All 26
+pairs preserve exact tokens and state and peak physical memory is 5.18 GB.
+Astra approves stopping at the failed guard. Ordinary G2 remains selected.
+[Decision](../benchmarks/results/2026-11-06-gemma-assistant-mtp-retention-v1.json)

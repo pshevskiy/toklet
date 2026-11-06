@@ -42,6 +42,21 @@ fn equal_state(a: &Bf16GenerationSession<'_, '_, '_>, b: &Bf16GenerationSession<
 #[test]
 #[ignore = "explicit real Mac assistant verification and paired speed feasibility"]
 fn official_gemma_assistant_paired_pilot() {
+    paired(false, false);
+}
+
+#[test]
+#[ignore = "explicit real Mac paired assistant timing and guard workloads"]
+fn official_gemma_assistant_paired_confirmation() {
+    let order = std::env::var("TOKLET_GEMMA_ASSISTANT_ORDER").expect("explicit timing order");
+    assert!(matches!(
+        order.as_str(),
+        "ordinary-first" | "assistant-first"
+    ));
+    paired(true, order == "assistant-first");
+}
+
+fn paired(confirmation: bool, reverse: bool) {
     const CAPACITY: usize = 512;
     let mut workspace = Scratch::new(CAPACITY, Scratch::planned_bytes(CAPACITY).unwrap()).unwrap();
     let budget = crate::weights::INITIAL_MEMORY_LIMIT_BYTES
@@ -82,11 +97,14 @@ fn official_gemma_assistant_paired_pilot() {
         )
         .unwrap();
     let cancel = AtomicBool::new(false);
-    for (prompt, maximum, stops, samples) in [
+    let pilot: &[(&[u32], usize, &[u32], usize)] = &[
         (chat.as_slice(), 32, owner.codec().stop_ids(), 2),
-        (&ids[..128], 32, &[] as &[u32], 4),
-        (&ids[..384], 32, &[] as &[u32], 4),
-    ] {
+        (&ids[..128], 32, &[], 4),
+        (&ids[..384], 32, &[], 4),
+    ];
+    let frozen: &[(&[u32], usize, &[u32], usize)] =
+        &[(&ids[..128], 128, &[], 13), (&ids[..384], 128, &[], 13)];
+    for &(prompt, maximum, stops, samples) in if confirmation { frozen } else { pilot } {
         for sample in 0..samples {
             let request = || Request {
                 input: Input::Reset(prompt),
@@ -117,7 +135,8 @@ fn official_gemma_assistant_paired_pilot() {
                 .unwrap();
                 (report, time.elapsed().as_nanos())
             };
-            let ((basic_report, basic_ns), (draft_report, draft_ns)) = if sample % 2 == 0 {
+            let assistant_first = reverse ^ (sample % 2 == 1);
+            let ((basic_report, basic_ns), (draft_report, draft_ns)) = if !assistant_first {
                 let before = basic();
                 let after = draft();
                 (before, after)
@@ -133,7 +152,8 @@ fn official_gemma_assistant_paired_pilot() {
                 "OFFICIAL_GEMMA_ASSISTED_PILOT {}",
                 json!({
                     "prompt":prompt.len(),"maximum":maximum,"emitted":basic_ids.len(),"sample":sample,
-                    "warmup":sample==0,"ordinary_ns":basic_ns,"assisted_ns":draft_ns,
+                    "warmup":sample < if confirmation { 3 } else { 1 },
+                "first":if assistant_first { "assistant" } else { "ordinary" },"ordinary_ns":basic_ns,"assisted_ns":draft_ns,
                     "ordinary_decode_seconds":basic_report.decode_seconds,
                     "proposed":draft_report.proposed,"accepted":draft_report.accepted,"rounds":draft_report.verification_rounds,
                     "ids_sha256":format!("{:x}",Sha256::digest(basic_ids.into_iter().flat_map(u32::to_le_bytes).collect::<Vec<_>>()))
