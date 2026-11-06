@@ -87,12 +87,58 @@ fn run_qat_blocks(blocks: &[usize]) {
     );
 }
 
-fn score_blocks(
+#[cfg(target_os = "macos")]
+#[test]
+#[ignore = "explicit official BF16 first original-loss block"]
+fn official_bf16_first_loss_block() {
+    run_bf16_blocks(&[0]);
+}
+
+#[cfg(target_os = "macos")]
+#[test]
+#[ignore = "explicit official BF16 remaining nine original-loss blocks"]
+fn official_bf16_remaining_loss_blocks() {
+    run_bf16_blocks(&(1..10).collect::<Vec<_>>());
+}
+
+#[cfg(target_os = "macos")]
+fn run_bf16_blocks(blocks: &[usize]) {
+    println!();
+    let (source, context, path, original) = super::bf16::load_official();
+    let snapshot = source.test_retained_digest();
+    let budget = PROCESS - DIAGNOSTIC;
+    let model = source.model_for_quality_probe(1025).unwrap();
+    let warm = source.new_session(&model, &context, 32, budget).unwrap();
+    let owned = warm.allocated_bytes().unwrap();
+    let required = model.model_bytes() + owned;
+    drop(warm);
+    assert!(matches!(
+        source.new_session(&model, &context, 32, required - 1),
+        Err(hybrid::Error::Metal(crate::metal::Error::Budget { required: r, limit }))
+        if r == required && limit == required - 1
+    ));
+    let mut session = source.new_session(&model, &context, 32, required).unwrap();
+    emit(
+        "BF16_LOSS_ADMISSION",
+        json!({"required_bytes":required,"session_bytes":owned}),
+    );
+    score_blocks(blocks, &mut session, owned, || {});
+    assert_eq!(source.test_retained_digest(), snapshot);
+    assert_eq!(
+        identity(&std::fs::symlink_metadata(path).unwrap()),
+        original
+    );
+}
+
+fn score_blocks<M, B>(
     blocks: &[usize],
-    session: &mut hybrid::Session<'_, '_, '_, '_>,
+    session: &mut Session<'_, '_, M, B>,
     expected_allocated: usize,
     verify_owners: impl Fn(),
-) {
+) where
+    M: MatrixSource,
+    B: Operations<M, Error = hybrid::Error>,
+{
     let frozen =
         include_bytes!("../../../../../../benchmarks/gemma-quality-v1/held_out_loss.u32le");
     let prefix = include_bytes!("../../../../../../benchmarks/gemma-e2b-wrap-v1/tokens.u32le");

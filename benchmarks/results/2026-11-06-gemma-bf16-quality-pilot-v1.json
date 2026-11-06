@@ -1,0 +1,127 @@
+{
+  "format": "toklet-gemma-official-bf16-quality-pilot-v1",
+  "source_revision": "70af34e20bd4b7a91f0de6b22675850c43922a03",
+  "engine_base": "722cbda7",
+  "checks": {
+    "current": [
+      "cargo fmt --check",
+      "strict Metal all-target Clippy",
+      "706 Metal tests",
+      "optimized Metal lib test build"
+    ],
+    "default_reused": {
+      "tests": 588,
+      "strict_clippy": true,
+      "unchanged_inputs": "Changed test-only Metal code"
+    },
+    "receipt": "artifacts/gemma-bf16-quality-2026-11-06/checks.json",
+    "receipt_sha256": "7bc590d441b4d780eb78a0771e8de3b67ad8a696d406c8e4f17d31631af34715"
+  },
+  "runs": {
+    "task-pilot": {
+      "binary_sha256": "d89eb336c68baaf759788f32b005a509af125a5ee7f6bc6fd77bc900dfaea667",
+      "physical_peak_bytes": 4694577088,
+      "limit_bytes": 6442450944,
+      "inputs_sha256": {
+        "/Users/coloner/work/rust/toklet/artifacts/m8-gemma-quality-contract-checks-v2/contract/tasks.jsonl": "510a7ca794cd75ea150292b7017b3d5f884f27ae7f51446d4f0c3e86be3ff2e5"
+      },
+      "group_absent": true,
+      "passed": true,
+      "receipt": "artifacts/gemma-bf16-quality-2026-11-06/task-pilot/owned.json",
+      "receipt_sha256": "a7e0e017f97a23f4e4926cb8f8d4c5636df7e82b70df13e42b84163cbd666221"
+    },
+    "replay-pilot": {
+      "binary_sha256": "d89eb336c68baaf759788f32b005a509af125a5ee7f6bc6fd77bc900dfaea667",
+      "physical_peak_bytes": 4692365224,
+      "limit_bytes": 6442450944,
+      "inputs_sha256": {
+        "/Users/coloner/work/rust/toklet/artifacts/m8-gemma-quality-contract-checks-v2/contract/tasks.jsonl": "510a7ca794cd75ea150292b7017b3d5f884f27ae7f51446d4f0c3e86be3ff2e5",
+        "/Users/coloner/work/rust/toklet/artifacts/gemma-bf16-quality-2026-11-06/replay-pilot.u32.jsonl": "1aa1f4a37a816cc514ed4d9fd0fa2990d4a6c1c9e7839a88e7573cac534c93bc"
+      },
+      "group_absent": true,
+      "passed": true,
+      "receipt": "artifacts/gemma-bf16-quality-2026-11-06/replay-pilot/owned.json",
+      "receipt_sha256": "0d50079dd5e1229dc9ea70294cc1316ad8058623e61957726241ce1ea438742c"
+    },
+    "loss-first": {
+      "binary_sha256": "d89eb336c68baaf759788f32b005a509af125a5ee7f6bc6fd77bc900dfaea667",
+      "physical_peak_bytes": 4728049624,
+      "limit_bytes": 6442450944,
+      "inputs_sha256": {},
+      "group_absent": true,
+      "passed": true,
+      "receipt": "artifacts/gemma-bf16-quality-2026-11-06/loss-first/owned.json",
+      "receipt_sha256": "24ce81c73d76f33371ba05627bd49a9ae704631db8b2bc19f0b19ccefa442f66"
+    },
+    "q4-task-pilot": {
+      "binary_sha256": "d89eb336c68baaf759788f32b005a509af125a5ee7f6bc6fd77bc900dfaea667",
+      "physical_peak_bytes": 2901002952,
+      "limit_bytes": 6442450944,
+      "inputs_sha256": {
+        "/Users/coloner/work/rust/toklet/artifacts/m8-gemma-quality-contract-checks-v2/contract/tasks.jsonl": "510a7ca794cd75ea150292b7017b3d5f884f27ae7f51446d4f0c3e86be3ff2e5"
+      },
+      "group_absent": true,
+      "passed": true,
+      "receipt": "artifacts/gemma-bf16-quality-2026-11-06/q4-task-pilot/owned.json",
+      "receipt_sha256": "853001b9820609fbeab39b75e92d57965d320b5846dd4d7e5ee6d7321cf5db16"
+    },
+    "qat-replay-pilot": {
+      "binary_sha256": "d89eb336c68baaf759788f32b005a509af125a5ee7f6bc6fd77bc900dfaea667",
+      "physical_peak_bytes": 3694333168,
+      "limit_bytes": 6442450944,
+      "inputs_sha256": {
+        "/Users/coloner/work/rust/toklet/artifacts/m8-gemma-quality-contract-checks-v2/contract/tasks.jsonl": "510a7ca794cd75ea150292b7017b3d5f884f27ae7f51446d4f0c3e86be3ff2e5",
+        "/Users/coloner/work/rust/toklet/artifacts/gemma-qat-quality-2026-11-06/replay-pilot.u32.jsonl": "e628c544cfd5f72b603b8f4ec5336025bfe17e785e4a1a261021fb0a56720bd5"
+      },
+      "group_absent": true,
+      "passed": true,
+      "receipt": "artifacts/gemma-bf16-quality-2026-11-06/qat-replay-pilot/owned.json",
+      "receipt_sha256": "44934b5b9f1fc56eede399e8629d2fea3ab16e43d37815cab6ff2beb47f1e922"
+    },
+    "q4-loss-first": {
+      "binary_sha256": "d89eb336c68baaf759788f32b005a509af125a5ee7f6bc6fd77bc900dfaea667",
+      "physical_peak_bytes": 2905688824,
+      "limit_bytes": 6442450944,
+      "inputs_sha256": {},
+      "group_absent": true,
+      "passed": true,
+      "receipt": "artifacts/gemma-bf16-quality-2026-11-06/q4-loss-first/owned.json",
+      "receipt_sha256": "aa8a39e2459b5e4404457b208fd788de3a4fcf95fbc10062939f6a2f8e36009f"
+    }
+  },
+  "original_quality_pilot": {
+    "passed": true,
+    "targets": 1024,
+    "paired_mean_delta": -0.011815194055304838,
+    "admission": {
+      "required_bytes": 4747683796,
+      "session_bytes": 179149348
+    },
+    "full_gate_pending": true,
+    "categories": 3,
+    "replayed_decisions": 66,
+    "mismatches": 0,
+    "trajectory_sha256": "1aa1f4a37a816cc514ed4d9fd0fa2990d4a6c1c9e7839a88e7573cac534c93bc"
+  },
+  "legacy": {
+    "q4-task-pilot": {
+      "identical_records": 4,
+      "peak_bytes": 2901002952
+    },
+    "qat-replay-pilot": {
+      "identical_records": 4,
+      "peak_bytes": 3694333168
+    },
+    "q4-loss-first": {
+      "identical_records": 1026,
+      "peak_bytes": 2905688824,
+      "exact_raw_sha256": "48c72f91a7ac0aaa776074c5f092aed1526e407235b45d02c86ceb7410fe075d"
+    }
+  },
+  "review": "Astra approves test-only generation, independently replayed decisions including hidden stops, admission, and shared Q4/QAT controls.",
+  "limits": [
+    "Full loss and task gates pending",
+    "Independent 1025 numerical qualification pending",
+    "No app, phone or performance qualification"
+  ]
+}

@@ -10819,3 +10819,11 @@ stops. All97 frozen records match and both crossed profiles reject.
 Peak physical memory is488.2MB under the existing1GiB policy. Astra
 approved standalone text. Combined model/codec admission remains open.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-codec-v1.json)
+
+## 6 November 2026 — Verify the official BF16 quality workers
+
+First1,024 original-relative loss targets and66 sampled decisions pass.
+Fresh replay includes hidden stop tokens. Astra approves after588 default
+and706 Metal tests and six owned Mac checks. Historical Q4 loss and
+Q4/QAT task controls match. Full quality and long fidelity remain open.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-quality-pilot-v1.json)

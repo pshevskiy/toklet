@@ -14,6 +14,10 @@ pub type Bf16Model<'weights> = graph::Model<'weights, MatrixRef<'weights>>;
 pub type Bf16Session<'model, 'weights, 'context> =
     graph::Session<'model, 'weights, MatrixRef<'weights>, Backend<'weights, 'context>>;
 
+#[cfg(test)]
+type QualitySession<'model, 'weights, 'context> =
+    graph::GenerationSession<'model, 'weights, MatrixRef<'weights>, Backend<'weights, 'context>>;
+
 pub struct MatrixRef<'weights> {
     source: &'weights Bf16Weights,
     index: usize,
@@ -108,6 +112,61 @@ impl Bf16Weights {
         chunk_rows: usize,
         budget: usize,
     ) -> GraphResult<Bf16Session<'model, 'weights, 'context>> {
+        let numerical = model
+            .planned_backend_session_bytes_for_chunk::<Backend<'weights, 'context>>(chunk_rows)?;
+        let fixed = add(model.model_bytes(), numerical)?;
+        let backend = self.admit_backend(model, context, chunk_rows, fixed, budget)?;
+        model.session_with_backend_for_chunk(backend, chunk_rows, budget)
+    }
+
+    #[cfg(test)]
+    pub(crate) fn new_quality_generation_session<'model, 'weights, 'context>(
+        &'weights self,
+        model: &'model Bf16Model<'weights>,
+        context: &'context Bf16Context,
+        options: crate::session::Options,
+    ) -> std::result::Result<QualitySession<'model, 'weights, 'context>, crate::session::Error>
+    {
+        use crate::session::Error as SessionError;
+        graph::generation::validate_options(model, options)?;
+        let numerical = model
+            .planned_backend_session_bytes_for_capacity::<Backend<'weights, 'context>>(
+                options.capacity,
+                options.prefill_chunk_size,
+            )?;
+        let wrapper =
+            QualitySession::<'model, 'weights, 'context>::planned_wrapper_bytes(options.capacity)
+                .map_err(GraphError::from)?;
+        let fixed = add(
+            model.model_bytes(),
+            add(numerical, wrapper).map_err(GraphError::from)?,
+        )
+        .map_err(GraphError::from)?;
+        let backend = self
+            .admit_backend(
+                model,
+                context,
+                options.prefill_chunk_size,
+                fixed,
+                options.memory_limit_bytes,
+            )
+            .map_err(|error| match error {
+                GraphError::Metal(Error::Budget { required, limit }) => {
+                    SessionError::MemoryBudget { required, limit }
+                }
+                other => other.into(),
+            })?;
+        graph::GenerationSession::with_backend(model, backend, options)
+    }
+
+    fn admit_backend<'weights, 'context>(
+        &'weights self,
+        model: &Bf16Model<'weights>,
+        context: &'context Bf16Context,
+        chunk_rows: usize,
+        fixed: usize,
+        budget: usize,
+    ) -> GraphResult<Backend<'weights, 'context>> {
         if !std::ptr::eq(&*self.device, &*context.0.gpu.device)
             || model
                 .matrix_handles()
@@ -115,14 +174,10 @@ impl Bf16Weights {
         {
             return Err(Error::Options("Gemma BF16 model/source/device differs").into());
         }
-        let numerical = model
-            .planned_backend_session_bytes_for_chunk::<Backend<'weights, 'context>>(chunk_rows)?;
-        let fixed = add(model.model_bytes(), numerical)?;
         let counts = Counts::new(self, chunk_rows)?;
         let minimum = counts.memory(counts.tile, counts.ple)?.total()?;
         check_budget(add(fixed, minimum)?, budget)?;
-        let backend = Backend::new(self, context, chunk_rows, counts, budget - fixed)?;
-        model.session_with_backend_for_chunk(backend, chunk_rows, budget)
+        Backend::new(self, context, chunk_rows, counts, budget - fixed)
     }
 }
 

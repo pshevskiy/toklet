@@ -5,7 +5,10 @@ use serde::Deserialize;
 use sha2::{Digest, Sha256};
 use std::{io::Read, sync::atomic::AtomicBool};
 
+#[cfg(target_os = "macos")]
+mod official_bf16;
 mod qat;
+mod replay;
 
 #[test]
 #[ignore = "explicit original E2B resident chunk admission"]
@@ -220,7 +223,7 @@ fn run(pilot: bool) {
 
 fn run_tasks(
     tasks: &[Task],
-    session: &mut hybrid::GenerationSession<'_, '_, '_, '_>,
+    session: &mut impl session::InferenceSession,
     pilot: bool,
     verify_owners: impl Fn(),
 ) -> usize {

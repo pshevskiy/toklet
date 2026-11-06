@@ -197,6 +197,10 @@ The other text tensors require4,559,518,278 raw bytes. [Official source inventor
    quality before factory or app work.
    The [official basic-text codec](../benchmarks/results/2026-11-06-gemma-bf16-codec-v1.json)
    passes its standalone gates. Measure combined codec/engine peak under6GiB.
+   The [quality pilots](../benchmarks/results/2026-11-06-gemma-bf16-quality-pilot-v1.json)
+   pass the first1,024 loss targets and fresh replay of66 sampled decisions.
+   Finish all10,000 targets, all100 fresh trajectories and isolated grading
+   against the original source before the adoption decision.
 
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 
