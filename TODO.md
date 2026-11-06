@@ -2,6 +2,8 @@
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
 Current task: **Measure G2 paired Mac performance and prepare the G3 assistant import.**
+G2 paired timings are running. G3 recovered and authenticated the complete
+public assistant shard. Native cold checks and proposal comparison are next.
 The native45 Mac build passed active same-owner context/KV changes and
 rendered Settings. Full public Gemma transfer remains open after two
 timeouts; cached publication and offline Chat pass.
@@ -750,8 +752,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
   [Report](docs/mac-production-memory.md). Other four production-profile peaks remain unmeasured.
 - [ ] Confirm required checks/reviews/commits and update this checklist and
   the improvement record. Do not infer support from a family name alone.
-  - [x] Reconcile six Mac and four iOS catalog identities, selected package
-    and open gates. [Audit](benchmarks/results/2026-11-06-m8-mac-audit-v1.json).
+  - [x] Reconcile seven Apple Silicon Mac and four iOS catalog identities,
+    selected native45 package and open gates. [Audit](benchmarks/results/2026-11-06-m8-mac-audit-v2.json).
   - [x] Give Qwen2.5-1.5B its own Mac display name, lookup key and discovery
     query. Live metadata, strict Swift checks, Mac build and Astra pass.
     [Evidence](benchmarks/results/2026-11-06-qwen15-catalog-repair-v1.json).
@@ -810,6 +812,8 @@ completed or prerequisites for the active breadth-first queue.
 
 | Date | Iteration | Result, checks and review | Commit / next action |
 | --- | --- | --- | --- |
+| 2026-11-06 | M8 current Mac audit | Seven Mac and four iOS catalog identities, 45 exports per slice, 49 links and Astra pass. Historical Q8 rejections and transient Gemma Settings are explicit. | Public target transfer and deferred iPhone checks remain. [Evidence](benchmarks/results/2026-11-06-m8-mac-audit-v2.json). |
+| 2026-11-06 | G2 timings and G3 assistant import in progress | G2 measured pairs retain identical token IDs so far. Astra confirmed canonical assistant head rows, final target normalization and read-only producers13/14. The public assistant passed full SHA-256 after large transfers timed out and smaller ranges recovered the missing bytes. | Finish paired timing and native cold checks before runtime changes. |
 | 2026-10-28 | Active plan and M9 architecture | Astra approved shared-block and performance boundaries; local links/whitespace passed. | `1d673e0`; B0 core. |
 | 2026-10-28 | B0 capacity core | 375 default / 254 Metal-library tests (overlap), fmt, strict Clippy and three tiny GPU checks passed; independent Astra approval. | `ea874d1`; B1 artifact and positional-block research. |
 | 2026-10-28 | Progress tracking | Created this live checklist and persistent iteration-update instruction; documentation link/content and whitespace checks. | `4602baf`; continue B1 with Astra advice/review. |

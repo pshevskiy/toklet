@@ -11,7 +11,8 @@ The [coverage table](model-coverage.md) is the current artifact/route/device
 index. Match it against `ModelHub.swift` and `NativeAcceptedIdentity.swift`,
 using exact model and codec identities. The catalog contains Qwen2.5 0.5B,
 Qwen3, SmolLM2, Mistral and three Mac-only profiles, Llama3, Qwen2.5 1.5B
-and official Gemma 4 E2B BF16.
+and official Gemma 4 E2B BF16. The selected XCFramework has 45 C exports
+per arm64 slice for Mac, iOS and iOS Simulator.
 The five earlier profiles have production fresh download/Stop/offline evidence.
 The sixth has a linked Mac product and isolated controller evidence.
 Official Gemma has a signed Mac build, verified cached publication and
@@ -29,14 +30,15 @@ network-denied Chat. [Gemma Hub evidence](../benchmarks/results/2026-11-06-gemma
 | Phi3, Gemma3, LFM2 diagnostic | Bounded adapter/block/state/reference qualifications exist. Original full adoption quality and ordinary app admission do not; they stay out of the catalog. |
 | Gemma4 Q4 rejected for adoption | Original/native full collections and grading complete. NLL passes, tasks52→43/100 fail. Historical mathematical-logit/KV failures remain; four stock-MLX decisions agree with Toklet but cannot waive those failures. |
 | Official Gemma 4 E2B BF16 managed, Mac only | Corrected numerical and original10k/100 quality gates pass. Shared512 window, exact six assets, cached publication and offline Chat pass. Full public transfer timed out; retry remains open. |
-| Gemma4 alternative weights | OptiQ passes stock trajectories and fails the task limit at49/100 vs original52/100. Uniform Q6 and oQ6 reject on a proposal cycle. Separate stock-only Q8 screen proceeds under a measured 6GiB gate. Native/app Q8 still exceeds its estimated allowance. |
+| Gemma4 alternative weights | OptiQ passes stock trajectories and fails the task limit at49/100 vs original52/100. Uniform Q6 and oQ6 reject on a proposal cycle. Stock Q8 rejects on a proposal cycle and measured 6 GiB overflow. Native/app Q8 exceeds its estimated allowance. [Q8 evidence](../benchmarks/results/2026-11-06-gemma-q8-stock-cap-v1.json). |
 | Physical iPhone14Pro outstanding | Four-profile catalog is not new-device evidence. Current Settings, journeys, wider context and diagnostic adapters lack a fresh phone run; Llama3 is excluded. |
 
 [Context/KV controls](context-app-integration.md) calculate capacity from the
 actual backend/layout and preserve model-declared versus loaded/selected limits.
 Mac Settings Preview/Apply, physical KV ceiling, authenticated preferences,
 owner reporting and conditional load-peak reporting have separate checked
-receipts indexed by [coverage](model-coverage.md). No selectable quantized KV
+receipts indexed by [coverage](model-coverage.md). Official Gemma uses transient
+active and next-open choices. No selectable quantized KV
 format or full model-declared window is implied. Reply limits and prompt/history
 share the selected context; displayed positions are not tokens per second.
 
@@ -73,13 +75,16 @@ and the [M9 Mac baseline](m9-mac-baseline.md). The MoE test covers pinned
 engine decisions, state and process memory. Broader numerical qualification,
 catalog adoption and deferred phone verification remain open.
 
-The 6 November review verified all six catalog and identity pairs, the selected
-41-export package and current rejection receipts. The package was built before
-the later test-only Gemma capture edits. Rebuild for the next source-matched
-Apple package validation. The remaining Gemma and phone gates keep the
-aggregate TODO open.
-[Current audit evidence](../benchmarks/results/2026-11-06-m8-mac-audit-v1.json).
+The earlier 6 November review covered six catalog and identity pairs and the
+then-selected 41-export package.
+[Earlier audit](../benchmarks/results/2026-11-06-m8-mac-audit-v1.json).
 
 The later source-matched refresh selects a new 41-export package after the
 chunk-pool change. It passes an offline Mac controller run and both iOS SDK
 builds. [Refresh evidence](../benchmarks/results/2026-11-06-chunk-pools-native41-v1.json).
+
+The current review checks all seven catalog and native identity pairs, the
+selected 45-export package and the signed Gemma Settings evidence. The package
+source predates the test-only G2 candidate. Full public target transfer and
+physical iPhone checks keep M8 open.
+[Current audit](../benchmarks/results/2026-11-06-m8-mac-audit-v2.json).

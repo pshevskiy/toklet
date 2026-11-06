@@ -10992,3 +10992,11 @@ positions. Tiny schedules and fault controls pass with 590 default and
 709 Metal tests. Astra approves the candidate and timing runner. Paired
 measurements and multirow failure coverage precede runtime selection.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-g2-candidate-v1.json)
+
+## 6 November 2026 — Reconcile current Mac model and package evidence
+
+Seven Mac profiles, four iOS profiles and 45 exports per arm64 slice match the
+checked evidence. The audit corrects the Q8 rejection link and identifies
+transient Gemma Settings. Astra and 49 local links pass. Full public target
+transfer and deferred physical iPhone checks keep M8 open.
+[Evidence](../benchmarks/results/2026-11-06-m8-mac-audit-v2.json)

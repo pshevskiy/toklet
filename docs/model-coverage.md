@@ -41,12 +41,13 @@ and diagnostic decisions. Gemma4 Q4 remains rejected by its
 [four-decision stock witness](gemma-mlx-decisions.md) does not waive it.
 Gemma E2B8-bit remains excluded by the
 [native/app memory estimate](gemma8-feasibility.md). Its separate
-[stock-only experiment](../benchmarks/results/2026-11-06-gemma-oq6-stock-v1.json)
-uses frozen token IDs and its own process measurement.
+[stock-only experiment](../benchmarks/results/2026-11-06-gemma-q8-stock-cap-v1.json)
+rejects on a proposal cycle and measured 6 GiB overflow.
 
 Mac Settings separates model-declared, loaded and selected limits. Capacity,
-chunk, reply and numerical budget are saved under authenticated artifact/backend/
-load/text/planning identities; Apply rechecks fresh admission and preserves old
+chunk, reply and numerical budget for dense profiles are saved under authenticated
+artifact/backend/load/text/planning identities. Official Gemma uses transient
+active and next-open choices. Apply rechecks fresh admission and preserves old
 state and drafts on rejection. The physical KV-byte ceiling is intentionally
 per-Apply. KV storage remains the current implemented format, with no implied
 quantization choice. Chat output remains bounded to256 tokens and existing text,
@@ -69,6 +70,10 @@ substitute for it. The five earlier Mac profiles have fresh production
 transfer/Stop/offline evidence. [Journey report](mac-hub-journeys.md).
 The sixth profile has isolated Mac controller evidence and a linked Mac product.
 [Qwen2.5-1.5B evidence](../benchmarks/results/2026-11-06-qwen15-mac-app-v1.json).
+Gemma BF16 has signed Mac Chat and active Settings evidence, including same-owner
+384/16 to 256/8 context and chunk selection. The complete public transfer
+remains open.
+[Gemma Settings evidence](../benchmarks/results/2026-11-06-gemma-bf16-live-window-v1.json).
 
 The [representative production Mac Qwen2 journey](mac-production-memory.md)
 measures lifetimeRSS816,709,632bytes and greatest observed pre-exit physical
