@@ -225,7 +225,10 @@ fn producer<'a, M: MatrixSource, B: Operations<M>>(
 #[derive(Clone, Copy)]
 pub(super) enum OutputRows {
     All,
-    #[cfg(test)]
+    #[cfg(any(
+        test,
+        all(feature = "metal", target_os = "macos", target_arch = "aarch64")
+    ))]
     Last,
 }
 
@@ -326,7 +329,10 @@ pub(super) fn run<M: MatrixSource, B: Operations<M>>(
     debug_assert!(!frames.spilled());
     let (tail_count, tail_offset) = match output {
         OutputRows::All => (count, offset),
-        #[cfg(test)]
+        #[cfg(any(
+            test,
+            all(feature = "metal", target_os = "macos", target_arch = "aarch64")
+        ))]
         OutputRows::Last => {
             // Producers staged every token. Only the final hidden and its full
             // token-major PLE row advance through the consumer-only tail.

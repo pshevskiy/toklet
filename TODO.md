@@ -1,10 +1,10 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Finish G2 paired Mac performance and qualify the G3 scalar proposal.**
-G2 primary repeats at 60.9% and 60.8% lower prefill time. Reverse controls
-are running. The authenticated G3 cold importer passed 591 default and 710
-Metal tests, real-file checks and Astra review.
+Current task: **Qualify the G3 scalar proposal and strict target verification.**
+G2 is retained on the signed official BF16 Mac route. Both primary runs
+reduce prefill time by about 61% and request time by about 28%.
+[Timing and runtime checks](benchmarks/results/2026-11-06-gemma-bf16-g2-retention-v1.json).
 The native45 Mac build passed active same-owner context/KV changes and
 rendered Settings. Full public Gemma transfer remains open after two
 timeouts; cached publication and offline Chat pass.
@@ -786,11 +786,12 @@ Conditional follow-ons require their own decision; they do not all block M9:
   [Timing](benchmarks/results/2026-11-06-m9-qwen2-lookup-timing-v1.json) repeats a 53% decode
   gain on the repeated contract prompt. The code prompt misses the 5% gate.
   Retain the explicit nonstreaming API and reject default adoption.
-- [ ] G2: qualify checkpoint-defined last-row shared-KV prefill on Mac.
+- [x] G2: qualify checkpoint-defined last-row shared-KV prefill on Mac.
   - [x] Test-only candidate, exact tiny and real parity, frozen paired runner
     and Astra. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-g2-candidate-v1.json).
-  - [ ] Finish both timing orders and test tail/head failure after multirow
-    compaction before selecting the runtime route.
+  - [x] Both timing orders, multirow tail/head rollback and exact retry,
+    native and Swift Chat, signed app, and Astra review pass.
+    [Retention](benchmarks/results/2026-11-06-gemma-bf16-g2-retention-v1.json).
 - [ ] G3: authenticate and qualify the official Gemma assistant for MTP.
   - [x] Pin the compatible official assistant and upstream interface.
     [Header evidence](benchmarks/results/2026-11-06-gemma-official-assistant-header-v1.json).
@@ -815,6 +816,7 @@ completed or prerequisites for the active breadth-first queue.
 
 | Date | Iteration | Result, checks and review | Commit / next action |
 | --- | --- | --- | --- |
+| 2026-11-06 | G2 Mac retention | All 78 pairs match token IDs. Primary prefill falls 60.9% and 60.8%; 591 default, 710 Metal, rollback/retry, native and Swift Chat, and Astra pass. | Signed native45 package selected. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-g2-retention-v1.json). |
 | 2026-11-06 | G3 official assistant cold import | Complete public SHA, all 262,144 IDs and 4,096 exact candidates pass. Initial lint fixed. Metal warmup cutoff rerun passes; 591 default and 710 Metal tests with Astra approval. | Scalar proposal next. [Evidence](benchmarks/results/2026-11-06-gemma-official-assistant-import-v1.json). |
 | 2026-11-06 | M8 current Mac audit | Seven Mac and four iOS catalog identities, 45 exports per slice, 49 links and Astra pass. Historical Q8 rejections and transient Gemma Settings are explicit. | Public target transfer and deferred iPhone checks remain. [Evidence](benchmarks/results/2026-11-06-m8-mac-audit-v2.json). |
 | 2026-11-06 | G2 timings and G3 assistant import in progress | G2 measured pairs retain identical token IDs so far. Astra confirmed canonical assistant head rows, final target normalization and read-only producers13/14. The public assistant passed full SHA-256 after large transfers timed out and smaller ranges recovered the missing bytes. | Finish paired timing and native cold checks before runtime changes. |

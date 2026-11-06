@@ -1,0 +1,361 @@
+{
+  "format": "toklet-gemma-bf16-g2-mac-retention-v1",
+  "scope": "Select exact official Gemma 4 E2B BF16 Mac native generation. Raw/full row scoring and other profiles are unchanged.",
+  "timing": {
+    "preliminary": false,
+    "peak_bytes": 4917907704,
+    "measurements": {
+      "full-first": {
+        "384+128": {
+          "samples": 10,
+          "ids_sha256": "cabc476ab224713d3e6abce62f683cb1154ca9a01d78193f3e93579630d18078",
+          "metrics": {
+            "prefill": {
+              "full_median_seconds": 32.6418604375,
+              "last_median_seconds": 12.7181684165,
+              "median_paired_gain": 0.6093724806019887,
+              "paired_gain_minimum": 0.5934289556845961,
+              "paired_gain_maximum": 0.6237496021164065,
+              "full_range_seconds": [
+                32.244090583,
+                33.432724334
+              ],
+              "last_range_seconds": [
+                12.532425917,
+                13.320132375
+              ]
+            },
+            "decode": {
+              "full_median_seconds": 38.053659254,
+              "last_median_seconds": 38.2451775805,
+              "median_paired_gain": -0.005068142081654738,
+              "paired_gain_minimum": -0.02245477563650438,
+              "paired_gain_maximum": 0.011106294117947928,
+              "full_range_seconds": [
+                37.526877246,
+                38.431321829
+              ],
+              "last_range_seconds": [
+                37.647879874,
+                38.749386956
+              ]
+            },
+            "total": {
+              "full_median_seconds": 70.843486417,
+              "last_median_seconds": 51.2477510625,
+              "median_paired_gain": 0.276621218646557,
+              "paired_gain_minimum": 0.26836600981513126,
+              "paired_gain_maximum": 0.29349309882171964,
+              "full_range_seconds": [
+                70.276098292,
+                71.561658667
+              ],
+              "last_range_seconds": [
+                50.503932458,
+                51.601550166
+              ]
+            }
+          }
+        },
+        "128+128": {
+          "samples": 10,
+          "ids_sha256": "c70fb108649f29d4a38878778c6be7193f3b4ed00f324782935edd37ca98ea55",
+          "metrics": {
+            "prefill": {
+              "full_median_seconds": 8.11862775,
+              "last_median_seconds": 2.8695821665,
+              "median_paired_gain": 0.646024563529425,
+              "paired_gain_minimum": 0.640947722891119,
+              "paired_gain_maximum": 0.6552269083471925,
+              "full_range_seconds": [
+                8.0646645,
+                8.38956025
+              ],
+              "last_range_seconds": [
+                2.861334375,
+                2.933914917
+              ]
+            },
+            "decode": {
+              "full_median_seconds": 32.440957582,
+              "last_median_seconds": 32.4470703065,
+              "median_paired_gain": 0.0007099511761349626,
+              "paired_gain_minimum": -0.04907063604129269,
+              "paired_gain_maximum": 0.010228139537691909,
+              "full_range_seconds": [
+                32.234667041,
+                32.796050294
+              ],
+              "last_range_seconds": [
+                32.190992509,
+                34.107439463
+              ]
+            },
+            "total": {
+              "full_median_seconds": 40.760526958,
+              "last_median_seconds": 35.4617759165,
+              "median_paired_gain": 0.12902196637352842,
+              "paired_gain_minimum": 0.08929068177597363,
+              "paired_gain_maximum": 0.1369568286209988,
+              "full_range_seconds": [
+                40.541198583,
+                41.037805042
+              ],
+              "last_range_seconds": [
+                35.1853025,
+                37.105414375
+              ]
+            }
+          }
+        },
+        "511+1": {
+          "samples": 10,
+          "ids_sha256": "8b38b2ad51a60bb9f23ed8c84946ee8ffa22d483cf8a492b8c71ea27208f975b",
+          "metrics": {
+            "prefill": {
+              "full_median_seconds": 48.658189646,
+              "last_median_seconds": 19.6397357085,
+              "median_paired_gain": 0.5976782857222089,
+              "paired_gain_minimum": 0.5800618861346769,
+              "paired_gain_maximum": 0.5997390038346415,
+              "full_range_seconds": [
+                48.213227334,
+                49.553020167
+              ],
+              "last_range_seconds": [
+                19.387794167,
+                20.24657175
+              ]
+            },
+            "decode": {
+              "full_median_seconds": 0.0,
+              "last_median_seconds": 0.0,
+              "median_paired_gain": 0.0,
+              "paired_gain_minimum": 0.0,
+              "paired_gain_maximum": 0.0,
+              "full_range_seconds": [
+                0.0,
+                0.0
+              ],
+              "last_range_seconds": [
+                0.0,
+                0.0
+              ]
+            },
+            "total": {
+              "full_median_seconds": 48.659211146,
+              "last_median_seconds": 19.6408147085,
+              "median_paired_gain": 0.597665436698599,
+              "paired_gain_minimum": 0.5800486776227619,
+              "paired_gain_maximum": 0.5997263670431003,
+              "full_range_seconds": [
+                48.214295334,
+                49.55408925
+              ],
+              "last_range_seconds": [
+                19.388817542,
+                20.247657083
+              ]
+            }
+          }
+        }
+      },
+      "last-first": {
+        "384+128": {
+          "samples": 10,
+          "ids_sha256": "cabc476ab224713d3e6abce62f683cb1154ca9a01d78193f3e93579630d18078",
+          "metrics": {
+            "prefill": {
+              "full_median_seconds": 32.257877375,
+              "last_median_seconds": 12.628359146,
+              "median_paired_gain": 0.6078969160635815,
+              "paired_gain_minimum": 0.603387966733797,
+              "paired_gain_maximum": 0.6147841676353065,
+              "full_range_seconds": [
+                31.907676041,
+                32.856533542
+              ],
+              "last_range_seconds": [
+                12.462990625,
+                12.8079945
+              ]
+            },
+            "decode": {
+              "full_median_seconds": 37.626213023,
+              "last_median_seconds": 37.658360646,
+              "median_paired_gain": -0.0005768291459284766,
+              "paired_gain_minimum": -0.008037028659917973,
+              "paired_gain_maximum": 0.009825909126590945,
+              "full_range_seconds": [
+                37.429384133,
+                37.981003125
+              ],
+              "last_range_seconds": [
+                37.471959047,
+                37.849992951
+              ]
+            },
+            "total": {
+              "full_median_seconds": 70.103211021,
+              "last_median_seconds": 50.467590625,
+              "median_paired_gain": 0.28077360755166386,
+              "paired_gain_minimum": 0.274609177711935,
+              "paired_gain_maximum": 0.28532770323038237,
+              "full_range_seconds": [
+                69.603743583,
+                70.754890417
+              ],
+              "last_range_seconds": [
+                50.139980125,
+                50.582400334
+              ]
+            }
+          }
+        },
+        "128+128": {
+          "samples": 10,
+          "ids_sha256": "c70fb108649f29d4a38878778c6be7193f3b4ed00f324782935edd37ca98ea55",
+          "metrics": {
+            "prefill": {
+              "full_median_seconds": 8.0565671875,
+              "last_median_seconds": 2.86907825,
+              "median_paired_gain": 0.6438688103359388,
+              "paired_gain_minimum": 0.6403557879757673,
+              "paired_gain_maximum": 0.6525046773368475,
+              "full_range_seconds": [
+                8.001738209,
+                8.234300042
+              ],
+              "last_range_seconds": [
+                2.855485667,
+                2.900377834
+              ]
+            },
+            "decode": {
+              "full_median_seconds": 32.020333101,
+              "last_median_seconds": 31.89385868,
+              "median_paired_gain": 0.0021779846205220656,
+              "paired_gain_minimum": -0.022352875444910214,
+              "paired_gain_maximum": 0.006781745024550648,
+              "full_range_seconds": [
+                31.711297288,
+                32.506311673
+              ],
+              "last_range_seconds": [
+                31.703121333,
+                33.232921209
+              ]
+            },
+            "total": {
+              "full_median_seconds": 40.219390708,
+              "last_median_seconds": 34.897854021,
+              "median_paired_gain": 0.1310299002872688,
+              "paired_gain_minimum": 0.11368671542083872,
+              "paired_gain_maximum": 0.1352889120840647,
+              "full_range_seconds": [
+                39.844609209,
+                40.874402667
+              ],
+              "last_range_seconds": [
+                34.703029458,
+                36.227526083
+              ]
+            }
+          }
+        },
+        "511+1": {
+          "samples": 10,
+          "ids_sha256": "8b38b2ad51a60bb9f23ed8c84946ee8ffa22d483cf8a492b8c71ea27208f975b",
+          "metrics": {
+            "prefill": {
+              "full_median_seconds": 47.6729194375,
+              "last_median_seconds": 19.2099048335,
+              "median_paired_gain": 0.596650243988563,
+              "paired_gain_minimum": 0.5921265763211178,
+              "paired_gain_maximum": 0.6012509959357577,
+              "full_range_seconds": [
+                47.481263083,
+                48.069027167
+              ],
+              "last_range_seconds": [
+                19.011339791,
+                19.442664791
+              ]
+            },
+            "decode": {
+              "full_median_seconds": 0.0,
+              "last_median_seconds": 0.0,
+              "median_paired_gain": 0.0,
+              "paired_gain_minimum": 0.0,
+              "paired_gain_maximum": 0.0,
+              "full_range_seconds": [
+                0.0,
+                0.0
+              ],
+              "last_range_seconds": [
+                0.0,
+                0.0
+              ]
+            },
+            "total": {
+              "full_median_seconds": 47.6739735,
+              "last_median_seconds": 19.2109276875,
+              "median_paired_gain": 0.5966370819261521,
+              "paired_gain_minimum": 0.5921135874839838,
+              "paired_gain_maximum": 0.6012381108283763,
+              "full_range_seconds": [
+                47.482284917,
+                48.070050542
+              ],
+              "last_range_seconds": [
+                19.012374166,
+                19.443714166
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "timing_pairs": 78,
+  "measured_pairs": 60,
+  "warmup_only_background_checks": true,
+  "default_tests": 591,
+  "metal_tests": 710,
+  "strict_checks": true,
+  "gpu_peaks_bytes": {
+    "parity": 5038035312,
+    "native-chat": 4946972992,
+    "window-live": 4964209104
+  },
+  "native_exports_per_arm64_slice": 45,
+  "signed_mac_artifact": "artifacts/gemma-bf16-g2-mac-app-2026-11-06/Toklet.app",
+  "physical_iphone_tested": false,
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-g2-2026-11-06/qualified-summary.json": "ade9cc59a120dc361e650a613d9c56d10faa44aec401bd908b880af5bb90d2eb",
+    "artifacts/gemma-bf16-g2-2026-11-06/mid-first-power.txt": "c61f38989a17874ee6825b98fda1dd6fe7d2e0d64f33f17ddb5d124e85f1c429",
+    "artifacts/gemma-bf16-g2-2026-11-06/full-first/gpu.stdout": "b0dc1bc61a82066a4747aeda63955c510aaa4ec373ecb7a99f91cdb117bcc1e2",
+    "artifacts/gemma-bf16-g2-2026-11-06/last-first/gpu.stdout": "7fdb0851d0df151b4e7a1c6e0931a6dbc26385dd0c51694371399635522033e9",
+    "artifacts/gemma-bf16-g2-2026-11-06/full-first/owned.json": "f3dd90bd06f4da2ad8ddc66c4f46432c9262c3b41ea8b1bb3b40d050d3376267",
+    "artifacts/gemma-bf16-g2-2026-11-06/last-first/owned.json": "3543286d30016034aead8c52152b02c22d8133eb4e9f1edbe53900463c7f6e37",
+    "artifacts/gemma-g2-promotion-draft-2026-11-06/checks.json": "00946ef3f600ac4f7cad206574154e40ec8ecfdb740531b456b2fa4b542a6501",
+    "artifacts/gemma-bf16-g2-native45-package-2026-11-06/build.json": "216ed76e385e9f97955a6ce6cb47a12ff9ff79968dcf3c01250d92682d4cd93c",
+    "artifacts/gemma-bf16-g2-mac-app-2026-11-06/build.json": "bdcd7d14752fffcd4e3e97741abd3f9a075deb3a4faad2934d9d2e072814c029",
+    "artifacts/gemma-g2-promotion-draft-2026-11-06/parity/owned.json": "2f09cc2a7239b87461ce2eb7d57cf0417dc6ff5835e61624a05b308ff8724ecf",
+    "artifacts/gemma-g2-promotion-draft-2026-11-06/parity/gpu.stdout": "651e72073ac5642deced2fdeb9fc3db2a2ae4fb91c8e1efbfa54883b68be06d8",
+    "artifacts/gemma-g2-promotion-draft-2026-11-06/native-chat/owned.json": "5f3a11ede9b0950991d7525b9f4f7cd16c931fd6bdad807a8a732ec02ea4a1e1",
+    "artifacts/gemma-g2-promotion-draft-2026-11-06/native-chat/gpu.stdout": "7266017daae6b009393692d807a338c9f3a66702f6d1499ada5db4691a58f3e1",
+    "artifacts/gemma-g2-promotion-draft-2026-11-06/window-live/owned.json": "5473d557a4dee59c07d3534a646cc0052c15a4ef09b61da92605e17f992f3a34",
+    "artifacts/gemma-g2-promotion-draft-2026-11-06/window-live/gpu.stdout": "5e25a8f6f4d657e93aa755ea268987de4647f9044554aa4cbd621b7fa1454193",
+    "artifacts/gemma-g2-promotion-draft-2026-11-06/selection.json": "9d9fbfc986fdb4df030ca6e52e4c24efad4da86322162cef40085f5ce9b940be"
+  },
+  "selected_native_package": {
+    "passed": true,
+    "previous": "../../artifacts/gemma-bf16-native45-package-2026-11-06/Toklet.xcframework",
+    "selected": "../../artifacts/gemma-bf16-g2-native45-package-2026-11-06/Toklet.xcframework",
+    "previous_artifact_preserved": true,
+    "package_sha256": "216ed76e385e9f97955a6ce6cb47a12ff9ff79968dcf3c01250d92682d4cd93c",
+    "app_receipt_sha256": "bdcd7d14752fffcd4e3e97741abd3f9a075deb3a4faad2934d9d2e072814c029"
+  },
+  "review": "Astra approves scoped official BF16 Mac generation promotion. Exact parity, multirow rollback/retry, native Chat and Swift Apply/replay pass."
+}

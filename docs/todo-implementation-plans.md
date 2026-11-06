@@ -426,7 +426,10 @@ chunk32/512. The timed workload uses the frozen loss token IDs. Primary is
 384 input plus128 output, with128+128 and511+1 controls. Use three warmups
 and ten paired samples per workload, then repeat with the order reversed.
 Retain only a primary gain of at least5% beyond variation and no unexplained
-control regression. Add multirow tail/head failure controls before promotion.
+control regression. Add multirow tail/head failure controls before promotion. The official BF16
+Mac route passed both orders, exact multirow rollback and Swift Chat. The
+[retention evidence](../benchmarks/results/2026-11-06-gemma-bf16-g2-retention-v1.json)
+records selected scope and measured prefill and request gains.
 
 **G3 MTP.** Use the official E2B assistant paired with the selected BF16
 target. The exact157,565,344-byte shard has49 BF16 tensors and one I64

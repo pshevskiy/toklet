@@ -63,10 +63,11 @@ impl Model {
     }
 
     pub(super) fn create_session(&'static self, options: session::Options) -> Result<Session> {
-        let inference = self
+        let mut inference = self
             .owner
             .new_session(&self.graph, options)
             .map_err(|error| fail(ENGINE_ERROR, error.to_string()))?;
+        inference.use_last_row_prefill();
         let admitted_bytes = inference
             .memory()
             .admitted_bytes

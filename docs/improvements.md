@@ -11008,3 +11008,12 @@ The complete 157.6 MB shard passes its pinned SHA-256. The importer checks
 4,096 independently selected IDs. Astra, 591 default and 710 Metal tests
 pass. Scalar proposal, target verification and app eligibility stay separate.
 [Evidence](../benchmarks/results/2026-11-06-gemma-official-assistant-import-v1.json)
+
+## 6 November 2026 — Retain last-row prefill on Mac Gemma BF16
+
+For 384 input and 128 output tokens, paired prefill time falls 60.9% and
+60.8%, and complete request time falls 27.7% and 28.1%. Both controls improve
+and all 78 pairs match token IDs. Timed physical peak is 4.92 GB. Multirow
+rollback/retry, native and Swift Chat, strict checks and Astra pass. The
+signed Mac package is selected for the exact official BF16 profile.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-g2-retention-v1.json)

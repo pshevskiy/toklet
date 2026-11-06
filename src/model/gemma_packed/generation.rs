@@ -14,6 +14,7 @@ pub struct GenerationSession<'model, 'weights, M = Matrix<'weights>, B = Scalar>
     capacity: usize,
     chunk: usize,
     needs_replay: bool,
+    output: forward::OutputRows,
     memory: Memory,
 }
 
@@ -171,6 +172,7 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
             capacity: options.capacity,
             chunk: options.prefill_chunk_size,
             needs_replay: false,
+            output: forward::OutputRows::All,
             memory,
         })
     }
@@ -248,7 +250,14 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
     /// reset failure keeps needs_replay=true, evaluated_len0 and logits hidden.
     /// A later forward failure preserves the now-valid committed inner prefix.
     pub fn evaluate_next_chunk(&mut self) -> Result<usize, session::Error> {
-        self.evaluate_next_chunk_rows(forward::OutputRows::All)
+        self.evaluate_next_chunk_rows(self.output)
+    }
+
+    /// The audited Mac BF16 native bridge exposes only the final distribution.
+    /// Raw scoring and speculative verification keep the complete rows.
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    pub(crate) fn use_last_row_prefill(&mut self) {
+        self.output = forward::OutputRows::Last;
     }
     #[cfg(test)]
     pub(crate) fn evaluate_next_chunk_last_row(&mut self) -> Result<usize, session::Error> {
