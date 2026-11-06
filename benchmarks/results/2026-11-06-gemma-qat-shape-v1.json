@@ -1,0 +1,179 @@
+{
+  "passed": true,
+  "case_count": 2,
+  "independent_workers": 2,
+  "verified_complete_rows": 32,
+  "observations": [
+    {
+      "case": "HumanEval/4",
+      "position": 212,
+      "rows": {
+        "original_a": {
+          "length": 221,
+          "winner": 35233,
+          "margin": 0.125,
+          "sha256": "3f18f3ae50708a0f5f83a244ec60c4da1fc27172540c38b0d22a98a02594734d",
+          "row_file": "HumanEval-4-original_a.f32le"
+        },
+        "original_b": {
+          "length": 224,
+          "winner": 34488,
+          "margin": 0.125,
+          "sha256": "892dadb70c17313ee5ad9fb416e10f5ad5110437675c1549f549a2c29e86605a",
+          "row_file": "HumanEval-4-original_b.f32le"
+        },
+        "fixed_a": {
+          "length": 228,
+          "winner": 34488,
+          "margin": 0.125,
+          "sha256": "892dadb70c17313ee5ad9fb416e10f5ad5110437675c1549f549a2c29e86605a",
+          "row_file": "HumanEval-4-fixed_a.f32le"
+        },
+        "fixed_b": {
+          "length": 228,
+          "winner": 34488,
+          "margin": 0.125,
+          "sha256": "892dadb70c17313ee5ad9fb416e10f5ad5110437675c1549f549a2c29e86605a",
+          "row_file": "HumanEval-4-fixed_b.f32le"
+        },
+        "fixed_zero": {
+          "length": 228,
+          "winner": 34488,
+          "margin": 0.125,
+          "sha256": "892dadb70c17313ee5ad9fb416e10f5ad5110437675c1549f549a2c29e86605a",
+          "row_file": "HumanEval-4-fixed_zero.f32le"
+        },
+        "fixed_reordered": {
+          "length": 228,
+          "winner": 34488,
+          "margin": 0.125,
+          "sha256": "892dadb70c17313ee5ad9fb416e10f5ad5110437675c1549f549a2c29e86605a",
+          "row_file": "HumanEval-4-fixed_reordered.f32le"
+        },
+        "short_zero": {
+          "length": 221,
+          "winner": 35233,
+          "margin": 0.125,
+          "sha256": "3f18f3ae50708a0f5f83a244ec60c4da1fc27172540c38b0d22a98a02594734d",
+          "row_file": "HumanEval-4-short_zero.f32le"
+        },
+        "long_zero": {
+          "length": 224,
+          "winner": 34488,
+          "margin": 0.125,
+          "sha256": "892dadb70c17313ee5ad9fb416e10f5ad5110437675c1549f549a2c29e86605a",
+          "row_file": "HumanEval-4-long_zero.f32le"
+        }
+      },
+      "fixed_future_invariant": true,
+      "identical_padding_cross_length_differs": true
+    },
+    {
+      "case": "lambada/row-29",
+      "position": 70,
+      "rows": {
+        "original_a": {
+          "length": 87,
+          "winner": 4284,
+          "margin": 0.125,
+          "sha256": "391567be6ef5bb6586c71425cd600a55e752d3442b3d75e44f57af117a2992f0",
+          "row_file": "lambada-row-29-original_a.f32le"
+        },
+        "original_b": {
+          "length": 73,
+          "winner": 515,
+          "margin": 0.1875,
+          "sha256": "81546189f7133a94a6876836840c5f70851fd7ba1ffed16f42c9fdab66154163",
+          "row_file": "lambada-row-29-original_b.f32le"
+        },
+        "fixed_a": {
+          "length": 91,
+          "winner": 4284,
+          "margin": 0.125,
+          "sha256": "391567be6ef5bb6586c71425cd600a55e752d3442b3d75e44f57af117a2992f0",
+          "row_file": "lambada-row-29-fixed_a.f32le"
+        },
+        "fixed_b": {
+          "length": 91,
+          "winner": 4284,
+          "margin": 0.125,
+          "sha256": "391567be6ef5bb6586c71425cd600a55e752d3442b3d75e44f57af117a2992f0",
+          "row_file": "lambada-row-29-fixed_b.f32le"
+        },
+        "fixed_zero": {
+          "length": 91,
+          "winner": 4284,
+          "margin": 0.125,
+          "sha256": "391567be6ef5bb6586c71425cd600a55e752d3442b3d75e44f57af117a2992f0",
+          "row_file": "lambada-row-29-fixed_zero.f32le"
+        },
+        "fixed_reordered": {
+          "length": 91,
+          "winner": 4284,
+          "margin": 0.125,
+          "sha256": "391567be6ef5bb6586c71425cd600a55e752d3442b3d75e44f57af117a2992f0",
+          "row_file": "lambada-row-29-fixed_reordered.f32le"
+        },
+        "short_zero": {
+          "length": 73,
+          "winner": 515,
+          "margin": 0.1875,
+          "sha256": "81546189f7133a94a6876836840c5f70851fd7ba1ffed16f42c9fdab66154163",
+          "row_file": "lambada-row-29-short_zero.f32le"
+        },
+        "long_zero": {
+          "length": 87,
+          "winner": 4284,
+          "margin": 0.125,
+          "sha256": "391567be6ef5bb6586c71425cd600a55e752d3442b3d75e44f57af117a2992f0",
+          "row_file": "lambada-row-29-long_zero.f32le"
+        }
+      },
+      "fixed_future_invariant": true,
+      "identical_padding_cross_length_differs": true
+    }
+  ],
+  "qualification_changed": false,
+  "decision": "Tested differences follow total sequence shape. Keep the stock trajectory rejection and investigate a distinct native diagnostic profile.",
+  "review": "Astra approved the scoped attribution and prospective native diagnostic ordering.",
+  "receipts_sha256": {
+    "artifacts/gemma-qat-screen-2026-11-06/suffix/stock/HumanEval-4-original_a.f32le": "3f18f3ae50708a0f5f83a244ec60c4da1fc27172540c38b0d22a98a02594734d",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix/stock/HumanEval-4-original_b.f32le": "892dadb70c17313ee5ad9fb416e10f5ad5110437675c1549f549a2c29e86605a",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix/stock/HumanEval-4-fixed_a.f32le": "892dadb70c17313ee5ad9fb416e10f5ad5110437675c1549f549a2c29e86605a",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix/stock/HumanEval-4-fixed_b.f32le": "892dadb70c17313ee5ad9fb416e10f5ad5110437675c1549f549a2c29e86605a",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix/stock/HumanEval-4-fixed_zero.f32le": "892dadb70c17313ee5ad9fb416e10f5ad5110437675c1549f549a2c29e86605a",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix/stock/HumanEval-4-fixed_reordered.f32le": "892dadb70c17313ee5ad9fb416e10f5ad5110437675c1549f549a2c29e86605a",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix/stock/HumanEval-4-short_zero.f32le": "3f18f3ae50708a0f5f83a244ec60c4da1fc27172540c38b0d22a98a02594734d",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix/stock/HumanEval-4-long_zero.f32le": "892dadb70c17313ee5ad9fb416e10f5ad5110437675c1549f549a2c29e86605a",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix/stock/lambada-row-29-original_a.f32le": "391567be6ef5bb6586c71425cd600a55e752d3442b3d75e44f57af117a2992f0",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix/stock/lambada-row-29-original_b.f32le": "81546189f7133a94a6876836840c5f70851fd7ba1ffed16f42c9fdab66154163",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix/stock/lambada-row-29-fixed_a.f32le": "391567be6ef5bb6586c71425cd600a55e752d3442b3d75e44f57af117a2992f0",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix/stock/lambada-row-29-fixed_b.f32le": "391567be6ef5bb6586c71425cd600a55e752d3442b3d75e44f57af117a2992f0",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix/stock/lambada-row-29-fixed_zero.f32le": "391567be6ef5bb6586c71425cd600a55e752d3442b3d75e44f57af117a2992f0",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix/stock/lambada-row-29-fixed_reordered.f32le": "391567be6ef5bb6586c71425cd600a55e752d3442b3d75e44f57af117a2992f0",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix/stock/lambada-row-29-short_zero.f32le": "81546189f7133a94a6876836840c5f70851fd7ba1ffed16f42c9fdab66154163",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix/stock/lambada-row-29-long_zero.f32le": "391567be6ef5bb6586c71425cd600a55e752d3442b3d75e44f57af117a2992f0",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix/stock-owned.json": "2bad9730b57ff79df1fabc8e2c3000188566a9058477e22a7ec23c0384efd7a9",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix/stock-plan.json": "55191a758e09ecd578724cfef6d7071b6aa452df8f27fd0c65d6cced40508a5a",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix/stock/result.json": "edd38b56596b2eb4b3e0928de0cf3b375d09926c0dd19513075a6eee58be0606",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix-repeat/stock/HumanEval-4-original_a.f32le": "3f18f3ae50708a0f5f83a244ec60c4da1fc27172540c38b0d22a98a02594734d",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix-repeat/stock/HumanEval-4-original_b.f32le": "892dadb70c17313ee5ad9fb416e10f5ad5110437675c1549f549a2c29e86605a",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix-repeat/stock/HumanEval-4-fixed_a.f32le": "892dadb70c17313ee5ad9fb416e10f5ad5110437675c1549f549a2c29e86605a",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix-repeat/stock/HumanEval-4-fixed_b.f32le": "892dadb70c17313ee5ad9fb416e10f5ad5110437675c1549f549a2c29e86605a",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix-repeat/stock/HumanEval-4-fixed_zero.f32le": "892dadb70c17313ee5ad9fb416e10f5ad5110437675c1549f549a2c29e86605a",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix-repeat/stock/HumanEval-4-fixed_reordered.f32le": "892dadb70c17313ee5ad9fb416e10f5ad5110437675c1549f549a2c29e86605a",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix-repeat/stock/HumanEval-4-short_zero.f32le": "3f18f3ae50708a0f5f83a244ec60c4da1fc27172540c38b0d22a98a02594734d",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix-repeat/stock/HumanEval-4-long_zero.f32le": "892dadb70c17313ee5ad9fb416e10f5ad5110437675c1549f549a2c29e86605a",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix-repeat/stock/lambada-row-29-original_a.f32le": "391567be6ef5bb6586c71425cd600a55e752d3442b3d75e44f57af117a2992f0",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix-repeat/stock/lambada-row-29-original_b.f32le": "81546189f7133a94a6876836840c5f70851fd7ba1ffed16f42c9fdab66154163",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix-repeat/stock/lambada-row-29-fixed_a.f32le": "391567be6ef5bb6586c71425cd600a55e752d3442b3d75e44f57af117a2992f0",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix-repeat/stock/lambada-row-29-fixed_b.f32le": "391567be6ef5bb6586c71425cd600a55e752d3442b3d75e44f57af117a2992f0",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix-repeat/stock/lambada-row-29-fixed_zero.f32le": "391567be6ef5bb6586c71425cd600a55e752d3442b3d75e44f57af117a2992f0",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix-repeat/stock/lambada-row-29-fixed_reordered.f32le": "391567be6ef5bb6586c71425cd600a55e752d3442b3d75e44f57af117a2992f0",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix-repeat/stock/lambada-row-29-short_zero.f32le": "81546189f7133a94a6876836840c5f70851fd7ba1ffed16f42c9fdab66154163",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix-repeat/stock/lambada-row-29-long_zero.f32le": "391567be6ef5bb6586c71425cd600a55e752d3442b3d75e44f57af117a2992f0",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix-repeat/stock-owned.json": "2e15aac261df43d52cca953f86a2cb64f1c713fb38d91d8a3c893e57081d7717",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix-repeat/stock-plan.json": "55191a758e09ecd578724cfef6d7071b6aa452df8f27fd0c65d6cced40508a5a",
+    "artifacts/gemma-qat-screen-2026-11-06/suffix-repeat/stock/result.json": "48a10d67b9ab40652862ef571e30b050814d950556856d1cdc7f159b301235e7"
+  }
+}

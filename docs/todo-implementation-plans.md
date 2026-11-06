@@ -118,18 +118,25 @@ repair, at 4.47GB peak. Run the frozen100 cases first. If the grade passes,
 score the exact ten reset loss windows against the unchanged original mean.
 The [full stock trajectory](../benchmarks/results/2026-11-06-gemma-qat-full-tasks-v1.json)
 verifies 98 cases and rejects cycles in HumanEval/4 and lambada/row-29.
-Grading and loss are withheld. Native QAT admission remains conditional.
-If stock quality passes, extend the existing Gemma FP32 compensated affine
-projection with a statically selected 8-bit leaf. Reuse the packing layout
-as the pool key and derive the admitted pool inventory from the pinned
-matrix policy. Keep graph blocks shared and require a QAT-owned independent
-fidelity reference before using the profile in Chat.
+Grading and loss are withheld. The [two-worker shape witness](../benchmarks/results/2026-11-06-gemma-qat-shape-v1.json)
+reproduces both stock flips by changing only replay length. Fixed-shape
+future variants match bitwise. Astra approves a distinct native diagnostic
+while the stock rejection stays recorded.
 
 **Independent affine8 leaf.** Qualify the missing projection mechanism on
 authored original-code fixtures. Keep group64/BF16 storage and the current
 FP32 compensation. Validate the full byte codebook, guarded budgets,
 residual-sensitive dots and affine4 parity. Keep the resident loader and
 catalog out of this task.
+
+**Pinned native QAT diagnostic.** Verify the mixed cold tensor plan and
+consumed byte identity. Reuse the affine layout as the pool key, admit
+both projection pipelines with charged owners and keep Q4 gather and the
+existing graph blocks. Freeze an artifact-owned numerical reference,
+chunk1/32 and causal-invariance witnesses, state/reset and actual process
+peaks before running the real model. Compare the original 10k/100 gates
+only after native trajectory and fidelity qualify. Chat and G2/G3 still
+require their separate acceptance evidence.
 
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 

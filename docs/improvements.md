@@ -10654,3 +10654,11 @@ after two repairs each. Peak physical memory is4.98GB and endpoint
 checks pass. Astra approved withholding grading and loss. A separate
 affine8 leaf task covers the missing projection mechanism.
 [Evidence](../benchmarks/results/2026-11-06-gemma-qat-full-tasks-v1.json)
+
+## 6 November 2026 — Attribute the QAT stock cycles to tested replay shapes
+
+Both workers reproduce all 32 full-row captures. Same-length future
+variants agree bitwise. Changing only padded length flips both disputed
+decisions. Astra approved a separate native diagnostic plan. The frozen
+stock trajectory gate remains rejected.
+[Evidence](../benchmarks/results/2026-11-06-gemma-qat-shape-v1.json)

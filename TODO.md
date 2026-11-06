@@ -593,6 +593,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
   - [x] QAT full stock trajectory rejects two proposal cycles. Grading and
     loss remain withheld.
     [Evidence](benchmarks/results/2026-11-06-gemma-qat-full-tasks-v1.json).
+  - [x] Both QAT cycles reproduce with shape-dependent stateless arithmetic.
+    Plan a separate native mixed-format diagnostic after leaf qualification.
+    [Evidence](benchmarks/results/2026-11-06-gemma-qat-shape-v1.json).
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
