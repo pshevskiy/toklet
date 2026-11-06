@@ -10687,3 +10687,11 @@ tiles retain original packed bytes, peak physical memory is3.53GB on Mac,
 and the full Q4 storage regression passes. Astra approved immutable
 storage. Execution and quality remain separate.
 [Evidence](../benchmarks/results/2026-11-06-gemma-qat-resident-v1.json)
+
+## 6 November 2026 — Freeze independent QAT prefix references
+
+The mathematical FP64 and staged FP32 oracles capture124 records across
+the 213- and 71-token causal prefixes. All576 authored rational controls
+pass and peak physical memory is268MB. Astra verified the row hashes,
+runtime pins and owned exit. Native fidelity still requires comparison.
+[Evidence](../benchmarks/results/2026-11-06-gemma-qat-native-reference-v1.json)

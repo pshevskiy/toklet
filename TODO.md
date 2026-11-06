@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Independent QAT prefix oracle and explicit mixed session.**
+Current task: **Explicit mixed QAT diagnostic session and frozen prefix comparison.**
 Completed: source-matched native41 package selected, with Mac offline regression
 and both iOS SDK builds. [Evidence](benchmarks/results/2026-11-06-chunk-pools-native41-v1.json).
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
@@ -603,6 +603,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
   - [x] Authenticated mixed resident QAT storage, exact budget and original
     bytes pass on Mac. Default 584, Metal 698, four hardware witnesses and
     Astra review pass. [Evidence](benchmarks/results/2026-11-06-gemma-qat-resident-v1.json).
+  - [x] Independent QAT math and staged references captured both disputed
+    prefixes. Astra verified all124 records and the owned exit.
+    [Evidence](benchmarks/results/2026-11-06-gemma-qat-native-reference-v1.json).
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).

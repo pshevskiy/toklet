@@ -1,0 +1,48 @@
+{
+  "passed": true,
+  "revision": "42f62737af7a9fd8c1d55d79666c1a217be4e2e2",
+  "cases": [
+    {
+      "id": "HumanEval/4",
+      "selected_positions": [
+        0,
+        212
+      ]
+    },
+    {
+      "id": "lambada/row-29",
+      "selected_positions": [
+        0,
+        70
+      ]
+    }
+  ],
+  "contracts": [
+    "math_fp64",
+    "staged_fp32"
+  ],
+  "tolerances": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "records": 124,
+  "rational_checks": 576,
+  "raw_bytes": 43991040,
+  "physical_peak_bytes": 267781032,
+  "process_limit_bytes": 6442450944,
+  "group_absent": true,
+  "evidence_directory": "artifacts/gemma-qat-native-reference-2026-11-06",
+  "sha256": {
+    "plan.json": "26fea0d19e67f1535723d8b67f53eda11e8f532b8972d9ec25c4043fda76a057",
+    "reference.py": "5865f09ffcc47224661f833d755bbca66eb058752f0c646e43457ae0ec5b68b1",
+    "prepare.py": "0b995a38e96c9b2bdd69b7cb8a86c2ab1f89b6e98d7fca48e289a9bb4222726f",
+    "owned.py": "83b2f4e294e5a735e5d2c2fcdf349609f6fb1e86d99e00cc2f66345cd4811edc",
+    "operator-runtime.json": "6feaff49837d09095df0d687e1b98fe47d4cf04e186be744dc6f886152899c7f",
+    "reference.json": "99fe3128e934ff9e3238137df1f29e7b49e50033e0c1faa5fd09549f6e46a9e8",
+    "rows.bin": "7cd201fa561b8e7845c7458cfdd6694cc11c2a91b159962160e7df97ab2929cd",
+    "owned.json": "32579c651b9dab059a650e4e956fcf74f613597f513013d5c88992a55e9513b8"
+  },
+  "reproduce": "From repository root, preserve the prior outputs and use the exact checked producer and pinned manifests in the evidence directory. Invoke the owned runner with .venv/bin/python; it sets the clean runtime environment and runs the producer with -s -B. Output is exclusive-create. The preliminary runtime-inventory rejection is retained under initial/.",
+  "review": "Astra verified 124 record hashes, exact positions and shape, independent source and runtime pins, and the owner exit.",
+  "scope": "Independent oracle capture. Native comparison and stock quality remain separate."
+}
