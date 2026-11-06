@@ -214,6 +214,35 @@ The other text tensors require4,559,518,278 raw bytes. [Official source inventor
    Scope larger transfer bounds to this exact Mac manifest and resolved shard
    URL. Keep 64-bit range, cancellation, disk admission and publication checks.
 
+#### Prospective ordered BF16 arithmetic gate
+
+Astra reviewed this policy before the full exploratory comparison. The prior
+dual-reference rejection stands. Qualification under this separately named
+profile requires a fresh owned reference and a distinct holdout. Existing
+exploratory output is diagnostic evidence.
+
+- Use the pinned original BF16 text weights. Center projection comparisons
+  on independently rounded BF16×FP32 dots. Exact fallback covers ambiguous
+  nearest-even boundaries. Bind the binary64 reduction assumptions, outward
+  intervals, exact fallback, source closure and provider before collection.
+- Propagate the complete graph from raw token IDs. Fix FP32 storage points,
+  chronological FP64 attention and norm reductions, binary64 rotary with
+  FP32 trigonometric values, and binary64 softcap with one FP32 store. This
+  reference defines projection arithmetic independently of Metal's compensated
+  lane reduction. Preserve provider distinctions and test their effects.
+- Compare all frozen1,025-token retained K/V values and eight full logits
+  in both schedules at the original `1e-5 + 1e-4 * abs(reference)` gate.
+  Require every greedy decision, exact state and no omitted coordinates.
+  Preserve mutation, source, ownership, allocation and6GiB process gates.
+- Freeze the holdout to 651 raw IDs from `benchmarks/gemma-quality-v1/held_out_loss.u32le`
+  at indices `[2048, 2699)`. The slice SHA-256 is
+  `64ff1c8f61b4546ab26bfffee1a23a50cc1ff4bba73e400a06ce77e3a277839c`.
+  Compare anchors0/31/127/433/511/512/649/650, complete producer chronology
+  through the window boundary, both native schedules and exact greedy/state.
+- Retain original-relative loss and isolated task grading for the same
+  numerical engine and require both before managed Mac adoption. Any
+  exploratory rejection calls for localization on identical operands.
+
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 
 The [short alignment](../benchmarks/results/2026-11-06-qwen15-original-alignment-v1.json)

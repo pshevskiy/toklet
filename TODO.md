@@ -665,6 +665,10 @@ uses the existing full saved-conversation reset+prompt path on Send.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-producer-trace-v1.json).
     - [ ] Trace the staged value-cache deviations at508 and826. Use the
       result to define a complete independent native arithmetic reference.
+    - [ ] Evaluate the prospective ordered BF16 gate on the frozen wrap and
+      distinct651-token holdout. Initial runtime and projection-width failures
+      are retained. The corrected exploratory prefix passes.
+      [Policy](docs/todo-implementation-plans.md#prospective-ordered-bf16-arithmetic-gate).
     - [ ] Complete replay and isolated grading for the frozen100 tasks.
 
 - [x] Reconcile completed adapters and exact supported configurations with the
