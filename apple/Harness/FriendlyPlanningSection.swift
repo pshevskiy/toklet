@@ -35,7 +35,7 @@ struct FriendlyPlanningSection: View {
                     Text("Preview working allowance: \(bytes(UInt64(NativePreviewResult.requiredApplicationAllowance))). This is outside the engine estimate.")
                 }.font(.footnote).foregroundStyle(.secondary)
             } else if store.state.acceptedIdentity?.profile == .gemmaBF16 {
-                Text("Gemma opens with a 512-token shared window. Its active cache size is shown below.")
+                Text("Gemma applies window and cache settings at model open. Its active cache size is shown below.")
                     .font(.footnote).foregroundStyle(.secondary)
             } else {
                 Text("Open this conversation’s model before previewing. No model is selected or downloaded here.")
@@ -64,6 +64,9 @@ struct FriendlyPlanningSection: View {
                 Text("For the managed Qwen2 model only. Choose Reopen with new limit in Models to unload and reopen it. Editing this choice does not change the open model or saved preferences. The initial session is still 512 tokens; Preview and Apply can change its KV capacity within the admitted model limit.")
                 Text("Input and reply share the active chat window. Replies remain limited to 256 tokens. Text and message limits still apply; allocating a larger window does not establish full-window quality.")
             }.font(.footnote)
+            #if os(macOS) && arch(arm64)
+            gemmaNextOpen
+            #endif
             DisclosureGroup("Loading-memory observation") {
                 Toggle("Measure model loads while enabled",isOn:Binding(get:{ chat.measureLoadingMemory },set:{ chat.setMeasureLoadingMemory($0) }))
                     .disabled(chat.loadingModel || chat.running || store.state.busy)
@@ -73,6 +76,29 @@ struct FriendlyPlanningSection: View {
                 .font(.footnote).foregroundStyle(.secondary)
         }
     }
+    #if os(macOS) && arch(arm64)
+    private var gemmaNextOpen: some View {
+        DisclosureGroup("Gemma BF16 settings for the next open") {
+            Picker("Shared window (tokens)",selection:Binding(get:{ chat.nextGemmaCapacity },set:{ chat.setGemmaCapacity($0) })) {
+                ForEach(OfficialGemmaWindow.capacities,id:\.self) { Text($0.formatted()).tag($0) }
+            }.accessibilityIdentifier("gemma-next-window")
+            Picker("Prefill chunk (tokens)",selection:Binding(get:{ chat.nextGemmaChunk },set:{ chat.setGemmaChunk($0) })) {
+                ForEach(OfficialGemmaWindow.chunks,id:\.self) { Text($0.formatted()).tag($0) }
+            }.accessibilityIdentifier("gemma-next-chunk")
+            LabeledContent("KV ceiling (MiB; blank is unlimited)") {
+                TextField("",text:Binding(get:{ chat.nextGemmaKVCeilingMiB },set:{ chat.setGemmaKVCeiling($0) }))
+                    .accessibilityLabel("Gemma next-open KV ceiling").accessibilityIdentifier("gemma-next-kv")
+            }
+            switch Result(catching:{ try chat.gemmaWindowChoice().plan() }) {
+            case .success(let planned):
+                LabeledContent("Planned KV buffers",value:bytes(planned))
+            case .failure(let error):
+                Text(error.localizedDescription).foregroundStyle(.secondary)
+            }
+            Text("Choose these before opening Gemma in Models. Toklet checks the FP32 cache and staging buffers before loading. Input and reply share the selected window.")
+        }.disabled(chat.loadingModel || chat.running || store.state.busy).font(.footnote)
+    }
+    #endif
     @ViewBuilder private var current: some View {
         if let context = store.state.modelContext, chat.hasChatModel {
             if let configuration = chat.currentSessionConfiguration {

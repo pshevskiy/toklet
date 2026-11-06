@@ -1,8 +1,11 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Connect and verify the Mac Gemma BF16 window and KV controls.**
-Selected native43 package and signed Mac build. Official BF16 passed exact
+Current task: **Add a same-owner Gemma BF16 native session replacement.**
+Next-open window and KV controls pass on the signed native44 Mac build.
+Full model reload retained 2.67 GB and correctly failed the headroom gate.
+[Evidence](benchmarks/results/2026-11-06-gemma-bf16-window-open-v1.json).
+The earlier native43 Hub build passed exact
 cached publication and network-denied Chat at 4.93 GB peak. The full public
 transfer timed out after 256 MiB and remains open.
 [Evidence](benchmarks/results/2026-11-06-gemma-bf16-mac-hub-v1.json).
@@ -708,7 +711,11 @@ uses the existing full saved-conversation reset+prompt path on Send.
     - [x] Plan exact cold KV bytes from the shared layout. Three real session
       allocations, 44 native exports, strict checks and Astra pass.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-kv-plan-v1.json).
-    - [ ] Wire and qualify Mac context/KV tuning, lifecycle and the signed app.
+    - [x] Wire Mac next-open context/KV controls. Real 384/16 open, rejection,
+      same-owner suspend/replay and signed native44 app pass Astra review.
+      [Evidence](benchmarks/results/2026-11-06-gemma-bf16-window-open-v1.json).
+    - [ ] Reuse the resident model for an atomic active session replacement,
+      then verify the rendered controls and late PLE corruption handling.
     - [x] Complete replay and isolated grading for the frozen100 tasks.
       All4,149 sampled decisions match. The grade is51/100 versus52/100,
       within the2pp gate. Astra confirms both original-quality results.

@@ -1,0 +1,43 @@
+{
+  "format": "toklet-gemma-bf16-window-open-v1",
+  "scope": "Mac next-open context and KV settings, exact first load and same-owner suspend/replay. Live resizing is a separate task.",
+  "declared_positions": 131072,
+  "loaded_limit": 512,
+  "selected_capacity": 384,
+  "chunk": 16,
+  "kv_ceiling_bytes": 16777216,
+  "planned_and_live_kv_bytes": 14745600,
+  "rejected_new_and_running_settings_preserved_prefix": true,
+  "changed_valid_future_choice_preserved_active_owner": true,
+  "actual_chat_passed": true,
+  "exact_suspend_replay": true,
+  "physical_peak_bytes": 4909961416,
+  "signed_app": true,
+  "native_exports": 44,
+  "strict_swift_checks": [
+    "compile",
+    "regressions",
+    "worker-revision",
+    "render",
+    "iphoneos",
+    "iphonesimulator"
+  ],
+  "physical_ios_tested": false,
+  "initial_failure": {
+    "full_reload_rejected": true,
+    "residual_physical_bytes": 2666007216,
+    "available_headroom_bytes": 3776443728,
+    "required_headroom_bytes": 6190792704
+  },
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-window-controls-2026-11-06/final/window-live/gpu.stdout": "4333a256fc48af609d52f261883a1d1278d6f0ab9b6c8688ccd5cfb16062e73d",
+    "artifacts/gemma-bf16-window-controls-2026-11-06/final/window-live/owned.json": "311848a078de8ba93bfdcecaab55dfe933b07f75f33c15ff65b4c740d6c0ee22",
+    "artifacts/gemma-bf16-window-controls-2026-11-06/diagnostic/window-live/gpu.stdout": "47fd3072f00bbac7d9a008ab7bf60acc0fed0f7e9f95298649f22872616f52d2",
+    "artifacts/gemma-bf16-window-controls-2026-11-06/diagnostic/window-live/owned.json": "fecbf4d025258def4d468b084bc7bcdcd0bc8e3506116ac5a27430c23884d593",
+    "artifacts/gemma-bf16-window-mobile-checks-2026-11-06/check.json": "e276bb46b3a229284a8c5df879f206c1c30dc315b83c54c7573da45fd1ca4e0d",
+    "artifacts/gemma-bf16-native44-package-2026-11-06/build.json": "fa012e565e004015883bb293e6a9cd76983a79503338bf7dcf944a71a3b710c3",
+    "artifacts/gemma-bf16-window-mac-app-2026-11-06/build.json": "aa1a2a056fdcbdda9c8760f6a741332760e27f0430e3983320d7f2978d9d089f",
+    "artifacts/gemma-bf16-window-controls-2026-11-06/package-selection.json": "3a71e1da88588463bd934a8fa81a35988e9262e606cb48bee996119391862777"
+  },
+  "review": "Astra approves next-open scope, cold checks before native loading/active teardown, exact real allocation and preserved active owner and replay. Live resizing remains separate."
+}

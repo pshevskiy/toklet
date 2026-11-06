@@ -7,6 +7,25 @@ struct LocalBenchmarkSample: Identifiable, Sendable {
     let stopReason: UInt32
 }
 
+struct OfficialGemmaWindow: Equatable, Sendable {
+    static let capacities: [UInt32] = [128,256,384,512]
+    static let chunks: [UInt32] = [1,8,16,32]
+    let capacity, chunk: UInt32
+    let kvCeiling: UInt64?
+
+    func configure(_ settings: inout NativeSettings) {
+        settings.capacity = capacity; settings.chunk = chunk; settings.gemmaKVCeiling = kvCeiling
+    }
+    func matches(_ settings: NativeSettings) -> Bool {
+        capacity == settings.capacity && chunk == settings.chunk && kvCeiling == settings.gemmaKVCeiling
+    }
+    func plan() throws -> UInt64 {
+        var settings = NativeSettings(directory:"",loadIdentity:.managedGemmaBF16)
+        configure(&settings)
+        return try settings.plannedGemmaKVBytes()
+    }
+}
+
 // Captured routing intent across unload, never artifact identity. Only a
 // successful native model+codec getter supplies consumed-byte evidence.
 struct FriendlyLoadRequest: Equatable, Sendable {
@@ -16,6 +35,7 @@ struct FriendlyLoadRequest: Equatable, Sendable {
     let conversation: UUID
     var measureLoadingMemory = false
     var loadUpper: UInt32? = nil // Captured next-load choice, never preference identity.
+    var gemmaWindow: OfficialGemmaWindow? = nil
     func isCurrent(in workspace: ChatWorkspace) -> Bool {
         workspace.selected == conversation && workspace.conversations.contains { $0.id == conversation }
     }
@@ -64,6 +84,9 @@ final class FriendlyChatStore: ObservableObject {
     @Published private(set) var loadingModel = false
     @Published private(set) var loadingName = ""
     @Published private(set) var qwen2LoadUpper: UInt32 = 512
+    @Published private(set) var nextGemmaCapacity: UInt32 = 512
+    @Published private(set) var nextGemmaChunk: UInt32 = 32
+    @Published private(set) var nextGemmaKVCeilingMiB = ""
     @Published private(set) var measureLoadingMemory = false
     @Published var notice = ""
     @Published var storageError = ""
@@ -358,6 +381,27 @@ final class FriendlyChatStore: ObservableObject {
         guard !loadingModel, !running else { return }
         qwen2LoadUpper = upper
     }
+    func setGemmaCapacity(_ value: UInt32) {
+        guard !loadingModel, !running, OfficialGemmaWindow.capacities.contains(value) else { return }
+        nextGemmaCapacity = value
+    }
+    func setGemmaChunk(_ value: UInt32) {
+        guard !loadingModel, !running, OfficialGemmaWindow.chunks.contains(value) else { return }
+        nextGemmaChunk = value
+    }
+    func setGemmaKVCeiling(_ value: String) {
+        guard !loadingModel, !running else { return }
+        nextGemmaKVCeilingMiB = String(value.prefix(16))
+    }
+    func gemmaWindowChoice() throws -> OfficialGemmaWindow {
+        let value = nextGemmaKVCeilingMiB.trimmingCharacters(in:.whitespacesAndNewlines)
+        var ceiling: UInt64?
+        if !value.isEmpty {
+            guard let mib = UInt64(value), mib <= 6144 else { throw NativeContextFailure("Enter a KV ceiling from 0 to 6144 MiB, or leave it blank.") }
+            ceiling = mib * 1024 * 1024
+        }
+        return OfficialGemmaWindow(capacity:nextGemmaCapacity,chunk:nextGemmaChunk,kvCeiling:ceiling)
+    }
     func setMeasureLoadingMemory(_ enabled: Bool) {
         guard !loadingModel, !running else { return }
         measureLoadingMemory = enabled
@@ -388,19 +432,26 @@ final class FriendlyChatStore: ObservableObject {
             let profile = try HubProfile.identify(folder)
             guard FriendlyLoadRequest.matches(mode,profile:profile) else { throw HubFailure(profile == .llama3 && mode == .ordinary ? "Open Llama from Models to use its validated setup." : "The selected folder does not match the requested managed profile") }
             let loadUpper = mode == .managedQwen2 ? qwen2LoadUpper : nil
+            let gemmaWindow = mode == .managedGemmaBF16 ? try gemmaWindowChoice() : nil
             // Validate the captured choice before workspace saves or old-owner teardown.
             var initial = NativeSettings(directory:folder.path)
-            initial.loadIdentity = mode; initial.metal = true; initial.mlx = true; initial.chat = true
+            initial.loadIdentity = mode; initial.metal = true; initial.mlx = mode != .managedGemmaBF16; initial.chat = true
             initial.capacity = NativeSettings.chatContextPositions; initial.loadUpper = loadUpper
             _ = try initial.admittedLoadUpper()
-            if hasChatModel && loadedKey == key(folder) && planningLoad?.settings.loadIdentity == mode
-                && planningLoad?.settings.loadUpper == loadUpper { notice = "This model is already open."; return }
+            if let gemmaWindow { _ = try gemmaWindow.plan() }
+            if hasChatModel && loadedKey == key(folder), let current = planningLoad?.settings,
+               current.loadIdentity == mode, current.loadUpper == loadUpper {
+                if let gemmaWindow, !gemmaWindow.matches(current) {
+                    notice = "Gemma is already open. Your selection is ready for its next load."
+                } else { notice = "This model is already open." }
+                return
+            }
             if workspace.current.modelKey != key(folder), !workspace.current.messages.isEmpty { try workspace.newChat(modelKey:key(folder)) }
             workspace.conversations[workspace.selectedIndex].modelKey = key(folder)
             save()
             loadPreferenceEdit = preferenceEdit
             preferenceMessage = ""
-            let request = FriendlyLoadRequest(folder:folder,mode:mode,conversation:workspace.selected,measureLoadingMemory:measureLoadingMemory,loadUpper:loadUpper)
+            let request = FriendlyLoadRequest(folder:folder,mode:mode,conversation:workspace.selected,measureLoadingMemory:measureLoadingMemory,loadUpper:loadUpper,gemmaWindow:gemmaWindow)
             acceptedIdentity = nil
             if harness.state.hasModel {
                 loadingName = profile.name; loadingModel = true; pendingLoad = FriendlyAcceptingLoad(request:request,worker:ObjectIdentifier(worker)); worker.interrupt(unload:true); harness.poll()
@@ -441,6 +492,7 @@ final class FriendlyChatStore: ObservableObject {
         settings.metal = true; settings.mlx = request.mode != .managedGemmaBF16; settings.chat = true
         settings.capacity = NativeSettings.chatContextPositions; settings.chunk = 32; settings.loadUpper = request.loadUpper
         settings.numericalBudget = profile.numericalBudget; settings.textBudget = profile.textBudget
+        request.gemmaWindow?.configure(&settings)
         if worker.submit(.load(settings)) {
             acceptingLoad = FriendlyAcceptingLoad(request:request,worker:ObjectIdentifier(worker))
             planningLoad = FriendlyPlanningLoad(worker:ObjectIdentifier(worker),settings:settings,coexistenceBudget:profile.processAllowance)

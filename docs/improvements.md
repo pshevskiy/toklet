@@ -10957,3 +10957,12 @@ allocations match at 128/1, 384/16, and 512/32. The largest is 20.05 MB.
 Astra approves after 589 default and 708 Metal tests and all 44 native exports.
 Metal lint initially flagged helper placement and passed after relocation.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-kv-plan-v1.json)
+
+## 6 November 2026 — Choose the Mac Gemma window and KV limit before opening
+
+The signed native44 Mac build keeps a loaded limit of 512 and opens a selected
+384-token window with chunk16 and exactly 14.75 MB of KV. Rejected edits keep
+the active prefix and draft, and suspend/replay restores the selected settings.
+Astra approves after Swift6 checks. Full reload failed the unchanged headroom
+gate with 2.67 GB retained. Active replacement stays a separate task.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-window-open-v1.json)

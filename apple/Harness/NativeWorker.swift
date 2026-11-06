@@ -18,6 +18,7 @@ struct NativeSettings: Sendable {
     // Explicitly supported only for managed Qwen2 in this bounded integration.
     var loadUpper: UInt32? = nil
     var chunk: UInt32 = 3
+    var gemmaKVCeiling: UInt64?
     var numericalBudget: UInt64 = 128 * 1024 * 1024
 
     var planningAttention: NativeCapacityPlan.AttentionPolicy {
@@ -25,12 +26,24 @@ struct NativeSettings: Sendable {
     }
 
     func admittedLoadUpper() throws -> UInt32 {
-        guard let loadUpper else { return capacity }
+        guard let loadUpper else {
+            return loadIdentity == .managedGemmaBF16 ? Self.chatContextPositions : capacity
+        }
         guard loadIdentity == .managedQwen2, metal, mlx, chat, packedDirectory.isEmpty,
               (loadUpper == 512 || loadUpper == 1024), capacity > 0, capacity <= loadUpper else {
             throw NativeContextFailure("The separate model limit requires managed Qwen2, 512 or 1024 positions, and an initial window within that limit.")
         }
         return loadUpper
+    }
+
+    func plannedGemmaKVBytes() throws -> UInt64 {
+        guard loadIdentity == .managedGemmaBF16 else { throw NativeContextFailure("Choose the official Gemma profile first.") }
+        var bytes: UInt64 = 0, error = TokletError()
+        try requireOK(toklet_gemma_bf16_plan_kv(capacity,chunk,&bytes,&error),&error)
+        guard bytes > 0, gemmaKVCeiling.map({ bytes <= $0 }) ?? true else {
+            throw NativeContextFailure("This Gemma window needs \(bytes.formatted()) KV bytes. Increase the KV ceiling or choose a smaller window or chunk.")
+        }
+        return bytes
     }
 
     func loadOptions() throws -> TokletOptions {
@@ -875,6 +888,7 @@ private final class Engine {
             let retained = NativeModelContext(fresh)
             guard let settings, fresh.capacity == UInt64(settings.capacity),
                   fresh.offset == 0, fresh.backend == (settings.metal ? TOKLET_CONTEXT_METAL : TOKLET_CONTEXT_CPU),
+                  settings.loadIdentity != .managedGemmaBF16 || fresh.loadedLimit == UInt64(NativeSettings.chatContextPositions),
                   settings.loadUpper.map({ fresh.loadedLimit == UInt64($0) }) ?? true,
                   modelContext == nil || modelContext == retained else {
                 throw invalid("Native context does not match the loaded model/settings")
@@ -979,15 +993,17 @@ private final class Engine {
         guard let model, let settings else { throw invalid("Load a model first") }
         // Retained settings are resume policy, not a live accepted request.
         sessionConfiguration = nil; sessionMemory = nil
+        let gemmaKV = settings.loadIdentity == .managedGemmaBF16 ? try settings.plannedGemmaKVBytes() : nil
         var options = settings.options(); var error = TokletError()
         try requireOK(toklet_session_create(model, &options, &session, &error), &error)
         try requireOK(toklet_session_state(session, &report, &error), &error)
         admissionUpperBound = max(admissionUpperBound,report.admitted_bytes)
         try refreshContext()
         if let session, let context = liveContext, let configuration = sessionConfiguration {
-            if settings.loadIdentity == .managedGemmaBF16 {
+            if let gemmaKV {
                 var memory = TokletGemmaBf16MemoryInfo()
                 try requireOK(toklet_session_gemma_bf16_memory(session,&memory,&error),&error)
+                guard memory.kv_owned_bytes == gemmaKV else { throw invalid("Gemma KV allocation differs from the admitted plan") }
                 sessionMemory = try NativeSessionMemorySnapshot.officialGemma(memory,context:context,configuration:configuration)
             } else {
                 sessionMemory = NativeSessionMemorySnapshot.inspect(model:model,session:session,context:context,configuration:configuration)
@@ -1104,6 +1120,9 @@ private final class Engine {
                       requested.textBudget == 0, (1...512).contains(requested.capacity) else {
                     throw invalid("Official Gemma BF16 needs its Mac Metal text route and a window up to 512 positions")
                 }
+                _ = try requested.plannedGemmaKVBytes()
+            } else if requested.gemmaKVCeiling != nil {
+                throw invalid("The next-load KV ceiling requires the official Gemma route")
             } else if requested.loadIdentity != .ordinary {
                 guard requested.metal, requested.mlx, requested.chat, requested.packedDirectory.isEmpty else {
                     throw invalid("Audited managed identity requires native MLX Chat loading")
