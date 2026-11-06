@@ -231,6 +231,7 @@ struct NativeSessionMemorySnapshot: Sendable {
     enum Reading: Sendable {
         case available(shared: NativeTransitionPlan.Shared, owned: NativeTransitionPlan.Owned,
                        driverAllowance: UInt64, bridgeAllowance: UInt64, storage: String)
+        case officialGemma(loadAdmission: UInt64, sessionAdmission: UInt64, kv: UInt64, codecAllowance: UInt64)
         case unavailable(String)
     }
     let configuration: NativeSessionConfiguration
@@ -240,6 +241,27 @@ struct NativeSessionMemorySnapshot: Sendable {
         guard let context, current == configuration else { return false }
         return context.modelInstance == configuration.modelInstance && context.sessionInstance == configuration.sessionInstance
             && context.capacity == UInt64(configuration.capacity) && context.offset == 0
+    }
+    static func officialGemma(_ value: TokletGemmaBf16MemoryInfo, context: NativeContextFacts,
+                              configuration: NativeSessionConfiguration) throws -> Self {
+        let combined = context.numericalAdmission.addingReportingOverflow(value.session_reserved_bytes)
+        guard value.abi_version == TOKLET_ABI_VERSION,
+              value.struct_size == UInt32(MemoryLayout<TokletGemmaBf16MemoryInfo>.size),
+              context.backend == TOKLET_CONTEXT_METAL,
+              context.modelInstance == configuration.modelInstance,
+              context.sessionInstance == configuration.sessionInstance,
+              context.capacity == UInt64(configuration.capacity),
+              !combined.overflow, combined.partialValue == value.session_admitted_bytes,
+              value.session_admitted_bytes <= configuration.wholeSessionBudget,
+              value.load_admitted_bytes > value.session_reserved_bytes,
+              value.load_admitted_bytes <= configuration.wholeSessionBudget,
+              value.codec_allowance_bytes == 1 << 30,
+              value.codec_allowance_bytes <= value.session_reserved_bytes,
+              value.kv_owned_bytes > 0, value.kv_owned_bytes <= context.numericalAdmission else {
+            throw NativeContextFailure("Invalid official Gemma memory record")
+        }
+        return Self(configuration:configuration,reading:.officialGemma(loadAdmission:value.load_admitted_bytes,
+            sessionAdmission:value.session_admitted_bytes,kv:value.kv_owned_bytes,codecAllowance:value.codec_allowance_bytes))
     }
     static func capture(configuration: NativeSessionConfiguration,
                         inspect: () throws -> NativeTransitionPlan) -> Self {

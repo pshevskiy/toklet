@@ -33,7 +33,7 @@ struct FriendlyIdentityLoadedMain {
                              "manifest_sha256":value.namespace.manifestSHA256,"backend":value.namespace.backend,
                              "load":value.namespace.load,"text":value.namespace.text,"planning":value.namespace.planning],
                 "model_instance":value.modelInstance,"loaded_limit":value.loadedLimit,
-                "source_ranges":value.sourceRanges,"source_reads":value.sourceReads,
+                "source_ranges":value.sourceRanges as Any? ?? NSNull(),"source_reads":value.sourceReads as Any? ?? NSNull(),
                 "assets":value.assets.map { ["name":$0.name,"bytes":$0.bytes,"sha256":$0.sha256,"roles":$0.roles] as [String:Any] }] as [String:Any]
     }
     static func frame(_ event: String, _ worker: NativeWorker, _ chat: FriendlyChatStore, _ file: URL, _ writes: Int) throws {

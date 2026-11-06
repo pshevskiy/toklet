@@ -81,7 +81,7 @@ struct FriendlyPlanningSection: View {
                     .font(.footnote).foregroundStyle(.secondary)
             }
             DisclosureGroup("Active chat details") {
-                LabeledContent("Loaded model window",value:positions(context.declaredTotal))
+                LabeledContent("Declared model window",value:positions(context.declaredTotal))
                 LabeledContent("Declared input limit",value:positions(context.declaredInput))
                 LabeledContent("Declared output limit",value:positions(context.declaredOutput))
                 LabeledContent("Global engine ceiling",value:context.engineGlobalCeiling.formatted())
@@ -93,8 +93,10 @@ struct FriendlyPlanningSection: View {
                 if let plan = store.state.runtimePlan {
                     LabeledContent("KV estimate when model opened",value:bytes(plan.sessionMemory.kvBytes))
                     LabeledContent("Engine fit when opened",value:plan.fitsRequestedBudgets ? "Fit at load" : "Did not fit")
-                } else { Text("The memory report from opening this model is unavailable.") }
-                if let live = store.state.liveContext {
+                } else if store.state.acceptedIdentity?.profile != .gemmaBF16 {
+                    Text("The memory report from opening this model is unavailable.")
+                }
+                if let live = store.state.liveContext, store.state.acceptedIdentity?.profile != .gemmaBF16 {
                     LabeledContent("Current admission with allowances",value:bytes(live.numericalAdmission))
                 }
                 if let memory = store.state.sessionMemory,
@@ -142,6 +144,11 @@ struct FriendlyPlanningSection: View {
             LabeledContent("Separate driver allowance",value:bytes(driver))
             LabeledContent("Separate bridge allowance",value:bytes(bridge))
             Text("Shared weights are counted once. This snapshot is not refreshed per token; history storage may grow. It excludes loading peaks and app/process memory.")
+        case .officialGemma(let load,let session,let kv,let codec):
+            LabeledContent("Combined model load admission",value:bytes(load))
+            LabeledContent("Combined session admission",value:bytes(session))
+            LabeledContent("KV buffers",value:bytes(kv))
+            LabeledContent("Codec allowance included above",value:bytes(codec))
         case .unavailable(let reason):
             Text("Owner memory report unavailable: " + reason)
         }

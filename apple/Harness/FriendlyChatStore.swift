@@ -40,6 +40,7 @@ struct FriendlyLoadRequest: Equatable, Sendable {
         case .smol: return profile == .smol
         case .mistral: return profile == .mistral
         case .llama3: return profile == .llama3
+        case .gemmaBF16: return profile.repository == expected.repository && profile.revision == expected.revision
         }
     }
 }

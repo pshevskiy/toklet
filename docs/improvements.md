@@ -10931,3 +10931,12 @@ The real Mac reply, bounds, lifetime and dense Qwen2 regression pass.
 Peak physical memory is 4.92 GB. Astra approves after 589 default and
 707 Metal tests. Two overlapping CLI checks passed on the serial rerun.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-native-chat-v1.json)
+
+## 6 November 2026 — Open official Gemma BF16 through the Mac Swift worker
+
+The explicit Metal route publishes exact identity, context and combined
+memory after successful setup. The optimized offline reply, Stop and replay
+pass at 4.92 GB peak, with 20.05 MB of KV buffers. The first witness used the
+test binary's session size, 16 bytes above production. The corrected checks,
+both iOS SDK builds and Astra review pass.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-mac-worker-v1.json)

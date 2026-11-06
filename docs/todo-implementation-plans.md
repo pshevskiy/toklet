@@ -230,6 +230,7 @@ The other text tensors require4,559,518,278 raw bytes. [Official source inventor
      Chat, Stop, suspend/replay and unload on the verified local source. Report
      the declared window, loaded limit, remaining output, exact KV bytes and
      combined admission without counting the codec twice.
+     [Worker evidence](../benchmarks/results/2026-11-06-gemma-bf16-mac-worker-v1.json).
    - Scope Hub discovery and large transfer to the pinned Mac profile. Check
      search, SHA-verified publication, cancel, disk limits and network-denied
      reopen. Keep generic transfer bounds and iPhone eligibility.

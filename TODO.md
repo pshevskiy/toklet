@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Connect the official Gemma BF16 profile to the Mac Swift worker and verify Chat and live memory.**
+Current task: **Add exact Mac Hub discovery and authenticated transfer for official Gemma BF16.**
 Completed: source-matched native41 package selected, with Mac offline regression
 and both iOS SDK builds. [Evidence](benchmarks/results/2026-11-06-chunk-pools-native41-v1.json).
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
@@ -695,7 +695,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
     - [x] Bind audited native Chat to the existing codec reservation and exact
       identity. Real Gemma and Qwen2 regression, serial checks and Astra pass.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-native-chat-v1.json).
-    - [ ] Integrate Mac Swift Chat, exact identity, context and live memory.
+    - [x] Integrate Mac Swift Chat, exact identity, context and live memory.
+      Real Stop and replay, Mac and both iOS SDK checks, and Astra pass.
+      [Evidence](benchmarks/results/2026-11-06-gemma-bf16-mac-worker-v1.json).
     - [ ] Add exact Mac Hugging Face discovery, verified transfer and offline use.
     - [ ] Verify context/KV tuning, lifecycle and the source-matched Mac app.
     - [x] Complete replay and isolated grading for the frozen100 tasks.

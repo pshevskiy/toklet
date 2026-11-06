@@ -985,7 +985,13 @@ private final class Engine {
         admissionUpperBound = max(admissionUpperBound,report.admitted_bytes)
         try refreshContext()
         if let session, let context = liveContext, let configuration = sessionConfiguration {
-            sessionMemory = NativeSessionMemorySnapshot.inspect(model:model,session:session,context:context,configuration:configuration)
+            if settings.loadIdentity == .managedGemmaBF16 {
+                var memory = TokletGemmaBf16MemoryInfo()
+                try requireOK(toklet_session_gemma_bf16_memory(session,&memory,&error),&error)
+                sessionMemory = try NativeSessionMemorySnapshot.officialGemma(memory,context:context,configuration:configuration)
+            } else {
+                sessionMemory = NativeSessionMemorySnapshot.inspect(model:model,session:session,context:context,configuration:configuration)
+            }
         }
     }
     func refreshHistory() throws {
@@ -1093,8 +1099,15 @@ private final class Engine {
                   !requested.mlx || (requested.metal && requested.packedDirectory.isEmpty) else {
                 throw invalid("MLX requires Metal and no separate Q4 folder; packed Q4 requires Metal")
             }
-            guard requested.loadIdentity == .ordinary || (requested.metal && requested.mlx && requested.chat && requested.packedDirectory.isEmpty) else {
-                throw invalid("Audited managed identity requires native MLX Chat loading")
+            if requested.loadIdentity == .managedGemmaBF16 {
+                guard requested.metal, !requested.mlx, requested.chat, requested.packedDirectory.isEmpty,
+                      requested.textBudget == 0, (1...512).contains(requested.capacity) else {
+                    throw invalid("Official Gemma BF16 needs its Mac Metal text route and a window up to 512 positions")
+                }
+            } else if requested.loadIdentity != .ordinary {
+                guard requested.metal, requested.mlx, requested.chat, requested.packedDirectory.isEmpty else {
+                    throw invalid("Audited managed identity requires native MLX Chat loading")
+                }
             }
             guard (1...32768).contains(requested.capacity), requested.chunk > 0 else { throw invalid("Invalid capacity/chunk") }
             let loadUpper = try requested.admittedLoadUpper()
@@ -1125,7 +1138,8 @@ private final class Engine {
             var options = try requested.loadOptions(); var error = TokletError()
             let code = path.withUnsafeBufferPointer { path in
                 packed.withUnsafeBufferPointer { packed in
-                    requested.loadIdentity == .managedSmol ? toklet_model_load_mlx_smol_audited(path.baseAddress,path.count,&options,&model,&error)
+                    requested.loadIdentity == .managedGemmaBF16 ? toklet_model_load_gemma_bf16_audited(path.baseAddress,path.count,&options,&model,&error)
+                    : requested.loadIdentity == .managedSmol ? toklet_model_load_mlx_smol_audited(path.baseAddress,path.count,&options,&model,&error)
                     : requested.loadIdentity == .managedQwen2 ? toklet_model_load_mlx_qwen2_audited(path.baseAddress,path.count,&options,&model,&error)
                     : requested.loadIdentity == .managedQwen15 ? toklet_model_load_mlx_qwen15_audited(path.baseAddress,path.count,&options,&model,&error)
                     : requested.loadIdentity == .managedQwen3 ? toklet_model_load_mlx_qwen3_audited(path.baseAddress,path.count,&options,&model,&error)
@@ -1148,7 +1162,7 @@ private final class Engine {
                         chatCode = toklet_chat_create(model,requested.textBudget,&chat,&error)
                     case .managedQwen3:
                         chatCode = toklet_chat_create_qwen3_audited(model,requested.textBudget,&chat,&error)
-                    case .managedSmol, .managedQwen2, .managedQwen15, .managedMistral, .managedLlama3:
+                    case .managedSmol, .managedQwen2, .managedQwen15, .managedMistral, .managedLlama3, .managedGemmaBF16:
                         chatCode = toklet_chat_create_complete_audited(model,requested.textBudget,&chat,&error)
                     }
                     try requireOK(chatCode,&error)

@@ -1,0 +1,54 @@
+{
+  "format": "toklet-gemma-bf16-mac-worker-v1",
+  "scope": "Mac Swift worker and accepted identity parsing, with the pinned offline source. Managed Hub exposure is separate.",
+  "checks": {
+    "passed": true,
+    "results": {
+      "mac-app": 0,
+      "FriendlyIdentityLoadedMain": 0,
+      "FriendlySmolPreferenceLoadedMain": 0,
+      "FriendlyQwen2PreferenceLoadedMain": 0,
+      "FriendlyMistralPreferenceLoadedMain": 0,
+      "identity-compile": 0,
+      "identity-run": 0,
+      "iphoneos-app": 0,
+      "iphonesimulator-app": 0
+    },
+    "archive_sha256": "26113c06b8a827da75b84930a1b45320406173c601da66e422f5d5a374337bd9"
+  },
+  "unchanged_rust_tests": {
+    "default": 589,
+    "metal": 707,
+    "evidence": "benchmarks/results/2026-11-06-gemma-bf16-native-chat-v1.json"
+  },
+  "dense_identity_controls": 100,
+  "production_owner_bytes": {
+    "load": 5717853922,
+    "session": 5814091904,
+    "kv": 20054016,
+    "codec_included": 1073741824
+  },
+  "declared_positions": 131072,
+  "loaded_positions": 512,
+  "hidden_stop": 106,
+  "peak_physical_bytes": 4920856848,
+  "state": [
+    "exact eight reply IDs",
+    "full visible prefix decode",
+    "suspend",
+    "exact prefix replay",
+    "stop after first token",
+    "unload"
+  ],
+  "first_draft_failure": "The first witness asserted Rust cfg(test) owner bytes against the production archive. The session admission differs by 16 bytes. The corrected witness checks the real report equation, configured budget and exact KV and codec sizes.",
+  "physical_ios_tested": false,
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-mac-worker-2026-11-06/swift-checks.json": "09e2520c71413e06986ed5ebb4f7b0bbe6d65f85a60f81ae5c7cbc6002047d90",
+    "artifacts/gemma-bf16-mac-worker-2026-11-06/identity-run.stdout": "6716e8a0e86d4936a69da068cfaf87669f482f0093f02b2a5e4ede7007a8f25d",
+    "artifacts/gemma-bf16-mac-worker-2026-11-06/worker-live/owned.json": "df4639774c8d2f0ce4ecac5568ce7b7dc24c5022827beb845b03d8e930437577",
+    "artifacts/gemma-bf16-mac-worker-2026-11-06/worker-live/gpu.stdout": "3c190414bee661cc0d2cd5119d67a8182735e0b17ab33dfd3e0bbf47eeae5e8a",
+    "artifacts/gemma-bf16-mac-app-draft-2026-11-06/worker-live/owned.json": "16236bdc07ef0bf26009ad12c59083bba2ddd50578b0d7ea391fc10e5aa662f4",
+    "artifacts/gemma-bf16-mac-app-draft-2026-11-06/worker-live/gpu.stderr": "f78e979ee1aa1daef893c59213c17b987a5d090db0a84f63e35a8adaaecc69e5"
+  },
+  "review": "Astra approves the exact distinct schema, explicit worker route, no duplicate codec allowance, combined memory validation, legacy behavior and offline journey. Managed catalog and source-matched package selection remain separate."
+}

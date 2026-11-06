@@ -12,8 +12,9 @@ enum NativeLoadIdentity: String, Sendable, Equatable {
     case managedSmol = "managed_smol_audited_v1"
     case managedMistral = "managed_mistral_audited_v1"
     case managedLlama3 = "managed_llama3_audited_v1"
+    case managedGemmaBF16 = "managed_gemma_bf16_audited_v1"
     var identityProfile: NativeAcceptedIdentity.Profile? {
-        switch self { case .ordinary: nil; case .managedQwen2: .qwen2; case .managedQwen15: .qwen15; case .managedQwen3: .qwen3; case .managedSmol: .smol; case .managedMistral: .mistral; case .managedLlama3: .llama3 }
+        switch self { case .ordinary: nil; case .managedQwen2: .qwen2; case .managedQwen15: .qwen15; case .managedQwen3: .qwen3; case .managedSmol: .smol; case .managedMistral: .mistral; case .managedLlama3: .llama3; case .managedGemmaBF16: .gemmaBF16 }
     }
 }
 
@@ -32,15 +33,15 @@ struct NativeAcceptedIdentity: Equatable, Sendable {
     // A concrete engine-policy allowlist, shared by wire decoding and preferences.
     // Profile recognition selects a route; only the native report proves pairing.
     enum Profile: CaseIterable, Equatable, Sendable {
-        case qwen2, qwen15, qwen3, smol, mistral, llama3
+        case qwen2, qwen15, qwen3, smol, mistral, llama3, gemmaBF16
         var repository: String {
-            switch self { case .qwen2: "mlx-community/Qwen2.5-0.5B-Instruct-8bit"; case .qwen15: "mlx-community/Qwen2.5-1.5B-Instruct-8bit"; case .qwen3: "mlx-community/Qwen3-0.6B-8bit"; case .smol: "mlx-community/SmolLM2-135M-Instruct-8bit"; case .mistral: "mlx-community/Mistral-7B-Instruct-v0.3-4bit"; case .llama3: "mlx-community/Llama-3.2-1B-Instruct-8bit" }
+            switch self { case .qwen2: "mlx-community/Qwen2.5-0.5B-Instruct-8bit"; case .qwen15: "mlx-community/Qwen2.5-1.5B-Instruct-8bit"; case .qwen3: "mlx-community/Qwen3-0.6B-8bit"; case .smol: "mlx-community/SmolLM2-135M-Instruct-8bit"; case .mistral: "mlx-community/Mistral-7B-Instruct-v0.3-4bit"; case .llama3: "mlx-community/Llama-3.2-1B-Instruct-8bit"; case .gemmaBF16: "google/gemma-4-E2B-it" }
         }
         var revision: String {
-            switch self { case .qwen2: "6474d4c1a05bd7bd634a9c993560e4e7272eda3d"; case .qwen15: "c7e1ff25efda4a2c8f7ee312380557fb42e145a2"; case .qwen3: "11de96878523501bcaa86104e3c186de07ff9068"; case .smol: "0f0d9b8218915bc34d401e1a340b8c049d300d5e"; case .mistral: "a4b8f870474b0eb527f466a03fbc187830d271f5"; case .llama3: "d48cdf0a4ea22d893b7c63a99d6a693e24822795" }
+            switch self { case .qwen2: "6474d4c1a05bd7bd634a9c993560e4e7272eda3d"; case .qwen15: "c7e1ff25efda4a2c8f7ee312380557fb42e145a2"; case .qwen3: "11de96878523501bcaa86104e3c186de07ff9068"; case .smol: "0f0d9b8218915bc34d401e1a340b8c049d300d5e"; case .mistral: "a4b8f870474b0eb527f466a03fbc187830d271f5"; case .llama3: "d48cdf0a4ea22d893b7c63a99d6a693e24822795"; case .gemmaBF16: "70af34e20bd4b7a91f0de6b22675850c43922a03" }
         }
         var manifestSHA256: String {
-            switch self { case .qwen2: "e92e6d359697d8ada4714ff4f5ff618ba8d9fc69d7abc24bfb4ec905eae6c59b"; case .qwen15: "775a61717b5785783a75a19a6a472fb8eb9ea1e5a8efbbf4c919330e7c6c209c"; case .qwen3: "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51"; case .smol: "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce"; case .mistral: "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26"; case .llama3: "61bd958bbd437cdce22122d01297318a672c605f000fedd6bb53af9ddd8ce5ff" }
+            switch self { case .qwen2: "e92e6d359697d8ada4714ff4f5ff618ba8d9fc69d7abc24bfb4ec905eae6c59b"; case .qwen15: "775a61717b5785783a75a19a6a472fb8eb9ea1e5a8efbbf4c919330e7c6c209c"; case .qwen3: "5e9aafa305e0e48182a856cafe3ae2b597599033e61b16664f42b09a4af5ff51"; case .smol: "16902411a6306407a5d330e28bc64edb3cbec3961c9db0dbb513176e8e1cb9ce"; case .mistral: "0f543bc8679995fe028857674e6e327d5baa6832453587adda92b0c45e4f4a26"; case .llama3: "61bd958bbd437cdce22122d01297318a672c605f000fedd6bb53af9ddd8ce5ff"; case .gemmaBF16: "654dc6dfd66fd893a24f0faa39355b71d5e7ffc3f53c2dac394dfcfd9ed95298" }
         }
         var namespace: Namespace {
             let load: String, text: String
@@ -51,6 +52,10 @@ struct NativeAcceptedIdentity: Equatable, Sendable {
             case .smol: load = "smol_witness_audited_v1"; text = "smol-chatml-v1"
             case .mistral: load = "mistral_audited_v1"; text = "mistral-instruct-v1"
             case .llama3: load = "llama3_audited_v1"; text = "llama3-plain-20240726-v1"
+            case .gemmaBF16:
+                return Namespace(version:1,manifestAlgorithm:"toklet-full-manifest-v1",manifestSHA256:manifestSHA256,
+                    backend:"metal_official_gemma_bf16_v1",load:"gemma_bf16_audited_v1",
+                    text:"gemma4-basic-nonthinking-v1",planning:"official_gemma_bf16_planning_v1")
             }
             return Namespace(version:1,manifestAlgorithm:"toklet-full-manifest-v1",manifestSHA256:manifestSHA256,
                 backend:"metal_native_dense_v1",load:load,text:text,planning:"native_mlx_planning_v1")
@@ -59,9 +64,29 @@ struct NativeAcceptedIdentity: Equatable, Sendable {
             switch self {
             case .qwen2, .qwen15, .qwen3, .mistral, .llama3: ["source_bytes_delivered_to_assembled_model"]
             case .smol: ["source_bytes_delivered_to_assembled_model","reference_container_digest_anchor"]
+            case .gemmaBF16: ["whole_source_authenticated","file_backed_ple_authenticated"]
             }
         }
-        func admits(loaded: UInt64, ranges: UInt64, reads: UInt64) -> Bool {
+        var reportKind: String {
+            self == .gemmaBF16 ? "accepted_official_gemma_bf16_identity" : "accepted_model_chat_identity"
+        }
+        var assetRoles: [String:[String]] {
+            var roles = ["config.json":["source_metadata_consumed","codec_config_verified"],
+                "model.safetensors":modelRoles,"tokenizer.json":["tokenizer_parser_consumed"]]
+            if self == .gemmaBF16 {
+                roles["chat_template.jinja"] = ["fixed_text_policy_verified"]
+                roles["generation_config.json"] = ["fixed_text_policy_verified"]
+                roles["tokenizer_config.json"] = ["ancillary_verified"]
+            } else {
+                roles["model.safetensors.index.json"] = ["source_metadata_consumed"]
+                roles["tokenizer_config.json"] = ["fixed_text_policy_verified"]
+                roles["special_tokens_map.json"] = ["ancillary_verified"]
+            }
+            return roles
+        }
+        func admits(loaded: UInt64, ranges: UInt64?, reads: UInt64?) -> Bool {
+            if self == .gemmaBF16 { return (1...512).contains(loaded) && ranges == nil && reads == nil }
+            guard let ranges, let reads else { return false }
             // Wire-policy bounds only; actual loaded context must also match.
             // Qwen2 uses the global ceiling, not the Qwen3/Smol/Mistral factory cap.
             let upper: UInt64 = self == .qwen2 ? 32768 : 512
@@ -78,7 +103,8 @@ struct NativeAcceptedIdentity: Equatable, Sendable {
     var profile: Profile? { Profile.matching(namespace) }
     let namespace: Namespace
     let assets: [Asset]
-    let modelInstance, loadedLimit, sourceRanges, sourceReads: UInt64
+    let modelInstance, loadedLimit: UInt64
+    let sourceRanges, sourceReads: UInt64?
 
     func matches(_ context: NativeModelContext) -> Bool {
         context.modelInstance == modelInstance && context.backend == TOKLET_CONTEXT_METAL
@@ -103,19 +129,26 @@ struct NativeAcceptedIdentity: Equatable, Sendable {
     }
     static func decode(_ data: Data, context: NativeModelContext) throws -> Self {
         let object = try GenerationJSON.object(data,maximumBytes:Int(TOKLET_MAX_COMPATIBILITY_JSON_BYTES),maximumStringBytes:128)
-        try GenerationJSON.keys(object,["schema_version","report_kind","repository","revision","preference_namespace","assets",
-            "model_instance","loaded_position_limit","source_container_physical_ranges","source_container_verified_reads",
-            "model_assembled","codec_constructed","exact_model_pair","source_receipts_equal","historical_evidence",
-            "current_disk_identity_evaluated","resident_buffer_identity_evaluated","qualification_evaluated",
-            "whole_app_device_fit_evaluated","preferences_require_fresh_admission"])
-        guard try GenerationJSON.integer(object["schema_version"]) == 1,
-              try GenerationJSON.string(object["report_kind"],maximumBytes:64) == "accepted_model_chat_identity" else { throw failure("Unsupported accepted identity schema") }
         let repository = try GenerationJSON.string(object["repository"],maximumBytes:128)
-        let revision = try GenerationJSON.string(object["revision"],maximumBytes:40)
+        let revision = try GenerationJSON.hex(object["revision"],count:40)
         guard let profile = Profile.allCases.first(where:{ $0.repository == repository && $0.revision == revision }) else {
             throw failure("Unsupported accepted identity artifact")
         }
-        for key in ["model_assembled","codec_constructed","exact_model_pair","source_receipts_equal","historical_evidence","preferences_require_fresh_admission"] {
+        var trueKeys = ["model_assembled","codec_constructed","exact_model_pair","historical_evidence","preferences_require_fresh_admission"]
+        let sourceKeys: [String]
+        if profile == .gemmaBF16 {
+            trueKeys += ["whole_source_sha256_verified","file_backed_ple"]
+            sourceKeys = []
+        } else {
+            trueKeys.append("source_receipts_equal")
+            sourceKeys = ["source_container_physical_ranges","source_container_verified_reads"]
+        }
+        try GenerationJSON.keys(object,Set(["schema_version","report_kind","repository","revision","preference_namespace","assets",
+            "model_instance","loaded_position_limit","current_disk_identity_evaluated","resident_buffer_identity_evaluated",
+            "qualification_evaluated","whole_app_device_fit_evaluated"] + trueKeys + sourceKeys))
+        guard try GenerationJSON.integer(object["schema_version"]) == 1,
+              try GenerationJSON.string(object["report_kind"],maximumBytes:64) == profile.reportKind else { throw failure("Unsupported accepted identity schema") }
+        for key in trueKeys {
             guard try GenerationJSON.boolean(object[key]) else { throw failure("Incomplete accepted identity evidence") }
         }
         for key in ["current_disk_identity_evaluated","resident_buffer_identity_evaluated","qualification_evaluated","whole_app_device_fit_evaluated"] {
@@ -129,10 +162,7 @@ struct NativeAcceptedIdentity: Equatable, Sendable {
             backend:GenerationJSON.string(policy["backend"],maximumBytes:64),load:GenerationJSON.string(policy["load"],maximumBytes:64),
             text:GenerationJSON.string(policy["text"],maximumBytes:64),planning:GenerationJSON.string(policy["planning"],maximumBytes:64))
         guard namespace == profile.namespace else { throw failure("Unsupported identity policy") }
-        let roles: [String:[String]] = ["config.json":["source_metadata_consumed","codec_config_verified"],
-            "model.safetensors":profile.modelRoles,
-            "model.safetensors.index.json":["source_metadata_consumed"],"tokenizer.json":["tokenizer_parser_consumed"],
-            "tokenizer_config.json":["fixed_text_policy_verified"],"special_tokens_map.json":["ancillary_verified"]]
+        let roles = profile.assetRoles
         guard let rows = object["assets"] as? [Any], rows.count == 6 else { throw failure("Incomplete identity asset table") }
         var assets: [Asset] = [], names = Set<String>(), total: UInt64 = 0
         for row in rows {
@@ -140,16 +170,19 @@ struct NativeAcceptedIdentity: Equatable, Sendable {
             let name = try GenerationJSON.string(value["name"],maximumBytes:64)
             let bytes = try GenerationJSON.positive(value["bytes"])
             let digest = try GenerationJSON.hex(value["sha256"],count:64)
+            let fileLimit: UInt64 = profile == .gemmaBF16 && name == "model.safetensors" ? 10_246_621_918 : 4 * 1024 * 1024 * 1024
             guard let actualRoles = value["roles"] as? [String], let expectedRoles = roles[name], actualRoles == expectedRoles,
-                  names.insert(name).inserted, bytes <= 4 * 1024 * 1024 * 1024 else { throw failure("Invalid identity asset or role") }
+                  names.insert(name).inserted, bytes <= fileLimit else { throw failure("Invalid identity asset or role") }
             let sum = total.addingReportingOverflow(bytes)
-            guard !sum.overflow, sum.partialValue <= 6 * 1024 * 1024 * 1024 else { throw failure("Identity inventory exceeds bounds") }; total = sum.partialValue
+            let totalLimit: UInt64 = profile == .gemmaBF16 ? 10_278_816_137 : 6 * 1024 * 1024 * 1024
+            guard !sum.overflow, sum.partialValue <= totalLimit else { throw failure("Identity inventory exceeds bounds") }; total = sum.partialValue
             assets.append(Asset(name:name,bytes:bytes,sha256:digest,roles:actualRoles))
         }
         guard names == Set(roles.keys), try canonical(assets,profile:profile) == profile.manifestSHA256 else { throw failure("Complete consumed manifest differs") }
         let result = try Self(namespace:namespace,assets:assets.sorted(by:{ $0.name < $1.name }),
             modelInstance:GenerationJSON.positive(object["model_instance"]),loadedLimit:GenerationJSON.positive(object["loaded_position_limit"]),
-            sourceRanges:GenerationJSON.integer(object["source_container_physical_ranges"]),sourceReads:GenerationJSON.integer(object["source_container_verified_reads"]))
+            sourceRanges:profile == .gemmaBF16 ? nil : GenerationJSON.integer(object["source_container_physical_ranges"]),
+            sourceReads:profile == .gemmaBF16 ? nil : GenerationJSON.integer(object["source_container_verified_reads"]))
         guard profile.admits(loaded:result.loadedLimit,ranges:result.sourceRanges,reads:result.sourceReads),
               result.matches(context) else { throw failure("Identity does not match the accepted model owner") }
         return result
