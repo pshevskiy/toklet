@@ -10803,3 +10803,11 @@ greedy observations. Chunk sizes1/3/32 preserve logits and KV. Late
 head and PLE failures preserve committed state. Physical peak is4.699GB.
 Astra approved the short scope. Long fidelity, quality and Chat remain open.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-short-graph-v1.json)
+
+## 6 November 2026 — Verify official BF16 long cache state
+
+Both test-only 1,025-token schedules preserve complete logits, retained
+KV and rollback/reset behavior. All resident matrix, guard and norm bytes
+remain exact. Peak physical memory is4.858GB. Astra and the unchanged Q4
+capture pass. Independent long fidelity and quality remain open.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-wrap-state-v1.json)

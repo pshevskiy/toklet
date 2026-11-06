@@ -49,6 +49,18 @@ impl Bf16Weights {
                 crate::model::Error::InvalidConfig("Gemma BF16 diagnostic position limit").into(),
             );
         }
+        self.build_model(position_limit)
+    }
+
+    #[cfg(test)]
+    pub(crate) fn model_for_quality_probe(
+        &self,
+        position_limit: usize,
+    ) -> GraphResult<Bf16Model<'_>> {
+        self.build_model(position_limit)
+    }
+
+    fn build_model(&self, position_limit: usize) -> GraphResult<Bf16Model<'_>> {
         let weights = self.bindings.graph_weights_for(
             |index| {
                 Ok(MatrixRef {

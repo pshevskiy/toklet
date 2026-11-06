@@ -1,0 +1,96 @@
+{
+  "passed": true,
+  "admission": {
+    "required_bytes": 4747683796,
+    "session_bytes": 179149348
+  },
+  "hardware": {
+    "bf16-wrap": {
+      "receipt": "artifacts/gemma-bf16-wrap-state-2026-11-06/bf16-wrap/owned.json",
+      "physical_peak_bytes": 4857794640,
+      "capture": {
+        "records": 136,
+        "bytes": 104882176,
+        "sha256": "5c083a1d5ba9dc7cfa75395dfdb847b59f28fd2e11d45bada772c2c39144e351",
+        "whole_e2b_qualified": false
+      },
+      "state": [
+        {
+          "schedule": 0,
+          "committed": 1025,
+          "overflow_preserved": true,
+          "reset_all32_rows_exact": true,
+          "reset_all15_valid_kv_prefixes_exact": true,
+          "allocated_bytes": 179149348,
+          "cross_schedule_endpoints": [
+            256,
+            1025
+          ]
+        },
+        {
+          "schedule": 1,
+          "committed": 1025,
+          "overflow_preserved": true,
+          "reset_all32_rows_exact": true,
+          "reset_all15_valid_kv_prefixes_exact": true,
+          "allocated_bytes": 179149348,
+          "cross_schedule_endpoints": [
+            256,
+            1025
+          ]
+        }
+      ]
+    },
+    "q4-wrap": {
+      "receipt": "artifacts/gemma-bf16-wrap-state-2026-11-06/q4-wrap/owned.json",
+      "physical_peak_bytes": 3085208432,
+      "capture": {
+        "records": 136,
+        "bytes": 104882176,
+        "sha256": "e36b124bc8954d78b5e8d9d72da44e24eb1ba66dbddcc919a3b979a85c5b6a6c",
+        "whole_e2b_qualified": false
+      },
+      "state": [
+        {
+          "schedule": 0,
+          "committed": 1025,
+          "overflow_preserved": true,
+          "reset_all32_rows_exact": true,
+          "reset_all15_valid_kv_prefixes_exact": true,
+          "allocated_bytes": 271117548,
+          "cross_schedule_endpoints": [
+            256,
+            1025
+          ]
+        },
+        {
+          "schedule": 1,
+          "committed": 1025,
+          "overflow_preserved": true,
+          "reset_all32_rows_exact": true,
+          "reset_all15_valid_kv_prefixes_exact": true,
+          "allocated_bytes": 271117548,
+          "cross_schedule_endpoints": [
+            256,
+            1025
+          ]
+        }
+      ]
+    }
+  },
+  "retained_milestones": [
+    512,
+    513,
+    1024,
+    1025
+  ],
+  "checks": {
+    "fmt": true,
+    "strict_metal_clippy": true,
+    "metal_tests": 706,
+    "release_lib": true,
+    "default_tests_reused": 588
+  },
+  "review": "Astra approved test-only 1025 state, generic legacy fixture and exact admission after same-build Q4 passed.",
+  "scope": "Quality-only long cache state. Resident matrix/guard/vector bytes remained exact; PLE rows authenticate when requested. Numerical wrap fidelity and quality stay separate."
+}

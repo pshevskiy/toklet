@@ -80,12 +80,52 @@ fn assert_source_unchanged(file: &std::fs::File, path: &std::path::Path, origina
     );
 }
 
-fn run_wrap<'model, 'weights, 'source, 'context>(
-    model: &'model hybrid::Model<'weights, 'source>,
-    new_session: impl Fn() -> hybrid::Session<'model, 'weights, 'source, 'context>,
+#[cfg(target_os = "macos")]
+#[test]
+#[ignore = "explicit official BF16 1025-position quality-only state probe"]
+fn official_bf16_wrap_schedules_overflow_and_reset() {
+    let (source, context, path, original) = super::bf16::load_official();
+    let owner = source.test_retained_digest();
+    let budget = PROCESS - DIAGNOSTIC;
+    assert!(source.model(1025).is_err());
+    let model = source.model_for_quality_probe(1025).unwrap();
+    assert!(model.content_identity().is_none());
+    let warm = source.new_session(&model, &context, 32, budget).unwrap();
+    let owned = warm.allocated_bytes().unwrap();
+    drop(warm);
+    let required = model.model_bytes() + owned;
+    assert!(matches!(
+        source.new_session(&model, &context, 32, required - 1),
+        Err(hybrid::Error::Metal(crate::metal::Error::Budget { required: r, limit }))
+        if r == required && limit == required - 1
+    ));
+    emit(
+        "BF16_WRAP_ADMISSION",
+        json!({"required_bytes":required,"session_bytes":owned}),
+    );
+    run_wrap(
+        &model,
+        || source.new_session(&model, &context, 32, required).unwrap(),
+        owned,
+        || {
+            assert_eq!(source.test_retained_digest(), owner);
+            assert_eq!(
+                identity(&std::fs::symlink_metadata(path).unwrap()),
+                original
+            );
+        },
+    );
+}
+
+fn run_wrap<'model, 'weights, M, B>(
+    model: &'model Model<'weights, M>,
+    new_session: impl Fn() -> Session<'model, 'weights, M, B>,
     expected_allocated: usize,
     verify_source: impl FnOnce(),
-) {
+) where
+    M: MatrixSource,
+    B: Operations<M, Error = hybrid::Error>,
+{
     let raw = include_bytes!("../../../../../../benchmarks/gemma-e2b-wrap-v1/tokens.u32le");
     let ids: Vec<u32> = raw
         .chunks_exact(4)

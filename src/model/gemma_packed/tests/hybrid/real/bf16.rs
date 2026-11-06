@@ -5,9 +5,7 @@ use crate::metal::gemma_affine::{Bf16Context, Bf16GraphFault, Bf16Weights};
 const VOCAB: usize = 262144;
 const BUDGET: usize = PROCESS - DIAGNOSTIC;
 
-#[test]
-#[ignore = "explicit official BF16 short Metal graph and rollback witness"]
-fn official_bf16_short_graph_preserves_state_and_causal_rows() {
+pub(super) fn load_official() -> (Bf16Weights, Bf16Context, std::path::PathBuf, [u64; 7]) {
     let root = std::path::PathBuf::from(std::env::var_os("TOKLET_GEMMA_BF16_MODEL").unwrap());
     let path = root.join("model.safetensors");
     let config = std::fs::read(root.join("config.json")).unwrap();
@@ -19,6 +17,13 @@ fn official_bf16_short_graph_preserves_state_and_causal_rows() {
     let original = identity(&file.metadata().unwrap());
     let context = Bf16Context::new(gemma_affine::CONTEXT_ALLOWANCE_BYTES).unwrap();
     let weights = Bf16Weights::load_text_only(&context, file, &config, BUDGET).unwrap();
+    (weights, context, path, original)
+}
+
+#[test]
+#[ignore = "explicit official BF16 short Metal graph and rollback witness"]
+fn official_bf16_short_graph_preserves_state_and_causal_rows() {
+    let (weights, context, path, original) = load_official();
     assert!(weights.model(0).is_err());
     assert!(weights.model(33).is_err());
     let model = weights.model(32).unwrap();

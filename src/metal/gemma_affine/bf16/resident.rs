@@ -331,4 +331,31 @@ fn multiply(a: usize, b: usize) -> Result<usize> {
 }
 
 #[cfg(test)]
+impl Bf16Weights {
+    pub(crate) fn test_retained_digest(&self) -> [u8; 32] {
+        use sha2::{Digest, Sha256};
+        let mut sha = Sha256::new();
+        let mut raw = [0; 4096];
+        for matrix in self.matrices.iter().flatten() {
+            for tile in &matrix.tiles {
+                tile.with_slice(|words| {
+                    for block in words.chunks(raw.len() / 4) {
+                        for (word, bytes) in block.iter().zip(raw.chunks_exact_mut(4)) {
+                            bytes.copy_from_slice(&word.to_le_bytes());
+                        }
+                        sha.update(&raw[..block.len() * 4]);
+                    }
+                });
+            }
+        }
+        for vector in &self.vectors {
+            for value in vector {
+                sha.update(value.to_bits().to_le_bytes());
+            }
+        }
+        sha.finalize().into()
+    }
+}
+
+#[cfg(test)]
 mod tests;

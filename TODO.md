@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Validate official BF16 long cache state and the independent wrap references.**
+Current task: **Run official BF16 quality pilots and join independent wrap references.**
 Completed: source-matched native41 package selected, with Mac offline regression
 and both iOS SDK builds. [Evidence](benchmarks/results/2026-11-06-chunk-pools-native41-v1.json).
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
@@ -648,6 +648,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
     - [x] Official BF16 shared graph passes two short sequences across both
       contracts and chunks1/3/32. Late head/PLE failure preserves state.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-short-graph-v1.json).
+    - [x] Official BF16 1,025-token state passes both schedules, all four
+      KV milestones and exact admission. Same-build Q4 capture stays exact.
+      [Evidence](benchmarks/results/2026-11-06-gemma-bf16-wrap-state-v1.json).
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1603,3 +1606,4 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | Official BF16 Metal leaf | 15 exact authored and24 real-row values pass. Prior Q4 and QAT captures remain byte-identical. | Astra approved the guarded leaf. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-projection-v1.json); authenticated upload next. |
 | 2026-11-06 | Official BF16 resident upload | Exact requested4.644GB, peak4.587GB, complete SHA and PLE/legacy byte regressions pass. | Astra approved after588/706 tests. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-resident-v1.json); shared graph next. |
 | 2026-11-06 | Official BF16 short graph | All4,341,760 comparisons and16 greedy pass; exact chunks and late failures preserve state. Peak4.699GB. | Astra approved after588/706 tests and four Metal runs. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-short-graph-v1.json); long state/reference next. |
+| 2026-11-06 | Official BF16 long state | Both1,025-token schedules, exact KV boundaries, overflow/reset and retained buffer digest pass; peak4.858GB. | Astra approved and Q4 capture is bitwise. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-wrap-state-v1.json); independent long numerical join and quality pending. |
