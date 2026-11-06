@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Join the official BF16 wrap references and collect full original-quality evidence.**
+Current task: **Trace official BF16 value-cache drift and finish the original task gate.**
 Completed: source-matched native41 package selected, with Mac offline regression
 and both iOS SDK builds. [Evidence](benchmarks/results/2026-11-06-chunk-pools-native41-v1.json).
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
@@ -656,8 +656,13 @@ uses the existing full saved-conversation reset+prompt path on Send.
     - [x] Official BF16 quality pilots pass1,024 loss targets and66 exact
       sampled decisions. Astra approves the test workers and legacy controls.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-quality-pilot-v1.json).
-    - [ ] Join both sealed wrap references and complete the full loss and
-      replayed task gates. Frozen suites are running on the Mac.
+    - [x] Complete the sealed dual-reference decision and full loss gate.
+      The original numerical gate rejects and 61 coordinates admit no common
+      FP32 value. Loss passes all10,000 targets. Astra confirms both results.
+      [Evidence](benchmarks/results/2026-11-06-gemma-bf16-long-decision-v1.json).
+    - [ ] Trace the staged value-cache deviations at508 and826. Use the
+      result to define a complete independent native arithmetic reference.
+    - [ ] Complete replay and isolated grading for the frozen100 tasks.
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).

@@ -10835,3 +10835,12 @@ The exact repository returned from Hugging Face. Astra approved after the
 strict Swift checks and Mac bundle verification. Initial test warning and
 missing iOS runner input were corrected. Physical iPhone work stays deferred.
 [Evidence](../benchmarks/results/2026-11-06-qwen15-catalog-repair-v1.json)
+
+## 6 November 2026 — Close the dual-reference decision and BF16 loss gate
+
+Both original long references sealed. Native has664 mathematical and26 staged
+failures across52,441,088 comparisons. All32 greedy checks pass. Exact bounds
+leave61 unique coordinates with no common FP32 result. Astra confirmed the
+rejection and the separate original-relative loss pass of−0.03085 nats across
+10,000 targets. Task grading and native arithmetic qualification remain open.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-long-decision-v1.json)

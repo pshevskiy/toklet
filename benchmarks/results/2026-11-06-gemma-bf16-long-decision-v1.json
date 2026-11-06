@@ -1,0 +1,101 @@
+{
+  "format": "toklet-gemma-official-bf16-long-decision-v1",
+  "policy_unchanged": true,
+  "tolerances": {
+    "atol": 1e-05,
+    "rtol": 0.0001
+  },
+  "wrap": {
+    "state_passed": true,
+    "numerical_gate_passed": false,
+    "contracts": {
+      "math_fp64": {
+        "total": 26220544,
+        "failed": 664,
+        "failed_by_kind": {
+          "K": 8,
+          "V": 654,
+          "logits": 2
+        },
+        "greedy_exact": 16
+      },
+      "staged_fp32": {
+        "total": 26220544,
+        "failed": 26,
+        "failed_by_kind": {
+          "K": 0,
+          "V": 26,
+          "logits": 0
+        },
+        "greedy_exact": 16
+      }
+    },
+    "peak_physical_bytes": {
+      "math_fp64": 1185695472,
+      "staged_fp32": 973964824
+    }
+  },
+  "intersection": {
+    "complete": true,
+    "unique_values": 11543552,
+    "disjoint_bands": 60,
+    "without_common_fp32": 61,
+    "nonempty_interval_example": {
+      "name": "layer.10.self_attn.v_norm",
+      "index": 9829,
+      "shape": [
+        1,
+        1025,
+        1,
+        256
+      ],
+      "math_fp64_hex": "-0x1.51933ee87cc3cp-2",
+      "staged_fp32_hex": "-0x1.51a9c60000000p-2",
+      "exact_lower": "-74243241991838769403/225179981368524800000",
+      "exact_upper": "-553155250049/1677721600000",
+      "first_fp32_hex": "-0x1.519e820000000p-2",
+      "disjoint": false
+    }
+  },
+  "staged_unique_value_misses": 13,
+  "original_relative_loss": {
+    "completed": true,
+    "targets": 10000,
+    "original_mean_nll": 9.995776113844665,
+    "native_mean_nll": 9.964928683222988,
+    "native_minus_original": -0.030847430621676608,
+    "mean_nll_increase_limit": 0.05,
+    "loss_gate_passed": true,
+    "paired_mean_delta": -0.030847430621676677,
+    "task_gate_pending": true,
+    "full_quality_qualified": false,
+    "earlier_fidelity_failures_waived": false,
+    "admission": {
+      "required_bytes": 4747683796,
+      "session_bytes": 179149348
+    },
+    "source_targets_sha256": "45b8bf9a149425ff9131aa58dd328797e97335c0eb42435b4a96f87a9b45403c",
+    "peak_physical_bytes": 4728049624
+  },
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-wrap-state-2026-11-06/compare.py": "d00db2778280311160cd93d48f870ae4cb103aaa2a7051f757f1647a1abce5a0",
+    "artifacts/gemma-bf16-wrap-state-2026-11-06/comparison.json": "d0941f188a3ad074da241d742eb69e30ac9cbe855091cd8a619778ecbbf02e25",
+    "artifacts/gemma-bf16-wrap-state-2026-11-06/intersection.py": "ae54609b80ab95153002bc80422cb179b93c81712978915d27c1c4e92598d028",
+    "artifacts/gemma-bf16-wrap-state-2026-11-06/intersection.json": "44b4d419be74b05672b7cca9a84483692b741c558873347ade889245ca89498c",
+    "artifacts/gemma-bf16-wrap-state-2026-11-06/stage-distinct-failures.json": "11f1ba4ca92eb81feb46a8cec98af65069993b2eae9ae508f8e70e81392b3eaf",
+    "artifacts/gemma-bf16-wrap-state-2026-11-06/bf16-wrap/owned.json": "26db302acd741aeeeda85c00fc70909d8e6ff380bb821726d3f33741bd95882b",
+    "artifacts/gemma-bf16-wrap-reference-2026-11-06/math_fp64/owned.json": "f75ad72be852bbb1d385d4c1395c4a1682e4ea61831221a3e218225e511a3235",
+    "artifacts/gemma-bf16-wrap-reference-2026-11-06/math_fp64/plan.json": "f62957e7b55c902b17faa3498cf1246604b1d0ae572a2a40dc8a7e9b3656a0cb",
+    "artifacts/gemma-bf16-wrap-reference-2026-11-06/math_fp64/reference.json": "f111105081f8881cee25f3eaf6a78ac6efc0f8a32895dab1bf43b7658525e11a",
+    "artifacts/gemma-bf16-wrap-reference-2026-11-06/math_fp64/rows.bin": "97f402014d909f42a8ada429cd0d88a4219d566fc56fd709fe2b9e6a9d1f6dd3",
+    "artifacts/gemma-bf16-wrap-reference-2026-11-06/staged_fp32/owned.json": "eb16d95269754f244d78b4e3752334e7d2b6eb4fd4b9b26f63d6e8aa840dcf47",
+    "artifacts/gemma-bf16-wrap-reference-2026-11-06/staged_fp32/plan.json": "b24328bd35dcc17126f88fa9c6de84a9764e6185132970e32f9d587036de3974",
+    "artifacts/gemma-bf16-wrap-reference-2026-11-06/staged_fp32/reference.json": "c28a27595f36f03400e98ea6047ad19695d1259ef45710102512ea9e428c06ac",
+    "artifacts/gemma-bf16-wrap-reference-2026-11-06/staged_fp32/rows.bin": "40dce0eb5b65deca408d42efbc0daf8dd0f81c4bad0a68b7e0b2905f000dd7e6",
+    "artifacts/gemma-bf16-quality-2026-11-06/loss-full-comparison.json": "bb527933139a575bc3fc8d6bd6ed7f4efad212aebb10cd6988a58f0d3f1e483e",
+    "artifacts/gemma-bf16-quality-2026-11-06/loss-first/owned.json": "24ce81c73d76f33371ba05627bd49a9ae704631db8b2bc19f0b19ccefa442f66",
+    "artifacts/gemma-bf16-quality-2026-11-06/loss-rest/owned.json": "873b1d2deb2ba350bd825624bd79be049414d4db069292948d2bccafeffa6bbc"
+  },
+  "scope": "Original BF16 fallback remains diagnostic. Full task grade and a complete independently propagated native arithmetic profile are separate.",
+  "review": "Astra independently confirms sealed numerical rejection, exact FP32 intersection proof and separate 10,000-target loss pass."
+}

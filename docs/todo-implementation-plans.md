@@ -201,6 +201,13 @@ The other text tensors require4,559,518,278 raw bytes. [Official source inventor
    pass the first1,024 loss targets and fresh replay of66 sampled decisions.
    Finish all10,000 targets, all100 fresh trajectories and isolated grading
    against the original source before the adoption decision.
+   The [sealed comparison and full loss](../benchmarks/results/2026-11-06-gemma-bf16-long-decision-v1.json)
+   preserve the dual numerical rejection. The frozen bands have no common
+   FP32 value at61 coordinates. All10,000 loss targets pass separately.
+   Replay complete V projection and norm on the observed native operands at
+   positions508 and826, with adjacent passing controls and exact cache transfer.
+   Use this attribution to specify a complete, independently propagated native
+   arithmetic reference at the unchanged tolerance. Continue the100-task gate.
 
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat
 
