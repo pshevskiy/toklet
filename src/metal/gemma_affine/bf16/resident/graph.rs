@@ -130,20 +130,7 @@ impl Bf16Weights {
     {
         use crate::session::Error as SessionError;
         graph::generation::validate_options(model, options)?;
-        let numerical = model
-            .planned_backend_session_bytes_for_capacity::<Backend<'weights, 'context>>(
-                options.capacity,
-                options.prefill_chunk_size,
-            )?;
-        let wrapper = Bf16GenerationSession::<'model, 'weights, 'context>::planned_wrapper_bytes(
-            options.capacity,
-        )
-        .map_err(GraphError::from)?;
-        let fixed = add(
-            model.model_bytes(),
-            add(numerical, wrapper).map_err(GraphError::from)?,
-        )
-        .map_err(GraphError::from)?;
+        let fixed = Self::generation_fixed_bytes(model, options)?;
         let backend = self
             .admit_backend(
                 model,
@@ -159,6 +146,36 @@ impl Bf16Weights {
                 other => other.into(),
             })?;
         graph::GenerationSession::with_backend(model, backend, options)
+    }
+
+    fn generation_fixed_bytes(
+        model: &Bf16Model<'_>,
+        options: crate::session::Options,
+    ) -> GraphResult<usize> {
+        let numerical = model.planned_backend_session_bytes_for_capacity::<Backend<'_, '_>>(
+            options.capacity,
+            options.prefill_chunk_size,
+        )?;
+        let wrapper = Bf16GenerationSession::<'_, '_, '_>::planned_wrapper_bytes(options.capacity)?;
+        Ok(add(model.model_bytes(), add(numerical, wrapper)?)?)
+    }
+
+    pub(crate) fn planned_generation_admission(
+        &self,
+        model: &Bf16Model<'_>,
+        options: crate::session::Options,
+    ) -> std::result::Result<usize, crate::session::Error> {
+        graph::generation::validate_options(model, options)?;
+        let fixed = Self::generation_fixed_bytes(model, options)?;
+        let counts = Counts::new(self, options.prefill_chunk_size).map_err(GraphError::from)?;
+        let backend = counts
+            .memory(counts.tile, counts.ple)
+            .map_err(GraphError::from)?
+            .total()
+            .map_err(GraphError::from)?;
+        add(fixed, backend)
+            .map_err(GraphError::from)
+            .map_err(Into::into)
     }
 
     fn admit_backend<'weights, 'context>(

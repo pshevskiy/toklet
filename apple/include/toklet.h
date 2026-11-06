@@ -277,6 +277,25 @@ uint32_t toklet_session_gemma_bf16_memory(const TokletSession *, TokletGemmaBf16
    No model/session, payload read, reservation or whole-app fit decision.
    Output remains unchanged on error; other platforms return UNSUPPORTED. */
 uint32_t toklet_gemma_bf16_plan_kv(uint32_t capacity, uint32_t chunk, uint64_t *, TokletError *);
+typedef struct {
+    uint32_t abi_version;
+    uint32_t struct_size;
+    uint64_t model_instance;
+    uint64_t session_instance;
+    uint32_t candidate_capacity;
+    uint32_t candidate_chunk;
+    uint64_t current_combined_bytes;
+    uint64_t candidate_combined_bytes;
+    uint64_t candidate_incremental_bytes;
+    uint64_t candidate_kv_bytes;
+    uint64_t aggregate_required_bytes;
+} TokletGemmaBf16TransitionInfo;
+/* Cold plan for toklet_session_prepare_empty on the exact same official Mac
+   model. Combined budgets include the codec and bridge. Coexistence counts
+   the shared owner once and includes the named caller reserves. No allocation
+   reservation or whole-app fit decision. Output is unchanged on failure. */
+uint32_t toklet_session_gemma_bf16_plan_empty(const TokletModel *, const TokletSession *,
+    const TokletOptions *, const TokletTransitionPlanningOptions *, TokletGemmaBf16TransitionInfo *, TokletError *);
 /* Read-only live model/session snapshot, valid after external model release.
    No directory reads, new execution, reservation or app eligibility grant.
    Outputs are complete native-aligned records, untouched on failure. Existing

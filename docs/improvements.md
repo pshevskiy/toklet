@@ -10966,3 +10966,11 @@ the active prefix and draft, and suspend/replay restores the selected settings.
 Astra approves after Swift6 checks. Full reload failed the unchanged headroom
 gate with 2.67 GB retained. Active replacement stays a separate task.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-window-open-v1.json)
+
+## 6 November 2026 — Prepare an empty Gemma session on the same Mac owner
+
+Typed planning shares model and codec once and checks both session budgets.
+The 384/16 candidate needs 124.06 MB incrementally. Exact and minus-one
+checks, cancellation and old-prefix preservation pass at 4.94 GB peak.
+Astra approves after 589 default and 708 Metal tests and the native45 build.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-live-transition-v1.json)

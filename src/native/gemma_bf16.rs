@@ -49,6 +49,19 @@ impl Model {
         self.owner.codec()
     }
 
+    pub(super) fn planned_session_admission(&self, options: session::Options) -> Result<usize> {
+        self.owner
+            .planned_session_admission(&self.graph, options)
+            .map_err(|error| fail(INVALID, error.to_string()))
+    }
+
+    pub(super) fn shared_model_bytes(&self) -> Result<usize> {
+        self.graph
+            .model_bytes()
+            .checked_add(self.owner.memory().session_reserved_bytes)
+            .ok_or_else(|| fail(ENGINE_ERROR, "official Gemma shared owner size overflow"))
+    }
+
     pub(super) fn create_session(&'static self, options: session::Options) -> Result<Session> {
         let inference = self
             .owner

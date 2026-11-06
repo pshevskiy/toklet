@@ -115,6 +115,27 @@ impl OfficialBf16 {
         self.weights.build_model(self.position_limit)
     }
 
+    pub(crate) fn planned_session_admission(
+        &self,
+        model: &Bf16Model<'_>,
+        options: Options,
+    ) -> std::result::Result<usize, session::Error> {
+        self.validate_session_budget(options)?;
+        let numerical = self.weights.planned_generation_admission(model, options)?;
+        add(numerical, self.memory.session_reserved_bytes)
+            .map_err(hybrid::Error::from)
+            .map_err(Into::into)
+    }
+
+    fn validate_session_budget(&self, options: Options) -> std::result::Result<(), session::Error> {
+        if options.memory_limit_bytes == 0 || options.memory_limit_bytes > self.memory_limit {
+            return Err(session::Error::InvalidOptions(
+                "Gemma BF16 session budget exceeds its owner limit",
+            ));
+        }
+        Ok(())
+    }
+
     /// Session options use a whole owner budget. The returned numerical
     /// session reports its own admission, apart from `session_reserved_bytes`.
     pub fn new_session<'model, 'owner>(
@@ -122,11 +143,7 @@ impl OfficialBf16 {
         model: &'model Bf16Model<'owner>,
         mut options: Options,
     ) -> std::result::Result<Bf16GenerationSession<'model, 'owner, 'owner>, session::Error> {
-        if options.memory_limit_bytes == 0 || options.memory_limit_bytes > self.memory_limit {
-            return Err(session::Error::InvalidOptions(
-                "Gemma BF16 session budget exceeds its owner limit",
-            ));
-        }
+        self.validate_session_budget(options)?;
         let limit = options.memory_limit_bytes;
         let reserved = self.memory.session_reserved_bytes;
         options.memory_limit_bytes = limit

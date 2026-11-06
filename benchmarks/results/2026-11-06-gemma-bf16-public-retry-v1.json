@@ -1,0 +1,16 @@
+{
+  "format": "toklet-gemma-bf16-public-retry-v1",
+  "passed": false,
+  "scope": "Isolated alternate public URL with download=true, no production transport changes.",
+  "exact_stalled_range_pilot_bytes": 4194304,
+  "public_search_passed": true,
+  "failure": "Three attempts timed out at bytes100663296\u2013117440511; last attempt received11929272 bytes.",
+  "staging_removed": true,
+  "source_scope": "google/gemma-4-E2B-it@70af34e20bd4b7a91f0de6b22675850c43922a03",
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-public-retry-2026-11-06/live.stdout": "ee7ceb2445627f5a4e2d93c7779d33c5dea6af435a73584e9fcc9e6645fe6f83",
+    "artifacts/gemma-bf16-public-retry-2026-11-06/live.stderr": "dadd06383e489e8597bd52c56e74cd9404a007575e7bab65eb93638a652652c5",
+    "artifacts/gemma-bf16-public-retry-2026-11-06/range-pilot.sha256": "bf0d28f8b5aa97563120cc4f1558c7e4c0ad7e94ac58b9f63704932a1943cb51",
+    "artifacts/gemma-bf16-mac-hub-2026-11-06/alternate-range.stdout": "6640df8b1052a5e5a5f2ee2b131d1efb6a7da0ecf928493f8af3a5a3c1472026"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "format": "toklet-gemma-bf16-live-transition-v1",
+  "scope": "Typed Mac official BF16 same-owner planning and native empty candidate creation. Swift swap is a separate task.",
+  "checks": {
+    "default": 589,
+    "metal": 708,
+    "native_exports_per_slice": 45,
+    "C_header_targets": 3,
+    "ios_rust_targets": 2
+  },
+  "observation": {
+    "current": 5814091920,
+    "candidate": 5766339728,
+    "incremental": 124063392,
+    "aggregate": 6223367984,
+    "kv": 14745600,
+    "prefix_preserved": true
+  },
+  "peak_physical_bytes": 4942893328,
+  "both_exact_and_minus_one_budgets": true,
+  "stale_owner_untouched_out": true,
+  "cancelled_candidate_null": true,
+  "current_prefix_preserved": true,
+  "physical_ios_tested": false,
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-live-transition-2026-11-06/checks.json": "95019d6668ae6be6cbfa1f7d239cb8e76188e0791a1111b1e84b155034223659",
+    "artifacts/gemma-bf16-live-transition-2026-11-06/cross-checks.txt": "e38d2d034da3036fab6f35a62dd37d2e1c3785ef69f0b92b8d22e1518c96174e",
+    "artifacts/gemma-bf16-live-transition-2026-11-06/header-check.txt": "91259cb3c58c84a69bc4a1e1f38aba4d9e4b91cfb3a10caa363451422aceb3a9",
+    "artifacts/gemma-bf16-live-transition-2026-11-06/link-check.json": "d81569f696057910b4c0b2966a1857c835fd0affc3dd8ce6112d68685df823ee",
+    "artifacts/gemma-bf16-live-transition-2026-11-06/native/owned.json": "71e3ff6f686aeedfaef7283f673bb6eec4a7dc615e98867a099c4f89eb56a5f0",
+    "artifacts/gemma-bf16-live-transition-2026-11-06/native/gpu.stdout": "80f82a293b115be6a43b179efc58fa92d6b96f794845f22e0b7c5eda9d64c320",
+    "artifacts/gemma-bf16-native45-package-2026-11-06/build.json": "cec3b45ac875f8a7d566a3d263c25111e51baa32df7ae1d12f532c7a8e48aa79"
+  },
+  "review": "Astra approves the exact same-owner plan, conservative coexistence accounting, cancellation and candidate-only publication. Swift swap remains separate."
+}

@@ -2,6 +2,8 @@
 use super::*;
 use serde::Serialize;
 mod candidate;
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+mod official;
 pub use candidate::*;
 
 #[repr(C)]
@@ -161,6 +163,22 @@ struct TransitionReport {
     whole_app_device_fit_evaluated: bool,
 }
 
+fn validate_transition_owners(
+    model: &ModelHandle,
+    current: &SessionHandle,
+    state: &OwnedSession,
+    request: TransitionPlanningOptions,
+) -> Result<()> {
+    if model.instance != request.expected_model_instance
+        || current.instance != request.expected_session_instance
+        || state.model_instance != model.instance
+        || !Rc::ptr_eq(&model.model, &state._model)
+    {
+        return Err(fail(INVALID, "transition model/session identity mismatch"));
+    }
+    Ok(())
+}
+
 fn capture_transition(
     model: &ModelHandle,
     current: &SessionHandle,
@@ -169,13 +187,7 @@ fn capture_transition(
     whole_candidate_budget: u64,
     request: TransitionPlanningOptions,
 ) -> Result<TransitionReport> {
-    if model.instance != request.expected_model_instance
-        || current.instance != request.expected_session_instance
-        || state.model_instance != model.instance
-        || !Rc::ptr_eq(&model.model, &state._model)
-    {
-        return Err(fail(INVALID, "transition model/session identity mismatch"));
-    }
+    validate_transition_owners(model, current, state, request)?;
     #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
     if matches!(model.model.as_ref(), NativeModel::OfficialGemma(_)) {
         return Err(fail(
@@ -386,6 +398,66 @@ pub unsafe extern "C" fn toklet_session_transition_plan_create(
                 out.write(compatibility::capture(&report)?);
                 Ok(())
             })
+        })
+    }
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct GemmaBf16TransitionInfo {
+    pub abi_version: u32,
+    pub struct_size: u32,
+    pub model_instance: u64,
+    pub session_instance: u64,
+    pub candidate_capacity: u32,
+    pub candidate_chunk: u32,
+    pub current_combined_bytes: u64,
+    pub candidate_combined_bytes: u64,
+    pub candidate_incremental_bytes: u64,
+    pub candidate_kv_bytes: u64,
+    pub aggregate_required_bytes: u64,
+}
+const _: () = assert!(size_of::<GemmaBf16TransitionInfo>() == 72);
+
+/// Non-reserving same-owner BF16 replacement plan. Combined admission includes
+/// the codec and bridge; coexistence counts the shared owner once. No app fit
+/// or allocation reservation is implied.
+/// # Safety
+/// Follow the parent foreign pointer, creating-thread and disjoint-output rules.
+/// Output is unchanged on error.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_session_gemma_bf16_plan_empty(
+    model: *const ModelHandle,
+    current: *const SessionHandle,
+    candidate: *const Options,
+    transition: *const TransitionPlanningOptions,
+    out: *mut GemmaBf16TransitionInfo,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe {
+        boundary(error, || {
+            pointer(model)?;
+            pointer(current)?;
+            pointer(candidate)?;
+            pointer(transition)?;
+            pointer(out)?;
+            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            {
+                owner((*model).owner)?;
+                let request = *transition;
+                request.validate()?;
+                let options = options(candidate)?;
+                (*current).access_owned(|state| {
+                    let plan = official::plan(&*model, &*current, state, options, request)?;
+                    out.write(plan);
+                    Ok(())
+                })
+            }
+            #[cfg(not(all(feature = "metal", target_os = "macos", target_arch = "aarch64")))]
+            Err(fail(
+                UNSUPPORTED,
+                "official Gemma BF16 transition is unavailable",
+            ))
         })
     }
 }

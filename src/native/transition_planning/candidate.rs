@@ -87,7 +87,19 @@ fn candidate_memory(candidate: &SessionHandle) -> Result<(session::Memory, usize
     }
 }
 
-/// Prepare an ordinary, explicitly empty session. Current stays borrowed only
+fn create_candidate(
+    model: &ModelHandle,
+    options: session::Options,
+    cancel: &CancelHandle,
+) -> Result<Box<SessionHandle>> {
+    cancelled(cancel)?;
+    let prepared = create_session(model, options)?;
+    #[cfg(test)]
+    fault_after(&prepared, cancel)?;
+    Ok(prepared)
+}
+
+/// Prepare an explicitly empty session on a supported model owner. Current stays borrowed only
 /// for inspection; candidate unwind never traverses access_owned's poison path.
 /// # Safety
 /// Follow the parent pointer/thread contract; cancel stays live through return.
@@ -123,6 +135,23 @@ pub unsafe extern "C" fn toklet_session_prepare_empty(
             request.validate()?;
             let opts = options(candidate)?;
             cancelled(&*cancel)?;
+            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            if matches!((*model).model.as_ref(), NativeModel::OfficialGemma(_)) {
+                let plan = official::plan(&*model, &*current, &state, opts, request)?;
+                if plan.candidate_combined_bytes > (*candidate).memory_limit_bytes
+                    || plan.aggregate_required_bytes > request.transition_budget_bytes
+                {
+                    return Err(fail(
+                        ENGINE_ERROR,
+                        "planned Gemma candidate exceeds individual or coexistence budget",
+                    ));
+                }
+                let prepared = create_candidate(&*model, opts, &*cancel)?;
+                official::readmit(&plan, &prepared)?;
+                cancelled(&*cancel)?;
+                out.write(Box::into_raw(prepared));
+                return Ok(());
+            }
             let plan = capture_transition(
                 &*model,
                 &*current,
@@ -137,10 +166,7 @@ pub unsafe extern "C" fn toklet_session_prepare_empty(
                     "planned candidate exceeds individual or coexistence budget",
                 ));
             }
-            cancelled(&*cancel)?;
-            let prepared = create_session(&*model, opts)?;
-            #[cfg(test)]
-            fault_after(&prepared, &*cancel)?;
+            let prepared = create_candidate(&*model, opts, &*cancel)?;
             let (actual, shared_metadata) = candidate_memory(&prepared)?;
             readmit(&plan, actual, shared_metadata)?;
             cancelled(&*cancel)?;

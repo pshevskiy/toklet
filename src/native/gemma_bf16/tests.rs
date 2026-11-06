@@ -6,6 +6,180 @@ unsafe extern "C" fn record(context: *mut c_void, event: TokenEvent) -> u32 {
     0
 }
 
+unsafe fn check_official_replacement(
+    model: *const ModelHandle,
+    current: *const SessionHandle,
+    cancel: *const CancelHandle,
+    before: ContextInfo,
+    current_memory: GemmaBf16MemoryInfo,
+    options: Options,
+) {
+    // SAFETY: caller supplies valid same-thread owners; locals are disjoint.
+    unsafe {
+        let error = ptr::null_mut();
+        let requested = Options {
+            capacity: 384,
+            chunk: 16,
+            ..options
+        };
+        let mut accounting = TransitionPlanningOptions {
+            abi_version: ABI_VERSION,
+            struct_size: size_of::<TransitionPlanningOptions>() as u32,
+            expected_model_instance: before.model_instance,
+            expected_session_instance: before.session_instance,
+            transition_budget_bytes: options.memory_limit_bytes,
+            replay_reserve_bytes: 0,
+            text_reserve_bytes: 0,
+            application_reserve_bytes: 272 * 1024 * 1024,
+            reserved: 0,
+        };
+        let mut plan = GemmaBf16TransitionInfo::default();
+        assert_eq!(
+            toklet_session_gemma_bf16_plan_empty(
+                model,
+                current,
+                &requested,
+                &accounting,
+                &mut plan,
+                error
+            ),
+            OK
+        );
+        assert_eq!(
+            plan.current_combined_bytes,
+            current_memory.session_admitted_bytes
+        );
+        assert_eq!(plan.candidate_kv_bytes, 14_745_600);
+        assert_eq!(
+            plan.aggregate_required_bytes,
+            plan.current_combined_bytes
+                + plan.candidate_incremental_bytes
+                + accounting.application_reserve_bytes
+        );
+        assert!(plan.aggregate_required_bytes <= accounting.transition_budget_bytes);
+        let bad = TransitionPlanningOptions {
+            expected_model_instance: 1 + before.model_instance,
+            ..accounting
+        };
+        let mut untouched = plan;
+        assert_eq!(
+            toklet_session_gemma_bf16_plan_empty(
+                model,
+                current,
+                &requested,
+                &bad,
+                &mut untouched,
+                error
+            ),
+            INVALID
+        );
+        assert_eq!(untouched, plan);
+        let mut out = ptr::dangling_mut();
+        accounting.transition_budget_bytes = plan.aggregate_required_bytes - 1;
+        assert_eq!(
+            toklet_session_prepare_empty(
+                model,
+                current,
+                &requested,
+                &accounting,
+                cancel,
+                &mut out,
+                error
+            ),
+            ENGINE_ERROR
+        );
+        assert!(out.is_null());
+        accounting.transition_budget_bytes = plan.aggregate_required_bytes;
+        let mut exact = Options {
+            memory_limit_bytes: plan.candidate_combined_bytes - 1,
+            ..requested
+        };
+        assert_eq!(
+            toklet_session_prepare_empty(
+                model,
+                current,
+                &exact,
+                &accounting,
+                cancel,
+                &mut out,
+                error
+            ),
+            ENGINE_ERROR
+        );
+        assert!(out.is_null());
+        exact.memory_limit_bytes = plan.candidate_combined_bytes;
+        assert_eq!(toklet_cancel_set(cancel, 1, error), OK);
+        assert_eq!(
+            toklet_session_prepare_empty(
+                model,
+                current,
+                &exact,
+                &accounting,
+                cancel,
+                &mut out,
+                error
+            ),
+            CANCELLED
+        );
+        assert!(out.is_null());
+        assert_eq!(toklet_cancel_set(cancel, 0, error), OK);
+        assert_eq!(
+            toklet_session_prepare_empty(
+                model,
+                current,
+                &exact,
+                &accounting,
+                cancel,
+                &mut out,
+                error
+            ),
+            OK
+        );
+        let mut candidate_context = ContextInfo::default();
+        assert_eq!(
+            toklet_session_context(out, &mut candidate_context, error),
+            OK
+        );
+        assert_eq!(
+            (
+                candidate_context.model_instance,
+                candidate_context.loaded_position_limit
+            ),
+            (before.model_instance, before.loaded_position_limit)
+        );
+        assert_ne!(candidate_context.session_instance, before.session_instance);
+        assert_eq!(
+            (
+                candidate_context.session_capacity,
+                candidate_context.history_tokens
+            ),
+            (384, 0)
+        );
+        let mut actual = GemmaBf16MemoryInfo::default();
+        assert_eq!(
+            toklet_session_gemma_bf16_memory(out, &mut actual, error),
+            OK
+        );
+        assert_eq!(actual.session_admitted_bytes, plan.candidate_combined_bytes);
+        assert_eq!(actual.kv_owned_bytes, plan.candidate_kv_bytes);
+        let mut retained = ContextInfo::default();
+        assert_eq!(toklet_session_context(current, &mut retained, error), OK);
+        assert_eq!(retained, before);
+        assert_eq!(toklet_session_release(out, error), OK);
+        println!(
+            "GEMMA_BF16_TRANSITION {}",
+            serde_json::json!({
+                "current":plan.current_combined_bytes,
+                "candidate":plan.candidate_combined_bytes,
+                "incremental":plan.candidate_incremental_bytes,
+                "aggregate":plan.aggregate_required_bytes,
+                "kv":plan.candidate_kv_bytes,
+                "prefix_preserved":true
+            })
+        );
+    }
+}
+
 #[test]
 fn official_bf16_cold_kv_plan_covers_physical_buffers_and_rejects_bad_bounds() {
     let mut bytes = u64::MAX;
@@ -242,6 +416,7 @@ fn official_bf16_native_raw_owner_survives_model_release() {
         assert_eq!(toklet_session_context(session, &mut context, error), OK);
         assert_eq!(context.history_tokens, prompt.len() as u64);
         assert_eq!(context.committed_tokens, context.history_tokens);
+        check_official_replacement(model, session, cancel, context, memory, options);
         let address = session as usize;
         assert_eq!(
             thread::spawn(move || {

@@ -1,13 +1,14 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Add a same-owner Gemma BF16 native session replacement.**
+Current task: **Apply the same-owner Gemma BF16 replacement in Mac Settings.**
 Next-open window and KV controls pass on the signed native44 Mac build.
 Full model reload retained 2.67 GB and correctly failed the headroom gate.
 [Evidence](benchmarks/results/2026-11-06-gemma-bf16-window-open-v1.json).
 The earlier native43 Hub build passed exact
 cached publication and network-denied Chat at 4.93 GB peak. The full public
-transfer timed out after 256 MiB and remains open.
+transfer timed out after 256 MiB. A second route matched the stalled range
+but timed out on the full retry and cleaned staging. Full transfer stays open.
 [Evidence](benchmarks/results/2026-11-06-gemma-bf16-mac-hub-v1.json).
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
 [Evidence](benchmarks/results/2026-11-06-qwen15-mac-app-v1.json).
@@ -707,15 +708,19 @@ uses the existing full saved-conversation reset+prompt path on Send.
       cached publication, offline Chat and Astra pass.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-mac-hub-v1.json).
     - [ ] Complete a full public Gemma download and reopen from its publication.
-      First attempt timed out after three range attempts and cleaned staging.
+      Both full routes timed out and cleaned staging. Exact live ranges pass.
+      [Retry evidence](benchmarks/results/2026-11-06-gemma-bf16-public-retry-v1.json).
     - [x] Plan exact cold KV bytes from the shared layout. Three real session
       allocations, 44 native exports, strict checks and Astra pass.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-kv-plan-v1.json).
     - [x] Wire Mac next-open context/KV controls. Real 384/16 open, rejection,
       same-owner suspend/replay and signed native44 app pass Astra review.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-window-open-v1.json).
-    - [ ] Reuse the resident model for an atomic active session replacement,
-      then verify the rendered controls and late PLE corruption handling.
+    - [x] Plan and prepare a same-owner native replacement. Exact and
+      minus-one budgets, cancellation, retained prefix and Astra pass.
+      [Evidence](benchmarks/results/2026-11-06-gemma-bf16-live-transition-v1.json).
+    - [ ] Apply the native replacement through Mac Settings and verify the
+      rendered controls, replay and late PLE corruption handling.
     - [x] Complete replay and isolated grading for the frozen100 tasks.
       All4,149 sampled decisions match. The grade is51/100 versus52/100,
       within the2pp gate. Astra confirms both original-quality results.
