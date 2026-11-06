@@ -1,6 +1,65 @@
 use super::*;
 
 #[test]
+#[ignore = "explicit Metal immutable affine8 tile boundary checks"]
+fn affine8_storage_preserves_original_bytes_across_tiles() {
+    let context = Context::new(CONTEXT_ALLOWANCE_BYTES).unwrap();
+    let layout = Layout::new(3, 64, 8, 64, MetadataDtype::BF16).unwrap();
+    assert!(
+        context
+            .weights_from_fill(layout, 2, usize::MAX, |_, _, _, _, _| {
+                panic!("public affine4 upload must reject affine8 before callback")
+            })
+            .is_err()
+    );
+    let codes: Vec<_> = (0..192).map(|i| ((i * 7) % 256) as u8).collect();
+    let scales = [128, 59, 0, 189, 128, 60];
+    let biases = [128, 63, 0, 192, 128, 62];
+    let fill = |first: usize, child: Layout, a: &mut [u8], b: &mut [u8], c: &mut [u8]| {
+        let end = first + child.rows();
+        a.copy_from_slice(&codes[first * 64..end * 64]);
+        b.copy_from_slice(&scales[first * 2..end * 2]);
+        c.copy_from_slice(&biases[first * 2..end * 2]);
+        Ok(())
+    };
+    let plan = Plan::storage(layout, 2, usize::MAX).unwrap();
+    let budget = plan.minimum_working;
+    assert!(
+        matches!(context.weights_from_fill_reported(layout,2,budget-1,fill),
+        Err(Error::Budget { required, limit }) if required==budget && limit==budget-1)
+    );
+    let (storage, stats) = context
+        .weights_from_fill_reported(layout, 2, budget, fill)
+        .unwrap();
+    assert_eq!(stats.working_bytes, budget);
+    assert_eq!(storage.layout(), layout);
+    assert_eq!(storage.views().count(), 2);
+    for (first, view) in [0, 2].into_iter().zip(storage.views()) {
+        let end = first + view.layout.rows();
+        for (buffer, original) in [
+            (view.codes, &codes[first * 64..end * 64]),
+            (view.scales, &scales[first * 2..end * 2]),
+            (view.biases, &biases[first * 2..end * 2]),
+        ] {
+            buffer.with_slice(|words| {
+                assert!(
+                    words
+                        .iter()
+                        .flat_map(|word| word.to_le_bytes())
+                        .take(original.len())
+                        .eq(original.iter().copied())
+                );
+                assert!(
+                    words[original.len().div_ceil(4)..]
+                        .iter()
+                        .all(|&word| word == SENTINEL)
+                );
+            });
+        }
+    }
+}
+
+#[test]
 fn immutable_plan_counts_only_original_buffers_device_handle_slots_and_source_without_gpu() {
     let layout = Layout::new(3, 64, 4, 64, MetadataDtype::BF16).unwrap();
     // Chunk2: codes64+28, scales4+28, biases4+28 =156.

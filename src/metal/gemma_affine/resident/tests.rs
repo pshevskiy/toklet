@@ -18,7 +18,8 @@ fn real_metadata() -> (source::Prepared, Cursor<Vec<u8>>, LoadOptions) {
         available_bytes: 6 * 1024 * 1024 * 1024,
         modality: ModalityPolicy::TextOnly,
     };
-    let prepared = source::Prepared::read(config, index, &mut reader, &options).unwrap();
+    let prepared =
+        source::Prepared::read(config, index, &mut reader, &options, SourceKind::Affine4).unwrap();
     (prepared, reader, options)
 }
 #[test]

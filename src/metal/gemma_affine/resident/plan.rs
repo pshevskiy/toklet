@@ -54,7 +54,7 @@ impl Plan {
             .try_reserve_exact(inputs.matrices.len())
             .map_err(|_| Error::Native("Gemma resident plan reservation failed".into()))?;
         for matrix in &inputs.matrices {
-            let plan = super::super::weights::Plan::new(matrix.layout, TILE, usize::MAX)?;
+            let plan = super::super::weights::Plan::storage(matrix.layout, TILE, usize::MAX)?;
             let bytes = subtract(plan.minimum_owned()?, size_of::<Weights>())?;
             payload = add(payload, bytes)?;
             source = source.max(plan.minimum_source()?);
@@ -80,7 +80,7 @@ impl Plan {
     }
     pub(super) fn validate_device(&self, inputs: &source::Inputs, maximum: usize) -> Result<()> {
         for matrix in &inputs.matrices {
-            super::super::weights::Plan::new(matrix.layout, TILE, usize::MAX)?
+            super::super::weights::Plan::storage(matrix.layout, TILE, usize::MAX)?
                 .validate_device(maximum)?;
         }
         for vector in &inputs.vectors {

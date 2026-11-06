@@ -1,0 +1,56 @@
+{
+  "passed": true,
+  "tested_base": "b6000800",
+  "checks": {
+    "fmt": true,
+    "clippy_default_and_metal": true,
+    "default_tests": 584,
+    "metal_tests": 698,
+    "release_lib": true,
+    "logs": "artifacts/gemma-qat-resident-2026-11-06/checks.json"
+  },
+  "shard_sha256": "d52e64b9cb669c65da88c1597fe12ab90e63ab9f79cc1b053eb1fa8bb06c493f",
+  "storage": {
+    "resident_bytes": 3383232892,
+    "policy_bytes": 3600157124,
+    "source_bytes": 82575432,
+    "matrices": 278,
+    "affine8": 105,
+    "vectors": 262,
+    "budget_minus_one_read_bytes": 320319,
+    "checked_original_components": 6
+  },
+  "hardware": {
+    "q8-tile": {
+      "receipt": "artifacts/gemma-qat-resident-2026-11-06/q8-tile/owned.json",
+      "physical_peak_bytes": 3719744,
+      "group_absent": true,
+      "passed": true
+    },
+    "qat-real": {
+      "receipt": "artifacts/gemma-qat-resident-2026-11-06/qat-real/owned.json",
+      "physical_peak_bytes": 3529575520,
+      "group_absent": true,
+      "passed": true
+    },
+    "q4-transaction": {
+      "receipt": "artifacts/gemma-qat-resident-2026-11-06/q4-transaction/owned.json",
+      "physical_peak_bytes": 4375104,
+      "group_absent": true,
+      "passed": true
+    },
+    "q4-real": {
+      "receipt": "artifacts/gemma-qat-resident-2026-11-06/q4-real/owned.json",
+      "physical_peak_bytes": 2733328952,
+      "group_absent": true,
+      "passed": true
+    }
+  },
+  "controls": [
+    "Final second-pass affine8 component mutation rejects",
+    "Unsigned affine8 components retain original bytes across tiles",
+    "Legacy public affine4 upload rejects affine8 before callback"
+  ],
+  "review": "Astra approved after the full Q4 regression passed",
+  "scope": "Authenticated immutable text storage. Graph fidelity, quality and Chat remain open."
+}

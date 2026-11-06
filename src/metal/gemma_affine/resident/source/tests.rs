@@ -2,8 +2,11 @@ use super::*;
 use std::io::{Cursor, ErrorKind};
 
 fn fixture() -> (Inputs, Cursor<Vec<u8>>, LoadOptions) {
-    let layout = Layout::new(3, 64, 4, 64, MetadataDtype::BF16).unwrap();
-    let codes = [0_u8; 96];
+    fixture_width(4)
+}
+fn fixture_width(bits: u8) -> (Inputs, Cursor<Vec<u8>>, LoadOptions) {
+    let layout = Layout::new(3, 64, bits, 64, MetadataDtype::BF16).unwrap();
+    let codes = vec![0_u8; layout.weight_bytes()];
     let scales = [0_u8; 6];
     let biases = [0_u8; 6];
     test_support::stream(
@@ -12,21 +15,33 @@ fn fixture() -> (Inputs, Cursor<Vec<u8>>, LoadOptions) {
     )
 }
 fn read_complete_matrix(inputs: &mut Inputs, reader: &mut (impl Read + Seek)) -> Result<()> {
+    let bits = inputs.matrices[0].layout.bits();
     let mut source = inputs.matrix_read(0)?;
     for (first, rows) in [(0, 2), (2, 1)] {
-        let layout = Layout::new(rows, 64, 4, 64, MetadataDtype::BF16).unwrap();
+        let layout = Layout::new(rows, 64, bits, 64, MetadataDtype::BF16).unwrap();
         source.fill(
             reader,
             first,
             layout,
             [
-                &mut vec![0; rows * 32],
+                &mut vec![0; layout.weight_bytes()],
                 &mut vec![0; rows * 2],
                 &mut vec![0; rows * 2],
             ],
         )?;
     }
     source.finish(inputs)
+}
+#[test]
+fn changed_last_affine8_chunk_cannot_complete_authentication() {
+    let (mut inputs, mut reader, options) = fixture_width(8);
+    inputs.authenticate(&mut reader, &options).unwrap();
+    let code = inputs.matrices[0].regions[0];
+    let region = &inputs.regions[code];
+    reader.get_mut()[region.offset as usize + region.bytes - 1] ^= 1;
+    assert!(read_complete_matrix(&mut inputs, &mut reader).is_err());
+    assert!(!inputs.regions[code].consumed);
+    assert!(inputs.finish(&options).is_err());
 }
 #[test]
 fn exact_full_anchor_then_complete_selected_consumption_is_required_for_identity() {

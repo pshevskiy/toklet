@@ -1,6 +1,6 @@
 //! Cold two-pass byte authentication. No model or identity escapes this module.
 use super::*;
-use crate::mlx::gemma4::{E2bPlan, Storage, inspect};
+use crate::mlx::gemma4::{E2bPlan, Storage, inspect, inspect_qat};
 use sha2::{Digest, Sha256};
 use std::collections::BTreeMap;
 use std::io::{Read, Seek, SeekFrom};
@@ -72,6 +72,7 @@ impl Prepared {
         index: &[u8],
         reader: &mut (impl Read + Seek),
         options: &LoadOptions,
+        kind: SourceKind,
     ) -> Result<Self> {
         if config.len() > MAX_HEADER || index.len() > MAX_HEADER {
             return Err(Error::Options("Gemma source metadata bound"));
@@ -90,13 +91,16 @@ impl Prepared {
         }
         header.resize(count, 0);
         exact(reader, &mut header)?;
-        let cold = inspect(
-            config,
-            index,
-            &header,
-            options.container_bytes,
-            options.modality,
-        )?;
+        let cold = match kind {
+            SourceKind::Affine4 => inspect(
+                config,
+                index,
+                &header,
+                options.container_bytes,
+                options.modality,
+            )?,
+            SourceKind::QatMixed => inspect_qat(config, index, &header, options.modality)?,
+        };
         let mut physical = Vec::new();
         physical
             .try_reserve_exact(cold.text_tensors().len() + cold.excluded_tensors().len())

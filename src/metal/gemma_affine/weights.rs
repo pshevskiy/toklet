@@ -74,6 +74,15 @@ pub(super) struct Plan {
 }
 impl Plan {
     pub(super) fn new(layout: Layout, maximum: usize, available: usize) -> Result<Self> {
+        if layout.bits() != 4 {
+            return Err(Error::Options(
+                "Gemma affine fixed geometry/format outside bounds",
+            ));
+        }
+        Self::storage(layout, maximum, available)
+    }
+
+    pub(super) fn storage(layout: Layout, maximum: usize, available: usize) -> Result<Self> {
         if layout.rows() > 262144
             || !(1..=16384).contains(&maximum)
             || layout.rows().div_ceil(maximum) > 64
@@ -92,7 +101,7 @@ impl Plan {
             let (_, child) = plan.child(index)?;
             // Reuse the existing fixed format/domain geometry, without owning
             // its activation/status allocations or creating any device object.
-            Sizes::new(child, 1)?;
+            Sizes::projection(child, 1)?;
             let buffers = Self::buffer_lengths(child);
             for words in buffers {
                 plan.buffer_bytes = plan
@@ -208,7 +217,8 @@ impl Context {
     where
         F: FnMut(usize, Layout, &mut [u8], &mut [u8], &mut [u8]) -> Result<()>,
     {
-        self.weights_from_fill_reported(layout, maximum_rows, available_working_bytes, fill)
+        let plan = Plan::new(layout, maximum_rows, available_working_bytes)?;
+        self.upload_from_fill(plan, available_working_bytes, fill)
             .map(|(weights, _)| weights)
     }
     pub(super) fn weights_from_fill_reported<F>(
@@ -216,12 +226,25 @@ impl Context {
         layout: Layout,
         maximum_rows: usize,
         available_working_bytes: usize,
+        fill: F,
+    ) -> Result<(Weights, UploadStats)>
+    where
+        F: FnMut(usize, Layout, &mut [u8], &mut [u8], &mut [u8]) -> Result<()>,
+    {
+        let plan = Plan::storage(layout, maximum_rows, available_working_bytes)?;
+        self.upload_from_fill(plan, available_working_bytes, fill)
+    }
+
+    fn upload_from_fill<F>(
+        &self,
+        plan: Plan,
+        available_working_bytes: usize,
         mut fill: F,
     ) -> Result<(Weights, UploadStats)>
     where
         F: FnMut(usize, Layout, &mut [u8], &mut [u8], &mut [u8]) -> Result<()>,
     {
-        let plan = Plan::new(layout, maximum_rows, available_working_bytes)?;
+        let layout = plan.layout;
         plan.validate_device(self.gpu.device.maxBufferLength())?;
         let mut chunks = Vec::new();
         chunks

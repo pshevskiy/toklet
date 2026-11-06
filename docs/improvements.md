@@ -10678,3 +10678,12 @@ The shared physical descriptor now uses the packed byte stride and group
 size. Real metadata, mutation controls, default and Metal checks and
 Astra review pass. Payload authentication and execution remain separate.
 [Evidence](../benchmarks/results/2026-11-06-gemma-qat-cold-v1.json)
+
+## 6 November 2026 — Authenticate mixed Gemma QAT resident storage
+
+All 278 matrices and 262 vectors load from the pinned shard under an exact
+3,600,157,124-byte policy. One byte less rejects after metadata. Affine8
+tiles retain original packed bytes, peak physical memory is3.53GB on Mac,
+and the full Q4 storage regression passes. Astra approved immutable
+storage. Execution and quality remain separate.
+[Evidence](../benchmarks/results/2026-11-06-gemma-qat-resident-v1.json)

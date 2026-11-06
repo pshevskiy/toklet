@@ -1,6 +1,6 @@
 //! Complete immutable E2B text weights. Storage admission is not graph execution.
 use super::*;
-use crate::mlx::gemma4::ModalityPolicy;
+use crate::mlx::gemma4::{ModalityPolicy, QAT_CONTAINER_BYTES};
 use std::io::{Read, Seek};
 
 mod bindings;
@@ -18,6 +18,16 @@ const TILE: usize = 16384;
 const COLD_POLICY: usize = 64 * 1024 * 1024;
 const HASH_STACK_POLICY: usize = 128 * 1024;
 const OVERFLOW: &str = "Gemma resident storage size overflow";
+const QAT_CONTAINER_SHA256: [u8; 32] = [
+    0xd5, 0x2e, 0x64, 0xb9, 0xcb, 0x66, 0x9c, 0x65, 0xda, 0x88, 0xc1, 0x59, 0x7f, 0xe1, 0x2a, 0xb9,
+    0x0e, 0x63, 0xab, 0x9f, 0x79, 0xcc, 0x1b, 0x05, 0x3e, 0xb1, 0xfa, 0x8b, 0xb0, 0x6c, 0x49, 0x3f,
+];
+
+#[derive(Clone, Copy)]
+enum SourceKind {
+    Affine4,
+    QatMixed,
+}
 fn policy_overhead() -> Result<usize> {
     add(
         add(CONTEXT_ALLOWANCE_BYTES, COLD_POLICY)?,
@@ -100,11 +110,22 @@ impl E2bWeights {
         context: &Context,
         config: &[u8],
         index: &[u8],
-        mut reader: impl Read + Seek,
+        reader: impl Read + Seek,
         options: LoadOptions,
     ) -> Result<Self> {
+        Self::load_profile(context, config, index, reader, options, SourceKind::Affine4)
+    }
+
+    fn load_profile(
+        context: &Context,
+        config: &[u8],
+        index: &[u8],
+        mut reader: impl Read + Seek,
+        options: LoadOptions,
+        kind: SourceKind,
+    ) -> Result<Self> {
         admit(policy_overhead()?, options.available_bytes)?;
-        let mut prepared = source::Prepared::read(config, index, &mut reader, &options)?;
+        let mut prepared = source::Prepared::read(config, index, &mut reader, &options, kind)?;
         let bindings = Bindings::new(&prepared.cold)?;
         let (storage, report) = load_storage(context, &mut prepared.inputs, &mut reader, &options)?;
         let identity = prepared.inputs.finish(&options)?;
@@ -130,6 +151,45 @@ impl E2bWeights {
     /// Cold admitted geometry, not a numerical execution capability.
     pub fn layer_geometry(&self, index: usize) -> Option<crate::mlx::gemma4::LayerPlan> {
         self.bindings.layer_geometry(index)
+    }
+}
+
+/// Authenticated mixed QAT text weights. The transparent wrapper has the
+/// same owner size as the charged E2B storage and exposes no graph access.
+#[repr(transparent)]
+pub struct QatWeights(E2bWeights);
+
+impl QatWeights {
+    pub fn load_text_only(
+        context: &Context,
+        config: &[u8],
+        index: &[u8],
+        reader: impl Read + Seek,
+        available_bytes: usize,
+    ) -> Result<Self> {
+        let options = LoadOptions {
+            container_bytes: QAT_CONTAINER_BYTES,
+            container_sha256: QAT_CONTAINER_SHA256,
+            available_bytes,
+            modality: ModalityPolicy::TextOnly,
+        };
+        E2bWeights::load_profile(
+            context,
+            config,
+            index,
+            reader,
+            options,
+            SourceKind::QatMixed,
+        )
+        .map(Self)
+    }
+
+    pub fn identity(&self) -> &Identity {
+        self.0.identity()
+    }
+
+    pub fn report(&self) -> &LoadReport {
+        self.0.report()
     }
 }
 fn owner_vec<T>(count: usize) -> Result<Vec<T>> {

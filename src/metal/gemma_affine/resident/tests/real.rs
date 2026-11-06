@@ -53,6 +53,125 @@ fn buffer(value: &Buffer<u32>) -> Value {
     });
     json!({"allocation":format!("{:p}",&*value.raw),"bytes":value.len*4,"sha256":digest})
 }
+
+#[test]
+#[ignore = "explicit pinned QAT immutable mixed storage, no graph"]
+fn complete_qat_storage_authenticates_and_owns_mixed_payload() {
+    let root = std::path::PathBuf::from(std::env::var_os("TOKLET_GEMMA_QAT_METADATA").unwrap());
+    let path = root.join("model/model.safetensors");
+    let mut file = OpenOptions::new()
+        .read(true)
+        .custom_flags(libc::O_NOFOLLOW | libc::O_NONBLOCK)
+        .open(&path)
+        .unwrap();
+    let before = identity(&file.metadata().unwrap());
+    assert_eq!(before, identity(&std::fs::symlink_metadata(&path).unwrap()));
+    let config = std::fs::read(root.join("config.json")).unwrap();
+    let index = std::fs::read(root.join("model.safetensors.index.json")).unwrap();
+    let options = LoadOptions {
+        container_bytes: QAT_CONTAINER_BYTES,
+        container_sha256: QAT_CONTAINER_SHA256,
+        available_bytes: 6 * 1024 * 1024 * 1024,
+        modality: ModalityPolicy::TextOnly,
+    };
+    let prepared =
+        source::Prepared::read(&config, &index, &mut file, &options, SourceKind::QatMixed).unwrap();
+    let plan = Plan::new(&prepared.inputs, 278, 262).unwrap();
+    let required = plan.working(0, 0, plan.source).unwrap();
+    let (original, _, _) = real_metadata();
+    let affine4 = Plan::new(&original.inputs, 278, 262).unwrap();
+    assert_eq!(plan.base, affine4.base);
+    assert_eq!(plan.source, affine4.source);
+    assert_eq!(plan.payload - affine4.payload, 778_567_680);
+    assert_eq!(size_of::<QatWeights>(), size_of::<E2bWeights>());
+    let resident = autoreleasepool(|_| {
+        let context = Context::new(CONTEXT_ALLOWANCE_BYTES).unwrap();
+        let count = Cell::new(0);
+        let rejected = QatWeights::load_text_only(
+            &context,
+            &config,
+            &index,
+            Counted {
+                file: &mut file,
+                bytes: &count,
+            },
+            required - 1,
+        );
+        assert!(
+            matches!(rejected,Err(Error::Budget { required: bytes, limit })
+            if bytes==required && limit==required-1)
+        );
+        assert_eq!(count.get(), 320_319);
+        QatWeights::load_text_only(&context, &config, &index, &mut file, required).unwrap()
+    });
+    let report = resident.report();
+    assert_eq!(report.resident_requested_bytes, plan.base + plan.payload);
+    assert_eq!(report.admitted_load_policy_bytes, required);
+    assert_eq!(report.maximum_source_capacity_bytes, plan.source);
+    assert_eq!((report.matrices, report.vectors), (278, 262));
+    assert_eq!(
+        resident.identity().container_sha256(),
+        &QAT_CONTAINER_SHA256
+    );
+    assert_eq!(resident.identity().text_components(), 1096);
+    let affine8: Vec<_> = resident
+        .0
+        .storage
+        .matrices
+        .iter()
+        .enumerate()
+        .filter(|(_, matrix)| matrix.layout().bits() == 8)
+        .collect();
+    assert_eq!(affine8.len(), 105);
+    for &(matrix_index, matrix) in [affine8.first().unwrap(), affine8.last().unwrap()] {
+        let mut views = matrix.views();
+        let view = views.next().unwrap();
+        assert!(views.next().is_none());
+        let regions = prepared.inputs.matrices[matrix_index].regions;
+        for (region, buffer) in regions
+            .into_iter()
+            .zip([view.codes, view.scales, view.biases])
+        {
+            let source = &prepared.inputs.regions[region];
+            file.seek(SeekFrom::Start(source.offset)).unwrap();
+            let mut original = Sha256::new();
+            let mut temporary = [0_u8; 4096];
+            let mut remaining = source.bytes;
+            while remaining > 0 {
+                let count = remaining.min(temporary.len());
+                file.read_exact(&mut temporary[..count]).unwrap();
+                original.update(&temporary[..count]);
+                remaining -= count;
+            }
+            let retained = buffer.with_slice(|words| {
+                let mut digest = Sha256::new();
+                let mut remaining = source.bytes;
+                for word in words {
+                    let count = remaining.min(4);
+                    if count == 0 {
+                        assert_eq!(*word, SENTINEL);
+                    } else {
+                        digest.update(&word.to_le_bytes()[..count]);
+                        remaining -= count;
+                    }
+                }
+                assert_eq!(remaining, 0);
+                digest.finalize()
+            });
+            assert_eq!(original.finalize(), retained);
+        }
+    }
+    assert_eq!(before, identity(&file.metadata().unwrap()));
+    assert_eq!(before, identity(&std::fs::symlink_metadata(&path).unwrap()));
+    emit(
+        "QAT_STORAGE",
+        json!({"resident_bytes":report.resident_requested_bytes,
+        "policy_bytes":report.admitted_load_policy_bytes,"source_bytes":report.maximum_source_capacity_bytes,
+        "matrices":report.matrices,"affine8":affine8.len(),"vectors":report.vectors,
+        "budget_minus_one_read_bytes":320319,"checked_original_components":6}),
+    );
+}
+
 #[test]
 #[ignore = "explicit complete original Gemma E2B immutable GPU storage qualification"]
 fn complete_original_e2b_storage_matches_independent_inventory_after_context_teardown() {

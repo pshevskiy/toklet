@@ -24,6 +24,7 @@ const LAYERS: usize = 35;
 const PRODUCERS: usize = 15;
 const PLE: usize = 256;
 const MAX_HEADER_TENSORS: usize = 4096;
+pub(crate) const QAT_CONTAINER_BYTES: u64 = 4_329_240_325;
 const FEED_FORWARD: [&str; 3] = ["mlp.gate_proj", "mlp.up_proj", "mlp.down_proj"];
 
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -390,7 +391,7 @@ pub fn inspect_qat(
         config_bytes,
         index_bytes,
         header_bytes,
-        4_329_240_325,
+        QAT_CONTAINER_BYTES,
         policy,
         Format::QatMixed,
     )
