@@ -182,6 +182,33 @@ impl<'a> Model<'a> {
     }
 }
 
+/// Exact physical FP32 cache and proposal buffers for the pinned Mac profile.
+/// Separate model/owner, scratch, codec, and application admission still applies.
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+pub(crate) fn official_bf16_planned_kv(capacity: usize, chunk_rows: usize) -> Result<usize, Error> {
+    use crate::metal::gemma_affine::OfficialBf16;
+    if !(1..=OfficialBf16::MAX_POSITIONS).contains(&capacity)
+        || !(1..=capacity.min(MAX_POSITIONS)).contains(&chunk_rows)
+    {
+        return Err(Error::InvalidConfig("official Gemma KV capacity or chunk"));
+    }
+    let layout = Layout::e2b_layers_for_limit(&crate::mlx::gemma4::layer_plans(), capacity)?;
+    let cache_bytes = layout
+        .shared_kv_plan()?
+        .planned_narrowed_cache_bytes(capacity)?;
+    let cache_metadata = add_bytes(
+        std::mem::size_of::<Vec<WindowKvCache>>(),
+        cpu::product(layout.producers, std::mem::size_of::<WindowKvCache>())?,
+    )?;
+    let cache_payload = cache_bytes
+        .checked_sub(cache_metadata)
+        .ok_or(cpu::Error::SizeOverflow)?;
+    add_bytes(
+        cache_payload,
+        allocation_bytes(layout.staged_kv_values(chunk_rows)?)?,
+    )
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

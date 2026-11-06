@@ -272,6 +272,11 @@ typedef struct {
 /* Combined owner admission including the codec and bridge, with caller-owned
    app memory separate. Other model profiles return TOKLET_UNSUPPORTED. */
 uint32_t toklet_session_gemma_bf16_memory(const TokletSession *, TokletGemmaBf16MemoryInfo *, TokletError *);
+/* Exact physical FP32 cache and proposal buffers for the pinned official
+   Apple Silicon Mac profile at the supplied capacity and prefill chunk.
+   No model/session, payload read, reservation or whole-app fit decision.
+   Output remains unchanged on error; other platforms return UNSUPPORTED. */
+uint32_t toklet_gemma_bf16_plan_kv(uint32_t capacity, uint32_t chunk, uint64_t *, TokletError *);
 /* Read-only live model/session snapshot, valid after external model release.
    No directory reads, new execution, reservation or app eligibility grant.
    Outputs are complete native-aligned records, untouched on failure. Existing

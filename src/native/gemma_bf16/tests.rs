@@ -7,6 +7,36 @@ unsafe extern "C" fn record(context: *mut c_void, event: TokenEvent) -> u32 {
 }
 
 #[test]
+fn official_bf16_cold_kv_plan_covers_physical_buffers_and_rejects_bad_bounds() {
+    let mut bytes = u64::MAX;
+    let error = ptr::null_mut();
+    // SAFETY: output and error are disjoint; the first always points to a live u64.
+    unsafe {
+        for (capacity, chunk, expected) in [
+            (1, 1, 73_728),
+            (256, 32, 10_616_832),
+            (384, 32, 15_335_424),
+            (512, 1, 18_911_232),
+            (512, 32, 20_054_016),
+        ] {
+            assert_eq!(
+                toklet_gemma_bf16_plan_kv(capacity, chunk, &mut bytes, error),
+                OK
+            );
+            assert_eq!(bytes, expected);
+        }
+        for (capacity, chunk) in [(0, 1), (513, 32), (512, 33), (512, 0), (4, 5)] {
+            bytes = u64::MAX;
+            assert_eq!(
+                toklet_gemma_bf16_plan_kv(capacity, chunk, &mut bytes, error),
+                INVALID
+            );
+            assert_eq!(bytes, u64::MAX);
+        }
+    }
+}
+
+#[test]
 #[ignore = "explicit Mac official BF16 C ABI lifetime and raw generation witness"]
 fn official_bf16_native_raw_owner_survives_model_release() {
     let directory = std::env::var("TOKLET_GEMMA_OFFICIAL_DIRECTORY").unwrap();
@@ -36,6 +66,30 @@ fn official_bf16_native_raw_owner_survives_model_release() {
             ),
             OK
         );
+        for (capacity, chunk) in [(128, 1), (384, 16)] {
+            let mut planned = 0;
+            assert_eq!(
+                toklet_gemma_bf16_plan_kv(capacity, chunk, &mut planned, error),
+                OK
+            );
+            let candidate_options = Options {
+                capacity,
+                chunk,
+                ..options
+            };
+            let mut candidate = ptr::null_mut();
+            assert_eq!(
+                toklet_session_create(model, &candidate_options, &mut candidate, error),
+                OK
+            );
+            let mut candidate_memory = GemmaBf16MemoryInfo::default();
+            assert_eq!(
+                toklet_session_gemma_bf16_memory(candidate, &mut candidate_memory, error),
+                OK
+            );
+            assert_eq!(candidate_memory.kv_owned_bytes, planned);
+            assert_eq!(toklet_session_release(candidate, error), OK);
+        }
         assert_eq!(
             toklet_session_create(model, &options, &mut session, error),
             OK
@@ -54,6 +108,9 @@ fn official_bf16_native_raw_owner_survives_model_release() {
             memory.session_admitted_bytes,
             context.numerical_and_bridge_admitted_bytes + memory.session_reserved_bytes
         );
+        let mut planned = 0;
+        assert_eq!(toklet_gemma_bf16_plan_kv(512, 32, &mut planned, error), OK);
+        assert_eq!(memory.kv_owned_bytes, planned);
         assert_eq!(memory.codec_allowance_bytes, 1 << 30);
         assert!(memory.session_admitted_bytes <= options.memory_limit_bytes);
         let mut candidate = ptr::null_mut();

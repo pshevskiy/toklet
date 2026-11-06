@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Plan exact Gemma BF16 KV bytes before opening a Mac session.**
+Current task: **Connect and verify the Mac Gemma BF16 window and KV controls.**
 Selected native43 package and signed Mac build. Official BF16 passed exact
 cached publication and network-denied Chat at 4.93 GB peak. The full public
 transfer timed out after 256 MiB and remains open.
@@ -705,8 +705,10 @@ uses the existing full saved-conversation reset+prompt path on Send.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-mac-hub-v1.json).
     - [ ] Complete a full public Gemma download and reopen from its publication.
       First attempt timed out after three range attempts and cleaned staging.
-    - [ ] Add exact cold KV planning, then wire and qualify Mac context/KV
-      tuning, lifecycle and the source-matched app.
+    - [x] Plan exact cold KV bytes from the shared layout. Three real session
+      allocations, 44 native exports, strict checks and Astra pass.
+      [Evidence](benchmarks/results/2026-11-06-gemma-bf16-kv-plan-v1.json).
+    - [ ] Wire and qualify Mac context/KV tuning, lifecycle and the signed app.
     - [x] Complete replay and isolated grading for the frozen100 tasks.
       All4,149 sampled decisions match. The grade is51/100 versus52/100,
       within the2pp gate. Astra confirms both original-quality results.

@@ -10949,3 +10949,11 @@ The offline managed process peaks at 4.93 GB. Astra approves after both iOS
 SDK builds and the Mac ranking/discovery regressions. The full public transfer
 timed out after 256 MiB and cleaned staging. That acceptance stays open.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-mac-hub-v1.json)
+
+## 6 November 2026 — Plan exact Gemma BF16 KV bytes before opening
+
+The cold C query reuses the graph's cache and staging equations. Real Mac
+allocations match at 128/1, 384/16, and 512/32. The largest is 20.05 MB.
+Astra approves after 589 default and 708 Metal tests and all 44 native exports.
+Metal lint initially flagged helper placement and passed after relocation.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-kv-plan-v1.json)

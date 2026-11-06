@@ -1,0 +1,44 @@
+{
+  "format": "toklet-gemma-bf16-kv-plan-v1",
+  "scope": "Cold exact FP32 cache and per-chunk staging bytes for the supported Mac official BF16 graph. No asset reads, allocation reservations, or whole-app fit claims.",
+  "real_plan_actual_pairs": [
+    {
+      "capacity": 128,
+      "chunk": 1,
+      "bytes": 4755456
+    },
+    {
+      "capacity": 384,
+      "chunk": 16,
+      "bytes": 14745600
+    },
+    {
+      "capacity": 512,
+      "chunk": 32,
+      "bytes": 20054016
+    }
+  ],
+  "checks": {
+    "default_tests": 589,
+    "metal_tests": 708,
+    "all_three_native_slices_c_exports": 44,
+    "c_header_targets": 3,
+    "ios_rust_targets": 2,
+    "physical_ios_tested": false
+  },
+  "initial_failure": "Metal lint reported an item after the test module. Relocation of the Mac-only helper corrected it; compiled default and iOS inputs are unchanged.",
+  "peak_physical_bytes": 4924051752,
+  "process_group_absent": true,
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-kv-plan-2026-11-06/checks.json": "060ed9f42be8453995bc0d27f518989edcef547456f5e3f1a0b661db4a4aa3ec",
+    "artifacts/gemma-bf16-kv-plan-2026-11-06/metal-clippy.stderr": "4789c7d9c993a2fef4fe345ad09b5fa9638aa9986ffe42f27ec0834d4abaf25c",
+    "artifacts/gemma-bf16-kv-plan-2026-11-06/cross-checks.txt": "e38d2d034da3036fab6f35a62dd37d2e1c3785ef69f0b92b8d22e1518c96174e",
+    "artifacts/gemma-bf16-kv-plan-2026-11-06/final/checks.json": "883fda85220fe58b66a59784baac8696f94751275a376e008ae2769141bea988",
+    "artifacts/gemma-bf16-kv-plan-2026-11-06/final/header-check.txt": "91259cb3c58c84a69bc4a1e1f38aba4d9e4b91cfb3a10caa363451422aceb3a9",
+    "artifacts/gemma-bf16-kv-plan-2026-11-06/final/link-check.json": "f6a3f74ee90c386efc5a2e1624eeb1f908c5a04dee88b9ffecc9c9c0f262a4f6",
+    "artifacts/gemma-bf16-kv-plan-2026-11-06/final/native/owned.json": "32073d689a1df58d4d35a2471115f7884fa3463ca4959d5d2e73bd28139cf580",
+    "artifacts/gemma-bf16-kv-plan-2026-11-06/final/native/gpu.stdout": "71a1c9fd374751002cecbeddf5ffcc6d39915c0bee53afa663ed2a4e9f3f42e5",
+    "artifacts/gemma-bf16-native44-package-2026-11-06/build.json": "fa012e565e004015883bb293e6a9cd76983a79503338bf7dcf944a71a3b710c3"
+  },
+  "review": "Astra approves the reused exact layout math, shape bounds, unchanged existing admission and three real allocation pairs."
+}

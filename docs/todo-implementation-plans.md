@@ -239,7 +239,8 @@ The other text tensors require4,559,518,278 raw bytes. [Official source inventor
      timed out. Repeat it independently of the qualified offline journey.
    - Expose exact cold FP32 KV buffer bytes from the shared layout for the
      supported Mac capacity and chunk. Check the prediction against real
-     owners, then qualify next-load controls, rejected settings and late
+     owners. [KV planner evidence](../benchmarks/results/2026-11-06-gemma-bf16-kv-plan-v1.json).
+     Qualify next-load controls, rejected settings and late
      PLE corruption.
      Build the source-matched Mac package and measure the app process. Keep
      append-only text delivery as a separate gate from visible-prefix Chat.

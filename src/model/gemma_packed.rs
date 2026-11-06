@@ -14,6 +14,8 @@ use crate::cpu::{self, finite, length};
 use crate::mlx::affine::{Matrix, MetadataDtype};
 
 mod e2b;
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+pub(crate) use e2b::official_bf16_planned_kv;
 mod forward;
 pub(crate) mod generation;
 pub(crate) mod operations;
@@ -107,6 +109,37 @@ impl Layout {
                 })
                 .collect(),
         }
+    }
+    fn shared_kv_plan(&self) -> Result<SharedKvPlan, Error> {
+        let geometry: Vec<_> = self
+            .layers
+            .iter()
+            .map(|g| LayerKvGeometry {
+                kind: g.kind,
+                heads: 1,
+                head_dim: g.head_dim,
+            })
+            .collect();
+        SharedKvPlan::new(
+            &geometry,
+            self.layers.len() - self.producers,
+            self.window,
+            self.positions,
+            // Physical local rings may exceed the short executable prefix.
+            // Forward still rejects any request beyond self.positions before work.
+            self.positions.max(self.window),
+        )
+    }
+
+    fn staged_kv_values(&self, chunk_rows: usize) -> Result<usize, Error> {
+        self.layers[..self.producers]
+            .iter()
+            .try_fold(0, |values, layer| {
+                add_bytes(
+                    values,
+                    cpu::product(cpu::product(chunk_rows, layer.head_dim)?, 2)?,
+                )
+            })
     }
     fn max_dim(&self) -> usize {
         self.layers.iter().map(|l| l.head_dim).max().unwrap()
@@ -399,24 +432,7 @@ impl<'a, M: MatrixSource> Model<'a, M> {
                 report.metadata_allowance_bytes,
             )?;
         }
-        let geometry: Vec<_> = l
-            .layers
-            .iter()
-            .map(|g| LayerKvGeometry {
-                kind: g.kind,
-                heads: 1,
-                head_dim: g.head_dim,
-            })
-            .collect();
-        let plan = SharedKvPlan::new(
-            &geometry,
-            l.layers.len() - l.producers,
-            l.window,
-            l.positions,
-            // Physical local rings may exceed the short executable prefix.
-            // Forward still rejects any request beyond l.positions before work.
-            l.positions.max(l.window),
-        )?;
+        let plan = l.shared_kv_plan()?;
         let mut unit_norm = zeros(l.max_dim())?;
         unit_norm.fill(1.);
         // Scalar fields live in LayerWeights and are counted by its capacity.
@@ -501,13 +517,7 @@ impl<'a, M: MatrixSource> Model<'a, M> {
     ) -> Result<usize, Error> {
         let l = &self.layout;
         let scratch = Scratch::counts(l, capacity, chunk_rows)?;
-        let mut stages = 0;
-        for g in &l.layers[..l.producers] {
-            stages = add_bytes(
-                stages,
-                cpu::product(cpu::product(chunk_rows, g.head_dim)?, 2)?,
-            )?;
-        }
+        let stages = l.staged_kv_values(chunk_rows)?;
         let mut bytes = std::mem::size_of::<Session<'_, '_, M, B>>();
         for n in [
             self.plan.planned_narrowed_cache_bytes(capacity)?

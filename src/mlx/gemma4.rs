@@ -231,7 +231,7 @@ fn config(value: &Value, policy: ModalityPolicy, format: Format) -> Result<(), E
     Ok(())
 }
 
-fn layer_plans() -> [LayerPlan; LAYERS] {
+pub(crate) fn layer_plans() -> [LayerPlan; LAYERS] {
     std::array::from_fn(|index| {
         let full = index % 5 == 4;
         LayerPlan {

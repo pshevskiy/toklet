@@ -290,3 +290,39 @@ pub unsafe extern "C" fn toklet_session_preflight(
 
 #[cfg(test)]
 mod tests;
+
+/// Exact physical KV-buffer planning for the supported Mac official BF16 graph.
+/// No asset read, model allocation, session reservation or application fit check.
+/// # Safety
+/// Follow the foreign pointer/disjoint output contract. Output is unchanged on error.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_gemma_bf16_plan_kv(
+    capacity: u32,
+    chunk: u32,
+    out: *mut u64,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe {
+        boundary(error, || {
+            pointer(out)?;
+            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            {
+                let bytes = crate::model::gemma_packed::official_bf16_planned_kv(
+                    capacity as usize,
+                    chunk as usize,
+                )
+                .map_err(|error| fail(INVALID, error.to_string()))?;
+                out.write(bytes as u64);
+                Ok(())
+            }
+            #[cfg(not(all(feature = "metal", target_os = "macos", target_arch = "aarch64")))]
+            {
+                let _ = (capacity, chunk);
+                Err(fail(
+                    UNSUPPORTED,
+                    "official Gemma BF16 KV planning is unavailable",
+                ))
+            }
+        })
+    }
+}
