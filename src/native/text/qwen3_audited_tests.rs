@@ -109,9 +109,13 @@ fn pinned_qwen3_audited_model_codec_retains_exact_owner() {
             paired._model.as_ref().unwrap(),
             &(*handles.model).model
         ));
-        let content = *paired.codec.qwen3_content_identity().unwrap();
+        let content = *paired
+            .dense_codec()
+            .unwrap()
+            .qwen3_content_identity()
+            .unwrap();
         assert_eq!(content.source(), &source);
-        assert!(paired.codec.content_identity().is_none());
+        assert!(paired.dense_codec().unwrap().content_identity().is_none());
         record(
             "QWEN_AUDITED_PAIR",
             serde_json::json!({

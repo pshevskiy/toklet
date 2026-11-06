@@ -9,7 +9,8 @@ use std::{
     os::unix::fs::{FileExt, MetadataExt},
 };
 
-const CONTAINER_SHA256: &str = "2db5482b20d746879bb3ef79b5203e9075a2e2b98f54ec7c2f281c1477ddc550";
+pub(crate) const CONTAINER_SHA256: &str =
+    "2db5482b20d746879bb3ef79b5203e9075a2e2b98f54ec7c2f281c1477ddc550";
 const SCAN_BYTES: usize = 64 * 1024;
 const METADATA_ALLOWANCE_BYTES: usize = 8 * 1024 * 1024;
 const MAX_BATCH: usize = 32;

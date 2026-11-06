@@ -10923,3 +10923,11 @@ admission is5.814GB and physical peak is4.914GB. Astra approves after strict
 checks,43 Mac exports and both iOS compiler targets. Managed Chat and
 replacement remain separate.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-native-raw-v1.json)
+
+## 6 November 2026 — Bind the official BF16 codec to audited native Chat
+
+Chat reuses the reserved codec and reports the exact six pinned assets.
+The real Mac reply, bounds, lifetime and dense Qwen2 regression pass.
+Peak physical memory is 4.92 GB. Astra approves after 589 default and
+707 Metal tests. Two overlapping CLI checks passed on the serial rerun.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-native-chat-v1.json)

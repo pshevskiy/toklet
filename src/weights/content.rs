@@ -86,26 +86,9 @@ impl<'a> Manifest<'a> {
         {
             return Err(invalid("duplicate content manifest file"));
         }
-        let mut hash = Sha256::new();
-        hash.update(b"toklet-full-manifest-v1\0");
-        let mut text = |value: &str| {
-            hash.update((value.len() as u64).to_le_bytes());
-            hash.update(value.as_bytes());
-        };
-        text(repository);
-        text(revision);
-        hash.update((files.len() as u64).to_le_bytes());
-        for &i in order.iter() {
-            let entry = files[i];
-            hash.update((entry.name.len() as u64).to_le_bytes());
-            hash.update(entry.name.as_bytes());
-            hash.update(entry.bytes.to_le_bytes());
-            hash.update(entry.sha256);
-        }
-        Ok(Self {
-            files,
-            identity: hash.finalize().into(),
-        })
+        let identity =
+            canonical_manifest_identity(repository, revision, order.iter().map(|&i| files[i]));
+        Ok(Self { files, identity })
     }
     pub(crate) const fn identity(&self) -> [u8; 32] {
         self.identity
@@ -113,6 +96,32 @@ impl<'a> Manifest<'a> {
     pub(crate) const fn files(&self) -> &[ExpectedFile<'a>] {
         self.files
     }
+}
+
+/// Hash an already validated inventory in ascending basename order.
+/// Also used for the statically pinned official inventory, whose shard exceeds
+/// this module's general bounded file-delivery policy.
+pub(crate) fn canonical_manifest_identity<'a>(
+    repository: &str,
+    revision: &str,
+    entries: impl ExactSizeIterator<Item = ExpectedFile<'a>>,
+) -> [u8; 32] {
+    let mut hash = Sha256::new();
+    hash.update(b"toklet-full-manifest-v1\0");
+    let mut text = |value: &str| {
+        hash.update((value.len() as u64).to_le_bytes());
+        hash.update(value.as_bytes());
+    };
+    text(repository);
+    text(revision);
+    hash.update((entries.len() as u64).to_le_bytes());
+    for entry in entries {
+        hash.update((entry.name.len() as u64).to_le_bytes());
+        hash.update(entry.name.as_bytes());
+        hash.update(entry.bytes.to_le_bytes());
+        hash.update(entry.sha256);
+    }
+    hash.finalize().into()
 }
 
 #[derive(Clone, Copy)]

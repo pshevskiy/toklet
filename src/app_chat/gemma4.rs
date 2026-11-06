@@ -19,6 +19,26 @@ pub const ALLOWANCE_BYTES: usize = 1024 * 1024 * 1024;
 /// This grants no numerical context/output or app capability.
 pub const STREAM_ALLOWANCE_BYTES: usize = 4 * 1024 * 1024;
 pub const STOP_IDS: [u32; 3] = [1, 106, 50];
+pub(crate) const OFFICIAL_TOKENIZER_CONFIG: (&str, usize, &str) = (
+    "tokenizer_config.json",
+    2095,
+    "90c3a3ba5bf53818383a58e1a776cbcacd2a038d4812eaa373e1522f2d06f3df",
+);
+pub(crate) const GENERATION_CONFIG: (&str, usize, &str) = (
+    "generation_config.json",
+    208,
+    "d4226bbe3117d2d253ba4609720ba82c6c4ce4627a9a6ae05387c78983ac03de",
+);
+pub(crate) const CHAT_TEMPLATE: (&str, usize, &str) = (
+    "chat_template.jinja",
+    17336,
+    "2f1b4d75d067bae3fe44e676721c7f077d243bc007156cb9c2f8b5836613d082",
+);
+pub(crate) const TOKENIZER: (&str, usize, &str) = (
+    "tokenizer.json",
+    32169626,
+    "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f",
+);
 const MAX_TOKEN_BYTES: usize = 4096;
 const CONTROLS: [(u32, &str); 24] = [
     (0, "<pad>"),
@@ -227,11 +247,7 @@ impl Codec {
             available_bytes,
             [
                 ("config.json", CONFIG_BYTES, CONFIG_SHA256),
-                (
-                    "tokenizer_config.json",
-                    2095,
-                    "90c3a3ba5bf53818383a58e1a776cbcacd2a038d4812eaa373e1522f2d06f3df",
-                ),
+                OFFICIAL_TOKENIZER_CONFIG,
             ],
             capture,
         )
@@ -246,25 +262,14 @@ impl Codec {
         if available_bytes < ALLOWANCE_BYTES {
             return Err(invalid("Gemma text allowance exceeds available bytes"));
         }
-        for (name, bytes, sha) in profile.into_iter().chain([
-            (
-                "generation_config.json",
-                208,
-                "d4226bbe3117d2d253ba4609720ba82c6c4ce4627a9a6ae05387c78983ac03de",
-            ),
-            (
-                "chat_template.jinja",
-                17336,
-                "2f1b4d75d067bae3fe44e676721c7f077d243bc007156cb9c2f8b5836613d082",
-            ),
-        ]) {
+        for (name, bytes, sha) in profile
+            .into_iter()
+            .chain([GENERATION_CONFIG, CHAT_TEMPLATE])
+        {
             capture(&directory.join(name), bytes, sha)?;
         }
-        let bytes = capture(
-            &directory.join("tokenizer.json"),
-            32169626,
-            "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f",
-        )?;
+        let (name, bytes, sha) = TOKENIZER;
+        let bytes = capture(&directory.join(name), bytes, sha)?;
         tokenizers::utils::parallelism::set_parallelism(false);
         let tokenizer = Tokenizer::from_bytes(&bytes).map_err(invalid)?;
         if tokenizer.get_truncation().is_some()

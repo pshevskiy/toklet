@@ -12,6 +12,9 @@ use crate::{
 };
 use serde::Serialize;
 
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+mod gemma_bf16;
+
 const REPOSITORY: &str = "mlx-community/Qwen3-0.6B-8bit";
 const REVISION: &str = "11de96878523501bcaa86104e3c186de07ff9068";
 
@@ -77,6 +80,10 @@ enum Role {
     TokenizerParserConsumed,
     FixedTextPolicyVerified,
     AncillaryVerified,
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    WholeSourceAuthenticated,
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    FileBackedPleAuthenticated,
 }
 #[derive(Serialize)]
 struct Asset {
@@ -384,33 +391,45 @@ pub unsafe extern "C" fn toklet_model_chat_identity_create(
             owner(model.owner)?;
             owner(chat.owner)?;
             same_model(model, chat)?;
+            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            if let NativeModel::OfficialGemma(gemma) = model.model.as_ref() {
+                if chat.official_codec().is_none() {
+                    return Err(fail(UNSUPPORTED, "chat has no official Gemma codec"));
+                }
+                out.write(gemma_bf16::capture(
+                    model.instance,
+                    gemma.loaded_positions(),
+                )?);
+                return Ok(());
+            }
+            let codec = chat.dense_codec()?;
             let (source, loaded) = SourceReceipt::model(model)?;
             let evidence = match source {
                 SourceReceipt::Qwen2(source) => evidence(
                     IdentityProfile::Qwen2,
                     &source,
-                    chat.codec
+                    codec
                         .qwen2_content_identity()
                         .ok_or_else(|| fail(UNSUPPORTED, "chat has no audited Qwen2 codec"))?,
                 )?,
                 SourceReceipt::Qwen15(source) => evidence(
                     IdentityProfile::Qwen15,
                     &source,
-                    chat.codec
+                    codec
                         .dense_content_identity()
                         .ok_or_else(|| fail(UNSUPPORTED, "chat has no audited Qwen1.5B codec"))?,
                 )?,
                 SourceReceipt::Qwen3(source) => evidence(
                     IdentityProfile::Qwen3,
                     &source,
-                    chat.codec
+                    codec
                         .qwen3_content_identity()
                         .ok_or_else(|| fail(UNSUPPORTED, "chat has no audited Qwen3 codec"))?,
                 )?,
                 SourceReceipt::Llama3(source) => evidence(
                     IdentityProfile::Llama3,
                     &source,
-                    chat.codec
+                    codec
                         .dense_content_identity()
                         .filter(|c| c.text_policy() == "llama3-plain-20240726-v1")
                         .ok_or_else(|| fail(UNSUPPORTED, "chat has no audited Llama3 codec"))?,
@@ -418,13 +437,13 @@ pub unsafe extern "C" fn toklet_model_chat_identity_create(
                 SourceReceipt::Mistral(source) => evidence(
                     IdentityProfile::Mistral,
                     &source,
-                    chat.codec
+                    codec
                         .mistral_content_identity()
                         .ok_or_else(|| fail(UNSUPPORTED, "chat has no audited Mistral codec"))?,
                 )?,
                 SourceReceipt::Smol(source) => smol_evidence(
                     &source,
-                    chat.codec
+                    codec
                         .content_identity()
                         .ok_or_else(|| fail(UNSUPPORTED, "chat has no audited Smol codec"))?,
                 )?,

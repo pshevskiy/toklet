@@ -143,11 +143,24 @@ fn pinned_mistral_complete_pair_identity_and_release() {
         );
         assert_eq!(status, OK);
         assert_eq!(weak.strong_count(), 2);
-        assert!((*owners.chat).codec.qwen3_content_identity().is_none());
-        assert!((*owners.chat).codec.qwen2_content_identity().is_none());
+        assert!(
+            (*owners.chat)
+                .dense_codec()
+                .unwrap()
+                .qwen3_content_identity()
+                .is_none()
+        );
+        assert!(
+            (*owners.chat)
+                .dense_codec()
+                .unwrap()
+                .qwen2_content_identity()
+                .is_none()
+        );
         assert_eq!(
             (*owners.chat)
-                .codec
+                .dense_codec()
+                .unwrap()
                 .mistral_content_identity()
                 .unwrap()
                 .source(),
@@ -155,7 +168,8 @@ fn pinned_mistral_complete_pair_identity_and_release() {
         );
         assert_eq!(
             (*owners.chat)
-                .codec
+                .dense_codec()
+                .unwrap()
                 .mistral_content_identity()
                 .unwrap()
                 .text_policy(),

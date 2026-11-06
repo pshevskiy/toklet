@@ -8,10 +8,65 @@ pub use identity::toklet_model_chat_identity_create;
 
 pub struct ChatHandle {
     owner: ThreadId,
-    codec: Codec,
+    // Official BF16 reuses the codec already reserved by its retained owner.
+    codec: Option<Codec>,
     // Exactly the supplied loaded allocation, retained only by audited factory.
     // Covered by separate text allowance; count the shared physical model once.
     _model: Option<Rc<NativeModel>>,
+}
+
+impl ChatHandle {
+    fn dense_codec(&self) -> Result<&Codec> {
+        self.codec
+            .as_ref()
+            .ok_or_else(|| fail(UNSUPPORTED, "chat has no dense text codec"))
+    }
+
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    fn official_codec(&self) -> Option<&crate::app_chat::gemma4::Codec> {
+        match self._model.as_deref()? {
+            NativeModel::OfficialGemma(model) => Some(model.codec()),
+            _ => None,
+        }
+    }
+
+    fn encode(&self, json: &[u8]) -> Result<Vec<u32>> {
+        #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+        if let Some(codec) = self.official_codec() {
+            return codec
+                .encode_chat(
+                    json,
+                    crate::app_chat::gemma4::RenderOptions {
+                        enable_thinking: false,
+                        add_generation_prompt: true,
+                    },
+                )
+                .map_err(|error| fail(INVALID, error.to_string()));
+        }
+        self.dense_codec()?
+            .encode(json)
+            .map_err(|error| fail(INVALID, error.to_string()))
+    }
+
+    fn decode(&self, ids: &[u32]) -> Result<String> {
+        #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+        if let Some(codec) = self.official_codec() {
+            return codec
+                .decode(ids, true)
+                .map_err(|error| fail(INVALID, error.to_string()));
+        }
+        self.dense_codec()?
+            .decode(ids)
+            .map_err(|error| fail(INVALID, error.to_string()))
+    }
+
+    fn stop_ids(&self) -> Result<&[u32]> {
+        #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+        if let Some(codec) = self.official_codec() {
+            return Ok(codec.stop_ids());
+        }
+        Ok(self.dense_codec()?.stop_ids())
+    }
 }
 
 /// Load the pinned chat assets from the loaded model's own directory.
@@ -68,7 +123,7 @@ pub unsafe extern "C" fn toklet_chat_create(
                 .map_err(|e| fail(LOAD_ERROR, e.to_string()))?;
             out.write(Box::into_raw(Box::new(ChatHandle {
                 owner: thread::current().id(),
-                codec,
+                codec: Some(codec),
                 _model: None,
             })));
             Ok(())
@@ -130,7 +185,7 @@ pub unsafe extern "C" fn toklet_chat_create_smol_audited(
             // no owner. The codec and exact model association publish atomically.
             out.write(Box::into_raw(Box::new(ChatHandle {
                 owner: thread::current().id(),
-                codec,
+                codec: Some(codec),
                 _model: Some(Rc::clone(&model.model)),
             })));
             Ok(())
@@ -195,7 +250,7 @@ pub unsafe extern "C" fn toklet_chat_create_qwen3_audited(
                 .map_err(|e| fail(LOAD_ERROR, e.to_string()))?;
             out.write(Box::into_raw(Box::new(ChatHandle {
                 owner: thread::current().id(),
-                codec,
+                codec: Some(codec),
                 _model: Some(Rc::clone(&model.model)),
             })));
             Ok(())
@@ -225,10 +280,10 @@ pub unsafe extern "C" fn toklet_chat_encode(
             if capacity > MAX_TOKENS {
                 return Err(fail(INVALID, "text token capacity exceeds engine ceiling"));
             }
-            let ids = chat
-                .codec
-                .encode(slice(json, len, MAX_TEXT)?)
-                .map_err(|e| fail(INVALID, e.to_string()))?;
+            let ids = chat.encode(slice(json, len, MAX_TEXT)?)?;
+            if ids.len() > MAX_TOKENS {
+                return Err(fail(INVALID, "encoded chat exceeds engine token ceiling"));
+            }
             copy_output(&ids, output, capacity, count)
         })
     }
@@ -257,10 +312,7 @@ pub unsafe extern "C" fn toklet_chat_decode(
             if capacity > MAX_TEXT {
                 return Err(fail(INVALID, "decoded text capacity exceeds 64 KiB"));
             }
-            let text = chat
-                .codec
-                .decode(slice(ids, len, MAX_RESPONSE_TOKENS)?)
-                .map_err(|e| fail(INVALID, e.to_string()))?;
+            let text = chat.decode(slice(ids, len, MAX_RESPONSE_TOKENS)?)?;
             copy_output(text.as_bytes(), output, capacity, count)
         })
     }
@@ -286,7 +338,7 @@ pub unsafe extern "C" fn toklet_chat_stop_ids(
             if capacity > 8 {
                 return Err(fail(INVALID, "stop-ID capacity exceeds eight"));
             }
-            copy_output(chat.codec.stop_ids(), output, capacity, count)
+            copy_output(chat.stop_ids()?, output, capacity, count)
         })
     }
 }
@@ -319,7 +371,7 @@ mod tests {
     fn rendered_encode_ceiling_preserves_query_copy_and_rejection_contracts() {
         let chat = Box::into_raw(Box::new(ChatHandle {
             owner: thread::current().id(),
-            codec: crate::app_chat::encode_boundary_fixture(),
+            codec: Some(crate::app_chat::encode_boundary_fixture()),
             _model: None,
         }));
         unsafe {
@@ -409,7 +461,7 @@ mod tests {
     fn visible_decode_boundary_has_exact_query_copy_and_257_rejection() {
         let chat = Box::into_raw(Box::new(ChatHandle {
             owner: thread::current().id(),
-            codec: crate::app_chat::decode_fixture(),
+            codec: Some(crate::app_chat::decode_fixture()),
             _model: None,
         }));
         let ids = [32; 257];
@@ -869,7 +921,9 @@ mod tests {
     fn real_text_handle_bounds_thread_and_utf8() {
         let chat = Box::into_raw(Box::new(ChatHandle {
             owner: thread::current().id(),
-            codec: Codec::load(Path::new("models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8")).unwrap(),
+            codec: Some(
+                Codec::load(Path::new("models/MLX-SmolLM2-135M-Instruct-8bit-0f0d9b8")).unwrap(),
+            ),
             _model: None,
         }));
         let input = br#"[{"role":"user","content":"Hello!"}]"#;

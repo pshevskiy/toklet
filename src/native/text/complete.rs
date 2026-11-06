@@ -149,6 +149,21 @@ pub unsafe extern "C" fn toklet_chat_create_complete_audited(
             pointer(model)?;
             let model = &*model;
             owner(model.owner)?;
+            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            if matches!(model.model.as_ref(), NativeModel::OfficialGemma(_)) {
+                if allowance != 0 {
+                    return Err(fail(
+                        INVALID,
+                        "Gemma BF16 codec is already reserved by the model",
+                    ));
+                }
+                out.write(Box::into_raw(Box::new(ChatHandle {
+                    owner: thread::current().id(),
+                    codec: None,
+                    _model: Some(Rc::clone(&model.model)),
+                })));
+                return Ok(());
+            }
             if allowance < crate::app_chat::TOKENIZER_ALLOWANCE as u64
                 || allowance > weights::INITIAL_MEMORY_LIMIT_BYTES as u64
             {
@@ -167,7 +182,7 @@ pub unsafe extern "C" fn toklet_chat_create_complete_audited(
             let codec = source.codec(&model.directory, allowance as usize)?;
             out.write(Box::into_raw(Box::new(ChatHandle {
                 owner: thread::current().id(),
-                codec,
+                codec: Some(codec),
                 _model: Some(Rc::clone(&model.model)),
             })));
             Ok(())

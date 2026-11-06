@@ -4,7 +4,7 @@ use crate::native::tests::{handles, model};
 fn chat(retained: Option<Rc<NativeModel>>) -> *mut ChatHandle {
     Box::into_raw(Box::new(ChatHandle {
         owner: thread::current().id(),
-        codec: crate::app_chat::decode_fixture(),
+        codec: Some(crate::app_chat::decode_fixture()),
         _model: retained,
     }))
 }

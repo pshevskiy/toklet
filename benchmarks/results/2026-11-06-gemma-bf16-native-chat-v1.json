@@ -1,0 +1,137 @@
+{
+  "format": "toklet-gemma-bf16-native-chat-v1",
+  "scope": "Mac official basic nonthinking C Chat and historical exact artifact identity. Swift managed discovery and transitions are separate.",
+  "checks": {
+    "default_tests": 589,
+    "metal_tests": 707,
+    "mac_c_exports": 43,
+    "ios_c_header_and_rust_compile": true,
+    "physical_ios_tested": false
+  },
+  "observations": {
+    "load_admitted_bytes": 5717853922,
+    "session_admitted_bytes": 5814091920,
+    "kv_owned_bytes": 20054016,
+    "visible_ids": [
+      818,
+      5279,
+      529,
+      7001,
+      563,
+      5213,
+      50429,
+      84750
+    ],
+    "reply": "The capital of France is **Paris**.",
+    "accepted_identity": {
+      "schema_version": 1,
+      "report_kind": "accepted_official_gemma_bf16_identity",
+      "repository": "google/gemma-4-E2B-it",
+      "revision": "70af34e20bd4b7a91f0de6b22675850c43922a03",
+      "preference_namespace": {
+        "version": 1,
+        "manifest_algorithm": "toklet-full-manifest-v1",
+        "manifest_sha256": "654dc6dfd66fd893a24f0faa39355b71d5e7ffc3f53c2dac394dfcfd9ed95298",
+        "backend": "metal_official_gemma_bf16_v1",
+        "load": "gemma_bf16_audited_v1",
+        "text": "gemma4-basic-nonthinking-v1",
+        "planning": "official_gemma_bf16_planning_v1"
+      },
+      "assets": [
+        {
+          "name": "chat_template.jinja",
+          "bytes": 17336,
+          "sha256": "2f1b4d75d067bae3fe44e676721c7f077d243bc007156cb9c2f8b5836613d082",
+          "roles": [
+            "fixed_text_policy_verified"
+          ]
+        },
+        {
+          "name": "config.json",
+          "bytes": 4954,
+          "sha256": "1b28f3d2c3100f6c594754b81107428bd7b822a7f48272ca681dae9d2ec38330",
+          "roles": [
+            "source_metadata_consumed",
+            "codec_config_verified"
+          ]
+        },
+        {
+          "name": "generation_config.json",
+          "bytes": 208,
+          "sha256": "d4226bbe3117d2d253ba4609720ba82c6c4ce4627a9a6ae05387c78983ac03de",
+          "roles": [
+            "fixed_text_policy_verified"
+          ]
+        },
+        {
+          "name": "model.safetensors",
+          "bytes": 10246621918,
+          "sha256": "2db5482b20d746879bb3ef79b5203e9075a2e2b98f54ec7c2f281c1477ddc550",
+          "roles": [
+            "whole_source_authenticated",
+            "file_backed_ple_authenticated"
+          ]
+        },
+        {
+          "name": "tokenizer.json",
+          "bytes": 32169626,
+          "sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f",
+          "roles": [
+            "tokenizer_parser_consumed"
+          ]
+        },
+        {
+          "name": "tokenizer_config.json",
+          "bytes": 2095,
+          "sha256": "90c3a3ba5bf53818383a58e1a776cbcacd2a038d4812eaa373e1522f2d06f3df",
+          "roles": [
+            "ancillary_verified"
+          ]
+        }
+      ],
+      "model_instance": 1,
+      "loaded_position_limit": 512,
+      "whole_source_sha256_verified": true,
+      "file_backed_ple": true,
+      "model_assembled": true,
+      "codec_constructed": true,
+      "exact_model_pair": true,
+      "historical_evidence": true,
+      "current_disk_identity_evaluated": false,
+      "resident_buffer_identity_evaluated": false,
+      "qualification_evaluated": false,
+      "whole_app_device_fit_evaluated": false,
+      "preferences_require_fresh_admission": true
+    },
+    "survived_external_model_release": true
+  },
+  "peak_physical_bytes": 4921020688,
+  "qwen2_regression_peak_physical_bytes": 641615048,
+  "both_process_groups_absent": true,
+  "whole_manifest_independently_matches_pins": true,
+  "wrong_pair_rejected": true,
+  "legacy_factory_rejected": true,
+  "oversized_c_size_query_rejected": true,
+  "stops": [
+    1,
+    106,
+    50
+  ],
+  "snapshot_survives_all_external_handles": true,
+  "initial_failures": [
+    "Two Metal CLI checks failed during overlapping default and Metal builds in one target. Both passed in the serial rerun."
+  ],
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-native-chat-2026-11-06/checks.json": "b994d955e13f70313f52c73bfa5894643608eca4f23b937f492ce752f85c1618",
+    "artifacts/gemma-bf16-native-chat-2026-11-06/metal-test.stdout": "5baf8ed616e8d284b1eea060af19aceeb5d0d8a67ad7c49da03080c175b5bb4a",
+    "artifacts/gemma-bf16-native-chat-2026-11-06/final/checks.json": "52b1c6d6220af158609d9d906ee3eb1e53c8288173c27a623403ca1b2be7b3b7",
+    "artifacts/gemma-bf16-native-chat-2026-11-06/final/link-check.json": "53951d29e106097cdce235e5f95255fed548e75171d2b4a4ab27dd019150b93d",
+    "artifacts/gemma-bf16-native-chat-2026-11-06/final/header-check.txt": "91259cb3c58c84a69bc4a1e1f38aba4d9e4b91cfb3a10caa363451422aceb3a9",
+    "artifacts/gemma-bf16-native-chat-2026-11-06/final/cross-checks.txt": "e38d2d034da3036fab6f35a62dd37d2e1c3785ef69f0b92b8d22e1518c96174e",
+    "artifacts/gemma-bf16-native-chat-2026-11-06/final/native/owned.json": "d7a5530786bba87beb6cf7a644e254b8c9c58f620fead079fa0cfcdd8257e677",
+    "artifacts/gemma-bf16-native-chat-2026-11-06/final/native/gpu.stdout": "c2d455958aa605ca9e428161eb08fc311f25937b4b9efbb0b1bb197ce0afc6be",
+    "artifacts/gemma-bf16-native-chat-2026-11-06/final/qwen2/owned.json": "e54c9337b05ef358e6b2c5bd3f5658b873bf39e42156a866ae89ab5e6c598119",
+    "artifacts/gemma-bf16-native-chat-2026-11-06/final/qwen2/gpu.stdout": "20003bbe3a181b79252556656ed5e9756f1624b9758bf9c36229fd3123666853"
+  },
+  "review": "Astra approved the exact retained owner codec, unchanged dense behavior, C bounds, and historical whole-source identity. Managed Swift integration and app qualification remain separate."
+}

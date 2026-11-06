@@ -330,10 +330,11 @@ uint32_t toklet_chat_create_smol_audited(const TokletModel *, uint64_t allowance
    tokenizer_config is verified policy data; special_tokens_map is ancillary.
    Raw token APIs do not prevent IDs from being passed to another session. */
 uint32_t toklet_chat_create_qwen3_audited(const TokletModel *, uint64_t allowance, TokletChat **, TokletError *);
-/* Complete six-file audited codec for an actually attached Smol, Qwen2, Qwen3, Mistral or Llama3 model.
+/* Complete six-file audited codec for an actually attached Smol, Qwen2, Qwen3, Mistral, Llama3 or Mac official Gemma BF16 model.
    Selects from the assembled receipt, never a supplied name/path. Same owner,
    memory and output rules: separate text reserve Smol/Mistral>=64MiB, Qwen2>=128MiB, Qwen3/Llama3>=256MiB,
-   <=6GiB. Verifies ancillary assets before publication and retains exact model.
+   <=6GiB. Mac official Gemma BF16 requires allowance 0 and reuses the codec
+   reserved and verified by its model. Retains the exact model.
    Existing audited factories are unchanged. Legacy Smol codecs lack complete
    identity; this new factory does not retroactively enrich old handles. */
 uint32_t toklet_chat_create_complete_audited(const TokletModel *, uint64_t allowance, TokletChat **, TokletError *);
@@ -343,7 +344,9 @@ uint32_t toklet_chat_create_complete_audited(const TokletModel *, uint64_t allow
    INVALID. No path, file read, session borrow, GPU work or allocation reservation.
    out is cleared before validation; publication is atomic on success. Uses the
    existing bounded inspection JSON copy/release functions and their allowance.
-   Snapshot survives handle release; instance IDs correlate only this process.
+   Mac official Gemma BF16 uses accepted_official_gemma_bf16_identity JSON with
+   historical whole-source evidence. Snapshot survives handle release; instance
+   IDs correlate only this process.
    No preferences, current-disk identity, quality or device fit is authorized. */
 uint32_t toklet_model_chat_identity_create(const TokletModel *, const TokletChat *,
                                          TokletCompatibility **, TokletError *);

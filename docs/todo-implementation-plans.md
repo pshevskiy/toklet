@@ -224,12 +224,18 @@ The other text tensors require4,559,518,278 raw bytes. [Official source inventor
      pairs both assets with borrowed graph and session lifetimes. The additive
      [raw native bridge](../benchmarks/results/2026-11-06-gemma-bf16-native-raw-v1.json)
      retains them after external release and reports combined admission separately.
-     Reuse the pre-reserved codec in audited Chat and verify the exact pairing.
-   - Exercise a bounded Mac Chat journey through the additive native bridge.
-     Report the checkpoint declaration separately from loaded capacity, chunk
-     and remaining output. Measure the combined codec, app and engine process,
-     then verify cancellation, reopen, failed Apply and late PLE corruption.
-     Treat streaming text and the exact large-transfer path as separate gates.
+     [Audited C Chat](../benchmarks/results/2026-11-06-gemma-bf16-native-chat-v1.json)
+     reuses the owner codec and records the exact six-file identity.
+   - Decode the exact Swift identity and use the official worker route. Check
+     Chat, Stop, suspend/replay and unload on the verified local source. Report
+     the declared window, loaded limit, remaining output, exact KV bytes and
+     combined admission without counting the codec twice.
+   - Scope Hub discovery and large transfer to the pinned Mac profile. Check
+     search, SHA-verified publication, cancel, disk limits and network-denied
+     reopen. Keep generic transfer bounds and iPhone eligibility.
+   - Qualify context/KV tuning, rejected settings and late PLE corruption.
+     Build the source-matched Mac package and measure the app process. Keep
+     append-only text delivery as a separate gate from visible-prefix Chat.
 
 #### Prospective ordered BF16 arithmetic gate
 

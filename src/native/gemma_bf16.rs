@@ -45,6 +45,10 @@ impl Model {
         self.owner.memory()
     }
 
+    pub(super) fn codec(&self) -> &crate::app_chat::gemma4::Codec {
+        self.owner.codec()
+    }
+
     pub(super) fn create_session(&'static self, options: session::Options) -> Result<Session> {
         let inference = self
             .owner

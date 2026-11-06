@@ -66,22 +66,77 @@ fn official_bf16_native_raw_owner_survives_model_release() {
             ENGINE_ERROR
         );
         assert!(candidate.is_null());
-        let NativeModel::OfficialGemma(loaded) = (&*model).model.as_ref() else {
-            panic!("expected the audited BF16 owner");
-        };
-        let prompt = loaded
-            .owner
-            .codec()
-            .encode_chat(
-                br#"[{"role":"user","content":"Name the capital of France."}]"#,
-                crate::app_chat::gemma4::RenderOptions {
-                    enable_thinking: false,
-                    add_generation_prompt: true,
-                },
-            )
-            .unwrap();
+        let mut chat = ptr::null_mut();
+        assert_eq!(
+            toklet_chat_create(model, 1 << 30, &mut chat, error),
+            UNSUPPORTED
+        );
+        assert!(chat.is_null());
+        assert_eq!(
+            toklet_chat_create_complete_audited(model, 1 << 30, &mut chat, error),
+            INVALID
+        );
+        assert!(chat.is_null());
+        assert_eq!(
+            toklet_chat_create_complete_audited(model, 0, &mut chat, error),
+            OK
+        );
+        let mut identity = ptr::null_mut();
+        assert_eq!(
+            toklet_model_chat_identity_create(model, chat, &mut identity, error),
+            OK
+        );
+        let (other, other_session, other_cancel) = super::super::tests::handles();
+        let mut unrelated = ptr::dangling_mut();
+        assert_eq!(
+            toklet_model_chat_identity_create(other, chat, &mut unrelated, error),
+            INVALID
+        );
+        assert!(unrelated.is_null());
+        assert_eq!(toklet_session_release(other_session, error), OK);
+        assert_eq!(toklet_model_release(other, error), OK);
+        assert_eq!(toklet_cancel_release(other_cancel, error), OK);
+
+        let messages = br#"[{"role":"user","content":"Name the capital of France."}]"#;
+        let mut prompt = [0; 15];
+        let mut count = 0;
+        let oversized = format!(
+            r#"[{{"role":"user","content":"{}"}}]"#,
+            "\u{f0000}".repeat(9_000)
+        );
+        assert_eq!(
+            toklet_chat_encode(
+                chat,
+                oversized.as_ptr(),
+                oversized.len(),
+                ptr::null_mut(),
+                0,
+                &mut count,
+                error,
+            ),
+            INVALID
+        );
+        assert_eq!(count, 0);
+        assert_eq!(
+            toklet_chat_encode(
+                chat,
+                messages.as_ptr(),
+                messages.len(),
+                prompt.as_mut_ptr(),
+                prompt.len(),
+                &mut count,
+                error
+            ),
+            OK
+        );
+        assert_eq!(count, prompt.len());
+        let mut stops = [0; 3];
+        assert_eq!(
+            toklet_chat_stop_ids(chat, stops.as_mut_ptr(), stops.len(), &mut count, error),
+            OK
+        );
+        assert_eq!((count, stops), (3, [1, 106, 50]));
         assert_eq!(toklet_cancel_create(&mut cancel, error), OK);
-        let stops = [1_u32, 106, 50];
         let generate = |maximum, output: &mut Vec<u32>, report: &mut Report| {
             toklet_session_generate(
                 session,
@@ -130,12 +185,6 @@ fn official_bf16_native_raw_owner_survives_model_release() {
         assert_eq!(toklet_session_context(session, &mut context, error), OK);
         assert_eq!(context.history_tokens, prompt.len() as u64);
         assert_eq!(context.committed_tokens, context.history_tokens);
-        let mut chat = ptr::null_mut();
-        assert_eq!(
-            toklet_chat_create(model, 1 << 30, &mut chat, error),
-            UNSUPPORTED
-        );
-        assert!(chat.is_null());
         let address = session as usize;
         assert_eq!(
             thread::spawn(move || {
@@ -175,11 +224,58 @@ fn official_bf16_native_raw_owner_survives_model_release() {
         );
         assert_eq!(toklet_cancel_release(cancel, error), OK);
         assert_eq!(toklet_session_release(session, error), OK);
+        let mut visible = [0; 256];
+        assert_eq!(
+            toklet_chat_decode(
+                chat,
+                prior.as_ptr(),
+                prior.len(),
+                visible.as_mut_ptr(),
+                visible.len(),
+                &mut count,
+                error
+            ),
+            OK
+        );
+        let reply = std::str::from_utf8(&visible[..count]).unwrap();
+        assert_eq!(reply, "The capital of France is **Paris**.");
+        assert_eq!(toklet_chat_release(chat, error), OK);
+        assert_eq!(
+            toklet_mlx_inspect_json(identity, ptr::null_mut(), 0, &mut count, error),
+            OK
+        );
+        let mut json = vec![0; count];
+        assert_eq!(
+            toklet_mlx_inspect_json(identity, json.as_mut_ptr(), json.len(), &mut count, error),
+            OK
+        );
+        assert_eq!(toklet_mlx_inspect_release(identity, error), OK);
+        let identity: serde_json::Value = serde_json::from_slice(&json[..count]).unwrap();
+        assert_eq!(
+            identity["report_kind"],
+            "accepted_official_gemma_bf16_identity"
+        );
+        assert_eq!(identity["loaded_position_limit"], 512);
+        assert_eq!(identity["model_instance"], context.model_instance);
+        assert_eq!(identity["whole_source_sha256_verified"], true);
+        assert_eq!(identity["file_backed_ple"], true);
+        assert_eq!(identity["current_disk_identity_evaluated"], false);
+        assert_eq!(identity["qualification_evaluated"], false);
+        assert_eq!(identity["whole_app_device_fit_evaluated"], false);
+        assert_eq!(identity["assets"].as_array().unwrap().len(), 6);
+        assert_eq!(
+            identity["preference_namespace"]["manifest_sha256"],
+            "654dc6dfd66fd893a24f0faa39355b71d5e7ffc3f53c2dac394dfcfd9ed95298"
+        );
+        assert_eq!(
+            identity["preference_namespace"]["text"],
+            "gemma4-basic-nonthinking-v1"
+        );
         println!(
-            "OFFICIAL_BF16_NATIVE_RAW {}",
+            "OFFICIAL_BF16_NATIVE_CHAT {}",
             serde_json::json!({"load_admitted_bytes":memory.load_admitted_bytes,
                 "session_admitted_bytes":memory.session_admitted_bytes,"kv_owned_bytes":memory.kv_owned_bytes,
-                "visible_ids":prior,"survived_external_model_release":true})
+                "visible_ids":prior,"reply":reply,"accepted_identity":identity,"survived_external_model_release":true})
         );
     }
 }
