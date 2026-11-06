@@ -184,8 +184,11 @@ The other text tensors require4,559,518,278 raw bytes. [Official source inventor
    streaming. Verify each bounded row on demand before publishing output.
    Count integrity metadata, gather scratch and concurrent source buffers.
    [Authenticated PLE source result](../benchmarks/results/2026-11-06-gemma-bf16-ple-source-v1.json).
-3. Add a dedicated BF16-storage projection and embedding gather. Keep
-   packed affine behavior. Reuse the Gemma graph and static backend routing.
+3. The [BF16 Metal projection leaf](../benchmarks/results/2026-11-06-gemma-bf16-projection-v1.json)
+   passes. Stream the pinned descriptor once in physical order. Fill private
+   resident BF16 buffers from the same bytes included in the whole-file SHA,
+   hash PLE rows and publish only after exact extent and endpoint checks.
+   Reuse role bindings and add BF16 embedding lookup before graph integration.
 4. Validate exact memory, numerical contracts, long cache state, raw
    trajectories and original-relative quality before factory or app work.
    Measure the codec/engine peak separately under6GiB.

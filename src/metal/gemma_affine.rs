@@ -16,12 +16,14 @@ use objc2_foundation::NSString;
 use objc2_metal::*;
 use std::{mem::size_of, ptr::NonNull};
 
+mod bf16;
 mod loading;
 mod partitioned;
 mod project;
 mod projection;
 pub mod resident;
 mod weights;
+pub use bf16::{Bf16Context, Bf16Projection};
 pub use partitioned::{Gather, PartitionedAffine};
 pub use projection::Projection;
 pub use weights::Weights;
@@ -54,6 +56,7 @@ impl Context {
         let name = match projection_bits {
             4 => "gemma_affine_product",
             8 => "gemma_affine_product_8",
+            16 => "gemma_bf16_product",
             _ => return Err(Error::Options("Gemma affine projection width")),
         };
         Self::compile(available_bytes, name, projection_bits, false)
@@ -449,7 +452,7 @@ impl Affine<'_> {
         };
         project::run(
             self.context,
-            weights,
+            project::Matrix::affine(weights),
             project::Buffers {
                 input: &mut self.input,
                 output: &mut self.output,

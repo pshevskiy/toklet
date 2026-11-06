@@ -213,7 +213,7 @@ impl Projection<'_> {
             let active = &mut self.chunk_output[..tokens * rows];
             project::run(
                 self.context,
-                child,
+                project::Matrix::affine(child),
                 project::Buffers {
                     input: &mut self.input,
                     output: &mut self.output,

@@ -14,6 +14,24 @@ void gemma_add(thread float2& sum, float value) {
     sum.y += abs(sum.x) >= abs(value) ? (sum.x - next) + value : (value - next) + sum.x;
     sum.x = next;
 }
+void gemma_store_dot(float2 sum, device uint* output, device atomic_uint* status,
+    uint index, uint lane, uint lanes) {
+    // Increasing pair offsets support any admitted queried SIMD width.
+    for (uint hop = 1; hop < lanes; hop *= 2) {
+        float hi = simd_shuffle_down(sum.x, hop);
+        float lo = simd_shuffle_down(sum.y, hop);
+        if (lane % (2 * hop) == 0 && lane + hop < lanes) {
+            gemma_add(sum, hi);
+            gemma_add(sum, lo);
+        }
+    }
+    if (lane == 0) {
+        float value = sum.x + sum.y;
+        output[index] = as_type<uint>(value);
+        if (!isfinite(value)) atomic_fetch_or_explicit(status, 1u, memory_order_relaxed);
+    }
+}
+
 // Shape [active tokens, input width, output rows]. One queried SIMD group per
 // token/output row. No dense expansion, padded tensor rows or linear bias.
 template <uint Bits>
@@ -41,20 +59,7 @@ void gemma_product(device const uint* codes, device const uint* scales,
             gemma_add(sum, fma(weight, x, -product));
         }
     }
-    // Increasing pair offsets support any admitted queried SIMD width.
-    for (uint hop = 1; hop < lanes; hop *= 2) {
-        float hi = simd_shuffle_down(sum.x, hop);
-        float lo = simd_shuffle_down(sum.y, hop);
-        if (lane % (2 * hop) == 0 && lane + hop < lanes) {
-            gemma_add(sum, hi);
-            gemma_add(sum, lo);
-        }
-    }
-    if (lane == 0) {
-        float value = sum.x + sum.y;
-        output[token * shape[2] + row] = as_type<uint>(value);
-        if (!isfinite(value)) atomic_fetch_or_explicit(status, 1u, memory_order_relaxed);
-    }
+    gemma_store_dot(sum, output, status, token * shape[2] + row, lane, lanes);
 }
 
 kernel void gemma_affine_product(
@@ -83,4 +88,29 @@ kernel void gemma_affine_product_8(
     uint lane [[thread_index_in_simdgroup]],
     uint lanes [[threads_per_simdgroup]]) {
     gemma_product<8>(codes, scales, biases, input, output, shape, status, group, lane, lanes);
+}
+
+// Row-major BF16 coefficients widen exactly for multiplication. The device
+// needs FP32 arithmetic and aligned ushort loads, not a native BF16 ALU.
+kernel void gemma_bf16_product(
+    device const uint* coefficients [[buffer(0)]],
+    device const uint* input [[buffer(3)]],
+    device uint* output [[buffer(4)]],
+    constant uint* shape [[buffer(5)]],
+    device atomic_uint* status [[buffer(6)]],
+    uint group [[threadgroup_position_in_grid]],
+    uint lane [[thread_index_in_simdgroup]],
+    uint lanes [[threads_per_simdgroup]]) {
+    uint token = group / shape[2], row = group % shape[2];
+    if (token >= shape[0]) return;
+    uint columns = shape[1];
+    float2 sum = float2(0.0f);
+    for (uint column = lane; column < columns; column += lanes) {
+        float weight = gemma_coefficient(coefficients, row * columns + column);
+        float x = as_type<float>(input[token * columns + column]);
+        float product = weight * x;
+        gemma_add(sum, product);
+        gemma_add(sum, fma(weight, x, -product));
+    }
+    gemma_store_dot(sum, output, status, token * shape[2] + row, lane, lanes);
 }

@@ -10778,3 +10778,11 @@ complete their independent memory and exit checks. Native passes all
 52,441,088 values and32 greedy observations. Astra verified the result.
 The QAT task rejection still governs adoption.
 [Evidence](../benchmarks/results/2026-11-06-gemma-qat-wrap-parity-v1.json)
+
+## 6 November 2026 — Qualify the original BF16 Metal projection leaf
+
+Aligned BF16 words widen to FP32 in the dedicated kernel. The authored
+residuals and real attention/feed-forward rows pass, with exact budgets
+and atomic guard failure. Q4 and mixed QAT captures remain bitwise.
+Astra approved. Whole-model fit and throughput remain open.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-projection-v1.json)

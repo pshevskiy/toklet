@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Qualify the original BF16 Metal projection leaf.**
+Current task: **Authenticate and upload the official BF16 resident projection tensors.**
 Completed: source-matched native41 package selected, with Mac offline regression
 and both iOS SDK builds. [Evidence](benchmarks/results/2026-11-06-chunk-pools-native41-v1.json).
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
@@ -639,6 +639,9 @@ uses the existing full saved-conversation reset+prompt path on Send.
     - [x] Whole official shard and each requested PLE row authenticate.
       Exact/minus-one, late failure and independent real rows pass.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-ple-source-v1.json).
+    - [x] Standalone BF16 Metal projection passes authored residuals, real
+      source rows, exact budgets and legacy Q4/Q8/QAT checks.
+      [Evidence](benchmarks/results/2026-11-06-gemma-bf16-projection-v1.json).
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
@@ -1591,3 +1594,4 @@ completed or prerequisites for the active breadth-first queue.
 | 2026-11-06 | Official BF16 cold plan | Exact config/header and all2,011 intervals pass. Real probe reads263,960 bytes, no payload. | Astra approved; file-backed PLE authentication next. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-cold-v1.json). |
 | 2026-11-06 | Official BF16 authenticated PLE | Full source SHA, 5 exact original rows, transaction controls and memory budgets pass. Physical peak13.86MB. | Astra approved after588/702 tests and owned Mac run. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-ple-source-v1.json). |
 | 2026-11-06 | Gemma QAT wrap fidelity | Both guarded same-pin repeats reproduce initial bytes. All52,441,088 values and32 decisions pass; both owners exit. | Astra approved diagnostic fidelity. [Evidence](benchmarks/results/2026-11-06-gemma-qat-wrap-parity-v1.json); task rejection stands. |
+| 2026-11-06 | Official BF16 Metal leaf | 15 exact authored and24 real-row values pass. Prior Q4 and QAT captures remain byte-identical. | Astra approved the guarded leaf. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-projection-v1.json); authenticated upload next. |

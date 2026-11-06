@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "authored_exact_outputs": 15,
+  "real_source_rows_values": 24,
+  "fixed_residual": "2^-30",
+  "legacy_capture_sha256": {
+    "q4-real": "b4c9ee3f1fcd1c312c26d50056d537acbc6be817f89b0d2b7749fe2294327075",
+    "qat-short": "a1c5124a79283f4cfed942b19757309cd1eb395dba3070dab9c824155d14a843"
+  },
+  "checks": {
+    "fmt": true,
+    "strict_metal_clippy": true,
+    "metal_tests": 703,
+    "release_lib": true,
+    "default_tests_reused": 588
+  },
+  "owned_witnesses": {
+    "bf16-authored": {
+      "receipt": "artifacts/gemma-bf16-leaf-2026-11-06/bf16-authored/owned.json",
+      "receipt_sha256": "36ed68ff33ff9e05e6699a9f4e03e27f70757b9ef23d6b0bae7f313826808d2c",
+      "rss_peak_bytes": 17629184
+    },
+    "bf16-real": {
+      "receipt": "artifacts/gemma-bf16-leaf-2026-11-06/bf16-real/owned.json",
+      "receipt_sha256": "913bd844c03dcd06708c667a49e72dd7f5ee38b1c83f96be67a109358b258adf",
+      "rss_peak_bytes": 21512192
+    },
+    "affine8-authored": {
+      "receipt": "artifacts/gemma-bf16-leaf-2026-11-06/affine8-authored/owned.json",
+      "receipt_sha256": "9ecaaa9f26d3eaf4ad1a34f12beac3e68d87ed0daf9134c322f14110ffd31334",
+      "rss_peak_bytes": 17612800
+    },
+    "q4-real": {
+      "receipt": "artifacts/gemma-bf16-leaf-2026-11-06/q4-real/owned.json",
+      "receipt_sha256": "7c5971cfcf0a48c05180c15eb3ffe91aeb757816dd0e82a50ffff14f99ff8e45",
+      "rss_peak_bytes": 2913288192
+    },
+    "qat-short": {
+      "receipt": "artifacts/gemma-bf16-leaf-2026-11-06/qat-short/owned.json",
+      "receipt_sha256": "24b0b794fa2e253782df09730ddee2a4e6b95215ff24d8c7e14fbe3271fd3120",
+      "rss_peak_bytes": 2421833728
+    }
+  },
+  "domain_screen": {
+    "matrices": 277,
+    "bytes": 4558946304,
+    "nonfinite": 0,
+    "subnormal": 0,
+    "largest_coefficient": 1.2109375,
+    "source_inventory_sha256": "2419f70e7232fd75a6d361e0ef8e8acaf37f87f52124e63e1e04e814d1040840",
+    "scope": "Read-only source domain screen. Payload authentication and execution remain separate."
+  },
+  "review": "Astra approved original aligned BF16 words, checked geometry, exact widening, static reduction and guarded transaction. Q4, affine8 and mixed QAT regressions pass.",
+  "scope": "Standalone original BF16 Metal projection. Resident model, exact full-model fit and speed remain open."
+}
