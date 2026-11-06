@@ -1,0 +1,150 @@
+{
+  "passed": true,
+  "atol": 1e-05,
+  "rtol": 0.0001,
+  "contracts": [
+    {
+      "sequence": "original",
+      "contract": "math_fp64",
+      "values": 1085440,
+      "failures": 0,
+      "failed_parts": [],
+      "greedy": [
+        {
+          "actual": 236761,
+          "expected": 236761
+        },
+        {
+          "actual": 106,
+          "expected": 106
+        },
+        {
+          "actual": 1018,
+          "expected": 1018
+        },
+        {
+          "actual": 106,
+          "expected": 106
+        }
+      ],
+      "passed": true
+    },
+    {
+      "sequence": "original",
+      "contract": "staged_fp32",
+      "values": 1085440,
+      "failures": 0,
+      "failed_parts": [],
+      "greedy": [
+        {
+          "actual": 236761,
+          "expected": 236761
+        },
+        {
+          "actual": 106,
+          "expected": 106
+        },
+        {
+          "actual": 1018,
+          "expected": 1018
+        },
+        {
+          "actual": 106,
+          "expected": 106
+        }
+      ],
+      "passed": true
+    },
+    {
+      "sequence": "future",
+      "contract": "math_fp64",
+      "values": 1085440,
+      "failures": 0,
+      "failed_parts": [],
+      "greedy": [
+        {
+          "actual": 236761,
+          "expected": 236761
+        },
+        {
+          "actual": 106,
+          "expected": 106
+        },
+        {
+          "actual": 1018,
+          "expected": 1018
+        },
+        {
+          "actual": 106,
+          "expected": 106
+        }
+      ],
+      "passed": true
+    },
+    {
+      "sequence": "future",
+      "contract": "staged_fp32",
+      "values": 1085440,
+      "failures": 0,
+      "failed_parts": [],
+      "greedy": [
+        {
+          "actual": 236761,
+          "expected": 236761
+        },
+        {
+          "actual": 106,
+          "expected": 106
+        },
+        {
+          "actual": 1018,
+          "expected": 1018
+        },
+        {
+          "actual": 106,
+          "expected": 106
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "total_values": 4341760,
+  "greedy_observations": 16,
+  "checks": {
+    "fmt": true,
+    "strict_clippy_default_and_metal": true,
+    "default_tests": 588,
+    "metal_tests": 706,
+    "release_lib": true
+  },
+  "hardware": {
+    "bf16-short": {
+      "receipt": "artifacts/gemma-bf16-graph-2026-11-06/bf16-short/owned.json",
+      "sha256": "0dd5ad03c6cfabfe5141169ff3e60691e4c445bfac6d84f521143aa7653688cd",
+      "physical_peak_bytes": 4698558376
+    },
+    "gemma3-tiny": {
+      "receipt": "artifacts/gemma-bf16-graph-2026-11-06/gemma3-tiny/owned.json",
+      "sha256": "bbfb0aaa75508f75810b8668f237e39f42d72f824131621cb7a0973fe9d28c9d",
+      "physical_peak_bytes": 48153296
+    },
+    "q4-real": {
+      "receipt": "artifacts/gemma-bf16-graph-2026-11-06/q4-real/owned.json",
+      "sha256": "996e5778a80bb07acce225d6f89c8468e621f16e5d15db058058326b2cc843c1",
+      "physical_peak_bytes": 2900953776
+    },
+    "qat-short": {
+      "receipt": "artifacts/gemma-bf16-graph-2026-11-06/qat-short/owned.json",
+      "sha256": "395f2790487a0d8fe057fa1f102a839022b46343cdbcc0953517c269dd66f569",
+      "physical_peak_bytes": 3741945096
+    }
+  },
+  "prospective_wrap_plans": {
+    "artifacts/gemma-bf16-wrap-reference-2026-11-06/math_fp64/plan.json": "f62957e7b55c902b17faa3498cf1246604b1d0ae572a2a40dc8a7e9b3656a0cb",
+    "artifacts/gemma-bf16-wrap-reference-2026-11-06/staged_fp32/plan.json": "b24328bd35dcc17126f88fa9c6de84a9764e6185132970e32f9d587036de3974"
+  },
+  "source_reference": "benchmarks/results/2026-10-26-gemma-bf16-text-reference-v1.json",
+  "native_capture_sha256": "fd796ca69c21b6b2584de11661094705b497826ab44b15d6b399ccb9c4cdeed3",
+  "review": "Astra approved sealed typed storage admission, exact session bytes and failure publication after legacy regressions passed.",
+  "scope": "Official original/future four-token fidelity and transactional state only; long positions and original quality remain open."
+}

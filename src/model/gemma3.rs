@@ -101,7 +101,11 @@ fn offset_norm(raw: Vec<bf16>, width: usize) -> Result<Vec<f32>, Error> {
     Ok(result)
 }
 fn matrix(m: &impl MatrixSource, rows: usize, columns: usize) -> Result<usize, Error> {
-    let l = m.layout();
+    let super::packed_operations::MatrixDescriptor::Affine(l) = m.descriptor() else {
+        return Err(Error::InvalidConfig(
+            "Gemma3 packed4/group64/BF16 matrix shape",
+        ));
+    };
     if l.rows() != rows
         || l.columns() != columns
         || l.bits() != 4

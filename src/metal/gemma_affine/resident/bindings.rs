@@ -206,7 +206,7 @@ impl Bindings {
     pub(in crate::metal::gemma_affine) fn ple_embedding_index(&self) -> usize {
         self.ple_embedding
     }
-    pub(super) fn geometry(&self) -> [LayerPlan; 35] {
+    pub(in crate::metal::gemma_affine) fn geometry(&self) -> [LayerPlan; 35] {
         self.layers.each_ref().map(|layer| layer.geometry)
     }
     pub(super) fn graph_weights<'a, 'weights>(
@@ -214,9 +214,15 @@ impl Bindings {
         norms: &'a super::hybrid::Norms<'weights>,
     ) -> Result<crate::model::gemma_packed::Weights<'a, super::hybrid::MatrixRef<'a, 'weights>>>
     {
+        self.graph_weights_for(|index| norms.matrix(index), |index| norms.vector(index))
+    }
+
+    pub(in crate::metal::gemma_affine) fn graph_weights_for<'a, M>(
+        &self,
+        m: impl Fn(usize) -> Result<M>,
+        v: impl Fn(usize) -> Result<&'a [f32]>,
+    ) -> Result<crate::model::gemma_packed::Weights<'a, M>> {
         use crate::model::gemma_packed::{KvWeights, LayerWeights, Weights};
-        let m = |index| norms.matrix(index);
-        let v = |index| norms.vector(index);
         let mut layers = owner_vec(self.layers.len())?;
         for layer in &self.layers {
             layers.push(LayerWeights {

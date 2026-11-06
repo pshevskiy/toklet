@@ -62,11 +62,42 @@ impl<'a, M: MatrixSource> Model<'a, M> {
         position_limit: usize,
         qat_mixed: bool,
     ) -> Result<Self, Error> {
+        let profile = if qat_mixed {
+            StorageProfile::MixedQat
+        } else {
+            StorageProfile::Affine4
+        };
+        Self::from_e2b_format(weights, geometry, backing, position_limit, profile)
+    }
+
+    #[cfg(target_os = "macos")]
+    pub(crate) fn from_official_bf16_parts(
+        weights: Weights<'a, M>,
+        geometry: &[crate::mlx::gemma4::LayerPlan],
+        backing: Backing,
+        position_limit: usize,
+    ) -> Result<Self, Error> {
+        Self::from_e2b_format(
+            weights,
+            geometry,
+            backing,
+            position_limit,
+            StorageProfile::OfficialBf16,
+        )
+    }
+
+    fn from_e2b_format(
+        weights: Weights<'a, M>,
+        geometry: &[crate::mlx::gemma4::LayerPlan],
+        backing: Backing,
+        position_limit: usize,
+        profile: StorageProfile,
+    ) -> Result<Self, Error> {
         let result = Self::with_storage_format(
             weights,
             Layout::e2b_layers_for_limit(geometry, position_limit)?,
             Some(backing),
-            if qat_mixed { 8 } else { 4 },
+            profile,
         )?;
         for (index, layer) in geometry.iter().enumerate() {
             if result.plan.producer_for(index)? != layer.producer {

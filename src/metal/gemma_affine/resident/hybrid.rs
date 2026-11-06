@@ -68,8 +68,8 @@ pub struct MatrixRef<'a, 'weights> {
 }
 impl sealed::Matrix for MatrixRef<'_, '_> {}
 impl MatrixSource for MatrixRef<'_, '_> {
-    fn layout(&self) -> crate::mlx::affine::Layout {
-        self.source.matrices[self.index].layout()
+    fn descriptor(&self) -> graph::MatrixDescriptor {
+        graph::MatrixDescriptor::Affine(self.source.matrices[self.index].layout())
     }
 }
 /// Small immutable CPU vector copy tied to the exact resident source. Keeps the

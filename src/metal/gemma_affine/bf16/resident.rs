@@ -6,6 +6,8 @@ use crate::mlx::gemma4::bf16::{
 };
 use std::{fs::File, io::Read};
 
+pub(super) mod graph;
+
 const TILE_ROWS: usize = 8192;
 const MATRIX_SLOTS: usize = 278;
 const VECTOR_SLOTS: usize = 262;

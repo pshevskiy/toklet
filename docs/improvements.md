@@ -10795,3 +10795,11 @@ Exact requested load is4.644GB and peak physical memory is4.587GB.
 Legacy captures match bitwise. Astra approved storage; graph fidelity,
 quality and Chat remain separate.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-resident-v1.json)
+
+## 6 November 2026 — Run the official BF16 shared graph
+
+Both four-token sequences pass4,341,760 independent comparisons and16
+greedy observations. Chunk sizes1/3/32 preserve logits and KV. Late
+head and PLE failures preserve committed state. Physical peak is4.699GB.
+Astra approved the short scope. Long fidelity, quality and Chat remain open.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-short-graph-v1.json)

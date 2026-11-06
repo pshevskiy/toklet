@@ -16,6 +16,8 @@ const HEADS: usize = 8;
 const PROCESS: usize = 6 * 1024 * 1024 * 1024;
 const DIAGNOSTIC: usize = 128 * 1024 * 1024;
 mod attention_boundary;
+#[cfg(target_os = "macos")]
+mod bf16;
 mod context_probe;
 mod loss_block;
 mod qat;

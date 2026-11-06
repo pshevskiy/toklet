@@ -18,7 +18,7 @@ mod forward;
 pub(crate) mod generation;
 pub(crate) mod operations;
 pub use generation::GenerationSession;
-pub use operations::{BackendMemory, MatrixSource, Operations, Scalar};
+pub use operations::{BackendMemory, MatrixDescriptor, MatrixSource, Operations, Scalar};
 #[cfg(test)]
 mod tests;
 
@@ -130,22 +130,84 @@ fn check(values: &[f32], expected: usize, name: &'static str) -> Result<(), Erro
     finite(name, values)?;
     Ok(())
 }
+#[derive(Clone, Copy)]
+enum StorageProfile {
+    Affine4,
+    #[cfg(all(
+        feature = "metal",
+        any(target_os = "macos", target_os = "ios"),
+        target_arch = "aarch64"
+    ))]
+    MixedQat,
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    OfficialBf16,
+}
+
+#[derive(Clone, Copy)]
+enum MatrixFormat {
+    Affine(u8),
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    Bf16 {
+        file_backed: bool,
+    },
+}
+
+impl StorageProfile {
+    fn formats(self) -> [MatrixFormat; 3] {
+        use MatrixFormat::Affine;
+        match self {
+            Self::Affine4 => [Affine(4); 3],
+            #[cfg(all(
+                feature = "metal",
+                any(target_os = "macos", target_os = "ios"),
+                target_arch = "aarch64"
+            ))]
+            Self::MixedQat => [Affine(4), Affine(8), Affine(4)],
+            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            Self::OfficialBf16 => [
+                MatrixFormat::Bf16 { file_backed: false },
+                MatrixFormat::Bf16 { file_backed: false },
+                MatrixFormat::Bf16 { file_backed: true },
+            ],
+        }
+    }
+}
+
 fn matrix(
     value: &impl MatrixSource,
     rows: usize,
     columns: usize,
-    bits: u8,
+    format: MatrixFormat,
 ) -> Result<usize, Error> {
-    let l = value.layout();
-    if l.rows() != rows
-        || l.columns() != columns
-        || l.bits() != bits
-        || l.group_size() != 64
-        || l.metadata_dtype() != MetadataDtype::BF16
-    {
-        return Err(Error::InvalidConfig("Gemma packed matrix profile"));
+    match (value.descriptor(), format) {
+        (MatrixDescriptor::Affine(layout), MatrixFormat::Affine(bits))
+            if layout.rows() == rows
+                && layout.columns() == columns
+                && layout.bits() == bits
+                && layout.group_size() == 64
+                && layout.metadata_dtype() == MetadataDtype::BF16 =>
+        {
+            Ok(layout.total_bytes())
+        }
+        #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+        (
+            MatrixDescriptor::Bf16 {
+                rows: actual_rows,
+                columns: actual_columns,
+                file_backed: actual_file,
+            },
+            MatrixFormat::Bf16 { file_backed },
+        ) if actual_rows == rows && actual_columns == columns && actual_file == file_backed => {
+            // File-backed PLE contributes no resident coefficient bytes. The
+            // source owner and per-session read workspace have separate charges.
+            if file_backed {
+                Ok(0)
+            } else {
+                Ok(cpu::product(cpu::product(rows, columns)?, 2)?)
+            }
+        }
+        _ => Err(Error::InvalidConfig("Gemma packed matrix profile")),
     }
-    Ok(l.total_bytes())
 }
 fn add_bytes(a: usize, b: usize) -> Result<usize, Error> {
     a.checked_add(b).ok_or(cpu::Error::SizeOverflow.into())
@@ -236,13 +298,13 @@ impl<'a, M: MatrixSource> Model<'a, M> {
         l: Layout,
         retained: Option<Backing>,
     ) -> Result<Self, Error> {
-        Self::with_storage_format(weights, l, retained, 4)
+        Self::with_storage_format(weights, l, retained, StorageProfile::Affine4)
     }
     fn with_storage_format(
         weights: Weights<'a, M>,
         l: Layout,
         retained: Option<Backing>,
-        ff_bits: u8,
+        profile: StorageProfile,
     ) -> Result<Self, Error> {
         // A bounded proposal frame must never spill to the heap during forward.
         // Public admission selects only the frozen witness or named E2B geometry.
@@ -260,21 +322,24 @@ impl<'a, M: MatrixSource> Model<'a, M> {
                 actual: weights.layers.len(),
             });
         }
+        let [resident, feed_forward, ple_embedding] = profile.formats();
         let mut bytes = 0;
-        for (m, r, c) in [
-            (&weights.embedding, l.vocab, l.hidden),
+        for (m, r, c, format) in [
+            (&weights.embedding, l.vocab, l.hidden, resident),
             (
                 &weights.per_layer_embedding,
                 l.vocab,
                 l.layers.len() * l.ple,
+                ple_embedding,
             ),
             (
                 &weights.per_layer_projection,
                 l.layers.len() * l.ple,
                 l.hidden,
+                resident,
             ),
         ] {
-            bytes = add_bytes(bytes, matrix(m, r, c, 4)?)?;
+            bytes = add_bytes(bytes, matrix(m, r, c, format)?)?;
         }
         for (v, n) in [
             (weights.per_layer_norm, l.ple),
@@ -284,16 +349,16 @@ impl<'a, M: MatrixSource> Model<'a, M> {
             bytes = add_bytes(bytes, allocation_bytes(v.len())?)?;
         }
         for (i, (w, g)) in weights.layers.iter().zip(&l.layers).enumerate() {
-            for (m, r, c, bits) in [
-                (&w.q, l.heads * g.head_dim, l.hidden, 4),
-                (&w.o, l.hidden, l.heads * g.head_dim, 4),
-                (&w.ff_gate, g.intermediate, l.hidden, ff_bits),
-                (&w.ff_up, g.intermediate, l.hidden, ff_bits),
-                (&w.ff_down, l.hidden, g.intermediate, ff_bits),
-                (&w.ple_gate, l.ple, l.hidden, 4),
-                (&w.ple_projection, l.hidden, l.ple, 4),
+            for (m, r, c, format) in [
+                (&w.q, l.heads * g.head_dim, l.hidden, resident),
+                (&w.o, l.hidden, l.heads * g.head_dim, resident),
+                (&w.ff_gate, g.intermediate, l.hidden, feed_forward),
+                (&w.ff_up, g.intermediate, l.hidden, feed_forward),
+                (&w.ff_down, l.hidden, g.intermediate, feed_forward),
+                (&w.ple_gate, l.ple, l.hidden, resident),
+                (&w.ple_projection, l.hidden, l.ple, resident),
             ] {
-                bytes = add_bytes(bytes, matrix(m, r, c, bits)?)?;
+                bytes = add_bytes(bytes, matrix(m, r, c, format)?)?;
             }
             for (v, n) in [
                 (w.input_norm, l.hidden),
@@ -308,8 +373,8 @@ impl<'a, M: MatrixSource> Model<'a, M> {
             }
             match (&w.kv, i < l.producers) {
                 (Some(kv), true) => {
-                    bytes = add_bytes(bytes, matrix(&kv.k, g.head_dim, l.hidden, 4)?)?;
-                    bytes = add_bytes(bytes, matrix(&kv.v, g.head_dim, l.hidden, 4)?)?;
+                    bytes = add_bytes(bytes, matrix(&kv.k, g.head_dim, l.hidden, resident)?)?;
+                    bytes = add_bytes(bytes, matrix(&kv.v, g.head_dim, l.hidden, resident)?)?;
                     check(kv.k_norm, g.head_dim, "Gemma packed K norm")?;
                     bytes = add_bytes(bytes, allocation_bytes(kv.k_norm.len())?)?;
                 }

@@ -190,8 +190,10 @@ The other text tensors require4,559,518,278 raw bytes. [Official source inventor
    hash PLE rows and publish only after exact extent and endpoint checks.
    Reuse role bindings and add BF16 embedding lookup before graph integration.
    [Full storage result](../benchmarks/results/2026-11-06-gemma-bf16-resident-v1.json).
-4. Validate exact memory, numerical contracts, long cache state, raw
-   trajectories and original-relative quality before factory or app work.
+4. The [official short graph](../benchmarks/results/2026-11-06-gemma-bf16-short-graph-v1.json)
+   passes both contracts and late-failure checks. Complete long cache state,
+   both independent wrap references, raw trajectories and original-relative
+   quality before factory or app work.
    Measure the codec/engine peak separately under6GiB.
 
 ### Qwen2.5-1.5B MLX8 quality and managed Mac Chat

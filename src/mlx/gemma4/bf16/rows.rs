@@ -76,6 +76,14 @@ impl Source {
         self.memory
     }
 
+    pub fn shape(&self) -> (usize, usize) {
+        (self.table.rows, self.table.columns)
+    }
+
+    pub fn workspace_bytes(&self, max_rows: usize) -> Result<usize, Error> {
+        Ok(Workspace::layout(self.table.row_bytes, max_rows)?.1)
+    }
+
     pub fn workspace(&self, max_rows: usize, available_bytes: usize) -> Result<Workspace, Error> {
         Workspace::new(self.table.row_bytes, max_rows, available_bytes)
     }
@@ -125,13 +133,8 @@ pub struct Workspace {
 
 impl Workspace {
     fn new(row_bytes: usize, max_rows: usize, available_bytes: usize) -> Result<Self, Error> {
-        if !(1..=MAX_BATCH).contains(&max_rows) {
-            return Err(invalid("Gemma4 BF16 PLE workspace rows outside bounds"));
-        }
-        let len = row_bytes
-            .checked_mul(max_rows)
-            .ok_or_else(|| invalid("Gemma4 BF16 PLE workspace size overflow"))?;
-        admit(add_bytes(size_of::<Self>(), len)?, available_bytes)?;
+        let (len, minimum) = Self::layout(row_bytes, max_rows)?;
+        admit(minimum, available_bytes)?;
         let mut raw = reserved(len)?;
         admit(
             add_bytes(size_of::<Self>(), raw.capacity())?,
@@ -143,6 +146,16 @@ impl Workspace {
             max_rows,
             raw,
         })
+    }
+
+    fn layout(row_bytes: usize, max_rows: usize) -> Result<(usize, usize), Error> {
+        if !(1..=MAX_BATCH).contains(&max_rows) {
+            return Err(invalid("Gemma4 BF16 PLE workspace rows outside bounds"));
+        }
+        let len = row_bytes
+            .checked_mul(max_rows)
+            .ok_or_else(|| invalid("Gemma4 BF16 PLE workspace size overflow"))?;
+        Ok((len, add_bytes(size_of::<Self>(), len)?))
     }
 
     pub fn owned_bytes(&self) -> usize {

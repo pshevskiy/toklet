@@ -23,9 +23,11 @@ mod project;
 mod projection;
 pub mod resident;
 mod weights;
+#[cfg(all(test, target_os = "macos"))]
+pub(crate) use bf16::Bf16GraphFault;
 pub use bf16::{Bf16Context, Bf16Projection};
 #[cfg(target_os = "macos")]
-pub use bf16::{Bf16LoadReport, Bf16Weights};
+pub use bf16::{Bf16LoadReport, Bf16Model, Bf16Session, Bf16Weights};
 pub use partitioned::{Gather, PartitionedAffine};
 pub use projection::Projection;
 pub use weights::Weights;

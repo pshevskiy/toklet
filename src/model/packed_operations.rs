@@ -12,15 +12,24 @@ pub(crate) mod sealed {
     pub trait Matrix {}
     pub trait Operations {}
 }
-/// Admitted matrix geometry. Implementations are sealed to the scalar and Metal
-/// Gemma paths; this is not a general tensor/backend extension interface.
+/// Cold shape and storage contract for the shared Gemma graph.
+pub enum MatrixDescriptor {
+    Affine(crate::mlx::affine::Layout),
+    Bf16 {
+        rows: usize,
+        columns: usize,
+        file_backed: bool,
+    },
+}
+
+/// Implementations are sealed to the concrete scalar and Metal adapters.
 pub trait MatrixSource: sealed::Matrix {
-    fn layout(&self) -> crate::mlx::affine::Layout;
+    fn descriptor(&self) -> MatrixDescriptor;
 }
 impl sealed::Matrix for Matrix<'_> {}
 impl MatrixSource for Matrix<'_> {
-    fn layout(&self) -> crate::mlx::affine::Layout {
-        Matrix::layout(self)
+    fn descriptor(&self) -> MatrixDescriptor {
+        MatrixDescriptor::Affine(Matrix::layout(self))
     }
 }
 /// External scratch/descriptor ownership, excluding the backend embedded in

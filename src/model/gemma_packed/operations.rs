@@ -5,4 +5,6 @@
     target_arch = "aarch64"
 ))]
 pub(crate) use super::super::packed_operations::sealed;
-pub use super::super::packed_operations::{BackendMemory, MatrixSource, Operations, Scalar};
+pub use super::super::packed_operations::{
+    BackendMemory, MatrixDescriptor, MatrixSource, Operations, Scalar,
+};
