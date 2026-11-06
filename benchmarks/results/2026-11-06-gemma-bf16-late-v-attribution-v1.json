@@ -1,0 +1,36 @@
+{
+  "format": "toklet-gemma-bf16-late-v-attribution-v1",
+  "capture_positions": [
+    507,
+    508,
+    825,
+    826,
+    827
+  ],
+  "producers": [
+    12,
+    13,
+    14
+  ],
+  "rows": 15,
+  "components": 5120,
+  "all_local_projection_norm_cache_exact": true,
+  "previous_prefix_raw_exact": true,
+  "failed_initial_check": "An unbounded source row request was rejected. The corrected verifier reads 128-row chunks.",
+  "peaks": {
+    "native": 4838592544,
+    "prior": 4756492248,
+    "reference": 172098256
+  },
+  "diagnostic_only": true,
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-v-trace-2026-11-06/late-build/checks.json": "661fabd0b8f749a6b02de4e28c8afbec21b77becbad50b33c3746f76b2581b3d",
+    "artifacts/gemma-bf16-v-trace-2026-11-06/late-build/late/owned.json": "76d625c071206f3d950382301a461c7bc6afa06ca12b8a0c3409a1c937fcb40d",
+    "artifacts/gemma-bf16-v-trace-2026-11-06/late-build/producer/owned.json": "054100c1938f722b23790e26c141964dcb0b206ed82bd22bbf35ceef404eefb2",
+    "artifacts/gemma-bf16-v-trace-2026-11-06/late-reference-v2/plan.json": "817217c094ee07e2f78509d5968349ec20d250bbb89a63d37133130e1b085cd0",
+    "artifacts/gemma-bf16-v-trace-2026-11-06/late-reference-v2/owned.json": "b3e3faa7f8e4503f4355ae53637ed778c84326e7f57fcf732e7a18b1f6bb6abb",
+    "artifacts/gemma-bf16-v-trace-2026-11-06/late-reference-v2/reference.json": "959ac8b766a262d49f565f2d0ad7eef101ec0648657d1fe3225fd6128dd77f76",
+    "artifacts/gemma-bf16-v-trace-2026-11-06/late-reference/owned.json": "7c8d93d282b1768853d4d88ce2efd7d1f9671669b5bed0502a5feb1f555d1d3b"
+  },
+  "review": "Astra approves the bounded test-only producer capture, transactional fault controls, prior raw parity and scoped same-input attribution."
+}

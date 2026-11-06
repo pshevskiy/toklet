@@ -10861,3 +10861,11 @@ captured cache drift is producer1 at position70. Astra approved the scoped
 rejection and the next two-producer trace. Initial prototype failures are
 retained, and the separate holdout remains unused.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-ordered-exploratory-v1.json)
+
+## 6 November 2026 — Attribute the official BF16 late value drift
+
+All5,120 projection and normalization components and prior cache transfer
+are bitwise exact on actual inputs. The first verifier exceeded the source
+row bound. The bounded retry, old short trace and Astra pass. The original
+long rejection remains, with the source of these differences upstream.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-late-v-attribution-v1.json)

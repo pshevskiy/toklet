@@ -130,15 +130,27 @@ fn official_bf16_short_graph_preserves_state_and_causal_rows() {
 #[test]
 #[ignore = "explicit official BF16 producer trace for the frozen 96-token prefix"]
 fn official_bf16_producer_trace() {
+    trace_producers(&[31, 38, 94, 95], 96, 0..15);
+}
+
+#[test]
+#[ignore = "explicit official BF16 local V trace at the staged cache deviations"]
+fn official_bf16_late_v_trace() {
+    trace_producers(&[507, 508, 825, 826, 827], 832, 12..15);
+}
+
+fn trace_producers(positions: &[usize], prefix: usize, producers: std::ops::Range<usize>) {
     const CHUNK: usize = 32;
-    const POSITIONS: [usize; 4] = [31, 38, 94, 95];
     let ids: Vec<u32> =
         include_bytes!("../../../../../../benchmarks/gemma-e2b-wrap-v1/tokens.u32le")
             .chunks_exact(4)
-            .take(96)
+            .take(prefix)
             .map(|word| u32::from_le_bytes(word.try_into().unwrap()))
             .collect();
-    assert_eq!(ids.len(), 96);
+    assert_eq!(ids.len(), prefix);
+    assert_eq!(prefix % CHUNK, 0);
+    assert!(positions.windows(2).all(|pair| pair[0] < pair[1]));
+    assert!(positions.iter().all(|&position| position < prefix));
     let (source, context, path, original) = load_official();
     let owner = source.test_retained_digest();
     let model = source.model_for_quality_probe(ids.len()).unwrap();
@@ -148,13 +160,11 @@ fn official_bf16_producer_trace() {
     let mut capture = capture::Capture::bounded(8 * 1024 * 1024);
     for (chunk, input) in ids.chunks_exact(CHUNK).enumerate() {
         let before = chunk * CHUNK;
-        let positions = || {
-            POSITIONS
-                .into_iter()
-                .filter(|p| (before..before + CHUNK).contains(p))
-        };
-        let committed = snapshot(&session);
-        for index in 0..model.layout.producers {
+        let first = positions.partition_point(|&position| position < before);
+        let end = positions.partition_point(|&position| position < before + CHUNK);
+        let selected = &positions[first..end];
+        let committed = (!selected.is_empty()).then(|| snapshot(&session));
+        for index in producers.clone().filter(|_| committed.is_some()) {
             session.fault = Some(index);
             assert!(matches!(
                 session.forward(input),
@@ -162,10 +172,10 @@ fn official_bf16_producer_trace() {
                     "injected Gemma layer failure"
                 )))
             ));
-            assert_eq!(snapshot(&session), committed);
+            assert_eq!(Some(snapshot(&session)), committed);
             let scratch = &session.scratch;
             let dim = model.layout.layers[index].head_dim;
-            for position in positions() {
+            for &position in selected {
                 let row = position - before;
                 for (stage, values, width) in [
                     ("input_layernorm", &scratch.norm[..], H),
@@ -186,7 +196,7 @@ fn official_bf16_producer_trace() {
         }
         session.fault = None;
         let logits = session.forward(input).unwrap();
-        for position in positions() {
+        for &position in selected {
             let row = position - before;
             capture.record(
                 "logits",
@@ -207,7 +217,7 @@ fn official_bf16_producer_trace() {
     capture.finish();
     emit(
         "BF16_PRODUCER_TRACE",
-        json!({"positions":POSITIONS,"prefix":ids.len(),"session_bytes":allocated,
+        json!({"positions":positions,"prefix":ids.len(),"session_bytes":allocated,
             "faults_preserved_committed_state":true,"diagnostic_only":true}),
     );
 }

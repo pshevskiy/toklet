@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Trace official BF16 value-cache drift and finish the original task gate.**
+Current task: **Capture the first BF16 cache drift and record original task grading.**
 Completed: source-matched native41 package selected, with Mac offline regression
 and both iOS SDK builds. [Evidence](benchmarks/results/2026-11-06-chunk-pools-native41-v1.json).
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
@@ -663,8 +663,10 @@ uses the existing full saved-conversation reset+prompt path on Send.
     - [x] Trace the frozen96-token producer prefix. All1,435,648 staged
       comparisons pass and 120 K/V vectors reproduce the wrap bytes.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-producer-trace-v1.json).
-    - [ ] Trace the staged value-cache deviations at508 and826. Use the
-      result to define a complete independent native arithmetic reference.
+    - [x] Trace the staged value-cache deviations at508 and826. All5,120 local
+      components and exact retained transfer pass. The bounded retry fixes
+      the original128-row read error. Short trace parity and Astra pass.
+      [Evidence](benchmarks/results/2026-11-06-gemma-bf16-late-v-attribution-v1.json).
     - [ ] Evaluate the prospective ordered BF16 gate on the frozen wrap and
       distinct651-token holdout. The exploratory wrap still rejects on the
       same26 V observations. Astra approved the rejection. Capture producers0–1
@@ -672,6 +674,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
       [Policy](docs/todo-implementation-plans.md#prospective-ordered-bf16-arithmetic-gate).
       [Exploratory evidence](benchmarks/results/2026-11-06-gemma-bf16-ordered-exploratory-v1.json).
     - [ ] Complete replay and isolated grading for the frozen100 tasks.
+      All100 completions and4,149 sampled decisions pass. The grading
+      receipt awaits review.
 
 - [x] Reconcile completed adapters and exact supported configurations with the
   capability report, app discovery and documentation; [coverage](docs/model-coverage.md).
