@@ -844,6 +844,8 @@ mod tests {
                 assert!(!model.is_null());
                 let weights = match unsafe { &*model }.model.as_ref() {
                     NativeModel::Metal(m) => m.weights_bytes(),
+                    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+                    NativeModel::OfficialGemma(_) => panic!("Expected explicit dense Metal model"),
                     NativeModel::Cpu(_) => panic!("Expected explicit Metal model"),
                 };
                 assert_eq!(report["resident_weights_bytes"], weights);

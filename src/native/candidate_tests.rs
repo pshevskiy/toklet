@@ -47,6 +47,8 @@ fn snapshot(s: *mut SessionHandle) -> Snapshot {
     let r = report(&state.session);
     let (history, logits) = match &state.session {
         NativeSession::Cpu(s) => (s.history(), s.logits()),
+        #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+        NativeSession::OfficialGemma(s) => (s.inference.history(), s.inference.logits()),
         #[cfg(all(
             feature = "metal",
             any(target_os = "macos", target_os = "ios"),
@@ -158,6 +160,8 @@ fn exercise_rollback(m: *mut ModelHandle, s: *mut SessionHandle, c: *mut CancelH
         (*s).access(|session| {
             match session {
                 NativeSession::Cpu(s) => s.discard_pending(),
+                #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+                NativeSession::OfficialGemma(s) => s.inference.discard_pending(),
                 #[cfg(all(
                     feature = "metal",
                     any(target_os = "macos", target_os = "ios"),
@@ -222,6 +226,8 @@ fn empty_candidate_rechecks_actual_individual_and_coexistence_capacity() {
                 target_arch = "aarch64"
             ))]
             NativeSession::Metal(_) => unreachable!(),
+            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            NativeSession::OfficialGemma(_) => unreachable!(),
         }
     };
     unsafe {

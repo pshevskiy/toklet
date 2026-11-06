@@ -176,6 +176,13 @@ fn capture_transition(
     {
         return Err(fail(INVALID, "transition model/session identity mismatch"));
     }
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    if matches!(model.model.as_ref(), NativeModel::OfficialGemma(_)) {
+        return Err(fail(
+            UNSUPPORTED,
+            "Gemma BF16 live session replacement is unavailable",
+        ));
+    }
     let (backend, loaded, metadata, metadata_in_report, actual, planned, old_options, buffer) =
         match (model.model.as_ref(), &state.session) {
             (NativeModel::Cpu(model), NativeSession::Cpu(session)) => {
@@ -239,6 +246,13 @@ fn capture_transition(
         return Err(fail(ENGINE_ERROR, "shared model accounting differs"));
     }
     let modes = match model.model.as_ref() {
+        #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+        NativeModel::OfficialGemma(_) => {
+            return Err(fail(
+                UNSUPPORTED,
+                "Gemma BF16 live session replacement is unavailable",
+            ));
+        }
         NativeModel::Cpu(_) => ExecutionModes {
             projection: "Scalar".into(),
             normalization: "Scalar".into(),

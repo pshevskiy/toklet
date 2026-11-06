@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Connect the audited official BF16 owner to the Mac native bridge.**
+Current task: **Connect the official BF16 basic-text codec and audited native identity.**
 Completed: source-matched native41 package selected, with Mac offline regression
 and both iOS SDK builds. [Evidence](benchmarks/results/2026-11-06-chunk-pools-native41-v1.json).
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
@@ -688,8 +688,12 @@ uses the existing full saved-conversation reset+prompt path on Send.
       exact/minus-one checks, a real512-capacity request, reset, cancellation
       and Astra pass. Peak physical memory is5.03GB.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-official-mac-owner-v1.json).
-    - [ ] Add the native bridge and verify its lifecycle and exact memory facts.
-      Managed Chat, discovery and transport follow.
+    - [x] Add the native raw bridge and exact combined memory facts. Real
+      generation survives external model release. All43 Mac exports, both
+      iOS target compiles, strict checks and Astra pass.
+      [Evidence](benchmarks/results/2026-11-06-gemma-bf16-native-raw-v1.json).
+    - [ ] Bind the existing codec reservation to audited native Chat and
+      publish the exact accepted artifact identity. Managed Mac follows.
     - [x] Complete replay and isolated grading for the frozen100 tasks.
       All4,149 sampled decisions match. The grade is51/100 versus52/100,
       within the2pp gate. Astra confirms both original-quality results.

@@ -23,6 +23,8 @@ pub use runtime_planning::*;
 pub use transition_planning::*;
 mod context;
 pub use context::*;
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+mod gemma_bf16;
 #[cfg(all(
     feature = "llama-staged-mac-app-probe",
     target_os = "macos",
@@ -172,6 +174,8 @@ enum NativeModel {
         target_arch = "aarch64"
     ))]
     Metal(Box<crate::metal::Model>),
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    OfficialGemma(Box<gemma_bf16::Model>),
 }
 enum NativeSession {
     Cpu(Box<session::Session<'static>>),
@@ -181,6 +185,8 @@ enum NativeSession {
         target_arch = "aarch64"
     ))]
     Metal(Box<crate::metal::Session<'static>>),
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    OfficialGemma(Box<gemma_bf16::Session>),
 }
 impl NativeSession {
     fn generate(
@@ -192,6 +198,8 @@ impl NativeSession {
         // Backend selection is once per request, outside generation/kernels.
         match self {
             Self::Cpu(s) => generation::generate(s.as_mut(), request, cancel, emit),
+            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            Self::OfficialGemma(s) => generation::generate(&mut s.inference, request, cancel, emit),
             #[cfg(all(
                 feature = "metal",
                 any(target_os = "macos", target_os = "ios"),
@@ -212,6 +220,8 @@ impl NativeSession {
     fn score(&self, target: u32) -> Result<Score> {
         let (logits, evaluated) = match self {
             Self::Cpu(s) => (s.logits(), s.evaluated_len()),
+            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            Self::OfficialGemma(s) => (s.inference.logits(), s.inference.evaluated_len()),
             #[cfg(all(
                 feature = "metal",
                 any(target_os = "macos", target_os = "ios"),
@@ -227,6 +237,8 @@ impl NativeSession {
     fn reset(&mut self) {
         match self {
             Self::Cpu(s) => s.reset(),
+            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            Self::OfficialGemma(s) => s.inference.reset(),
             #[cfg(all(
                 feature = "metal",
                 any(target_os = "macos", target_os = "ios"),
@@ -404,6 +416,10 @@ fn report(s: &NativeSession) -> Report {
     }
     match s {
         NativeSession::Cpu(s) => snapshot(s.as_ref(), s.memory().admitted_bytes),
+        #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+        NativeSession::OfficialGemma(s) => {
+            snapshot(&s.inference, s.inference.memory().admitted_bytes)
+        }
         #[cfg(all(
             feature = "metal",
             any(target_os = "macos", target_os = "ios"),
@@ -723,6 +739,45 @@ unsafe fn load_mlx(
         })
     }
 }
+
+/// Open the exact official BF16 Gemma checkpoint for raw generation on Mac.
+/// The budget includes the pinned codec reservation and native bridge.
+/// # Safety
+/// Follow the foreign caller contract; outputs must be disjoint from inputs.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_model_load_gemma_bf16_audited(
+    path: *const u8,
+    len: usize,
+    opts: *const Options,
+    out: *mut *mut ModelHandle,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe {
+        boundary(error, || {
+            pointer(out)?;
+            out.write(ptr::null_mut());
+            let options = options(opts)?;
+            let path = local_path(path, len)?;
+            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            {
+                let path = origin_path(path)?;
+                let model = gemma_bf16::Model::load(&path, options)?;
+                out.write(Box::into_raw(Box::new(ModelHandle {
+                    owner: thread::current().id(),
+                    instance: context::next_instance()?,
+                    model: Rc::new(NativeModel::OfficialGemma(Box::new(model))),
+                    directory: path,
+                })));
+                Ok(())
+            }
+            #[cfg(not(all(feature = "metal", target_os = "macos", target_arch = "aarch64")))]
+            {
+                let _ = (path, options);
+                Err(fail(UNSUPPORTED, "Official Gemma BF16 requires Mac Metal"))
+            }
+        })
+    }
+}
 /// Release an external model handle. Live sessions and audited chats retain
 /// weights; keep their model memory admitted. Legacy chats retain no model.
 /// NULL is a no-op.
@@ -756,6 +811,10 @@ fn create_session(model: &ModelHandle, opts: session::Options) -> Result<Box<Ses
         NativeModel::Cpu(model) => NativeSession::Cpu(Box::new(
             session::Session::new(model, opts).map_err(|e| fail(ENGINE_ERROR, e.to_string()))?,
         )),
+        #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+        NativeModel::OfficialGemma(model) => {
+            NativeSession::OfficialGemma(Box::new(model.create_session(opts)?))
+        }
         #[cfg(all(
             feature = "metal",
             any(target_os = "macos", target_os = "ios"),
@@ -920,6 +979,8 @@ pub unsafe extern "C" fn toklet_session_history(
             (*session).access(|s| {
                 let history = match s {
                     NativeSession::Cpu(s) => s.history(),
+                    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+                    NativeSession::OfficialGemma(s) => s.inference.history(),
                     #[cfg(all(
                         feature = "metal",
                         any(target_os = "macos", target_os = "ios"),

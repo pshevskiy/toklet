@@ -32,6 +32,22 @@ pub unsafe extern "C" fn toklet_chat_create(
             pointer(model)?;
             let model = &*model;
             owner(model.owner)?;
+            let config = match model.model.as_ref() {
+                NativeModel::Cpu(model) => model.config(),
+                #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+                NativeModel::OfficialGemma(_) => {
+                    return Err(fail(
+                        UNSUPPORTED,
+                        "Gemma BF16 requires its audited text route",
+                    ));
+                }
+                #[cfg(all(
+                    feature = "metal",
+                    any(target_os = "macos", target_os = "ios"),
+                    target_arch = "aarch64"
+                ))]
+                NativeModel::Metal(model) => model.config(),
+            };
             let profile =
                 Profile::load(&model.directory).map_err(|e| fail(LOAD_ERROR, e.to_string()))?;
             if allowance < profile.allowance() as u64
@@ -42,15 +58,6 @@ pub unsafe extern "C" fn toklet_chat_create(
                     "reserve text memory separately: SmolLM2/Mistral 64MiB, Qwen 128MiB, Qwen3 256MiB",
                 ));
             }
-            let config = match model.model.as_ref() {
-                NativeModel::Cpu(model) => model.config(),
-                #[cfg(all(
-                    feature = "metal",
-                    any(target_os = "macos", target_os = "ios"),
-                    target_arch = "aarch64"
-                ))]
-                NativeModel::Metal(model) => model.config(),
-            };
             if !profile.supports(config) {
                 return Err(fail(
                     UNSUPPORTED,
@@ -102,6 +109,8 @@ pub unsafe extern "C" fn toklet_chat_create_smol_audited(
             // Reject them BEFORE inspecting their directory or any text asset.
             let source = match model.model.as_ref() {
                 NativeModel::Cpu(_) => None,
+                #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+                NativeModel::OfficialGemma(_) => None,
                 #[cfg(all(
                     feature = "metal",
                     any(target_os = "macos", target_os = "ios"),
@@ -161,6 +170,8 @@ pub unsafe extern "C" fn toklet_chat_create_qwen3_audited(
             }
             let source = match model.model.as_ref() {
                 NativeModel::Cpu(_) => None,
+                #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+                NativeModel::OfficialGemma(_) => None,
                 #[cfg(all(
                     feature = "metal",
                     any(target_os = "macos", target_os = "ios"),

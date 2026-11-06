@@ -253,10 +253,25 @@ uint32_t toklet_model_load_mlx_qwen15_audited(const uint8_t *, size_t, const Tok
 /* Pinned Llama3 scaled-RoPE import; context must be <=512. */
 uint32_t toklet_model_load_mlx_llama3_audited(const uint8_t *, size_t, const TokletOptions *, TokletModel **, TokletError *);
 uint32_t toklet_model_load_mlx_mistral_audited(const uint8_t *, size_t, const TokletOptions *, TokletModel **, TokletError *);
+/* Mac raw-token path for the exact official Gemma BF16 source, at most 512
+   positions. The supplied budget reserves the pinned codec and bridge. */
+uint32_t toklet_model_load_gemma_bf16_audited(const uint8_t *, size_t, const TokletOptions *, TokletModel **, TokletError *);
 uint32_t toklet_model_release(TokletModel *, TokletError *);
 uint32_t toklet_session_create(const TokletModel *, const TokletOptions *, TokletSession **, TokletError *);
 uint32_t toklet_session_release(TokletSession *, TokletError *);
 uint32_t toklet_session_state(const TokletSession *, TokletReport *, TokletError *);
+typedef struct {
+    uint32_t abi_version;
+    uint32_t struct_size;
+    uint64_t load_admitted_bytes;
+    uint64_t session_admitted_bytes;
+    uint64_t session_reserved_bytes;
+    uint64_t kv_owned_bytes;
+    uint64_t codec_allowance_bytes;
+} TokletGemmaBf16MemoryInfo;
+/* Combined owner admission including the codec and bridge, with caller-owned
+   app memory separate. Other model profiles return TOKLET_UNSUPPORTED. */
+uint32_t toklet_session_gemma_bf16_memory(const TokletSession *, TokletGemmaBf16MemoryInfo *, TokletError *);
 /* Read-only live model/session snapshot, valid after external model release.
    No directory reads, new execution, reservation or app eligibility grant.
    Outputs are complete native-aligned records, untouched on failure. Existing

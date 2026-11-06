@@ -29,6 +29,8 @@ impl SourceReceipt {
             usize,
         ) = match model.model.as_ref() {
             NativeModel::Cpu(_) => (None, None, 0),
+            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            NativeModel::OfficialGemma(_) => (None, None, 0),
             #[cfg(all(
                 feature = "metal",
                 any(target_os = "macos", target_os = "ios"),

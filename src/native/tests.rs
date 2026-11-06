@@ -1554,3 +1554,21 @@ mod mistral_pairing_tests;
 
 #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
 mod llama3_chat;
+#[cfg(not(all(feature = "metal", target_os = "macos", target_arch = "aarch64")))]
+#[test]
+fn official_gemma_raw_load_is_unavailable_without_mac_metal() {
+    let path = b"unavailable-official-gemma-source";
+    let mut model = ptr::dangling_mut();
+    // SAFETY: path and options are initialized and output is disjoint.
+    let status = unsafe {
+        toklet_model_load_gemma_bf16_audited(
+            path.as_ptr(),
+            path.len(),
+            &opts(),
+            &mut model,
+            ptr::null_mut(),
+        )
+    };
+    assert_eq!(status, UNSUPPORTED);
+    assert!(model.is_null());
+}

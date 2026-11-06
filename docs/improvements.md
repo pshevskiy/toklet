@@ -10914,3 +10914,12 @@ one byte below each, and real generation at capacity512. The combined
 process peaks at5.032GB. Reset, cancellation and the old task pilot pass.
 Astra approves after strict checks. The native and app routes remain separate.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-official-mac-owner-v1.json)
+
+## 6 November 2026 — Add the official BF16 Mac raw bridge
+
+Two additive C entry points open the audited raw model and report combined
+memory. Real generation and scoring survive external model release. Session
+admission is5.814GB and physical peak is4.914GB. Astra approves after strict
+checks,43 Mac exports and both iOS compiler targets. Managed Chat and
+replacement remain separate.
+[Evidence](../benchmarks/results/2026-11-06-gemma-bf16-native-raw-v1.json)

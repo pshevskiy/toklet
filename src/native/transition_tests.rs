@@ -4,6 +4,11 @@ use serde_json::Value;
 fn state_bytes(session: &NativeSession) -> (Vec<u32>, Option<Vec<f32>>) {
     match session {
         NativeSession::Cpu(s) => (s.history().to_vec(), s.logits().map(<[f32]>::to_vec)),
+        #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+        NativeSession::OfficialGemma(s) => (
+            s.inference.history().to_vec(),
+            s.inference.logits().map(<[f32]>::to_vec),
+        ),
         #[cfg(all(
             feature = "metal",
             any(target_os = "macos", target_os = "ios"),
@@ -20,6 +25,8 @@ fn check_committed_snapshot(m: *mut ModelHandle, s: *mut SessionHandle, options:
         (*s).access(|session| {
             match session {
                 NativeSession::Cpu(s) => s.discard_pending(),
+                #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+                NativeSession::OfficialGemma(s) => s.inference.discard_pending(),
                 #[cfg(all(
                     feature = "metal",
                     any(target_os = "macos", target_os = "ios"),

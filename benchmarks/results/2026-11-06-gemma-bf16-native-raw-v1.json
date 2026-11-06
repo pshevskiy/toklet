@@ -1,0 +1,51 @@
+{
+  "format": "toklet-gemma-bf16-native-raw-v1",
+  "scope": "Audited Mac raw ABI and combined owner memory; Chat and managed profiles separate.",
+  "observations": {
+    "load_admitted_bytes": 5717853922,
+    "session_admitted_bytes": 5814091920,
+    "kv_owned_bytes": 20054016,
+    "visible_ids": [
+      818,
+      5279,
+      529,
+      7001,
+      563,
+      5213,
+      50429,
+      84750
+    ],
+    "survived_external_model_release": true
+  },
+  "checks": {
+    "default_tests": 589,
+    "metal_tests": 707,
+    "mac_c_exports": 43,
+    "ios_c_header_and_rust_compile": true,
+    "physical_ios_tested": false
+  },
+  "peak_physical_bytes": 4914417960,
+  "exact_below_budget_rejected": true,
+  "declared_positions": 131072,
+  "loaded_positions": 512,
+  "live_prefix_preserved_on_unsupported_transition": true,
+  "wrong_thread_rejected": true,
+  "cancel_reset_and_score": true,
+  "initial_failures": [
+    "Metal compile needed new test match arms.",
+    "Homebrew toolchain lacked iOS Rust core targets; installed rustup toolchain succeeds.",
+    "The first arbitrary raw prompt stopped without emitting. The pinned rendered control passes."
+  ],
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-native-bridge-2026-11-06/checks.json": "5b389d68dad992481622cea49cf7d0d40dcad7d9f9087601843dae2affb11eea",
+    "artifacts/gemma-bf16-native-bridge-2026-11-06/first-run/checks.json": "34f6eb1e69a68e5c1a9ca25e8f35d051936e0b7bcf55ac6f8484c44d3d26d80d",
+    "artifacts/gemma-bf16-native-bridge-2026-11-06/initial/checks.json": "f5d9f671825ad4684c4a6050b74758cdf8aa759917c5b3bd38f51a7e97384f64",
+    "artifacts/gemma-bf16-native-bridge-2026-11-06/native/owned.json": "f9ac741abdf6f1c4790bbc4bd3cfdee2b07db4828a0c0441dadceef97a21b587",
+    "artifacts/gemma-bf16-native-bridge-2026-11-06/native/gpu.stdout": "67b8a6e2a57d954aaad9e064f19b4c88b11b54c232e3a6a12776807cab39bedd",
+    "artifacts/gemma-bf16-native-bridge-2026-11-06/first-run/native/owned.json": "339aead7269fe02e1192056d81275202a6c31988264d87a12aa311be737ecd64",
+    "artifacts/gemma-bf16-native-bridge-2026-11-06/header-check.txt": "91259cb3c58c84a69bc4a1e1f38aba4d9e4b91cfb3a10caa363451422aceb3a9",
+    "artifacts/gemma-bf16-native-bridge-2026-11-06/cross-checks.txt": "e38d2d034da3036fab6f35a62dd37d2e1c3785ef69f0b92b8d22e1518c96174e",
+    "artifacts/gemma-bf16-native-bridge-2026-11-06/link-check.json": "a01ec9fab733baa00897744eed37544fa5f7ed382300bd6f4acbb7944f4e2c59"
+  },
+  "review": "Astra approves the private stable Rc lifetime extensions, additive ABI, separate memory reporting, and owned post-model-release behavior."
+}

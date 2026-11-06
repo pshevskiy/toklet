@@ -79,6 +79,12 @@ pub(super) fn generation_input(operation: u32, tokens: &[u32]) -> Result<generat
 fn facts(state: &OwnedSession, session_instance: u64) -> ContextInfo {
     let (backend, loaded, declared): (u32, usize, Option<usize>) = match state._model.as_ref() {
         NativeModel::Cpu(model) => (0, model.config().max_positions, None),
+        #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+        NativeModel::OfficialGemma(model) => (
+            1,
+            model.loaded_positions(),
+            Some(crate::metal::gemma_affine::OfficialBf16::DECLARED_POSITIONS),
+        ),
         #[cfg(all(
             feature = "metal",
             any(target_os = "macos", target_os = "ios"),
@@ -93,6 +99,8 @@ fn facts(state: &OwnedSession, session_instance: u64) -> ContextInfo {
     let snapshot = report(&state.session);
     let capacity = match &state.session {
         NativeSession::Cpu(s) => s.capacity(),
+        #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+        NativeSession::OfficialGemma(s) => s.inference.capacity(),
         #[cfg(all(
             feature = "metal",
             any(target_os = "macos", target_os = "ios"),
@@ -137,6 +145,8 @@ impl NativeSession {
     ) -> std::result::Result<generation::RequestAdmission, generation::Error> {
         match self {
             Self::Cpu(s) => generation::request_admission(s.as_ref(), request),
+            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            Self::OfficialGemma(s) => generation::request_admission(&s.inference, request),
             #[cfg(all(
                 feature = "metal",
                 any(target_os = "macos", target_os = "ios"),
@@ -144,6 +154,60 @@ impl NativeSession {
             ))]
             Self::Metal(s) => generation::request_admission(s.as_ref(), request),
         }
+    }
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Default)]
+pub struct GemmaBf16MemoryInfo {
+    pub abi_version: u32,
+    pub struct_size: u32,
+    pub load_admitted_bytes: u64,
+    pub session_admitted_bytes: u64,
+    pub session_reserved_bytes: u64,
+    pub kv_owned_bytes: u64,
+    pub codec_allowance_bytes: u64,
+}
+const _: () = assert!(size_of::<GemmaBf16MemoryInfo>() == 48);
+
+/// Read combined owner admission for a live official BF16 session. The two
+/// totals include the codec and native bridge. Caller-owned app memory is separate.
+/// # Safety
+/// Follow the parent pointer/thread contract; output is untouched unless status is OK.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_session_gemma_bf16_memory(
+    session: *const SessionHandle,
+    out: *mut GemmaBf16MemoryInfo,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe {
+        boundary(error, || {
+            pointer(session)?;
+            pointer(out)?;
+            (*session).access_owned(|state| {
+                #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+                if let (NativeModel::OfficialGemma(model), NativeSession::OfficialGemma(session)) =
+                    (state._model.as_ref(), &state.session)
+                {
+                    let owner = model.memory();
+                    out.write(GemmaBf16MemoryInfo {
+                        abi_version: ABI_VERSION,
+                        struct_size: size_of::<GemmaBf16MemoryInfo>() as u32,
+                        load_admitted_bytes: (owner.load_admitted_bytes + BRIDGE_BYTES) as u64,
+                        session_admitted_bytes: (session.admitted_bytes + BRIDGE_BYTES) as u64,
+                        session_reserved_bytes: owner.session_reserved_bytes as u64,
+                        kv_owned_bytes: session.inference.memory().kv_bytes as u64,
+                        codec_allowance_bytes: crate::app_chat::gemma4::ALLOWANCE_BYTES as u64,
+                    });
+                    return Ok(());
+                }
+                let _ = state;
+                Err(fail(
+                    UNSUPPORTED,
+                    "Official Gemma BF16 memory is unavailable for this session",
+                ))
+            })
+        })
     }
 }
 

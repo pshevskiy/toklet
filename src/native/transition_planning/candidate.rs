@@ -48,6 +48,10 @@ fn candidate_memory(candidate: &SessionHandle) -> Result<(session::Memory, usize
                 NativeModel::Cpu(model) => model
                     .allocated_metadata_bytes()
                     .map_err(|e| fail(ENGINE_ERROR, e.to_string()))?,
+                #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+                NativeModel::OfficialGemma(_) => {
+                    return Err(fail(ENGINE_ERROR, "candidate backend differs"));
+                }
                 #[cfg(all(
                     feature = "metal",
                     any(target_os = "macos", target_os = "ios"),
@@ -64,6 +68,11 @@ fn candidate_memory(candidate: &SessionHandle) -> Result<(session::Memory, usize
                 metadata,
             ))
         }
+        #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+        NativeSession::OfficialGemma(_) => Err(fail(
+            UNSUPPORTED,
+            "Gemma BF16 live session replacement is unavailable",
+        )),
         #[cfg(all(
             feature = "metal",
             any(target_os = "macos", target_os = "ios"),
@@ -188,6 +197,8 @@ fn fault_after(candidate: &SessionHandle, cancel: &CancelHandle) -> Result<()> {
         Fault::ExcessHistory => {
             match &mut candidate.state.borrow_mut().session {
                 NativeSession::Cpu(s) => s.test_reserve_history(4096),
+                #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+                NativeSession::OfficialGemma(_) => panic!("CPU-only allocation excess control"),
                 #[cfg(all(
                     feature = "metal",
                     any(target_os = "macos", target_os = "ios"),
