@@ -1,0 +1,17 @@
+{
+  "format": "toklet-official-gemma-public-4m-v1",
+  "scope": "Isolated Toklet Hub public trial with smaller ranges before partial-prefix support. No model publication or offline reopen.",
+  "passed": false,
+  "total_bytes": 10278816137,
+  "last_confirmed_progress_bytes": 2013288418,
+  "resource_deadline_seconds": 7200,
+  "staging_empty": true,
+  "xet_diagnostic_completed": false,
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-public-adaptive-2026-11-06/LiveHubMain.swift": "5febd8dd5d7a301678547045f7cdbb437fe000f93ed4d35479211a337eee3c28",
+    "artifacts/gemma-bf16-public-adaptive-2026-11-06/live-4m.stdout": "f85590a660b434da55efc6b022d426b929caf05106c5c9d3c0b534f5946b2d72",
+    "artifacts/gemma-bf16-public-adaptive-2026-11-06/live-4m.stderr": "91a15636f3f0b67438c2e614c90f2d01b9d7b46bb896cd5d40409995e7dc26b2",
+    "artifacts/gemma-bf16-public-adaptive-2026-11-06/resume-receipt.json": "2374f645575a47a593d118fcebeed9eec43a1f69b56c96f6efc8435c92e6e68f",
+    "artifacts/gemma-bf16-public-adaptive-2026-11-06/xet-stopped.json": "e405087bf0d16620e00cbeb9ee41141ec6d6fb5ec03decaf826474ed61a21386"
+  }
+}

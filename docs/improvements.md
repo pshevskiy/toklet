@@ -11049,3 +11049,5 @@ from the accepted prefix within the original three-attempt bound. Swift
 controls verify exact assembly, malformed suffix rejection and cleanup. The
 signed Mac build and Astra pass. Complete public transfer remains open.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-resumable-ranges-v1.json)
+The older 4 MiB trial assembled 2.01 GB before its deadline and cleared staging.
+[Trial](../benchmarks/results/2026-11-06-gemma-bf16-public-4m-v1.json)

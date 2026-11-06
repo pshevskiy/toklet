@@ -710,8 +710,10 @@ uses the existing full saved-conversation reset+prompt path on Send.
       cached publication, offline Chat and Astra pass.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-mac-hub-v1.json).
     - [ ] Complete a full public Gemma download and reopen from its publication.
-      Both 16 MiB attempts timed out and cleaned staging. A 4 MiB trial is active.
-      [Retry evidence](benchmarks/results/2026-11-06-gemma-bf16-public-retry-v1.json).
+      Both 16 MiB attempts timed out. The older 4 MiB trial reached 2.01 GB
+      before its deadline and cleaned staging. The production retry is queued
+      after the isolated G3 timing.
+      [4 MiB trial](benchmarks/results/2026-11-06-gemma-bf16-public-4m-v1.json).
     - [x] Resume accepted range prefixes for the exact Mac Gemma shard.
       Swift controls, signed app and Astra pass.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-resumable-ranges-v1.json).
@@ -825,6 +827,7 @@ completed or prerequisites for the active breadth-first queue.
 
 | Date | Iteration | Result, checks and review | Commit / next action |
 | --- | --- | --- | --- |
+| 2026-11-06 | Official Gemma older 4 MiB public trial | Confirmed 2.01 GB before the two-hour deadline, empty staging after failure. Xet diagnostic stopped separately without full SHA. | Production resumption retry queued after G3. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-public-4m-v1.json). |
 | 2026-11-06 | Official Gemma bounded range resumption | Exact Mac shard uses 4 MiB chunks and keeps accepted partial bytes for transient retries. Owned Hub controls, both SDKs, signed build and Astra pass. | Full public transfer remains open. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-resumable-ranges-v1.json). |
 | 2026-11-06 | G3 real assistant-loop pilot | Ten exact paired requests. At128+32 median gain is21.4%; at384+32 loss is5.9%. Peak5.18GB. First runner move error fixed, 594 default/713 Metal and Astra pass. | Confirm128+128 and384+128 under frozen gates. [Evidence](benchmarks/results/2026-11-06-gemma-assistant-mtp-pilot-v1.json). |
 | 2026-11-06 | G3 strict target verification | Real partial acceptance/correction, exact hidden/KV, pre-publication cancellation and G2 parity pass. Two-head wrap and pending stop controls, 594 default, 713 Metal, Astra. | Measure the real assistant loop. [Evidence](benchmarks/results/2026-11-06-gemma-strict-shared-kv-v1.json). |
