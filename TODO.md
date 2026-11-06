@@ -1,15 +1,11 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Apply the same-owner Gemma BF16 replacement in Mac Settings.**
-Next-open window and KV controls pass on the signed native44 Mac build.
-Full model reload retained 2.67 GB and correctly failed the headroom gate.
-[Evidence](benchmarks/results/2026-11-06-gemma-bf16-window-open-v1.json).
-The earlier native43 Hub build passed exact
-cached publication and network-denied Chat at 4.93 GB peak. The full public
-transfer timed out after 256 MiB. A second route matched the stalled range
-but timed out on the full retry and cleaned staging. Full transfer stays open.
-[Evidence](benchmarks/results/2026-11-06-gemma-bf16-mac-hub-v1.json).
+Current task: **G2 last-row shared-KV prefill parity and Mac performance.**
+The native45 Mac build passed active same-owner context/KV changes and
+rendered Settings. Full public Gemma transfer remains open after two
+timeouts; cached publication and offline Chat pass.
+[Settings evidence](benchmarks/results/2026-11-06-gemma-bf16-live-window-v1.json).
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
 [Evidence](benchmarks/results/2026-11-06-qwen15-mac-app-v1.json).
 The six earlier Mac profile journeys are reviewed and complete. [Report](docs/mac-hub-journeys.md).
@@ -533,7 +529,10 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Diagnostic1,025 admission and qualified512-prefix parity; default32/chunk32 preserved. [Report](docs/gemma-context1025-probe.md).
 - [x] Independent real1,025 oracle and native local-cache state/wrap/overflow/reset capture; [report](docs/gemma-hybrid1025.md).
 - [x] Same-input V-projection/RMSNorm and exact cache-transfer witness; [report](docs/gemma-v-boundary.md).
-- [ ] Real1,025 numerical qualification:4mathematical logits and8stagedKV observations remain rejected; local same-input witnesses pass; source/precision decision remains.
+- [x] Resolve the Gemma numerical adoption decision. Packed Q4 remains
+  rejected on the historical 1,025-position gate. The selected official BF16
+  profile passes the distinct frozen arithmetic gate.
+  [Evidence](benchmarks/results/2026-11-06-gemma-bf16-rounding-numerical-v1.json).
   - [x] Layer12 position433 complete post-attention tail passes both
     arithmetic contracts. Astra confirms no further local layer walking.
     [Evidence](benchmarks/results/2026-11-06-gemma-layer12-tail-v1.json).
@@ -570,7 +569,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
 - [x] Resident original BF16/stockKV reference at511–567positions; [report](docs/gemma-resident-generation.md).
 - [x] Original100-task controller pilot with exact sampled/terminal-stop replay; [report](docs/gemma-task-controller-pilot.md).
 - [x] Complete original/native100-case collections and isolated grading; [task result](docs/gemma-full-tasks.md), `89f0613`.
-- [ ] Gemma4 adoption task gate: rejected52→43/100; stock MLX matches all4selected decisions (`c79fa90`). Higher-precision feasibility decision: [header ledger](docs/gemma8-feasibility.md); no8-bit execution. [Q6 header screen](docs/gemma6-feasibility.md) leaves estimated headroom; [Stock decision replay](benchmarks/results/2026-11-05-gemma6-stock-decisions-v1.json) matches original BF16 in all four probes. [Three-category pilot](benchmarks/results/2026-11-05-gemma6-stock-task-pilot-v1.json) passes 50 exact sampled rows. [Complete stock collection](benchmarks/results/2026-11-05-gemma6-stock-tasks-v1.json) has 26 stateless mismatches across 13 cases. [Bounded recovery](benchmarks/results/2026-11-05-gemma6-stock-recovery-v1.json) verifies 99, with one proposal cycle. [Fresh-prefix replay](benchmarks/results/2026-11-05-gemma6-stock-prefix37-v1.json) also rejects. Current Q6 deferred, grading withheld.
+- [x] Decline packed Q4 adoption after its rejected52→43/100 task gate; stock MLX matches all4selected decisions (`c79fa90`). Higher-precision feasibility decision: [header ledger](docs/gemma8-feasibility.md); no8-bit execution. [Q6 header screen](docs/gemma6-feasibility.md) leaves estimated headroom; [Stock decision replay](benchmarks/results/2026-11-05-gemma6-stock-decisions-v1.json) matches original BF16 in all four probes. [Three-category pilot](benchmarks/results/2026-11-05-gemma6-stock-task-pilot-v1.json) passes 50 exact sampled rows. [Complete stock collection](benchmarks/results/2026-11-05-gemma6-stock-tasks-v1.json) has 26 stateless mismatches across 13 cases. [Bounded recovery](benchmarks/results/2026-11-05-gemma6-stock-recovery-v1.json) verifies 99, with one proposal cycle. [Fresh-prefix replay](benchmarks/results/2026-11-05-gemma6-stock-prefix37-v1.json) also rejects. Current Q6 deferred, grading withheld.
   - [x] OptiQ text payload, strict mixed4/8 stock load and four pinned decisions. [Evidence](benchmarks/results/2026-11-06-gemma-optiq-stock-v1.json).
   - [x] OptiQ HumanEval/37, all 122 cached/stateless decisions, zero repairs. [Evidence](benchmarks/results/2026-11-06-gemma-optiq-trajectory37-v1.json).
   - [x] OptiQ stock experiment complete. All trajectories pass, but 49/100
@@ -635,7 +634,7 @@ uses the existing full saved-conversation reset+prompt path on Send.
     greedy observations. Both owners verify. Task rejection remains.
     [Final evidence](benchmarks/results/2026-11-06-gemma-qat-wrap-parity-v1.json)
     and [initial audit failure](benchmarks/results/2026-11-06-gemma-qat-wrap-initial-v1.json).
-  - [ ] Screen the official BF16 source with only PLE lookup file-backed.
+  - [x] Qualify the official BF16 source with only PLE lookup file-backed.
     Full selected text9.26GB exceeds the6GiB policy. Projected resident
     text4.56GB plus bounded row integrity and exact owner accounting may fit.
     Keep all existing native and original-quality gates.
@@ -719,8 +718,10 @@ uses the existing full saved-conversation reset+prompt path on Send.
     - [x] Plan and prepare a same-owner native replacement. Exact and
       minus-one budgets, cancellation, retained prefix and Astra pass.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-live-transition-v1.json).
-    - [ ] Apply the native replacement through Mac Settings and verify the
-      rendered controls, replay and late PLE corruption handling.
+    - [x] Apply the same-owner replacement in Mac Settings. Real 384/16→256/8
+      Chat, AppKit render, regressions and Astra pass.
+      [Settings](benchmarks/results/2026-11-06-gemma-bf16-live-window-v1.json).
+      [Late PLE rejection](benchmarks/results/2026-11-06-gemma-bf16-late-ple-v1.json).
     - [x] Complete replay and isolated grading for the frozen100 tasks.
       All4,149 sampled decisions match. The grade is51/100 versus52/100,
       within the2pp gate. Astra confirms both original-quality results.
@@ -782,7 +783,8 @@ Conditional follow-ons require their own decision; they do not all block M9:
   [Timing](benchmarks/results/2026-11-06-m9-qwen2-lookup-timing-v1.json) repeats a 53% decode
   gain on the repeated contract prompt. The code prompt misses the 5% gate.
   Retain the explicit nonstreaming API and reject default adoption.
-- [ ] G2/G3: checkpoint-defined shared-KV prefill/MTP after selected Gemma support.
+- [ ] G2: qualify checkpoint-defined last-row shared-KV prefill on Mac.
+- [ ] G3: authenticate and qualify the official Gemma assistant for MTP.
   [Last-row prefill and assistant plans](docs/todo-implementation-plans.md#g2g3-shared-kv-and-mtp).
   The prospective assistant header and target token-ID comparison pass.
   [Evidence](benchmarks/results/2026-11-06-gemma-qat-assistant-header-v1.json).

@@ -135,7 +135,7 @@ struct FriendlyPlanningState {
 // files and saved paths never authorize replacement. No workspace is retained.
 struct FriendlyApplyRequest {
     let target: FriendlyPlanningTarget
-    let previewID: UUID
+    let previewID: UUID?
     let transition: NativeTransitionRequest
 }
 

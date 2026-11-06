@@ -507,10 +507,10 @@ final class FriendlyChatStore: ObservableObject {
     func unload() { invalidatePlanning(); pendingLoad = nil; acceptingLoad = nil; acceptedIdentity = nil; loadingModel = false; harness?.worker?.interrupt(unload:true); harness?.poll() }
     func enterExpert() { invalidatePlanning(); pendingLoad = nil; acceptingLoad = nil; acceptedIdentity = nil; loadingModel = false; save(); harness?.setExpert(true) }
     // Preview is never serialized into ChatWorkspace or used by beginLoad.
-    private func planningTarget(_ state: NativeSnapshot, requireVisible: Bool = true) -> FriendlyPlanningTarget? {
+    private func planningTarget(_ state: NativeSnapshot, requireVisible: Bool = true, includeGemma: Bool = false) -> FriendlyPlanningTarget? {
         guard (!requireVisible || planningVisible), let harness, !harness.expert, !loadingModel,
               let worker = harness.worker, let accepted = planningLoad,
-              accepted.settings.loadIdentity != .managedGemmaBF16,
+              includeGemma || accepted.settings.loadIdentity != .managedGemmaBF16,
               accepted.worker == ObjectIdentifier(worker), state.hasModel, state.chatEnabled, !state.closed,
               let instance = state.modelContext?.modelInstance, instance > 0,
               instance == loadedModelInstance, !loadedKey.isEmpty, loadedKey == workspace.current.modelKey else { return nil }
@@ -534,7 +534,7 @@ final class FriendlyChatStore: ObservableObject {
             acceptedIdentity = identity
         } else { acceptedIdentity = nil }
         reconcilePreference(actual)
-        let active = planningTarget(actual,requireVisible:false)
+        let active = planningTarget(actual,requireVisible:false,includeGemma:true)
         if let prior = planning.target,
            active?.worker != prior.worker || active?.modelInstance != prior.modelInstance
             || active?.conversation != prior.conversation || active?.modelKey != prior.modelKey {
@@ -544,7 +544,8 @@ final class FriendlyChatStore: ObservableObject {
         // transient result. Reconcile it before retiring the old preview.
         applying.observe(target:active,snapshot:actual)
         currentSessionConfiguration = active?.configuration
-        if planning.select(planningVisible ? active : nil) {
+        let previewTarget = planningLoad?.settings.loadIdentity == .managedGemmaBF16 ? nil : active
+        if planning.select(planningVisible ? previewTarget : nil) {
             planningWorker?.selectPreview(nil); planningWorker?.selectTransition(nil)
             planningWorker = harness?.worker
             planningWorker?.selectPreview(nil); planningWorker?.selectTransition(nil)
@@ -568,8 +569,9 @@ final class FriendlyChatStore: ObservableObject {
         let actual = harness?.worker?.snapshot()
         if let actual {
             reconcilePreference(actual)
-            applying.observe(target:planningTarget(actual,requireVisible:false),snapshot:actual)
-            currentSessionConfiguration = planningTarget(actual,requireVisible:false)?.configuration
+            let target = planningTarget(actual,requireVisible:false,includeGemma:true)
+            applying.observe(target:target,snapshot:actual)
+            currentSessionConfiguration = target?.configuration
         }
         // A committed candidate is still retiring its old owner while busy.
         // Keep that one intent until terminal health is known; cancelling its
@@ -616,6 +618,36 @@ final class FriendlyChatStore: ObservableObject {
             return nil
         } catch { return error.localizedDescription }
     }
+    func applyGemmaWindow() {
+        guard let harness, let worker = harness.worker else { return }
+        let actual = worker.snapshot()
+        observePlanning(actual)
+        guard planningVisible, !running, !loadingModel, !applying.pending,
+              !actual.busy, actual.hasSession, !actual.restartRequired,
+              actual.acceptedIdentity?.profile == .gemmaBF16,
+              let target = planningTarget(actual,includeGemma:true), let configuration = target.configuration,
+              let context = actual.modelContext else { applying.reject("Open an idle Gemma chat before applying."); return }
+        do {
+            let window = try gemmaWindowChoice()
+            _ = try window.plan()
+            try FriendlyModelPreference.validateReply(workspace.outputLimit,capacity:UInt64(window.capacity),model:context)
+            let selection = NativeTransitionSelection(id:UUID(),modelInstance:configuration.modelInstance,
+                sessionInstance:configuration.sessionInstance)
+            var transition = NativeTransitionRequest(id:UUID(),selection:selection,capacity:window.capacity,
+                chunk:window.chunk,wholeSessionBudget:configuration.wholeSessionBudget,
+                coexistenceBudget:NativeFootprint.macProcessBudget,replayReserve:0,textReserve:0,
+                applicationReserve:NativeTransitionHeadroomCheck.applicationReserve)
+            transition.kvBudgetBytes = window.kvCeiling
+            transition.memoryPolicy = .friendly
+            try transition.validate()
+            applying.begin(FriendlyApplyRequest(target:target,previewID:nil,transition:transition))
+            guard worker.selectTransition(selection), worker.submit(.replaceWithEmptySession(transition)) else {
+                worker.selectTransition(nil); applying.reject("The engine changed or is busy. Your current chat is kept."); return
+            }
+            harness.poll()
+        } catch { applying.reject(error.localizedDescription) }
+    }
+
     func applyPlanning() {
         guard let harness, let worker = harness.worker else { applying.reject("The engine is unavailable."); return }
         let actual = worker.snapshot()

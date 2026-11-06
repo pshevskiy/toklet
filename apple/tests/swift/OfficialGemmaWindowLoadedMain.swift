@@ -1,5 +1,7 @@
 import Foundation
 import CToklet
+import SwiftUI
+import AppKit
 
 @main
 @MainActor
@@ -81,6 +83,47 @@ struct OfficialGemmaWindowLoadedMain {
         try require(replayed.status == TOKLET_OK && replayed.savedPrefix == before.savedPrefix &&
                     replayed.sessionConfiguration?.capacity == 384 && replayed.sessionConfiguration?.chunk == 16 &&
                     replayKV == plan,"Replay failed to restore the frozen context")
-        print("Gemma next-open plan and owners: \(actualKV) bytes, rejected settings preserved the old prefix")
+        chat.showPlanning()
+        chat.setGemmaKVCeiling("0")
+        chat.applyGemmaWindow()
+        let denied = try await wait()
+        try require(chat.applying.message.contains("KV bytes") && denied.savedPrefix == replayed.savedPrefix &&
+                    denied.sessionConfiguration == replayed.sessionConfiguration && chat.workspace.current.draft == "Draft stays",
+                    "Rejected live replacement changed the session")
+        chat.setGemmaKVCeiling("16")
+        chat.applyGemmaWindow()
+        let resized = try await wait()
+        let resizedKV = try kv(resized)
+        try require(chat.applying.committed && resized.transition?.headroom?.fits == true &&
+                    resized.modelContext?.modelInstance == replayed.modelContext?.modelInstance &&
+                    resized.acceptedIdentity == replayed.acceptedIdentity &&
+                    resized.sessionConfiguration?.sessionInstance != replayed.sessionConfiguration?.sessionInstance &&
+                    resized.sessionConfiguration?.capacity == 256 && resized.sessionConfiguration?.chunk == 8 &&
+                    resizedKV == 9_732_096 && resized.history == 0 && resized.savedPrefix?.isEmpty == true &&
+                    chat.workspace.selected == conversation && chat.workspace.current.messages.count == messages &&
+                    chat.workspace.current.draft == "Draft stays","Same-owner active context did not apply: \(chat.applying.message) \(resized.message)")
+        chat.edit("Say hello in one short sentence.")
+        try require(chat.canSend,"Resized session cannot chat")
+        chat.sendOrStop()
+        let recovered = try await wait()
+        try require(recovered.status == TOKLET_OK && recovered.emitted > 0 && recovered.history > 0 &&
+                    recovered.chatResult?.error.isEmpty == true,"Chat did not recover after active resize")
+        let settingsView = VStack(alignment:.leading,spacing:12) {
+            FriendlyPlanningSection(chat:chat,store:harness)
+        }.padding().frame(width:520).background(Color.white).environment(\.colorScheme,.light)
+        _ = NSApplication.shared
+        let host = NSHostingView(rootView:settingsView)
+        host.frame = CGRect(origin:.zero,size:host.fittingSize)
+        host.layoutSubtreeIfNeeded()
+        guard let bitmap = host.bitmapImageRepForCachingDisplay(in:host.bounds),
+              bitmap.pixelsWide >= 500, bitmap.pixelsHigh >= 200 else {
+            throw NativeContextFailure("Gemma Settings view did not render")
+        }
+        host.cacheDisplay(in:host.bounds,to:bitmap)
+        guard let png = bitmap.representation(using:.png,properties:[:]) else {
+            throw NativeContextFailure("Gemma Settings bitmap could not be encoded")
+        }
+        try png.write(to:root.appendingPathComponent("gemma-settings.png"))
+        print("Gemma active same-owner plan and owners: \(actualKV) -> \(resizedKV); rejected settings preserved the old prefix")
     }
 }

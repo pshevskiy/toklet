@@ -13,6 +13,10 @@ struct NativeFootprint: Codable, Sendable {
     let lifetimePeakPhysicalBytes: UInt64
     let returnedNaturalCount: UInt32
 
+    static var macProcessBudget: UInt64 {
+        min(ProcessInfo.processInfo.physicalMemory / 2,6 * 1024 * 1024 * 1024)
+    }
+
     // The same process-headroom policy used for model admission. This is an
     // observation, not free system RAM, an allocation reservation or a peak.
     static func readHeadroom() throws -> (availableBytes: UInt64, instrument: String) {
@@ -20,7 +24,7 @@ struct NativeFootprint: Codable, Sendable {
         return (UInt64(os_proc_available_memory()),
                 "os_proc_available_memory: current process dirty-memory allowance")
         #else
-        let budget = min(ProcessInfo.processInfo.physicalMemory / 2,6 * 1024 * 1024 * 1024)
+        let budget = macProcessBudget
         let footprint = try read().physicalBytes
         return (budget > footprint ? budget - footprint : 0,
                 "Configured Mac process allowance min(RAM/2,6GiB) minus TASK_VM_INFO footprint; not free system RAM")

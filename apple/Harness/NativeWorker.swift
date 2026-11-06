@@ -737,7 +737,7 @@ private let nativeSink: @convention(c) (UnsafeMutableRawPointer?, TokletTokenEve
 // a substitute for the C boundary's OS-thread affinity.
 private final class PreparedTransition {
     var handle: OpaquePointer?
-    let plan: NativeTransitionPlan
+    let plan: NativeTransitionPlan?
     let settings: NativeSettings
     let context: NativeContextFacts
     let configuration: NativeSessionConfiguration
@@ -748,7 +748,7 @@ private final class PreparedTransition {
     let emptyPrefix: [UInt32]?
     var emptyIDs: [UInt32] = []
     var emptyTimings: [NativeTokenTiming] = []
-    init(handle: OpaquePointer, plan: NativeTransitionPlan, settings: NativeSettings,
+    init(handle: OpaquePointer, plan: NativeTransitionPlan?, settings: NativeSettings,
          context: NativeContextFacts, configuration: NativeSessionConfiguration,
          memory: NativeSessionMemorySnapshot, report: TokletReport, captureSavedPrefix: Bool) {
         self.handle = handle; self.plan = plan; self.settings = settings
@@ -822,15 +822,43 @@ private final class Engine {
               request.textReserve >= (chat == nil ? 0 : settings.textBudget) else {
             throw invalid("Transition reserves omit retained Swift/text owners")
         }
-        let plan = try NativeTransitionPlan.inspect(model:model,session:session,request:request,
-            current:old,chunk:settings.chunk,wholeBudget:settings.numericalBudget)
-        guard plan.fitsTransitionBudget, plan.fitsCandidateIndividualBudget else { throw invalid("Transition memory budget does not fit") }
-        try request.validateKV(bytes:plan.candidatePlanned.kvBytes)
+        var options = request.options(), accounting = request.accounting(), error = TokletError()
+        let plan: NativeTransitionPlan?
+        let official: TokletGemmaBf16TransitionInfo?
+        let required: UInt64
+        if settings.loadIdentity == .managedGemmaBF16 {
+            var record = TokletGemmaBf16TransitionInfo()
+            try requireOK(toklet_session_gemma_bf16_plan_empty(model,session,&options,&accounting,&record,&error),&error)
+            guard let sessionMemory, sessionMemory.matches(old,configuration:sessionConfiguration),
+                  case .officialGemma(_,let currentCombined,_,_) = sessionMemory.reading,
+                  record.abi_version == TOKLET_ABI_VERSION,
+                  record.struct_size == UInt32(MemoryLayout<TokletGemmaBf16TransitionInfo>.size),
+                  record.model_instance == old.modelInstance, record.session_instance == old.sessionInstance,
+                  record.candidate_capacity == request.capacity, record.candidate_chunk == request.chunk,
+                  record.current_combined_bytes == currentCombined,
+                  record.candidate_incremental_bytes >= record.candidate_kv_bytes,
+                  record.candidate_incremental_bytes < record.candidate_combined_bytes,
+                  record.aggregate_required_bytes == (try NativeTransitionPlan.sum([currentCombined,
+                      record.candidate_incremental_bytes,request.replayReserve,request.textReserve,request.applicationReserve])),
+                  record.candidate_combined_bytes <= request.wholeSessionBudget,
+                  record.aggregate_required_bytes <= request.coexistenceBudget else {
+                throw invalid("Gemma replacement plan does not match the owner or budget")
+            }
+            try request.validateKV(bytes:record.candidate_kv_bytes)
+            required = try NativeTransitionPlan.sum([record.candidate_incremental_bytes,NativeTransitionHeadroomCheck.stagingReserve])
+            official = record; plan = nil
+        } else {
+            let dense = try NativeTransitionPlan.inspect(model:model,session:session,request:request,
+                current:old,chunk:settings.chunk,wholeBudget:settings.numericalBudget)
+            guard dense.fitsTransitionBudget, dense.fitsCandidateIndividualBudget else { throw invalid("Transition memory budget does not fit") }
+            try request.validateKV(bytes:dense.candidatePlanned.kvBytes)
+            required = try NativeTransitionHeadroomCheck.requiredIncrementalBytes(
+                candidateOwned:dense.candidatePlanned.totalBytes,
+                candidateAllowance:dense.reserves.candidateMetadataDriverBytes,
+                bridge:dense.reserves.candidateBridgeBytes,json:dense.reserves.jsonSnapshotBytes)
+            plan = dense; official = nil
+        }
         if request.memoryPolicy == .friendly {
-            let required = try NativeTransitionHeadroomCheck.requiredIncrementalBytes(
-                candidateOwned:plan.candidatePlanned.totalBytes,
-                candidateAllowance:plan.reserves.candidateMetadataDriverBytes,
-                bridge:plan.reserves.candidateBridgeBytes,json:plan.reserves.jsonSnapshotBytes)
             let observed = try readHeadroom()
             guard !observed.instrument.isEmpty, observed.instrument.utf8.count <= 512 else {
                 throw invalid("Process-headroom observation is invalid")
@@ -842,7 +870,6 @@ private final class Engine {
                 throw invalid("Replacement needs \(required) additional accounted bytes; process headroom is \(observed.availableBytes) bytes")
             }
         }
-        var options = request.options(), accounting = request.accounting(), error = TokletError()
         var pointer: OpaquePointer?
         try requireOK(toklet_session_prepare_empty(model,session,&options,&accounting,flag,&pointer,&error),&error)
         guard let pointer else { throw invalid("Native preparation returned no candidate") }
@@ -866,8 +893,21 @@ private final class Engine {
             nextSettings.numericalBudget = request.wholeSessionBudget
             let configuration = try NativeSessionConfiguration(context:next,capacity:nextSettings.capacity,
                 chunk:nextSettings.chunk,wholeSessionBudget:nextSettings.numericalBudget,acceptedRequestID:request.id)
-            let memory = NativeSessionMemorySnapshot.inspect(model:model,session:pointer,context:next,configuration:configuration)
-            try request.validateCandidateKV(memory)
+            let memory: NativeSessionMemorySnapshot
+            if let official {
+                var actual = TokletGemmaBf16MemoryInfo()
+                try requireOK(toklet_session_gemma_bf16_memory(pointer,&actual,&error),&error)
+                guard actual.kv_owned_bytes == official.candidate_kv_bytes,
+                      actual.session_admitted_bytes <= official.candidate_combined_bytes else {
+                    throw invalid("Gemma replacement allocation differs from the plan")
+                }
+                try request.validateKV(bytes:actual.kv_owned_bytes)
+                nextSettings.gemmaKVCeiling = request.kvBudgetBytes
+                memory = try NativeSessionMemorySnapshot.officialGemma(actual,context:next,configuration:configuration)
+            } else {
+                memory = NativeSessionMemorySnapshot.inspect(model:model,session:pointer,context:next,configuration:configuration)
+                try request.validateCandidateKV(memory)
+            }
             return PreparedTransition(handle:pointer,plan:plan,settings:nextSettings,
                 context:next,configuration:configuration,memory:memory,
                 report:report,captureSavedPrefix:captureSavedPrefix)

@@ -2,9 +2,10 @@
 
 **6 November 2026 update. Apple Silicon Mac has seven managed profiles and
 iOS has four. M8 remains open for the full public Gemma BF16 transfer and
-context controls, plus the deferred physical iPhone 14 Pro checks.**
+the deferred physical iPhone 14 Pro checks.**
 The official BF16 path passed corrected numerical and original-quality gates.
-Its Mac offline managed process peaked at 4.93 GB. [Coverage](model-coverage.md).
+Its Mac offline managed process peaked at 4.93 GB. Active Mac context and KV
+replacement passed at 4.96 GB peak. [Coverage](model-coverage.md).
 
 The [coverage table](model-coverage.md) is the current artifact/route/device
 index. Match it against `ModelHub.swift` and `NativeAcceptedIdentity.swift`,

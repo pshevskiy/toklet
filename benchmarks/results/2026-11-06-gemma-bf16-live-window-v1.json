@@ -1,0 +1,49 @@
+{
+  "format": "toklet-gemma-bf16-live-window-v1",
+  "scope": "Mac active Settings uses typed same-owner preparation and existing atomic session swap. Physical iPhone deferred.",
+  "model_retained": true,
+  "old_capacity": 384,
+  "new_capacity": 256,
+  "old_chunk": 16,
+  "new_chunk": 8,
+  "old_kv_bytes": 14745600,
+  "new_kv_bytes": 9732096,
+  "invalid_ceiling_preserved_old_prefix": true,
+  "new_chat_completed": true,
+  "conversation_and_draft_preserved": true,
+  "actual_process_headroom_passed": true,
+  "process_peak_physical_bytes": 4962456016,
+  "signed_mac_app": true,
+  "appkit_settings_capture": "artifacts/gemma-bf16-live-window-2026-11-06/appkit-final/test-workspace/gemma-settings.png",
+  "native_exports_per_slice": 45,
+  "strict_swift_checks": [
+    "compile",
+    "regressions",
+    "worker-revision",
+    "render",
+    "iphoneos",
+    "iphonesimulator"
+  ],
+  "ordinary_apply_controls": 28,
+  "ordinary_cpu_and_metal_transitions_passed": true,
+  "prior_witness_failures": [
+    "Ordinary CLI expects the repository root, not a fixture folder. Corrected CPU and Metal runs pass.",
+    "ImageRenderer captured text but omitted native controls. AppKit capture shows all fields and the Apply button."
+  ],
+  "late_ple_rejected_preserving_15_committed_tokens": true,
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-live-window-2026-11-06/appkit-final/window-live/owned.json": "d660779c76f88be3d0e621a885e35ccc1fcbdf0a32b96cf22be60e4de47f500c",
+    "artifacts/gemma-bf16-live-window-2026-11-06/appkit-final/window-live/gpu.stdout": "5e25a8f6f4d657e93aa755ea268987de4647f9044554aa4cbd621b7fa1454193",
+    "artifacts/gemma-bf16-live-window-2026-11-06/appkit-final/test-workspace/gemma-settings.png": "295752ee721c230f17646d1ae2b49f2a4aca0ebe66e3d86792878029a29ce1fd",
+    "artifacts/gemma-bf16-live-window-mobile-checks-2026-11-06/check.json": "3839e75ffcb8ce2c90697822ace28cf97b3741e1d54ddf8578c2a699a9c050a3",
+    "artifacts/gemma-bf16-live-window-mac-app-2026-11-06/build.json": "6f2b70691c8f6eb2a30f92cf18ee7d79808aa3c3689fbd1b576e7e293789a940",
+    "artifacts/gemma-bf16-native45-package-2026-11-06/build.json": "cec3b45ac875f8a7d566a3d263c25111e51baa32df7ae1d12f532c7a8e48aa79",
+    "artifacts/gemma-bf16-live-window-dense-regressions-2026-11-06/apply.stdout": "ef684a4567975201d67d00ad8948a3390c9b69ddee2485e571a97862ad23b372",
+    "artifacts/gemma-bf16-live-window-dense-regressions-2026-11-06/cpu-root.stdout": "bc17f53ae3e8f1c450361881cabb332e6954ff4b72d69f577c1b4b2fe48a23e3",
+    "artifacts/gemma-bf16-live-window-dense-regressions-2026-11-06/metal-root.stdout": "8e04e63c944677c720f184e628e157148f027595dc2641c16ed0797160740f95",
+    "artifacts/gemma-bf16-live-window-dense-regressions-2026-11-06/cpu.stderr": "76d885c26a38d63e344c2c535bf12ea00f6afee9ce39bc260812474828e7700c",
+    "artifacts/gemma-bf16-late-ple-2026-11-06/receipt-draft.json": "9413a47979e0ad7732af05c79a65452a24416ca9501b9a2e1ac0b2e610ce9c23",
+    "artifacts/gemma-bf16-live-window-2026-11-06/package-selection.json": "b961356d3a8ba2b54b7386394ba86139e59d51f6ed808312239d6bcff84d7652"
+  },
+  "review": "Astra approves typed headroom validation, offside construction, atomic swap/cleanup, preserved chat and dense regressions."
+}

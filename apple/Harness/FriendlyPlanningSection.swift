@@ -35,7 +35,7 @@ struct FriendlyPlanningSection: View {
                     Text("Preview working allowance: \(bytes(UInt64(NativePreviewResult.requiredApplicationAllowance))). This is outside the engine estimate.")
                 }.font(.footnote).foregroundStyle(.secondary)
             } else if store.state.acceptedIdentity?.profile == .gemmaBF16 {
-                Text("Gemma applies window and cache settings at model open. Its active cache size is shown below.")
+                Text("Gemma shares its loaded weights when applying a new window. Its active cache size is shown below.")
                     .font(.footnote).foregroundStyle(.secondary)
             } else {
                 Text("Open this conversation’s model before previewing. No model is selected or downloaded here.")
@@ -78,25 +78,38 @@ struct FriendlyPlanningSection: View {
     }
     #if os(macOS) && arch(arm64)
     private var gemmaNextOpen: some View {
-        DisclosureGroup("Gemma BF16 settings for the next open") {
-            Picker("Shared window (tokens)",selection:Binding(get:{ chat.nextGemmaCapacity },set:{ chat.setGemmaCapacity($0) })) {
-                ForEach(OfficialGemmaWindow.capacities,id:\.self) { Text($0.formatted()).tag($0) }
-            }.accessibilityIdentifier("gemma-next-window")
-            Picker("Prefill chunk (tokens)",selection:Binding(get:{ chat.nextGemmaChunk },set:{ chat.setGemmaChunk($0) })) {
-                ForEach(OfficialGemmaWindow.chunks,id:\.self) { Text($0.formatted()).tag($0) }
-            }.accessibilityIdentifier("gemma-next-chunk")
-            LabeledContent("KV ceiling (MiB; blank is unlimited)") {
-                TextField("",text:Binding(get:{ chat.nextGemmaKVCeilingMiB },set:{ chat.setGemmaKVCeiling($0) }))
-                    .accessibilityLabel("Gemma next-open KV ceiling").accessibilityIdentifier("gemma-next-kv")
+        Group {
+            if store.state.acceptedIdentity?.profile == .gemmaBF16 {
+                GroupBox("Gemma BF16 window and cache") { gemmaFields }
+            } else {
+                DisclosureGroup("Gemma BF16 window and cache") { gemmaFields }
             }
-            switch Result(catching:{ try chat.gemmaWindowChoice().plan() }) {
-            case .success(let planned):
-                LabeledContent("Planned KV buffers",value:bytes(planned))
-            case .failure(let error):
-                Text(error.localizedDescription).foregroundStyle(.secondary)
-            }
-            Text("Choose these before opening Gemma in Models. Toklet checks the FP32 cache and staging buffers before loading. Input and reply share the selected window.")
         }.disabled(chat.loadingModel || chat.running || store.state.busy).font(.footnote)
+    }
+    @ViewBuilder private var gemmaFields: some View {
+        Picker("Shared window (tokens)",selection:Binding(get:{ chat.nextGemmaCapacity },set:{ chat.setGemmaCapacity($0) })) {
+            ForEach(OfficialGemmaWindow.capacities,id:\.self) { Text($0.formatted()).tag($0) }
+        }.accessibilityIdentifier("gemma-next-window")
+        Picker("Prefill chunk (tokens)",selection:Binding(get:{ chat.nextGemmaChunk },set:{ chat.setGemmaChunk($0) })) {
+            ForEach(OfficialGemmaWindow.chunks,id:\.self) { Text($0.formatted()).tag($0) }
+        }.accessibilityIdentifier("gemma-next-chunk")
+        LabeledContent("KV ceiling (MiB; blank is unlimited)") {
+            TextField("",text:Binding(get:{ chat.nextGemmaKVCeilingMiB },set:{ chat.setGemmaKVCeiling($0) }))
+                .accessibilityLabel("Gemma next-open KV ceiling").accessibilityIdentifier("gemma-next-kv")
+        }
+        switch Result(catching:{ try chat.gemmaWindowChoice().plan() }) {
+        case .success(let planned):
+            LabeledContent("Planned KV buffers",value:bytes(planned))
+        case .failure(let error):
+            Text(error.localizedDescription).foregroundStyle(.secondary)
+        }
+        if store.state.acceptedIdentity?.profile == .gemmaBF16 {
+            Button("Apply to current Gemma chat",systemImage:"checkmark.circle") { chat.applyGemmaWindow() }
+                .disabled(chat.applying.pending).accessibilityIdentifier("gemma-apply-window")
+            Text("Applying resets cached tokens. The conversation and draft stay available.")
+        } else {
+            Text("Choose these before opening Gemma in Models. Input and reply share the selected window.")
+        }
     }
     #endif
     @ViewBuilder private var current: some View {

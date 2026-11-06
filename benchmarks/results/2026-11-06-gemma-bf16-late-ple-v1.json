@@ -1,0 +1,26 @@
+{
+  "format": "toklet-gemma-bf16-late-ple-v1",
+  "scope": "One original BF16 PLE row corrupted after native Mac owner authentication in a private clone.",
+  "row": {
+    "row": 42,
+    "offset": 1423051032,
+    "stride": 17920,
+    "shape": [
+      262144,
+      8960
+    ]
+  },
+  "engine_error": true,
+  "committed_prefix_tokens": 15,
+  "unchanged_owner_identity": true,
+  "historical_identity_still_available": true,
+  "peak_physical_bytes": 4922282232,
+  "source_original_unchanged": true,
+  "synthetic_clone_removed": true,
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-late-ple-2026-11-06/probe.c": "212ede82db680f4e6e0df13701ccb6321e13cc634c603d975659fa2d1263d663",
+    "artifacts/gemma-bf16-late-ple-2026-11-06/row.json": "6d93a84ac51c9260c3fe6fca46434ff52ac86e637ad52124a4d7d24b828b671d",
+    "artifacts/gemma-bf16-late-ple-2026-11-06/live/owned.json": "c0d82f6af2c80f261e3e03b1cb80de00fe0f6722a8b27804923f01fdbddf599c",
+    "artifacts/gemma-bf16-late-ple-2026-11-06/live/gpu.stdout": "7b676cc56f012033aa64e2dde17eaecef1c971cc8f9e197cb649656605fdb7d2"
+  }
+}

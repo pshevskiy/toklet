@@ -10974,3 +10974,13 @@ The 384/16 candidate needs 124.06 MB incrementally. Exact and minus-one
 checks, cancellation and old-prefix preservation pass at 4.94 GB peak.
 Astra approves after 589 default and 708 Metal tests and the native45 build.
 [Evidence](../benchmarks/results/2026-11-06-gemma-bf16-live-transition-v1.json)
+
+## 6 November 2026 — Apply Gemma context and KV changes on the resident model
+
+Mac Settings keeps the model and codec while resizing 384/16 to 256/8.
+KV drops from 14.75 MB to 9.73 MB. Rejection preserves the prefix; accepted
+changes keep the conversation and draft and reset KV. The real Swift
+process peaks at 4.96 GB. AppKit, dense regressions, both iOS SDKs and Astra
+pass. A late corrupted PLE row preserves 15 committed tokens.
+[Settings evidence](../benchmarks/results/2026-11-06-gemma-bf16-live-window-v1.json)
+[PLE evidence](../benchmarks/results/2026-11-06-gemma-bf16-late-ple-v1.json)

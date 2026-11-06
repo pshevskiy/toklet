@@ -245,7 +245,9 @@ The other text tensors require4,559,518,278 raw bytes. [Official source inventor
      the actual headroom gate. Retain the owner for active changes. Plan both
      sessions and one shared codec, re-admit the actual candidate before an
      atomic swap, and qualify late PLE corruption separately.
-     [Native preparation evidence](../benchmarks/results/2026-11-06-gemma-bf16-live-transition-v1.json).
+     [Native preparation](../benchmarks/results/2026-11-06-gemma-bf16-live-transition-v1.json).
+     [Mac Settings](../benchmarks/results/2026-11-06-gemma-bf16-live-window-v1.json).
+     [Late PLE rejection](../benchmarks/results/2026-11-06-gemma-bf16-late-ple-v1.json).
      Build the source-matched Mac package and measure the app process. Keep
      append-only text delivery as a separate gate from visible-prefix Chat.
 
