@@ -1,0 +1,36 @@
+{
+  "format": "toklet-gemma-durable-public-checkpoint-v1",
+  "scope": "Exact pinned Mac Gemma shard. Durable local checkpoints remain unpublished and complete snapshot SHA still gates use.",
+  "max_per_attempt_seconds": 7200,
+  "normal_staging_cleanup": true,
+  "controls": [
+    "nonblocking concurrent lease",
+    "cancellation preserves previous generation",
+    "orphan generation cleanup",
+    "same-length corrupt prefix restarts",
+    "wrong seed extent before requests",
+    "only exact remaining ranges requested",
+    "complete shard requires pinned SHA",
+    "complete shard survives ancillary failure until publication"
+  ],
+  "swift_checks": [
+    "compile",
+    "regressions",
+    "worker-revision",
+    "render",
+    "iphoneos",
+    "iphonesimulator"
+  ],
+  "signed_mac": "artifacts/gemma-durable-resume-v2-2026-11-06/signed-mac/Toklet.app",
+  "full_public_download_qualified": false,
+  "initial_draft_corrected": "A completed shard is kept until whole-snapshot publication, covering later tokenizer failure.",
+  "evidence_sha256": {
+    "artifacts/gemma-durable-resume-v2-2026-11-06/hub.stdout": "7bfd7d0a323c96e1906ecab02be3d3c1592e39cdde5366c2e16cc15677e54fd2",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/swift/check.json": "9732b9951e6a7cdfae5f6a39fe6e30ffd871eaac41ff092f3ed8a0b670bda308",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/signed-mac/build.json": "3ee7b4e3368ce2a836b42a2ccd636966e1d0833635e89f485876d5a6623e7595",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/journey-build.json": "260899e55a467838a782821f3b8ae5e49bfe3c6e83fd081ac726fd37eb4c1fa2",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/seed-build.json": "344d290c5927d9490cc518e4d7fcccd6002614567c67d6a6537ff2f3e08b31da",
+    "artifacts/gemma-bf16-resume-2026-11-06/genuine-public-prefix.json": "634e1ae7c8540a6a9384853e5fbff6fdfd55854245eb95bd14742bb9dc5f8836"
+  },
+  "review": "Astra approves cross-attempt checkpointing, the exclusive lease, joined save, exact file integrity and unchanged snapshot SHA policy."
+}

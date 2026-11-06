@@ -1,3 +1,4 @@
+import CryptoKit
 import Foundation
 import Darwin
 
@@ -52,10 +53,14 @@ final class HubTransfer: NSObject, URLSessionDataDelegate, @unchecked Sendable {
         return host == "huggingface.co" || host.hasSuffix(".huggingface.co") || host == "hf.co" || host.hasSuffix(".hf.co")
     }
     static func fetch(_ url: URL,_ destination: URL,_ maximum: Int64,
-                      _ progress: @escaping @Sendable (Int64) -> Void) async throws {
+                      _ progress: @escaping @Sendable (Int64) -> Void,checkpointRoot: URL? = nil) async throws {
         if maximum >= 1024 * 1024 * 1024 {
             let official = HubProfile.gemmaBF16Shard
             let exact = maximum == official.bytes && url == HubAPI.fileURL(HubProfile.gemmaBF16,official)
+            if exact, let checkpointRoot, HubProfile.catalog.contains(.gemmaBF16) {
+                try await checkpointedGemma(url,destination,root:checkpointRoot,shard:official,progress:progress)
+                return
+            }
             let chunkBytes: Int64 = (exact ? 4 : 16) * 1024 * 1024
             try await ranged(url,destination,maximum,progress,chunkBytes:chunkBytes,resumesPartialRanges:exact)
         } else {
@@ -63,6 +68,54 @@ final class HubTransfer: NSObject, URLSessionDataDelegate, @unchecked Sendable {
             try await whole(url,destination,maximum,progress,resourceTimeout:metadata ? .seconds(20) : .seconds(7200))
         }
     }
+    private static var gemmaCheckpointKey: String {
+        HubProfile.gemmaBF16.revision + "-" + HubProfile.gemmaBF16Shard.sha256
+    }
+
+    private static func checkpointedGemma(_ url: URL,_ destination: URL,root: URL,shard: HubFile,
+                                         progress: @escaping @Sendable (Int64) -> Void) async throws {
+        let maximum = Duration.seconds(7200)
+        let expires = ContinuousClock.now.advanced(by:maximum)
+        try await withDeadline(maximum) {
+            let checkpoint = try HubShardCheckpoint(root:root,identity:gemmaCheckpointKey,
+                maximum:shard.bytes,completeSHA:shard.sha256)
+            let offset = try checkpoint.seed(destination)
+            if offset != 0 { progress(offset) }
+            if offset == shard.bytes { return }
+            // Leave bounded time for joined cleanup and the checkpoint or final SHA.
+            let networkTime = ContinuousClock.now.duration(to:expires) - .seconds(90)
+            guard networkTime > .zero else { throw HubFailure(deadlineMessage) }
+            do {
+                try await ranged(url,destination,shard.bytes,progress,chunkBytes:4 * 1024 * 1024,
+                    resourceTimeout:networkTime,resumesPartialRanges:true,startingAt:offset)
+            } catch {
+                if !Task.isCancelled && (transient(error) || (error as? HubFailure)?.message == deadlineMessage) {
+                    let original = error
+                    do { try checkpoint.save(destination,after:offset) }
+                    catch { throw cleanupFailure(original,"download checkpoint: " + error.localizedDescription) }
+                }
+                throw error
+            }
+            do { try checkpoint.save(destination,after:offset,completed:true) }
+            catch {
+                if !Task.isCancelled { try checkpoint.clear() }
+                throw error
+            }
+        }
+    }
+
+    // A complete shard survives an ancillary-file failure. Once the snapshot
+    // is published, retire its duplicate checkpoint if no other owner holds it.
+    static func retireGemmaCheckpoint(root: URL) {
+        let key = gemmaCheckpointKey
+        let folder = root.appendingPathComponent(".resume-" + key,isDirectory:true)
+        guard FileManager.default.fileExists(atPath:folder.path) else { return }
+        let shard = HubProfile.gemmaBF16Shard
+        guard let checkpoint = try? HubShardCheckpoint(root:root,identity:key,
+            maximum:shard.bytes,completeSHA:shard.sha256) else { return }
+        try? checkpoint.clear()
+    }
+
     // One exact, revision-pinned official shard has a separate large range
     // ceiling. Its published contents still require the complete profile SHA.
     static func admitsRangeTotal(_ total: Int64, from url: URL) -> Bool {
@@ -238,11 +291,11 @@ extension HubTransfer {
                        chunkBytes: Int64 = 16 * 1024 * 1024,parallelism: Int = 4,
                        configuration: URLSessionConfiguration = .ephemeral,
                        closeHandle: @escaping @Sendable (FileHandle) throws -> Void = { try $0.close() },
-                       resourceTimeout: Duration = .seconds(7200),resumesPartialRanges: Bool = false) async throws {
+                       resourceTimeout: Duration = .seconds(7200),resumesPartialRanges: Bool = false,startingAt: Int64 = 0) async throws {
         let options = SessionOptions(value:configuration.copy() as! URLSessionConfiguration)
         try await withDeadline(resourceTimeout) {
             try await assembleRanges(url,destination,total,progress,chunkBytes:chunkBytes,parallelism:parallelism,
-                                     configuration:options.value,closeHandle:closeHandle,resumesPartialRanges:resumesPartialRanges)
+                                     configuration:options.value,closeHandle:closeHandle,resumesPartialRanges:resumesPartialRanges,startingAt:startingAt)
         }
     }
 
@@ -287,13 +340,14 @@ extension HubTransfer {
         guard let code else { return false }
         return [.timedOut,.networkConnectionLost,.cannotConnectToHost,.cannotFindHost,.dnsLookupFailed,.notConnectedToInternet].contains(code)
     }
+    private static let deadlineMessage = "Transfer exceeded its resource deadline."
     private static func withDeadline(_ duration: Duration,_ operation: @escaping @Sendable () async throws -> Void) async throws {
         guard duration > .zero, duration <= .seconds(7200) else { throw HubFailure("Invalid transfer deadline.") }
         try await withThrowingTaskGroup(of:Void.self) { group in
             group.addTask { try await operation() }
             group.addTask {
                 try await Task.sleep(for:duration)
-                throw HubFailure("Transfer exceeded its resource deadline.")
+                throw HubFailure(deadlineMessage)
             }
             var primary: Error?
             do { _ = try await group.next() } catch { primary = error }
@@ -305,16 +359,24 @@ extension HubTransfer {
                        _ progress: @escaping @Sendable (Int64) -> Void,
                        chunkBytes: Int64 = 16 * 1024 * 1024,parallelism: Int = 4,
                        configuration: URLSessionConfiguration = .ephemeral,
-                       closeHandle: @escaping @Sendable (FileHandle) throws -> Void = { try $0.close() },resumesPartialRanges: Bool) async throws {
-        guard allowed(url), admitsRangeTotal(total,from:url),
+                       closeHandle: @escaping @Sendable (FileHandle) throws -> Void = { try $0.close() },resumesPartialRanges: Bool,startingAt: Int64) async throws {
+        guard allowed(url), admitsRangeTotal(total,from:url), (0..<total).contains(startingAt),
               chunkBytes > 0, chunkBytes <= 16 * 1024 * 1024, (1...4).contains(parallelism) else {
             throw HubFailure("Invalid ranged transfer request.")
         }
         try Task.checkCancellation()
-        let descriptor = Darwin.open(destination.path,O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW,0o600)
+        let flags = startingAt == 0 ? O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW : O_WRONLY | O_NOFOLLOW | O_NONBLOCK
+        let descriptor = Darwin.open(destination.path,flags,0o600)
         guard descriptor >= 0 else { throw HubFailure("Download destination already exists or cannot be created.") }
         let sink = FileHandle(fileDescriptor:descriptor,closeOnDealloc:true)
         defer { try? sink.close() }
+        if startingAt != 0 {
+            var info = stat()
+            guard fstat(descriptor,&info) == 0, info.st_mode & S_IFMT == S_IFREG, info.st_size == startingAt else {
+                throw HubFailure("Download prefix extent differs.")
+            }
+            try sink.seek(toOffset:UInt64(startingAt))
+        }
         let directory = destination.deletingLastPathComponent().appendingPathComponent(".ranges-" + UUID().uuidString,isDirectory:true)
         guard Darwin.mkdir(directory.path,0o700) == 0 else {
             let primary = HubFailure("Could not create exclusive range directory.")
@@ -325,7 +387,7 @@ extension HubTransfer {
         // every child (including cancelled transfers) before cleanup reaches here.
         var primary: Error?
         do {
-            var committed: Int64 = 0
+            var committed = startingAt
             while committed < total {
                 try Task.checkCancellation()
                 let start = committed
@@ -401,5 +463,151 @@ extension HubTransfer {
         do { try FileManager.default.removeItem(at:directory) }
         catch { primary = cleanupFailure(primary,"range staging removal: " + error.localizedDescription) }
         if let primary { throw primary }
+    }
+}
+
+/// Unpublished bytes for one exact shard. The pointer moves only after the new
+/// prefix is complete and locally hashed. The caller still verifies full SHA.
+final class HubShardCheckpoint {
+    private struct Prefix: Codable {
+        let generation: UUID
+        let bytes: Int64
+        let digest: String
+        var name: String { "prefix-\(generation.uuidString).part" }
+    }
+
+    private let folder: URL
+    private let directory: Int32
+    private let lock: Int32
+    private let maximum: Int64
+    private let completeSHA: String?
+
+    init(root: URL,identity: String,maximum: Int64,completeSHA: String? = nil) throws {
+        guard maximum > 0, identity.utf8.count <= 128,
+              !identity.isEmpty && identity.utf8.allSatisfy({ (48...57).contains($0) || (97...102).contains($0) || $0 == 45 }) else {
+            throw HubFailure("Invalid download checkpoint identity.")
+        }
+        let folder = root.appendingPathComponent(".resume-" + identity,isDirectory:true)
+        guard mkdir(folder.path,0o700) == 0 || errno == EEXIST else {
+            throw HubFailure("Could not create the private download checkpoint.")
+        }
+        let directory = Darwin.open(folder.path,O_RDONLY | O_DIRECTORY | O_NOFOLLOW)
+        guard directory >= 0 else { throw HubFailure("Could not open the private download checkpoint.") }
+        var info = stat()
+        guard fstat(directory,&info) == 0, info.st_uid == geteuid(), info.st_mode & 0o077 == 0 else {
+            Darwin.close(directory)
+            throw HubFailure("Download checkpoint permissions differ.")
+        }
+        let lock = openat(directory,"lease",O_CREAT | O_RDWR | O_NOFOLLOW | O_NONBLOCK,0o600)
+        guard lock >= 0 else {
+            Darwin.close(directory)
+            throw HubFailure("Could not open the download checkpoint lease.")
+        }
+        guard fstat(lock,&info) == 0, info.st_mode & S_IFMT == S_IFREG,
+              info.st_uid == geteuid(), info.st_mode & 0o077 == 0, flock(lock,LOCK_EX | LOCK_NB) == 0 else {
+            Darwin.close(lock); Darwin.close(directory)
+            throw HubFailure("Another download owns this checkpoint.")
+        }
+        self.folder = folder; self.directory = directory; self.lock = lock
+        self.maximum = maximum; self.completeSHA = completeSHA
+    }
+
+    deinit { Darwin.close(lock); Darwin.close(directory) }
+
+    private var pointer: URL { folder.appendingPathComponent("prefix.json") }
+
+    /// Copy only a consistent acknowledged checkpoint into fresh staging.
+    func seed(_ destination: URL) throws -> Int64 {
+        guard FileManager.default.fileExists(atPath:pointer.path) else {
+            try prune(keeping:nil)
+            return 0
+        }
+        let prefix: Prefix
+        do {
+            let data = try ModelHub.withRegular(pointer,maximum:1024,directory:directory) { handle,size in
+                try handle.read(upToCount:Int(size)) ?? Data()
+            }
+            prefix = try JSONDecoder().decode(Prefix.self,from:data)
+            guard (1...maximum).contains(prefix.bytes), prefix.bytes < maximum || prefix.digest == completeSHA,
+                  try digest(folder.appendingPathComponent(prefix.name),expected:prefix.bytes,inDirectory:directory) == prefix.digest else {
+                throw HubFailure("Saved download prefix failed its local check.")
+            }
+        } catch {
+            try Task.checkCancellation()
+            try clear()
+            return 0
+        }
+        try prune(keeping:prefix.name)
+        try duplicate(folder.appendingPathComponent(prefix.name),destination,bytes:prefix.bytes,inDirectory:directory)
+        return prefix.bytes
+    }
+
+    /// Called only after the owned transfer joins and closes its output.
+    func save(_ source: URL,after previous: Int64,completed: Bool = false) throws {
+        guard FileManager.default.fileExists(atPath:source.path) else { return }
+        let bytes = try ModelHub.withRegular(source,maximum:maximum) { _,size in size }
+        guard bytes > previous, bytes < maximum || completed else { return }
+        if completed && bytes != maximum { throw HubFailure("Completed download shard extent differs.") }
+        try Task.checkCancellation()
+        let generation = UUID()
+        let next = folder.appendingPathComponent("prefix-\(generation.uuidString).part")
+        var pointed = false
+        defer { if !pointed { try? FileManager.default.removeItem(at:next) } }
+        try duplicate(source,next,bytes:bytes)
+        let localDigest = try digest(next,expected:bytes,inDirectory:directory)
+        if completed && localDigest != completeSHA { throw HubFailure("Downloaded file failed its SHA-256 check.") }
+        let data = try JSONEncoder().encode(Prefix(generation:generation,bytes:bytes,digest:localDigest))
+        try Task.checkCancellation()
+        try data.write(to:pointer,options:.atomic)
+        pointed = true
+        try prune(keeping:next.lastPathComponent)
+    }
+
+    func clear() throws {
+        if FileManager.default.fileExists(atPath:pointer.path) { try FileManager.default.removeItem(at:pointer) }
+        try prune(keeping:nil)
+    }
+
+    private func prune(keeping: String?) throws {
+        for name in try FileManager.default.contentsOfDirectory(atPath:folder.path) where name != keeping {
+            guard name.hasPrefix("prefix-"), name.hasSuffix(".part"),
+                  UUID(uuidString:String(name.dropFirst(7).dropLast(5))) != nil else { continue }
+            try FileManager.default.removeItem(at:folder.appendingPathComponent(name))
+        }
+    }
+
+    private func digest(_ source: URL,expected: Int64,inDirectory: Int32) throws -> String {
+        try ModelHub.withRegular(source,maximum:maximum,directory:inDirectory) { handle,bytes in
+            guard bytes == expected else { throw HubFailure("Download prefix extent differs.") }
+            var hasher = SHA256()
+            var count: Int64 = 0
+            while let data = try autoreleasepool(invoking:{ try handle.read(upToCount:256 * 1024) }), !data.isEmpty {
+                try Task.checkCancellation()
+                count += Int64(data.count)
+                guard count <= expected else { throw HubFailure("Download prefix exceeded its size.") }
+                hasher.update(data:data)
+            }
+            guard count == expected else { throw HubFailure("Download prefix was truncated.") }
+            return hasher.finalize().map { String(format:"%02x",$0) }.joined()
+        }
+    }
+
+    private func duplicate(_ source: URL,_ destination: URL,bytes: Int64,inDirectory: Int32? = nil) throws {
+        try ModelHub.withRegular(source,maximum:maximum,directory:inDirectory) { input,size in
+            guard size == bytes else { throw HubFailure("Download prefix extent differs.") }
+            if fclonefileat(input.fileDescriptor,AT_FDCWD,destination.path,UInt32(CLONE_NOFOLLOW_ANY)) == 0 { return }
+            let descriptor = Darwin.open(destination.path,O_WRONLY | O_CREAT | O_EXCL | O_NOFOLLOW,0o600)
+            guard descriptor >= 0 else { throw HubFailure("Could not create the download prefix copy.") }
+            let output = FileHandle(fileDescriptor:descriptor,closeOnDealloc:true)
+            defer { try? output.close() }
+            var count: Int64 = 0
+            while let data = try autoreleasepool(invoking:{ try input.read(upToCount:256 * 1024) }), !data.isEmpty {
+                try Task.checkCancellation(); count += Int64(data.count)
+                guard count <= bytes else { throw HubFailure("Download prefix copy exceeded its size.") }
+                try output.write(contentsOf:data)
+            }
+            guard count == bytes else { throw HubFailure("Download prefix copy was truncated.") }
+            try output.close()
+        }
     }
 }

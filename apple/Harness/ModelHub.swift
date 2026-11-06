@@ -315,12 +315,14 @@ actor ModelHub {
     private let removeMetadata: @Sendable (URL) throws -> Void
     private var busy = false
     static let reserve: Int64 = 64 * 1024 * 1024
-    init(root: URL,fetch: @escaping HubFetch = { try await HubTransfer.fetch($0,$1,$2,$3) },
+    init(root: URL,fetch: HubFetch? = nil,
          freeBytes: @escaping @Sendable (URL) throws -> Int64 = { try ModelHub.diskSpace($0) },
          removeMetadata: @escaping @Sendable (URL) throws -> Void = {
              if FileManager.default.fileExists(atPath:$0.path) { try FileManager.default.removeItem(at:$0) }
          }) {
-        self.root = root; self.fetch = fetch; self.freeBytes = freeBytes; self.removeMetadata = removeMetadata
+        self.root = root
+        self.fetch = fetch ?? { try await HubTransfer.fetch($0,$1,$2,$3,checkpointRoot:root) }
+        self.freeBytes = freeBytes; self.removeMetadata = removeMetadata
     }
     static func diskSpace(_ directory: URL) throws -> Int64 {
         let values = try directory.resourceValues(forKeys:[.volumeAvailableCapacityForImportantUsageKey])
@@ -487,7 +489,11 @@ actor ModelHub {
         busy = true; defer { busy = false }
         try admission.check(profile); try profile.validate(); try prepareRoot()
         let destination = root.appendingPathComponent(profile.folder,isDirectory:true)
-        if FileManager.default.fileExists(atPath:destination.path) { try Self.verify(destination,profile:profile); return destination }
+        if FileManager.default.fileExists(atPath:destination.path) {
+            try Self.verify(destination,profile:profile)
+            if profile == .gemmaBF16 { HubTransfer.retireGemmaCheckpoint(root:root) }
+            return destination
+        }
         // Includes one staging copy and a conservative additional full-copy allowance.
         try space(profile.totalBytes * 2 + HubAPI.metadataLimit)
         let stage = root.appendingPathComponent(".download-" + UUID().uuidString)
@@ -516,6 +522,7 @@ actor ModelHub {
         // valid snapshot may remain. Existing destinations are never replaced.
         guard !FileManager.default.fileExists(atPath:destination.path) else { throw HubFailure("A model folder already exists. Retry to verify it.") }
         guard renamex_np(stage.path,destination.path,UInt32(RENAME_EXCL)) == 0 else { throw HubFailure("Could not publish the download exclusively. Existing models are preserved.") }
+        if profile == .gemmaBF16 { HubTransfer.retireGemmaCheckpoint(root:root) }
         progress(profile.totalBytes,profile.totalBytes)
         return destination
     }

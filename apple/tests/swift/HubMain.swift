@@ -324,8 +324,73 @@ struct HubMain {
         try await largeInventoryChecks(root)
         try await transportChecks(root)
         try await rangeChecks(root)
+        try await checkpointChecks(root)
         try await wholeRetryChecks(root)
     }
+    static func checkpointChecks(_ root: URL) async throws {
+        let total: Int64 = 23
+        let data = Data((0..<Int(total)).map(UInt8.init))
+        let hash = SHA256.hash(data:data).map { String(format:"%02x",$0) }.joined()
+        let prefix = root.appendingPathComponent("first-prefix")
+        try data.prefix(8).write(to:prefix,options:.withoutOverwriting)
+        let checkpointRoot = root.appendingPathComponent(".resume-abc")
+        do {
+            let checkpoint = try HubShardCheckpoint(root:root,identity:"abc",maximum:total,completeSHA:hash)
+            try require(try checkpoint.seed(root.appendingPathComponent("unused")) == 0,"empty checkpoint starts fresh")
+            try checkpoint.save(prefix,after:0)
+            try await rejects("checkpoint concurrent ownership") {
+                _ = try HubShardCheckpoint(root:root,identity:"abc",maximum:total,completeSHA:hash)
+            }
+        }
+        let orphan = checkpointRoot.appendingPathComponent("prefix-" + UUID().uuidString + ".part")
+        try data.prefix(3).write(to:orphan,options:.withoutOverwriting)
+        let more = root.appendingPathComponent("more-prefix")
+        try data.prefix(12).write(to:more,options:.withoutOverwriting)
+        let cancelled = Task {
+            let checkpoint = try HubShardCheckpoint(root:root,identity:"abc",maximum:total,completeSHA:hash)
+            withUnsafeCurrentTask { $0?.cancel() }
+            try checkpoint.save(more,after:8)
+        }
+        try await rejects("cancelled checkpoint update") { try await cancelled.value }
+        do {
+            let checkpoint = try HubShardCheckpoint(root:root,identity:"abc",maximum:total,completeSHA:hash)
+            let stage = root.appendingPathComponent("reopened-prefix")
+            let offset = try checkpoint.seed(stage)
+            try require(offset == 8 && (try Data(contentsOf:stage)) == data.prefix(8),"previous checkpoint survives cancellation")
+            try require(!FileManager.default.fileExists(atPath:orphan.path),"discard interrupted generation without losing current")
+            RangeHubProtocol.plan.set("good",data)
+            let config = URLSessionConfiguration.ephemeral
+            config.protocolClasses = [RangeHubProtocol.self]
+            let url = URL(string:"https://huggingface.co/test")!
+            try await rejects("staging size differs from seed") {
+                try await HubTransfer.ranged(url,stage,total,{ _ in },chunkBytes:8,parallelism:1,configuration:config,startingAt:7)
+            }
+            try require(RangeHubProtocol.plan.counts().isEmpty,"invalid seed must reject before networking")
+            try await HubTransfer.ranged(url,stage,total,{ _ in },chunkBytes:8,parallelism:1,configuration:config,startingAt:offset)
+            try require(RangeHubProtocol.plan.counts() == [8:1,16:1],"fresh process fetches only the suffix")
+            try ModelHub.verifyFile(stage,file:HubFile(name:"model.safetensors",bytes:total,sha256:hash))
+            let wrong = root.appendingPathComponent("wrong-complete")
+            try Data(repeating:4,count:Int(total)).write(to:wrong,options:.withoutOverwriting)
+            try await rejects("complete checkpoint requires pinned SHA") { try checkpoint.save(wrong,after:offset,completed:true) }
+            try checkpoint.save(stage,after:offset,completed:true)
+        }
+        // An ancillary-file failure can leave a complete shard to reuse later.
+        do {
+            let checkpoint = try HubShardCheckpoint(root:root,identity:"abc",maximum:total,completeSHA:hash)
+            let stage = root.appendingPathComponent("complete-reopen")
+            try require(try checkpoint.seed(stage) == total && (try Data(contentsOf:stage)) == data,
+                        "complete shard survives before snapshot publication")
+            try checkpoint.clear()
+            try checkpoint.save(prefix,after:0)
+        }
+        let saved = try FileManager.default.contentsOfDirectory(at:checkpointRoot,includingPropertiesForKeys:nil).filter { $0.pathExtension == "part" }
+        try require(saved.count == 1,"exactly one checkpoint generation")
+        try Data(repeating:255,count:8).write(to:saved[0])
+        let checkpoint = try HubShardCheckpoint(root:root,identity:"abc",maximum:total,completeSHA:hash)
+        let invalid = root.appendingPathComponent("invalid-prefix")
+        try require(try checkpoint.seed(invalid) == 0 && !FileManager.default.fileExists(atPath:invalid.path),"same-length corruption restarts fresh")
+    }
+
     static func largeInventoryChecks(_ root: URL) async throws {
         let hash = String(repeating:"0",count:64)
         func profile(_ sizes: [Int64]) -> HubProfile {

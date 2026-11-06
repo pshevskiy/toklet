@@ -11066,3 +11066,12 @@ The current checked source produces 45 exports per arm64 slice and a signed
 Mac app with retained G2 prefill and scoped Gemma range resumption. Six
 Swift checks and Astra pass. The previous native package remains available.
 [Audit](../benchmarks/results/2026-11-06-m8-mac-audit-v3.json)
+
+## 6 November 2026 — Keep exact Gemma download progress across attempts
+
+The Mac transport checkpoints contiguous bytes under an exclusive lease and
+validates the local digest before resuming. A fully verified shard survives
+a later file failure. Snapshot publication retires the checkpoint. The
+two-hour per-attempt limit, final SHA and staging cleanup remain enforced.
+Swift checks, the signed app and Astra pass.
+[Evidence](../benchmarks/results/2026-11-06-gemma-durable-public-checkpoint-v1.json)

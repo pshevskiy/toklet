@@ -716,6 +716,10 @@ uses the existing full saved-conversation reset+prompt path on Send.
     - [x] Resume accepted range prefixes for the exact Mac Gemma shard.
       Swift controls, signed app and Astra pass.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-resumable-ranges-v1.json).
+    - [x] Retain verified-size unpublished checkpoint generations across exact
+      Mac shard attempts. Lease, corruption, cancellation, complete-shard reuse,
+      Swift, signed app and Astra pass.
+      [Evidence](benchmarks/results/2026-11-06-gemma-durable-public-checkpoint-v1.json).
     - [x] Plan exact cold KV bytes from the shared layout. Three real session
       allocations, 44 native exports, strict checks and Astra pass.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-kv-plan-v1.json).
@@ -829,6 +833,7 @@ completed or prerequisites for the active breadth-first queue.
 
 | Date | Iteration | Result, checks and review | Commit / next action |
 | --- | --- | --- | --- |
+| 2026-11-06 | Durable exact Mac Gemma checkpoints | Private lease and atomic generation, exact resumed suffix and complete-shard reuse pass. The first draft retired the shard too soon; snapshot publication now retires it. | Swift, signed Mac and Astra pass. The live public journey continues. [Evidence](benchmarks/results/2026-11-06-gemma-durable-public-checkpoint-v1.json). |
 | 2026-11-06 | Source-matched Mac code audit | Current code pins, 45 exports per slice, six Swift checks, signed build and Astra pass. Previous package preserved. | Production public download is running. [Evidence](benchmarks/results/2026-11-06-m8-mac-audit-v3.json). |
 | 2026-11-06 | G3 frozen Mac retention decision | All 26 pairs exact. Primary gain21.33%, longer guard regression21.06%, peak5.18GB. Strict checks and Astra pass. | Retain G2 default, keep G3 test-only. [Evidence](benchmarks/results/2026-11-06-gemma-assistant-mtp-retention-v1.json). |
 | 2026-11-06 | Official Gemma older 4 MiB public trial | Confirmed 2.01 GB before the two-hour deadline, empty staging after failure. Xet diagnostic stopped separately without full SHA. | Production resumption retry queued after G3. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-public-4m-v1.json). |
