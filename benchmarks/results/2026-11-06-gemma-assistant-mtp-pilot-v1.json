@@ -1,0 +1,83 @@
+{
+  "format": "toklet-gemma-assistant-mtp-pilot-v1",
+  "scope": "Test-only scalar assistant with exact target verification and ordinary G2 prefill on Mac. Screening workload, not timing retention.",
+  "peak_physical_bytes": 5184180712,
+  "all_ten_paired_requests_exact": true,
+  "metrics": {
+    "15": {
+      "samples": 1,
+      "median_request_gain": 0.3357700075735742,
+      "paired_gain_range": [
+        0.3357700075735742,
+        0.3357700075735742
+      ],
+      "draft_acceptance": [
+        {
+          "proposed": 8,
+          "accepted": 7
+        }
+      ],
+      "ids_sha256": "e979173272fcd74b44ac302086998c7df6b579197dd8245c28ae7608c656a058"
+    },
+    "128": {
+      "samples": 3,
+      "median_request_gain": 0.21417778869712156,
+      "paired_gain_range": [
+        0.21190422004601195,
+        0.23657640484843312
+      ],
+      "draft_acceptance": [
+        {
+          "proposed": 28,
+          "accepted": 23
+        },
+        {
+          "proposed": 28,
+          "accepted": 23
+        },
+        {
+          "proposed": 28,
+          "accepted": 23
+        }
+      ],
+      "ids_sha256": "f3126a42b51f8f4ec4c3a8613dbe4ec912e3650824f825240adb1c05b30d9c88"
+    },
+    "384": {
+      "samples": 3,
+      "median_request_gain": -0.05869170445731764,
+      "paired_gain_range": [
+        -0.07295691555354833,
+        -0.040833258345311485
+      ],
+      "draft_acceptance": [
+        {
+          "proposed": 39,
+          "accepted": 15
+        },
+        {
+          "proposed": 39,
+          "accepted": 15
+        },
+        {
+          "proposed": 39,
+          "accepted": 15
+        }
+      ],
+      "ids_sha256": "5e543f614d1cd2d715c99e12aba4b18a214de9c63816b2e22438c1adb43f4682"
+    }
+  },
+  "default_tests": 594,
+  "metal_tests": 713,
+  "strict_checks": true,
+  "initial_build": "The runner moved a non-Copy Request into both closures. Each closure now creates a request with the same inputs.",
+  "evidence_sha256": {
+    "artifacts/gemma-g3-pilot-v2-2026-11-06/checks.json": "f073ee1492031fc1bab08d6b893f589ca0bbfb3025cd0b84ad6a499724c8561d",
+    "artifacts/gemma-g3-pilot-v2-2026-11-06/standard/checks.json": "83b1b9308e34ae92d7898c95e2f55d96f37c7cf5bbb10621c0a9e59584ddd3d7",
+    "artifacts/gemma-g3-pilot-v2-2026-11-06/standard/cpu-test.stdout": "3d9097652b24bccb4375c56589554466b9a98f5bcab50bb86d9199cdf292f3f1",
+    "artifacts/gemma-g3-pilot-v2-2026-11-06/standard/metal-test.stdout": "3e108182a385f736496ce322be1ebd8e27ef98e42525f0589b41cf8c1143d334",
+    "artifacts/gemma-g3-pilot-v2-2026-11-06/pilot/owned.json": "aa2f08a1f302a7b26fce33562409016576e2c02f090ceffdf5e218eac87e1c3a",
+    "artifacts/gemma-g3-pilot-v2-2026-11-06/pilot/gpu.stdout": "992fa99792adb46e7de3e39dcb9c961158792f0bc5d4be000ae729260a1cf10f",
+    "artifacts/gemma-g3-pilot-2026-11-06/metal-clippy.stderr": "b38a087aad88f494ac5a593e967c98ce9093b0ac8081932b91980441a0972579"
+  },
+  "review": "Astra approves the test-only exact assistant loop and prospective 128+128/384+128 timing gates. Pilot rates remain descriptive."
+}

@@ -450,6 +450,19 @@ full-row verification path for intermediate decisions. Commit only the
 accepted cache prefix. Exercise rejection, hidden stop, cancellation and
 local-ring rollback before measuring acceptance, latency and memory.
 
+The [paired pilot](../benchmarks/results/2026-11-06-gemma-assistant-mtp-pilot-v1.json)
+keeps exact tokens and state. The 128+32 case improves, and 384+32 regresses.
+Astra recommends freezing 128+128 as the primary and 384+128 as the guard,
+with the same pinned token IDs, G2 prefill, empty stop set and 512 capacity.
+Use release runs, three warmups and ten measured pairs per workload. Alternate
+pair order and record all samples. The median paired complete-request gain
+must reach 5% and exceed observed variation on the primary. The guard may
+vary by at most the larger relative median absolute deviation of the two
+request distributions. Require exact IDs, history, pending count, last logits
+and physical KV, with both owners below 6 GiB. Repeat in the opposite order
+only when the first run meets both timing gates. A failed gate keeps the
+assistant test-only. A context-specific policy needs its own prospective scope.
+
 ### Llama Online correctness
 
 The [same-operand witness](../benchmarks/results/2026-11-05-llama-online-witness-v1.json)

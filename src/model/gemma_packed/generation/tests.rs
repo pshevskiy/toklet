@@ -7,6 +7,8 @@ use std::{
     sync::atomic::{AtomicBool, Ordering},
 };
 
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+mod assistant_timing;
 mod capacity;
 #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
 mod g2;

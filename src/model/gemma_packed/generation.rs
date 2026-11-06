@@ -403,5 +403,8 @@ impl<M: MatrixSource, B: Operations<M>> InferenceSession for GenerationSession<'
     }
 }
 
+#[cfg(all(test, feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+mod assistant_experiment;
+
 #[cfg(test)]
 pub(in crate::model::gemma_packed) mod tests;

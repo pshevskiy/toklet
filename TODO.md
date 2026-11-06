@@ -1,7 +1,7 @@
 # Toklet progress checklist
 
 Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Measure the G3 paired Mac assistant experiment and decide retention.**
+Current task: **Run G3 frozen 128+128 and 384+128 timing gates.**
 G2 is retained on the signed official BF16 Mac route. Both primary runs
 reduce prefill time by about 61% and request time by about 28%.
 [Timing and runtime checks](benchmarks/results/2026-11-06-gemma-bf16-g2-retention-v1.json).
@@ -802,7 +802,9 @@ Conditional follow-ons require their own decision; they do not all block M9:
   - [x] Verify strict shared-KV prefix publication with cancellation, EOS,
     wrapped KV, real target correction and an exact G2 regression.
     [Evidence](benchmarks/results/2026-11-06-gemma-strict-shared-kv-v1.json).
-  - [ ] Measure Mac acceptance, timing and memory before deciding retention.
+  - [x] Run the exact real assistant-loop pilot. Short prompts improve and
+    the 384+32 control regresses. [Evidence](benchmarks/results/2026-11-06-gemma-assistant-mtp-pilot-v1.json).
+  - [ ] Run the frozen representative timing and decide retention.
   [Last-row prefill and assistant plans](docs/todo-implementation-plans.md#g2g3-shared-kv-and-mtp).
   The prospective assistant header and target token-ID comparison pass.
   [Evidence](benchmarks/results/2026-11-06-gemma-qat-assistant-header-v1.json).
@@ -820,6 +822,7 @@ completed or prerequisites for the active breadth-first queue.
 
 | Date | Iteration | Result, checks and review | Commit / next action |
 | --- | --- | --- | --- |
+| 2026-11-06 | G3 real assistant-loop pilot | Ten exact paired requests. At128+32 median gain is21.4%; at384+32 loss is5.9%. Peak5.18GB. First runner move error fixed, 594 default/713 Metal and Astra pass. | Confirm128+128 and384+128 under frozen gates. [Evidence](benchmarks/results/2026-11-06-gemma-assistant-mtp-pilot-v1.json). |
 | 2026-11-06 | G3 strict target verification | Real partial acceptance/correction, exact hidden/KV, pre-publication cancellation and G2 parity pass. Two-head wrap and pending stop controls, 594 default, 713 Metal, Astra. | Measure the real assistant loop. [Evidence](benchmarks/results/2026-11-06-gemma-strict-shared-kv-v1.json). |
 | 2026-11-06 | G3 scalar assistant proposal | Three synthetic positions and real position14 pass. All 4,096 IDs/logits and 1,536 projected values match the reference. A stale isolated binary was rejected and rerun. | 592 default, 711 Metal and Astra pass. [Evidence](benchmarks/results/2026-11-06-gemma-official-assistant-scalar-v1.json). |
 | 2026-11-06 | G2 Mac retention | All 78 pairs match token IDs. Primary prefill falls 60.9% and 60.8%; 591 default, 710 Metal, rollback/retry, native and Swift Chat, and Astra pass. | Signed native45 package selected. [Evidence](benchmarks/results/2026-11-06-gemma-bf16-g2-retention-v1.json). |

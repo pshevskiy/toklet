@@ -11033,3 +11033,11 @@ accepted KV, logits and target hidden. Corrections and stops remain pending.
 Real cancellation and serial parity pass, as do the two-head wrap case,
 G2 regression, strict checks and Astra. The speculative route is test-only.
 [Evidence](../benchmarks/results/2026-11-06-gemma-strict-shared-kv-v1.json)
+
+## 6 November 2026 — Screen strict Gemma assistant generation on Mac
+
+All ten pairs preserve exact tokens, stops, history, logits and KV. Median
+request time falls 21.4% at 128+32 and rises 5.9% at 384+32. Peak physical
+memory is 5.18 GB. Strict checks and Astra pass. Production retention awaits
+the frozen longer-output primary and guard.
+[Evidence](../benchmarks/results/2026-11-06-gemma-assistant-mtp-pilot-v1.json)
