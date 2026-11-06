@@ -71,8 +71,9 @@ transfer/Stop/offline evidence. [Journey report](mac-hub-journeys.md).
 The sixth profile has isolated Mac controller evidence and a linked Mac product.
 [Qwen2.5-1.5B evidence](../benchmarks/results/2026-11-06-qwen15-mac-app-v1.json).
 Gemma BF16 has signed Mac Chat and active Settings evidence, including same-owner
-384/16 to 256/8 context and chunk selection. The complete public transfer
-remains open.
+384/16 to 256/8 context and chunk selection. Its public 10.28 GB download,
+verified publication, Stop recovery and network-denied Chat pass.
+[Public journey](../benchmarks/results/2026-11-07-gemma-public-resume-mac-v1.json).
 [Gemma Settings evidence](../benchmarks/results/2026-11-06-gemma-bf16-live-window-v1.json).
 
 The [representative production Mac Qwen2 journey](mac-production-memory.md)

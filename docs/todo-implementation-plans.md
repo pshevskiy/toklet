@@ -235,8 +235,9 @@ The other text tensors require4,559,518,278 raw bytes. [Official source inventor
      search, SHA-verified publication, cancel, disk limits and network-denied
      reopen. Keep generic transfer bounds and iPhone eligibility. The
      [Mac Hub checks](../benchmarks/results/2026-11-06-gemma-bf16-mac-hub-v1.json)
-     qualify exact live ranges and cached publication. A full public transfer
-     timed out. Repeat it independently of the qualified offline journey.
+     qualify exact live ranges and cached publication. The independent
+     [public journey](../benchmarks/results/2026-11-07-gemma-public-resume-mac-v1.json)
+     verifies the complete resumed download, publication and offline reopen.
    - Expose exact cold FP32 KV buffer bytes from the shared layout for the
      supported Mac capacity and chunk. Check the prediction against real
      owners. [KV planner evidence](../benchmarks/results/2026-11-06-gemma-bf16-kv-plan-v1.json).

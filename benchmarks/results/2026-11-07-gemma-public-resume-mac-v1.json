@@ -1,0 +1,134 @@
+{
+  "format": "toklet-gemma-public-resume-mac-v1",
+  "passed": true,
+  "scope": "Production Swift Hub and native Chat controllers on Mac, using owned processes. Prior public prefix bootstrapped the first durable attempt. No rendered UI or physical iPhone claim.",
+  "transport_commit": "33dac87fc2f8490318105ebccf02589538f79b35",
+  "journey_binary_sha256": "9468e96897d975328185532abbc29c747f272dab0b71ec582243d7a3cfccdd63",
+  "repository": "google/gemma-4-E2B-it",
+  "revision": "70af34e20bd4b7a91f0de6b22675850c43922a03",
+  "initial_public_prefix": {
+    "bytes": 771751936,
+    "sha256": "7f6adba75389ad8da85a82996a82bd9718cf280337ca88b02f3409563a295f95",
+    "source": "Cloned contiguous staging bytes written by the production public Toklet journey. Compared against, and never supplemented from, the already verified shard.",
+    "captured_at": 1793980408.757523
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "checkpoint_before_bytes": 771751936,
+      "checkpoint_after_bytes": 4513071104,
+      "process_exit": 1,
+      "published": false
+    },
+    {
+      "attempt": 2,
+      "checkpoint_before_bytes": 4513071104,
+      "checkpoint_after_bytes": 5855248384,
+      "process_exit": 1,
+      "published": false
+    },
+    {
+      "attempt": 3,
+      "checkpoint_before_bytes": 5855248384,
+      "checkpoint_after_bytes": 6006243328,
+      "process_exit": 1,
+      "published": false
+    },
+    {
+      "attempt": 4,
+      "checkpoint_before_bytes": 6006243328,
+      "checkpoint_after_bytes": 0,
+      "process_exit": 0,
+      "published": true
+    }
+  ],
+  "published_profile": {
+    "revision": "70af34e20bd4b7a91f0de6b22675850c43922a03",
+    "files": [
+      {
+        "bytes": 17336,
+        "sha256": "2f1b4d75d067bae3fe44e676721c7f077d243bc007156cb9c2f8b5836613d082",
+        "name": "chat_template.jinja"
+      },
+      {
+        "bytes": 4954,
+        "sha256": "1b28f3d2c3100f6c594754b81107428bd7b822a7f48272ca681dae9d2ec38330",
+        "name": "config.json"
+      },
+      {
+        "bytes": 208,
+        "sha256": "d4226bbe3117d2d253ba4609720ba82c6c4ce4627a9a6ae05387c78983ac03de",
+        "name": "generation_config.json"
+      },
+      {
+        "bytes": 10246621918,
+        "sha256": "2db5482b20d746879bb3ef79b5203e9075a2e2b98f54ec7c2f281c1477ddc550",
+        "name": "model.safetensors"
+      },
+      {
+        "bytes": 32169626,
+        "sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f",
+        "name": "tokenizer.json"
+      },
+      {
+        "bytes": 2095,
+        "sha256": "90c3a3ba5bf53818383a58e1a776cbcacd2a038d4812eaa373e1522f2d06f3df",
+        "name": "tokenizer_config.json"
+      }
+    ],
+    "repository": "google/gemma-4-E2B-it"
+  },
+  "total_bytes": 10278816137,
+  "snapshot_sha256": "aec859165fdd236bfe573e5f71352489a85ceea2d96655a50dc6e12f81f88802",
+  "online_physical_peak_bytes": 4921839912,
+  "offline_physical_peak_bytes": 4917006584,
+  "online_chat": {
+    "emitted": 2,
+    "online": true,
+    "reason": 2,
+    "text": "Hello!"
+  },
+  "offline_chat": {
+    "emitted": 2,
+    "online": false,
+    "reason": 2,
+    "text": "Hello!"
+  },
+  "offline_controls": {
+    "cache_unchanged": true,
+    "network_unavailable": true,
+    "owner_and_conversation_preserved": true,
+    "phone_qualified": false,
+    "recovery_emitted": 11,
+    "ui_rendered": false
+  },
+  "staging_empty": true,
+  "checkpoint_payload_retired": true,
+  "evidence_sha256": {
+    "artifacts/gemma-bf16-resume-2026-11-06/genuine-public-prefix.json": "84e8e29d8ddbe964f3524b2c22ecbeaa6708074d431001ab93bc6f45572e0ac5",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/approved.json": "d50ee142f86e3768fe5bb3f96407f047b040fe35755348963c3356a9803582c0",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/attempts.json": "0d9fc8b50706b363150e2e92b9bf034ecd9be0100024d0f2e89582f9394e9518",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/continue.py": "2f1c22554aa1074b7ab3b62bc6ed5e342f00ed48138fad408ac27609e75dc37a",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/journey-build.json": "260899e55a467838a782821f3b8ae5e49bfe3c6e83fd081ac726fd37eb4c1fa2",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/journey-download-01/owned.json": "7fcbade1cb800ba1bf1c4287fb674a4af515c4e658d93e4e836f83aa65e48cca",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/journey-download-01/stderr": "9a7b8ef124369e63c07ab8138539f22965de3d971c0e30919e6bc4787dabb3da",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/journey-download-01/stdout": "575742350ea2c53aa91e524dd04bd61a9deda3455fd2c64ef72dda4fad80e602",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/journey-download-02/owned.json": "5b3c16c7b224fc434339b72966aa0ba8805a6d07015a7f66805daccd3ff822ea",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/journey-download-02/stderr": "9a7b8ef124369e63c07ab8138539f22965de3d971c0e30919e6bc4787dabb3da",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/journey-download-02/stdout": "575742350ea2c53aa91e524dd04bd61a9deda3455fd2c64ef72dda4fad80e602",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/journey-download-03/owned.json": "3ba51eea1c21b85a2294253955b1e1b317064baf54d0ab8d0e7261f10fd0cc1e",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/journey-download-03/stderr": "1efb28556fc372f0c6bb224ef90531d2123dd7603c49c1379f68e1965f08e8c1",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/journey-download-03/stdout": "575742350ea2c53aa91e524dd04bd61a9deda3455fd2c64ef72dda4fad80e602",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/journey-download-04/owned.json": "ea152f6a10143a1c8fde175e25c6ea5ccfc288298a04142f3a2fa0d7a73d9b9d",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/journey-download-04/stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/journey-download-04/stdout": "5e649c6aa639927e23202fe6b89bc748aa5654235966a1c2155e4c29d5eef0af",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/journey-offline/owned.json": "35b3709133f34dba548a079d6b0806e4f62af1ecf0f7939a9361a1ce61829c43",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/journey-offline/stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/journey-offline/stdout": "5265493214b5b235266dd9a2294cada70dbf80282315ec955f556c95c119670a",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/provenance.json": "84e8e29d8ddbe964f3524b2c22ecbeaa6708074d431001ab93bc6f45572e0ac5",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/public-workspace/Models/google--gemma-4-E2B-it--70af34e20bd4b7a91f0de6b22675850c43922a03/snapshot.json": "aec859165fdd236bfe573e5f71352489a85ceea2d96655a50dc6e12f81f88802",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/run-step.py": "ca7594ab34188d0206d66613c75a882b95706b88fc79f729699a802e591e053b",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/signed-mac/build.json": "3ee7b4e3368ce2a836b42a2ccd636966e1d0833635e89f485876d5a6623e7595",
+    "artifacts/gemma-durable-resume-v2-2026-11-06/verify-public.py": "95868c7608d153b7b275e2a7f6e101c0334af06dc4588942b45680743cc1168b"
+  }
+}

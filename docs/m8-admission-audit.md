@@ -1,8 +1,8 @@
 # M8 capability and admission audit
 
-**6 November 2026 update. Apple Silicon Mac has seven managed profiles and
-iOS has four. M8 remains open for the full public Gemma BF16 transfer and
-the deferred physical iPhone 14 Pro checks.**
+**7 November 2026 update. Apple Silicon Mac has seven managed profiles and
+iOS has four. The active Mac scope is complete. Physical iPhone 14 Pro
+checks remain deferred.**
 The official BF16 path passed corrected numerical and original-quality gates.
 Its Mac offline managed process peaked at 4.93 GB. Active Mac context and KV
 replacement passed at 4.96 GB peak. [Coverage](model-coverage.md).
@@ -15,8 +15,9 @@ and official Gemma 4 E2B BF16. The selected XCFramework has 45 C exports
 per arm64 slice for Mac, iOS and iOS Simulator.
 The five earlier profiles have production fresh download/Stop/offline evidence.
 The sixth has a linked Mac product and isolated controller evidence.
-Official Gemma has a signed Mac build, verified cached publication and
-network-denied Chat. [Gemma Hub evidence](../benchmarks/results/2026-11-06-gemma-bf16-mac-hub-v1.json).
+Official Gemma has a signed Mac build and a complete 10.28 GB public download,
+verified publication and network-denied Chat through the Mac controllers.
+[Gemma public journey](../benchmarks/results/2026-11-07-gemma-public-resume-mac-v1.json).
 [Production journeys](mac-hub-journeys.md).
 [Qwen2.5 1.5B controller](../benchmarks/results/2026-11-06-qwen15-mac-app-v1.json).
 
@@ -29,7 +30,7 @@ network-denied Chat. [Gemma Hub evidence](../benchmarks/results/2026-11-06-gemma
 | Llama3 managed, Mac only | Original10k NLL and100-task gates pass; Mac512 managed adoption/download/offline evidence is complete. No131072-window or iPhone claim. |
 | Phi3, Gemma3, LFM2 diagnostic | Bounded adapter/block/state/reference qualifications exist. Original full adoption quality and ordinary app admission do not; they stay out of the catalog. |
 | Gemma4 Q4 rejected for adoption | Original/native full collections and grading complete. NLL passes, tasks52→43/100 fail. Historical mathematical-logit/KV failures remain; four stock-MLX decisions agree with Toklet but cannot waive those failures. |
-| Official Gemma 4 E2B BF16 managed, Mac only | Corrected numerical and original10k/100 quality gates pass. Shared512 window, exact six assets, cached publication and offline Chat pass. Full public transfer timed out; retry remains open. |
+| Official Gemma 4 E2B BF16 managed, Mac only | Corrected numerical and original10k/100 quality gates pass. Shared512 window. All six public assets verify, publish and reopen for offline Chat. |
 | Gemma4 alternative weights | OptiQ passes stock trajectories and fails the task limit at49/100 vs original52/100. Uniform Q6 and oQ6 reject on a proposal cycle. Stock Q8 rejects on a proposal cycle and measured 6 GiB overflow. Native/app Q8 exceeds its estimated allowance. [Q8 evidence](../benchmarks/results/2026-11-06-gemma-q8-stock-cap-v1.json). |
 | Physical iPhone14Pro outstanding | Four-profile catalog is not new-device evidence. Current Settings, journeys, wider context and diagnostic adapters lack a fresh phone run; Llama3 is excluded. |
 
@@ -92,5 +93,6 @@ physical iPhone checks keep M8 open.
 The selected source-matched package now includes retained G2 and resumable
 Gemma ranges. All 45 exports per slice, the signed Mac app and six Swift
 checks match the current checked source. G3 remains test-only after its
-longer guard failed. The full production public transfer is in progress.
-[Current audit](../benchmarks/results/2026-11-06-m8-mac-audit-v3.json).
+longer guard failed. The durable signed build and public Mac run are recorded
+separately above.
+[Package audit](../benchmarks/results/2026-11-06-m8-mac-audit-v3.json).

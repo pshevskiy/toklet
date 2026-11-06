@@ -1,6 +1,6 @@
 # Toklet improvement record
 
-Updated 6 November 2026. This records implemented capabilities, measured benefits,
+Updated 7 November 2026. This records implemented capabilities, measured benefits,
 and the decisions that limit their use. Detailed reports retain exact revisions,
 artifact hashes, raw samples, checks and Astra reviews. M0–M6 are complete in their
 qualified scopes: M5 selects the small compensated Half and frozen larger group8
@@ -11075,3 +11075,15 @@ a later file failure. Snapshot publication retires the checkpoint. The
 two-hour per-attempt limit, final SHA and staging cleanup remain enforced.
 Swift checks, the signed app and Astra pass.
 [Evidence](../benchmarks/results/2026-11-06-gemma-durable-public-checkpoint-v1.json)
+
+## 7 November 2026 — Qualify the public official Gemma Mac journey
+
+The six-file 10.28 GB snapshot downloaded through the production Hub, verified
+and published. A byte-verified 772 MB prefix from an earlier public attempt
+seeded four durable attempts. Online Chat and Stop recovery passed. A separate
+network-denied process reopened the same snapshot, chatted and rejected missing
+and corrupt cache controls. Observed physical peaks were 4.92 GB online and
+4.92 GB offline. The controller journey and signed Mac build have separate
+evidence. Astra approved the public journey record. Physical iPhone validation
+stays deferred.
+[Public journey](../benchmarks/results/2026-11-07-gemma-public-resume-mac-v1.json)

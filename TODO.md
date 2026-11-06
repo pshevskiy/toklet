@@ -1,13 +1,13 @@
 # Toklet progress checklist
 
-Last updated: **6 November 2026**. Active work: **Mac model coverage + M9 performance; iPhone deferred by user**.
-Current task: **Run the production public Gemma download and isolated reopen.**
+Last updated: **7 November 2026**. **Active Mac scope complete; iPhone deferred by user.**
+The complete 10.28 GB official Gemma snapshot passed public download,
+six-file SHA verification, managed publication, Chat, Stop and a network-denied
+reopen. [Public journey](benchmarks/results/2026-11-07-gemma-public-resume-mac-v1.json).
 G2 is retained on the signed official BF16 Mac route. Both primary runs
 reduce prefill time by about 61% and request time by about 28%.
 [Timing and runtime checks](benchmarks/results/2026-11-06-gemma-bf16-g2-retention-v1.json).
-The native45 Mac build passed active same-owner context/KV changes and
-rendered Settings. Full public Gemma transfer remains open after two
-timeouts; cached publication and offline Chat pass.
+The native45 Mac build passed same-owner context/KV changes and rendered Settings.
 [Settings evidence](benchmarks/results/2026-11-06-gemma-bf16-live-window-v1.json).
 Completed: Qwen1.5B managed Mac Chat and native41 package selection.
 [Evidence](benchmarks/results/2026-11-06-qwen15-mac-app-v1.json).
@@ -709,10 +709,11 @@ uses the existing full saved-conversation reset+prompt path on Send.
     - [x] Add exact Mac Hub discovery and transport policy. Real byte ranges,
       cached publication, offline Chat and Astra pass.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-mac-hub-v1.json).
-    - [ ] Complete a full public Gemma download and reopen from its publication.
-      Both 16 MiB attempts timed out. The older 4 MiB trial reached 2.01 GB
-      before its deadline and cleaned staging. The production retry is running.
-      [4 MiB trial](benchmarks/results/2026-11-06-gemma-bf16-public-4m-v1.json).
+    - [x] Complete a full public Gemma download and reopen from its publication.
+      Four durable attempts continued a verified 772 MB public prefix. The last
+      attempt published all six pinned files. Chat, Stop recovery, offline Chat
+      and missing/corrupt cache controls pass. Staging and checkpoint payload
+      are retired. [Evidence](benchmarks/results/2026-11-07-gemma-public-resume-mac-v1.json).
     - [x] Resume accepted range prefixes for the exact Mac Gemma shard.
       Swift controls, signed app and Astra pass.
       [Evidence](benchmarks/results/2026-11-06-gemma-bf16-resumable-ranges-v1.json).
@@ -760,8 +761,8 @@ uses the existing full saved-conversation reset+prompt path on Send.
   exact bundle/profile/config, external peaks and Astra review pass.
   [Report](docs/mac-production-memory.md). Other four production-profile peaks remain unmeasured.
 - [x] Confirm scoped code checks, reviews, commits and source-matched package.
-  Public transfer and deferred device evidence stay separate.
-  [Current audit](benchmarks/results/2026-11-06-m8-mac-audit-v3.json).
+  Public Mac transfer is verified above. Physical iPhone evidence stays deferred.
+  [Package audit](benchmarks/results/2026-11-06-m8-mac-audit-v3.json).
   - [x] Reconcile seven Apple Silicon Mac and four iOS catalog identities,
     selected native45 package and open gates. [Audit](benchmarks/results/2026-11-06-m8-mac-audit-v2.json).
   - [x] Give Qwen2.5-1.5B its own Mac display name, lookup key and discovery
