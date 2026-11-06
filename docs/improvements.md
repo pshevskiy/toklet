@@ -10704,3 +10704,11 @@ chunk sizes and the causal future extension. Exact admission and reset
 pass, and the original Q4 capture remains bitwise identical. Astra
 approved the diagnostic code. Longer fidelity and Chat remain open.
 [Evidence](../benchmarks/results/2026-11-06-gemma-qat-session-v1.json)
+
+## 6 November 2026 — Pass both frozen Gemma QAT prefix comparisons
+
+The 213- and 71-token runs pass all 7,331,840 values across both
+contracts and all eight greedy observations. Logits and committed KV
+stay identical across chunks and the future extension. Astra verified
+the receipts. The 1,025-token wrap and original quality gates remain open.
+[Evidence](../benchmarks/results/2026-11-06-gemma-qat-prefix-parity-v1.json)

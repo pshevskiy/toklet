@@ -142,9 +142,10 @@ The [exact cold plan](../benchmarks/results/2026-11-06-gemma-qat-cold-v1.json)
 passes for the pinned metadata. [Authenticated resident storage](../benchmarks/results/2026-11-06-gemma-qat-resident-v1.json)
 passes the exact budget and original-byte checks. The [independent prefix oracle](../benchmarks/results/2026-11-06-gemma-qat-native-reference-v1.json)
 is frozen. The [mixed diagnostic session](../benchmarks/results/2026-11-06-gemma-qat-session-v1.json)
-passes exact short state and legacy controls. Compare captured logits and producer KV under both contracts,
-including chunk sizes1, 3 and32 and the causal future extension. Keep any
-failure with its coordinate and tolerance ratio.
+passes exact short state and legacy controls. The [two-prefix fidelity gate](../benchmarks/results/2026-11-06-gemma-qat-prefix-parity-v1.json)
+passes both numerical contracts, chunk sizes1/3/32 and the causal future
+extension. The frozen1,025-token oracle and quality-only wrap state checks
+are separate. Preserve the public diagnostic ceiling at512.
 
 If the native prefix gate passes, reuse the existing raw Gemma loss and
 task loops with QAT-bound source identity and measured owner plans. Admit

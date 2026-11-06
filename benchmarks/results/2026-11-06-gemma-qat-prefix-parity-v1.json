@@ -1,0 +1,124 @@
+{
+  "gate_passed": true,
+  "atol": 1e-05,
+  "rtol": 0.0001,
+  "results": [
+    {
+      "case": "HumanEval/4",
+      "contract": "math_fp64",
+      "values": 2487296,
+      "failed": 0,
+      "failed_records": [],
+      "greedy": [
+        {
+          "position": 0,
+          "native": 236761,
+          "reference": 236761
+        },
+        {
+          "position": 212,
+          "native": 34488,
+          "reference": 34488
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case": "HumanEval/4",
+      "contract": "staged_fp32",
+      "values": 2487296,
+      "failed": 0,
+      "failed_records": [],
+      "greedy": [
+        {
+          "position": 0,
+          "native": 236761,
+          "reference": 236761
+        },
+        {
+          "position": 212,
+          "native": 34488,
+          "reference": 34488
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case": "lambada/row-29",
+      "contract": "math_fp64",
+      "values": 1178624,
+      "failed": 0,
+      "failed_records": [],
+      "greedy": [
+        {
+          "position": 0,
+          "native": 107,
+          "reference": 107
+        },
+        {
+          "position": 70,
+          "native": 4284,
+          "reference": 4284
+        }
+      ],
+      "passed": true
+    },
+    {
+      "case": "lambada/row-29",
+      "contract": "staged_fp32",
+      "values": 1178624,
+      "failed": 0,
+      "failed_records": [],
+      "greedy": [
+        {
+          "position": 0,
+          "native": 107,
+          "reference": 107
+        },
+        {
+          "position": 70,
+          "native": 4284,
+          "reference": 4284
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "summary": {
+    "comparisons": 7331840,
+    "greedy_matches": 8,
+    "causal_prefix_lengths": [
+      213,
+      71
+    ],
+    "chunk_rows": [
+      32,
+      3,
+      1,
+      32
+    ],
+    "future_tokens": 2
+  },
+  "receipts_sha256": {
+    "artifacts/gemma-qat-session-2026-11-06/compare.py": "129edfe6af3f00260b2ce0d926b70d2d6b9ff6e03a3be995f7134e0993ef4907",
+    "artifacts/gemma-qat-session-2026-11-06/comparison.json": "c40eea86948208a19892f4a04cd0e418a6cab17ef1fec78e704019a02bd35b23",
+    "artifacts/gemma-qat-session-2026-11-06/qat-human-eval/owned.json": "abcd69970443c6a4a29ad8beaa8b2c88d6461e91c221a09a05b1dc902e11c6f7",
+    "artifacts/gemma-qat-session-2026-11-06/qat-human-eval/gpu.stdout": "70d1280f8824eeacf4748781fc00ed0a18409add9d3f990c9d9ba85f52f78431",
+    "artifacts/gemma-qat-session-2026-11-06/qat-human-eval/arrays.bin": "bcfaffafc6153f5c9831f3f6901c7a1cdcd29e41da9e6435464db2f2a1030074",
+    "artifacts/gemma-qat-session-2026-11-06/qat-human-eval/prefix.u32le": "fd636856857d6c1ae2fda49fcb5163f61d9b78251471d565e5d613eb298de4bd",
+    "artifacts/gemma-qat-session-2026-11-06/qat-lambada/owned.json": "e115dd49cb1beb0ca0c85f380e7c4d53cee29f6f6348096e3dda0b31946f6828",
+    "artifacts/gemma-qat-session-2026-11-06/qat-lambada/gpu.stdout": "5cbdc150711e801b8fefc89f4743d9dc87f8977c0d5c59821c053329b741640d",
+    "artifacts/gemma-qat-session-2026-11-06/qat-lambada/arrays.bin": "ce511cff6d12840fb50c5af55082466b4cc9668ec36fb6469888c2faecba4d87",
+    "artifacts/gemma-qat-session-2026-11-06/qat-lambada/prefix.u32le": "e0ab6a6099b3b5cdb9a7b8e463afa3bcec7c1e04b4ae18e478740df2c4a72995"
+  },
+  "peak_physical_bytes": {
+    "qat-human-eval": 3729771808,
+    "qat-lambada": 3710995696
+  },
+  "follow_on_frozen_plan_sha256": {
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/math_fp64/plan.json": "e8ccaba0407cf9a740d49b2677bf33289e5f88d1b7864c1eb552802e54e951ea",
+    "artifacts/gemma-qat-wrap-reference-2026-11-06/staged_fp32/plan.json": "d53942063329c8b851c39b7ff5b67db66ca78908974ba0b3332745445f7b557f"
+  },
+  "review": "Astra verified both exact receipt chains, disjoint math and staged comparisons, observed state parity and prospective wrap plans",
+  "scope": "Frozen causal prefixes only. Full-context fidelity, original adoption quality and Chat remain separate."
+}
