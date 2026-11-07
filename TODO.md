@@ -1,6 +1,6 @@
 # Toklet progress checklist
 
-Updated **7 November 2026**. **Prior Mac milestones complete in recorded scopes; improvement goal active.**
+Updated **8 November 2026**. **Prior Mac milestones complete in recorded scopes; improvement goal active.**
 iPhone runtime work remains deferred by user.
 Read this file first, then the relevant plan criteria and targeted code/diff.
 Completed history is in the [dated archive](docs/archive/2026-11-07/README.md).
@@ -20,10 +20,34 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next milestone: **O2.B2.B visible-frame diagnostic**, then O3 concrete
-runtime/profile attribution. O3 can proceed independently if OS capture
-authorization is unavailable. The full goal remains active; performance/model
-work follows. Screen Recording preflight is false; no permission was requested.
+Current priority per user: **console tests and Ollama/vLLM-Metal comparison**,
+then resume O2.B2.B and O3. Two independent Toklet BF16/G2 cohorts pass:
+3 warmups + 10 measured each, all26 exact; TTFT0.392–0.395s,
+request2.184–2.202s, decode4.44–4.48tok/s, processpeak4.919GB.
+[Console evidence](artifacts/console-engine-2026-11-07/toklet-console-report.json).
+Ollama0.40.15 update/signature/notarization and local vLLM0.33.0/Metal0.33.0
+clean dependencies/MLX GPU checks pass. Original-BF16 external configurations
+fail tested6GiB admission; user selects quantizedMLX. Both external references
+pass two3warm+10 cohorts, exact text (IDs where available), AC/thermal0 and
+conservative memory guards. Request medians: Ollama121/119ms, vLLM147/149ms;
+cache/precision/timing boundaries differ from native. No speedup ratio/adoption.
+[Comparison](docs/console-engine-comparison.md); offline validation passes;
+Astra approves scoped documentation/result publication; [review/commit receipt](artifacts/engine-comparison-2026-11-07/publication-checks.json). Strict native format rejects candidate; exploratory
+metadata change reverted, no loader relaxation.
+- [x] Publish reviewed initial console comparison and installation results;
+  six cohorts/60 measured requests pass in their recorded scopes. Performance
+  ratios, quality/adoption, sustained/tail and continuous memory cap unqualified.
+
+UI lab is paused per console priority: third capture has13 exact trials but25
+invalid callbacks and remains unqualified; fourth interrupted before reference
+verification. Processes closed; capture qualification/Astra remain open.
+[UI evidence](artifacts/o2-ui-frames-2026-11-07).
+O3 is in an isolated `codex/o3-runtime` worktree: cold/live BF16 CLI inventory
+and stable identities now pass initial tests and explicit Mac reconciliation
+(279ops/349tiles; exact admission5.814GB, processpeak4.918GB). Bounded encoding
+capture, full gates/overhead/Astra remain; no completion or speed claim.
+[contract/location](artifacts/o3-gemma-runtime-2026-11-07/implementation-contract.json).
+No O3 runtime or performance qualification yet.
 O2.B2.A bounded Send/preparation/publication correlation is reviewed and delivered
 in the existing summary ring; no lifecycle/render conflation.
 [Iteration evidence](artifacts/o2-ui-publication-2026-11-07/iteration-notes.json).

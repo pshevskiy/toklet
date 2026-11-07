@@ -1,0 +1,297 @@
+{
+  "passed": true,
+  "scope": "Initial short console reference measurements; unequal precision/weights/cache/timing boundaries. No cross-engine speedup ratio, adoption, sustained, tail, UI or overhead qualification.",
+  "hardware": "Apple M1 Pro, 16 GiB unified memory",
+  "memory_limit_bytes": 6442450944,
+  "prompt": "Name the capital of France.",
+  "prompt_tokens": 15,
+  "output_text": "The capital of France is **Paris**.",
+  "external_revision": "cde01efcb11f8a12e88a953b752fc16062aa1486",
+  "external_quantization": {
+    "group_size": 64,
+    "bits": 4,
+    "mode": "affine"
+  },
+  "definitions": {
+    "native_ttft": "Generate start to first token event, excludes initial tokenization and text detokenization",
+    "native_request": "Generate start through terminal report, includes ID callback; excludes text detokenization/console print",
+    "native_decode": "8 evaluated decode tokens / completed numerical decode seconds",
+    "ollama_ttft": "HTTP client start to first nonempty response text",
+    "ollama_request": "HTTP client start to stream completion; includes request tokenization and detokenization",
+    "ollama_decode": "API eval_count / eval_duration; hidden stop accounting unobserved",
+    "vllm_ttft": "Frontend-reported first_token_latency duration, not observed streaming text",
+    "vllm_request": "Blocking LLM.generate call on prompt IDs, including returned detokenized text",
+    "vllm_decode": "(num_generation_tokens - 1) / (last_token_ts - first_token_ts); includes stop106 after first generated token",
+    "vllm_prefill": "first_token_ts - scheduled_ts in the engine monotonic clock; no subtraction from wall-clock arrival_time",
+    "memory": "External conservative process-tree physical sum; shared pages may be counted multiple times. Native single-process lifetime peak. Not exact comparable unique residency. Guard samples at250ms; lifetime peaks cover only discovered/live processes and can miss short-lived children or final peaks. Not a continuous allocator hard cap."
+  },
+  "unknowns": [
+    "Ollama actual sampled token IDs and hidden stop work",
+    "External committed/pending KV journal",
+    "Externally observed KV dtype",
+    "UI first visible/scanout",
+    "Sustained and reliable tail latency"
+  ],
+  "native": {
+    "passed": true,
+    "scope": "Original BF16/G2 console, fresh prompt/KV each request, not cross-engine ranking or summary overhead qualification",
+    "cohorts": [
+      {
+        "cohort": 1,
+        "measured": 10,
+        "warmups": 3,
+        "ttft_seconds": {
+          "median": 0.3919174165,
+          "iqr": 0.0023752289999999787,
+          "minimum": 0.390680916,
+          "maximum": 0.394870334
+        },
+        "request_seconds": {
+          "median": 2.1843380415,
+          "iqr": 0.01334928099999999,
+          "minimum": 2.17266125,
+          "maximum": 2.241859
+        },
+        "decode_evaluations_per_second": {
+          "median": 4.482965394051214,
+          "iqr": 0.02583518054796663,
+          "minimum": 4.348444182847841,
+          "maximum": 4.51280041905594
+        },
+        "process_lifetime_peak_bytes": 4919169320,
+        "thermal_states": [
+          0
+        ],
+        "power_before": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=67567715)\t80%; AC attached; not charging present: true"
+      },
+      {
+        "cohort": 2,
+        "measured": 10,
+        "warmups": 3,
+        "ttft_seconds": {
+          "median": 0.395194396,
+          "iqr": 0.006037833250000013,
+          "minimum": 0.39015075,
+          "maximum": 0.404207708
+        },
+        "request_seconds": {
+          "median": 2.2016926045,
+          "iqr": 0.04512275999999993,
+          "minimum": 2.180634083,
+          "maximum": 2.281706916
+        },
+        "decode_evaluations_per_second": {
+          "median": 4.441730544732943,
+          "iqr": 0.10882196959998147,
+          "minimum": 4.280311922124116,
+          "maximum": 4.494404847988666
+        },
+        "process_lifetime_peak_bytes": 4919169320,
+        "thermal_states": [
+          0
+        ],
+        "power_before": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=67567715)\t80%; AC attached; not charging present: true"
+      }
+    ],
+    "raw_samples": 26,
+    "measured_samples": 20,
+    "independent_confirmation": true
+  },
+  "external": {
+    "ollama": {
+      "cohorts": [
+        {
+          "cohort": 1,
+          "warmups": 3,
+          "measured_samples": 10,
+          "request_seconds": {
+            "median": 0.120616479,
+            "iqr": 0.002324645499999972,
+            "minimum": 0.119204542,
+            "maximum": 0.123654166
+          },
+          "peak_conservative_process_sum_bytes": 3852391488,
+          "sum_observed_per_process_lifetime_peaks_bytes": 3890369600,
+          "conditions": "AC attached, thermal_state0 before and after every request",
+          "shares_control_process": true,
+          "fresh_process_since_prior_measured_cohort": null,
+          "raw_result": "artifacts/engine-comparison-2026-11-07/ollama-q4-cohort-1/result.json",
+          "ttft_seconds": {
+            "median": 0.020902499999999997,
+            "iqr": 0.0007108435000000024,
+            "minimum": 0.01991975,
+            "maximum": 0.021604417
+          },
+          "api_eval_tokens_per_second": {
+            "median": 71.39344852448392,
+            "iqr": 1.3683908126730557,
+            "minimum": 69.37654335708757,
+            "maximum": 72.57774607541509
+          },
+          "prompt_eval_seconds": {
+            "median": 1.35e-05,
+            "iqr": 1.8752500000000004e-06,
+            "minimum": 1.1542e-05,
+            "maximum": 1.6416e-05
+          },
+          "cached_prompt_tokens": [
+            14
+          ],
+          "server_pid": 93924
+        },
+        {
+          "cohort": 2,
+          "warmups": 3,
+          "measured_samples": 10,
+          "request_seconds": {
+            "median": 0.11915964600000001,
+            "iqr": 0.0034433337499999994,
+            "minimum": 0.11712025,
+            "maximum": 0.123941917
+          },
+          "peak_conservative_process_sum_bytes": 3851310024,
+          "sum_observed_per_process_lifetime_peaks_bytes": 3899184048,
+          "conditions": "AC attached, thermal_state0 before and after every request",
+          "shares_control_process": false,
+          "fresh_process_since_prior_measured_cohort": true,
+          "raw_result": "artifacts/engine-comparison-2026-11-07/ollama-q4-cohort-2/result.json",
+          "ttft_seconds": {
+            "median": 0.0206716875,
+            "iqr": 0.000850103750000001,
+            "minimum": 0.019933458,
+            "maximum": 0.021489167
+          },
+          "api_eval_tokens_per_second": {
+            "median": 72.47681312891649,
+            "iqr": 2.2189526378036817,
+            "minimum": 69.13378231173638,
+            "maximum": 73.61449469400524
+          },
+          "prompt_eval_seconds": {
+            "median": 1.39585e-05,
+            "iqr": 1.9999999999999995e-06,
+            "minimum": 1.1375e-05,
+            "maximum": 4.4125e-05
+          },
+          "cached_prompt_tokens": [
+            14
+          ],
+          "server_pid": 94316
+        }
+      ],
+      "raw_samples": 26,
+      "measured_samples": 20,
+      "control_samples": 1,
+      "independent_confirmation": true,
+      "process_reload_between_measured_cohorts": true
+    },
+    "vllm": {
+      "cohorts": [
+        {
+          "cohort": 1,
+          "warmups": 3,
+          "measured_samples": 10,
+          "request_seconds": {
+            "median": 0.1471383955,
+            "iqr": 0.0026320629999999623,
+            "minimum": 0.14562375,
+            "maximum": 0.151167709
+          },
+          "peak_conservative_process_sum_bytes": 5921790960,
+          "sum_observed_per_process_lifetime_peaks_bytes": 5948005408,
+          "conditions": "AC attached, thermal_state0 before and after every request",
+          "shares_control_process": false,
+          "fresh_process_since_prior_measured_cohort": null,
+          "raw_result": "artifacts/engine-comparison-2026-11-07/vllm-q4-cohort-1/result.json",
+          "ttft_seconds": {
+            "median": 0.050673723220825195,
+            "iqr": 0.0026123523712158203,
+            "minimum": 0.048995018005371094,
+            "maximum": 0.053459882736206055
+          },
+          "decode_after_first_tokens_per_second": {
+            "median": 80.66484731332596,
+            "iqr": 0.26119196986962834,
+            "minimum": 79.75452194768862,
+            "maximum": 81.10704301061817
+          },
+          "scheduled_to_first_seconds": {
+            "median": 0.04644112501409836,
+            "iqr": 0.0028189172298880294,
+            "minimum": 0.04476800002157688,
+            "maximum": 0.049381625023670495
+          },
+          "cached_prompt_tokens": [
+            0
+          ],
+          "explicit_shutdown": true,
+          "versions": {
+            "vllm": "0.33.0+cpu",
+            "vllm-metal": "0.33.0",
+            "mlx": "0.32.4",
+            "mlx-lm": "0.32.3.dev12+g4cfc64784",
+            "torch": "2.14.0"
+          }
+        },
+        {
+          "cohort": 2,
+          "warmups": 3,
+          "measured_samples": 10,
+          "request_seconds": {
+            "median": 0.1485809585,
+            "iqr": 0.0041333547499999845,
+            "minimum": 0.144439166,
+            "maximum": 0.152663459
+          },
+          "peak_conservative_process_sum_bytes": 5911534480,
+          "sum_observed_per_process_lifetime_peaks_bytes": 5934816168,
+          "conditions": "AC attached, thermal_state0 before and after every request",
+          "shares_control_process": false,
+          "fresh_process_since_prior_measured_cohort": true,
+          "raw_result": "artifacts/engine-comparison-2026-11-07/vllm-q4-cohort-2/result.json",
+          "ttft_seconds": {
+            "median": 0.05150437355041504,
+            "iqr": 0.0034156441688537598,
+            "minimum": 0.04844999313354492,
+            "maximum": 0.0542449951171875
+          },
+          "decode_after_first_tokens_per_second": {
+            "median": 80.88036433454985,
+            "iqr": 1.1633690636356135,
+            "minimum": 79.03719497785097,
+            "maximum": 81.10392580812244
+          },
+          "scheduled_to_first_seconds": {
+            "median": 0.04710118702496402,
+            "iqr": 0.003738499479368329,
+            "minimum": 0.044204499979969114,
+            "maximum": 0.05000066600041464
+          },
+          "cached_prompt_tokens": [
+            0
+          ],
+          "explicit_shutdown": true,
+          "versions": {
+            "vllm": "0.33.0+cpu",
+            "vllm-metal": "0.33.0",
+            "mlx": "0.32.4",
+            "mlx-lm": "0.32.3.dev12+g4cfc64784",
+            "torch": "2.14.0"
+          }
+        }
+      ],
+      "raw_samples": 26,
+      "measured_samples": 20,
+      "control_samples": 1,
+      "independent_confirmation": true,
+      "process_reload_between_measured_cohorts": true
+    }
+  },
+  "full_report": "artifacts/engine-comparison-2026-11-07/console-comparison-report.json",
+  "astra_review": {
+    "status": "approved",
+    "evidence": "artifacts/engine-comparison-2026-11-07/astra-review.json",
+    "scope": "Documentation/result publication only; excludes all O3/UI production WIP."
+  },
+  "ollama_import_provenance": "artifacts/engine-comparison-2026-11-07/ollama/import-provenance.json"
+}

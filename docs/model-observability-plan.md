@@ -131,8 +131,15 @@ an identified, qualified instrument; modelled bytes are not measured DRAM traffi
    raw samples, median and dispersion, then an independent confirmation run.
    Token-matched numerical and user-visible app comparisons are separate tracks.
    Record tokens and wall time together so reduced reasoning output cannot be
-   misreported as a faster kernel. Use MLX as an external reference, not proof
-   that Toklet can execute the same artifact.
+   misreported as a faster kernel. Before further UI work, run console engine
+   checks and compare with current stable Ollama and vLLM-Metal on this Mac.
+   Record exact engine versions, authenticated model/tokenizer identity,
+   precision/KV policy, prompt/output work and cache hits. Separate client TTFT
+   and request wall time from completed native/server phases, loading and
+   tokenization. Use the same weights where supported; label quantized or
+   otherwise unmatched configurations separately. Preserve the 6 GiB gate and
+   explicit unsupported/admission results. Use MLX/external engines as references,
+   not proof that Toklet can execute the same artifact.
 3. **Admitted workload matrix.** Start the existing Gemma pilot at its qualified
    context/chunk/reply limits, including a 384-input/128-output case only if its
    actual admission passes. For each new model run 128/512/1,024-input plus

@@ -1,6 +1,6 @@
 # Toklet improvement index
 
-Updated **7 November 2026**. This is the compact index of retained capabilities,
+Updated **8 November 2026**. This is the compact index of retained capabilities,
 measured gains and material restrictions. The [full dated history](archive/2026-11-07/improvements.md)
 preserves every previous entry, source revision, failed check and evidence link.
 Read it only when the current task needs that detail.
@@ -58,6 +58,19 @@ qualification scope live in [TODO](../TODO.md); acceptance policy is in
 | Gemma G3 assistant | Longer guard regresses about 21%; keep test-only, retain ordinary G2. [Decision](../benchmarks/results/2026-11-06-gemma-assistant-mtp-retention-v1.json). |
 | New device/context/default adoption | Requires its own applicable checks. Mac execution, metadata support or admission estimates do not establish unrestricted support. |
 
+## Console reference comparison
+
+All78 requests pass across two3warm+10 cohorts for each of3engines on M1Pro16GiB.
+Official BF16/G2 Toklet request medians2.184/2.202s; verified uncensoredMLX4bit
+Ollama121/119ms and vLLM-Metal147/149ms. Precision, weights, cache hits and timing
+boundaries differ; no engine speedup ratio or adoption qualification. All observed
+memory guards and observed external lifetime sums stay below6GiB. Ollama0.40.15 and
+local vLLM0.33.0/Metal0.33.0 are installed/verified. Original BF16 external runs
+fail tested admission; native Q4 format remains strict and rejects this candidate.
+Offline report/document checks pass; Astra approves scoped publication.
+[Comparison / limitations](console-engine-comparison.md),
+[full evidence](../artifacts/engine-comparison-2026-11-07/console-comparison-report.json).
+
 ## Current observability work
 
 [O1 Gemma summaries](o1-gemma-request-summaries.md) and
@@ -78,6 +91,14 @@ callback TTFT and controller handling/publication. Six real Gemma controls,
 52 UI and 52 headless paired requests, fresh Swift/app builds and 29 portable
 checks pass; Astra approves after a typed state/work join correction. Both overhead tracks remain
 unqualified/default-disabled. Visible-frame qualification and O3 remain open.
+A bounded display-frame lab is now in validation: strict clock/pixel fixtures,
+offline corruption checks, actual renderer crop inspection and fresh platform
+builds pass. User selected the primary display; first attempt failed strict viewport visibility
+before capture. Captured-frame/resource evidence and Astra remain pending; [current evidence](../artifacts/o2-ui-frames-2026-11-07/iteration-notes.json).
+O3 continues independently: explicit BF16 CLI/live-owner inventory passes initial
+unit/Metal/Clippy and Mac reconciliation (279ops/349tiles, exact5.814GB admission,
+4.918GB processpeak). Encode-time capture, final gates and Astra remain;
+[evidence](../artifacts/o3-gemma-runtime-2026-11-07/iteration-notes.json).
 [Evidence](../benchmarks/results/2026-11-07-o2a-gemma-phase-report-v1.json).
 
 The [R1 offline regression job](gemma-regression-job.md) now rejects incomparable
