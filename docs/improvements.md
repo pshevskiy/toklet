@@ -60,6 +60,13 @@ qualification scope live in [TODO](../TODO.md); acceptance policy is in
 
 ## Latest documentation work
 
+The user stopped O1 before integration/checks/Astra review and requested
+[current model research](models-under-30b-2026-11-07.md). The ten-model shortlist
+distinguishes total from active parameters and capability from local memory fit.
+Documentation [checks](../artifacts/models-under-30b-2026-11-07/checks.json) pass;
+no new engine capability or device qualification is claimed. O1 code remains
+unfinished and uncommitted.
+
 The [observability/performance proposal](observability-performance-proposal.md)
 was committed as `338c4e5b`. It proposes correlated request summaries, a bounded
 overhead budget, explainable selected operations and one measured performance

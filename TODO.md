@@ -15,10 +15,16 @@ Completed history is in the [dated archive](docs/archive/2026-11-07/README.md).
 - [x] Pass archive integrity, link/anchor, content-preservation and whitespace
   checks; [validation record](artifacts/context-archive-2026-11-07/checks.json).
 
-Next proposed implementation: **O1**, one managed Qwen2 Mac request-summary pilot
-with bounded overhead, followed by a matched baseline and one measured change.
-Implementation has not started; the proposal is not blanket authorization for
-its entire queue. No archive/research blocker is known.
+Current task: completed the [under-30B model research](docs/models-under-30b-2026-11-07.md).
+Next: await model selection; no new implementation is authorized by the research.
+User stopped O1 on 7 November before integration/checks/review.
+The unfinished summary types in `apple/Harness/NativeRequestSummary.swift` and
+source-list addition remain uncommitted and unqualified. O1's selected route
+was Gemma 4 E2B BF16 Mac, with Qwen2.5-1.5B next.
+- [ ] Implement bounded summaries and export with authoritative terminal state.
+- [ ] Run portable, Swift, real Mac and overhead checks; retain full logs.
+- [ ] Obtain combined Astra review, update evidence and commit.
+O1 is stopped at the user's request. No O1 checks or Astra approval are claimed.
 
 ## Working method
 
@@ -81,6 +87,7 @@ Preserve these rejected or restricted results:
 
 | Date | Result and checks | Evidence / next action |
 | --- | --- | --- |
+| 2026-11-07 | Researched ten current under-30B candidates from primary sources; capability/local-efficiency shortlist, not common-harness qualification. O1 stopped; unfinished code uncommitted and unchecked. Documentation checks pass. | [Research](docs/models-under-30b-2026-11-07.md), [checks](artifacts/models-under-30b-2026-11-07/checks.json); model selection next. |
 | 2026-11-07 | Archived full TODO/PLAN/improvement snapshots at `338c4e5b`; routine document bytes reduced about 97%. All snapshot text, 32 milestone criteria, four binding policy sections and both open items preserved; link/content/whitespace checks pass. Documentation-only. | [Archive manifest](docs/archive/2026-11-07/manifest.json), [checks](artifacts/context-archive-2026-11-07/checks.json); next proposed O1 pilot. |
 
 Older iterations and all completed checklists remain in the
