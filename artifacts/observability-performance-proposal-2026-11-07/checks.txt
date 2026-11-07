@@ -1,0 +1,19 @@
+Documentation-only proposal validation
+Date: 2026-11-07 Asia/Almaty
+Inspected engine: be28a3973614a13844463e02c8ff27244f11aeeb
+Content review: existing reports/Metal timing/Swift callback timing/planner distinguished from proposed additions.
+Content review: historical tile/G2 gains scoped; G3 rejection, device deferral, memory limits and quality gates preserved.
+Content review: no additive host-wait/GPU timing; callback versus visible text separated; modelled traffic distinguished from DRAM observations.
+Content review: summary overhead and memory caps explicitly proposed and unqualified; no implementation or new speedup claim.
+Research diagnostics: source-path probes returned missing-file errors; actual paths were discovered and read. No missing source dependency remains.
+Research diagnostics: ClickHouse /docs/development/performance-tests could not be opened; official ClickHouse performance-practices presentation used instead.
+Runtime tests/Astra code review: not applicable to documentation-only scope; none run or claimed.
+Final content review: verified managed dense constructor and Swift resource plan select FullLogits; corrected draft assumption before delivery.
+Local links/anchors checked: 22
+Distinct external primary-source references: 7
+git diff --check: exit 0
+Whitespace/fence checks: PASS
+SHA256 docs/observability-performance-proposal.md 2e692acdb2327e4c6d7e7b69a3f2e8ea5126375459ddf5479409e22dd45200df
+SHA256 TODO.md 15d78fbdf87edd60de885d6ba0e90287229ba5abd243d55fb2848bf6ded7440d
+SHA256 docs/improvements.md 096e1247d21d5adcda3e70f77de6704e4fc67314cceea1255a9dc8d2ce8742c3
+Failures: 0

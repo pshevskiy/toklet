@@ -1,6 +1,17 @@
 # Toklet progress checklist
 
 Last updated: **7 November 2026**. **Active Mac scope complete; iPhone deferred by user.**
+Current request: [observability/performance proposal](docs/observability-performance-proposal.md),
+grounded in current code and ClickHouse's performance practices.
+
+- [x] Inspect existing timing/profiling/planning and retained optimization evidence;
+  propose request summaries, bounded overhead and one measured performance delivery.
+- [x] Complete proposal link/content/whitespace checks; retain the
+  [check record](artifacts/observability-performance-proposal-2026-11-07/checks.txt).
+
+Next proposed implementation: O1, one managed Qwen2 Mac request-summary pilot;
+implementation has not started. No research blocker; iPhone remains deferred.
+
 The complete 10.28 GB official Gemma snapshot passed public download,
 six-file SHA verification, managed publication, Chat, Stop and a network-denied
 reopen. [Public journey](benchmarks/results/2026-11-07-gemma-public-resume-mac-v1.json).
@@ -834,6 +845,7 @@ completed or prerequisites for the active breadth-first queue.
 
 | Date | Iteration | Result, checks and review | Commit / next action |
 | --- | --- | --- | --- |
+| 2026-11-07 | Observability/performance proposal | Current code/evidence and primary ClickHouse sources reviewed; link/content/whitespace checks pass. No implementation, code/Astra review or new benchmark claim. | [Proposal](docs/observability-performance-proposal.md), [checks](artifacts/observability-performance-proposal-2026-11-07/checks.txt); next proposed O1 request-summary pilot. |
 | 2026-11-06 | Durable exact Mac Gemma checkpoints | Private lease and atomic generation, exact resumed suffix and complete-shard reuse pass. The first draft retired the shard too soon; snapshot publication now retires it. | Swift, signed Mac and Astra pass. The live public journey continues. [Evidence](benchmarks/results/2026-11-06-gemma-durable-public-checkpoint-v1.json). |
 | 2026-11-06 | Source-matched Mac code audit | Current code pins, 45 exports per slice, six Swift checks, signed build and Astra pass. Previous package preserved. | Production public download is running. [Evidence](benchmarks/results/2026-11-06-m8-mac-audit-v3.json). |
 | 2026-11-06 | G3 frozen Mac retention decision | All 26 pairs exact. Primary gain21.33%, longer guard regression21.06%, peak5.18GB. Strict checks and Astra pass. | Retain G2 default, keep G3 test-only. [Evidence](benchmarks/results/2026-11-06-gemma-assistant-mtp-retention-v1.json). |

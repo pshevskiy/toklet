@@ -11,6 +11,18 @@ iiPhone 14 Pro target and selected trials. CPU/scalar and the existing GPU/readb
 chunk defaults stay unchanged. Speedups below apply to the named workload and
 comparison, and cannot be added together. See the [M5 release decision](experiments/2026-10-15-m5-release.md).
 
+## 7 November 2026 — Observability and performance proposal
+
+The [proposal](observability-performance-proposal.md) builds on existing Rust/Swift
+timings, bounded GPU profiles, runtime planning and memory reports. It proposes
+correlated request summaries, an explicit overhead budget, inspectable selected
+operations and one measured optimization/adoption at a time. ClickHouse sources
+and current implementation/evidence links are included. This is research/design,
+not an implemented capability or a new performance result. Link/content/whitespace
+[checks pass](../artifacts/observability-performance-proposal-2026-11-07/checks.txt);
+first proposed implementation is O1 on managed Qwen2 Mac. No code/Astra review
+or runtime benchmark is claimed for this documentation-only iteration.
+
 ## Measured performance improvements
 
 Measurements use Apple M1 Pro, 16 GiB, macOS 26.6.2 and optimized release builds.
