@@ -53,8 +53,9 @@ workloads, memory, UI behavior and source review are still required. No p95/p99,
 thermal-equivalence or 1% summary-overhead qualification follows from ten samples
 or from the legacy bundle's limited environmental observations.
 
-The GitHub `observability-reports` job checks three named portable suites under
+The GitHub `observability-reports` job uses named portable suites under
 optimized Python, including rejection fixtures. Named imports fail when a suite
-is absent. The separately reviewed O2.B1 suite can be added after its commit. Model/GPU suites remain explicit
+is absent. The separately reviewed [O2.B1 suite](o2-gemma-workloads.md) adds
+six workload tests to the original three R1 suites, for 23 local CI checks. Model/GPU suites remain explicit
 local hardware jobs. New reports use fresh output directories and retain links to
 both bundles and the caller-supplied revision references.

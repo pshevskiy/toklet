@@ -1,0 +1,241 @@
+{
+  "format": "toklet-o2b-gemma-workloads-v1",
+  "status": "checks_passed_astra_approved",
+  "measurement_base_revision": "f9477e999041252fe2f83fce68bb0e253b2e584d",
+  "hardware": "Apple M1 Pro",
+  "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.2\nBuildVersion:\t\t25G83",
+  "power_before": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=67567715)\t80%; AC attached; not charging present: true",
+  "power_after": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=67567715)\t80%; AC attached; not charging present: true",
+  "model": {
+    "profile": "google/gemma-4-E2B-it",
+    "revision": "70af34e20bd4b7a91f0de6b22675850c43922a03",
+    "manifest_sha256": "654dc6dfd66fd893a24f0faa39355b71d5e7ffc3f53c2dac394dfcfd9ed95298",
+    "precision": "official BF16/G2, FP32 KV, FullLogits",
+    "capacity": 512,
+    "chunk": 32
+  },
+  "measurement_archive_sha256": "30e6265b1e94e98d6d3d8812490f6dd7a06d01e7e9e8d4f2875cf351e857a4b9",
+  "cold_batches": [
+    {
+      "batch": 1,
+      "measured": 10,
+      "warmups": 3,
+      "median_ms": {
+        "launch_to_ready_receipt_ms": 50860.6755415,
+        "entry_to_prepared_ms": 50848.14925,
+        "model_load_ms": 50819.309792,
+        "session_ms": 24.994896,
+        "codec_cancel_ms": 0.027979
+      }
+    },
+    {
+      "batch": 2,
+      "measured": 10,
+      "warmups": 3,
+      "median_ms": {
+        "launch_to_ready_receipt_ms": 50856.622354,
+        "entry_to_prepared_ms": 50845.580291499995,
+        "model_load_ms": 50820.786521,
+        "session_ms": 25.5115625,
+        "codec_cancel_ms": 0.0227915
+      }
+    }
+  ],
+  "continuation_batches": [
+    {
+      "batch": 1,
+      "workloads": {
+        "reset": {
+          "measured_pairs": 10,
+          "native_phase_median_seconds": {
+            "prefillSeconds": 0.39729189600000003,
+            "decodeSeconds": 0.6791828959999999,
+            "samplingSeconds": 0.004157167,
+            "totalSeconds": 1.0811785624999999
+          },
+          "legacy_caller_median_ms": 1085.266208,
+          "observed_caller_median_ms": 1081.1802295,
+          "observed_call_overhead_median_pct": {
+            "total_ms": -0.3723368346135292,
+            "ttft_ms": -0.20636181260875186
+          }
+        },
+        "append": {
+          "measured_pairs": 10,
+          "native_phase_median_seconds": {
+            "prefillSeconds": 0.227241625,
+            "decodeSeconds": 0.6812795835000001,
+            "samplingSeconds": 0.0041593335,
+            "totalSeconds": 0.9131622705
+          },
+          "legacy_caller_median_ms": 906.2058955,
+          "observed_caller_median_ms": 913.163896,
+          "observed_call_overhead_median_pct": {
+            "total_ms": 0.8208080965195652,
+            "ttft_ms": 0.44195774632813656
+          }
+        },
+        "fully_cached": {
+          "measured_pairs": 10,
+          "native_phase_median_seconds": {
+            "prefillSeconds": 0.0,
+            "decodeSeconds": 0.6767765625,
+            "samplingSeconds": 0.00415277,
+            "totalSeconds": 0.680988583
+          },
+          "legacy_caller_median_ms": 682.6304795,
+          "observed_caller_median_ms": 680.9900625,
+          "observed_call_overhead_median_pct": {
+            "total_ms": -0.6434979371025384,
+            "ttft_ms": 0.4239832504324692
+          }
+        },
+        "pending": {
+          "measured_pairs": 10,
+          "native_phase_median_seconds": {
+            "prefillSeconds": 0.2251468955,
+            "decodeSeconds": 0.453785854,
+            "samplingSeconds": 0.003143917,
+            "totalSeconds": 0.685832479
+          },
+          "legacy_caller_median_ms": 680.268854,
+          "observed_caller_median_ms": 685.8339585,
+          "observed_call_overhead_median_pct": {
+            "total_ms": 0.31472551241235047,
+            "ttft_ms": 0.34500077360181125
+          }
+        },
+        "edited_prefix": {
+          "measured_pairs": 10,
+          "native_phase_median_seconds": {
+            "prefillSeconds": 0.3959947085,
+            "decodeSeconds": 0.6763967495,
+            "samplingSeconds": 0.004139249500000001,
+            "totalSeconds": 1.0761606664999999
+          },
+          "legacy_caller_median_ms": 1081.594646,
+          "observed_caller_median_ms": 1076.1620619999999,
+          "observed_call_overhead_median_pct": {
+            "total_ms": -0.5040802319790871,
+            "ttft_ms": -0.27266027009053007
+          }
+        }
+      }
+    },
+    {
+      "batch": 2,
+      "workloads": {
+        "reset": {
+          "measured_pairs": 10,
+          "native_phase_median_seconds": {
+            "prefillSeconds": 0.39671531250000003,
+            "decodeSeconds": 0.6760997915,
+            "samplingSeconds": 0.0041164795,
+            "totalSeconds": 1.075115583
+          },
+          "legacy_caller_median_ms": 1080.0087085,
+          "observed_caller_median_ms": 1075.1172495,
+          "observed_call_overhead_median_pct": {
+            "total_ms": -0.10660912986475979,
+            "ttft_ms": 0.28170504114783945
+          }
+        },
+        "append": {
+          "measured_pairs": 10,
+          "native_phase_median_seconds": {
+            "prefillSeconds": 0.225493521,
+            "decodeSeconds": 0.6788440825,
+            "samplingSeconds": 0.0041358545,
+            "totalSeconds": 0.9099526250000001
+          },
+          "legacy_caller_median_ms": 909.488042,
+          "observed_caller_median_ms": 909.954375,
+          "observed_call_overhead_median_pct": {
+            "total_ms": -0.682544883409153,
+            "ttft_ms": -0.09648817334694249
+          }
+        },
+        "fully_cached": {
+          "measured_pairs": 10,
+          "native_phase_median_seconds": {
+            "prefillSeconds": 0.0,
+            "decodeSeconds": 0.6760108535,
+            "samplingSeconds": 0.004126625,
+            "totalSeconds": 0.6801507495
+          },
+          "legacy_caller_median_ms": 682.004958,
+          "observed_caller_median_ms": 680.1524380000001,
+          "observed_call_overhead_median_pct": {
+            "total_ms": -0.246020049159279,
+            "ttft_ms": 0.20353568282034384
+          }
+        },
+        "pending": {
+          "measured_pairs": 10,
+          "native_phase_median_seconds": {
+            "prefillSeconds": 0.22632558349999998,
+            "decodeSeconds": 0.4521199575,
+            "samplingSeconds": 0.0030975409999999997,
+            "totalSeconds": 0.683539354
+          },
+          "legacy_caller_median_ms": 679.691792,
+          "observed_caller_median_ms": 683.540937,
+          "observed_call_overhead_median_pct": {
+            "total_ms": 0.16807254491185697,
+            "ttft_ms": 0.20250577840270623
+          }
+        },
+        "edited_prefix": {
+          "measured_pairs": 10,
+          "native_phase_median_seconds": {
+            "prefillSeconds": 0.3966554375,
+            "decodeSeconds": 0.675858375,
+            "samplingSeconds": 0.004148979,
+            "totalSeconds": 1.0750675415
+          },
+          "legacy_caller_median_ms": 1075.8479164999999,
+          "observed_caller_median_ms": 1075.0692295,
+          "observed_call_overhead_median_pct": {
+            "total_ms": -0.07860519193164661,
+            "ttft_ms": -0.09186521557764116
+          }
+        }
+      }
+    }
+  ],
+  "sustained": {
+    "measured_requests": 554,
+    "wall_seconds": 601.060494209,
+    "active_native_caller_seconds": 600.996650756,
+    "duty_cycle": 0.9998937819843176,
+    "total_ms_median": 1078.6610620000001,
+    "total_ms_range": [
+      1062.478041,
+      1449.959125
+    ],
+    "thermal_states": [
+      0
+    ],
+    "process_lifetime_peak_bytes": 4922413304,
+    "tail_percentiles_qualified": false
+  },
+  "raw_request_records": 854,
+  "max_process_lifetime_peak_bytes": 4923953400,
+  "measurement_result_sha256": "9e4efff92e0bd68176d4afed09582c3c924dc1099cc34cdde2ba05370b0f5173",
+  "evidence": {
+    "result": "artifacts/o2b-gemma-workloads-2026-11-07/acceptance-final/result.json",
+    "raw_process_receipts": "artifacts/o2b-gemma-workloads-2026-11-07/acceptance-final/commands.json",
+    "strict_recomputation": "artifacts/o2b-gemma-workloads-2026-11-07/strict-recomputation.json",
+    "checks_commit_review": "artifacts/o2b-gemma-workloads-2026-11-07/checks.json",
+    "scope": "docs/o2-gemma-workloads.md"
+  },
+  "limitations": [
+    "Uncontrolled filesystem/driver caches; each cold trial creates a new process; no cold-storage claim",
+    "Raw numerical fixed-token native C API, separate from managed Chat/UI; observed report copies existing native timers",
+    "No new engine change or speedup/adoption claim",
+    "Observed native API comparison does not qualify whole-summary overhead; default remains disabled",
+    "Boundary384+128 checks one pair only; no performance/tail/full-context or physical iPhone qualification",
+    "UI/render and conversion/compilation split remain unavailable; O2.B2/O3 follow"
+  ],
+  "astra_review": "artifacts/o2b-gemma-workloads-2026-11-07/astra-review.md"
+}

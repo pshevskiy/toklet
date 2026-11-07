@@ -66,7 +66,14 @@ approval and required checks. Native46 preserves the legacy ABI and adds a
 completed-report copy; summary schema2 carries phase/work counters. Matched warm
 reports identify decode as the dominant phase; no kernel speedup is claimed.
 The ≤1% overhead bound remains unqualified, so collection stays opt-in/default
-disabled. O2.B cold/continuation/sustained/UI work is next.
+disabled. [O2.B1 numerical coverage](o2-gemma-workloads.md) now adds repeated
+load/continuation comparisons and 601 seconds of sustained work. Both batches
+pass token/state and counter checks; maximum child-process lifetime peak is
+4.924 GB, below 6 GiB. Six new portable tests, strict standalone Swift and Astra
+review pass; unchanged production checks are reused by verified source pins.
+No optimization gain or UI/whole-app/tail qualification follows.
+[O2.B1 evidence](../benchmarks/results/2026-11-07-o2b-gemma-workloads-v1.json).
+UI timing and O3 are next.
 [Evidence](../benchmarks/results/2026-11-07-o2a-gemma-phase-report-v1.json).
 
 The [R1 offline regression job](gemma-regression-job.md) now rejects incomparable
@@ -86,14 +93,14 @@ Uncensored MLX is preferred with per-artifact quality/admission gates; conversio
 gaps and an over-budget F32 derivative are explicit. Content/link/whitespace
 [checks pass](../artifacts/model-observability-plan-2026-11-07/checks.json), with
 binding acceptance policy unchanged. This adds no qualified runtime capability
-and does not resume O1.
+in those documentation-only commits; later O1/O2 deliveries are listed above.
 
 The user stopped O1 before integration/checks/Astra review and requested
 [current model research](models-under-30b-2026-11-07.md). The ten-model shortlist
 distinguishes total from active parameters and capability from local memory fit.
 Documentation [checks](../artifacts/models-under-30b-2026-11-07/checks.json) pass;
-no new engine capability or device qualification is claimed. O1 code remains
-unfinished and uncommitted.
+those research commits claimed no new engine capability or device qualification.
+O1 was subsequently completed as recorded above.
 
 The [observability/performance proposal](observability-performance-proposal.md)
 was committed as `338c4e5b`. It proposes correlated request summaries, a bounded

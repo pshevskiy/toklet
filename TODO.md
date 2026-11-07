@@ -17,59 +17,42 @@ Completed history is in the [dated archive](docs/archive/2026-11-07/README.md).
   checks; [validation record](artifacts/context-archive-2026-11-07/checks.json).
 
 Active goal: implement the whole selected observability/performance/model
-roadmap, with Gemma first, then Qwen3.5-4B and 9B and the under-4B track.
-Current milestone: O2.B1 numerical cold/continuation/sustained measurement harness.
-O2.A phase metrics and matched warm reporting committed as `f9477e99`.
-The corrected O2.B1 GPU suite runs sequentially. R1 offline comparison is
-complete after checks and Astra approval; its commit does not change measured
-production inputs.
-- [x] Add observed-generation ABI and Swift phase/counter coverage; preserve the
-  legacy ABI and unknown/error/clock meanings.
-- [x] Add strict offline report with matched identity/work and duration enclosure;
-  retain raw data and explicit coverage gaps.
-- [x] Pass required Cargo, native package/C, strict Swift and simulator Xcode
-  checks, repeated real Gemma baseline and Astra review; commit this stage.
-[Scope](docs/o2-gemma-cost-report.md),
-[result/commit](artifacts/o2-gemma-metrics-2026-11-07/checks.json).
-- [ ] Add a separate bounded raw-token harness for new-process load, exact append,
-  fully cached/pending and edited-prefix requests, capacity/Stop controls and
-  ten-minute sustained resets; preserve managed Chat as a separate track.
-- [ ] Run pinned matched repetitions, required checks and combined Astra review;
-  commit after acceptance. UI render/final-answer and remaining native probes
-  follow as O2.B2; no UI completion claim from a headless workload.
-- Checks so far: strict Swift compile passed after local helper visibility fix;
-  Python5 normal/optimized passed after correcting independent reference labels.
-  Sandboxed Metal reported no device; authorized hardware controls running. Standalone load/generate now use
-  explicit autorelease pools as the worker does; initial control is diagnostic
-  only, superseded by the frozen runner build.
-  Production source pins match all352 native and42 Swift inputs, allowing
-  prior Cargo/package/controller/Xcode checks to be reused.
-  [Working evidence](artifacts/o2b-gemma-workloads-2026-11-07/check-reuse.json).
-- [x] Deliver [R1 offline screening](docs/gemma-regression-job.md): nine gate tests,
-  local named CI14+3, real-bundle self-rejection and Astra approval after three
-  findings; [checks/commit](artifacts/r1-gemma-regression-2026-11-07/checks.json).
-- O2.B1 first cohort stopped at a reporting assumption: edited committed Gemma
-  prefixes replay0/15, not reuse14/1. Exact tokens/state passed; concrete owner
-  source confirms full replay. Corrected tests pass and a fresh complete run
-  replaces the interrupted cohort and potentially CPU-contended cold samples.
-  [Iteration notes](artifacts/o2b-gemma-workloads-2026-11-07/iteration-notes.json).
-The full goal remains active; O3/R1 and model/performance deliveries follow.
-O1 managed Gemma 4 E2B BF16 Mac request summaries are complete:
-- [x] Implement bounded opt-in collection/export, typed terminal state and
-  explicit unavailable-field/budget-skip reasons; disabled mode remains default.
-- [x] Pass fmt/strict Metal Clippy, CPU594/Metal-feature713 tests, 16 portable
-  Python checks, strict Swift controller/render/iOS/simulator compilation,
-  unsigned Xcode simulator build and current-engine Gemma controls.
-- [x] Complete two 3-warmup/10-measured-pair overhead batches with full caller
-  boundaries and exact token/state parity. The 1% bound remains unqualified.
-- [x] Resolve Astra findings and obtain final scoped approval before commit.
-[Result/commit evidence](artifacts/o1-gemma-summary-2026-11-07/checks.json),
-[pilot scope](docs/o1-gemma-request-summaries.md),
-[Astra approval](artifacts/o1-gemma-summary-2026-11-07/astra-final.md).
-Next: O2 matched baselines/offline reporting and missing native/UI observations;
-then O3/R1 and measured improvements under the [model plan](docs/model-observability-plan.md).
-Qwen2.5-1.5B remains a regression reference. Uncensored MLX adoption is separate
-from this official BF16 pilot. Larger under-30B models remain research options.
+roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
+under-4B track; [model/metric plan](docs/model-observability-plan.md).
+
+Current/next milestone: **O2.B2 UI observation**, then O3 concrete runtime/profile
+attribution. The full goal remains active; performance/model work follows.
+- [ ] Correlate request IDs with UI publication and qualified first-visible/
+  final-answer observations; preserve explicit unknowns and bounded retention.
+- [ ] Validate a bounded diagnostic display-frame instrument, clock conversion,
+  capture coverage and actual Mac behavior; lifecycle callbacks precede rendering.
+  [Research](artifacts/o2-ui-observation-2026-11-07/research.md).
+- [ ] Run applicable checks and overhead trials, resolve Astra review, commit.
+  iPhone remains deferred; no render or device qualification from headless runs.
+
+Completed observability stages (full logs/review/commit in linked receipts):
+- [x] [O1 opt-in summaries](docs/o1-gemma-request-summaries.md), `4e160566`:
+  bounded request outcomes/state/memory; full caller-boundary overhead trials.
+- [x] [O2.A native phases/report](docs/o2-gemma-cost-report.md), `f9477e99`:
+  additive ABI, typed phases and strict matched warm report; required checks/Astra pass.
+- [x] [R1 regression job](docs/gemma-regression-job.md), `de7ee673`:
+  comparable independent bundles, noisy/failure receipts and named portable CI.
+- [x] [O2.B1 numerical workloads](docs/o2-gemma-workloads.md): two load/continuation
+  batches, 854 raw records and 601.060 seconds/554 sustained requests pass. Strict
+  Swift, six new tests, local CI 14+9 and Astra pass; 352 native/42 Swift inputs
+  match prior required checks. Report-only guards recompute unchanged data.
+  [Checks/review/commit](artifacts/o2b-gemma-workloads-2026-11-07/checks.json).
+
+Summary mode stays opt-in/default-disabled: the 1% overhead bound is unqualified.
+Existing single-turn decode dominates; no new optimization gain is claimed.
+O3 must cover the actual official BF16 tiled projection/CPU graph and file-backed
+PLE, not reuse dense graph event ordering.
+[Source pointers](artifacts/o2b-gemma-workloads-2026-11-07/o3-scope.txt).
+After observability, screen exact-prefix use at the Gemma Chat caller, which
+currently resets every request; [hypothesis/constraints](artifacts/o2b-gemma-workloads-2026-11-07/prefix-candidate.json).
+Uncensored MLX adoption and larger/new model quality/memory admission remain
+separate. Qwen2.5-1.5B remains a regression reference; under-30B research options
+do not expand scope or the 6 GiB ceiling.
 
 ## Working method
 
@@ -132,6 +115,7 @@ Preserve these rejected or restricted results:
 
 | Date | Result and checks | Evidence / next action |
 | --- | --- | --- |
+| 2026-11-07 | O2.B1 numerical coverage complete: strict Swift/new Python and reused production gates pass; two batches plus 601 seconds sustained, max lifetime peak 4.924 GB. Astra approves. Earlier counter-assumption/interference run is superseded by fresh captures; no quality gate changed. | [Scope](docs/o2-gemma-workloads.md), [result](benchmarks/results/2026-11-07-o2b-gemma-workloads-v1.json), [checks/commit](artifacts/o2b-gemma-workloads-2026-11-07/checks.json); next UI/O3. |
 | 2026-11-07 | R1 offline regression screening complete: comparable frozen identity/work, independent cohorts, explicit noisy/failure receipts and named portable CI. Local17 tests/Astra pass; no runtime or optimization qualification. O2.B1 corrected suite running. | [Job](docs/gemma-regression-job.md), [checks/commit](artifacts/r1-gemma-regression-2026-11-07/checks.json); next O2.B1 completion, then UI/O3. |
 | 2026-11-07 | O2.A native46 API/schema2 phases and strict matched warm reports complete. Required checks and Astra approval pass after parser clock/enclosure fixes. Decode dominates this workload; overhead remains unqualified/default-disabled. | [Report](docs/o2-gemma-cost-report.md), [receipt](benchmarks/results/2026-11-07-o2a-gemma-phase-report-v1.json), [checks/commit](artifacts/o2-gemma-metrics-2026-11-07/checks.json); next O2.B. |
 | 2026-11-07 | O1 Gemma opt-in summaries complete; Cargo, strict Swift/Xcode, real output/state/failure/admission controls pass. Corrected full-boundary overhead remains unqualified; Astra approves after three fixes. Earlier archive mismatch, compiler sandbox/type failures and superseded timings are retained in check notes/logs. | [Pilot](docs/o1-gemma-request-summaries.md), [result](benchmarks/results/2026-11-07-o1-gemma-summary-v1.json), [checks/commit](artifacts/o1-gemma-summary-2026-11-07/checks.json); next O2 within full-roadmap goal. |
