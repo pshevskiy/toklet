@@ -20,14 +20,25 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next milestone: **O2.B2 UI observation**, then O3 concrete runtime/profile
-attribution. The full goal remains active; performance/model work follows.
+Current/next milestone: **O2.B2.B visible-frame diagnostic**, then O3 concrete
+runtime/profile attribution. O3 can proceed independently if OS capture
+authorization is unavailable. The full goal remains active; performance/model
+work follows. Screen Recording preflight is false; no permission was requested.
+O2.B2.A bounded Send/preparation/publication correlation is reviewed and delivered
+in the existing summary ring; no lifecycle/render conflation.
+[Iteration evidence](artifacts/o2-ui-publication-2026-11-07/iteration-notes.json).
+- [x] O2.B2.A publication: strict fixtures, six real controller controls,
+  52 UI +52 headless paired requests, fresh Swift/Mac/simulator builds and
+  29 portable checks pass. Astra approves after typed state/work join fix;
+  strict offline recomputation preserves captures. Both overhead bounds remain
+  unqualified/default-disabled. [Checks/review/commit](artifacts/o2-ui-publication-2026-11-07/checks.json).
 - [ ] Correlate request IDs with UI publication and qualified first-visible/
   final-answer observations; preserve explicit unknowns and bounded retention.
 - [ ] Validate a bounded diagnostic display-frame instrument, clock conversion,
   capture coverage and actual Mac behavior; lifecycle callbacks precede rendering.
   [Research](artifacts/o2-ui-observation-2026-11-07/research.md).
-- [ ] Run applicable checks and overhead trials, resolve Astra review, commit.
+- [ ] For the visible-frame instrument run applicable checks, resolve Astra
+  review and commit.
   iPhone remains deferred; no render or device qualification from headless runs.
 
 Completed observability stages (full logs/review/commit in linked receipts):
@@ -115,6 +126,7 @@ Preserve these rejected or restricted results:
 
 | Date | Result and checks | Evidence / next action |
 | --- | --- | --- |
+| 2026-11-07 | O2.B2.A bounded UI publication complete: six real Gemma controls, 104 paired requests across UI/headless tracks, fresh strict Swift/app checks and 29 portable tests pass. Astra approves state/count join fix; timing captures recompute unchanged. Both 1% overhead bounds remain unqualified/default-disabled. | [Scope](docs/o2-ui-publication.md), [result](benchmarks/results/2026-11-07-o2-ui-publication-v1.json), [checks/commit](artifacts/o2-ui-publication-2026-11-07/checks.json); visible-frame/O3 remain open. |
 | 2026-11-07 | O2.B1 numerical coverage complete: strict Swift/new Python and reused production gates pass; two batches plus 601 seconds sustained, max lifetime peak 4.924 GB. Astra approves. Earlier counter-assumption/interference run is superseded by fresh captures; no quality gate changed. | [Scope](docs/o2-gemma-workloads.md), [result](benchmarks/results/2026-11-07-o2b-gemma-workloads-v1.json), [checks/commit](artifacts/o2b-gemma-workloads-2026-11-07/checks.json); next UI/O3. |
 | 2026-11-07 | R1 offline regression screening complete: comparable frozen identity/work, independent cohorts, explicit noisy/failure receipts and named portable CI. Local17 tests/Astra pass; no runtime or optimization qualification. O2.B1 corrected suite running. | [Job](docs/gemma-regression-job.md), [checks/commit](artifacts/r1-gemma-regression-2026-11-07/checks.json); next O2.B1 completion, then UI/O3. |
 | 2026-11-07 | O2.A native46 API/schema2 phases and strict matched warm reports complete. Required checks and Astra approval pass after parser clock/enclosure fixes. Decode dominates this workload; overhead remains unqualified/default-disabled. | [Report](docs/o2-gemma-cost-report.md), [receipt](benchmarks/results/2026-11-07-o2a-gemma-phase-report-v1.json), [checks/commit](artifacts/o2-gemma-metrics-2026-11-07/checks.json); next O2.B. |

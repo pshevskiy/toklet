@@ -52,6 +52,53 @@ enum NativeGenerationMetricStatus: String, Codable, Sendable {
     case notStarted, completed, generationFailed, invalidRecord
 }
 
+// UI model publication is distinct from rendering. This fixed-size record has
+// no text or view references; its clock is the same DispatchTime uptime clock.
+struct NativeUIPublication: Codable, Sendable {
+    enum Outcome: String, Codable, Sendable {
+        case published, workerRejected, submissionRejected, workerClosed, messageMissing
+    }
+    let submittedUptimeNanoseconds: UInt64
+    let preparationMilliseconds: Double
+    var handledUptimeNanoseconds: UInt64?
+    var publicationUptimeNanoseconds: UInt64?
+    var callbackTTFTMilliseconds: Double?
+    var terminalHandlingMilliseconds: Double?
+    var workerToHandlingMilliseconds: Double?
+    var publicationMilliseconds: Double?
+    var firstNonemptyPublicationMilliseconds: Double?
+    // This pilot's audited template is explicitly non-thinking. This is answer
+    // publication, never first-answer visibility or proof of completed prose.
+    var firstAnswerPublicationMilliseconds: Double?
+    var selectedConversation: Bool?
+    var nonemptyText: Bool?
+    var outcome: Outcome?
+
+    init?(submitted: UInt64, workerSubmitted: UInt64) {
+        guard submitted <= workerSubmitted else { return nil }
+        submittedUptimeNanoseconds = submitted
+        preparationMilliseconds = Double(workerSubmitted - submitted) / 1e6
+    }
+    mutating func finish(outcome: Outcome, selected: Bool, nonempty: Bool,
+                         workerCompleted: UInt64, now: UInt64) -> Bool {
+        guard handledUptimeNanoseconds == nil, outcome == .published || !nonempty,
+              submittedUptimeNanoseconds <= workerCompleted, workerCompleted <= now else { return false }
+        self.outcome = outcome; selectedConversation = selected; nonemptyText = nonempty
+        handledUptimeNanoseconds = now
+        terminalHandlingMilliseconds = Double(now - submittedUptimeNanoseconds) / 1e6
+        workerToHandlingMilliseconds = Double(now - workerCompleted) / 1e6
+        if outcome != .messageMissing {
+            publicationUptimeNanoseconds = now
+            publicationMilliseconds = terminalHandlingMilliseconds
+        }
+        if outcome == .published && selected && nonempty {
+            firstNonemptyPublicationMilliseconds = publicationMilliseconds
+            firstAnswerPublicationMilliseconds = publicationMilliseconds
+        }
+        return true
+    }
+}
+
 struct NativeRequestObservation: Sendable {
     enum Phase: String, Codable { case queued, encoding, evaluation, decoding, completion }
     var phase: Phase = .queued
@@ -133,6 +180,7 @@ struct NativeRequestSummary: Codable, Sendable {
     var failedPhase: NativeRequestObservation.Phase?
     var status: UInt32 = 0
     var evaluationStarted = false
+    var ui: NativeUIPublication?
 
     mutating func observeCallback(_ elapsed: Double, uptime: UInt64) {
         if callbackTokens == 0 { firstCallbackNanoseconds = uptime; nativeFirstTokenSeconds = elapsed }
@@ -152,6 +200,9 @@ struct NativeRequestSummary: Codable, Sendable {
         requestMilliseconds = Double(now - submittedUptimeNanoseconds) / 1e6
         queueMilliseconds = startedUptimeNanoseconds.map { Double($0 - submittedUptimeNanoseconds) / 1e6 }
         callbackTTFTMilliseconds = firstCallbackNanoseconds.map { Double($0 - submittedUptimeNanoseconds) / 1e6 }
+        if let start = ui?.submittedUptimeNanoseconds, let first = firstCallbackNanoseconds, first >= start {
+            ui?.callbackTTFTMilliseconds = Double(first - start) / 1e6
+        }
         cancelToTerminalMilliseconds = cancellationUptimeNanoseconds.map { Double(now - $0) / 1e6 }
         if let observation {
             encodingNanoseconds = observation.encodingNanoseconds
@@ -181,21 +232,45 @@ final class NativeRequestSummaryStore {
     private(set) var sequence: UInt64 = 0
     private(set) var exportErrors: UInt64 = 0
     private(set) var budgetSkippedRecords: UInt64 = 0
+    private(set) var uiUpdateErrors: UInt64 = 0
     static func fitsBudget(admitted: UInt64, budget: UInt64) -> Bool {
         admitted <= budget && reservedBytes <= budget - admitted
     }
     func noteBudgetSkip() { budgetSkippedRecords = min(budgetSkippedRecords, UInt64.max - 1) + 1 }
     func noteExportError() { exportErrors = min(exportErrors, UInt64.max - 1) + 1 }
+    private func noteUIError() { uiUpdateErrors = min(uiUpdateErrors,UInt64.max-1)+1 }
     init() {
         precondition(MemoryLayout<NativeRequestSummary>.stride < 16 * 1024)
         precondition(MemoryLayout<NativeRequestSummary?>.stride * Self.capacity < Int(Self.reservedBytes) / 2)
     }
     func begin(id: UUID, maximum: UInt32, generation: UInt64, now: UInt64,
-               context: NativeContextFacts?, configuration: NativeSessionConfiguration?) -> NativeRequestSummary {
+               context: NativeContextFacts?, configuration: NativeSessionConfiguration?,
+               uiSubmitted: UInt64? = nil) -> NativeRequestSummary {
         sequence = min(sequence, UInt64.max - 1) + 1
-        return NativeRequestSummary(sequence:sequence,requestID:id,stateGeneration:generation,
+        var record = NativeRequestSummary(sequence:sequence,requestID:id,stateGeneration:generation,
             submittedUptimeNanoseconds:now,requestedOutputTokens:maximum,
             before:context.map(NativeRequestSummary.State.init),capacity:configuration?.capacity,chunk:configuration?.chunk)
+        if let uiSubmitted {
+            record.ui = NativeUIPublication(submitted:uiSubmitted,workerSubmitted:now)
+            if record.ui == nil { noteUIError() }
+        }
+        return record
+    }
+    // Both UUID and Send stamp bind the update. Ambiguous IDs, stale receipts,
+    // duplicate acknowledgments or invalid clocks never alter another record.
+    func publishUI(id: UUID, submitted: UInt64, outcome: NativeUIPublication.Outcome,
+                   selected: Bool, nonempty: Bool, now: UInt64) {
+        var found: Int?
+        for index in records.indices {
+            guard let record = records[index], record.requestID == id,
+                  record.ui?.submittedUptimeNanoseconds == submitted else { continue }
+            guard found == nil else { noteUIError(); return }
+            found = index
+        }
+        guard let found, var record = records[found], let completed = record.completedUptimeNanoseconds,
+              record.ui?.finish(outcome:outcome,selected:selected,nonempty:nonempty,
+                                workerCompleted:completed,now:now) == true else { noteUIError(); return }
+        records[found] = record
     }
     func append(_ record: NativeRequestSummary) {
         if records[next] != nil { dropped = min(dropped, UInt64.max - 1) + 1 }
@@ -204,7 +279,8 @@ final class NativeRequestSummaryStore {
     func snapshot() -> ([NativeRequestSummary], UInt64) {
         ((0..<Self.capacity).compactMap { records[(next + $0) % Self.capacity] }, dropped)
     }
-    static func export(_ records: [NativeRequestSummary], dropped: UInt64, exportErrors: UInt64 = 0, budgetSkipped: UInt64 = 0) throws -> Data {
+    static func export(_ records: [NativeRequestSummary], dropped: UInt64, exportErrors: UInt64 = 0,
+                       budgetSkipped: UInt64 = 0, uiErrors: UInt64 = 0) throws -> Data {
         struct Manifest: Encodable {
             let schemaVersion = 2
             let kind = "request_summary_manifest"
@@ -218,7 +294,9 @@ final class NativeRequestSummaryStore {
             let unavailable = ["engine/package build identity: bind export to runner build receipt",
                 "GPU dispatch/wait/readback counters: not exposed by this ABI",
                 "nativeMetrics absent: nativeMetricStatus explains notStarted, generationFailed or invalidRecord; partial native reports are unavailable",
-                "ttft_event_ms and first-visible/final-answer/UI-update/request-UI timings: no calibrated event-to-host or render acknowledgment",
+                "ttft_event_ms and first-visible/final-answer/UI-update timings: no calibrated event-to-host or render acknowledgment",
+                "ui absent: no scoped Send stamp (headless caller, mode disabled, unsupported profile or budget); ui outcome absent: terminal UI handling not observed",
+                "ui publication/handling stamps describe controller state mutation, not rendering; selected conversation is not window visibility",
                 "load/conversion/compile phases and memory pressure: separate existing load receipt, not per-request measurements",
                 "token interval distribution: only first/last bounded aggregates in O1",
                 "decode evaluation count: not exposed by the native Report; before/after counts are session totals",
@@ -228,19 +306,20 @@ final class NativeRequestSummaryStore {
                 "missing phase/footprint: phase not reached or instrument unavailable"]
             let buildIdentity: String
             let recordScope = "accepted Gemma Chat requests, plus idle/busy submit rejections while identity is visible; other models unsupported"
-            let memoryAdmission = "1MiB headroom check for collection/export; fixed ring allocated at worker initialization; native admission unchanged"
+            let memoryAdmission = "1MiB headroom check for collection/export including fixed UI fields; fixed ring allocated at worker initialization; native admission unchanged"
             let metricScope = "request terminal is worker publication, not terminal UI; token rates use emitted callbacks, hidden stops excluded"
             let stateGenerationScope = "worker snapshot revision at submission; capacity/chunk are submission-time fields; owner IDs in before/after authoritative"
             let budgetSkippedRecords: UInt64
             let exportErrors: UInt64
             let droppedRecords: UInt64
+            let uiUpdateErrors: UInt64
         }
         guard records.count <= capacity else { throw NativeContextFailure("Summary export exceeds capacity") }
         guard ProcessInfo.processInfo.environment["TOKLET_BUILD_ID", default:""].utf8.count <= 256 else {
             throw NativeContextFailure("Build identity exceeds export bound")
         }
         let encoder = JSONEncoder(); encoder.outputFormatting = [.sortedKeys]
-        var data = try encoder.encode(Manifest(buildIdentity:ProcessInfo.processInfo.environment["TOKLET_BUILD_ID"] ?? "unavailable: bind to build receipt",budgetSkippedRecords:budgetSkipped,exportErrors:exportErrors,droppedRecords:dropped)); data.append(10)
+        var data = try encoder.encode(Manifest(buildIdentity:ProcessInfo.processInfo.environment["TOKLET_BUILD_ID"] ?? "unavailable: bind to build receipt",budgetSkippedRecords:budgetSkipped,exportErrors:exportErrors,droppedRecords:dropped,uiUpdateErrors:uiErrors)); data.append(10)
         for record in records {
             let row = try encoder.encode(record)
             guard row.count <= maximumRecordBytes else { throw NativeContextFailure("Summary record exceeds wire limit") }

@@ -49,7 +49,9 @@ Keep the existing ≥5% default performance retain gate and 6 GiB working-set
 ceiling. No model download, conversion or implementation is claimed by this
 planning update. O1 now has an [opt-in implementation](docs/o1-gemma-request-summaries.md);
 its measured overhead bound remains unqualified and missing native/UI probes
-remain explicit follow-on work.
+remain explicit follow-on work. O2.A now exposes completed native phases;
+[O2.B2.A](docs/o2-ui-publication.md) adds Send/controller publication correlation.
+Actual visible-frame timing remains unqualified.
 
 The initial settings below describe the foundation. Later selected models and
 routes use their own authenticated configuration and scoped acceptance evidence;

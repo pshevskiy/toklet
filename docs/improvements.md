@@ -73,7 +73,11 @@ pass token/state and counter checks; maximum child-process lifetime peak is
 review pass; unchanged production checks are reused by verified source pins.
 No optimization gain or UI/whole-app/tail qualification follows.
 [O2.B1 evidence](../benchmarks/results/2026-11-07-o2b-gemma-workloads-v1.json).
-UI timing and O3 are next.
+[O2.B2.A publication metrics](o2-ui-publication.md) add bounded Send preparation,
+callback TTFT and controller handling/publication. Six real Gemma controls,
+52 UI and 52 headless paired requests, fresh Swift/app builds and 29 portable
+checks pass; Astra approves after a typed state/work join correction. Both overhead tracks remain
+unqualified/default-disabled. Visible-frame qualification and O3 remain open.
 [Evidence](../benchmarks/results/2026-11-07-o2a-gemma-phase-report-v1.json).
 
 The [R1 offline regression job](gemma-regression-job.md) now rejects incomparable

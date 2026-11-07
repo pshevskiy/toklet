@@ -7,7 +7,9 @@ implements available worker-boundary observations. The additive
 [O2.A phase API/report](o2-gemma-cost-report.md) now exposes completed native
 phases. [O2.B1 numerical coverage](o2-gemma-workloads.md) adds two matched
 cold/continuation batches and a ten-minute sustained run; UI/device/other-workload
-gaps remain explicit and the 1% summary overhead bound is unqualified. [Current coverage](model-coverage.md) describes
+gaps remain explicit and the 1% summary overhead bound is unqualified.
+[O2.B2.A publication metrics](o2-ui-publication.md) correlate Send with controller
+handling; visible-frame qualification remains separate. [Current coverage](model-coverage.md) describes
 what actually runs. [PLAN](../PLAN.md#validation-and-performance-policy) retains
 the binding numerical, quality, memory and measurement gates.
 

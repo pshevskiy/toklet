@@ -103,6 +103,9 @@ final class FriendlyChatStore: ObservableObject {
     static let benchmarkMaximum: UInt32 = 64
     private weak var harness: HarnessStore?
     private var request: UUID?
+    private weak var publicationWorker: NativeWorker?
+    private var publicationSubmitted: UInt64?
+    private var publicationConversation: UUID?
     private var draftEdit = UUID()
     private var requestDraftEdit: UUID?
     private var pendingLoad: FriendlyAcceptingLoad?
@@ -298,6 +301,8 @@ final class FriendlyChatStore: ObservableObject {
     }
     func sendOrStop() {
         guard let harness else { return }
+        let submittingWorker = harness.worker
+        let uiSubmitted = submittingWorker?.requestSummaryUISubmissionTime()
         if benchmarkRunning { stopBenchmark(); return }
         if running { harness.worker?.cancel(); return }
         guard canSend else { return }
@@ -305,12 +310,26 @@ final class FriendlyChatStore: ObservableObject {
             let previous = workspace
             let pending = try workspace.begin()
             invalidatePlanning()
-            guard harness.worker?.submit(.chat(id:pending.0,conversation:pending.1,maximum:workspace.outputLimit)) == true else {
+            guard submittingWorker?.submit(.chat(id:pending.0,conversation:pending.1,maximum:workspace.outputLimit),uiSubmitted:uiSubmitted) == true else {
                 workspace = previous; notice = "The engine is busy. Your draft is kept; please try again."
+                if let uiSubmitted {
+                    submittingWorker?.noteUIPublication(id:pending.0,submitted:uiSubmitted,
+                        outcome:.submissionRejected,selected:true,nonempty:false)
+                }
                 save(); return
+            }
+            if let uiSubmitted {
+                publicationWorker = submittingWorker; publicationSubmitted = uiSubmitted
+                publicationConversation = workspace.selected
             }
             request = pending.0; requestDraftEdit = draftEdit; notice = ""; save(); harness.poll()
         } catch { notice = error.localizedDescription }
+    }
+    private func finishPublication(_ id: UUID, applied: Bool, outcome: NativeUIPublication.Outcome, nonempty: Bool) {
+        defer { publicationWorker = nil; publicationSubmitted = nil; publicationConversation = nil }
+        guard let worker = publicationWorker, let submitted = publicationSubmitted else { return }
+        worker.noteUIPublication(id:id,submitted:submitted,outcome:applied ? outcome:.messageMissing,
+            selected:publicationConversation == workspace.selected,nonempty:applied && outcome == .published && nonempty)
     }
     private func releaseUnusedScope() {
         guard let folder = scopedFolder, let owner = scopedWorker else { return }
@@ -346,13 +365,18 @@ final class FriendlyChatStore: ObservableObject {
             else { restorePreference(actual,worker:worker) }
         }
         if let result = state.chatResult, result.id == request {
-            workspace.finish(result,restoreRejectedDraft:requestDraftEdit == draftEdit)
+            let applied = workspace.finish(result,restoreRejectedDraft:requestDraftEdit == draftEdit)
             if result.rejected { notice = result.error }
-            request = nil; requestDraftEdit = nil; save()
+            request = nil; requestDraftEdit = nil
+            finishPublication(result.id,applied:applied,outcome:result.rejected ? .workerRejected:.published,
+                nonempty:!result.text.isEmpty)
+            save()
         }
         if state.closed, let id = request {
-            workspace.finish(NativeChatResult(id:id,text:"",reason:3,error:"Response stopped. Reload a model to continue."))
-            request = nil; requestDraftEdit = nil; save()
+            let applied = workspace.finish(NativeChatResult(id:id,text:"",reason:3,error:"Response stopped. Reload a model to continue."))
+            request = nil; requestDraftEdit = nil
+            finishPublication(id,applied:applied,outcome:.workerClosed,nonempty:false)
+            save()
         }
         if !state.busy && !state.hasModel {
             releaseUnusedScope(); loadedKey = ""; loadedModelInstance = nil; planningLoad = nil

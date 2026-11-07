@@ -185,9 +185,10 @@ final class NativeWorker: @unchecked Sendable {
         guard !view.busy, let store = summaryStore else {
             condition.unlock(); throw NativeContextFailure("Summaries disabled or worker busy")
         }
-        let (records, dropped) = store.snapshot(), errors = store.exportErrors, skipped = store.budgetSkippedRecords
+        let (records, dropped) = store.snapshot(), errors = store.exportErrors,
+            skipped = store.budgetSkippedRecords, uiErrors = store.uiUpdateErrors
         condition.unlock()
-        do { return try NativeRequestSummaryStore.export(records,dropped:dropped,exportErrors:errors,budgetSkipped:skipped) }
+        do { return try NativeRequestSummaryStore.export(records,dropped:dropped,exportErrors:errors,budgetSkipped:skipped,uiErrors:uiErrors) }
         catch {
             condition.lock(); store.noteExportError(); condition.unlock()
             throw error
@@ -201,6 +202,24 @@ final class NativeWorker: @unchecked Sendable {
         guard !view.busy, !closing, summaryStore != nil else { return false }
         summariesEnabled = enabled
         return true
+    }
+
+    // Called before UI formatting/serialization. Disabled workers take the
+    // immutable nil fast path, without a clock read or condition acquisition.
+    func requestSummaryUISubmissionTime() -> UInt64? {
+        guard summaryStore != nil else { return nil }
+        condition.lock(); defer { condition.unlock() }
+        guard summariesEnabled, view.acceptedIdentity?.profile == .gemmaBF16,
+              let budget = view.sessionConfiguration?.wholeSessionBudget ?? summaryBudget,
+              NativeRequestSummaryStore.fitsBudget(admitted:view.admittedBytes,budget:budget) else { return nil }
+        return DispatchTime.now().uptimeNanoseconds
+    }
+    func noteUIPublication(id: UUID, submitted: UInt64, outcome: NativeUIPublication.Outcome,
+                           selected: Bool, nonempty: Bool) {
+        guard let store = summaryStore else { return }
+        let now = DispatchTime.now().uptimeNanoseconds
+        condition.lock(); defer { condition.unlock() }
+        store.publishUI(id:id,submitted:submitted,outcome:outcome,selected:selected,nonempty:nonempty,now:now)
     }
 
     private func noteSummaryCancellation() {
@@ -291,7 +310,8 @@ final class NativeWorker: @unchecked Sendable {
     }
 
     @discardableResult
-    func submit(_ command: NativeCommand, initiallyCancelled: Bool = false) -> Bool {
+    func submit(_ command: NativeCommand, initiallyCancelled: Bool = false,
+                uiSubmitted: UInt64? = nil) -> Bool {
         condition.lock(); defer { condition.unlock() }
         var summary: NativeRequestSummary?
         if case .chat(let id,_,let maximum,_) = command, summariesEnabled, let store = summaryStore,
@@ -300,7 +320,8 @@ final class NativeWorker: @unchecked Sendable {
                NativeRequestSummaryStore.fitsBudget(admitted:view.admittedBytes,budget:budget),
                allowSummaryCollection?() ?? true {
                 summary = store.begin(id:id,maximum:maximum,generation:view.revision,
-                    now:DispatchTime.now().uptimeNanoseconds,context:view.liveContext,configuration:view.sessionConfiguration)
+                    now:DispatchTime.now().uptimeNanoseconds,context:view.liveContext,
+                    configuration:view.sessionConfiguration,uiSubmitted:uiSubmitted)
             } else { store.noteBudgetSkip() }
         }
         guard !closing, !view.closed, !view.busy, !view.restartRequired, let flag = cancelFlag else {

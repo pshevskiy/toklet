@@ -1,0 +1,47 @@
+{
+  "format": "toklet-o2-ui-publication-delivery-v1",
+  "status": "reviewed",
+  "scope": "Managed official Gemma 4 E2B BF16 Mac Send-to-controller publication; no window/render measurement",
+  "evidence": "artifacts/o2-ui-publication-2026-11-07",
+  "ui_protocol": "artifacts/o2-ui-publication-2026-11-07/acceptance-final/result.json",
+  "controls": 6,
+  "paired_requests": 52,
+  "measured_requests": 40,
+  "summary_schema": 2,
+  "additive_optional_fields": true,
+  "default_mode": "disabled",
+  "component_overhead_qualified": false,
+  "summary_overhead_qualified": false,
+  "render_measured": false,
+  "publication_median_ms": [
+    {
+      "preparationMilliseconds": 0.0901875,
+      "callbackTTFTMilliseconds": 508.9799375,
+      "terminalHandlingMilliseconds": 2399.3720415,
+      "workerToHandlingMilliseconds": 78.713,
+      "publicationMilliseconds": 2399.3720415,
+      "firstNonemptyPublicationMilliseconds": 2399.3720415,
+      "firstAnswerPublicationMilliseconds": 2399.3720415
+    },
+    {
+      "preparationMilliseconds": 0.08247850000000001,
+      "callbackTTFTMilliseconds": 470.0753745,
+      "terminalHandlingMilliseconds": 2363.6448955,
+      "workerToHandlingMilliseconds": 63.6912085,
+      "publicationMilliseconds": 2363.6448955,
+      "firstNonemptyPublicationMilliseconds": 2363.6448955,
+      "firstAnswerPublicationMilliseconds": 2363.6448955
+    }
+  ],
+  "max_process_lifetime_peak_bytes": 4919365880,
+  "headless_check": "artifacts/o2-ui-publication-2026-11-07/headless/result.json",
+  "checks": "artifacts/o2-ui-publication-2026-11-07/checks.json",
+  "astra": "Approved; typed state/work join finding resolved",
+  "headless_overhead_qualified": false,
+  "ui_measurement_result_sha256": "de8a955328e15686355c1bc86d043dba9fff9d6e78a18136e61f99d64da64cea",
+  "headless_result_sha256": "500cd3ea47dab6e438076b6ab7cd76699866f1f93145840e42be145a38d98066",
+  "astra_review": "artifacts/o2-ui-publication-2026-11-07/astra-review.md",
+  "passed": true,
+  "portable_tests": 29,
+  "new_ui_report_tests": 6
+}
