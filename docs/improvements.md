@@ -114,6 +114,15 @@ memory, UI, thermal or tail gates.
 
 ## Latest documentation work
 
+Preferred uncensored Gemma cold-format planning is delivered with Astra approval. A separate pinned cold
+recipe preserves277affine4/group64 matrices and one BF16 PLE projection, with
+explicit unused-KV/media exclusions. Fresh610CPU/735Metal tests, strict CPU/Metal
+Clippy and formatting pass; two3warm+10 actual header cohorts pass at about6.2ms.
+No numerical execution, model quality,
+memory fit or adoption follows from metadata inspection.
+[Scope/checks/review](gemma-heretic-mlx.md),
+[commit receipt](../artifacts/gemma-heretic-mlx-2026-11-08/publication-checks.json).
+
 The [selected model plan](model-observability-plan.md) now makes observability
 the first deliverable: defined latency/throughput/memory/state/outcome metrics,
 bounded collection and paired overhead checks before optimization. Order:

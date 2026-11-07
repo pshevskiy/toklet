@@ -1638,3 +1638,4 @@ benchmarks/results/2026-10-21-m7-phone-energy/m7-energy-capability-v1/record-hel
 
 # Raw safetensors header padding participates in source hashes and file offsets.
 tests/fixtures/gemma-unquantized-header-v1/header.json binary
+tests/fixtures/gemma4-heretic-metadata-v1/header.json binary

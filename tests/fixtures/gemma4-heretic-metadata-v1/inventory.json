@@ -1,0 +1,50 @@
+{
+  "repository": "deadbydawn101/gemma-4-E2B-Heretic-Uncensored-mlx-4bit",
+  "revision": "cde01efcb11f8a12e88a953b752fc16062aa1486",
+  "container_bytes": 3581100878,
+  "container_sha256": "d4a2995ce3fdafbbd4a3376bc8524a8d26bcbf0f51197701b4e21ab27faa37e1",
+  "header_bytes": 335744,
+  "header_sha256": "e12e790370839d89a88cb1ead5e27525011ed3f39a3879f6c2a7162080f4dc50",
+  "config_bytes": 6035,
+  "config_sha256": "7ff08145776f892538f06b2e6b574a62080959d3097c37e4f8a45664f4478da1",
+  "payload_offset": 335752,
+  "payload_bytes": 3580765126,
+  "partitions": {
+    "media": {
+      "tensors": 1415,
+      "bytes": 946370944,
+      "dtypes": {
+        "BF16": 1413,
+        "U32": 2
+      }
+    },
+    "text": {
+      "tensors": 1094,
+      "bytes": 2623765062,
+      "dtypes": {
+        "BF16": 817,
+        "U32": 277
+      }
+    },
+    "unused_shared_kv": {
+      "tensors": 140,
+      "bytes": 10629120,
+      "dtypes": {
+        "BF16": 100,
+        "U32": 40
+      }
+    }
+  },
+  "bf16_projection": {
+    "data_offsets": [
+      3484155792,
+      3511680912
+    ],
+    "dtype": "BF16",
+    "shape": [
+      8960,
+      1536
+    ]
+  },
+  "scope": "Independent raw Python safetensors-header inventory, no numerical execution/admission/quality proof"
+}

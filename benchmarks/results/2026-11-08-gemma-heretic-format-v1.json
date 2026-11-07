@@ -1,0 +1,58 @@
+{
+  "status": "cold_format_plan_complete_astra_approved",
+  "scope": "G1.A pinned cold format only; not payload loading/execution/admission/quality/adoption",
+  "repository": "deadbydawn101/gemma-4-E2B-Heretic-Uncensored-mlx-4bit",
+  "revision": "cde01efcb11f8a12e88a953b752fc16062aa1486",
+  "base": "4a31ecf440d03c892fc1a76b053fc3872048907d",
+  "matrices": {
+    "affine4_group64_bf16_metadata": 277,
+    "original_bf16_ple_projection": 1
+  },
+  "source_bytes": {
+    "selected_text": 2623765062,
+    "unused_shared_kv": 10629120,
+    "excluded_media": 946370944
+  },
+  "required": {
+    "cpu": {
+      "passed": 610,
+      "failed": 0,
+      "ignored": 33
+    },
+    "metal": {
+      "passed": 735,
+      "failed": 0,
+      "ignored": 289
+    }
+  },
+  "source_payload_authenticated_by_plan": false,
+  "cold_probe": [
+    {
+      "cohort": 1,
+      "median_seconds": 0.006167875,
+      "iqr_seconds": 4.791674999999988e-05,
+      "process_rss_peak_bytes": 10387456,
+      "physical_footprint_peak_bytes": 8339840
+    },
+    {
+      "cohort": 2,
+      "median_seconds": 0.0062250835,
+      "iqr_seconds": 8.440699999999988e-05,
+      "process_rss_peak_bytes": 10551296,
+      "physical_footprint_peak_bytes": 8503680
+    }
+  ],
+  "astra": {
+    "status": "approved",
+    "reviewer": "/root/astra_o1_review",
+    "reviewed_diff_sha256": "9fdd344d07471da98c549fa761f447831cbcaf5179e657e6f95f4427c67225e9",
+    "findings": [],
+    "verified": "Reconstructed2649 spans/partition counts/bytes; config/header digests, all3883 required/build source pins, cold binary/report hashes, raw medians/physical+RSS peaks and AC/nominal thermal conditions.",
+    "scope": "G1.A cold structural plan only; no payload integrity, resident/session execution, quality, model memory fit or managed adoption",
+    "reviewer_edits_builds_inference": false
+  },
+  "evidence": "artifacts/gemma-heretic-mlx-2026-11-08",
+  "full_goal_complete": false,
+  "publication": "artifacts/gemma-heretic-mlx-2026-11-08/publication-checks.json",
+  "model_adoption_qualified": false
+}

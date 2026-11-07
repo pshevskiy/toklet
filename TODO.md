@@ -23,6 +23,15 @@ under-4B track; [model/metric plan](docs/model-observability-plan.md).
 Current task: **evaluate the preferred uncensored Gemma MLX artifact's format and
 quality gates**, then continue Qwen3.5-4B. The full selected goal stays active.
 
+- [x] G1.A pinned cold mixed-format plan complete:277affine4 matrices and the
+  original BF16 PLE projection remain explicit;140unused-KV/1415media exclusions.
+  Fresh610CPU/735Metal tests, strict Clippy/fmt and two3warm+10 local header probes
+  pass (about6.2ms, zero payload reads). Astra approves structural scope only.
+  [Scope](docs/gemma-heretic-mlx.md),
+  [checks/review/commit](artifacts/gemma-heretic-mlx-2026-11-08/publication-checks.json).
+  Next: authenticated resident mixed-format loading/session metrics, then
+  numerical/state/quality/memory/performance gates and explicit adoption decision.
+
 - [x] Exact guard reduction retained on recorded Mac BF16/G2 cases: two primary
   request reductions25.0–26.6%;512 matched deeper decode-state pairs bit-identical.
   Sustained268/358 requests pass over ten minutes each (26.3% lower median).

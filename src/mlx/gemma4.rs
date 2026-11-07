@@ -16,6 +16,7 @@ use std::collections::BTreeMap;
 pub mod assistant;
 pub mod bf16;
 pub mod payload;
+pub mod uncensored;
 
 #[cfg(test)]
 mod tests;
