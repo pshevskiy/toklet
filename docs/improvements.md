@@ -69,6 +69,13 @@ The ≤1% overhead bound remains unqualified, so collection stays opt-in/default
 disabled. O2.B cold/continuation/sustained/UI work is next.
 [Evidence](../benchmarks/results/2026-11-07-o2a-gemma-phase-report-v1.json).
 
+The [R1 offline regression job](gemma-regression-job.md) now rejects incomparable
+or reused collections and separates regression/noisy/speed signals over disabled
+caller timings. Local named CI checks pass17 tests; Astra approval passes after
+three fixes. It never accepts an optimization or qualifies missing quality,
+memory, UI, thermal or tail gates.
+[Checks/review/commit](../artifacts/r1-gemma-regression-2026-11-07/checks.json).
+
 ## Latest documentation work
 
 The [selected model plan](model-observability-plan.md) now makes observability

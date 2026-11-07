@@ -8,6 +8,16 @@ permissions:
   contents: read
 
 jobs:
+  observability-reports:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
+      - name: Validate offline observability reports
+        run: PYTHONPATH=tools/bench python3 -O -m unittest test_request_cost_report test_gemma_regression
+      - name: Validate paired measurement contracts
+        run: PYTHONPATH=tools/experiments python3 -O -m unittest test_o1_gemma_summary
   cpu:
     runs-on: ubuntu-latest
     steps:
