@@ -198,6 +198,10 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
     pub fn memory(&self) -> Memory {
         self.memory
     }
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    pub(crate) fn operations(&self) -> &B {
+        &self.inner.operations
+    }
     pub fn logits(&self) -> Option<&[f32]> {
         if self.needs_replay || self.pending_len() != 0 || self.len == 0 {
             return None;
@@ -239,6 +243,7 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
     }
     pub fn set_tokens(&mut self, tokens: &[u32]) -> Result<(), session::Error> {
         self.validate(tokens, 0)?;
+        self.inner.operations.generation_history_replaced();
         if !self.needs_replay && !tokens.starts_with(self.inner.tokens()) {
             self.needs_replay = true;
         }
@@ -276,8 +281,21 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
             self.needs_replay = false;
         }
         let start = self.inner.tokens().len();
-        forward::run(&mut self.inner, &self.history[start..start + count], output)
-            .map_err(Into::into)?;
+        let last_row_only = match output {
+            forward::OutputRows::All => false,
+            #[cfg(any(
+                test,
+                all(feature = "metal", target_os = "macos", target_arch = "aarch64")
+            ))]
+            forward::OutputRows::Last => true,
+        };
+        self.inner
+            .operations
+            .begin_generation_step(start, count, last_row_only);
+        let result = forward::run(&mut self.inner, &self.history[start..start + count], output);
+        let committed = result.as_ref().ok().map(|_| self.inner.tokens().len());
+        self.inner.operations.finish_generation_step(committed);
+        result.map_err(Into::into)?;
         Ok(count)
     }
     /// Experimental nonstreaming round. Proposals are read-only until the
@@ -359,6 +377,7 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
     }
     /// Invalidate the current distribution/prefix immediately without allocating.
     pub fn reset(&mut self) {
+        self.inner.operations.generation_history_replaced();
         self.len = 0;
         self.needs_replay = true;
     }

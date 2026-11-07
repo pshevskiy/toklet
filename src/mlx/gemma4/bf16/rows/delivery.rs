@@ -28,6 +28,9 @@ impl Prepared {
     pub(crate) fn minimum_source_memory(&self) -> Result<Memory, Error> {
         memory(self.table.rows, SCAN_BYTES)
     }
+    pub(crate) fn workspace_bytes(&self, rows: usize) -> Result<usize, Error> {
+        Ok(Workspace::layout(self.table.row_bytes, rows)?.1)
+    }
 
     /// The receiver must keep its buffers private until this returns the
     /// authenticated source. Every selected non-PLE tensor must be consumed

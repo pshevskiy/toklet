@@ -1,0 +1,139 @@
+{
+  "status": "complete_in_recorded_scope",
+  "scope": "Selected official BF16/G2 Mac runtime explanation and bounded committed-evaluation diagnostic. No optimization, summary1% bound, model adoption, UI/tail/sustained or device-runtime qualification.",
+  "route": "google/gemma-4-E2B-it",
+  "model_revision": "70af34e20bd4b7a91f0de6b22675850c43922a03",
+  "hardware": "Apple M1 Pro 16GiB",
+  "rust": "1.90 release; detailed counters opt-in; precise shaders unchanged",
+  "tests": {
+    "cpu": {
+      "passed": 604,
+      "failed": 0,
+      "ignored": 32
+    },
+    "metal": {
+      "passed": 726,
+      "failed": 0,
+      "ignored": 285
+    }
+  },
+  "native": {
+    "slices": 3,
+    "exports_each": 46,
+    "mac_cpu_metal_smoke_pass": true,
+    "device_runtime": false
+  },
+  "live_inventory": {
+    "operations": 279,
+    "resident_matrix_owners": 277,
+    "gpu_tile_owners": 349,
+    "minimum_session_admitted_bytes": 5814073992,
+    "actual_session_admitted_bytes": 5814073992,
+    "capacity_overreservation_bytes": 0,
+    "process_physical_footprint_bytes": 4919284008,
+    "process_lifetime_peak_physical_footprint_bytes": 4919284008,
+    "memory_scope": "whole Rust test process, including cold inspection/load/session; not isolated load peak",
+    "passed": true
+  },
+  "hardware_control": {
+    "passed": true,
+    "frames": 2,
+    "tiles_per_frame": 349,
+    "cpu_gathers_per_frame": 2,
+    "logits": "bitwise plain/profile prefill and first decode",
+    "faults": "latePLE/head,overflow,postcapturefailure",
+    "reset_invalidation": true,
+    "prestart_cancel_unavailable": true,
+    "caller_allowance_bytes": 16777216,
+    "timing_qualified": false,
+    "physical_bytes": 4945563968,
+    "process_lifetime_peak_bytes": 4948234560
+  },
+  "successful_overhead_requests": 104,
+  "measured_overhead_requests": 80,
+  "default_none_changes": [
+    {
+      "cohort": 1,
+      "request_change_percent": 0.21843634144524948,
+      "ttft_change_percent": 0.6152343362910928
+    },
+    {
+      "cohort": 2,
+      "request_change_percent": -0.08986137680975226,
+      "ttft_change_percent": 0.1392015478002273
+    }
+  ],
+  "capture_changes_percent": [
+    -0.2788873739019815,
+    0.9842164204513892
+  ],
+  "overhead_bound_qualified": false,
+  "capture_ordinal_measured": 2,
+  "profile_default_enabled": false,
+  "evidence_root": "artifacts/o3-gemma-runtime-2026-11-07",
+  "astra_review": {
+    "status": "approved",
+    "evidence": "artifacts/o3-gemma-runtime-2026-11-07/astra-final-review.json",
+    "commit_receipt": "artifacts/o3-gemma-runtime-2026-11-07/publication-checks.json"
+  },
+  "lifetime_control": {
+    "passed": true,
+    "outer_autorelease_pool": false,
+    "constructor_warmups": 32,
+    "constructor_repetitions": 512,
+    "constructor_before_bytes": 4959637824,
+    "constructor_samples_bytes": [
+      4959637824,
+      4959637824,
+      4959637824,
+      4959637824,
+      4959637824,
+      4959637824,
+      4959637824,
+      4959637824,
+      4959637824,
+      4959637824,
+      4959637824,
+      4959637824,
+      4959637824,
+      4959637824,
+      4959637824,
+      4959637824
+    ],
+    "constructor_growth_bytes": 0,
+    "export_warmups": 64,
+    "export_repetitions": 16384,
+    "export_before_bytes": 4963520856,
+    "export_samples_bytes": [
+      4963520856,
+      4963520856,
+      4963520856,
+      4963520856,
+      4963520856,
+      4963520856,
+      4963520856,
+      4963520856,
+      4963520856,
+      4963520856,
+      4963520856,
+      4963520856,
+      4963520856,
+      4963520856,
+      4963520856,
+      4963520856
+    ],
+    "export_growth_bytes": 0,
+    "growth_limit_bytes": 67108864,
+    "process_lifetime_peak_bytes": 4963520856,
+    "timing_qualified": false,
+    "scope": "Observed repeated native lifetime bound on this pinned Mac; no continuous allocator or general driver-memory guarantee."
+  },
+  "evidence_current": {
+    "required": "required-checks-3/checks.json",
+    "numerical": "profile-correctness-fixed/checks.json",
+    "lifetime": "profile-lifetime-fixed/checks.json",
+    "inventory": "inventory-validation-fixed/checks.json",
+    "overhead": "overhead-report-pooled.json",
+    "native": "native-checks-pooled.json"
+  }
+}

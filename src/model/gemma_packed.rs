@@ -15,7 +15,7 @@ use crate::mlx::affine::{Matrix, MetadataDtype};
 
 mod e2b;
 #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
-pub(crate) use e2b::official_bf16_planned_kv;
+pub(crate) use e2b::{official_bf16_planned_kv, official_bf16_planned_layout};
 mod forward;
 pub(crate) mod generation;
 pub(crate) mod operations;
@@ -157,6 +157,50 @@ pub struct Model<'a, M = Matrix<'a>> {
     tensor_bytes: usize,
     metadata_allowance_bytes: usize,
     content_identity: Option<crate::mlx::gemma4::payload::ContentIdentity>,
+}
+
+fn model_metadata_bytes<M>(
+    layout: &Layout,
+    weights_capacity: usize,
+    unit_norm_capacity: usize,
+    shared_metadata: usize,
+) -> Result<usize, Error> {
+    let mut bytes = 0;
+    for n in [
+        std::mem::size_of::<Model<'_, M>>(),
+        cpu::product(weights_capacity, std::mem::size_of::<LayerWeights<'_, M>>())?,
+        cpu::product(layout.layers.capacity(), std::mem::size_of::<LayerLayout>())?,
+        allocation_bytes(unit_norm_capacity)?,
+        shared_metadata
+            .checked_sub(std::mem::size_of::<SharedKvPlan>())
+            .ok_or(cpu::Error::SizeOverflow)?,
+    ] {
+        bytes = add_bytes(bytes, n)?;
+    }
+    Ok(bytes)
+}
+
+fn backend_session_bytes<M, B>(
+    layout: &Layout,
+    plan: &SharedKvPlan,
+    capacity: usize,
+    chunk_rows: usize,
+) -> Result<usize, Error> {
+    let scratch = Scratch::counts(layout, capacity, chunk_rows)?;
+    let stages = layout.staged_kv_values(chunk_rows)?;
+    let mut bytes = std::mem::size_of::<Session<'_, '_, M, B>>();
+    for n in [
+        plan.planned_narrowed_cache_bytes(capacity)? - std::mem::size_of::<Vec<WindowKvCache>>(),
+        SharedKvPlan::planned_metadata_bytes(layout.layers.len())?
+            - std::mem::size_of::<SharedKvPlan>(),
+        allocation_bytes(capacity)?,
+        total_bytes(&scratch)?,
+        allocation_bytes(stages)?,
+        cpu::product(layout.producers, std::mem::size_of::<Staging>())?,
+    ] {
+        bytes = add_bytes(bytes, n)?;
+    }
+    Ok(bytes)
 }
 fn check(values: &[f32], expected: usize, name: &'static str) -> Result<(), Error> {
     length(name, values.len(), expected)?;
@@ -436,18 +480,15 @@ impl<'a, M: MatrixSource> Model<'a, M> {
         let mut unit_norm = zeros(l.max_dim())?;
         unit_norm.fill(1.);
         // Scalar fields live in LayerWeights and are counted by its capacity.
-        for n in [
-            std::mem::size_of::<Self>(),
-            cpu::product(
+        bytes = add_bytes(
+            bytes,
+            model_metadata_bytes::<M>(
+                &l,
                 weights.layers.capacity(),
-                std::mem::size_of::<LayerWeights<'_, M>>(),
+                unit_norm.capacity(),
+                plan.allocated_metadata_bytes(),
             )?,
-            cpu::product(l.layers.capacity(), std::mem::size_of::<LayerLayout>())?,
-            allocation_bytes(unit_norm.capacity())?,
-            plan.allocated_metadata_bytes() - std::mem::size_of::<SharedKvPlan>(),
-        ] {
-            bytes = add_bytes(bytes, n)?;
-        }
+        )?;
         Ok(Self {
             weights,
             layout: l,
@@ -515,23 +556,7 @@ impl<'a, M: MatrixSource> Model<'a, M> {
         capacity: usize,
         chunk_rows: usize,
     ) -> Result<usize, Error> {
-        let l = &self.layout;
-        let scratch = Scratch::counts(l, capacity, chunk_rows)?;
-        let stages = l.staged_kv_values(chunk_rows)?;
-        let mut bytes = std::mem::size_of::<Session<'_, '_, M, B>>();
-        for n in [
-            self.plan.planned_narrowed_cache_bytes(capacity)?
-                - std::mem::size_of::<Vec<WindowKvCache>>(),
-            SharedKvPlan::planned_metadata_bytes(l.layers.len())?
-                - std::mem::size_of::<SharedKvPlan>(),
-            allocation_bytes(capacity)?,
-            total_bytes(&scratch)?,
-            allocation_bytes(stages)?,
-            cpu::product(l.producers, std::mem::size_of::<Staging>())?,
-        ] {
-            bytes = add_bytes(bytes, n)?;
-        }
-        Ok(bytes)
+        backend_session_bytes::<M, B>(&self.layout, &self.plan, capacity, chunk_rows)
     }
     /// Admit model+session before allocating any numerical session buffers.
     pub(crate) fn session_with_backend<B: Operations<M>>(

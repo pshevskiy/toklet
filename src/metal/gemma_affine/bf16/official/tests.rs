@@ -141,3 +141,5 @@ fn official_bf16_owner_admits_combined_memory_and_generates() {
             "prompt_tokens":prompt.len(),"visible_ids":reply,"stop_ids":gemma4::STOP_IDS})
     );
 }
+
+mod console;

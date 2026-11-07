@@ -8,6 +8,8 @@ use serde_json::json;
 use sha2::{Digest, Sha256};
 use std::collections::BTreeMap;
 
+pub mod execution;
+
 #[cfg(unix)]
 pub mod rows;
 

@@ -105,7 +105,7 @@ fn convert_tick(ticks: u64, start: ClockPair, end: ClockPair) -> Result<f64> {
     Ok((ticks - start.gpu_ticks) as f64 / gpu as f64 * cpu as f64 / 1e9)
 }
 impl Trace {
-    fn new(g: &Gpu, capacity: usize) -> Result<Self> {
+    pub(super) fn new(g: &Gpu, capacity: usize) -> Result<Self> {
         if !g
             .device
             .supportsCounterSampling(MTLCounterSamplingPoint::AtStageBoundary)
@@ -221,7 +221,10 @@ impl Trace {
         h.end = self.clock.get().elapsed().as_secs_f64();
         self.slots[index].host.set(h);
     }
-    fn resolve(&self) -> Result<Profile> {
+    pub(super) fn elapsed(&self) -> f64 {
+        self.clock.get().elapsed().as_secs_f64()
+    }
+    pub(super) fn resolve(&self) -> Result<Profile> {
         if !self.valid.get() {
             return Err(Error::Options("no successful profiled chunk"));
         }

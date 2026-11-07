@@ -1,5 +1,46 @@
 //! Shared exact command/completion path for legacy and separate projection scratch.
 use super::*;
+use crate::{metal::profile::Trace, mlx::gemma4::bf16::execution::OperationId};
+
+#[derive(Clone, Copy, Debug, serde::Serialize)]
+pub struct TileAttribution {
+    pub operation: OperationId,
+    pub source_matrix_slot: usize,
+    pub tile_index: usize,
+    pub source_first_row: usize,
+    pub source_rows: usize,
+    pub input_rows: usize,
+    pub output_features: usize,
+    pub input_features: usize,
+}
+
+#[derive(Clone, Copy, Debug, serde::Serialize)]
+pub struct TileRecord {
+    pub counter_slot: usize,
+    pub attribution: TileAttribution,
+    pub host_staging_seconds: f64,
+    pub host_encoding_seconds: f64,
+    pub host_commit_seconds: f64,
+    pub host_wait_seconds: f64,
+    pub host_validation_and_copy_seconds: f64,
+    pub dispatches_encoded: usize,
+    pub commands_submitted: usize,
+    pub host_wait_calls: usize,
+    pub input_copy_bytes: usize,
+    pub output_copy_bytes: usize,
+}
+
+pub(super) struct Observation<'a> {
+    pub trace: &'a Trace,
+    pub records: &'a mut Vec<TileRecord>,
+    pub capacity: usize,
+    pub overflowed: &'a mut bool,
+    pub attribution: TileAttribution,
+}
+
+fn elapsed(observation: &Option<Observation<'_>>) -> f64 {
+    observation.as_ref().map_or(0., |o| o.trace.elapsed())
+}
 
 pub(super) struct Buffers<'a> {
     pub input: &'a mut Buffer<u32>,
@@ -70,8 +111,63 @@ pub(super) fn run(
     output: &mut [f32],
     tokens: usize,
 ) -> Result<()> {
+    execute(context, weights, buffers, input, output, tokens, None)
+}
+
+#[cfg(target_os = "macos")]
+pub(super) fn run_observed(
+    context: &Context,
+    weights: Matrix<'_>,
+    buffers: Buffers<'_>,
+    input: &[f32],
+    output: &mut [f32],
+    tokens: usize,
+    observation: Option<Observation<'_>>,
+) -> Result<()> {
+    execute(
+        context,
+        weights,
+        buffers,
+        input,
+        output,
+        tokens,
+        observation,
+    )
+}
+
+fn execute(
+    context: &Context,
+    weights: Matrix<'_>,
+    buffers: Buffers<'_>,
+    input: &[f32],
+    output: &mut [f32],
+    tokens: usize,
+    mut observation: Option<Observation<'_>>,
+) -> Result<()> {
+    if let Some(o) = &observation {
+        let a = o.attribution;
+        if weights.bits != 16
+            || a.input_rows != tokens
+            || a.input_features != weights.columns
+            || a.source_rows != weights.rows
+            || a.source_first_row
+                .checked_add(a.source_rows)
+                .is_none_or(|end| end > a.output_features)
+            || input.len()
+                != tokens
+                    .checked_mul(weights.columns)
+                    .ok_or(Error::Options("BF16 profile input shape overflow"))?
+            || output.len()
+                != tokens
+                    .checked_mul(weights.rows)
+                    .ok_or(Error::Options("BF16 profile output shape overflow"))?
+        {
+            return Err(Error::Options("BF16 profile attribution shape differs"));
+        }
+    }
     let (pipeline, width) = context.projection_pipeline(weights.bits)?;
     autoreleasepool(|_| {
+        let staging_start = elapsed(&observation);
         buffers.input.with_mut(|out| {
             out.fill(SENTINEL);
             for (y, x) in out.iter_mut().zip(input) {
@@ -83,10 +179,44 @@ pub(super) fn run(
             out.fill(SENTINEL);
             out[0] = 0;
         });
+        let staging_end = elapsed(&observation);
         let raw = context.gpu.command()?;
-        let encoder = raw
-            .computeCommandEncoder()
-            .ok_or_else(|| Error::Native("Gemma affine encoder absent".into()))?;
+        let (encoder, slot) = if let Some(observation) = observation.as_mut() {
+            if observation.records.len() >= observation.capacity {
+                *observation.overflowed = true;
+                return Err(Error::Options("BF16 profile event capacity exceeded"));
+            }
+            let (index, encoder) = observation.trace.encoder(&raw, "gemma_bf16_product")?;
+            if index != observation.records.len() || index >= observation.records.capacity() {
+                return Err(Error::Options("BF16 profile slot attribution differs"));
+            }
+            // Register role/layer/tile/shape now, before dispatch encoding. No
+            // later graph-order reconstruction and no vector growth are used.
+            observation.records.push(TileRecord {
+                counter_slot: index,
+                attribution: observation.attribution,
+                host_staging_seconds: staging_end - staging_start,
+                host_encoding_seconds: 0.,
+                host_commit_seconds: 0.,
+                host_wait_seconds: 0.,
+                host_validation_and_copy_seconds: 0.,
+                dispatches_encoded: 0,
+                commands_submitted: 0,
+                host_wait_calls: 0,
+                input_copy_bytes: input
+                    .len()
+                    .checked_mul(4)
+                    .ok_or(Error::Options("BF16 profile input bytes overflow"))?,
+                output_copy_bytes: 0,
+            });
+            (encoder, Some(index))
+        } else {
+            (
+                raw.computeCommandEncoder()
+                    .ok_or_else(|| Error::Native("Gemma affine encoder absent".into()))?,
+                None,
+            )
+        };
         encoder.setComputePipelineState(pipeline);
         let shape = [tokens as u32, weights.columns as u32, weights.rows as u32];
         // SAFETY: private fixed ABI; all same-device u32 buffers initialized,
@@ -117,11 +247,29 @@ pub(super) fn run(
                 depth: 1,
             },
         );
+        if let (Some(o), Some(index)) = (observation.as_mut(), slot) {
+            o.records[index].dispatches_encoded += 1;
+        }
         encoder.endEncoding();
+        if let (Some(o), Some(index)) = (observation.as_mut(), slot) {
+            o.trace.finish_encoder(index);
+            o.records[index].host_encoding_seconds = o.trace.elapsed() - staging_end;
+        }
         *buffers.pending = Some(raw);
         let command = buffers.pending.as_ref().unwrap();
+        let commit_start = elapsed(&observation);
         command.commit();
+        let commit_end = elapsed(&observation);
+        if let (Some(o), Some(index)) = (observation.as_mut(), slot) {
+            o.records[index].commands_submitted += 1;
+            o.records[index].host_wait_calls += 1;
+            o.records[index].host_commit_seconds = commit_end - commit_start;
+        }
         command.waitUntilCompleted();
+        let wait_end = elapsed(&observation);
+        if let (Some(o), Some(index)) = (observation.as_mut(), slot) {
+            o.records[index].host_wait_seconds = wait_end - commit_end;
+        }
         if command.status() != MTLCommandBufferStatus::Completed {
             return Err(Error::Completion);
         }
@@ -153,6 +301,13 @@ pub(super) fn run(
                 *out = f32::from_bits(bits);
             }
         });
+        if let (Some(o), Some(index)) = (observation.as_mut(), slot) {
+            o.records[index].host_validation_and_copy_seconds = o.trace.elapsed() - wait_end;
+            o.records[index].output_copy_bytes = output
+                .len()
+                .checked_mul(4)
+                .ok_or(Error::Options("BF16 profile output bytes overflow"))?;
+        }
         *buffers.pending = None;
         Ok(())
     })

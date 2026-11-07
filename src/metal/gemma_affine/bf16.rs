@@ -12,6 +12,16 @@ pub(crate) use resident::graph::Fault as Bf16GraphFault;
 #[cfg(target_os = "macos")]
 pub use resident::graph::{Bf16GenerationSession, Bf16Model, Bf16Session};
 #[cfg(target_os = "macos")]
+pub use resident::planning::{
+    MinimumMemory, OfficialBf16Plan, RuntimeInventory, SelectedOperation, inspect_official_bf16,
+};
+#[cfg(target_os = "macos")]
+pub use resident::profile::{
+    AttributedTile as Bf16AttributedTile, CaptureState as Bf16CaptureState,
+    CpuGather as Bf16CpuGather, Evaluation as Bf16Evaluation, FrameProfile as Bf16FrameProfile,
+    ProfileOptions as Bf16ProfileOptions, ProfileStatus as Bf16ProfileStatus,
+};
+#[cfg(target_os = "macos")]
 pub use resident::{Bf16LoadReport, Bf16Weights};
 
 /// Dedicated BF16 projection pipeline and device/queue owner.

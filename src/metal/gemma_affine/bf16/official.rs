@@ -37,6 +37,13 @@ impl OfficialBf16 {
     pub const REVISION: &str = "70af34e20bd4b7a91f0de6b22675850c43922a03";
     pub const DECLARED_POSITIONS: usize = 131_072;
     pub const MAX_POSITIONS: usize = 512;
+    pub(in crate::metal::gemma_affine::bf16) fn reserved_bytes() -> Result<usize> {
+        let owner_bytes = size_of::<Self>()
+            - size_of::<Bf16Weights>()
+            - size_of::<Bf16Context>()
+            - size_of::<gemma4::Codec>();
+        add(owner_bytes, gemma4::ALLOWANCE_BYTES)
+    }
 
     /// Reserve the codec alongside numerical construction, even before both
     /// owners are live. Caller-owned application buffers are separate.
@@ -49,11 +56,7 @@ impl OfficialBf16 {
         }
         // The source, context and codec admission already charge their own
         // storage. Only the remaining fields and padding are additional.
-        let owner_bytes = size_of::<Self>()
-            - size_of::<Bf16Weights>()
-            - size_of::<Bf16Context>()
-            - size_of::<gemma4::Codec>();
-        let reserved = add(owner_bytes, gemma4::ALLOWANCE_BYTES)?;
+        let reserved = Self::reserved_bytes()?;
         let load_reserved = add(reserved, CONFIG_BYTES)?;
         check_budget(add(load_reserved, CONTEXT_ALLOWANCE_BYTES)?, memory_limit)?;
         let numerical_budget = memory_limit - load_reserved;
@@ -106,6 +109,13 @@ impl OfficialBf16 {
     pub fn memory(&self) -> OfficialBf16Memory {
         self.memory
     }
+    /// Explicit immutable-owner explanation; this performs no model evaluation.
+    pub fn runtime_inventory(
+        &self,
+        chunk_rows: usize,
+    ) -> Result<super::resident::planning::RuntimeInventory> {
+        self.weights.runtime_inventory(chunk_rows)
+    }
 
     pub fn codec(&self) -> &gemma4::Codec {
         &self.codec
@@ -141,7 +151,29 @@ impl OfficialBf16 {
     pub fn new_session<'model, 'owner>(
         &'owner self,
         model: &'model Bf16Model<'owner>,
+        options: Options,
+    ) -> std::result::Result<Bf16GenerationSession<'model, 'owner, 'owner>, session::Error> {
+        self.new_session_with_profile(model, options, None)
+    }
+
+    /// Diagnostic G2 session capturing one selected committed evaluation.
+    /// Charges an additional64MiB before allocating counter resources.
+    pub fn new_profiled_session<'model, 'owner>(
+        &'owner self,
+        model: &'model Bf16Model<'owner>,
+        options: Options,
+        profile: Bf16ProfileOptions,
+    ) -> std::result::Result<Bf16GenerationSession<'model, 'owner, 'owner>, session::Error> {
+        let mut session = self.new_session_with_profile(model, options, Some(profile))?;
+        session.use_last_row_prefill();
+        Ok(session)
+    }
+
+    fn new_session_with_profile<'model, 'owner>(
+        &'owner self,
+        model: &'model Bf16Model<'owner>,
         mut options: Options,
+        profile: Option<Bf16ProfileOptions>,
     ) -> std::result::Result<Bf16GenerationSession<'model, 'owner, 'owner>, session::Error> {
         self.validate_session_budget(options)?;
         let limit = options.memory_limit_bytes;
@@ -153,10 +185,18 @@ impl OfficialBf16 {
                 required: reserved + 1,
                 limit,
             })?;
-        match self
-            .weights
-            .new_generation_session(model, &self.context, options)
-        {
+        let result = match profile {
+            Some(profile) => self.weights.new_generation_session_with_profile(
+                model,
+                &self.context,
+                options,
+                Some(profile),
+            ),
+            None => self
+                .weights
+                .new_generation_session(model, &self.context, options),
+        };
+        match result {
             Err(session::Error::MemoryBudget { required, .. }) => {
                 Err(session::Error::MemoryBudget {
                     required: add(required, reserved).map_err(hybrid::Error::from)?,

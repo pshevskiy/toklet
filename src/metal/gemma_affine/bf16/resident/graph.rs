@@ -1,4 +1,5 @@
 //! Short official BF16 graph over authenticated shared buffers and file-backed PLE.
+use super::profile::{Bf16Trace, ProfileOptions};
 use super::*;
 use crate::{
     metal::gemma_affine::resident::hybrid::Error as GraphError,
@@ -17,9 +18,36 @@ pub type Bf16Session<'model, 'weights, 'context> =
 pub type Bf16GenerationSession<'model, 'weights, 'context> =
     graph::GenerationSession<'model, 'weights, MatrixRef<'weights>, Backend<'weights, 'context>>;
 
+impl<'model, 'weights, 'context>
+    graph::GenerationSession<'model, 'weights, MatrixRef<'weights>, Backend<'weights, 'context>>
+{
+    /// Explicit diagnostic export; an unselected, failed or invalidated frame
+    /// is unavailable rather than represented by a zero-duration trace.
+    pub fn bf16_profile(&self) -> GraphResult<profile::FrameProfile> {
+        let backend = self.operations();
+        backend.ready()?;
+        Ok(backend
+            .trace
+            .as_ref()
+            .ok_or(Error::Options("BF16 profiling disabled"))?
+            .export()?)
+    }
+    pub fn bf16_profile_status(&self) -> Option<profile::ProfileStatus> {
+        let backend = self.operations();
+        backend.trace.as_ref().map(|trace| {
+            let mut status = trace.status();
+            if backend.failed || backend.pending.is_some() {
+                status.state = profile::CaptureState::Invalid;
+            }
+            status
+        })
+    }
+}
+
 pub struct MatrixRef<'weights> {
     source: &'weights Bf16Weights,
     index: usize,
+    operation: crate::mlx::gemma4::bf16::execution::OperationId,
 }
 
 impl sealed::Matrix for MatrixRef<'_> {}
@@ -72,6 +100,7 @@ impl Bf16Weights {
                 Ok(MatrixRef {
                     source: self,
                     index,
+                    operation: self.bindings.operation_identity(index)?,
                 })
             },
             |index| {
@@ -117,7 +146,7 @@ impl Bf16Weights {
         let numerical = model
             .planned_backend_session_bytes_for_chunk::<Backend<'weights, 'context>>(chunk_rows)?;
         let fixed = add(model.model_bytes(), numerical)?;
-        let backend = self.admit_backend(model, context, chunk_rows, fixed, budget)?;
+        let backend = self.admit_backend(model, context, chunk_rows, fixed, budget, None)?;
         model.session_with_backend_for_chunk(backend, chunk_rows, budget)
     }
 
@@ -128,8 +157,22 @@ impl Bf16Weights {
         options: crate::session::Options,
     ) -> std::result::Result<Bf16GenerationSession<'model, 'weights, 'context>, crate::session::Error>
     {
+        self.new_generation_session_with_profile(model, context, options, None)
+    }
+
+    pub(crate) fn new_generation_session_with_profile<'model, 'weights, 'context>(
+        &'weights self,
+        model: &'model Bf16Model<'weights>,
+        context: &'context Bf16Context,
+        options: crate::session::Options,
+        profile: Option<ProfileOptions>,
+    ) -> std::result::Result<Bf16GenerationSession<'model, 'weights, 'context>, crate::session::Error>
+    {
         use crate::session::Error as SessionError;
         graph::generation::validate_options(model, options)?;
+        if let Some(profile) = profile {
+            profile.validate().map_err(GraphError::from)?;
+        }
         let fixed = Self::generation_fixed_bytes(model, options)?;
         let backend = self
             .admit_backend(
@@ -138,6 +181,7 @@ impl Bf16Weights {
                 options.prefill_chunk_size,
                 fixed,
                 options.memory_limit_bytes,
+                profile,
             )
             .map_err(|error| match error {
                 GraphError::Metal(Error::Budget { required, limit }) => {
@@ -185,6 +229,7 @@ impl Bf16Weights {
         chunk_rows: usize,
         fixed: usize,
         budget: usize,
+        profile: Option<ProfileOptions>,
     ) -> GraphResult<Backend<'weights, 'context>> {
         if !std::ptr::eq(&*self.device, &*context.0.gpu.device)
             || model
@@ -195,12 +240,17 @@ impl Bf16Weights {
         }
         let counts = Counts::new(self, chunk_rows)?;
         let minimum = counts.memory(counts.tile, counts.ple)?.total()?;
-        check_budget(add(fixed, minimum)?, budget)?;
-        Backend::new(self, context, chunk_rows, counts, budget - fixed)
+        let diagnostic = if profile.is_some() {
+            profile::ALLOWANCE_BYTES
+        } else {
+            0
+        };
+        check_budget(add(add(fixed, minimum)?, diagnostic)?, budget)?;
+        Backend::new(self, context, chunk_rows, counts, budget - fixed, profile)
     }
 }
 
-struct Counts {
+pub(super) struct Counts {
     input: usize,
     tile: usize,
     ple: usize,
@@ -211,11 +261,29 @@ impl Counts {
         let matrices = source.matrices.iter().flatten();
         let columns = matrices.clone().map(|m| m.columns).max().unwrap_or(0);
         let rows = matrices.map(|m| m.rows.min(TILE_ROWS)).max().unwrap_or(0);
+        Self::from_dimensions(columns, rows, source.source.workspace_bytes(chunk)?, chunk)
+    }
+    pub(super) fn from_plan(plan: &TextPlan, chunk: usize, ple: usize) -> Result<Self> {
+        let tensors = plan
+            .text_tensors()
+            .values()
+            .filter(|t| t.shape.len() == 2 && !std::ptr::eq(*t, plan.per_layer_embedding()));
+        let columns = tensors.clone().map(|t| t.shape[1]).max().unwrap_or(0);
+        let rows = tensors
+            .map(|t| t.shape[0].min(TILE_ROWS))
+            .max()
+            .unwrap_or(0);
+        Self::from_dimensions(columns, rows, ple, chunk)
+    }
+    fn from_dimensions(columns: usize, rows: usize, ple: usize, chunk: usize) -> Result<Self> {
         Ok(Self {
             input: multiply(chunk, columns)?,
             tile: multiply(chunk, rows)?,
-            ple: source.source.workspace_bytes(chunk)?,
+            ple,
         })
+    }
+    pub(super) fn minimum_memory(&self) -> Result<BackendMemory> {
+        self.memory(self.tile, self.ple)
     }
 
     fn memory(&self, cpu_tile: usize, ple_owned: usize) -> Result<BackendMemory> {
@@ -251,6 +319,7 @@ pub struct Backend<'weights, 'context> {
     pending: Option<Retained<ProtocolObject<dyn MTLCommandBuffer>>>,
     memory: BackendMemory,
     failed: bool,
+    trace: Option<Box<Bf16Trace>>,
     #[cfg(test)]
     fault: Option<Fault>,
 }
@@ -269,7 +338,16 @@ impl<'weights, 'context> Backend<'weights, 'context> {
         chunk: usize,
         counts: Counts,
         budget: usize,
+        profile: Option<ProfileOptions>,
     ) -> GraphResult<Self> {
+        let diagnostic = if profile.is_some() {
+            profile::ALLOWANCE_BYTES
+        } else {
+            0
+        };
+        let budget = budget
+            .checked_sub(diagnostic)
+            .ok_or(Error::Options("BF16 diagnostic budget missing"))?;
         let mut tile = reserve::<f32>(counts.tile)?;
         let with_tile = counts.memory(tile.capacity(), counts.ple)?.total()?;
         check_budget(with_tile, budget)?;
@@ -278,10 +356,14 @@ impl<'weights, 'context> Backend<'weights, 'context> {
             .source
             .workspace(chunk, ple_budget)
             .map_err(Error::from)?;
-        let memory = counts.memory(tile.capacity(), ple.owned_bytes())?;
+        let mut memory = counts.memory(tile.capacity(), ple.owned_bytes())?;
         check_budget(memory.total()?, budget)?;
+        memory.metadata_allowance_bytes = add(memory.metadata_allowance_bytes, diagnostic)?;
         tile.resize(counts.tile, 0.);
         let gpu = &context.0.gpu;
+        let trace = profile
+            .map(|options| Bf16Trace::new(source, gpu, options).map(Box::new))
+            .transpose()?;
         Ok(Self {
             source,
             context: &context.0,
@@ -294,6 +376,7 @@ impl<'weights, 'context> Backend<'weights, 'context> {
             pending: None,
             memory,
             failed: false,
+            trace,
             #[cfg(test)]
             fault: None,
         })
@@ -303,12 +386,35 @@ impl<'weights, 'context> Backend<'weights, 'context> {
     pub(crate) fn set_fault(&mut self, fault: Fault) {
         self.fault = Some(fault);
     }
+    #[cfg(test)]
+    pub(crate) fn limit_profile_events_for_test(&mut self, capacity: usize) {
+        self.trace
+            .as_mut()
+            .expect("profile enabled")
+            .limit_events_for_test(capacity);
+    }
 }
 
 impl sealed::Operations for Backend<'_, '_> {}
 
 impl<'weights> Operations<MatrixRef<'weights>> for Backend<'weights, '_> {
     type Error = GraphError;
+
+    fn begin_generation_step(&mut self, position: usize, rows: usize, last_row_only: bool) {
+        if let Some(trace) = &mut self.trace {
+            trace.begin(&self.context.gpu, position, rows, last_row_only);
+        }
+    }
+    fn finish_generation_step(&mut self, committed: Option<usize>) {
+        if let Some(trace) = &mut self.trace {
+            trace.finish(&self.context.gpu, committed);
+        }
+    }
+    fn generation_history_replaced(&mut self) {
+        if let Some(trace) = &mut self.trace {
+            trace.replace_history();
+        }
+    }
 
     fn project(
         &mut self,
@@ -337,7 +443,23 @@ impl<'weights> Operations<MatrixRef<'weights>> for Backend<'weights, '_> {
             let first = tile_index * TILE_ROWS;
             let rows = (matrix.rows - first).min(TILE_ROWS);
             let active = &mut self.tile[..rows * tokens];
-            project::run(
+            let mut operation = weight.operation;
+            if operation.role == crate::mlx::gemma4::bf16::execution::Role::TokenEmbedding {
+                operation.role = crate::mlx::gemma4::bf16::execution::Role::OutputHead;
+            }
+            let observation = self.trace.as_mut().and_then(|trace| {
+                trace.observation(project::TileAttribution {
+                    operation,
+                    source_matrix_slot: weight.index,
+                    tile_index,
+                    source_first_row: first,
+                    source_rows: rows,
+                    input_rows: tokens,
+                    output_features: matrix.rows,
+                    input_features: matrix.columns,
+                })
+            });
+            project::run_observed(
                 self.context,
                 project::Matrix::bf16(rows, matrix.columns, weights),
                 project::Buffers {
@@ -349,6 +471,7 @@ impl<'weights> Operations<MatrixRef<'weights>> for Backend<'weights, '_> {
                 input,
                 active,
                 tokens,
+                observation,
             )?;
             for (to, from) in output
                 .chunks_exact_mut(matrix.rows)
@@ -378,6 +501,7 @@ impl<'weights> Operations<MatrixRef<'weights>> for Backend<'weights, '_> {
         if !std::ptr::eq(weight.source, self.source) || ids.len() > self.chunk {
             return Err(Error::Options("Gemma BF16 foreign gather or row bound").into());
         }
+        let begin = self.trace.as_ref().and_then(|trace| trace.gather_start());
         if weight.index == self.source.bindings.embedding_index() {
             self.source.gather_embeddings(ids, output)?;
         } else if weight.index == self.source.bindings.ple_embedding_index() {
@@ -393,6 +517,15 @@ impl<'weights> Operations<MatrixRef<'weights>> for Backend<'weights, '_> {
             self.failed = false;
         } else {
             return Err(Error::Options("Gemma BF16 graph gather role differs").into());
+        }
+        if let (Some(trace), Some(begin)) = (&mut self.trace, begin) {
+            self.failed = true;
+            let columns = match weight.descriptor() {
+                MatrixDescriptor::Bf16 { columns, .. } => columns,
+                _ => unreachable!(),
+            };
+            trace.gather(weight.operation, weight.index, ids.len(), columns, begin)?;
+            self.failed = false;
         }
         Ok(())
     }

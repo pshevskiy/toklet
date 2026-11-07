@@ -20,34 +20,33 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current priority per user: **console tests and Ollama/vLLM-Metal comparison**,
-then resume O2.B2.B and O3. Two independent Toklet BF16/G2 cohorts pass:
-3 warmups + 10 measured each, all26 exact; TTFT0.392–0.395s,
-request2.184–2.202s, decode4.44–4.48tok/s, processpeak4.919GB.
-[Console evidence](artifacts/console-engine-2026-11-07/toklet-console-report.json).
-Ollama0.40.15 update/signature/notarization and local vLLM0.33.0/Metal0.33.0
-clean dependencies/MLX GPU checks pass. Original-BF16 external configurations
-fail tested6GiB admission; user selects quantizedMLX. Both external references
-pass two3warm+10 cohorts, exact text (IDs where available), AC/thermal0 and
-conservative memory guards. Request medians: Ollama121/119ms, vLLM147/149ms;
-cache/precision/timing boundaries differ from native. No speedup ratio/adoption.
-[Comparison](docs/console-engine-comparison.md); offline validation passes;
-Astra approves scoped documentation/result publication; [review/commit receipt](artifacts/engine-comparison-2026-11-07/publication-checks.json). Strict native format rejects candidate; exploratory
-metadata change reverted, no loader relaxation.
-- [x] Publish reviewed initial console comparison and installation results;
-  six cohorts/60 measured requests pass in their recorded scopes. Performance
-  ratios, quality/adoption, sustained/tail and continuous memory cap unqualified.
+Current task: **measure the guard-validation performance hypothesis**, then
+retain/reject it under the unchanged5% gate. The full selected goal stays active.
+[Predeclared hypothesis](artifacts/o3-gemma-runtime-2026-11-07/guard-validation-hypothesis.json).
 
-UI lab is paused per console priority: third capture has13 exact trials but25
-invalid callbacks and remains unqualified; fourth interrupted before reference
-verification. Processes closed; capture qualification/Astra remain open.
-[UI evidence](artifacts/o2-ui-frames-2026-11-07).
-O3 is in an isolated `codex/o3-runtime` worktree: cold/live BF16 CLI inventory
-and stable identities now pass initial tests and explicit Mac reconciliation
-(279ops/349tiles; exact admission5.814GB, processpeak4.918GB). Bounded encoding
-capture, full gates/overhead/Astra remain; no completion or speed claim.
-[contract/location](artifacts/o3-gemma-runtime-2026-11-07/implementation-contract.json).
-No O3 runtime or performance qualification yet.
+- [x] O3 selected BF16/G2 explanation and bounded profile complete: cold/live
+  inventory, full-logit/state/fault/overflow controls,604CPU/726Metal tests,
+  both strict Clippy configurations and three native slices/46exports pass.
+  Final lifetime fix passes512constructor/16,384export repetitions on a plain
+  Rust worker with zero observed postwarm growth. Astra approves afterP2/P3 fixes.
+  Refreshed104request overhead tracks pass; capture changes−0.28%/+0.98%
+  (ordinal2), default None+0.22%/−0.09%. No1%bound; diagnostic remains opt-in.
+  [Scope](docs/o3-gemma-runtime.md),
+  [checks/review/commit](artifacts/o3-gemma-runtime-2026-11-07/publication-checks.json).
+- [x] Console comparison published as`34db5778`; [report](docs/console-engine-comparison.md).
+  Externalquantized/nativeBF16 precision/cache/timing differences remain explicit.
+
+Earlier release-cache reuse and an incorrect pending-logit test assumption were
+caught, retained and corrected before final checks/measurements. No native model
+format or numerical tolerance was relaxed. First diagnostic decode identifies
+validation/copy as a candidate cost, not an accepted optimization.
+
+UI lab remains paused: third capture has13 exact trials but25 invalid callbacks;
+fourth interrupted before reference verification. It remains unqualified with
+capture/Astra gates open; [UI evidence](artifacts/o2-ui-frames-2026-11-07).
+After O3, evaluate measured performance hypotheses before further model breadth;
+keep the full selected goal active and iPhone runtime deferred.
+
 O2.B2.A bounded Send/preparation/publication correlation is reviewed and delivered
 in the existing summary ring; no lifecycle/render conflation.
 [Iteration evidence](artifacts/o2-ui-publication-2026-11-07/iteration-notes.json).

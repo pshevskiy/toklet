@@ -11,9 +11,18 @@ use std::{
 mod assistant_timing;
 mod capacity;
 #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+mod engine_compare;
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
 mod g2;
 #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
 mod g3;
+mod lifecycle;
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+mod profile;
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+mod profile_lifetime;
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+mod profile_overhead;
 mod verification;
 
 fn options() -> Options {

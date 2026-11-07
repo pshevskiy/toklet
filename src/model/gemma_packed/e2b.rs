@@ -209,6 +209,31 @@ pub(crate) fn official_bf16_planned_kv(capacity: usize, chunk_rows: usize) -> Re
     )
 }
 
+/// Minimum graph metadata and numerical session storage, excluding immutable
+/// backing, generation wrapper and external backend resources. Uses the same
+/// layouts/counting functions as construction, allocating only small metadata.
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+pub(crate) fn official_bf16_planned_layout<M: MatrixSource, B>(
+    load_limit: usize,
+    capacity: usize,
+    chunk_rows: usize,
+) -> Result<(usize, usize), Error> {
+    if !(1..=512).contains(&load_limit) || capacity > load_limit {
+        return Err(Error::InvalidConfig("official Gemma planned load/capacity"));
+    }
+    let layout = Layout::e2b_layers_for_limit(&crate::mlx::gemma4::layer_plans(), load_limit)?;
+    let plan = layout.shared_kv_plan()?;
+    Ok((
+        model_metadata_bytes::<M>(
+            &layout,
+            layout.layers.len(),
+            layout.max_dim(),
+            plan.allocated_metadata_bytes(),
+        )?,
+        backend_session_bytes::<M, B>(&layout, &plan, capacity, chunk_rows)?,
+    ))
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

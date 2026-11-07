@@ -34,6 +34,98 @@ pub(in crate::metal::gemma_affine) struct Bindings {
     layers: [LayerBindings; 35],
 }
 impl Bindings {
+    #[cfg(target_os = "macos")]
+    pub(in crate::metal::gemma_affine) fn operation_identity(
+        &self,
+        source: usize,
+    ) -> Result<crate::mlx::gemma4::bf16::execution::OperationId> {
+        use crate::mlx::gemma4::bf16::execution::{OperationId, Role};
+        for (index, role) in [
+            (self.embedding, Role::TokenEmbedding),
+            (self.ple_embedding, Role::PerLayerEmbedding),
+            (self.ple_projection, Role::PerLayerInputProjection),
+        ] {
+            if source == index {
+                return Ok(OperationId { role, layer: None });
+            }
+        }
+        for (index, layer) in self.layers.iter().enumerate() {
+            let layer_id = Some(
+                u16::try_from(index)
+                    .map_err(|_| Error::Options("Gemma operation layer overflow"))?,
+            );
+            for (slot, role) in [
+                (layer.q, Role::Query),
+                (layer.o, Role::AttentionOutput),
+                (layer.gate, Role::FeedForwardGate),
+                (layer.up, Role::FeedForwardUp),
+                (layer.down, Role::FeedForwardDown),
+                (layer.ple_gate, Role::PerLayerGate),
+                (layer.ple_projection, Role::PerLayerProjection),
+            ] {
+                if slot == source {
+                    return Ok(OperationId {
+                        role,
+                        layer: layer_id,
+                    });
+                }
+            }
+            if let Some(kv) = &layer.kv {
+                for (slot, role) in [(kv.k, Role::Key), (kv.v, Role::Value)] {
+                    if slot == source {
+                        return Ok(OperationId {
+                            role,
+                            layer: layer_id,
+                        });
+                    }
+                }
+            }
+        }
+        Err(Error::Options("Gemma operation source absent"))
+    }
+    #[cfg(target_os = "macos")]
+    pub(in crate::metal::gemma_affine) fn operation_source(
+        &self,
+        id: crate::mlx::gemma4::bf16::execution::OperationId,
+    ) -> Result<usize> {
+        use crate::mlx::gemma4::bf16::execution::Role;
+        if let Some(index) = id.layer {
+            let layer = self
+                .layers
+                .get(usize::from(index))
+                .ok_or(Error::Options("Gemma operation layer differs"))?;
+            return Ok(match id.role {
+                Role::Query => layer.q,
+                Role::AttentionOutput => layer.o,
+                Role::FeedForwardGate => layer.gate,
+                Role::FeedForwardUp => layer.up,
+                Role::FeedForwardDown => layer.down,
+                Role::PerLayerGate => layer.ple_gate,
+                Role::PerLayerProjection => layer.ple_projection,
+                Role::Key => {
+                    layer
+                        .kv
+                        .as_ref()
+                        .ok_or(Error::Options("Gemma consumer has no K projection"))?
+                        .k
+                }
+                Role::Value => {
+                    layer
+                        .kv
+                        .as_ref()
+                        .ok_or(Error::Options("Gemma consumer has no V projection"))?
+                        .v
+                }
+                _ => return Err(Error::Options("Gemma operation scope differs")),
+            });
+        }
+        Ok(match id.role {
+            Role::TokenEmbedding | Role::OutputHead => self.embedding,
+            Role::PerLayerEmbedding => self.ple_embedding,
+            Role::PerLayerInputProjection => self.ple_projection,
+            _ => return Err(Error::Options("Gemma operation scope differs")),
+        })
+    }
     pub(super) fn new(cold: &E2bPlan) -> Result<Self> {
         let matrix = |name: &str, rows: usize, columns: usize| {
             let found = cold

@@ -25,11 +25,17 @@ pub mod resident;
 mod weights;
 #[cfg(all(test, target_os = "macos"))]
 pub(crate) use bf16::Bf16GraphFault;
+#[cfg(target_os = "macos")]
+pub use bf16::{
+    Bf16AttributedTile, Bf16CaptureState, Bf16CpuGather, Bf16Evaluation, Bf16FrameProfile,
+    Bf16ProfileOptions, Bf16ProfileStatus,
+};
 pub use bf16::{Bf16Context, Bf16Projection};
 #[cfg(target_os = "macos")]
 pub use bf16::{
-    Bf16GenerationSession, Bf16LoadReport, Bf16Model, Bf16Session, Bf16Weights, OfficialBf16,
-    OfficialBf16Memory,
+    Bf16GenerationSession, Bf16LoadReport, Bf16Model, Bf16Session, Bf16Weights, MinimumMemory,
+    OfficialBf16, OfficialBf16Memory, OfficialBf16Plan, RuntimeInventory, SelectedOperation,
+    inspect_official_bf16,
 };
 pub use partitioned::{Gather, PartitionedAffine};
 pub use projection::Projection;

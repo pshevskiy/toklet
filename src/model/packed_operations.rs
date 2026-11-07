@@ -62,6 +62,10 @@ pub trait Operations<M: MatrixSource>: sealed::Operations {
     fn gather(&mut self, weight: &M, ids: &[u32], output: &mut [f32]) -> Result<(), Self::Error>;
     fn ready(&self) -> Result<(), Self::Error>;
     fn memory(&self) -> Result<BackendMemory, Error>;
+    // Coarse generation lifecycle only; scalar/other backends keep no-op hooks.
+    fn begin_generation_step(&mut self, _position: usize, _rows: usize, _last_row_only: bool) {}
+    fn finish_generation_step(&mut self, _committed: Option<usize>) {}
+    fn generation_history_replaced(&mut self) {}
 }
 #[derive(Default)]
 pub struct Scalar;

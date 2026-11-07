@@ -90,15 +90,18 @@ No optimization gain or UI/whole-app/tail qualification follows.
 callback TTFT and controller handling/publication. Six real Gemma controls,
 52 UI and 52 headless paired requests, fresh Swift/app builds and 29 portable
 checks pass; Astra approves after a typed state/work join correction. Both overhead tracks remain
-unqualified/default-disabled. Visible-frame qualification and O3 remain open.
+unqualified/default-disabled. Visible-frame qualification remains open; selected O3 scope is delivered below.
 A bounded display-frame lab is now in validation: strict clock/pixel fixtures,
 offline corruption checks, actual renderer crop inspection and fresh platform
 builds pass. User selected the primary display; first attempt failed strict viewport visibility
 before capture. Captured-frame/resource evidence and Astra remain pending; [current evidence](../artifacts/o2-ui-frames-2026-11-07/iteration-notes.json).
-O3 continues independently: explicit BF16 CLI/live-owner inventory passes initial
-unit/Metal/Clippy and Mac reconciliation (279ops/349tiles, exact5.814GB admission,
-4.918GB processpeak). Encode-time capture, final gates and Astra remain;
-[evidence](../artifacts/o3-gemma-runtime-2026-11-07/iteration-notes.json).
+O3 cold/live explanation and first bounded349-event profiles pass inventory,
+full-logit parity and failure/state controls. Fresh604CPU/726Metal tests, both
+strict Clippy configurations and104 exact overhead requests pass. Observed
+request-median capture changes−0.28%/+0.98% (ordinal2); default None changes
++0.22%/−0.09%. No1% bound or optimization claim. Exact admission5.814GB and
+4.919GB live process peak fit6GiB. Three native slices/46 exports each and Mac C smoke pass; local native-lifetime fix/stress control and final Astra approval pass;
+[scope/evidence](o3-gemma-runtime.md).
 [Evidence](../benchmarks/results/2026-11-07-o2a-gemma-phase-report-v1.json).
 
 The [R1 offline regression job](gemma-regression-job.md) now rejects incomparable
