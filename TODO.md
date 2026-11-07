@@ -15,23 +15,24 @@ Completed history is in the [dated archive](docs/archive/2026-11-07/README.md).
 - [x] Pass archive integrity, link/anchor, content-preservation and whitespace
   checks; [validation record](artifacts/context-archive-2026-11-07/checks.json).
 
-Current task: completed the [model/observability plan](docs/model-observability-plan.md)
-with observability first, Gemma 4 E2B → Qwen3.5-4B → Qwen3.5-9B, preferred
-uncensored MLX artifacts and five verified under-4B candidates.
-- [x] Research exact parameter counts, artifact lineage and MLX format/gaps.
-- [x] Specify timing/throughput/memory/state/outcome/overhead metrics and gates.
-- [x] Pass documentation content/link/whitespace checks; commit/evidence in the
-  [validation record](artifacts/model-observability-plan-2026-11-07/checks.json).
-Next implementation task: O1 metrics on the existing Gemma BF16 Mac route,
-then O2 baseline before performance changes. This plan update does not resume
-the implementation stopped on 7 November before integration/checks/review.
-The unfinished summary types in `apple/Harness/NativeRequestSummary.swift` and
-source-list addition remain uncommitted and unqualified. Qwen2.5-1.5B is now a
-historical reference, superseded in the forward queue by Qwen3.5-4B and 9B.
-- [ ] Implement bounded summaries and export with authoritative terminal state.
-- [ ] Run portable, Swift, real Mac and overhead checks; retain full logs.
-- [ ] Obtain combined Astra review, update evidence and commit.
-O1 is stopped at the user's request. No O1 checks or Astra approval are claimed.
+Requested goal: implement the whole selected observability/performance/model
+roadmap, with Gemma first, then Qwen3.5-4B and 9B and the under-4B track.
+Current milestone: O1 managed Gemma 4 E2B BF16 Mac request summaries complete.
+- [x] Implement bounded opt-in collection/export, typed terminal state and
+  explicit unavailable-field/budget-skip reasons; disabled mode remains default.
+- [x] Pass fmt/strict Metal Clippy, CPU594/Metal-feature713 tests, 16 portable
+  Python checks, strict Swift controller/render/iOS/simulator compilation,
+  unsigned Xcode simulator build and current-engine Gemma controls.
+- [x] Complete two 3-warmup/10-measured-pair overhead batches with full caller
+  boundaries and exact token/state parity. The 1% bound remains unqualified.
+- [x] Resolve Astra findings and obtain final scoped approval before commit.
+[Result/commit evidence](artifacts/o1-gemma-summary-2026-11-07/checks.json),
+[pilot scope](docs/o1-gemma-request-summaries.md),
+[Astra approval](artifacts/o1-gemma-summary-2026-11-07/astra-final.md).
+Next: O2 matched baselines/offline reporting and missing native/UI observations;
+then O3/R1 and measured improvements under the [model plan](docs/model-observability-plan.md).
+Qwen2.5-1.5B remains a regression reference. Uncensored MLX adoption is separate
+from this official BF16 pilot. Larger under-30B models remain research options.
 
 ## Working method
 
@@ -94,6 +95,7 @@ Preserve these rejected or restricted results:
 
 | Date | Result and checks | Evidence / next action |
 | --- | --- | --- |
+| 2026-11-07 | O1 Gemma opt-in summaries complete; Cargo, strict Swift/Xcode, real output/state/failure/admission controls pass. Corrected full-boundary overhead remains unqualified; Astra approves after three fixes. Earlier archive mismatch, compiler sandbox/type failures and superseded timings are retained in check notes/logs. | [Pilot](docs/o1-gemma-request-summaries.md), [result](benchmarks/results/2026-11-07-o1-gemma-summary-v1.json), [checks/commit](artifacts/o1-gemma-summary-2026-11-07/checks.json); next O2 within full-roadmap goal. |
 | 2026-11-07 | Observability-first plan complete; five exact under-4B counts verified. Preferred uncensored MLX formats/lineage and conversion/memory gaps recorded. Initial metadata DNS/Python certificate failures resolved with system curl; receipts retained. Documentation checks pass; binding policy unchanged. No runtime checks/Astra review claimed. | [Plan](docs/model-observability-plan.md), [checks/commit](artifacts/model-observability-plan-2026-11-07/checks.json); next implementation O1 remains stopped. |
 | 2026-11-07 | Researched ten current under-30B candidates from primary sources; capability/local-efficiency shortlist, not common-harness qualification. O1 stopped; unfinished code uncommitted and unchecked. Documentation checks pass. | [Research](docs/models-under-30b-2026-11-07.md), [checks](artifacts/models-under-30b-2026-11-07/checks.json); model selection next. |
 | 2026-11-07 | Archived full TODO/PLAN/improvement snapshots at `338c4e5b`; routine document bytes reduced about 97%. All snapshot text, 32 milestone criteria, four binding policy sections and both open items preserved; link/content/whitespace checks pass. Documentation-only. | [Archive manifest](docs/archive/2026-11-07/manifest.json), [checks](artifacts/context-archive-2026-11-07/checks.json); next proposed O1 pilot. |

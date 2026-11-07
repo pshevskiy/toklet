@@ -44,7 +44,7 @@ MLX artifacts. The suggestions below remain research context.
   transients. Even a nominal 9B language model needs careful admission.
 - No Toklet execution, latency or quality qualification is implied by this
   research. Existing qualification remains in [model coverage](model-coverage.md).
-  O1 is stopped at the user's request; its unfinished code remains uncommitted.
+  Current O1 status is in the [pilot receipt](o1-gemma-request-summaries.md).
 
 Also inspected recent specialist releases, including
 [Nemotron 3.5 Bolt E4B](https://research.nvidia.com/labs/nemotron/Nemotron-3.5-Bolt-E4B-4GB/)

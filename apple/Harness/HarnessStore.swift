@@ -55,7 +55,7 @@ final class HarnessStore: ObservableObject {
     init(enabled: Bool, lifecycleEnabled: Bool = false) {
         diagnosticsOnly = !enabled
         lifecycleSignals = lifecycleEnabled ? NativeLifecycleSignals():nil
-        do { worker = enabled ? try NativeWorker() : nil }
+        do { worker = enabled ? try NativeWorker(requestSummaryMode:.configured) : nil }
         catch { worker = nil; inputError = error.localizedDescription }
     }
     func poll() {
@@ -75,7 +75,7 @@ final class HarnessStore: ObservableObject {
     func setExpert(_ value: Bool) {
         guard !diagnosticsOnly else { return }
         if state.closed || worker == nil {
-            do { worker = try NativeWorker(); state = worker!.snapshot() }
+            do { worker = try NativeWorker(requestSummaryMode:.configured); state = worker!.snapshot() }
             catch { inputError = error.localizedDescription; return }
         }
         if state.busy || state.hasModel {

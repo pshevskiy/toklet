@@ -2,8 +2,9 @@
 
 Updated 7 November 2026. Selected order: **Gemma 4 E2B → Qwen3.5-4B →
 Qwen3.5-9B**. Qwen2.5-1.5B remains a historical regression reference, not the
-next adoption target. This is a plan update; the interrupted O1 implementation
-remains stopped and unqualified. [Current coverage](model-coverage.md) describes
+next adoption target. The [O1 opt-in pilot](o1-gemma-request-summaries.md) now
+implements available worker-boundary observations; native-phase/UI gaps remain
+explicit and the measured 1% overhead bound is unqualified. [Current coverage](model-coverage.md) describes
 what actually runs. [PLAN](../PLAN.md#validation-and-performance-policy) retains
 the binding numerical, quality, memory and measurement gates.
 
@@ -151,8 +152,9 @@ an identified, qualified instrument; modelled bytes are not measured DRAM traffi
    relevant supported features, changed model/session/GPU checks, Swift/app
    lifecycle checks, real Mac baseline and overhead trials; retain full logs.
    Submit one combined diff/invariants/check-results request to Astra; resolve
-   findings before code completion/commit. This documentation iteration only
-   needs content/link/whitespace checks and does not resume O1.
+   findings before code completion/commit. The original planning commit was
+   documentation-only; the O1 implementation has its own linked check/review
+   receipt and does not qualify missing native/UI metrics.
 
 Source/metadata inspection and documentation checks are recorded in
 [checks](../artifacts/model-observability-plan-2026-11-07/checks.json). No new

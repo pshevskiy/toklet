@@ -19,7 +19,8 @@ Current extension contracts:
 - [M9 measured performance](docs/next-performance-milestone.md) and
   [Mac affine decision](docs/m9-mac-affine-decision.md).
 - [Observability/performance proposal](docs/observability-performance-proposal.md):
-  design rationale; partial O1 draft was stopped before integration/checks/review.
+  design rationale; [O1 opt-in pilot](docs/o1-gemma-request-summaries.md) now implements
+  scoped available observations with explicit native-phase/UI coverage gaps.
 - [Selected model and metric plan](docs/model-observability-plan.md): observability
   first, then measured performance on Gemma 4 E2B, Qwen3.5-4B and Qwen3.5-9B.
 - [Gemma3 native conformance](docs/gemma3-native-conformance.md): preserve historic
@@ -46,7 +47,9 @@ Collect baselines before optimization; unknown observations stay explicit.
 Qualify summary overhead at ≤1% median TTFT/request time or keep it opt-in.
 Keep the existing ≥5% default performance retain gate and 6 GiB working-set
 ceiling. No model download, conversion or implementation is claimed by this
-planning update; interrupted O1 code remains stopped.
+planning update. O1 now has an [opt-in implementation](docs/o1-gemma-request-summaries.md);
+its measured overhead bound remains unqualified and missing native/UI probes
+remain explicit follow-on work.
 
 The initial settings below describe the foundation. Later selected models and
 routes use their own authenticated configuration and scoped acceptance evidence;

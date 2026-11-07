@@ -173,6 +173,41 @@ final class NativeWorker: @unchecked Sendable {
     private let condition = NSCondition()
     private var queued: NativeCommand?
     private var closing = false
+    private let summaryStore: NativeRequestSummaryStore?
+    private var summariesEnabled: Bool
+    private var summaryBudget: UInt64?
+    private var queuedSummary: NativeRequestSummary?
+    private var activeSummary: NativeRequestSummary?
+
+    // Snapshot fixed records while idle; JSON formatting never blocks inference.
+    func exportRequestSummaries() throws -> Data {
+        condition.lock()
+        guard !view.busy, let store = summaryStore else {
+            condition.unlock(); throw NativeContextFailure("Summaries disabled or worker busy")
+        }
+        let (records, dropped) = store.snapshot(), errors = store.exportErrors, skipped = store.budgetSkippedRecords
+        condition.unlock()
+        do { return try NativeRequestSummaryStore.export(records,dropped:dropped,exportErrors:errors,budgetSkipped:skipped) }
+        catch {
+            condition.lock(); store.noteExportError(); condition.unlock()
+            throw error
+        }
+    }
+
+    // Diagnostic control for paired trials. No setting changes during a request.
+    @discardableResult
+    func setRequestSummariesEnabled(_ enabled: Bool) -> Bool {
+        condition.lock(); defer { condition.unlock() }
+        guard !view.busy, !closing, summaryStore != nil else { return false }
+        summariesEnabled = enabled
+        return true
+    }
+
+    private func noteSummaryCancellation() {
+        let now = DispatchTime.now().uptimeNanoseconds
+        if activeSummary != nil, activeSummary?.cancellationUptimeNanoseconds == nil { activeSummary?.cancellationUptimeNanoseconds = now }
+        if queuedSummary != nil, queuedSummary?.cancellationUptimeNanoseconds == nil { queuedSummary?.cancellationUptimeNanoseconds = now }
+    }
     private var previewSelection: NativePreviewSelection?
     private var previewRequest: NativePreviewRequest?
     private var previewPriorPhase = "Idle"
@@ -198,6 +233,8 @@ final class NativeWorker: @unchecked Sendable {
     // Cold diagnostic gate, outside the condition lock; ordinary callers nil.
     private let beforeCommandDequeue: (@Sendable (NativeCommand) -> Void)?
     // Cold test gate after C inspection ownership was released, outside the lock.
+    private let allowSummaryCollection: (@Sendable () -> Bool)?
+    private let beforeChatDecode: (@Sendable () throws -> Void)?
     private let afterRuntimeInspection: (@Sendable (NativeResourcePlan) -> Void)?
 
     private let afterPreviewLimits: (@Sendable (NativePreviewRequest, NativeContextLimits) -> Void)?
@@ -209,10 +246,12 @@ final class NativeWorker: @unchecked Sendable {
     private let transitionRetirementFault: (@Sendable () -> NativeTransitionRetirementFault?)?
     private let readTransitionHeadroom: @Sendable () throws -> (availableBytes: UInt64, instrument: String)
 
-    init(captureSavedPrefix: Bool = false, beforeScorePublication: (@Sendable () -> Void)? = nil,
+    init(requestSummaryMode: NativeRequestSummaryMode = .disabled, captureSavedPrefix: Bool = false, beforeScorePublication: (@Sendable () -> Void)? = nil,
          afterScorePublication: (@Sendable (Bool) -> Void)? = nil,
          beforeCommandDequeue: (@Sendable (NativeCommand) -> Void)? = nil,
          afterRuntimeInspection: (@Sendable (NativeResourcePlan) -> Void)? = nil,
+         beforeChatDecode: (@Sendable () throws -> Void)? = nil,
+         allowSummaryCollection: (@Sendable () -> Bool)? = nil,
          afterPreviewLimits: (@Sendable (NativePreviewRequest, NativeContextLimits) -> Void)? = nil,
          beforePreviewPublication: (@Sendable (NativePreviewResult) -> Void)? = nil,
          beforeTransitionAcceptance: (@Sendable (NativeTransitionRequest, NativeContextFacts) -> Void)? = nil,
@@ -220,11 +259,15 @@ final class NativeWorker: @unchecked Sendable {
          afterTransitionAcceptance: (@Sendable (NativeTransitionResult) -> Void)? = nil,
          transitionRetirementFault: (@Sendable () -> NativeTransitionRetirementFault?)? = nil,
          readTransitionHeadroom: @escaping @Sendable () throws -> (availableBytes: UInt64, instrument: String) = { try NativeFootprint.readHeadroom() }) throws {
+        self.summaryStore = requestSummaryMode == .summary ? NativeRequestSummaryStore() : nil
+        self.summariesEnabled = requestSummaryMode == .summary
         self.captureSavedPrefix = captureSavedPrefix
         self.beforeScorePublication = beforeScorePublication
         self.afterScorePublication = afterScorePublication
         self.beforeCommandDequeue = beforeCommandDequeue
         self.afterRuntimeInspection = afterRuntimeInspection
+        self.beforeChatDecode = beforeChatDecode
+        self.allowSummaryCollection = allowSummaryCollection
         self.afterPreviewLimits = afterPreviewLimits
         self.beforePreviewPublication = beforePreviewPublication
         self.beforeTransitionAcceptance = beforeTransitionAcceptance
@@ -250,7 +293,24 @@ final class NativeWorker: @unchecked Sendable {
     @discardableResult
     func submit(_ command: NativeCommand, initiallyCancelled: Bool = false) -> Bool {
         condition.lock(); defer { condition.unlock() }
-        guard !closing, !view.closed, !view.busy, !view.restartRequired, let flag = cancelFlag else { return false }
+        var summary: NativeRequestSummary?
+        if case .chat(let id,_,let maximum,_) = command, summariesEnabled, let store = summaryStore,
+           view.acceptedIdentity?.profile == .gemmaBF16 {
+            if let budget = view.sessionConfiguration?.wholeSessionBudget ?? summaryBudget,
+               NativeRequestSummaryStore.fitsBudget(admitted:view.admittedBytes,budget:budget),
+               allowSummaryCollection?() ?? true {
+                summary = store.begin(id:id,maximum:maximum,generation:view.revision,
+                    now:DispatchTime.now().uptimeNanoseconds,context:view.liveContext,configuration:view.sessionConfiguration)
+            } else { store.noteBudgetSkip() }
+        }
+        guard !closing, !view.closed, !view.busy, !view.restartRequired, let flag = cancelFlag else {
+            if var record = summary {
+                record.finish(observation:nil,failure:true,status:UInt32(TOKLET_BUSY),reason:0,now:DispatchTime.now().uptimeNanoseconds)
+                summaryStore?.append(record)
+            }
+            return false
+        }
+        queuedSummary = summary
         if case .replaceWithEmptySession(let request) = command {
             guard transitionSelection == request.selection,
                   view.liveContext?.modelInstance == request.selection.modelInstance,
@@ -278,6 +338,7 @@ final class NativeWorker: @unchecked Sendable {
         // A previous command's failure is not the status of this accepted work.
         view.status = 0; view.message = ""
         queued = command
+        if initiallyCancelled { noteSummaryCancellation() }
         switch command {
         case .chat, .generate: view.requestStartedUptimeNanoseconds = DispatchTime.now().uptimeNanoseconds
         default: view.requestStartedUptimeNanoseconds = nil
@@ -501,6 +562,7 @@ final class NativeWorker: @unchecked Sendable {
 
     func cancel() {
         condition.lock(); defer { condition.unlock() }
+        noteSummaryCancellation()
         invalidatePreview()
         invalidateTransition()
         if let flag = cancelFlag { _ = toklet_cancel_set(flag, 1, nil) }
@@ -511,6 +573,7 @@ final class NativeWorker: @unchecked Sendable {
     func interrupt(unload: Bool) {
         condition.lock(); defer { condition.unlock() }
         guard !closing, !view.closed else { return }
+        noteSummaryCancellation()
         invalidatePreview()
         invalidateTransition()
         if let flag = cancelFlag { _ = toklet_cancel_set(flag, 1, nil) }
@@ -532,6 +595,7 @@ final class NativeWorker: @unchecked Sendable {
     func close() {
         condition.lock(); defer { condition.unlock() }
         guard !view.closed else { return }
+        noteSummaryCancellation()
         invalidatePreview()
         invalidateTransition()
         cancelQueuedChat()
@@ -551,6 +615,10 @@ final class NativeWorker: @unchecked Sendable {
     // Caller holds condition. An accepted request always receives a terminal
     // response, even when lifecycle cleanup supersedes it before dequeue.
     private func cancelQueuedChat() {
+        if var record = queuedSummary {
+            record.finish(observation:nil,failure:false,status:0,reason:3,now:DispatchTime.now().uptimeNanoseconds)
+            summaryStore?.append(record); queuedSummary = nil
+        }
         if case .chat(let id,_,_,_)? = queued {
             view.chatResult = NativeChatResult(id:id,text:"",reason:3,error:"Response stopped before generation.",rejected:true)
         }
@@ -571,6 +639,8 @@ final class NativeWorker: @unchecked Sendable {
         guard !closing && queued == nil else { throw invalid("Load superseded by lifecycle cleanup") }
     }
 
+    fileprivate func checkChatDecode() throws { try beforeChatDecode?() }
+
     fileprivate func record(_ event: TokletTokenEvent, autoCancelAfter: Int) -> UInt32 {
         condition.lock(); defer { condition.unlock() }
         guard view.ids.count < Int(NativeSettings.maximumChatOutputTokens), event.index == UInt32(view.ids.count),
@@ -580,8 +650,10 @@ final class NativeWorker: @unchecked Sendable {
                                        callbackUptimeNanoseconds:DispatchTime.now().uptimeNanoseconds)
         view.ids.append(event.token_id)
         view.tokenTimings.append(timing)
+        activeSummary?.observeCallback(event.elapsed_seconds,uptime:timing.callbackUptimeNanoseconds)
         if autoCancelAfter > 0, view.ids.count == autoCancelAfter, let flag = cancelFlag {
             _ = toklet_cancel_set(flag, 1, nil)
+            noteSummaryCancellation()
         }
         return 0
     }
@@ -602,6 +674,9 @@ final class NativeWorker: @unchecked Sendable {
                 closing = true; queued = nil; condition.unlock(); break
             }
             let command = queued!
+            activeSummary = queuedSummary; queuedSummary = nil
+            activeSummary?.startedUptimeNanoseconds = DispatchTime.now().uptimeNanoseconds
+            engine.observation = activeSummary == nil ? nil : NativeRequestObservation()
             queued = nil
             if case .replaceWithEmptySession(let request) = command {
                 let flag = cancelFlag!
@@ -637,12 +712,29 @@ final class NativeWorker: @unchecked Sendable {
                     upper:requested.loadUpper ?? requested.capacity,completed:completed,
                     model:engine.modelContext?.modelInstance,session:engine.liveContext?.sessionInstance)
             }
+            engine.observation?.finishPhase()
+            let summaryFootprint = engine.observation == nil ? nil : try? NativeFootprint.read()
             if case .score = command { beforeScorePublication?() }
             condition.lock()
             switch command {
             case .chat, .generate:
                 view.requestCompletedUptimeNanoseconds = DispatchTime.now().uptimeNanoseconds
             default: break
+            }
+            if var record = activeSummary {
+                record.after = engine.liveContext.map(NativeRequestSummary.State.init)
+                record.nativeEmittedTokens = engine.observation?.evaluationStarted == true ? engine.lastEmitted : nil
+                if let memory = engine.sessionMemory, memory.matches(engine.liveContext,configuration:engine.sessionConfiguration),
+                   case .officialGemma(_,let admission,let kv,let codec) = memory.reading {
+                    record.sessionAdmittedBytes = admission; record.kvOwnedBytes = kv; record.codecAllowanceBytes = codec
+                }
+                record.processPhysicalBytes = summaryFootprint?.physicalBytes
+                record.processLifetimePeakBytes = summaryFootprint?.lifetimePeakPhysicalBytes
+                record.outputTextBytes = engine.chatResult.map { UInt64($0.text.utf8.count) }
+                if failure != nil && engine.observation?.evaluationStarted == true && engine.liveContext == nil { record.replayRequired = true }
+                record.finish(observation:engine.observation,failure:failure != nil,
+                    status:UInt32(clamping:failure?.code ?? 0),reason:engine.report.reason,now:DispatchTime.now().uptimeNanoseconds)
+                summaryStore?.append(record); activeSummary = nil
             }
             view.hasModel = engine.model != nil
             view.hasSession = engine.session != nil
@@ -670,6 +762,7 @@ final class NativeWorker: @unchecked Sendable {
             view.emitted = engine.lastEmitted
             view.stopToken = failure == nil && !closing && queued == nil && engine.report.reason == 2
                 ? engine.report.stop_token : .max
+            summaryBudget = engine.settings?.numericalBudget
             view.admittedBytes = engine.admissionUpperBound
             view.compatibility = !closing && queued == nil ? engine.compatibility : nil
             view.compatibilityDirectory = view.compatibility == nil ? "" : engine.compatibilityDirectory
@@ -694,6 +787,7 @@ final class NativeWorker: @unchecked Sendable {
             if code != TOKLET_OK { releaseError = nativeError(code, &error) }
             cancelFlag = nil
         }
+        summaryBudget = nil
         view.hasModel = false; view.hasSession = false
         view.chatEnabled = false; view.acceptedIdentity = nil; view.acceptedLoadRequestID = nil
         view.modelContext = nil; view.liveContext = nil; view.requestBudget = nil
@@ -762,6 +856,7 @@ private final class PreparedTransition {
 }
 
 private final class Engine {
+    var observation: NativeRequestObservation?
     var model: OpaquePointer?
     var session: OpaquePointer?
     var settings: NativeSettings?
@@ -967,6 +1062,7 @@ private final class Engine {
             let limits = NativeGenerationPolicy.limits(.chat,model:modelContext)
             try limits.validate(input:0,output:maximum)
             guard autoCancelAfter >= 0, UInt64(autoCancelAfter) <= limits.maximumOutput else { throw invalid("Invalid automatic cancellation count") }
+            observation?.enter(.encoding)
             var ids = [UInt32](repeating:0,count:Int(limits.maximumPrompt))
             var count = 0; var error = TokletError()
             let code = conversation.withUnsafeBytes { input in
@@ -977,15 +1073,20 @@ private final class Engine {
             }
             try requireOK(code,&error)
             guard count <= ids.count else { throw invalid("Encoded input exceeds current chat input limit") }
+            observation?.promptTokens = UInt64(count)
+            observation?.enter(.completion)
             if session == nil { try createSession() } // Explicit Send, never foreground auto-resume.
             var generationError: Error?
             do { try generate(3,Array(ids.prefix(count)),maximum,chatStops,autoCancelAfter,flag,worker,
                               chatOutput:true,didAdmit:{ generationStarted = true }) }
             catch { generationError = error }
             if !generationStarted, let generationError { throw generationError }
+            observation?.enter(.decoding)
+            try worker.checkChatDecode()
             let text = try decodeChat(worker.snapshot().ids)
             chatResult = NativeChatResult(id:id,text:text,reason:report.reason,
                 error:generationError?.localizedDescription ?? "")
+            observation?.enter(.completion)
             if let generationError { throw generationError }
         } catch {
             if chatResult == nil { chatResult = NativeChatResult(id:id,text:"",reason:0,error:error.localizedDescription,rejected:!generationStarted) }
@@ -1091,6 +1192,7 @@ private final class Engine {
         didAdmit?()
         let sink = Sink(worker, autoCancel)
         report = TokletReport()
+        observation?.enter(.evaluation)
         let code = withExtendedLifetime(sink) {
             tokens.withUnsafeBufferPointer { input in
                 stops.withUnsafeBufferPointer { stop in
@@ -1100,6 +1202,8 @@ private final class Engine {
                 }
             }
         }
+        if code != TOKLET_OK { observation?.failurePhase = .evaluation }
+        observation?.enter(.completion)
         lastEmitted = report.emitted_tokens
         // Query exact state even on recoverable generation failure. Poisoned or
         // otherwise unreadable state cannot be offered for replay.

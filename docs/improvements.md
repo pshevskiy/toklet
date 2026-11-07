@@ -58,6 +58,16 @@ qualification scope live in [TODO](../TODO.md); acceptance policy is in
 | Gemma G3 assistant | Longer guard regresses about 21%; keep test-only, retain ordinary G2. [Decision](../benchmarks/results/2026-11-06-gemma-assistant-mtp-retention-v1.json). |
 | New device/context/default adoption | Requires its own applicable checks. Mac execution, metadata support or admission estimates do not establish unrestricted support. |
 
+## Current observability work
+
+[O1 Gemma request summaries](o1-gemma-request-summaries.md) are implemented as a
+bounded, opt-in worker-boundary pilot with explicit unavailable-field reasons.
+Current-source release Gemma state/output/failure/budget controls, Cargo/Swift
+checks and unsigned Xcode simulator build pass; Astra approves. Two full-boundary
+paired runs cannot establish ≤1% overhead, so mode stays disabled by default.
+Native phase/UI gaps remain explicit; no speedup or broader qualification claimed.
+[Evidence](../artifacts/o1-gemma-summary-2026-11-07/checks.json).
+
 ## Latest documentation work
 
 The [selected model plan](model-observability-plan.md) now makes observability

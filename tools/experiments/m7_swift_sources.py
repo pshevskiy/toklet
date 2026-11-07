@@ -11,6 +11,7 @@ WORKER_NAMES = (
     'NativeContext.swift', 'NativeContextLimits.swift', 'NativeCapacityPlan.swift',
     'NativeAcceptedIdentity.swift', 'GenerationCapabilities.swift',
     'NativePlanningPreview.swift', 'NativeSessionTransition.swift', 'NativeProcessMemory.swift',
+    'NativeRequestSummary.swift',
 )
 
 

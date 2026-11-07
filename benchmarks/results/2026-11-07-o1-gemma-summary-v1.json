@@ -1,0 +1,212 @@
+{
+  "format": "toklet-o1-gemma-request-summaries-v1",
+  "scope": "managed official Gemma 4 E2B BF16 Mac Chat; opt-in, disabled by default",
+  "model": "google/gemma-4-E2B-it",
+  "revision": "70af34e20bd4b7a91f0de6b22675850c43922a03",
+  "source_build_id": "3c01d58896fc531244375795c39162442049600c130af44df279c23d978cc01c",
+  "native_archive_sha256": "3d93be4a8788a82db911536841a4e2a0bd7e87ab285f0bc4623009500c7ffe8d",
+  "hardware": "Apple M1 Pro",
+  "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.2\nBuildVersion:\t\t25G83",
+  "power": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=67567715)\t80%; AC attached; not charging present: true",
+  "thermal_state_before": "0",
+  "thermal_state_after": "0",
+  "thermal_instrument": "NSProcessInfo.thermalState, 0=nominal; pmset thermal warning unavailable",
+  "checks": {
+    "cargo_fmt": true,
+    "clippy_all_targets_metal": true,
+    "cpu": {
+      "passed": 594,
+      "failed": 0,
+      "ignored": 32,
+      "suites": 64
+    },
+    "metal_feature": {
+      "passed": 713,
+      "failed": 0,
+      "ignored": 278,
+      "suites": 64
+    },
+    "strict_swift_mac_controllers_render_ios_and_simulator_compile": true,
+    "python_tests_passed": 16,
+    "real_gemma_control_summaries": 9,
+    "source_weights_kernels_unchanged_by_o1": true,
+    "xcode_unsigned_simulator_build": true,
+    "budget_exact_fit_insufficient_underflow_and_skip_generation": true,
+    "conformance_export_errors": 1,
+    "conformance_budget_skips": 1
+  },
+  "trials_per_batch": {
+    "warmup_pairs": 3,
+    "measured_pairs": 10,
+    "independent_batches": 2,
+    "fixed_emitted_tokens": 8
+  },
+  "overhead": [
+    {
+      "ttft_ms": {
+        "disabled_median": 412.10793750000005,
+        "summary_median": 410.63925,
+        "median_ratio_overhead_pct": -0.35638418151070494,
+        "paired_overhead_pct": [
+          -0.22083968172385005,
+          10.707526414958624,
+          1.36031919613393,
+          -0.8860480468530829,
+          2.5508374545813117,
+          -1.0793233558465287,
+          -1.643050833985249,
+          -0.982351264335235,
+          0.4137738068243024,
+          -1.0025919087650714
+        ],
+        "paired_median_pct": -0.5534438642884665,
+        "paired_median_bootstrap_95_pct": [
+          -1.0308373100908819,
+          1.482305630702807
+        ],
+        "disabled_range": [
+          408.060458,
+          425.287208
+        ],
+        "summary_range": [
+          407.746,
+          452.048583
+        ]
+      },
+      "total_ms": {
+        "disabled_median": 2326.497187,
+        "summary_median": 2338.683271,
+        "median_ratio_overhead_pct": 0.5237953464157785,
+        "paired_overhead_pct": [
+          -3.4126376369274958,
+          3.2030974425318437,
+          -6.022369518879566,
+          5.5988728439070545,
+          0.5957731916987452,
+          7.054388516093746,
+          -1.6004753640963432,
+          0.0086347402784126,
+          3.303276802832711,
+          -0.23191740800512228
+        ],
+        "paired_median_pct": 0.3022039659885789,
+        "paired_median_bootstrap_95_pct": [
+          -1.822277522466309,
+          4.400985143219449
+        ],
+        "disabled_range": [
+          2294.183,
+          2492.344708
+        ],
+        "summary_range": [
+          2310.190458,
+          2494.580125
+        ]
+      }
+    },
+    {
+      "ttft_ms": {
+        "disabled_median": 407.2702705,
+        "summary_median": 409.5409585,
+        "median_ratio_overhead_pct": 0.5575383632132835,
+        "paired_overhead_pct": [
+          -10.64464527244029,
+          0.9436688316748709,
+          2.049106992818972,
+          -13.681021728952814,
+          0.9743704145989351,
+          -1.9336659711417958,
+          0.1738549270776879,
+          -0.11268187875059787,
+          0.5548297063318497,
+          0.9847756639864258
+        ],
+        "paired_median_pct": 0.3643423167047688,
+        "paired_median_bootstrap_95_pct": [
+          -5.378663575595444,
+          0.9743704145989351
+        ],
+        "disabled_range": [
+          387.994458,
+          477.122625
+        ],
+        "summary_range": [
+          390.076167,
+          419.029417
+        ]
+      },
+      "total_ms": {
+        "disabled_median": 2301.3342295,
+        "summary_median": 2311.623792,
+        "median_ratio_overhead_pct": 0.447112912505343,
+        "paired_overhead_pct": [
+          -2.996575750936392,
+          -0.04302493079838543,
+          2.419490025740112,
+          -4.29967182515939,
+          0.3100458200056444,
+          13.575256828845994,
+          0.2569015043367706,
+          0.03841523581831208,
+          2.7199533270189757,
+          0.1269135018456602
+        ],
+        "paired_median_pct": 0.1919075030912154,
+        "paired_median_bootstrap_95_pct": [
+          -1.47908025755904,
+          2.419490025740112
+        ],
+        "disabled_range": [
+          2170.849125,
+          2414.376125
+        ],
+        "summary_range": [
+          2184.208625,
+          2650.103334
+        ]
+      }
+    }
+  ],
+  "overhead_qualified": false,
+  "decision": "Retain as explicit opt-in, disabled by default. Initial paired evidence cannot establish <=1% TTFT and request-time overhead; no tail or sustained qualification.",
+  "maximum_process_lifetime_peak_bytes": 4915269880,
+  "maximum_conformance_record_wire_bytes": 1198,
+  "unavailable": [
+    "engine/package build identity: bind export to runner build receipt",
+    "GPU dispatch/wait/readback counters and native prefill/decode/sampling: not exposed by this ABI",
+    "ttft_event_ms and first-visible/final-answer/UI-update/request-UI timings: no calibrated event-to-host or render acknowledgment",
+    "load/conversion/compile phases and memory pressure: separate existing load receipt, not per-request measurements",
+    "token interval distribution: only first/last bounded aggregates in O1",
+    "reused/prefill/decode/sampled counts: not exposed by this ABI; before/after counts are session totals",
+    "replay-required: true when evaluation failed and state is unreadable; null otherwise (ABI has no poison/replay flag)",
+    "weights/scratch breakdown: Gemma ABI exposes aggregate admission, KV and codec allowance",
+    "missing state: native context unavailable or request had not started",
+    "missing phase/footprint: phase not reached or instrument unavailable"
+  ],
+  "review": "Astra approved scoped opt-in/default-disabled commit; all findings resolved; 1% overhead bound remains unqualified",
+  "evidence": {
+    "checks": "artifacts/o1-gemma-summary-2026-11-07/checks.json",
+    "current_build": "artifacts/o1-gemma-summary-2026-11-07/current-build.json",
+    "measurements": "artifacts/o1-gemma-summary-2026-11-07/acceptance/result.json",
+    "summaries": "artifacts/o1-gemma-summary-2026-11-07/acceptance/conformance.jsonl",
+    "review": "artifacts/o1-gemma-summary-2026-11-07/astra-final.md",
+    "review_fixes": "artifacts/o1-gemma-summary-2026-11-07/review-fixes.patch",
+    "xcode_build": "artifacts/o1-gemma-summary-2026-11-07/xcode-simulator-verified.log",
+    "initial_review": "artifacts/o1-gemma-summary-2026-11-07/astra-review.md"
+  },
+  "superseded_trials": [
+    "Historical native45 archive inputs differed from current source; discarded as acceptance evidence",
+    "SwiftUI macro sandbox failure rerun with compiler access; final current-source checks pass"
+  ],
+  "workload": {
+    "capacity": 512,
+    "chunk": 32,
+    "weight_dtype": "BF16",
+    "requested_output": 12,
+    "encoded_prompt_tokens": 15,
+    "cache_action": "reset and prompt each Chat request",
+    "readback": "existing official Gemma route; no changed commands",
+    "comparison": "Full caller submit-to-idle acknowledgment includes collection setup/finalization/publication; fixed token output/state parity; no render measurement"
+  },
+  "maximum_conformance_jsonl_line_bytes": 1199
+}

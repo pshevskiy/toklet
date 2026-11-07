@@ -8,9 +8,9 @@ qualification, memory budgets or the deferred iPhone scope.
 The selected [model/metric plan](model-observability-plan.md) now sets delivery
 priority: **observability first on Gemma 4 E2B**, then measured performance,
 Qwen3.5-4B and Qwen3.5-9B. It defines metric units/boundaries and the preferred
-uncensored MLX candidates, plus five strictly under-4B models. The earlier O1
-draft remains stopped before integration/checks/review; the plan is not a
-completion or support claim.
+uncensored MLX candidates, plus five strictly under-4B models. The subsequent
+[O1 opt-in pilot](o1-gemma-request-summaries.md) implements scoped worker metrics;
+unexposed native/UI observations and the unqualified overhead bound stay explicit.
 
 **Recommendation:** make every request explain its cost, then use that evidence
 to remove unnecessary work and qualify the best existing optimization for the
