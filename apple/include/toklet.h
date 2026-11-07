@@ -188,6 +188,23 @@ typedef struct {
     uint32_t history_tokens, evaluated_tokens, pending_tokens, emitted_tokens;
     uint64_t admitted_bytes;
 } TokletReport;
+/* Additive observed-generation output; C alignment/96 bytes. A completed native
+   Report (including cancellation) sets REPORT_KNOWN. FIRST_TOKEN_KNOWN means an
+   emitted event exists; hidden stops do not create one. Durations are seconds on
+   the native monotonic clock; total includes callbacks, phase timers exclude
+   callback work. Sampling is host selection/cached-ID fetch; fused GPU selection
+   stays charged to evaluation. Decode rate still uses emitted-event intervals.
+   On generation failure known_fields=0 and fields are unavailable, not measured
+   zero. Recoverable token state remains in TokletReport. No new GPU waits or
+   timers; this copies the engine's existing completed generation Report. */
+#define TOKLET_GENERATION_REPORT_KNOWN 1u
+#define TOKLET_GENERATION_FIRST_TOKEN_KNOWN 2u
+typedef struct {
+    uint32_t abi_version, struct_size, known_fields, reserved;
+    uint64_t session_instance, reused_tokens, prefill_tokens, sampled_tokens, emitted_tokens;
+    double prefill_seconds, decode_seconds, sampling_seconds, total_seconds, first_token_seconds;
+} TokletGenerationMetrics;
+
 /* Read-only scalar diagnostic; no full-logit copy. Native C alignment,48 bytes.
    FP32 target/greedy logits are exactly widened to double; loss uses stable
    compensated FP64 log-sum-exp. Tied greedy IDs choose the lowest token ID. */
@@ -331,6 +348,14 @@ uint32_t toklet_session_reset(const TokletSession *, TokletError *);
    Error reports may contain recoverable state; other outputs require OK. */
 uint32_t toklet_session_generate(const TokletSession *, uint32_t, const uint32_t *, size_t,
     uint32_t, const uint32_t *, size_t, const TokletCancel *, TokletEmit, void *, TokletReport *, TokletError *);
+/* Same operation/callback/state rules as generate. Required metrics output is
+   initialized unknown before request validation (except invalid error/output
+   pointers); never retains a previous call's measurements. It must not overlap
+   any inputs or outputs. The original generate ABI is unchanged. */
+uint32_t toklet_session_generate_observed(const TokletSession *, uint32_t, const uint32_t *, size_t,
+                                         uint32_t, const uint32_t *, size_t, const TokletCancel *,
+                                         TokletEmit, void *, TokletReport *, TokletGenerationMetrics *, TokletError *);
+
 uint32_t toklet_cancel_create(TokletCancel **, TokletError *);
 uint32_t toklet_cancel_set(const TokletCancel *, uint32_t, TokletError *);
 uint32_t toklet_cancel_release(TokletCancel *, TokletError *);

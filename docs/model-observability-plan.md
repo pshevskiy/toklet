@@ -3,8 +3,10 @@
 Updated 7 November 2026. Selected order: **Gemma 4 E2B → Qwen3.5-4B →
 Qwen3.5-9B**. Qwen2.5-1.5B remains a historical regression reference, not the
 next adoption target. The [O1 opt-in pilot](o1-gemma-request-summaries.md) now
-implements available worker-boundary observations; native-phase/UI gaps remain
-explicit and the measured 1% overhead bound is unqualified. [Current coverage](model-coverage.md) describes
+implements available worker-boundary observations. The additive
+[O2.A phase API/report](o2-gemma-cost-report.md) now exposes completed native
+phases; remaining UI/device/workload gaps are explicit and the 1% overhead bound
+is unqualified. [Current coverage](model-coverage.md) describes
 what actually runs. [PLAN](../PLAN.md#validation-and-performance-policy) retains
 the binding numerical, quality, memory and measurement gates.
 

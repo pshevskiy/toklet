@@ -1,0 +1,236 @@
+{
+  "format": "toklet-o2a-gemma-native-phase-report-v1",
+  "scope": "O2.A additive native phases and matched warm short-Chat report; O2.B cold/continuation/sustained/UI scopes pending",
+  "legacy_generate_abi_unchanged": true,
+  "native_c_exports_per_slice": 46,
+  "generation_metrics_struct_bytes": 96,
+  "summary_schema_version": 2,
+  "model": "google/gemma-4-E2B-it",
+  "revision": "70af34e20bd4b7a91f0de6b22675850c43922a03",
+  "capacity": 512,
+  "chunk": 32,
+  "weight_dtype": "BF16",
+  "prompt_tokens": 15,
+  "requested_output_tokens": 12,
+  "sampled_tokens_including_stop": 9,
+  "emitted_tokens": 8,
+  "build_id": "8b64cfc1b295e23b787e8cb25e11077a5102d43a11a9c2984ada84a683311612",
+  "native_archive_sha256": "30e6265b1e94e98d6d3d8812490f6dd7a06d01e7e9e8d4f2875cf351e857a4b9",
+  "hardware": "Apple M1 Pro",
+  "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.2\nBuildVersion:\t\t25G83",
+  "power": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=67567715)\t80%; AC attached; not charging present: true",
+  "thermal_state_mid": "0",
+  "thermal_state_after": "0",
+  "native_phase_costs": [
+    {
+      "prefillSeconds": 0.3951518335,
+      "decodeSeconds": 1.793634855,
+      "samplingSeconds": 0.009273958499999999,
+      "totalSeconds": 2.198272292
+    },
+    {
+      "prefillSeconds": 0.3932636045,
+      "decodeSeconds": 1.7963286875,
+      "samplingSeconds": 0.0093041655,
+      "totalSeconds": 2.2010244795
+    }
+  ],
+  "dominant_observed_phase": "decodeSeconds",
+  "overhead": [
+    {
+      "ttft_ms": {
+        "disabled_median": 393.153188,
+        "summary_median": 396.26483299999995,
+        "median_ratio_overhead_pct": 0.7914586718294592,
+        "paired_overhead_pct": [
+          5.198079565471159,
+          1.6025534145162057,
+          -1.5038993204886997,
+          -1.7305544139688323,
+          1.2152110681973305,
+          0.13059028715698417,
+          1.3322647876607308,
+          -2.1809480739752973,
+          24.577211198011728,
+          1.8874862517155533
+        ],
+        "paired_median_pct": 1.2737379279290306,
+        "paired_median_bootstrap_95_pct": [
+          -1.5038993204886997,
+          3.2651721765659447
+        ],
+        "disabled_range": [
+          391.155167,
+          400.979417
+        ],
+        "summary_range": [
+          390.410917,
+          489.42675
+        ]
+      },
+      "total_ms": {
+        "disabled_median": 2209.6100625,
+        "summary_median": 2198.4466045,
+        "median_ratio_overhead_pct": -0.5052229888638959,
+        "paired_overhead_pct": [
+          2.3522832366005497,
+          -1.663651305891778,
+          -1.3533732735791948,
+          0.33865851259082813,
+          -0.16872293673670935,
+          -0.6727787915198347,
+          -0.4846641925629114,
+          -0.8888228039722779,
+          6.163330432841585,
+          1.538653390508271
+        ],
+        "paired_median_pct": -0.32669356464981036,
+        "paired_median_bootstrap_95_pct": [
+          -1.0130760325495147,
+          1.538653390508271
+        ],
+        "disabled_range": [
+          2179.591334,
+          2228.807375
+        ],
+        "summary_range": [
+          2183.143209,
+          2313.92675
+        ]
+      }
+    },
+    {
+      "ttft_ms": {
+        "disabled_median": 394.088354,
+        "summary_median": 394.3495415,
+        "median_ratio_overhead_pct": 0.06627638126044388,
+        "paired_overhead_pct": [
+          -0.5160145673507976,
+          -0.41037057487420814,
+          -1.7878568873410106,
+          -2.0742808577937533,
+          1.888514675348163,
+          1.6284937721426251,
+          -0.5398995401432072,
+          0.1844304201571667,
+          0.978340485800766,
+          1.2237487933879798
+        ],
+        "paired_median_pct": -0.11297007735852072,
+        "paired_median_bootstrap_95_pct": [
+          -1.151935727345904,
+          1.3034171289716956
+        ],
+        "disabled_range": [
+          389.444833,
+          402.197125
+        ],
+        "summary_range": [
+          387.846666,
+          402.632334
+        ]
+      },
+      "total_ms": {
+        "disabled_median": 2192.5431044999996,
+        "summary_median": 2201.176062,
+        "median_ratio_overhead_pct": 0.39374174593338473,
+        "paired_overhead_pct": [
+          0.5129383183863245,
+          0.8041828077812285,
+          -1.8107078422930467,
+          -0.7118311141048106,
+          2.417700012118784,
+          0.2529877387672963,
+          -1.061015704107715,
+          1.9803289630917487,
+          1.1037011471854763,
+          -0.7950923918431774
+        ],
+        "paired_median_pct": 0.3829630285768104,
+        "paired_median_bootstrap_95_pct": [
+          -0.7950923918431774,
+          1.3922558854364886
+        ],
+        "disabled_range": [
+          2152.366083,
+          2263.684292
+        ],
+        "summary_range": [
+          2169.675041,
+          2236.390209
+        ]
+      }
+    }
+  ],
+  "overhead_qualified": false,
+  "decision": "Retain bounded native phase observation and offline attribution as opt-in; do not claim optimization or pure GPU bottleneck. Inspect concrete decode operations before selecting a performance experiment.",
+  "checks": {
+    "cargo": [
+      {
+        "name": "fmt",
+        "exit_code": 0
+      },
+      {
+        "name": "clippy",
+        "exit_code": 0
+      },
+      {
+        "name": "test-cpu",
+        "exit_code": 0
+      },
+      {
+        "name": "test-metal",
+        "exit_code": 0
+      }
+    ],
+    "counts": {
+      "test-cpu": {
+        "passed": 599,
+        "failed": 0,
+        "ignored": 32,
+        "suites": 64
+      },
+      "test-metal": {
+        "passed": 718,
+        "failed": 0,
+        "ignored": 278,
+        "suites": 64
+      }
+    },
+    "native_package_passed": true,
+    "swift": true,
+    "xcode_unsigned_simulator": "BUILD SUCCEEDED",
+    "report_python_tests": 5,
+    "gpu_baseline": "passed; exact token/state parity",
+    "approval_notes": [
+      "Initial GPU permission review timed out before action; single permitted retry started after other checks completed"
+    ],
+    "astra_review": "Approved for scoped O2.A; astra-final.md",
+    "report": "passed; decodeSeconds dominant in both batches",
+    "overhead_qualified": false,
+    "report_python_optimized_tests": 5,
+    "strict_report_recomputed": "report-validated/report.json",
+    "review_fix": "Timestamp/duration, callback TTFT, wrapper/native enclosure, both-mode caller-duration checks with negative fixtures; only offline parser/test changed",
+    "passed": true
+  },
+  "remaining": [
+    "UI render/final-answer clocks",
+    "cold filesystem/loading study",
+    "continuation/replay and sustained workload reports",
+    "operator/device counters and runtime attribution"
+  ],
+  "evidence": {
+    "package": "artifacts/o2-gemma-metrics-2026-11-07/native46/build.json",
+    "selection": "artifacts/o2-gemma-metrics-2026-11-07/package-selection.json",
+    "raw_baseline": "artifacts/o2-gemma-metrics-2026-11-07/baseline/result.json",
+    "offline_report": "artifacts/o2-gemma-metrics-2026-11-07/report-validated/report.json",
+    "review": "artifacts/o2-gemma-metrics-2026-11-07/astra-final.md",
+    "initial_review": "artifacts/o2-gemma-metrics-2026-11-07/astra-review.md"
+  },
+  "review": "Astra approved scoped O2.A after parser timestamp/duration/enclosure corrections; O2.B pending",
+  "reporter_source_sha256": {
+    "tools/bench/request_cost_report.py": "75ebc7bc9db658e1eb4f047bfbd051436498d61289ba437e76b7f0f6c9a77b81",
+    "tools/bench/test_request_cost_report.py": "91f54d251535d20b80a4bc8b78f035a81465a709314574d57763b908f14721e3"
+  },
+  "native_package_build_sha256": "9386bac21b84be4f7ff94d682115ad5e7ea4b32ea58b42e0bdb9fd8c9f6788e3"
+}

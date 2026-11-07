@@ -1,5 +1,9 @@
 # O1: managed Gemma request summaries
 
+The original O1 receipt is preserved here. The additive
+[O2.A phase API/report](o2-gemma-cost-report.md) now extends available native
+observations under summary schema 2.
+
 7 November 2026. The pilot instruments accepted managed official Gemma 4 E2B
 BF16 Mac Chat requests, with disabled mode as the default. It preserves the
 native ABI, numerical source, weights, generation options and existing state

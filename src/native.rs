@@ -17,6 +17,8 @@
 
 use crate::{generation, model, session, weights};
 mod compatibility;
+mod generation_metrics;
+pub use generation_metrics::*;
 mod runtime_planning;
 mod transition_planning;
 pub use runtime_planning::*;
@@ -1044,7 +1046,48 @@ pub unsafe extern "C" fn toklet_session_generate(
     error: *mut NativeError,
 ) -> u32 {
     unsafe {
+        generate_native(
+            session,
+            operation,
+            tokens,
+            token_count,
+            max_new_tokens,
+            stops,
+            stop_count,
+            cancel,
+            emit,
+            context,
+            out,
+            ptr::null_mut(),
+            error,
+        )
+    }
+}
+
+// The shared FFI implementation preserves the legacy path and ownership/error
+// contract. Metrics copy an existing completed Report at the request boundary.
+#[allow(clippy::too_many_arguments)]
+unsafe fn generate_native(
+    session: *const SessionHandle,
+    operation: u32,
+    tokens: *const u32,
+    token_count: usize,
+    max_new_tokens: u32,
+    stops: *const u32,
+    stop_count: usize,
+    cancel: *const CancelHandle,
+    emit: Emit,
+    context: *mut c_void,
+    out: *mut Report,
+    metrics: *mut GenerationMetrics,
+    error: *mut NativeError,
+) -> u32 {
+    unsafe {
         boundary(error, || {
+            if !metrics.is_null() {
+                pointer(metrics)?;
+                metrics.write(GenerationMetrics::empty());
+            }
             pointer(session)?;
             pointer(cancel)?;
             pointer(out)?;
@@ -1081,6 +1124,9 @@ pub unsafe extern "C" fn toklet_session_generate(
                 let mut summary = report(s);
                 summary.emitted_tokens = emitted;
                 if let Ok(ref r) = result {
+                    if !metrics.is_null() {
+                        metrics.write(GenerationMetrics::from_report((*session).instance, r));
+                    }
                     summary.reason = match r.reason {
                         generation::StopReason::OutputLimit => 1,
                         generation::StopReason::StopToken { token_id } => {

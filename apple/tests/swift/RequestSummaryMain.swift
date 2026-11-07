@@ -38,6 +38,17 @@ struct RequestSummaryMain {
     }
     static func main() throws {
         // Deterministic metric formulas, empty/single events and ring pressure.
+        var nativeFixture = TokletGenerationMetrics()
+        nativeFixture.abi_version = TOKLET_ABI_VERSION
+        nativeFixture.struct_size = UInt32(MemoryLayout<TokletGenerationMetrics>.size)
+        nativeFixture.known_fields = UInt32(TOKLET_GENERATION_REPORT_KNOWN)
+        nativeFixture.session_instance = 7
+        try require(NativeGenerationMetrics(nativeFixture,expectedSession:7)?.prefillTokensPerSecond == nil,"Empty prefill rate")
+        nativeFixture.known_fields = 0
+        try require(NativeGenerationMetrics(nativeFixture,expectedSession:7) == nil,"Unknown native report accepted")
+        nativeFixture.known_fields = UInt32(TOKLET_GENERATION_REPORT_KNOWN)
+        nativeFixture.total_seconds = .nan
+        try require(NativeGenerationMetrics(nativeFixture,expectedSession:7) == nil,"NaN native report accepted")
         let allowance = NativeRequestSummaryStore.reservedBytes
         try require(NativeRequestSummaryStore.fitsBudget(admitted:10,budget:10+allowance),"Exact-fit allowance rejected")
         try require(!NativeRequestSummaryStore.fitsBudget(admitted:10,budget:9+allowance),"Insufficient allowance accepted")
@@ -99,7 +110,8 @@ struct RequestSummaryMain {
                     let s = try run(command)
                     let end = DispatchTime.now().uptimeNanoseconds
                     try require(s.status == TOKLET_OK && s.ids == [818,5279,529,7001,563,5213,50429,84750],"Timing output changed")
-                    samples.append(["trial":trial,"warmup":trial<3,"mode":enabled ? "summary":"disabled",
+                    guard case .chat(let requestID,_,_,_) = command else { throw NativeContextFailure("Expected Chat command") }
+                    samples.append(["request_id":requestID.uuidString,"trial":trial,"warmup":trial<3,"mode":enabled ? "summary":"disabled",
                         "ttft_ms":Double(s.tokenTimings[0].callbackUptimeNanoseconds-start)/1e6,
                         "total_ms":Double(end-start)/1e6,"submitted_uptime_ns":start,"completed_uptime_ns":end,"tokens":s.ids,
                         "history":s.history,"committed":s.evaluated,"pending":s.pending])
@@ -124,6 +136,13 @@ struct RequestSummaryMain {
             try require(result.count == 6,"Expected five terminal summaries and manifest")
             try require(result[1]["outcome"] as? String == "stopToken" && result[2]["outcome"] as? String == "rejected" && result[3]["outcome"] as? String == "outputLimit" && result[4]["outcome"] as? String == "cancelled","Terminal outcomes")
             try require(result[1]["promptTokens"] != nil && result[1]["after"] != nil && result[1]["kvOwnedBytes"] != nil && result[1]["callbackTTFTMilliseconds"] != nil,"Missing available metrics")
+            guard let phases = result[1]["nativeMetrics"] as? [String:Any] else { throw NativeContextFailure("Native phase report missing") }
+            try require(result[1]["nativeMetricStatus"] as? String == "completed" &&
+                        phases["prefillTokens"] as? Int == 15 && phases["sampledTokens"] as? Int == 9 &&
+                        phases["emittedTokens"] as? Int == 8 && phases["prefillTokensPerSecond"] != nil,
+                        "Native phase/count report differs")
+            try require(result[2]["nativeMetrics"] == nil && result[2]["nativeMetricStatus"] as? String == "notStarted",
+                        "Rejected request inherited native phase data")
             try require(result[3]["nativeDecodeTokensPerSecond"] == nil && result[4]["cancelToTerminalMilliseconds"] != nil,"Single/cancel metrics")
             faults.armDecode()
             let outputFailure = try run(chat())

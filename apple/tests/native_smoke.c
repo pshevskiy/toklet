@@ -8,6 +8,7 @@ _Static_assert(sizeof(TokletTokenEvent)==16, "event ABI");
 _Static_assert(sizeof(TokletReport)==40, "report ABI");
 _Static_assert(sizeof(TokletError)==260, "error ABI");
 _Static_assert(sizeof(TokletScore)==48, "score ABI");
+_Static_assert(sizeof(TokletGenerationMetrics)==96, "metrics ABI");
 struct Sink { TokletSession *session; uint32_t ids[4]; size_t count; };
 static uint32_t emit(void *opaque, TokletTokenEvent event) {
     struct Sink *sink=opaque;
@@ -43,7 +44,12 @@ int main(int argc, char **argv) {
     assert(toklet_session_generate(s,0,prompt,4,2,NULL,0,c,emit,&sink,&report,&error)==TOKLET_OK);
     assert(report.history_tokens==6 && report.evaluated_tokens==5 && report.pending_tokens==1);
     assert(toklet_session_score(s,47,&score,&error)==TOKLET_INVALID);
-    assert(toklet_session_generate(s,2,NULL,0,2,NULL,0,c,emit,&sink,&report,&error)==TOKLET_OK);
+    TokletGenerationMetrics metrics={0};
+    assert(toklet_session_generate_observed(s,2,NULL,0,2,NULL,0,c,emit,&sink,&report,&metrics,&error)==TOKLET_OK);
+    assert(metrics.abi_version==1 && metrics.struct_size==96 && metrics.reserved==0);
+    assert(metrics.known_fields==(TOKLET_GENERATION_REPORT_KNOWN|TOKLET_GENERATION_FIRST_TOKEN_KNOWN));
+    assert(metrics.prefill_tokens==1 && metrics.reused_tokens==5 && metrics.sampled_tokens==2 && metrics.emitted_tokens==2);
+    assert(isfinite(metrics.total_seconds) && metrics.total_seconds>=metrics.first_token_seconds);
     assert(report.history_tokens==8 && report.evaluated_tokens==7 && report.pending_tokens==1);
     uint32_t history[32]={0};size_t count=0;
     assert(toklet_session_history(s,history,32,&count,&error)==TOKLET_OK);

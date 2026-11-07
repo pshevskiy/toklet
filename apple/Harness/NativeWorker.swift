@@ -1193,14 +1193,26 @@ private final class Engine {
         let sink = Sink(worker, autoCancel)
         report = TokletReport()
         observation?.enter(.evaluation)
+        var nativeMetrics = TokletGenerationMetrics()
         let code = withExtendedLifetime(sink) {
             tokens.withUnsafeBufferPointer { input in
                 stops.withUnsafeBufferPointer { stop in
-                toklet_session_generate(session, operation, input.baseAddress, input.count,
+                if observation != nil {
+                    return toklet_session_generate_observed(session, operation, input.baseAddress, input.count,
+                        maximum, stop.baseAddress, stop.count, flag, nativeSink,
+                        Unmanaged.passUnretained(sink).toOpaque(), &report, &nativeMetrics, &error)
+                }
+                return toklet_session_generate(session, operation, input.baseAddress, input.count,
                     maximum, stop.baseAddress, stop.count, flag, nativeSink,
                     Unmanaged.passUnretained(sink).toOpaque(), &report, &error)
                 }
             }
+        }
+        if observation != nil {
+            let phases = NativeGenerationMetrics(nativeMetrics,expectedSession:liveContext.sessionInstance)
+            observation?.nativeMetrics = phases
+            observation?.nativeMetricStatus = code != TOKLET_OK ? .generationFailed
+                : (phases == nil ? .invalidRecord : .completed)
         }
         if code != TOKLET_OK { observation?.failurePhase = .evaluation }
         observation?.enter(.completion)

@@ -60,13 +60,14 @@ qualification scope live in [TODO](../TODO.md); acceptance policy is in
 
 ## Current observability work
 
-[O1 Gemma request summaries](o1-gemma-request-summaries.md) are implemented as a
-bounded, opt-in worker-boundary pilot with explicit unavailable-field reasons.
-Current-source release Gemma state/output/failure/budget controls, Cargo/Swift
-checks and unsigned Xcode simulator build pass; Astra approves. Two full-boundary
-paired runs cannot establish ≤1% overhead, so mode stays disabled by default.
-Native phase/UI gaps remain explicit; no speedup or broader qualification claimed.
-[Evidence](../artifacts/o1-gemma-summary-2026-11-07/checks.json).
+[O1 Gemma summaries](o1-gemma-request-summaries.md) and
+[O2.A native phase/reporting](o2-gemma-cost-report.md) are delivered with Astra
+approval and required checks. Native46 preserves the legacy ABI and adds a
+completed-report copy; summary schema2 carries phase/work counters. Matched warm
+reports identify decode as the dominant phase; no kernel speedup is claimed.
+The ≤1% overhead bound remains unqualified, so collection stays opt-in/default
+disabled. O2.B cold/continuation/sustained/UI work is next.
+[Evidence](../benchmarks/results/2026-11-07-o2a-gemma-phase-report-v1.json).
 
 ## Latest documentation work
 

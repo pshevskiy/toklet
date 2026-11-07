@@ -1,4 +1,5 @@
 import Foundation
+import CToklet
 
 // O1: fixed records, collected only at request/phase boundaries. No text, IDs
 // of generated tokens, file paths, native pointers or numerical arrays are kept.
@@ -13,6 +14,44 @@ enum NativeRequestSummaryMode: Sendable {
     }
 }
 
+// Validated copy of the native engine's already-completed Report. The native
+// clock is independent of callback uptime. Unknown reports never become zeros.
+struct NativeGenerationMetrics: Codable, Sendable {
+    let sessionInstance, reusedTokens, prefillTokens, sampledTokens, emittedTokens: UInt64
+    let prefillSeconds, decodeSeconds, samplingSeconds, totalSeconds: Double
+    let firstTokenSeconds: Double?
+    let prefillTokensPerSecond: Double?
+
+    init?(_ value: TokletGenerationMetrics, expectedSession: UInt64) {
+        let report = UInt32(TOKLET_GENERATION_REPORT_KNOWN), first = UInt32(TOKLET_GENERATION_FIRST_TOKEN_KNOWN)
+        let times = [value.prefill_seconds,value.decode_seconds,value.sampling_seconds,value.total_seconds,value.first_token_seconds]
+        guard value.abi_version == TOKLET_ABI_VERSION,
+              value.struct_size == UInt32(MemoryLayout<TokletGenerationMetrics>.size), value.reserved == 0,
+              value.known_fields & report != 0, value.known_fields & ~(report | first) == 0,
+              value.session_instance == expectedSession, expectedSession > 0,
+              value.reused_tokens <= 32768, value.prefill_tokens <= 32768,
+              value.sampled_tokens <= 32768, value.emitted_tokens <= value.sampled_tokens,
+              times.allSatisfy({ $0.isFinite && $0 >= 0 }),
+              value.prefill_seconds + value.decode_seconds + value.sampling_seconds <= value.total_seconds + 1e-9,
+              value.first_token_seconds <= value.total_seconds,
+              (value.known_fields & first != 0) == (value.emitted_tokens > 0),
+              value.known_fields & first != 0 || value.first_token_seconds == 0 else { return nil }
+        sessionInstance = value.session_instance; reusedTokens = value.reused_tokens
+        prefillTokens = value.prefill_tokens; sampledTokens = value.sampled_tokens; emittedTokens = value.emitted_tokens
+        prefillSeconds = value.prefill_seconds; decodeSeconds = value.decode_seconds
+        samplingSeconds = value.sampling_seconds; totalSeconds = value.total_seconds
+        firstTokenSeconds = value.known_fields & first == 0 ? nil : value.first_token_seconds
+        let rate = value.prefill_tokens > 0 && value.prefill_seconds > 0
+            ? Double(value.prefill_tokens) / value.prefill_seconds : nil
+        guard rate?.isFinite ?? true else { return nil }
+        prefillTokensPerSecond = rate
+    }
+}
+
+enum NativeGenerationMetricStatus: String, Codable, Sendable {
+    case notStarted, completed, generationFailed, invalidRecord
+}
+
 struct NativeRequestObservation: Sendable {
     enum Phase: String, Codable { case queued, encoding, evaluation, decoding, completion }
     var phase: Phase = .queued
@@ -23,6 +62,8 @@ struct NativeRequestObservation: Sendable {
     var promptTokens: UInt64?
     var evaluationStarted = false
     var failurePhase: Phase?
+    var nativeMetrics: NativeGenerationMetrics?
+    var nativeMetricStatus: NativeGenerationMetricStatus = .notStarted
     mutating func enter(_ next: Phase) {
         finishPhase()
         phase = next; phaseStart = DispatchTime.now().uptimeNanoseconds
@@ -50,7 +91,7 @@ struct NativeRequestSummary: Codable, Sendable {
             history = context.history; committed = context.committed; pending = context.pending
         }
     }
-    var schemaVersion: Int = 1
+    var schemaVersion: Int = 2
     let sequence: UInt64
     let requestID: UUID
     let stateGeneration: UInt64
@@ -63,6 +104,8 @@ struct NativeRequestSummary: Codable, Sendable {
     var evaluationNanoseconds: UInt64?
     var decodingNanoseconds: UInt64?
     var promptTokens: UInt64?
+    var nativeMetrics: NativeGenerationMetrics?
+    var nativeMetricStatus: NativeGenerationMetricStatus = .notStarted
     var nativeFirstTokenSeconds: Double?
     var nativeLastTokenSeconds: Double?
     var callbackTTFTMilliseconds: Double?
@@ -115,6 +158,7 @@ struct NativeRequestSummary: Codable, Sendable {
             evaluationNanoseconds = observation.evaluationNanoseconds
             decodingNanoseconds = observation.decodingNanoseconds
             promptTokens = observation.promptTokens
+            nativeMetrics = observation.nativeMetrics; nativeMetricStatus = observation.nativeMetricStatus
             evaluationStarted = observation.evaluationStarted
             if failure { failedPhase = observation.failurePhase ?? observation.phase }
         }
@@ -162,7 +206,7 @@ final class NativeRequestSummaryStore {
     }
     static func export(_ records: [NativeRequestSummary], dropped: UInt64, exportErrors: UInt64 = 0, budgetSkipped: UInt64 = 0) throws -> Data {
         struct Manifest: Encodable {
-            let schemaVersion = 1
+            let schemaVersion = 2
             let kind = "request_summary_manifest"
             let profile = "google/gemma-4-E2B-it BF16 managed Mac G2"
             let revision = NativeAcceptedIdentity.Profile.gemmaBF16.revision
@@ -172,11 +216,12 @@ final class NativeRequestSummaryStore {
             let processMemoryInstrument = "task_info TASK_VM_INFO; lifetime peak is not request peak"
             let reservedBytes = NativeRequestSummaryStore.reservedBytes
             let unavailable = ["engine/package build identity: bind export to runner build receipt",
-                "GPU dispatch/wait/readback counters and native prefill/decode/sampling: not exposed by this ABI",
+                "GPU dispatch/wait/readback counters: not exposed by this ABI",
+                "nativeMetrics absent: nativeMetricStatus explains notStarted, generationFailed or invalidRecord; partial native reports are unavailable",
                 "ttft_event_ms and first-visible/final-answer/UI-update/request-UI timings: no calibrated event-to-host or render acknowledgment",
                 "load/conversion/compile phases and memory pressure: separate existing load receipt, not per-request measurements",
                 "token interval distribution: only first/last bounded aggregates in O1",
-                "reused/prefill/decode/sampled counts: not exposed by this ABI; before/after counts are session totals",
+                "decode evaluation count: not exposed by the native Report; before/after counts are session totals",
                 "replay-required: true when evaluation failed and state is unreadable; null otherwise (ABI has no poison/replay flag)",
                 "weights/scratch breakdown: Gemma ABI exposes aggregate admission, KV and codec allowance",
                 "missing state: native context unavailable or request had not started",

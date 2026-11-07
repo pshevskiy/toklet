@@ -15,9 +15,20 @@ Completed history is in the [dated archive](docs/archive/2026-11-07/README.md).
 - [x] Pass archive integrity, link/anchor, content-preservation and whitespace
   checks; [validation record](artifacts/context-archive-2026-11-07/checks.json).
 
-Requested goal: implement the whole selected observability/performance/model
+Active goal: implement the whole selected observability/performance/model
 roadmap, with Gemma first, then Qwen3.5-4B and 9B and the under-4B track.
-Current milestone: O1 managed Gemma 4 E2B BF16 Mac request summaries complete.
+Current milestone: O2.A native phase metrics and matched warm reporting complete.
+- [x] Add observed-generation ABI and Swift phase/counter coverage; preserve the
+  legacy ABI and unknown/error/clock meanings.
+- [x] Add strict offline report with matched identity/work and duration enclosure;
+  retain raw data and explicit coverage gaps.
+- [x] Pass required Cargo, native package/C, strict Swift and simulator Xcode
+  checks, repeated real Gemma baseline and Astra review; commit this stage.
+[Scope](docs/o2-gemma-cost-report.md),
+[result/commit](artifacts/o2-gemma-metrics-2026-11-07/checks.json).
+Next O2.B: cold/continuation/sustained workloads and remaining native/UI probes.
+The full goal remains active; O3/R1 and model/performance deliveries follow.
+O1 managed Gemma 4 E2B BF16 Mac request summaries are complete:
 - [x] Implement bounded opt-in collection/export, typed terminal state and
   explicit unavailable-field/budget-skip reasons; disabled mode remains default.
 - [x] Pass fmt/strict Metal Clippy, CPU594/Metal-feature713 tests, 16 portable
@@ -95,6 +106,7 @@ Preserve these rejected or restricted results:
 
 | Date | Result and checks | Evidence / next action |
 | --- | --- | --- |
+| 2026-11-07 | O2.A native46 API/schema2 phases and strict matched warm reports complete. Required checks and Astra approval pass after parser clock/enclosure fixes. Decode dominates this workload; overhead remains unqualified/default-disabled. | [Report](docs/o2-gemma-cost-report.md), [receipt](benchmarks/results/2026-11-07-o2a-gemma-phase-report-v1.json), [checks/commit](artifacts/o2-gemma-metrics-2026-11-07/checks.json); next O2.B. |
 | 2026-11-07 | O1 Gemma opt-in summaries complete; Cargo, strict Swift/Xcode, real output/state/failure/admission controls pass. Corrected full-boundary overhead remains unqualified; Astra approves after three fixes. Earlier archive mismatch, compiler sandbox/type failures and superseded timings are retained in check notes/logs. | [Pilot](docs/o1-gemma-request-summaries.md), [result](benchmarks/results/2026-11-07-o1-gemma-summary-v1.json), [checks/commit](artifacts/o1-gemma-summary-2026-11-07/checks.json); next O2 within full-roadmap goal. |
 | 2026-11-07 | Observability-first plan complete; five exact under-4B counts verified. Preferred uncensored MLX formats/lineage and conversion/memory gaps recorded. Initial metadata DNS/Python certificate failures resolved with system curl; receipts retained. Documentation checks pass; binding policy unchanged. No runtime checks/Astra review claimed. | [Plan](docs/model-observability-plan.md), [checks/commit](artifacts/model-observability-plan-2026-11-07/checks.json); next implementation O1 remains stopped. |
 | 2026-11-07 | Researched ten current under-30B candidates from primary sources; capability/local-efficiency shortlist, not common-harness qualification. O1 stopped; unfinished code uncommitted and unchecked. Documentation checks pass. | [Research](docs/models-under-30b-2026-11-07.md), [checks](artifacts/models-under-30b-2026-11-07/checks.json); model selection next. |
