@@ -1,0 +1,30 @@
+{
+  "source_commit": "338c4e5b7a3a8a83b600a0cb400c1d0e6231faaa",
+  "archive_snapshots_checked": 3,
+  "historical_links_rebased": 1725,
+  "non_link_snapshot_text_preserved": true,
+  "binding_sections_preserved": 4,
+  "milestone_criteria_preserved": 32,
+  "existing_unchecked_items_preserved": 2,
+  "live_local_links_checked": 96,
+  "live_anchors_checked": 16,
+  "external_inbound_anchors_checked": 1,
+  "historical_missing_paths_preserved": 0,
+  "before_bytes": 1313716,
+  "after_bytes": 40465,
+  "routine_bytes_reduction_percent": 96.92,
+  "git_diff_check_exit": 0,
+  "failures": [],
+  "scope": "Documentation only; no runtime tests, code/Astra review or performance measurement claimed.",
+  "live_file_sha256": {
+    "AGENTS.md": "e38b58858e78a3c46059ea941a824c728d4e4d0336a16971cbf78ce7e746fe86",
+    "TODO.md": "4c985fb6568d0b582220766e349bdfad07dc9c338ad64a1d9ac962dc3509c08a",
+    "PLAN.md": "2c19f302b7b88ac4113498e6baada051785e28686549e27fd95458ea896902fe",
+    "docs/improvements.md": "15bc3a8911a5609e851c9d02678a7736ebc9d3b13a78ef16d4466590cecda56b",
+    "docs/archive/2026-11-07/README.md": "5cd0e693fcc4e379a9d0ea649824e89a341d76e9c1f1f74e1f684c1fbea6a5df"
+  },
+  "research_notes": [
+    "Initial read-only artifact size inventory completed; raw artifacts remain in place.",
+    "An incidental process-inventory command was sandbox-denied; no process action was needed."
+  ]
+}

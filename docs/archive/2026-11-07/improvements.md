@@ -1,0 +1,11101 @@
+# Toklet improvement record
+
+Updated 7 November 2026. This records implemented capabilities, measured benefits,
+and the decisions that limit their use. Detailed reports retain exact revisions,
+artifact hashes, raw samples, checks and Astra reviews. M0–M6 are complete in their
+qualified scopes: M5 selects the small compensated Half and frozen larger group8
+Q4 v2 configurations with full quality, repeated workload/application, sustained
+and memory evidence. M6 adds explicit Online attention, qualified4K/8K/16K/32K
+context cases and final FP16 KV retention. M7 is complete for the amended
+iiPhone 14 Pro target and selected trials. CPU/scalar and the existing GPU/readback/
+chunk defaults stay unchanged. Speedups below apply to the named workload and
+comparison, and cannot be added together. See the [M5 release decision](../../experiments/2026-10-15-m5-release.md).
+
+## 7 November 2026 — Observability and performance proposal
+
+The [proposal](../../observability-performance-proposal.md) builds on existing Rust/Swift
+timings, bounded GPU profiles, runtime planning and memory reports. It proposes
+correlated request summaries, an explicit overhead budget, inspectable selected
+operations and one measured optimization/adoption at a time. ClickHouse sources
+and current implementation/evidence links are included. This is research/design,
+not an implemented capability or a new performance result. Link/content/whitespace
+[checks pass](../../../artifacts/observability-performance-proposal-2026-11-07/checks.txt);
+first proposed implementation is O1 on managed Qwen2 Mac. No code/Astra review
+or runtime benchmark is claimed for this documentation-only iteration.
+
+## Measured performance improvements
+
+Measurements use Apple M1 Pro, 16 GiB, macOS 26.6.2 and optimized release builds.
+Each linked report specifies its power observations and timing boundary.
+
+| Change | Measured benefit | Decision and evidence |
+| --- | --- | --- |
+| Ordered FP64 CPU projection tile | Warm TTFT for 128 input / 128 fixed output tokens improves **77.6400% / 77.6009%** in two confirming pairs; complete request time improves **52.0024% / 52.0992%**. | Qualified opt-in `--cpu-projection tiled`; scalar reference/default preserved. Full loss, 100 tasks, memory, eight workloads and application checks pass. [Retention report](../../experiments/2026-10-12-cpu-tiled-retention.md); commit `0abbe60`. |
+| Longest exact committed-prefix reuse | On Q4 0.5B, editing position 128 of a 512-token prompt reduces first-token latency **21.586% / 21.785%**; editing only position 511 reduces it **92.983% / 93.010%**. | Retained CPU/Metal session mechanism; no KV copying. Two paired runs, identical final distributions and fixed buffers. This does not qualify Q4 model quality. [Continuation report](../../experiments/2026-10-13-prefix-continuation.md); `340c965`. |
+| Original eight-row Q4 prompt tile | 512-input / one-output engine TTFT improves **35.1% / 35.2%** against Original Q4 projection. | Experimental `Q4Tiled`, not default. Refinement passes, but both paths fail the expanded independent offset decoder gate. [Experiment](../../experiments/2026-10-13-q4-prefill.md); `cc05939`. |
+| Accurate eight-row Q4 prompt tile | Larger-model 512-input / one-output engine TTFT improves **25.4128% / 25.6841%** in two paired runs, with identical final-logit bits. | Reviewed and retained as an explicit experimental component. Both fixed Q4 configurations remain quality-rejected. [Experiment](../../experiments/2026-10-13-accurate-q4-prefill.md); `aef86c9`. |
+
+The CPU tile reuses contiguous weights/activations across four token rows and
+four output features while preserving feature-order FP64 accumulation. The
+following accepted workload medians document its broader effects. Only the
+short row has the confirming paired primary experiment; other ratios compare
+separate historical runs and are descriptive.
+
+| CPU workload, 128 fixed outputs | Scalar request seconds | Tiled request seconds | Request reduction |
+| --- | ---: | ---: | ---: |
+| 128 input | 128.561790 | 61.706524 | 52.0024% |
+| 512 input | 253.195493 | 97.892741 | 61.3371% |
+| 1,024 input | 428.750184 | 142.368874 | 66.7944% |
+| 1,920 input, capacity boundary | 749.021123 | 246.854774 | 67.0430% |
+| 512 cached + 64 appended | 111.628890 | 63.166372 | 43.4140% |
+| Fully cached 512-token prompt | 90.000207 | 54.425495 | 39.5274% |
+| Cached 512 + one pending token | 90.500725 | 54.797608 | 39.4506% |
+| Changed 512-token prefix | 253.054154 | 93.038050 | 63.2339% |
+| Three-turn application scenario | 263.230241 | 129.141379 | 50.9398% |
+
+[Full retention evidence](../../experiments/2026-10-12-cpu-tiled-retention.md) links
+every workload. All application token IDs, text hashes, stops and states match.
+Several uninterrupted sequences exceed ten minutes. Near-floor fully cached
+first-token timings have overlapping ranges; they do not support a percentage
+ranking. No external-runtime speed lead follows from these internal comparisons.
+
+## Correctness and usable engine capabilities
+
+| Implemented change | Benefit and qualification | Evidence / implementation commit |
+| --- | --- | --- |
+| Checked scalar CPU kernels | Linear/bias/embedding/residual operations, stable FP64 reductions, RMSNorm, softmax, SiLU and gated MLP; shape/range checks and independent fixtures. | [Reference documentation](../../../tools/reference/README.md); M1 commits `c28df92`, `eea790e`. |
+| Complete deterministic decoder | Rotary pairing/absolute offsets, causal masking, GQA head mapping, two-layer tiny decoder, tied output weights and deterministic greedy ties. | [M1 plan](PLAN.md#m1-build-the-tiny-fp32-decoder); `5c413fd`, `41af02f`. |
+| Validated real-model loading | FP32/FP16/BF16 and indexed safetensors shards; names/shapes/config/tied weights checked before use; tensor-wise conversion bounds temporary memory. | [Qwen loading](../../../benchmarks/results/2026-10-09-qwen-load.md); `8b9d892`. |
+| Independent Qwen forward parity | Full short numerical arrays against pinned Transformers, rather than judging generated prose; source/config/tokenizer identities frozen. | [Qwen forward](../../../benchmarks/results/2026-10-09-qwen-forward.md); `66630c5`. |
+| Bounded transactional CPU sessions | Persistent separate K/V, reusable scratch, absolute positions, exact append/full-cache reuse, capacity admission and replay. Sampled history is separate from committed KV. | [Session qualification](../../../benchmarks/results/2026-10-09-qwen-session.md); `5f58a6e`. |
+| Streaming CLI and interactive sessions | Qualified tokenizer/chat template, stop/EOS, pending Unicode, append/continue/reset, bounded JSON input, Ctrl-C and recoverable request errors; generation statistics. | [CLI qualification](../../../benchmarks/results/2026-10-10-qwen-cli.md); `dd3f5e6`. |
+| Root FP16 Metal decoder | Complete tiny and pinned Qwen forward/generation: MPS projections, embedding, RMS, rotary, separate KV writes, causal/cached GQA, MLP, residuals and tied logits. | [Resident engine](../../experiments/2026-10-13-metal-engine.md); `876a5f7`. |
+| Metal failure and cancellation state | Commit positions only after a successful full chunk; finite overflow/status errors preserve the valid prefix, completion failure requires replay, invalid inputs fail before mutation. | [Resident engine](../../experiments/2026-10-13-metal-engine.md) and [continuation](../../experiments/2026-10-13-prefix-continuation.md). |
+| Exact-prefix edits and shortening | Reuse the longest committed match; reconstruct shortened cached distributions by replaying the final required token; preserve recovery provenance across repeated cleanup. | [Continuation report](../../experiments/2026-10-13-prefix-continuation.md); `340c965`. |
+| Larger exact model geometry | Admits the preselected 28-layer, hidden-1536 Qwen2.5-1.5B checkpoint; larger CPU and Half/Q4 numerical references verified independently within 6 GiB. | [CPU oracle](../../experiments/2026-10-13-larger-independent-oracle.md), [GPU geometry](../../experiments/2026-10-13-q4-compensated-storage.md), [passing Q4 numerical qualification](../../experiments/2026-10-13-compensated-rms.md); `58dc39a`, `dee4bc3`, `8e76c3d`. |
+| Compensated Q4 projection | Explicit FMA residual plus two-component accumulation and round-to-odd Half storage fixes a localized double-rounding error without changing Q4 reconstruction. Expanded tiny gates and signed midpoint cases pass. | [Numerical investigation](../../experiments/2026-10-13-q4-compensated-storage.md); `dee4bc3`. |
+| Compensated RMS reduction | Compensated summation of exactly represented Half squares isolates and fixes 66 larger first-layer rounding differences. Passes 43,008 exact primitive values, 4,550 tiny stage comparisons and 969 selected larger comparisons under unchanged gates. | [RMS qualification](../../experiments/2026-10-13-compensated-rms.md); `8e76c3d`. |
+| Explicit compensated resident Half projection | Shape-independent per-row accumulation, bias last, midpoint-preserving Half storage and nearest FP32 vocabulary output pass1,668 primitive outputs,2,520 tiny captured arrays and969 selected larger arrays. | [Numerical qualification](../../experiments/2026-10-14-half-compensated.md), [short consistency](../../experiments/2026-10-14-half-scorer.md) and [full loss](../../experiments/2026-10-14-half-full-loss.md) pass. [Full task quality](../../experiments/2026-10-14-half-task-quality.md) now passes both checkpoints; [release decision](../../experiments/2026-10-14-m5-performance-decision.md) withholds replacement. |
+| Explicit compensated Half CLI | Opt-in mode, actual ready/done execution metadata and complete logical admission; six bounded native workers preserve cached/pending/error/reset/stop/cancellation and independently finalized raw/chat text. | [CLI qualification](../../experiments/2026-10-14-metal-cli-half.md); later [full qualification and decision](../../experiments/2026-10-14-m5-performance-decision.md) record quality, workloads and repeatability; default/replacement remains unaccepted. |
+| Frozen controlled Metal worker/collector | Completed waits, exact consumed token-byte pins and full-history/state/memory checks preserve eight contract workloads on both fixed checkpoints, including explicit changed-prefix replay and the2048-position boundary. | [Functional qualification](../../experiments/2026-10-14-metal-controlled.md);16workers/62events pass. both [full matrices and repeats](../../experiments/2026-10-14-m5-performance-decision.md) are now complete. |
+| Bounded larger FP32 task-reference worker | Raw prepared IDs, capacity562/chunk8 and post-exit tokenizer construction fit all100 original admissions without a simultaneous tokenizer/model allocation. Synthetic maximum/EOS/state checks and three real short probes pass. | [Reference prerequisite](../../experiments/2026-10-14-cpu-task-reference.md); [full100responses/literal scores](../../experiments/2026-10-14-half-task-quality.md) now complete; not an application baseline. |
+| Backend-aware Half task collection | Actual Metal execution/memory admission, exact frozen case grammar and independent finalized-text comparison; qualified receipt replacement rejects before launch. Six real short probes/55events pass. | [Collector qualification](../../experiments/2026-10-14-metal-tasks.md); [full100responses and literal grading](../../experiments/2026-10-14-half-task-quality.md) now complete. |
+
+Compensated projection/normalization are explicit options. Their numerical
+qualification does not establish acceptable end-to-end quantization quality.
+
+## Memory, traffic and scheduling improvements
+
+| Change | Concrete effect | Scope and evidence |
+| --- | --- | --- |
+| Resident immutable weights and session-owned KV/scratch | Load once; preallocate admitted buffers/views/pipelines; reuse them at steady state. CPU and Metal numerical decode have zero measured Rust allocations after warmup. | [CPU sessions](../../../benchmarks/results/2026-10-09-qwen-session.md), [Metal engine](../../experiments/2026-10-13-metal-engine.md). Native frameworks and application allocations are separately scoped. |
+| Streamed Half loading | No redundant full FP32 model retained with GPU weights; bounded conversion stripes and a single tied embedding/output allocation. | [Metal engine](../../experiments/2026-10-13-metal-engine.md); `876a5f7`. |
+| One completed command per Metal chunk | Dependent operations encoded without a host wait per operator/layer; resources remain owned until completion. Real GPU captures and calibrated counters validate scheduling. | [Trace report](../../experiments/2026-10-13-metal-trace.md); `ede1d45`. No isolated before/after speed claim. |
+| Versioned source-bound Q4 artifacts | Group-64 affine Q4 format, explicit bit/group layout and oracle; provenance, overflow, padding, source replacement and full load/session admission checked. | [Format](../../q4-v1.md), [artifact qualification](../../experiments/2026-10-13-q4-artifact.md); `6ec620b`, `a0263f9`. |
+| Fused Q4 reconstruction/projection | Dequantizes within the dot product; no full-model or per-token expanded weights. 0.5B resident weights are **476,307,372 bytes**, versus Half **988,069,596** and FP32 **1,976,131,072**. | [Execution](../../experiments/2026-10-13-q4-decode.md); `b99d334`. Weight payload only; quality rejected. Larger Q4 payload is **1,223,992,516 bytes**. |
+| Required-position vocabulary projection | Ordinary prefill computes only its final-row logits, using a precreated checked view; diagnostic paths retain all rows. | [Qualification](../../experiments/2026-10-13-required-position-logits.md); `d93264e`. Float scratch is unchanged; no measured latency/memory gain claimed. |
+| Explicit GPU greedy token readback | Exact finite FP32 ordering and lowest-ID ties select in the completed command; eight cached-ID bytes replace two host distributions, with a 32-byte guarded GPU buffer. Larger-session admission falls **1,215,448 bytes**. | [Selection task](../../experiments/2026-10-13-metal-greedy.md). Full logits remain default; diagnostics preserve full arrays. No quality or speed acceptance. |
+| Explicit Metal chunks through 1,024 | Checked admission and a shared-model four-chunk harness pass exact capacity/budget boundaries and larger offset/append/edit final-logit bit refinement. | [Chunk task](../../experiments/2026-10-13-metal-chunks.md). Default stays 128; this does not qualify every mode or full release workload. |
+| Scoped M5.4 evaluation closure | All four named mechanisms have checked, Astra-reviewed and committed decisions. Only explicit functional token-ID readback remains; all three fusion prototypes were removed. | [Synthesis](../../experiments/2026-10-14-m5-dispatch-closure.md). No retained fusion latency gain or release/default acceptance. |
+| Scoped M5.3 prefill closure | Required-position logits, independently qualified accurate Q4 prompt tile and completed chunk sweep satisfy the named prefill mechanisms; default chunk stays 128. | [Synthesis](../../experiments/2026-10-13-m5-prefill-closure.md). Experimental compensated path only; both Q4 quality failures and M5 release gates remain open. |
+| CPU caller-owned all-row logits | Bounded external chunk output supports teacher-forced scoring without full-prefix traces or duplicate weights; normal final-row execution remains unchanged. | [All-row logits](../../experiments/2026-10-13-cpu-all-row-logits.md); `3dd5485`. |
+| Streamed independent storage oracles | Cache one Half tied table, stream current tensors/Q4 stripes, pin exact bytes before parsing, publish only after completed native memory qualification. | [Oracle report](../../experiments/2026-10-13-streamed-storage-oracles.md); `962f206`. Evaluation memory benefit, not inference latency. |
+
+## Measurement and verification improvements
+
+| Change | What it establishes | Evidence |
+| --- | --- | --- |
+| Offline Rust package, CI and frozen fixtures | CPU tests need neither model downloads nor Apple GPU; locked dependencies, formatting and strict Clippy, independent numerical data and causal/session regressions. | [Plan M0](PLAN.md#m0-establish-the-project-and-measurement-contract), [reference](../../../tools/reference/README.md). |
+| Frozen benchmark/quality contracts | Named input/output/cache workloads, artifact/token hashes, raw completed-work timings, three warmups/ten repetitions and second-run retention policy. | [Benchmark contract](../../../benchmarks/README.md). |
+| Internal and external comparison adapters | Separate engine/application timing, teacher-forced and practical representation tracks, native MLX and llama.cpp evidence without combining incompatible precision/cache rows. | [External matrix](../../../benchmarks/results/2026-10-10-external-matrix.md), [scalar closure](../../experiments/2026-10-11-m2.5-scalar-comparison.md). |
+| Owned bounded experiment transport | Exclusive evidence files, bounded nonblocking pipes/timeouts, owned process groups, cleanup/reaping and endpoint identity checks; failed/paused/overlapped attempts remain excluded. | [Continuation collector](../../experiments/2026-10-13-prefix-continuation.md), [loss collector](../../experiments/2026-10-13-larger-metal-loss.md). |
+| Native GPU trace and memory accounting | Paired CPU/GPU clocks, completed stage counters, diagnostic profiling separated from production; explicit allocated/physical/app/transient accounting under 6 GiB. | [Trace](../../experiments/2026-10-13-metal-trace.md), [larger admission](../../experiments/2026-10-13-cpu-row-loss.md). |
+| Frozen 10,000-target loss and 100-task grading | Causal target/block coverage, stable loss, all raw responses and literal grading; no generated-code repair. CPU scalar/tiled NLL and task results are identical. | [Loss](../../experiments/2026-10-11-held-out-tiled-loss.md), [tasks](../../experiments/2026-10-11-held-out-task-quality.md), [isolated grader](../../experiments/2026-10-11-linux-literal-controller.md). |
+| Matched larger references | Exact preselection before quality evaluation; larger FP32 mean NLL **2.485958031019153**, independent geometry/oracles and bounded native residency. | [Preselection](../../experiments/2026-10-13-larger-preselection.md), [FP32 collection](../../experiments/2026-10-13-larger-fp32-loss.md); `4f226ef`, `095dd91`. |
+| All-layer Half consistency localization | Reproduces all six scored rows, captures451 stage pairs/56 complete KV prefixes, and replays the first divergent projection with identical operands and exact dyadic rounding witnesses. | [Investigation](../../experiments/2026-10-14-half-consistency.md). Layer0 Q MPS shape-dependent rounding is localized; no arithmetic, quality or speed acceptance. |
+| Explicit compensated Half scorer | Both preselected checkpoints pass the unchanged short consistency guard with zero NLL difference and exact scored-row logits/target bits across chunk1/128. | [Scorer task](../../experiments/2026-10-14-half-scorer.md).12 scored observations per model; [full loss now passes](../../experiments/2026-10-14-half-full-loss.md), [full task quality](../../experiments/2026-10-14-half-task-quality.md) now passes; release replacement remains unaccepted. |
+| Compensated Half full held-out loss | All10,000 targets per fixed model pass the unchanged0.05 NLL-increase gate:0.5B mean2.8836406 vs FP32 2.8837251;1.5B mean2.4859246 vs FP32 2.4859580. | [Full-loss qualification](../../experiments/2026-10-14-half-full-loss.md). Corpus-specific quality gate; [full task quality and repeated measurements](../../experiments/2026-10-14-m5-performance-decision.md) now complete. Overall M5 remains open. |
+| Astra code/evidence review per task | Review findings addressed before task commits; receipts bind sources, binaries, fixtures, checks and saved results. | Each linked task report records its review and acceptance scope. |
+
+Full task grading admission now preserves actual backend/model/modes and requires
+all100 original cases/caps, complete native replay, owned successful exit, full
+memory and independent finalized text. Exact backend inventories and executable
+hashes anchored in pinned qualification receipts reject omitted dependencies and
+replacement; nine targeted/all410 Python checks pass. Published short probes cannot
+be scored. This is admission only; no full task score or VM execution is claimed.
+[Admission report](../../experiments/2026-10-14-task-grading-admission.md).
+
+A separate backend-aware literal grading window now connects full qualified task
+collections to the unchanged executor. It preserves literal programs and unresolved
+outcomes, requires all three matched models to exit, checks fresh PID/group absence
+immediately before VM startup and owns stopped restoration.22 mocked/all432 Python
+checks pass; subsequent [full native grading](../../experiments/2026-10-14-half-task-quality.md) resolves all300 outcomes.
+[Window report](../../experiments/2026-10-14-task-grading-window.md).
+
+The frozen authored application trace now supports explicit compensated Half Metal
+on both selected checkpoints. Exact36/76/117 prompt IDs, scripted history/reset,
+actual memory/modes and first-token/nonempty-text/done/finalization boundaries pass
+seven targeted/all439 Python checks and six short native turns/26event replay.
+Both model-plus-driver charges fit6GiB; short probes establish functionality only.
+[Application report](../../experiments/2026-10-14-metal-application.md).
+
+Full task response collection now covers all100 original cases for both Half
+checkpoints and the larger FP32 reference.18,027 native events, full provenance,
+state/memory and independent finalized text pass; all three workers exit cleanly
+and fit6GiB. Larger visible IDs match99/100 cases. This is response qualification;
+subsequent [matched literal scores](../../experiments/2026-10-14-half-task-quality.md) pass; latency replacement remains unaccepted.
+[Full response report](../../experiments/2026-10-14-full-task-responses.md).
+
+Full matched Half task quality now passes both checkpoints:2/100 versus2/100 small
+FP32 and11/100 versus11/100 larger FP32, with0pp loss under the unchanged2pp gate.
+Three native literal windows resolve300 outcomes/120 code programs, restore the VM
+stopped and replay exactly. Absolute code passes are0/40 per model, without repair.
+Together with full Half loss this closes frozen Half quality; later repeated
+measurements and sustained scopes are complete, while the Q4-blocked M5 exit stays open.
+[Matched quality report](../../experiments/2026-10-14-half-task-quality.md).
+
+Full small-model compensated Half controlled measurements now complete all eight
+workloads with three warmups and ten samples,187raw events and clean owned exits.
+Median shortTTFT/request are0.484318/12.192120seconds. The ten boundary requests
+total1096.033071seconds qualify sustained-duration scope with recorded AC/thermal
+endpoints; continuous temperature, energy and system pressure remain unavailable.
+Maximum admission1,262,602,960/samplednativejointcharge1,166,575,656bytes fit6GiB.
+Independent raw/state/timing/memory replay and six evidence-mutation checks pass.
+Astra cleared the exact replay source after provenance/phase/memory/byte-binding
+fixes; completed evidence review is recorded in the [full data report](../../experiments/2026-10-14-small-half-controlled-full.md).
+An initial account usage-limit failure in automatic approval review blocked post-run
+inspection. The user's retry restores access: fresh observations find no controlled
+worker/collector commands and a stopped/not-starting machine. Astra accepts the
+completed small-model evidence before commit; historical PID/group IDs were not retained.
+
+Full larger-model compensated Half measurements complete the same eight workloads/
+24warmups/80samples and187raw events. Median shortTTFT/request2.037336/28.398590s;
+boundaryrequest264.684586s. Seven rows exceed ten measured minutes, with recorded
+AC/thermal endpoints. Admission3,396,602,720/nativejointcharge3,301,821,896bytes fit
+6GiB. Independent replay/sixmutation checks and recorded9PID/eightworker-group idle
+proof pass. Both full matrices now complete; see the [larger report](../../experiments/2026-10-14-larger-half-controlled-full.md).
+Astra accepts completed larger-model evidence before commit; no speed/default/Q4 adoption.
+
+Full compensated Half application traces complete both fixed models with3warmups/
+10three-turn scenarios,78total turns and60measured. Medians20.445239/43.550813s;
+admissions1,443,266,720/3,577,266,480/nativejointcharges1,331,447,848/3,467,005,408
+bytes fit6GiB. Independent finalized text/state/receipt-boundary/memory replay passes.
+Astra found audit timestamp/nullability gaps; corrected source and15invalidvariant
+checks pass. Small second-turn14tokens differs fromFP3218, and neither measured
+scenario sum reaches600s; no purebackend speed or extra10min claim. See the
+[full application report](../../experiments/2026-10-14-half-application-full.md). Final
+Astra accepts completed application evidence before commit; confirming/release/Q4 gates remain open.
+
+Independent fixed Half primary repeats now retain secondthreewarmup/tensample
+short128/128collections on bothmodels.26requests/30events replay; TTFTmedian
+changes+0.003433%/−0.168474% and requestchanges+0.087202%/+0.005098%. These are
+repeatability, not a new paired optimization gain. Complete states/memory/inputs/
+endpoints and clean exits pass; caller source/fivefailurechecks cleared. See the
+[primary confirmation report](../../experiments/2026-10-14-half-primary-confirm.md); final
+Astra accepts final data before commit, applicationconfirmation/release/Q4 gates open.
+
+Independent full Half application repeats now match all39turn response/state
+signatures permodel to the initial runs, with medians20.456533/43.572448s and
+changes+0.055240%/+0.049678%.78turns/60measured/7165events, memory/endpoints/
+owned-exit/idle proofs pass. This is repeatability, retaining differentFP32outputs,
+sub600s/application-duration and unavailableend-power/sensor/timing limits. See
+[application confirmation](../../experiments/2026-10-14-half-application-confirm.md). Final
+Astra accepts final data before commit; finalrelease/Q4 gates remain open.
+
+The final [M5 evidence and decision report](../../experiments/2026-10-14-m5-performance-decision.md)
+consolidates all completed Half quality, eight-row matrices, sustained scopes and
+confirming runs. It retains explicit compensated Half and records all Q4/fusion/
+chunk/readback decisions without changing defaults. Historical CPU FP32 and
+external FP32/BF16 are different representation tracks; small Half boundary decode
+is slower than historical CPU, and application token counts differ. No matched
+external ranking or performance replacement follows. M5.2/.6 remain open;
+record completion is separate from milestone acceptance. Saved arithmetic,
+links/whitespace and protected executable checks pass; Astra accepted after two
+wording corrections with no remaining findings.
+
+A separate [Q4 v2 group8 candidate](../../q4-v2.md) now has a checked [source-bound
+packer and independent CPU reconstruction oracle](../../experiments/2026-10-14-q4-v2-format.md).
+It uses8effectivebits/weight including Half scale/bias before padding, with distinct
+version/quantizer identities and immutable admitted format. V1 default/bytes and
+rejected quality remain. Manual cross-language fixtures, group/alignment tails,
+source replacement, output ownership, overflow and version mixing pass. V2 GPU
+loading rejects before allocation until qualified execution is implemented.
+No v2 quality or latency gain is claimed; Astra accepted design, code, checks
+and evidence with no findings before commit.
+
+The [Q4 v2 GPU task](../../experiments/2026-10-14-q4-v2-gpu.md) adds two static
+compensated kernels and immutable format dispatch without weight expansion.
+Independent tiny graph9100stage comparisons,4032exactprimitiveoutputs and16
+midpoint/overflow witnesses pass; both session modes preserve cancellation,
+pending/cache/failure/admission and zero warmed Rust allocations. Existing v1
+independent regression4550arrays passes. The oracle now rejects missing/duplicate
+inventories and file replacement using hashes of consumed bytes and endpoint checks.
+This qualifies tiny execution only; real-model quality/memory/performance stay open.
+Astra accepted code, checks and native evidence after oracle fixes, with no findings.
+
+Both [Q4 v2 artifacts and real-model references](../../experiments/2026-10-14-q4-v2-real-oracles.md)
+now match the frozen layout on the two pinned checkpoints. Streaming conversion
+uses≤17,253,048bytes recorded native charge. Sixcases/342fullarrays permodel freeze
+independent reconstructed-math gates beforeGPU/heldout, with new17token/offset
+shape probes and explicit unavailable-source metadata. Reference admissions/
+complete native charges fit6GiB. Explicit stripe temporary release closes a
+memory-accounting overlap, verified with a lifetime regression.51Python checks
+and portable Rust integrity pass; Astra accepted final evidence with no findings.
+This is evaluation infrastructure/reference qualification, not inference speed
+or model quality acceptance.
+
+Both [real Q4 v2 GPU geometries](../../experiments/2026-10-14-q4-v2-real-geometry.md)
+now pass all 14,892 full-element stage-slice comparisons across frozen vector/
+tile modes, whole/irregular chunks, cached prefixes and offsets, with no greedy
+mismatches. Measured native lifetime charges758,334,616/1,910,425,496 bytes and
+admitted numerical+validation874,062,494/2,029,218,550 bytes fit6GiB. Capacity27
+is graph qualification, not full-context/application/quality/speed acceptance.
+Frozen held-out and repeated performance checks remain.
+
+The [explicit Q4 v2 scorer](../../experiments/2026-10-14-q4-v2-scorer.md) now reports
+actual format/quantizer/mode and resident admission, preserving legacy calls.
+Both unchanged short batch/single loss guards pass before any full-corpus worker.
+Exact-byte probe admission and both-model prelaunch tuple checks close Astra's
+provenance findings;22portable and104ordinaryMetal-feature checks pass. This
+qualifies integration/shortguards only; full loss/task/speed remain open.
+
+The [frozen Q4 v2 full-loss evaluation](../../experiments/2026-10-14-q4-v2-full-loss.md)
+completes all10,000targets for both models. Larger meanNLL2.51426472772287 versus
+matchedFP322.485958031019153 increases0.02830669670371666, passing0.05.
+Small increases0.05129570579114473 and remains rejected. All20,268events,
+owned exits, state, unchanged endpoints and≤6GiB budgets replay cleanly.
+This is larger loss acceptance only. Per the plan's explicit Half fallback,
+continue larger task-quality/release evidence while preserving small rejection.
+
+The [explicit v2 CLI](../../experiments/2026-10-14-q4-v2-cli.md) now requires a
+paired artifact/mode selection, rejects v1 before events, and publishes actual
+version/group/quantizer/dtype/modes while preserving legacy metadata/defaults.
+Eight native workers/109events qualify tiny and both real-model cached/pending/
+cancel/stop/text behavior within6GiB.95CPU/107Metal/13portable checks pass.
+The preflight fixture failure is retained/excluded; transitive helper provenance
+uses prior committed qualification/snapshots plus explicit endpoint proof.
+CLI functionality does not repair small v2 rejection or qualify tasks/speed.
+
+The [larger v2 task collector](../../experiments/2026-10-14-q4-v2-task-collector.md)
+now admits the exact reviewed loss-qualified CLI/source/artifact and preserves
+all frozen task/stop/reset/finalization rules. A prelaunch binary/source snapshot
+race is closed with reasserted pins and zero-launch mutation tests.14portable
+checks and the3category/24event native probe pass, with clean exit/post-exit
+text replay and≤6GiB accounting. Full100tasks, grading and speed remain open.
+
+## Rejected or inconclusive experiments
+
+These findings prevent unsuccessful experiments from being presented as improvements.
+
+| Experiment | Outcome and current constraint |
+| --- | --- |
+| Core ML / ANE supported slices | CPU slice/state behavior qualified; actual ANE acceleration unobserved. FP16 projection fails its frozen gate under both policies. No ANE backend adopted. [Closure](../../experiments/2026-10-11-ane-feasibility-closure.md). |
+| Dynamically indexed Original Q4 tile | **28.5% slower**; rejected in favor of the bounded fixed-index experiment. [Report](../../experiments/2026-10-13-q4-prefill.md). |
+| Residual/post-attention RMS fusion | All numerical/state checks pass, but complete 512/128 Fused requests are **0.553034% slower**. Prototype removed; Split retained. [Negative experiment](../../experiments/2026-10-14-residual-rms.md). |
+| Rotary/cache-write fusion | All numerical/state checks pass, but complete 512/128 request gain is only **0.014593%**, below the 5% gate and Split dispersion. Prototype removed; Split retained. [Negative experiment](../../experiments/2026-10-14-rotary-cache.md). |
+| MLP SiLU/gating fusion | Exact Half storage and all numerical/state checks pass, but complete512/128 request gain is only **0.006032%**, below dispersion and5%. Prototype removed; Split retained. [Negative experiment](../../experiments/2026-10-14-mlp-gating.md). |
+| GPU greedy latency | Larger512-input/128-output median is **0.2890% slower** than full-logit CPU selection. Explicit ID-only capability retained for verified host storage/traffic; no performance default or speed acceptance. [Result](../../experiments/2026-10-13-metal-greedy.md). |
+| Larger Q4 chunk-size default changes | 256/512 improve the named 1,024-input/one-output median only **4.0506% / 2.6294%**, below the frozen 5% threshold; 1,024 is **8.4712% slower**. No larger default adopted. [Sweep](../../experiments/2026-10-13-metal-chunks.md). |
+| Original and Original-tiled expanded Q4 tiny decoder | Both fail the frozen offset17 independent gate. The compensated candidate passes; no tolerance was loosened. [Original report](../../experiments/2026-10-13-q4-prefill.md), [compensated report](../../experiments/2026-10-13-q4-compensated-storage.md). |
+| 0.5B Q4 held-out quality | Mean NLL **3.057166039390558** vs FP32 **2.883725149929484**; increase **0.173441 > 0.05**, rejected. [Result](../../experiments/2026-10-13-metal-held-out-loss.md). |
+| 0.5B Original Half full-loss collection | Short batch/single NLL guard **0.004681 > 0.001** fails; collection stops before full loss. No full Half quality conclusion. [Result](../../experiments/2026-10-13-metal-held-out-loss.md). |
+| Larger Original Half full-loss collection | Short batch/single target NLL guard **0.001523869 > 0.001** fails at the first probe. Full scoring never starts; no full Half quality conclusion. [Result](../../experiments/2026-10-14-larger-half-loss.md). |
+| Larger Q4 held-out quality | Mean NLL **2.588645591385506** vs matched FP32 **2.485958031019153**; increase **0.10268756036635285 > 0.05**, rejected despite short numerical parity. [Result](../../experiments/2026-10-13-larger-metal-loss.md); `a082be5`. |
+| Small Q4 v2 group8 held-out loss | MeanNLL2.9350208557206288 vsFP322.883725149929484; increase0.05129570579114473 exceeds0.05. Rejected with no tuning/waiver. [Decision](../../experiments/2026-10-14-q4-v2-full-loss.md). |
+| Native macOS generated-code isolation prototype | Fixed resource admission fails; not adopted. Literal grading instead uses the separately qualified Linux controller. [Native rejection](../../experiments/2026-10-10-code-isolation.md), [Linux qualification](../../experiments/2026-10-11-linux-literal-controller.md). |
+
+The fixed quality gates, quantizer, checkpoint selection and corpus remain
+unchanged. Full compensated Half loss/task quality passes both selected models.
+Both confirming primary/application runs are complete. The [final decision](../../experiments/2026-10-14-m5-performance-decision.md)
+records the historical performance baseline gaps and withheld default replacement. Its open-exit conclusion is superseded by the [15 October M5 release decision](../../experiments/2026-10-15-m5-release.md).
+Long-context attention/KV experiments and physical iPhone work belong to M6/M7.
+This record will be updated with each reviewed implementation or measurement
+decision; unmeasured changes will remain explicitly marked.
+
+The [larger v2 full response collection](../../experiments/2026-10-14-q4-v2-full-tasks.md) completes100original cases at256/32/16caps. Clean natural model exit,101ordered native-memory observations, exact raw/state/post-exit text and unchanged source/artifact endpoints qualify transport. Literal grading and task-quality/performance acceptance remain pending.
+
+The [larger v2 full task gate](../../experiments/2026-10-14-q4-v2-task-quality.md) passes11/100 against matchedFP3211/100 with0pp precision loss. Exact v2 collection/inventory/pin admission and cold grading-window hooks preserve original literal/text semantics;43portable checks and the complete100-outcome/40code native window pass with zero unresolved infrastructure and stopped-VM restoration. Combined with its full loss pass, larger v2 quality is qualified; small v2 rejection and performance/release gaps remain.
+
+The [v2 benchmark workers](../../experiments/2026-10-14-q4-v2-bench.md) publish actual format/group/quantizer/mode/residency and truthful result-schema representation while preserving legacy defaults/timing.23portable/95CPU/107Metal checks pass. Eight controlled probes/31events qualify fullcontext/state/limits;13paired512/1 requests preserve exact fullvocabulary bits/greedy/state. Complete memory/endpoints/owned cleanup pass. A confirmed useful gain and final release measurements remain pending.
+
+The [v2 application adapter](../../experiments/2026-10-14-q4-v2-application.md) preserves the frozen scripted turns/formatting/policies and reports actualv2 execution.14portable checks cover quality/source/pin/parser admission, timers/state/stop/finalization and owned cleanup. The3turn/13event cap2nativeprobe passes exactpost-exit text with clean exit/unchanged endpoints/≤6GiB memory. Full application measurements and final release acceptance remain pending.
+
+The [v2 affected-shape harness](../../experiments/2026-10-14-q4-v2-shapes.md) now measures128reset andactual64append after512cachedtokens, preserving the512/1primary. Bounded exact input sizes/SHAs, both consumed append arrays, actual cache/state metadata and fullbits qualify39pairs/45events.13portable/oneRustreader checks pass. Identicalsingle-token dispatch and unchanged otheroperations support scoped regression analysis. A label-only correction is recorded without rewritingevidence; overlapped preparatory512timings are entirelyexcluded. Freshprimaryconfirmation andfullrelease workloads remain pending.
+
+The v2 controlled collector now accepts an explicit subset of frozen workloads for confirmation runs. Invalid, empty or duplicate selections fail before input admission or worker launch; the default still runs all eight rows. `selected_workloads` records the scope, and only a successful full canonical measurement sets `full_matrix_completed`. Fifteen portable controlled checks, formatting and strict Metal Clippy pass. This permits a separate short confirmation without repeating the full matrix; it changes no numerical worker, timing boundary, quality gate or default. Final measurements and M5 acceptance remain pending.
+
+The [fresh v2 primary confirmation](../../experiments/2026-10-14-q4-v2-primary.md) completes two same-binary512/1 collections,26pairs/30events with exact full logits/greedy/state. Tile gains23.691277% and22.202400% exceed5%, nonoverlapping measured ranges and between-run median shifts1.867689%/3.855253%. Complete admission/native memory/endpoints/cleanup pass. This accepts the named prefill refinement only; full release matrix/application/sustained evidence remains. The contaminated preparatory512timings remain wholly excluded.
+
+The [full larger v2 matrix and short confirmation](../../experiments/2026-10-15-q4-v2-controlled.md) complete117requests/202events at3warmup/10perrow. Exact cache/history/boundary2048/overflow preservation, source endpoints and≤6GiB admission/nativecharge pass. Completed matrix inference totals10,742.769647s includingwarmups (8,256.699921s measured-only), qualifying sustained duration without setup/hash gaps. Short medianTTFT/request change−3.349513%/−1.463285%; repeatability only. Full application/release acceptance remains pending.
+
+The [larger v2 full application and confirmation](../../experiments/2026-10-15-q4-v2-application-full.md) complete78turns/6086events, with39exactID/text/stop/state signatures repeated acrossruns,3warmup/10measuredscenariosperrun. Scenario medians41.267054271/41.301725271s change+0.084016%; outputcounts86/128/14 preserveEOS/capsemantics. Naturalexit, independentpostexittext, completepins/parserinventory/clockbounds and≤6GiB memorypass. Applicationmeasureddurations412.726713/412.866698s are not sustainedqualification; controlledsequence suppliesit. Finalrelease synthesis remains.
+
+The [15 October M5 release decision](../../experiments/2026-10-15-m5-release.md) supersedes the earlier open-exit conclusion: M5.1–M5.6 are complete. The selected small Half configuration and larger frozen group8 Q4 v2 configuration pass unchanged quality gates and full repeated/state/memory workloads; larger v2 confirms22.20–23.69% useful512/1prefill gains and the controlled sequence exceeds600s. Every optimization retains its measured scope, including slower cross-representation complete requests, rejected smallv2/v1, removed fusions, explicit GPUgreedy capability and unchanged defaults. Baseline gaps remain disclosed without externallead/defaultreplacement; M6/M7 remain pending.
+
+M6 implementation has started. The [bounded online attention component](../../experiments/2026-10-15-m6-online-attention.md)
+adds explicit separate decode/two-row prefill paths with16-key online softmax,
+GQA sharing and no depth-sized score matrices. Independent FP64 primitive checks
+cover202,048 outputs through32K depth;81 adversarial cases and173,184 existing
+tiny-stage values pass unchanged gates, along with session/failure/readback and
+zero warmed-allocation checks.95 CPU/107 ordinary Metal tests, formatting and
+strict linting pass. Calculated allocated scratch falls by about28MiB small/24MiB larger
+at capacity2048/chunk128 (exact byte accounting in the report). Retained as an
+explicit component; real-model quality, performance, longer-context admission and
+support, and the measured KV decision remain pending. Existing defaults stay.
+
+The [longer-context admission component](../../experiments/2026-10-15-m6-long-admission.md)
+permits explicit model-bounded Metal capacities through32K and adds
+`--metal-attention reference|online`, preserving2K/Reference defaults and the CPU
+session limit. Checked allocation/absolute positions/output reservation, exact
+budgets and state preservation pass.97 CPU/110 ordinary Metal checks and six
+native CLI workers/122 events pass;6912 independent high-position rotary values
+pass their predeclared arithmetic envelope through32767. Structural/tiny evidence
+is retained separately from the pending real-model long-prefix quality,
+performance, memory and supported-depth qualification.
+
+The [M6 Online quality collector](../../experiments/2026-10-15-m6-quality-collector.md)
+binds actual Online selection, compiled source/executable, model/corpus/baseline
+and packed payloads, reasserts them before worker launch, and preserves the
+unchanged short/full loss gates and incomplete/rejected flags.26 portable checks,
+97 CPU/110 ordinary Metal checks and eight real-model short-guard workers/68
+events pass; single/batch NLL differences are0 small and at most0.00001075 larger.
+Full10000-target loss/task quality and long-context release remain pending.
+
+The [M6 Online full-loss collections](../../experiments/2026-10-15-m6-online-full-loss.md)
+pass the unchanged10000-target gate for both selected representations: small
+mean2.8835716762 (−0.0001534737 vsFP32), larger v2 mean2.5142232720
+(+0.0282652410≤0.05). Ten serial workers/20268 raw events pass exact state,
+source/artifact/corpus and complete≤6GiB memory checks. The block policy remains
+near1K; task quality, long contexts, performance and M6 closure stay pending.
+
+The [paired M6 context worker](../../experiments/2026-10-15-m6-context-worker.md)
+shares immutable weights once, admits both session/counter resource sets before
+allocation, and separates ordinary samples, paired vocabulary/loss checks and
+same-depth decode profiles. Five portable protocol checks,97 CPU/110 ordinary
+Metal checks and two native tiny workers/262 events pass exact cache/state,
+rejection, memory and profiling checks. A byte-pinned4K–32K stress contract was
+frozen before long real-model evaluation. Native collectors, long quality,
+performance and the measured FP16 KV decision remain pending.
+
+The [M6 context collector](../../experiments/2026-10-15-m6-context-collector.md)
+binds reviewed compiled/runtime/model/contract bytes before launch and after
+owned exit, validates exact paired quality/state/memory, and separates ordinary
+timing from matching-command GPU profiles. The512/128 primary and three/ten
+paired policy are explicit. Ten collector/seven controlled/seven transport tests
+and two selected-model short probes/six events pass. Astra accepted all311
+endpoint bindings and raw replay after three collector fixes. Long quality,
+performance, application admission, task gates and the KV decision remain open.
+
+The [M6 Online task adapter](../../experiments/2026-10-15-m6-tasks-collector.md)
+preserves the original100-case caps/stops/literal rules, requires reviewed full
+loss, binds actual Online execution and reasserts the complete qualified CLI
+and consumed input inventory before launch. Separate full-collection admission
+retains raw replay, natural exit, independent text and the existing isolated
+grading window. Nine new/seven legacy/seven v2/seventeen window checks and two
+native probes/55events pass. Astra accepted code/evidence; full100-task
+collection and grading remain pending.
+
+The [M6 maximum-context application adapter](../../experiments/2026-10-15-m6-application-collector.md)
+checks the actual tokenizer-owning Online CLI's32K storage/admission, complete
+published-ID/output-limit/pending semantics, reset/finalization and independent
+text after owned exit. Separate decoder charge and honest derived-history-hash
+scope are recorded. Four portable checks and two native full-capacity allocation
+probes/tenevents pass, with admissions1,791,516,840/3,122,841,472bytes and sampled
+joint native charges1,617,987,816/2,960,116,952bytes. Astra accepted code/evidence;
+full32640+128 generation and M6 qualification remain pending.
+
+The [full M6 Online task gate](../../experiments/2026-10-15-m6-online-task-quality.md)
+passes for both selected representations:2/100 small and11/100 larger, matching
+their FP32 baselines with0pp loss. Two serial collectors/12221events and two
+isolated literal windows resolve all200outcomes, including80 unchanged
+SyntaxError code failures and120text grades. Exact original caps/state/text,
+complete≤6GiB admission/native charge, source/published archives and fresh stopped
+VM restoration pass. Astra accepted all411bindings and independent replay;
+absolute task scores stay disclosed. Full loss/task gates are now closed;
+long quality, profiles/performance, max-context generation and the KV decision
+remain before M6 completion.
+
+The [M6 bounded-wait adapter](../../experiments/2026-10-15-m6-long-budget.md)
+preserves completed collector identities while giving slow higher-depth
+collections explicit 2/6/12-hour per-event read bounds under the existing 24-hour
+worker lifetime. Four new/ten existing collector and seven transport checks pass;
+two serial selected-model probes/six events validate 21,600/43,200 second settings,
+exact state, endpoint identities and natural cleanup. No numerical gate or
+performance/support claim changes; the incomplete 16K attempt is retained for
+retry, and M6 long qualification remains open.
+Astra accepted the final code and evidence after independent six-event replay and
+313 binding checks.
+
+The [M6 short-workload comparison](../../experiments/2026-10-15-m6-short-performance.md)
+completes both eight-row matrices and independent 512/128 primary confirmations.
+All four workers/300 events pass exact state, identity, native memory and cleanup
+checks. Complete-request median reductions repeat at 76.26/76.24% small and
+73.02/73.03% larger, with disjoint observed ranges. All primary timing medians
+improve by at least 5%; small prefill/TTFT ranges overlap, so no uniform prefill
+gain is claimed. Every original workload has a lower complete-request median.
+The saved-data auditor fixes exact-buffer identity and extra-event gaps; 35
+portable checks and eight-record/568-event/327-binding replay pass. The stricter
+all-metric range-separation diagnostic remains false and disclosed. Astra
+accepted final source/evidence after byte-identical replay, independent statistics
+and 23 receipt/publication bindings; long qualification and the KV decision remain open.
+
+The README now distinguishes the unchanged 2K CPU/default limit from explicit,
+model-bounded experimental Metal admission through 32K, and documents the Online
+attention selector with its reviewed short-workload scope. PLAN records the
+accepted matrices/confirmations while leaving every M6 long-context/KV checkbox
+open. This corrects documentation; it changes no runtime default or support gate.
+Astra accepted the three-file documentation review without findings; changed
+links/anchor, open-task content and whitespace checks pass.
+
+The [M6 long-quality synthesis checker](../../experiments/2026-10-15-m6-long-quality-audit.md)
+requires all four exact depths and 512 observations per model, preserves both
+per-depth and pooled loss gates, and checks saved winner/logit/tie consistency.
+Changed predictions receive two-candidate reversal accounting and remain open
+for separate investigation. Fourteen portable checks pass; partial exact replay
+of three records/2,747 events/115 bindings also validates 256 existing real winner
+rows. The first small-model 32K profile completes three repetitions per mode
+with exact committed state and bounded memory. Online attention's 97.2638%
+median contribution triggers KV investigation; it does not prove DRAM traffic
+or support an ordinary timing ranking. Astra accepted code/evidence after
+independent byte-identical replay, 14 passing tests, all 115 endpoint bindings,
+15 receipt pins and 13 published copies. Full long quality, other profiles,
+boundary/application runs and the KV decision remain open.
+
+The [M6 I8 KV component contract](../../../benchmarks/m6-kv-component-v1/manifest.json)
+is frozen before component collection, following the reviewed small-model 32K
+profile trigger. It specifies signed packed bytes, per-32-value Half scales,
+nearest-even rounding, independent reconstruction/arithmetic checks, distinct
+resident layer inputs, three warmup/ten alternating measured pairs and separate
+confirmations under complete 6 GiB admission/native limits. Its payload is
+53.125% of FP16. A negative result can reject this candidate; a positive result
+still requires integration, cache-write, state, quality and end-to-end evidence.
+This records the experiment design only: implementation checks and measurements
+are pending, with no I8 adoption or M6 completion claim.
+
+The [M6 context coverage checker](../../experiments/2026-10-15-m6-context-scope-audit.md)
+requires all 32 model/depth/quality/profile/timing/confirmation roles, exact saved
+replay, unchanged quality gates and frozen repetition counts. Six portable tests
+pass; four-record compatibility replays 5,652 raw events and rejects incomplete
+coverage. The larger 32K profile also completes three samples per mode with exact
+state, clean exit and bounded memory. Its 95.6989% Online attention median joins
+the small-model trigger for KV investigation. Profile stage time is not DRAM
+traffic or an ordinary timing ranking; full context/application evidence and the
+KV decision remain pending.
+Astra accepted source and partial evidence after independent six-test and
+byte-identical replay checks, 318 bindings, eight receipt pins and six published
+copies, with larger-profile state/memory/intervals independently recomputed.
+
+The [isolated M6 I8 KV experiment](../../experiments/2026-10-15-m6-kv-component.md)
+passes the unchanged independent arithmetic gate, exact packed-format witnesses,
+immutable-input checks and complete component memory limits across four serial
+workers/116 events. Small synthetic decode medians improve 5.08%/5.56%; larger
+improves 3.20%/2.67%, below the frozen 5% component usefulness threshold. I8 uses
+53.125% of FP16 payload. These mixed component results do not qualify engine
+adoption or model quality; FP16 remains in use, with full context/application
+qualification and final KV review pending.
+Astra accepted the code, four-worker evidence and mixed-benefit non-adoption
+decision after byte-identical 116-event/6,579-binding replay, 29 receipt pins,
+20 published copies and independent timing/memory/input checks. Eleven portable
+tests, four packing tests, formatting and strict all-target Metal lint pass;
+the engine and protected CPU binaries remain unchanged.
+
+Both [full M6 maximum-context applications](../../experiments/2026-10-15-m6-full-application.md)
+complete 32,640 prompt IDs plus 128 ordinary generated outputs with the real
+tokenizer-owning Online CLI. Exact published text/IDs, output-limit state,
+32,767 committed positions plus one pending token, reset, independent post-exit
+decode, unchanged identities and clean exits pass. Complete admissions are
+1,791,516,840/3,122,841,472 bytes and joint native lifetime maxima are
+1,615,907,072/2,960,706,752 bytes, within 6 GiB. Saved-data replay covers 262
+events and 322 bindings. This is application state/memory evidence under a
+cyclic fixed-ID input; input tokenization is excluded, and no latency ranking
+or natural long-document quality is claimed. M6 context/retention closure
+remains pending.
+Astra accepted the full application evidence after byte-identical replay of both
+records, all 322 bindings/262 events and eight published copies, with exact
+requests, state, output, memory and clean exits independently verified.
+
+
+The [M6 producer-typed quality path](../../experiments/2026-10-16-m6-typed-quality.md)
+corrects shortest-FP32 JSON interpretation without changing raw events, FP64
+statistics, numerical gates or inference. The original larger32K attempt stays
+failed because the collector exception prevented natural successful completion.
+A separate typed collector/replay and mixed-format dispatcher preserve the old
+successful route. Twenty-five targeted portable tests pass; the broader40-test
+selection also passes independently under Astra. Seven original cases replay
+896 rows/917 events/334 bindings, with both larger4K winner changes still open.
+A fresh typed Small4K probe exits0, reproduces all original comparison events
+and quality exactly, and replays131 events/112 bindings within6GiB. Astra accepted
+code/data after byte-identical independent replay, all6source/26evidencepins and
+26exactcopies, with native state/memory/cleanexit verified. Fresh larger32K retry,
+winner investigations and full M6 completion remain pending.
+
+The [M6 full-distribution diagnostic](../../experiments/2026-10-16-m6-winner-investigation.md)
+reproduces all original larger4K comparison events and four complete distribution
+hashes for the two changed winners. Independent ordering, FP32 candidate bits,
+margins, vocabulary errors and target losses verify both top-two reversals.
+Fifteen portable Python tests, two Rust example tests, formatting/strict Clippy
+and 12 replay-admission mutation checks pass. Exact saved replay covers133 events
+and6,843 bindings. Admission2,445,934,228/native2,322,762,608 bytes and separate
+post-exit driver75,105,024 bytes fit6GiB; exit0/cleanup/endpoints/identities pass.
+Astra independently accepted code/data and manual investigation of only these
+two exact SHA/prefix cases after byte-identical replay and all6source/16evidence
+pins/16copies; original unresolved automatic flags remain. Full long-context
+qualification/M6 completion stay open.
+
+The [complete M6 long numerical quality](../../experiments/2026-10-16-m6-full-long-quality.md)
+now covers all four depths for both models:128 targets/depth and512/model.
+Every depth and pooled model mean passes the unchanged +.05 NLL limit; pooled
+increases are -0.00001851999728900924 small/-0.0001262955813478074 larger.
+Fresh typed larger32K v2 exits0 with no flips, unchanged identities/clean
+endpoints and4,442,652,308-byte admission/4,297,527,400-byte native maximum.
+Exact8-record replay covers1,048 events/334 bindings and independently matches
+under Astra. Only the two previously reviewed exact larger4K reversals remain
+flagged automatically; their manual resolution is recorded separately. Failed
+v1 and later interrupted ordinary-timing attempts remain unqualified. Astra accepted the final publication after all5source/6evidencepins and5copies
+verified; full long numerical quality is qualified. Boundary coverage and final
+KV/M6 completion stay open.
+
+The [M6 long-run supervisor](../../experiments/2026-10-16-m6-supervised-runs.md)
+keeps the collector attached to its GPU worker across chat-tool interruptions.
+An observed interrupted ordinary32K attempt is preserved as unqualified; its
+orphan was stopped and absence verified, while all13 completed roles remain.
+A detached owned serial queue resumes only10 unfinished roles, with a fresh
+small32K ordinaryv2 destination. Graceful group interruption joins collector
+cleanup, includes metadata/file-close failures and preserves primary errors.
+Eight CPU tests pass independently under Astra, including a real three-process
+fixture proving the separate-session child is reaped before supervisor exit.
+No numerical request, quality gate or collector timeout changes. Astra accepted publication after3source/11evidencepins and11exactcopies, with
+interruption preservation/role counts/report verified. This is prelaunch CPU
+supervision qualification; numerical boundary coverage/M6 remain open.
+
+The [complete M6 context qualification](../../experiments/2026-10-19-m6-context.md)
+closes all32 frozen roles across both models and4K/8K/16K/32K total tokens.
+Root and Astra replay22,752 events/429bindings byte identically, preserving the
+original automatic flags and only the two exact manually reviewed winner cases.
+All ordinary/independent boundary runs finish full-capacity recomputation and
+state-preserving overflow checks with clean exits and complete<=6GiB memory.
+Max admission/native bytes are2,770,507,468/2,518,502,184 small and
+4,576,870,036/4,357,935,304 larger.105Python/97CPU/110Metal-feature tests,
+formatting and strict Clippy pass; protected CPU binaries stay unchanged.
+Long timings remain descriptive, profiles measure completed GPU attention
+fractions, and cyclic stress does not establish natural long-document ability.
+Astra accepted code, data and final publication after all4source/126evidence
+pins and107exactcopies verified. Separate KV/M6 retention synthesis remains pending.
+
+The [M6 release decision](../../experiments/2026-10-19-m6-release.md) completes
+M6.1–M6.3 for the selected small compensated Half and larger frozen Q4 v2 models
+on Apple M1 Pro. It joins the unchanged full10,000-target loss/100-task gates,
+all32 context roles, both actual32K applications and a separate final KV decision.
+Retain FP16 after complete<=6GiB context/application qualification; preserve
+small positive I8 component gains and larger sub5% gains, with no I8 production
+adoption or waived cache-write/fullquality/state/end-to-end gates. Repeated
+short512/128 numerical request reductions76.26/76.24% small and73.02/73.03% larger
+remain scoped to their measurements; long timing is descriptive and natural
+long-document ability remains unqualified. Defaults/baseline limits/rejections
+stay unchanged. Astra accepted final synthesis/publication after independently verifying all497
+bindings/11exactprerequisites/421localtargets and the final FP16 decision.
+M6.1–M6.3 are complete in this qualified scope; M7 stays pending.
+
+
+The first [M7 native boundary component](../../experiments/2026-10-19-m7-native-abi.md)
+adds a versioned CPU raw-ID C ABI with retained immutable models, session-owned
+KV/scratch, dedicated-thread operations and separate concurrent atomic cancellation.
+Callback reentry returns Busy; failed output preserves pending history and prior
+successful emission counts. Rust panics poison affected sessions for recreation.
+Eight ABI tests plus a real compiled C client match the independent tiny oracle
+and cover ownership, continuation, cancellation, errors/reset/release. Formatting,
+strict Metal Clippy,105CPU/118Metal-feature tests and staticlib build pass. Astra
+accepted code/data/publication after39source/8evidencepins/4copies and all26
+exported tensors independently verified.
+No numerical/default/mobile-budget change or M7 completion is claimed.
+
+
+The [explicit M7 Metal bridge](../../experiments/2026-10-19-m7-metal-abi.md) adds
+compensated Half and frozen Q4 v2 native models with Online attention/FP16 KV,
+retained ownership and per-request static dispatch. Both selected real models
+match direct-session IDs and7/6/1 pending state; a compiled C Metal client matches
+the independent tiny oracle. Combined logical admission counts shared weights
+once and stays within6GiB; no new latency/native-footprint/mobile claim follows.
+107CPU/119Metal-feature tests, formatting, strict Clippy, six bounded-controller
+checks and release builds pass. The timed-out debug attempt stays preserved and
+unqualified; fresh release validation passes all244 endpoint bindings with clean
+exits. Astra accepted source, native evidence and final publication after all7source/
+16evidencepins/244validationbindings,201frozenpayloads and14exactcopies verified.
+M7 iOS packaging, Swift/frontend and physical-device qualification remain open.
+
+The [M7 Apple package task](../../experiments/2026-10-19-m7-apple-package.md)
+extends production Metal/native target gates to arm64 iOS and guards precise-math
+APIs with macOS15/iOS18 minimums. Separate Mac/device/simulator static-library
+slices, C linkage/export/deployment checks and XCFramework file verification
+prepare native integration without changing numerical kernels or defaults.
+The builder admits a controlled environment and absent Cargo configurations,
+uses isolated temporary/build outputs, and drains owned descendant processes.
+Ten package and seven integration checks cover cleanup, environment, frozen
+provenance and package-integrity failures. Three release slices compile/link with
+exact exports/platform/minimums; CPU107/Metal119 tests, fmt and strictClippy pass.
+The bounded simulator timeout witness is stopped and verified Shutdown.
+Physical-device qualification and overall M7 completion remain pending.
+Astra accepted the final task after verifying41source/115evidencepins/94copies,
+protected binaries, historical source identities, all slices and native/shutdown
+results. M7.1 is complete in this scope; Swift and physical M7 remain open.
+
+The [M7 native history task](../../experiments/2026-10-19-m7-native-history.md) adds
+an allocation-free caller-owned snapshot of exact sampled history, including
+pending IDs. It removes cancellation/replacement-prompt ambiguity for Swift
+replay while retaining owner/busy/poison guards and existing ABI record layouts.
+A tiny recreation test distinguishes identical history from eagerly committed
+KV and checks independent continuation IDs; the C client also verifies history.
+Physical-device lifecycle and overall M7 qualification remain pending.
+
+Astra accepted final code/data/publication after verifying4source/19evidencepins/
+14copies, protected binaries, clean native workers and all check counts.
+
+The [M7 Swift worker](../../experiments/2026-10-19-m7-swift-worker.md) serializes native
+owners on a dedicated OS thread with bounded queued work and polled raw-ID events.
+Cancellation and flag lifetime share the queue lock; callbacks have explicit
+ARC lifetime, and command autorelease pools drain temporary framework objects.
+Transactional replay retains the exact prefix through precancellation; suspend
+retains immutable weights, while unload clears replay state. Optimized strict
+Swift compilation and actual MacCPU/Metal tiny state/cancel/replay/unload/close/
+weak-release checks pass. Swift UI/iOS and physical M7 qualification remain open.
+
+Astra accepted the worker component after verifying30source/evidencebindings,
+18copies, the exact compiler command and four clean executions.
+
+The [M7 SwiftUI harness](../../experiments/2026-10-19-m7-swift-harness.md) adds the
+minimal raw-ID native app, shared self-test and arm64 Xcode project. Separate
+simulator/unsigned-device release builds verify deployment, resources, library
+provenance and simulator signing. Eight builder/five runner checks reject
+mutated inputs and preserve cleanup failures. The actual simulator self-test
+passes all ten native states, exact initial[47]*4 IDs, replay/cancel/resume,
+unload/close/deallocation; installed files/endpoints and Shutdown verify.
+Visual QA fixes persistent field labels and locks loaded-model settings.
+M7.2 software integration is complete; M7.3 remains blocked by phone Developer
+Mode/signing setup and lacks physical memory/thermal/sustained/lifecycle evidence.
+
+Astra accepted task6/M7.2 with no remaining findings after checking current and
+historical bindings,58copies, installed files, ten states, clean shutdown,
+helper checks, final UI/lifecycle wording and redacted device status.
+M7.3 and overall M7 remain pending physical qualification.
+
+The [physical setup follow-up](../../../benchmarks/results/2026-10-19-m7-physical-setup-v1.json)
+distinguishes the newly connected physical iiPhone 14 Pro from the earlier
+wireless ProMax and all simulators. The wired Pro's Developer Mode and developer
+services are ready; owner account sign-in and Personal Team availability are
+verified, while development signing remains open. The harness
+guide now explains initiating Xcode pairing before the hidden Developer Mode
+setting appears and assigning a Personal Team for local testing. Private
+inventories remain outside committed evidence. No engine/app code, numerical
+gate, supported phone limit or milestone completion changes; physical runs
+have not started.
+
+Astra accepted this setup documentation task with no remaining findings after
+verifying all12 pins,354 relative link targets and private-to-redacted facts.
+No physical workload or engine change is included.
+
+The [signed physical tiny integration](../../experiments/2026-10-20-m7-physical-tiny.md)
+adds private device/team admission, strict signed Release/profile verification,
+streamed hashes for seven admitted files and independently verified phone-process
+cleanup. Preparation and exact-install reuse avoid rebuilding while waiting for
+owner trust/unlock. Failed cleanup and nested private identifiers cannot be
+hidden by a later successful command. Sixteen targeted and52 related isolated
+checks pass; both SDK Release builds pass strict Swift checks (inherited Xcode
+orientation/AppIntents warnings remain). Actual iiPhone 14 Pro CPU and Metal checks
+pass exact initial IDs, ten states, replay/cancel/resume, unload, close and weak
+owner release, with matching before/after file proofs and verified process absence.
+Earlier failed attempts and intermittent host timeout-probe failures remain
+recorded. No numerical gate/default changes occur. Real-model memory, limits,
+performance, thermal and actual OS lifecycle evidence remain pending; M7.3 and
+overall M7 remain open. Astra accepted code and publication with no remaining
+findings after verifying198 pins,69 copies, privacy and363 local links.
+
+Physical evidence storage now explicitly preserves the two console logs' mixed
+line endings. A post-commit blob check caught automatic normalization; the
+original raw bytes and hashes are retained through path-specific Git attributes.
+
+The [worker timing capture](../../experiments/2026-10-20-m7-worker-timing.md) preserves
+bounded native elapsed events and monotonic callback timestamps, and adds a
+non-UI completion wait. Strict Mac CPU/Metal checks retain exact state/ID/release
+behavior and validate timing order/reset; both SDK builds and16 controller
+regressions pass. Callback timestamps include lock acquisition delay and caller
+completion timestamps include wakeup delay. Nine commands/seven events per
+backend validate the mechanism; no phone throughput or memory claim follows.
+Astra accepted this task and publication with no remaining findings after
+verifying110 evidence pins,29 exact copies and all stated build/runtime checks.
+
+The [authenticated measurement runner](../../experiments/2026-10-20-m7-measurement-runner.md)
+adds streamed local artifact identity, explicit native/process trial budgets,
+SDK-layout-checked own-process physical footprint/lifetime peak, bounded raw
+request samples, separate warmups and optional sustained accumulation. iOS
+interruption notifications invalidate foreground trials and request serialized
+cleanup. Failure-path artifact proofs preserve original output errors. Twelve
+functional cases pass on actual Mac CPU/Metal, retaining26 timed samples;
+27 related checks and both strict SDK builds pass. Changed headers/archives/
+helpers prevent every owned child. Earlier endpoint/provenance/parser gaps and
+executed sources remain recorded. These mechanism checks do not qualify phone
+memory/performance or complete M7.3. Astra accepted code and publication with
+no remaining findings after verifying164 evidence pins, six code pins, five
+historical mappings,50 copies,27 checks and364 local link targets.
+
+Raw Swift-version evidence also preserves its tool-emitted trailing space through
+a path-specific Git attribute; engine/source whitespace checks remain active.
+
+The [physical measurement controller](../../experiments/2026-10-21-m7-physical-measurement.md)
+admits exact signed installation and frozen inputs, stages immutable hard links,
+checks remote inventory and validates ordered raw token/state/memory/timing output.
+Transfer-only preparation and authenticated launch-only reuse avoid rebuilding or
+copying after owner unlock. Forty-four related portable checks and15 Mac cases
+pass. Actual phone failures exposed filesystem alias containment and startup
+activation ordering; both are fixed while retaining child-symlink rejection,
+strict foreground checks and checked deadlines. Both SDK builds and actual
+physical CPU/Metal runs pass26 raw samples overall, exact tiny IDs/state,
+installed/model proofs, close/release and independent process absence. Observed
+tiny lifetime peaks are21,546,656/23,037,600bytes; these do not qualify model
+budgets or sustained performance. Failed attempts and executed sources remain
+bound. Astra accepted source and publication after checking815 distinct paths,
+35 historical mappings,106 exact staged copies, both console replays, privacy,
+links and whitespace. M7.3 remains open.
+
+The [filesystem observation](../../experiments/2026-10-21-m7-filesystem-observation.md)
+adds a read-only own-filesystem free-byte report before loading, with checked
+Foundation numeric conversion and an explicit instrument/monotonic window.
+Forty-five portable checks,16 actual Mac cases and both SDK builds pass; Astra
+cleared source. Actual iiPhone 14 Pro observation reports32,768,000,000bytes before
+13 exact tiny requests, with matching artifact proofs and clean close/release/
+process absence. The earlier Locked failure remains recorded. Astra accepted261 bound paths,
+38 exact staged copies, independent phone replay, privacy, links and whitespace.
+Transfer admission and device limits remain separate; M7.3 stays open.
+
+The [storage admission](../../experiments/2026-10-21-m7-storage-admission.md)
+binds fresh same-device/signed-app observations to checked full payload bytes,
+2GiB reserve, both host clocks and a private boot proof. Freshness is rechecked
+after hashing directly before every copy, and no-copy retry replays original
+admission. Fifty-five portable checks pass, including the stat/hash replacement
+fix and expiration with independent cleanup. Small-model transfer and13 actual
+short-oracle requests pass exact IDs/state/proofs/release. A near-file-sized
+footprint increase during artifact proof is recorded for separate memory work;
+larger inference is deferred. Larger packed preparation passes after an earlier
+freshness expiration blocks the job write and preserves clean cleanup. The fresh
+retry completes all copy checks within84s. Astra accepted978 bound paths,30 exact
+staged copies, proof/state/admission replays, privacy, links and whitespace.
+M7.3 stays open.
+
+The [bounded hashing fix](../../experiments/2026-10-21-m7-hash-memory.md) drains
+Foundation read buffers after each256KiB SHA update in both model and installed
+bundle proofs. The independently hashed256MiB regression fails before loading
+with old code (280,724,248byte after-proof footprint) and passes under192MiB with
+the pools, preserving hashes, limits and cleanup. Astra cleared source;84 portable
+checks,17 actual Mac cases/39 samples and both SDK builds pass. Two same-job
+small phone confirmations retain26 exact ID/state samples; after-proof memory
+falls from1,013,664,064 to18,990,728/18,826,888bytes and final lifetime peaks from
+2,097,663,088 to1,016,990,064/1,016,858,992bytes. Sandbox timeout-test restriction,
+existing-process preparation failure and missing-snapshot reuse refusal remain
+recorded. Budgets/defaults remain unchanged. Final reclamation varies; these
+short trials qualify neither full mobile quality nor model/context limits.
+M7.3 stays open.
+Astra accepted622 distinct paths,130 exact staged copies, seven historical
+mappings, baseline/fixed and storage replays, privacy, links and whitespace.
+
+The [larger short phone oracle](../../experiments/2026-10-21-m7-larger-oracle.md)
+passes two runs/26 requests with frozen `[614,264,3405]`, exact pending state,
+before/after model and installed proofs, weak release and verified process
+absence. Fresh full-payload storage admission and no-copy reuse pass. Observed
+lifetime peaks1,825,098,624/1,824,607,104bytes fit unchanged trial policies;
+post-proof footprints stay near19MB. This evidence-only task retains the signed
+app/native package and all numerical defaults. Full quality, supported limits,
+context/state/lifecycle/sustained and base iPhone14 qualification remain open.
+Astra accepted619 bound paths,14 exact staged copies, console/launch/boot and
+original admission replays, privacy, links and whitespace, with no findings.
+
+The [iPhone context matrix](../../experiments/2026-10-21-m7-phone-context.md) adds two
+repeats of all small/larger128/512/1024 raw-ID rows:156 requests/19,968 events,
+identical128-ID sequences per row, exact committed/pending state and end-to-end
+exit/storage/install/source closure. Peaks1,114,245,536/1,944,701,920bytes fit the
+explicit trial budgets. Heating to serious state is retained; no controlled
+speedup, quality, supported-limit or M7 release is claimed. One verified initial
+preflight reset precedes all testing;47 other absences are natural. The old
+analyzer's all-natural refusal is retained, then narrowly corrected/reviewed with
+12 checks plus six driver checks. Astra accepted completed exploratory evidence
+with no findings. Full physical quality/lifecycle/remaining sustained/base
+iPhone14 gates stay open.
+
+The [committed-distribution score API](../../experiments/2026-10-21-m7-score-api.md)
+adds a read-only48-byte diagnostic for target/greedy FP32 logits and compensated
+FP64 loss, enabling later phone teacher forcing without full-logit C copies.
+Final-row, exact-prefix, pending/reset and cancellation semantics remain explicit;
+owner/busy/poison/pointer guards preserve state and failure outputs. Three new
+independent CPU tests,111 ordinary CPU/123 Metal-feature tests, strict Clippy/fmt,
+both actual selected-model Metal comparisons, three Apple build/link targets and
+Mac C CPU/Metal score clients pass. All14 exports and original CPU binaries are
+checked. Astra accepted source, controller and completed evidence with no blocking
+findings after3,590 distinct pins,74 exact staged copies, four code pins,
+command/test/platform/C replays,379 links, privacy and whitespace. No numerical kernel/default/gate changes or full phone quality/
+performance/device-limit qualification follows; M7.3 remains open.
+
+The [Swift score adapter](../../experiments/2026-10-21-m7-worker-score.md) keeps native
+scoring on the owning thread and exposes only bounded validated scalars. Accepted
+commands and failures clear earlier scores; completion suppresses publication
+when lifecycle cleanup or close supersedes it. Deterministic CPU/Metal barriers
+cover both races, and an isolated former-predicate control fails the intended
+assertion. Seven portable checks,40 score-state rows/four races,20 legacy worker
+rows, strict Swift and both SDK builds pass. A first strict-compile failure and
+its exact old source remain recorded. Astra accepted source/regressions and completed evidence after156 bound paths,
+66 exact staged copies, one historical mapping, all runtime/SDK/negative
+replays, privacy,376 links and whitespace, with no remaining findings. No full physical quality or M7.3 completion follows.
+
+The [teacher-forcing coordinator](../../experiments/2026-10-21-m7-teacher-forcing.md)
+adds bounded reset/score-before-append sequencing, exact committed-prefix checks,
+final-target commitment and compensated loss aggregation. Failed append/output
+cannot return a complete summary. Seven simulated protocol cases include the
+full10000-target frozen block layout; these are not full model-quality results.
+Actual tiny CPU/Metal each pass three targets with independent CPU fixture loss,
+clean close/release, seven portable checks and strict Mac/both iOS module builds.
+Astra accepted source and completed evidence after100 pins,25 exact staged
+copies, four code pins, independent oracle/runtime/module replays,379 links,
+privacy and whitespace, with no findings. App admission and
+full physical corpus/task collection remain; M7.3 stays open.
+
+The [sealed quality harness](../../experiments/2026-10-21-m7-quality-harness.md) adds
+strict config/corpus SHA admission, exact target sequencing, foreground and
+interruption checks around each command, per-target process peaks and verified
+close/release/endpoint proofs. Shared measurement artifact rules and chunk pools
+remain, with parent sources retained. All109 portable M7 checks pass;19 native
+cases include six actual tiny CPU/Metal targets and five raw expected failures.
+The existing17-case/39-request measurement and256MiB bounded-hash regression,
+strict Swift and both complete SDK app builds pass. Exact marker-order and load
+bracket parser findings are fixed and tested. Astra accepted source and completed evidence after196 pins,58 exact staged
+copies, historical/helper mappings, all native/regression/SDK replays,109-test
+record,382 links, actual private-identifier scan and whitespace, with no findings. Full physical corpus/task quality and M7.3 remain.
+
+The [physical quality controller](../../experiments/2026-10-21-m7-physical-quality.md)
+adds sealed score-package/corpus jobs, exact corpus-inclusive transfer/storage
+admission, separate receipt types, authenticated no-copy reuse and full raw
+prefix/FP32/aggregate/memory/environment validation. Twelve offline methods include
+a synthetic10000-target stream and mocked complete prepare transport;121 direct
+M7 tests and10 direct package tests pass. Two wrapper-only process-group EPERM
+failures, a temporary-root test alias and shell-glob refusal remain recorded;
+no cleanup rule or gate changes. Astra accepted source and completed component evidence after58 pins,28 exact
+staged copies, both parent mappings, source/test/failure correspondence,385links,
+actual private-identifier scan and whitespace, with no findings. No new physical command/model run or full quality/M7.3 acceptance occurs.
+
+The [bounded task-response coordinator](../../experiments/2026-10-21-m7-task-response.md)
+keeps128-token worker commands while supporting256-token raw tasks through exact
+continuation. Whole-request preflight, hidden-EOS budget/state, callback order,
+persistent cancellation and failed command/sink behavior are checked. Astra's
+stale stop metadata finding is fixed with successful idle reason2 publication;
+failed/lifecycle commands clear it. Eleven protocol cases/backend and actualtiny
+CPU/Metal onecall/chunked/hidden-stop checks pass, as do128 portable methods,
+worker/score regressions and both unsigned iOS app builds. Two prior EPERM suite
+failures remain recorded. Astra accepted completed code/evidence with no findings. Physical100-task
+collection/grading remains; M7.3 is open.
+
+The [sealed raw task harness](../../experiments/2026-10-21-m7-task-harness.md) adds exact
+bounded task/config admission, foreground/cancellation enforcement, raw chunk
+clocks/admission/memory observations and per-case reset acknowledgements, with
+endpoint proofs and explicit release.31 native test cases/four tiny completions,
+12 parser checks,27 clean owned commands including quality/hash regressions and
+both iOS app builds pass. All140 portable methods pass across15 isolated modules;
+three combined EPERM failures and four corrected-discovery import failures stay
+recorded. Astra's clock/consumed-buffer findings and a preflight tiny-test prompt
+mistake are corrected with retained old evidence. Astra accepted completed code
+and evidence with no findings. Frozen physical100-task collection/grading and
+M7.3 remain open.
+
+The [literal task-ID compatibility fix](../../experiments/2026-10-21-m7-task-id-compat.md)
+preserves original labels such as HumanEval/0. All100 frozen IDs contain slash;
+Swift now accepts that literal character within the unchanged bounded/unique ID
+policy, without using IDs as paths. Twelve parser methods, actualCPU/Metal label
+roundtrip,31-case native checks and27 clean owned commands/both iOS apps pass.
+Original task IDs/prompts/caps/numerics/gates stay unchanged. Astra accepted source and completed evidence with no findings. Full physical task collection/grading remains.
+
+### M7 physical held-out loss — 21 October 2026
+
+Hypothesis: the selected desktop-qualified paths preserve the frozen loss policy on the wired iPhone. The [full device report](../../experiments/2026-10-21-m7-phone-loss.md) accepts 10,000 scored targets per model with unchanged +0.05 nats/token gate: small −0.000153474, larger +0.028265241. Both means exactly match their frozen M6 Online results. Fourteen sealed stages, 20,012 total scored targets, 216 clean commands, independent tiny CPU reconstruction and 28 natural absence checks pass; four driver and ten analysis regressions pass. Full peaks 1,028,770,136/1,835,338,624 bytes fit the trial cap; thermal/power conditions and failed preparation/reuse attempts are retained. Retain the numerical evidence without a performance or energy claim. Physical tasks, actual OS lifecycle, small sustained work, supported-limit synthesis, the original base-device requirement and overall M7 remain open.
+The [sealed physical task collector](../../experiments/2026-10-21-m7-physical-tasks.md)
+keeps100 literal IDs/prompts/caps and original EOS, with full-payload storage
+admission and ordered raw chunks, hidden-stop/state/reset/clocks/peaks/proofs.
+Astra's pin-persistence and tiny-oracle findings are fixed; exact previous
+sources remain.153 methods/16 isolated modules/16 clean owned commands and an
+explicit unchanged frozen-input audit pass. Astra accepted source and completed evidence with no findings.
+Phone task collection/grading and M7.3 remain open.
+
+### M7 physical frozen task quality — 21 October2026
+
+Hypothesis: selected desktop-qualified paths preserve the original task policy on the phone. The [full task report](../../experiments/2026-10-21-m7-phone-tasks.md) accepts100cases/model with zero baseline drop: small2/100,larger11/100. Every visible ID, hidden stop and independently decoded text matches;120text grades recompute and80exact literal-program/test outcomes replay from pinned historical grading, without fresh generated-code execution.14stages/206cases/218clean commands pass;12analyzer/13quality regressions pass. The audit accurately records27natural absences plus1owned pre-copy reset and retains the failed strict analysis/service guard attempts. Retain selected-path task numerical evidence without speed/energy/general-mobile claims; remaining M7 gates stay open.
+
+### M7 dedicated small-model phone duration — 21 October2026
+
+The [sustained phone report](../../experiments/2026-10-21-m7-phone-small-sustained.md) closes the≥600-second measured-native observation:3warmups+24measured requests total620.566seconds, all128IDs identical. Peak1,114,180,024bytes and fair/serious thermals stay explicit; first/last-five decode medians slow15.511→8.386IDs/s.42clean commands/83sources/3456events replay, with5natural absences and1verified initial owned reset.6driver/16analyzer tests pass. Retained failed analyses corrected cleanup/count/producer-sum assumptions without tolerances, threshold changes or numerical reruns. Retain duration/thermal/memory evidence without controlled speedup, constant-rate, energy or overall device claims.
+
+The [completed-prefix diagnostic](../../experiments/2026-10-21-m7-worker-prefix.md)
+adds opt-in bounded saved-ID snapshots from the owning thread; ordinary callers
+retain no prefix copy. The first native check caught stale active counts after
+close; fixed terminal publication keeps the strict zero-state oracle unchanged.
+Exact failing sources/receipt remain. Astra's race-witness/state-matrix findings
+are fixed.26 states/backend, four actual publication witnesses,34 native/build
+commands/both unsigned apps and159 portable methods/17 modules pass. Astra accepted source and
+completed evidence with no findings. Actual phone lifecycle and M7.3 remain open.
+
+The [bounded lifecycle core](../../experiments/2026-10-21-m7-lifecycle-core.md)
+adds64-event/1152-ID weak-owner traces with before/requested states, separate
+observation/record clocks, command/provenance/footprint and completed-close
+detach. Astra's cleanup-after-trace-failure and pre-action-bound findings are
+fixed. Fourteen events/13 scenarios perCPU/Metal backend,43 native/build commands
+and165 portable methods/18 modules pass. The initial fixture-alias parser
+failure remains recorded. Astra accepted source and completed evidence with no findings. Actual app/OS/phone
+lifecycle qualification and M7.3 remain open.
+
+The [lifecycle app integration](../../experiments/2026-10-21-m7-lifecycle-app.md)
+shares scene/warning actions, preserves original callback times, requires active
+foreground READY, and tests exact original-prefix replay against uninterrupted
+decode without a second model. Astra findings and the initial test-thread trap
+are fixed with old sources retained.51 native/build commands,173 portable methods
+and19 Mac synthetic events pass. Retain for physical collection; actual OS/device
+qualification and M7.3 remain open.
+
+The [sealed physical lifecycle controller](../../experiments/2026-10-21-m7-physical-lifecycle.md)
+adds sealed jobs, active READY, Settings/foreground activation without replacement,
+exact observed/saved/rebuilt IDs and owned cleanup. Astra launch-race and prefix
+findings are fixed.190 portable methods/20 modules and two local commands pass;
+no native model or device was used. Initial mock/wrapper failures remain. Retain
+for actual OS collection; lifecycle/device qualification and M7.3 remain open.
+
+### M7 bounded state diagnostics — 21 October 2026
+
+Hypothesis: the native session preserves exact usable prefixes through cache reuse, active prefill cancellation and rejected capacity requests. The [state app report](../../experiments/2026-10-21-m7-state-app.md) adds one-model diagnostics and independent fresh references, exact scalar before/after rejection checks and real partial-prefill evidence. It also fixes successful close publishing stale error/admission/emission fields, with direct error-to-close and generated-output-to-close regressions. Astra findings and failed attempts remain pinned.59 native/build commands,206 methods across21 modules and15 focused tests pass; small Mac Metal covers512-token prefill cancellation and1152 fully committed positions. Retain for phone testing, without mobile/performance/energy claims.
+
+### M7 physical state orchestration — 21 October2026
+
+The [sealed state controller](../../experiments/2026-10-21-m7-physical-state.md) reuses admitted storage/signing/cleanup transport, adds explicit --state mode, separates pure result replay from component-only error-close tests, and admits the complete reviewed current app closure for both state and lifecycle jobs.217portable methods/22modules,11focused parser/admission/shared-controller tests and one owned local two-model inventory/three-native-raw replay child pass. Exact job/SHA, no-copy reuse, absent auxiliary payloads and cleanup after combined console/input failure are verified. Retain for physical collection; no new native model/device/build/performance claim.
+
+### M7 physical activation argv fix — 21 October2026
+
+The [activation boundary fix](../../experiments/2026-10-21-m7-lifecycle-cli-fix.md) corrects the first actual lifecycle attempt's exit64: device/output options now precede the positional app bundle. The regression fake enforces the real devicectl parsing boundary; both Settings and original-process activation arrays are checked.217methods/22modules and18focused tests pass. The failed phone receipt/source remain pinned; no app/kernel/gate change or physical qualification is claimed.
+
+### M7 phone state and actual scene replay — 21 October2026
+
+The [physical state/lifecycle report](../../experiments/2026-10-21-m7-phone-state-lifecycle.md) passes both selected models against exact cached/changed-prefix, pending append, actual partial-prefill cancellation, full1152-position commitment and overflow-preservation oracles. Actual Settings/return callbacks interrupt generation in the same process; retained-prefix replay matches uninterrupted continuation.13accepted stages and all sealed sources/raw endpoints replay, with two failed attempts retained and two owned preflight resets disclosed. Synthetic warning-handler coverage stays separate from actual UIKit warning delivery/jetsam. Retain bounded mechanism evidence on iiPhone 14 Pro; base-device scope, energy/limit synthesis and M7.3 remain open.
+
+### M7 bounded energy instrumentation observation — 21 October2026
+
+The [energy availability report](../../experiments/2026-10-21-m7-phone-energy.md) records two bounded actual PowerProfiler attempts against the exact owned process, using PID then guarded-name selection. The instruments fail with exits21/19 without a trace; energy stays null/unqualified. Both separate native diagnostics pass with independent natural release. Source reviews close parent-cleanup and evidence-binding gaps;11regressions per version cover threaded failure cleanup and exact byte/hash capture. Retain reproducible availability evidence without joules/efficiency claims or production changes.
+
+### M7 joined iiPhone 14 Pro trial limits — 21 October2026
+
+The [device report](../../experiments/2026-10-21-m7-iphone14pro.md) joins six accepted evidence components with exact quality policies, immutable model identities and33unchanged numerical-source files. Both selected paths retain full loss/task quality; named repeated contexts and sustained sequences fit explicit mobile trial budgets. The largest joined uninstrumented peak is1,944,701,920bytes; state/replay passes through1,152committed positions. Energy remains unset after both bounded instrument failures. Full-loss/task capacities stay distinct from context/state limits. Pro qualification does not silently replace the original base-device M7 requirement; Astra accepted the final Pro-only synthesis with no findings.
+
+### M7 completion after explicit device-target amendment — 21 October2026
+
+The user instructed “Amend M7 to iPhone 14 Pro.” The [M7 closure](../../experiments/2026-10-21-m7-release.md) updates the plan target and completes M7.1–M7.3 against the already accepted Pro report and six evidence components. The original base-device requirement is superseded for this milestone, not reported as physically tested. A separate closure receipt binds the immutable pre-amendment Pro qualification; historical flags, failed attempts, quality gates and all numerical/runtime bytes remain unchanged. Energy remains null and actual warning delivery/jetsam remain unqualified.
+
+Astra accepted the amended M7 closure and current documentation with no findings. All528documentation links, six accepted prerequisite hashes,43prior evidence pins,33unchanged numerical sources, protected CPU binaries and whitespace checks pass.
+
+### Full-plan audit: grading provenance regression repair — 21 October 2026
+
+The [fixture repair](../../experiments/2026-10-21-grading-fixture-audit.md) restores two provenance tests that stopped at an obsolete mocked Rust-source inventory. The helper preserves historical identities and synthesizes only missing current Rust sources; a new missing-Cargo.lock regression still requires exact production rejection. Production admission, historical qualifications and numerical gates remain unchanged. Ten focused tests and all 887 Python tests across 127 modules pass, alongside Cargo formatting, CPU/Metal-feature Clippy and 111/123 Rust tests. The initial fixture failures and a separate audit-invocation import failure remain retained. Astra accepted the source and completed evidence after independent hash, source-pin and suite-count replay.
+
+
+### Full-plan audit and current documentation reconciliation — 21 October 2026
+
+The [M0–M7 audit](../../experiments/2026-10-21-full-plan-audit.md) maps all 32 tasks and exit criteria to implementation and accepted scoped evidence. It closes stale ABI/backend/device descriptions, marks README and PLAN chronology as historical, and points the early CPU profiling probe to completed matrix/application/retention evidence. The separately reviewed fixture fix is committed as `ff8ba28`. All 887 Python tests, 111 CPU and 123 Metal-feature Rust tests, formatting and strict Clippy pass; ignored hardware/model tests remain explicit. The final audit records Astra review and link/content/hash/whitespace checks. No additional required implementation gap remains within the accepted plan scopes; energy availability, real warning/jetsam, other devices and rejected/deferred mechanisms retain their stated limits. No runtime, defaults, tolerances, quality policy or historical receipt changes.
+
+
+### Final implementation and performance summary — 21 October 2026
+
+The [final summary](../../final-summary.md) consolidates implemented M0–M7 capabilities, selected-path quality, measured M1 Pro and iPhone 14 Pro latencies/memory, sustained phone slowdown and remaining limitations. It separates numerical, native and application timing, paired mechanism gains, descriptive long-context trials and independent mobile budgets. It references immutable accepted reports without adding benchmarks, runtime changes or expanded qualification claims. Astra verified the numerical transcriptions and scopes; all 278 local links and whitespace checks pass.
+
+
+### Native Rust MLX affine storage foundation — 21 October 2026
+
+Following the user's explicit switch from Swift MLX integration to native Rust model support, the [affine reader/reference](../../mlx-affine.md) adds borrowed MLX U32 packing for 2/3/4/5/6/8 bits, groups 32/64/128 and F16/BF16/F32 metadata. It preserves negative/zero scales, separate biases, unaligned-safe decoding, checked sizes and failure-atomic scalar matvec output. Fifty-four pinned MLX CPU/GPU fixtures preserve every code and separate FP32 reconstruction from native-dtype rounding; 31 native-dtype CPU/GPU differences remain visible. Seven focused tests, 118 CPU tests, 130 Metal-feature tests, formatting, strict Clippy and offline fixture hashes pass. The initial expected-value failure used FP32 powi for a BF16 subnormal; exact expected bits fix the test without a parser/tolerance change. The uncommitted Swift prototype/setup failure and its investigation remain under ignored artifacts. Complete-model loading, architecture expansion, GPU execution, discovery/downloads and physical device qualification remain open in the [M8 plan](../../mlx-implementation-plan.md).
+
+Astra accepted the affine source and completed evidence with no blockers after independent fixture replay, source/raw hashes, failed-attempt correspondence and check-count verification. This acceptance covers the storage primitive only.
+
+### Native MLX local Qwen artifact source — 21 October 2026
+
+The [local source](../../mlx-qwen-source.md) validates MLX affine Qwen2 config, single/indexed safetensors, mixed floating/packed tensors, per-module overrides/exclusions and exact tied-head sharing. It streams into caller-owned buffers without a full-model expansion and explicitly separates metadata opening from payload validation. Eight focused tests, 126 CPU tests, 138 Metal-feature tests, formatting, strict Clippy and offline affine hashes pass; protected CPU binaries retain their hashes. Two initial failures were synthetic fixture-construction mistakes; their source/logs are retained and test setup was corrected without changing loader behavior or numerical gates. Admission remains a source-payload/metadata estimate, not GPU/session or device qualification. Astra cleared source correctness; complete numerical execution, architecture expansion, app integration, downloads and physical qualification remain open.
+
+Astra accepted the final source, tests and completed evidence with no blockers after independent pin/raw/hash/count and retained-failure verification. Acceptance covers the local artifact source, not executable model or device support.
+
+### Native MLX resident affine operators — 22 October 2026
+
+The [Metal operator component](../../mlx-metal-affine.md) keeps original packed weights and separate metadata resident, caches bounded dtype/width pipelines, and implements matrix products plus embedding gather with reusable buffers and checked completion/output guards. The M1 Pro passes 54 pinned storage cases, 864 completed calls and 390,096 exact value comparisons; four explicit GPU tests additionally cover odd Half/BF16 metadata padding, shrinking batches, signed midpoint rounding, failed-result reuse, Half subnormals and the exact signed FP32-normal residual floor. The first actual GPU trial exposed FP32-subnormal flushing; the original failed expectation/source/logs are retained. GPU upload now conservatively rejects subnormal metadata or any possible nonzero fused weight below 2^-79/above finite range, without changing the broader scalar reader or numerical gates. All eight final owned commands pass: formatting, strict CPU/Metal-feature Clippy, 126 CPU tests, 140 Metal-feature tests, offline fixture hashes, two focused admission tests and four release GPU tests. Protected CPU binaries remain unchanged. Astra's requested padding, signed tie-side and residual-floor coverage is included. This is operator qualification only; complete model execution, quality, app integration, discovery/downloads, broader architectures and phone qualification remain open.
+
+Astra accepted the resident operator source and final evidence with no blockers, independently verifying all current/raw identities, retained subnormal failure, numerical counts and domain proof. Acceptance remains restricted to the documented operator domain on M1 Pro.
+
+### Native MLX full-model scalar reference — 22 October 2026
+
+The [diagnostic import](../../mlx-reference.md) expands one packed tensor at a time into the existing FP32 scalar graph, with checked admission for complete expanded weights, largest packed temporary and metadata/stream estimates. It preserves tied ownership and publishes no model after malformed/nonfinite payload failure. A new mixed 4-bit/8-bit/excluded-projection tiny snapshot uses actual pinned MLX quantization, independent NumPy reconstruction/full traces and actual MLX CPU/GPU logits under unchanged tiny-v1 gates. All 195 NumPy arrays and eight native-logits arrays pass; cached offset/prefix/reset execution, budget boundaries and payload failures pass. Four focused tests, 130 CPU tests, 144 Metal-feature tests, formatting, strict Clippy and both offline MLX fixture checks pass. Astra found an initial exporter provenance gap; the original export/source are retained, and pre-execution source/selected-producer admission plus endpoint verification fixes provenance. Regenerated numerical arrays and model checkpoint remain byte-identical. Protected CPU binaries are unchanged. This explicitly expanded reference is not the production performance/device-fit backend; resident full-graph execution, quality, app/discovery/architecture coverage and physical checkpoint trials remain open.
+
+Astra accepted the corrected reference source and final evidence with no blockers, independently checking all fixture/current/historical identities, 5,248 native-logit values, unchanged gates and check counts. The expanded scalar reference remains diagnostic-only.
+
+### Native MLX Half-activation oracle frozen before GPU composition — 22 October 2026
+
+The [independent graph oracle](../../mlx-half-oracle.md) freezes 199 arrays/190,336 bytes with original reconstructed packed projections/tied output, Half exclusions/gather/activations, and independent FP32/FP64 accumulation. It retains existing tiny Q4 and Half-storage envelope policies before full-model GPU evaluation. Seven portable tests pass: complete manifest/gate identity, exact coverage/layouts/finite values, actual saved MLX CPU/GPU logits against the storage envelope, causal prefix bits, byte-exact regeneration, source/immutability rejection, and stdlib-only verification. Sixteen output dots verify the deliberate original-FP32 tied-output boundary differs from Half-rounded weights. Both frozen four-step token series are [47,47,47,47]. The owned exporter and all three verification commands pass with unchanged Rust/shader sources and protected CPU binaries. No new target full-model GPU, quality, performance or mobile claim; graph composition remains open.
+
+Astra accepted the frozen oracle and final evidence with no blockers after independent identity/layout/gate replay, including all 16 tied-output differences, recorded checks and unchanged runtime sources.
+
+### Native MLX resident complete tiny graph and sessions — 22 October 2026
+
+The [native graph integration](../../mlx-metal-model.md) streams packed MLX tensors directly into resident GPU allocations, retains one tied embedding/output allocation and uses explicit MlxAffine sessions with Half activations/exclusions and original packed FP32 vocabulary reconstruction. Strided row views and final-row offsets use the existing completed chunk command. On M1 Pro, 525 diagnostic snapshots/74,784 values pass pre-frozen independent gates; both attention/readback choices, 16 selected IDs, pending/changed prefixes, actual partial prefill, loader/mode rejection, gather overflow and transaction fault injection pass. Completion failure is injected after real staged work, not an observed command failure. Four prior affine tests still pass 54 cases/864 calls/390,096 exact values after the ABI change; the existing Half decoder regression passes 2,520 stage arrays and warmed allocation/state checks. Formatting, strict CPU/Metal-feature Clippy, ordinary Rust tests, all three offline MLX fixtures and seven portable oracle tests pass; protected CPU binaries remain unchanged. Retain this selected tiny numerical/state mechanism. Real-checkpoint quality, process peaks/performance, CLI/app selection, broader architectures, downloads and iPhone MLX qualification remain open.
+
+Astra accepted the graph source and completed evidence with no blockers after independently checking all current/raw identities, unchanged gates, exact coverage/counts and qualification limits. Both owned runners pass all 13 commands, including ten explicit GPU tests; ordinary totals remain 130 CPU and 144 Metal-feature tests.
+
+### Explicit native MLX CLI selection — 22 October 2026
+
+The [CLI integration](../../mlx-cli.md) adds explicit `--metal-projection mlx-affine` routing to the resident native Rust loader and compensated normalization. It preserves existing defaults and rejects backend/Q4 conflicts. Readiness/statistics identify mixed MLX affine/Half storage and per-tensor quantization without inventing a global group or Toklet Q4 version. Ten explicit M1 Pro subprocesses cover greedy/hidden-stop and persistent cache/continuation/rejection/reset behavior with exact IDs/state and logical accounting. Astra requested stronger state assertions after the first passing version; both sources/raw runs remain retained, and the strengthened suite passes without a runtime/gate change. Formatting, strict CPU/Metal-feature Clippy and all ordinary Rust tests pass; historical CPU binaries are unchanged. Retain the explicit CLI surface. Native Apple app selection, real checkpoint quality/performance/peaks, other architectures, downloads and iPhone MLX execution remain open.
+
+Astra accepted the CLI source and final evidence with no blockers after verifying current/raw/historical source correspondence, unchanged numerical identities and exact subprocess coverage. Final ordinary totals are 131 CPU and 145 Metal-feature tests; all six final owned commands pass.
+
+### Native MLX C bridge entry point — 22 October 2026
+
+The [additive native bridge](../../mlx-native-bridge.md) exposes resident MLX loading with the existing ABI-v1 layouts and ownership/error contract. Native sessions explicitly select MlxAffine/Compensated/Online/FullLogits; unsupported builds reject without CPU fallback. Mac Rust and actual C callers pass frozen tiny IDs, direct scoring, shared-model retention/release, exact pending/cancellation/rejected-input/reset state and existing callback/ABI checks. iOS Rust compilation also passes; app UI/package and physical phone execution remain separate. The first new GPU test incorrectly expected ENGINE_ERROR for an out-of-vocabulary request; retained failed source/logs show the unchanged boundary correctly returns INVALID. Correcting only that expectation preserves the exact state assertion. All ten final owned commands pass: formatting, strict CPU/Metal-feature Clippy, ordinary Rust tests, explicit GPU ABI test, native library build, C link/run and iOS check. Protected CPU binaries remain unchanged. Retain the native integration boundary; real checkpoint quality/performance/process peaks, harness selection, broader architectures, downloads and iPhone MLX qualification remain open.
+
+Astra accepted the native bridge source and completed evidence with no blockers after verifying all source/raw/binary identities, the exact retained failure/correction, final checks and qualification limits. Ordinary totals are 132 CPU and 146 Metal-feature tests; both actual Mac callers and iOS compilation pass.
+
+### Explicit MLX Apple worker and UI selection — 22 October 2026
+
+The [Apple worker/UI integration](../../mlx-apple-worker.md) adds explicit native MLX routing, rejects CPU/MLX/separate-Q4 conflicts before loading, and preserves existing defaults and lifetime rules. Mac CPU, Half Metal and native MLX workers pass identical exact token/state/replay/cancellation/cleanup oracles; the MLX path also rejects conflicting settings and a missing artifact before recovering with valid data. Strict arm64 iOS18+ source typechecking passes. Both passing source/raw runs remain retained: the final UI refinement clears MLX when choosing the bundled floating Tiny fixture. All eight final owned commands and source/archive/fixture/protected-binary endpoints pass; Rust/shader bytes are unchanged. Retain for new app packaging and physical collection. Linked app builds, sealed real-model job selection, real checkpoint quality/memory/performance and actual iPhone MLX testing remain open.
+
+Astra accepted the worker/UI source and completed evidence with no blockers after verifying current/historical/archive/raw identities, exact state/timing matrices, unchanged numerical sources and the limited qualification scope.
+
+### MLX-enabled native package and linked Apple apps — 22 October 2026
+
+The [package integration](../../mlx-apple-package.md) fixes source provenance that previously bound only the original Metal shader. The builder now binds all Rust and embedded Metal sources; a regression catches both actual libraries and a nested future shader. All 11 focused portable methods pass. A fresh three-slice arm64 package passes 21 native build/link/platform/symbol/bundle commands, then the exact Astra-admitted receipt produces linked release simulator and unsigned device apps in nine commands. The known generated library alias switch is recorded; the old M7 package remains immutable. Actual Mac C execution passes CPU, Half Metal and native MLX tiny ABI/state/score/cleanup checks. Rust/shader bytes, ABI/math policy and protected historical binaries are unchanged. Retain the package and linked apps for signed physical testing. Development signing/install, sealed real-model jobs, checkpoint quality/memory/performance and physical iPhone MLX qualification remain open.
+
+Astra accepted the packaging repair and completed native/app/Mac evidence with no blockers after verifying all current/raw/archive/app/alias identities, the preserved prior package and unchanged numerical inputs. All 36 recorded commands are clean, including outer wrappers; physical and real-checkpoint claims remain open.
+
+### Authenticated MLX diagnostic jobs and pinned trial data — 22 October 2026
+
+The [versioned job integration](../../mlx-apple-jobs.md) keeps exact legacy schemas and adds explicit true/Metal/no-separate-Q4 MLX selection across measurement, quality, task, state and lifecycle runners. Forty malformed variants reject; authenticated tiny jobs pass 13 measurement requests, three scoring targets, two task responses and bounded state checks. Legacy CPU/Half checkers pass 17/19/31 case labels, strict iOS typechecking and fresh linked app builds pass, and numerical sources/protected binaries remain unchanged. The injected READY failure closes/releases owners but exposes an existing active-trace detach cleanup error; its raw negative result is retained and repair is explicitly next before physical trials. Separately, reviewed data-only acquisition publishes the immutable public four-bit Qwen0.5B snapshot after three portable checks and eleven exact-identity downloads. Tokenizer ID semantics match the frozen source, while file/template identities differ and are not silently accepted. Real numerical references, quality/performance/phone qualification and app discovery/download implementation remain open.
+
+Astra accepted the job-routing source and completed evidence for the stated positive scope, including the authenticated execution bindings and exact acquisition/tokenizer identities. The observed lifecycle trace cleanup remains explicitly unqualified and is the next separate repair before phone collection; no real-model inference or physical/performance claim is made here.
+
+### Lifecycle trace cleanup after external coordinator failure — 22 October 2026
+
+The [trace-cleanup repair](../../mlx-lifecycle-cleanup.md) ends a remaining healthy trace label only after verified complete worker shutdown and signal detachment. It preserves the original error and all already failed trace evidence. Strengthened MLX and Half tests actually reach READY and retain the injected failure with empty cleanup/endpoint errors and post-close trace detachment; CPU records the distinct absent-active-window failure with clean closure. Both legacy app unit runs pass 34 labels and both low-level trace runs pass 13 labels, including sticky failures and resource release despite exhausted diagnostics. Authenticated MLX positive components, strict iOS source checks and fresh linked apps also pass. All 12 owned outer/nine app child commands complete with unchanged numerical sources and protected CPU binaries. Retain the cleanup fix; the earlier failing trace receipt remains immutable. Actual OS/device behavior and real-model reference/quality/memory/performance remain open.
+
+Astra accepted the trace-cleanup repair and completed evidence with no blockers after independently verifying all current/raw/prior/app identities, distinct observed negative branches, unchanged primary failures, complete detachment and sticky-trace guards. This closes the observed diagnostic defect while OS and phone qualification remain separate.
+
+### Independent selected real-checkpoint MLX reference — 22 October 2026
+
+The [public-checkpoint oracle](../../mlx-real-oracle.md) freezes 346 full CPU graph arrays before any target GPU run. Independent unsigned nibble/signed Half affine reconstruction feeds the unchanged Half-storage FP32/FP64 graph, with Half gather and original FP32 tied-output weights. Six prompt/position cases and four teacher-forced steps yield matching reference IDs; selected producer and 19 NumPy binary identities, exact input descriptors, full arrays and frozen numerical gates are bound. Seven new portable methods plus seven existing tiny-oracle methods pass; all four owned commands and numerical/protected-binary endpoints are clean. Logical admission is 1.762 GB and observed lifetime peak physical charge is 0.661 GB. Astra's source review required exact schema, finite tolerance arithmetic, single-descriptor verification and external manifest admission; those fixes precede export. Retain the reference for target trials. The largest independent stage allowance is 3.0 and the logits allowance about 0.2653; these do not qualify full loss/task quality. Real target parity, Mac/phone quality/performance, physical app execution, architecture expansion and discovery/download product work remain open.
+
+Astra accepted the real-reference source and final evidence with no blockers after independently verifying all 346 slices/gates, exact saved IDs, 84 provenance/output/protected pins, four owned commands and the disclosed qualification limits.
+
+### Public MLX Qwen checkpoint native Mac parity — 22 October 2026
+
+The [real native Mac tests](../../mlx-real-metal.md) pass the independently frozen public-checkpoint reference: 816 exact-inventory snapshots / 13,771,520 values, six prompt/position cases, one/three/full chunks and selected layers. Eight full vocabulary distributions and 16 exact greedy selections pass Reference/Online attention and FullLogits/token-only contracts, with maximum logit difference 0.0288893. Cached prefixes, invalid-token failure atomicity, changed-prefix fresh equality, reset and committed partial-prefill reuse pass. Resident logical weights are 277,997,982 bytes and maximum diagnostic session admission is 387,662,292 bytes; no whole-process peak or performance claim follows. Six final ordinary/build commands and two explicit GPU tests in one command pass, with unchanged numerical/Cargo sources and protected binaries. Astra's requested mandatory logits/absence checks and distribution count precede target execution; the first passing ordinary suite/source remain retained. Retain selected native execution for app and full-quality trials. Held-out quality, actual app/phone memory/performance/lifecycle, template compatibility and broader M8 scope remain open.
+
+Astra accepted the real Mac parity source and final evidence with no blockers after independently verifying 89 current/historical/reference/binary pins, all 34 raw files, recomputed coverage, all 13 current/retained owned commands and the qualification limits.
+
+### Shared MLX job staging and real Mac app transport — 22 October 2026
+
+The [shared raw-ID transport](../../mlx-mac-jobs.md) stages exact version-two tiny/public MLX jobs for Mac and iOS and routes the Mac through the app's existing coordinators. Eight actual Mac jobs pass: 13 four-ID requests per model, three scored targets, complete short task responses and all 26 component state rows. Full task/chunk/hidden-EOS accounting reuses the physical validator with an explicit Mac scope while preserving physical defaults; complete state validation is reused unchanged. Eight staging, 17 task and 15 state methods pass. All 19 owned collector commands satisfy their expected outcomes, including four deliberate CLI rejections, plus five supplemental source checks. Public native process peaks range from 293.36 to 384.78 MB under the explicit trial cap; these do not qualify representative performance or phone fit. Astra required persistent package/header admission, same-buffer log evidence and full response/state validation before collection. The existing-process phone preparation refusal remains retained; an identity-checked reset and 13-command signed installation then pass with zero inference launches. Retain for full-quality/performance and physical trials. Numerical sources/protected binaries and frozen quality gates are unchanged; broader M8 gaps remain open.
+
+Astra accepted the shared-job source and final evidence with no blockers after independently verifying 430 pin checks, all 104 raw files, exact task/state/score/measurement streams, 40 portable methods, source correspondence and private-identifier/qualification boundaries.
+
+### Guarded native MLX app execution on iPhone 14 Pro — 22 October 2026
+
+The [physical MLX transport](../../mlx-phone-jobs.md) authenticates the existing signed app, immutable staged jobs, fresh same-device storage proof and exact copied inventories before launch. Bounded consumed buffers bind metadata and raw console evidence; fast ready reuse avoids recopying the model. Ownership/device checks and cleanup survive source mutation. All 96 portable methods and ten physical stages pass, with 104 successful transport commands (94 devicectl and ten host boot queries). Cleanup has 19 natural absence endpoints and one verified initial owned-app preflight reset, all ending absent before measurement or at cleanup. The public Qwen checkpoint completes 13 exact four-ID generation requests, three scored targets and one original task with an eight-token short cap. Observed public native lifetime peaks are 307.97 MB for measurement, 306.28 MB for scoring and 397.64 MB for tasks; tiny observations remain below 21.52 MB. Astra's source requests for auxiliary inventory, consumed-byte proof, cleanup identity and strict schema types precede collection. Numerical/Swift sources, frozen quality gates and protected CPU binaries are unchanged. Retain this selected physical functional path. Full quality, representative/sustained performance, physical state/lifecycle, tokenizer-template compatibility and broader M8 architecture/discovery work remain open.
+
+Astra accepted the completed evidence with no remaining blockers, verifying 484 pins, exact source copies, six console replays and storage decisions. The corrected publication retains the initial accounting versions, distinguishes host boot queries and the verified preflight reset, and passes all 126 final raw inventory bindings and document links.
+
+### Full public MLX checkpoint loss checks on Mac and iPhone — 22 October 2026
+
+The [full scoring validator](../../mlx-full-loss.md) adds explicit Mac proof scope while preserving physical defaults and every target/block/state/logit/memory/aggregation gate. All 54 relevant portable methods pass. The unchanged public four-bit checkpoint completes 10,000 frozen targets on each device; all paired greedy IDs, target logits and losses agree exactly. Both mean losses are 3.0829338398049995 versus frozen FP32 2.883725149929484, an increase of 0.19920868987551543 nats/token that **fails** the unchanged 0.05 gate. Retain that rejection and the shared validator; do not adopt this candidate or infer same-source quantization attribution from its model card. Native lifetime peaks are 306,840,368 bytes on M1 Pro and 320,014,176 bytes on iPhone 14 Pro, with Mac thermal state zero, phone states zero/one and Low Power Mode off. All 45 transport commands (41 devicectl/four host boot queries), five outer commands and four portable commands pass. Cleanup records seven natural absence endpoints and one verified pre-copy owned-app reset, all ending absent. Astra required consumed-receipt/source/raw closure checks through exclusive publication; sources and protected CPU binaries remain unchanged. Full task quality, representative/sustained performance, physical state/lifecycle, a loss-qualified MLX candidate and broader M8 product work remain open.
+
+Astra accepted the completed rejected-checkpoint experiment with no remaining blockers after replaying both 10,000-target streams and verifying 322 pins, 99 raw files, 70 source copies, all commands, conditions, privacy and 221 links. Acceptance applies to the validator/evidence task; both numerical loss gates remain failed.
+
+### Independent upstream-runtime diagnosis of the MLX loss rejection — 22 October 2026
+
+The [local diagnostic](../../mlx-upstream-loss.md) evaluates the identical immutable checkpoint and all 10,000 frozen targets with static trusted MLX-LM Qwen2 classes, completed GPU work and independent stable FP64 loss scoring. Upstream mean 3.083056082158314 also fails the unchanged gate (+0.19933093222882992 > 0.05), differing from Toklet's mean by only +0.0001222423533144834. This reproduces the application-family rejection upstream without attributing it to an unproven precise source or changing native acceptance. Forty-four greedy IDs differ; maximum target-logit/loss differences and the Half-upstream/FP32-native output boundary remain explicit, with no invented parity tolerance. Upstream process peak is 620,070,376 bytes under its 6 GiB reference cap; no speed/memory ranking follows. All 14 portable methods and both final owned hardware/reference commands pass. Astra's initial shard-inventory and failure-journal findings have actual zero-load/partial-row regressions. The agent caught an omitted separate Metal-library pin during the first trial, stopped only its identity-verified driver/worker, retained all 7,449 partial rows and interruption/absence evidence, then reran with all non-cache MLX files bound. Retain the diagnostic and failed artifact decision; native product defaults/sources and numerical gates are unchanged. A loss-qualified MLX candidate, full task/performance/physical-state/lifecycle evidence and wider M8 architecture/discovery work remain open.
+
+Astra accepted the diagnostic with no remaining blockers after independently verifying 1,145 current pins, all 105 raw files, 57 source copies, 10,000 target rows and descriptive comparisons, 14 portable checks, the excluded interruption, privacy and 222 links. No checkpoint adoption or numerical-policy change follows.
+
+### Immutable higher-precision public MLX candidate — 22 October 2026
+
+The [eight-bit acquisition](../../mlx8-checkpoint.md) pins the off-the-shelf public Qwen0.5B snapshot at revision6474d4c1a05bd7bd634a9c993560e4e7272eda3d as an explicit next candidate, with no held-out calibration or gate change. Three portable methods and eleven exact HTTPS/size/Git/LFS download commands pass; ten files total536,580,527bytes are published exclusively. Metadata has628 tensors/169 packed matrices with eight-bit/group64 Half metadata and the expected Qwen2/tied structure. Frozen vocabulary/merges/added IDs match, while tokenizer files/template differ and remain unqualified. Sources and protected CPU binaries match their recorded identities. Retain the immutable data for a separately frozen numerical reference before any target inference. No native execution, device fit, quality/performance, product discovery/download or broader architecture acceptance follows; the four-bit rejection remains intact.
+
+Astra accepted data acquisition only, verifying 99 pins, all ten Git/LFS file identities, 84 raw files, 51 source copies, exact metadata/tokenizer checks, all command outcomes and 50 unchanged numerical/app sources. Privacy, 223 links and whitespace checks pass; no inference or adoption qualification follows.
+
+### Independent eight-bit Qwen graph oracle frozen before target trials — 22 October 2026
+
+The [eight-bit CPU reference](../../mlx8-real-oracle.md) independently reconstructs four unsigned octets per U32 with signed Half metadata and preserves original FP32 tied-output weights, Half gather/exclusions/activations/KV and the established FP32/FP64 graph. Fourteen portable methods and all four owned suite/export/stdlib-verification commands pass. Six authored prompt/offset cases and four greedy distributions freeze346arrays/38,461,888bytes; FP32/FP64 greedy IDs both[4460,311,1855,264]. The unchanged pre-target envelope policy yields largest stage allowance1.375/logits0.2790870666503906, explicitly separate from quality gates. Logical admission2,009,108,622bytes and observed lifetime physical peak629,425,784bytes stay within6GiB. Astra's wrapper-log preflight finding is fixed before execution. Selected producers/19NumPy binaries, every array and protected CPU/source endpoints remain bound. Retain this oracle for the next native trials; existing four-bit references/rejection remain unchanged. Eight-bit native app/device/quality/performance and wider M8 scope remain unqualified.
+
+Astra accepted the frozen CPU reference after independently checking 98 pins, 72 raw files, 59 source copies, every array's value/layout/hash/gate and exact greedy IDs, all four owned commands and 14 portable methods. Privacy, 227 links and whitespace checks pass; no target or quality acceptance follows.
+
+### Native eight-bit public Qwen numerical/session qualification — 22 October 2026
+
+The [eight-bit Mac tests](../../mlx8-real-metal.md) pass the independently frozen oracle across816snapshots/13,771,520values, six cases, chunking/offsets and selected layers. Eight full distributions and16exact IDs pass both attention and readback choices; maximum logit difference is0.02828359603881836, with unchanged gates. Pending/rejected-input/reset/changed-prefix and committed partial-prefill reuse checks pass. Resident logical weights524,978,590bytes and maximum diagnostic session admission634,642,900bytes are allocation counts, not physical peaks. The initial copied four-bit300MiB assertion stopped graph checks before comparison; its exact source/raw failure remain retained. The reviewed correction uses exact payload plus floating-tensor guards, changes no numerical gate, and explicitly labels the overwritten old executable as superseded. Six final ordinary/build commands and both GPU tests pass with clean source/model/oracle/protected-binary endpoints. Retain selected native execution for app and full-quality trials; full quality, representative performance, physical state/lifecycle, chat-template compatibility and broader M8 product scope remain open.
+
+Astra accepted the source and completed evidence with no remaining blockers after verifying92pins/82rawfiles/44sourcecopies, all final commands and comparison coverage, retained failure/disclosure and qualification limits. Privacy,228local links and whitespace checks pass.
+
+### Eight-bit native app jobs on Mac and iPhone 14 Pro — 22 October 2026
+
+The [shared app integration](../../mlx8-app-jobs.md) adds explicit immutable eight-bit recipes while preserving corpus, task, prompt, capacity and stop policies and the existing tiny/four-bit configurations. Fresh storage admission and ready-proof replay cover every admitted non-tiny candidate; regressions catch bypass for both public artifacts. All 101 portable methods and seven owned commands pass. Four actual Mac app jobs and ten signed-phone stages pass, including 13 exact four-ID generation requests, three scores and one short task per device, plus full Mac component state checks. Compiled app/native sources, packages, the signed bundle and protected binaries remain unchanged. Native physical peaks range from 539.38 to 630.80 MB on Mac and 552.73 to 643.99 MB on phone. All 104 transport commands comprise 94 devicectl operations and ten host boot queries; 19 natural absence endpoints plus one verified initial preflight reset end absent. Six phone console replays agree exactly, with no cleanup or endpoint errors. Retain selected short integration for full-quality trials. Full loss/task quality, representative and sustained performance, physical state/lifecycle, chat-template compatibility and broad architecture/discovery work remain open.
+
+Astra accepted the source and completed evidence with no remaining blockers after verifying 438 pins, 145 raw files, 83 source copies, all console replays, actual storage/reset/launch evidence and command counts. Privacy, 231 links and whitespace checks pass.
+
+### Eight-bit full loss acceptance on Mac and iPhone 14 Pro — 22 October 2026
+
+The [full frozen loss trial](../../mlx8-full-loss.md) identifies a selected native MLX candidate that passes the unchanged application-family loss gate on both devices. Each scores all 10,000 original targets with mean 2.884953696657687, an increase of 0.0012285467282029394 over FP32 baseline 2.883725149929484, below the 0.05 limit. Every paired greedy ID, target logit and loss agrees exactly. The four-bit rejection remains retained; model-card provenance does not prove exact prequantization source bytes or controlled quantization attribution. Observed native peaks are 553,075,648 bytes on Mac and 566,265,888 on phone. Low Power Mode is off; thermal states are zero on Mac and zero/one/two on phone, with no performance qualification inferred. Five collection commands and 45 transport commands pass (41 device operations/four boot queries); seven natural absence endpoints and one verified initial preflight reset finish absent. Both complete validators replay, all gate decisions recompute, and source/private/protected-binary endpoints remain clean. The evidence retains 108 raw files and 73 source copies, alongside the current 101-method portable suite. Retain selected loss acceptance for the next full task-quality and performance trials; broader M8 scope remains open.
+
+Astra accepted full loss quality for the selected checkpoint with no remaining blockers after independently verifying both complete streams, every paired target, 262 pins, 108 raw files, 73 source copies, storage/reset/cleanup and command/test totals. Privacy, 234 links and whitespace checks pass. Full task quality and adoption remain separate.
+
+### Repeated remote idle admission for task grading — 22 October 2026
+
+The [grading-window hook](../../mlx-task-grading-window.md) lets a physical-response adapter check remote app identity/absence at all five existing idle boundaries while retaining mandatory local process/group and input checks. Default callers, literal controller/classifier and VM ownership/restoration remain unchanged. Existing files and dangling window/probe/restoration outputs reject before work. Five new mocked methods cover repeated checks, remote failure before and after startup, local-check precedence and exclusive outputs; all 49 methods in four related suites pass. Broader checks exposed a stale synthetic legacy test inventory, now extended only with backend-appropriate current Rust/shader names while preserving historical identities and strict missing-input rejection. Initial environment/fixture failures and exact intermediate sources remain retained. No actual device query, VM run, generated-program execution, new full task-quality or numerical/performance qualification follows. Retain the mechanism for the next full native-app response adapter; broader M8 remains open.
+
+Astra accepted the source and completed evidence after verifying 124 pins, 120 raw files, 85 source copies, exact historical failure correspondence and all 49 methods. Mandatory local checks and owned restoration remain intact; numerical/Swift/protected inputs, links and whitespace pass. Actual remote response admission and full task grading remain open.
+
+### Full eight-bit native-app task response collection — 22 October 2026
+
+The [full raw collection](../../mlx8-full-task-collection.md) completes all 100 original task responses on both M1 Pro and iPhone 14 Pro, preserving every literal prompt, full output cap and stop policy. Each produces 123 chunks, 6,520 visible IDs and 66 hidden stops; all paired visible IDs, hidden stops and sampled/committed/pending/chunk counts agree exactly. Both complete validators replay from captured bytes. Observed native peaks are 631,620,640 bytes on Mac and 644,466,768 on phone; power/thermal observations remain recorded without performance acceptance. Five collection commands and 45 transport commands pass, with seven natural absence endpoints and one verified preflight reset ending absent. The publisher binds 389 inputs/evidence files, retains 94 raw files and 75 source copies, and preserves numerical/Swift/signed-app/protected inputs. No tokenizer, VM or generated program runs in this collection phase. Retain raw evidence for reviewed post-exit decoding and isolated grading; full task-quality acceptance remains open.
+
+Astra accepted raw collection after verifying all 389 pins, 94 raw files, 75 source copies, both complete streams and exact paired responses, storage/reset/launch/absence evidence and command/method totals. Privacy, 236 local links and whitespace checks pass. No tokenizer or task-outcome qualification follows from this task.
+
+### Post-exit native-app literal response admission — 22 October 2026
+
+The [response adapter](../../mlx-task-responses.md) authenticates both full raw collections, replays all original cases, and decodes with the frozen evaluation tokenizer only after fresh owned-host/group and exact signed-phone absence checks. It preserves literal fences/spacing, hidden stops, sampled/committed state and original app JSON substrings in explicit derivatives. All100 paired decoded dictionaries agree exactly; 71 portable methods pass, including16 new adapter checks. Source review adds separate command/capture-cause retention and per-boundary profile expiry checks. The initial temporary-path test mismatch, superseded passing suites, hardware-details schema failure and live-phone refusal remain retained with exact historical sources. A separately reviewed identity-checked one-SIGTERM test-app reset proves absence; the adapter itself stays read-only. The final retry passes two idle observations/eight read-only commands, with no VM or generated program execution. Publication binds540 files,142 raw files and78 current source copies while preserving numerical/Swift/package/signed-app/protected inputs. Retain literal derivatives for isolated task grading; task-quality acceptance and broader M8 remain open.
+
+Astra accepted response admission after independently verifying540 pins,142 raw files,78 source copies,71 methods, exact historical correspondence and all200 pinned-tokenizer decoded dictionaries. Actual reset/idle ordering, unchanged inputs, privacy,238 links and whitespace pass. No task-quality acceptance follows yet.
+
+### Full eight-bit native-app task quality — 22 October 2026
+
+The [full task qualification](../../mlx8-full-task-quality.md) passes the unchanged gate on Mac and iPhone 14 Pro: 2/100 each versus FP32 2/100, zero drop against the two-percentage-point limit. Each result is 0/40 code, 1/30 prose and 1/30 continuation; the low original baseline and zero-pass boundary remain explicit. The adapter independently reconstructs both literal derivatives after fresh host/phone absence. One qualified Linux window executes 40 original source-test programs; both devices replay exact program/test/completion hashes and recompute 60 text outcomes, with zero unresolved infrastructure. Six local/remote idle observations and 24 read-only commands pass. The VM returns to stopped with helper ownership finished.
+
+Astra's pre-launch review removes a finite parent cleanup deadline that could kill the owner during restoration and adds original private failure ledgers plus late-guard retention. All 81 portable methods and seven commands pass, including cooperative interruption with a simulated 30-second helper drain and running/foreign-machine refusal. Fixture errors, the unexecuted rejected parent, initial live-phone refusal, exact-app reset and restricted publication attempt remain retained; the latter's unavailable original query row is disclosed rather than reconstructed. The corrected publisher binds the final post-exit query before assertions and retains 722 pins, 177 raw files and 112 current source copies. Numerical/Swift/package/signed-app/protected inputs and the four-bit rejection remain unchanged. Retain selected full loss/task acceptance for representative performance and physical state/lifecycle trials; broader M8 remains open.
+
+Astra accepted the selected full-task gate after independently verifying all 722 pins, 177 raw files, 112 source copies, 81 methods, exact outcome replays and original baseline/gate. All 40 code cases resolve SyntaxError with clean removal; runtime identities, 12 VM control captures, six idle observations, reset/private-ledger/post-exit evidence, privacy, 241 links and whitespace pass. Performance and broader M8 qualification remain open.
+
+### Strict Mac native-app measurement admission — 22 October 2026
+
+The [Mac measurement counterpart](../../mlx-mac-measurement.md) preserves completed serial/callback/native clocks, state/admission, monotonic process peaks and first-eligible duration accounting, while requiring absent UIKit fields and zero synthetic installation proofs. Existing physical defaults stay unchanged. Typed vocabulary, exact repeated greedy IDs and unknown-marker rejection strengthen this explicit Mac scope. All 36 portable methods and three owned commands pass. One optimized native app trial completes three warmups plus ten measured original 128/128 requests on M1 Pro, with every 128-ID sequence identical. Descriptive medians are 0.746537 seconds native TTFT, 31.8685 IDs/second decode and 4.731781 seconds caller completion; observed native lifetime peak is 639,337,456 bytes. The load/session observation is separate, cache state is explicit, AC power/Low Power Mode off/thermal zero are recorded, and no cold-cache or speedup claim follows. All ten collection/observation commands and source/capture/cleanup endpoints pass. Publication replays the full stream and retains 763 pins, 146 raw files and 114 source copies without numerical/Swift/package/protected-input changes. Retain the mechanism for the full matrix, second confirmation and sustained Mac/phone trials; broader M8 remains open.
+
+Astra accepted the Mac measurement mechanism and descriptive trial after independently verifying 763 pins, 146 raw files, 114 source copies, all 13 requests/1,664 events, the regenerated frozen recipe, exact medians/peak and all 36 methods/13 commands. All 51 numerical/Swift/Cargo sources, protected binaries, power/thermal observations, privacy, 242 links and whitespace pass. Full performance qualification remains open.
+
+
+### Repeated and sustained native MLX app performance — 22 October 2026
+
+The [selected eight-bit matrix](../../mlx8-performance.md) completes all 128/512/1024 primary/confirmation workloads and dedicated 512/128 sustained sequences on M1 Pro and iPhone 14 Pro. All 256 requests/32,768 native events replay exact IDs/state, with matching cross-device and confirmation responses. Mac 512 primary/confirmation decode medians are 22.1772/22.2205 IDs/s and native TTFT 3.1133/3.1134 seconds; phone results are 15.2318/13.6681 IDs/s and 13.3074/15.1906 seconds. These are descriptive observations. Mac sustained 68 measured requests cover 600.685220793 native seconds; phone 26 cover 628.915998376 seconds, all excluding three warmups. First-five to last-five decode changes are −0.866%/−22.324%, with nominal Mac and nominal/fair/serious phone thermals. Maximum native process peaks of 639,157,232/651,888,720 bytes remain distinct from logical admission and general memory guarantees; energy is unmeasured.
+
+The reviewed data-only publisher binds canonical recipes/native/prepared/ready/proof identity, exact storage/copy freshness and raw installation/process/signal response identity; final intervention rejects. All 53 saved-data methods and the existing two orchestration methods pass, with 68 outer and 154 phone commands, 29 natural absence observations and three verified preflight resets. The cooperative collector retains original errors and has no finite parent deadline that could kill cleanup. The first publication's self-mutating stdout inventory is retained and explicitly unaccepted; fresh v2 output avoids the inventory, repeats checks/replay and retains 1,306 pins, 427 raw files and 114 current source copies. Numerical/Swift/package/signed-app/protected inputs and quality gates remain unchanged. Retain selected performance observations; physical MLX state/lifecycle and wider M8 architecture/discovery/product scope remain open.
+
+Astra accepted v2 and the documentation with no remaining blockers after independently verifying all 1,306 pins, 427 raw files, 114 source copies, 51 unchanged numerical/Swift/Cargo sources, fourteen complete sequences, all launch/storage/process/signal replays, 222 clean collection commands and all 55 current check methods. Statistics, privacy, 261 local links and whitespace pass. Acceptance covers selected-checkpoint repeated/sustained raw-ID observations only.
+
+
+### Native MLX physical state witnesses — 22 October 2026
+
+The [selected phone state trial](../../mlx8-phone-state.md) passes all 33 rows on iPhone 14 Pro using the unchanged signed app and native Rust/Metal package. Explicit state-512 recipes reuse the frozen 512-token contract, capacity 1152 and chunk 128. The new host validator preserves the unchanged state oracle and strict signed physical/foreground admission. Actual cancellation leaves 128 committed positions and the exact 384-token input tail with no emitted IDs; resume matches fresh evaluation. Cached primer/scalar, pending-token append, changed-prefix references, full 1,152-position commitment, all three overflow rejections, recovery and zero-resource close pass. Observed process peak is 651,921,488 bytes, nominal thermal state and Low Power Mode off; these are state witnesses, not performance or general memory limits.
+
+All 100 related Python methods, four orchestration and 22 data-replay methods pass, plus Rust 1.90 formatting, strict all-target Metal Clippy and 148 ordinary Metal-feature passes (74 explicit ignored cases). The unrelated ambient Rust 1.99 lint failure remains retained; no engine repair or lint waiver is introduced. A source-review timeout mismatch is corrected before replay, with its unexecuted draft retained and independent 3600/7200 substitution mutations. All four actual stages/42 transport commands pass, with seven natural absences and one verified initial reset, no final intervention and no unresolved cleanup/endpoints. Publication independently replays every state/launch/storage/ownership row and retains 1,498 pins, 207 raw files and 128 source copies. Exactly four changed historical Python paths use their original accepted copies; numerical/Swift/Cargo/package/signed/protected inputs stay unchanged. Retain selected physical state observations; actual OS lifecycle, architecture expansion, chat compatibility and discovery/downloads remain open.
+
+Astra accepted the source, completed phone evidence and documentation with no remaining blockers after independently verifying all 1,498 pins, 207 raw entries, 128 source copies, 51 unchanged numerical/Swift/Cargo sources, both console streams and all storage/launch/ownership/state replays. Test counts, retained failure/draft, privacy, 266 links and whitespace pass. Acceptance covers this selected checkpoint’s physical state diagnostic only.
+
+
+### Native MLX actual scene interruption and replay — 22 October 2026
+
+The [selected phone lifecycle trial](../../mlx8-phone-lifecycle.md) closes the remaining selected local-Qwen M8.2 witness. An explicit lifecycle-512 recipe prepares the unchanged signed app; a separate cooperative owner requires natural preflight absence and returns from Settings to the same live process without forced relaunch. Nineteen actual trace events preserve ten sampled IDs and the exact 522-token interrupted prefix; replayed continuation matches fresh reference IDs, close releases ownership and final absence needs no intervention. The synthetic warning action remains distinct from actual UIKit warning delivery/jetsam. Observed whole-process lifetime peak is 663,799,936 bytes, nominal thermal endpoints and Low Power Mode off. No numerical, shader, Swift, package, signed-app, quality-gate or default-backend change is made.
+
+Astra's source review adds deterministic shared proof dependencies without losing per-invocation source guards, composed standalone preparation/actual-ready admission tests, and immutable original/late failure journals with consumed log hashes. A later review requires explicit device-details outcome/type at both endpoints. Fresh checks pass 137 Python methods, four current orchestration methods and 16 saved-data methods, plus Rust 1.90 formatting, strict all-target Metal Clippy and 148 ordinary Metal-feature passes (74 explicit ignored cases). The final four-stage phone run has 44 clean commands, eight natural absences and no signals. Independent replay retains 1,849 bindings, 259 raw entries and 132 current source copies; all numerical/Swift/Cargo/package/signed/protected inputs stay unchanged.
+
+The initial sandbox boot-query denial issued no device command. The successful pre-hardening run is superseded under exact original collector/test copies, and the hardened rerun alone qualifies. Two early mock-only failures and the old auditor's unavailable original source snapshot are explicitly disclosed without reconstruction or current-check credit. Retain selected native MLX lifecycle support and close M8.2's local-Qwen scope; broader architecture implementation, chat compatibility, discovery/downloads and wider M8 qualification remain open.
+
+Astra accepted the code, completed evidence and documentation with no remaining blockers. Independent verification covers all 1,849 bindings, 259 raw entries, 132 source copies, 51 unchanged numerical/Swift/Cargo sources, exact historical mappings and both strict streams. All transport/storage/process/activation/launch/ledger replays, 157 current portable methods, Rust totals, privacy across 265 public files against nine actual identity/signing/path tokens, 269 local links and whitespace pass. M8.2 closes only the stated selected local-Qwen scope; M8.3–M8.5 remain open.
+
+
+### Pinned language/vision architecture reference coverage — 22 October 2026
+
+The [M8.3 inventory](../../mlx-architectures.md) records every Python model source in pinned MLX-LM and MLX-VLM trees: 137/1,399 modules and 126/232 static root Model exports, plus literal loader aliases. These are reference counts, not new native support or unique graph-family counts. Recursive Git tree reconstruction, exact selected path/blob/mode equality, bounded gzip-before-tar parsing and AST-only inspection preserve source identity without importing upstream code. Ten parser and six mocked ownership methods pass. All 1,403 immutable vision-source transfers finish with no retry or cleanup/capture error; the 120-second incomplete whole archive stays excluded. Language subset assembly records permission normalization and never follows the unrelated archive symlink. The collection binds 5,691 inputs/evidence files and preserves all 50 numerical/Swift/Cargo sources/protected binaries; prior Rust checks are explicitly inherited, with no new numerical or hardware claim. Retain this bounded reference inventory to guide independently specified dense, expert, recurrent/hybrid and multimodal implementations. M8.3–M8.5 remain open.
+
+Astra accepted the code, reference inventory and documentation with no remaining blockers after independently checking all 5,691 bindings, two source copies, both reconstructed Git roots, 1,544 selected files, 1,403 owned transfers, 16 test results and 50 unchanged numerical/Swift/Cargo sources. Privacy, 270 local links and whitespace pass. Acceptance covers static reference coverage only; native architecture expansion and M8.3–M8.5 remain open.
+
+
+### Independent dense Llama oracle — 22 October 2026
+
+The [first Llama task](../../mlx-llama-oracle.md) freezes809 tiny arrays before native target changes, covering bias-free GQA, full causal masking, split-half ordinary RoPE, tied and deliberately distinct untied heads, FP32 and mixed-Half storage, five cases and four greedy steps. Actual pinned MLX CPU/GPU full-prefix and two-plus-two cached logits pass fixed FP32 gates. Independent ordered FP32/FP64 reductions freeze mixed-Half tolerances before target evaluation. The wrong-tied-head witness changes the selected ID.
+
+Astra's review requires the complete non-cache MLX runtime closure, externally pinned manifest identity, mandatory finite non-Boolean gates and exact greedy/witness replay. All12 portable methods pass, including mutations for missing gates, overflow, versions, producer omission and metadata tampering. The owned export/check receipt preserves existing numerical/Swift sources and protected binaries; prior Rust checks are inherited. Retain this independent oracle for native Llama implementation. Native target execution, real models, quality/performance and phone qualification remain open.
+
+
+### Native bias-free Llama source and scalar decoder — 22 October 2026
+
+[Strict Llama loading](../../mlx-llama-scalar.md) adds explicit dense admission and diagnostic FP32 execution with full causal GQA, ordinary split-half RoPE and independently owned untied output. Packed/floating tensor validation and bounded streaming are reused; source and expanded head bytes count before loading, tied output keeps one embedding allocation, and empty bias vectors represent actual bias absence. All three scalar output paths select the correct head at the operation boundary with static numerical dispatch.
+
+Six CPU-only task tests pass390 frozen stage comparisons, saved actual upstream CPU/GPU logits, chunk/offset/reuse/reset/overflow contracts, bias/head constructor validation and memory capacity accounting. Astra identifies premature Llama admission through the shared reader; explicit open_dense/load_dense now opt in, while original source/Metal/Qwen entry points retain the original Qwen parser. The first full CPU run exposes the changed old error-text regression, retained without credit or an original source snapshot. Fresh Rust1.90 fmt, strict all-target Metal Clippy,140 CPU passes/eight ignored and154 Metal-feature passes/74 ignored pass. Protected binaries and the frozen oracle remain unchanged. Retain native tiny scalar Llama; GPU, real checkpoints, quality/performance and iPhone qualification remain open.
+
+
+### Resident tiny Llama with qualified Reference attention — 22 October 2026
+
+The [Metal Llama task](../../mlx-llama-metal.md) retains original resident affine embedding/projection/head buffers, optional immutable QKV biases and one reusable session zero buffer. An independent untied head counts exactly2,560 additional bytes; tied output keeps one embedding allocation. Head selection and architecture/capability selection stay outside numerical loops, with no per-token allocation or full-model expansion. Geometry is explicitly limited to the frozen tiny Llama shape.
+
+The first two release trials expose the existing shader's hardcoded Qwen theta1e6 rather than Llama theta1e4. The repaired rotary ABI carries validated FP32 theta bits at all three dispatch sites;13,824 independent values across both bases pass the unchanged operator envelope. A later Online candidate fails the frozen offset-case second-layer attention-projection gate; its precise numerical cause is unproven. Reference-only Llama is retained, explicit Online requests reject before session allocation, and existing Qwen Online remains available. The C ABI explicitly selects Llama Reference before session construction rather than retrying a failed mode. Failed logs and exact source correspondence are retained; only the comment-only header uses a disclosed exact-SHA-verified reconstruction. No tolerance is changed.
+
+The accepted M1 Pro run passes1,050 graph snapshots/149,568 values, eight full distributions and16 exact selected IDs, plus cache/pending/offset/replay/boundary/budget checks and explicit Online rejection. All11 release GPU/integration cases pass, including Qwen MLX, ordinary/compensated Half, CLI and the Rust C-ABI caller. Fresh Rust1.90 fmt/strict all-target Metal Clippy,140 CPU passes/eight ignored and155 Metal-feature passes/77 ignored pass. The receipt binds3,639 files and76 current source copies; oracle and protected binaries stay unchanged. Retain tiny native Reference-attention Llama. Real Llama checkpoints, wider shapes, Online attention, held-out quality/performance, a new iOS package and physical phone execution remain open; M8.3 is not complete.
+
+
+### Immutable real Llama-family candidate — 22 October 2026
+
+[SmolLM2-135M eight-bit acquisition](../../mlx-smollm-checkpoint.md) pins a public LlamaForCausalLM graph at revision0f0d9b8218915bc34d401e1a340b8c049d300d5e. Nine whitelisted files/147,875,570 bytes pass immutable Git/LFS identities and exclusive bounded HTTPS publication. Three portable methods pass. Exact data-only inspection validates694 tensors/211 packed matrices/61 normalization vectors, absent projection biases, tied output, contiguous payload spans and index equality. The30-layer576-hidden graph exercises nine-query/three-KV-head GQA. Retain as the real-model candidate; download size does not establish phone fit. No numerical, device, quality, performance or chat claim follows. Rust/shader/Swift and protected binaries are unchanged; prior Rust checks are inherited. Freeze the independent real-model oracle before target changes and preserve separate SmolLM tokenization/quality evidence.
+
+
+### Independent real Llama-family numerical gates — 22 October 2026
+
+The [SmolLM2 CPU oracle](../../mlx-smollm-oracle.md) freezes349 arrays/13,945,632 bytes before target edits: six prompt/offset/future/tile cases across layers0/1/29, four greedy distributions and three scoring-prefix distributions. The independent unsigned8bit/F16 reconstruction retains original FP32 tied-output weights, Half gathers/exclusions/activations and nine-query/three-KV mapping. An optimized bias-free graph is cross-checked against the ordered scalar tiny implementation. FP32/FP64 greedy IDs agree exactly at339,3543,719,1891; captured tokenization and BOS/EOS identities are SmolLM-specific.
+
+Nine portable methods and three owned commands pass. Numerical formula remains the predeclared real-graph FP32/FP64/equivalent-prefix policy; actual maximum absolute allowance32 and logits allowance0.207672119140625 are disclosed, with no held-out quality claim. Logical reference admission1,195,800,705 bytes and measured lifetime physical peak185,025,592 bytes stay under6GiB; neither establishes phone fit. The receipt binds579 files and58 current source copies, with unchanged Rust/shader/Swift/protected endpoints and inherited Rust checks. Retain this frozen CPU reference for real target qualification.
+
+
+### Real Llama-family resident Mac execution — 22 October 2026
+
+[Selected SmolLM2 native execution](../../mlx-smollm-metal.md) admits only the inspected30-layer576/1536 nine-query/three-KV shape, theta100000, epsilon1e-5 and context<=512. Export switches have exact-value admission; Reference-only Llama/default native routing and Qwen paths remain unchanged. Original packed affine weights stay resident with one tied table and142,955,990 allocated weight bytes; no shader or gate change.
+
+All816 frozen selected-stage snapshots/4,988,928 values pass, plus four full greedy distributions, three scoring prefixes and eight exact selected IDs. Maximum stage error16 is inside the independently frozen allowance32; maximum observed decode/scoring logit error0.0589752197265625. A separate512-capacity/chunk128 witness covers128 committed/384 pending discard/resume, overflow preservation, cached no-op and exact fresh-run full distribution. It does not claim asynchronous cancellation or independent long-context numerical parity. Logical session admission peaks at254,860,338 bytes, not a process/phone limit.
+
+Astra requested and reviewed the actual512 witness before GPU execution. Rust1.90 fmt, strict all-target Metal Clippy,142 CPU passes/eight ignored and158 Metal-feature passes/80 ignored pass; all14 explicit release GPU/integration cases pass. The corrected test-only Clippy allocation and sandbox no-device trial remain retained with exact source correspondence. The receipt binds3,425 files and77 current source copies; frozen oracle/protected binaries are unchanged. Retain selected real-model Mac Reference execution. Rebuilt app, actual phone execution, held-out quality, Online, chat and wider architecture scope remain separate.
+
+
+### Real Llama-family app and physical execution — 23 October 2026
+
+[Selected SmolLM2 app/device integration](../../mlx-smollm-app-device.md) keeps native Rust/Metal execution with resident original eight-bit affine weights and Reference attention. Explicit tokenizer-specific raw-ID recipes use49152 vocabulary/EOS2, independent scoring prefixes and two authored cases; Qwen quality datasets are not reused. Complete explicit package/prepared contexts preserve legacy defaults and original storage replay. A distinct physical component-state route preserves the legacy prefill witness requirement. Exact-current-installed-app reset has strict command/device/PID/executable/signal admission, same-buffer captures, preserved original/late causes, cooperative interruption and zero-command substitution tests.
+
+Fresh Mac/device/simulator archives build/link; strict Swift coordinator compilation/iOS type-check and the actual signed iPhone Release install pass. All232 portable methods, fmt and strict all-target Metal Clippy pass; numerical tests are inherited unchanged from the reviewed real-model Mac task. Both devices pass primary/confirmation13-request generations, three exactly paired scalar scores satisfying independent frozen-logit intervals, two matching authored task responses and26 exact state/scalar rows. Thirteen physical stages complete130 owned commands and26 natural absences, without trial cleanup intervention; two initial exact-app resets remain separate.
+
+Short4/4 raw-ID native TTFT medians are39.471/39.950ms Mac and63.240/63.359ms phone; decode interval medians18.986/19.201ms and27.102/27.615ms. Maximum component process peaks156,730,016/169,854,720 bytes remain separate from512MiB numerical/1GiB process trial caps. These are functional short observations, not representative/sustained throughput or comparative speedup claims. Retained setup failures cover the old generated link, a later existing process and missing exact reuse snapshots; no failed attempt receives inference credit. The publication binds4,790 files and298 current source copies; all14 saved-data replay/mutation methods pass. Retain selected real-model app execution on both devices. Full quality/chat, Online, independent long-context parity, actual interruption and broader M8.3–M8.5 scope remain open; phone probes currently exercise32 positions.
+
+
+Astra accepted the completed code, physical evidence and documentation with no remaining blockers. Independent verification covers all4,790 bindings/298 source copies, exact command/storage/signing/console replay, both separate resets, paired outputs/state/scores,232 portable and14 saved-data methods. Privacy across16 changed/new public files against seven actual identity/path/container tokens,285 local links and whitespace pass. Acceptance remains bounded to this selected SmolLM2 raw-ID app scope.
+
+
+### Exact text profile for one Toklet app — 23 October 2026
+
+The user requested the friendly InferencePhone interface inside Toklet Harness,
+with its current controls retained in Expert mode. The neighboring app belongs
+to a separate earlier runtime; it is a visual reference for this consolidation.
+The first [text boundary](../../app-chat-profile.md) validates the selected SmolLM2
+tokenizer/config identities and implements its exact bounded user/assistant
+template outside numerical kernels. Independent Python Jinja/tokenizers cases
+freeze32/68-token Unicode/multi-turn rendering, IDs and decoding. An additive
+immutable C handle provides caller-owned query/encode/decode buffers with explicit
+thread ownership, a separate64MiB text allowance and no model lifetime borrow.
+
+Astra's review identifies empty null-buffer validation and relative-directory
+drift. Both are fixed; absolute origin uses the actual load path and moves into
+one exact-capacity allocation, with native bridge allowance raised4→20KiB.
+Full-prefix decoding replaces displayed text rather than concatenating isolated
+token strings. Rust1.90 fmt, strict all-target Metal Clippy,147 CPU/163 Metal
+ordinary passes, two explicit local tokenizer/C-handle methods, independent
+Python replay and one actual Mac GPU public C lifecycle test pass. The
+[receipt](../../../benchmarks/results/2026-10-23-app-chat-profile-v1.json) binds103 files
+including source copies; protected CPU binaries stay unchanged. A preliminary
+wrapper path exception is observed in tool output; only preliminary fmt logs
+are retained, with no test credit. Astra accepts this bounded task after the
+final source/evidence audit. Retain the exact text
+profile; shared-worker/UI and phone text integration follow separately.
+
+
+### Friendly Chat and preserved Expert mode in one app — 23 October 2026
+
+The [interface consolidation](../../app-interface.md) addresses the confusing split
+between the earlier InferencePhone UI and Toklet's diagnostic app. Toklet Harness
+now opens friendly Chat, with local model selection, bounded saved history/drafts
+and settings; the original raw-token form remains under Expert mode. Both use
+one Toklet worker and the existing Rust/Metal engine. The selected SmolLM2 text
+profile supplies formatting/decoding; no second numerical runtime or implemented
+Hugging Face download flow is implied.
+
+Astra review found a queued-chat cancellation race before dequeue: cleanup could
+replace an accepted command without returning a terminal result. The worker now
+publishes cancellation for that request ID and retains terminal results through
+cleanup/Close. Deterministic suspend/unload/close checks cover the race. Review
+also tightened failed-read recovery, pending folder cancellation, security-scope
+release, result routing across conversations, terminal worker recreation and
+rejected-load identity. The final stale-published-state regression verifies that
+a rejected load cannot label an already loaded model as another selection.
+
+The final strict Swift6 Mac runner passes all six commands: SDK query, compile,
+workspace/controller regressions, real SmolLM2 text and original raw CPU/Metal
+checks. Both SDK app builds pass; final development signing/install passes on
+iiPhone 14 Pro. An earlier exact-source physical smoke matches Mac text/token IDs
+for first/second turns and explicit session recreation, with native cancellation,
+context rejection, release, signed correspondence and natural process absence.
+Original physical CPU/Metal worker checks pass. Historical source differences
+are retained as exact-SHA-verified copies; the final store-only fix is covered
+by the fresh Mac regression and app builds/install. Numerical Rust/shaders stay
+unchanged from the reviewed text-profile task, so its Rust checks are inherited.
+
+Visible checks cover Simulator navigation, Files opening/cancel, original Expert
+generation, terminal Close/Back and draft entry; physical dark appearance was
+inspected. The final Simulator capture preserves the draft after reinstall.
+Physical GUI Send/Stop, successful folder selection and large-text/keyboard
+layouts remain unqualified. No performance improvement or broader quality claim
+is made. The tiny model's arithmetic reply is incorrect; this is functional text
+support only. A proposed new collector was rejected in review and never executed;
+existing reviewed physical helpers and a bounded manual smoke provide the device
+evidence. The [receipt](../../../benchmarks/results/2026-10-23-app-interface-v1.json)
+records checks, scope, historical correspondence and remaining limitations.
+Retain the one-app interface; M8.4 search/downloads and wider chat profiles remain
+open.
+
+Astra accepts the final interface task for commit with no remaining blockers:
+412 audited evidence bindings/75 exact source copies, six final Mac commands, both SDK
+builds, final signing/install, historical physical correspondence and all304
+documentation links independently pass. Protected binaries remain unchanged.
+
+The final staged-file whitespace check additionally catches one blank line at
+EOF in the new chat store. Removing that newline changes no Swift tokens; the
+receipt retains the exact executed source and maps the final whitespace-only
+version explicitly. Functional checks are inherited unchanged.
+Astra clears this amendment after verifying all413 bindings,75 current source
+copies and the exact one-newline correspondence.
+
+
+### Immutable public-model search/download core — 23 October 2026
+
+The [model hub core](../../model-hub.md) separates searchable public MLX repositories
+from the single currently qualified SmolLM2 chat download. The hypothesis is that
+a pinned, verified app-owned snapshot can replace manual model copying without
+claiming arbitrary search results are compatible. A cold Swift actor admits the
+immutable revision and six trusted file sizes/SHA-256 hashes, streams sequentially,
+reserves storage and publishes an authenticated local receipt only after full
+verification. Existing snapshots are preserved. Networking/hashing stay outside
+the numerical worker; Rust, shaders, native package and protected CPU binaries
+remain unchanged.
+
+Astra found path-based prechecks before open and a missing active-URLSession
+cancellation witness. Verification now uses no-follow/nonblocking descriptors,
+`fstat` admission, bounded reads and the same opened inode for parsing/hashing;
+openat binds children to an opened directory. Ancestor symlinks reject before
+mkdir. A live delayed URLProtocol sends1MiB through the actual sink, then
+cancellation stops the transfer before its continuation returns and prevents
+later writes. Exact cancellation/publication boundaries, storage changes,
+corruption, FIFO/link/path/revision/receipt errors, duplicate requests and
+exclusive publication collisions have deterministic regressions.
+
+The final v6 strict Swift6 compile, deterministic suite and iOS type-check pass.
+Retained earlier failures include test-autoclosure compilation, URL directory
+identity and explicit Apple `/tmp`/`/var` alias handling; no acceptance gate was
+loosened. Models-screen integration is the next separately reviewed task.
+
+The actual Mac URLSession search/download succeeds for all146,607,552 required
+bytes, followed by full saved-snapshot verification. Independent Python hashes
+match all six files against the previously qualified local source. This task
+establishes transport/integrity behavior only; UI, numerical loading and physical
+use remain separate. The [core receipt](../../../benchmarks/results/2026-10-23-model-hub-core-v1.json)
+retains exact source and result identities. Retain the bounded download core.
+Astra accepts Task1 for commit with no remaining blockers after independently
+verifying all67 bindings, three current source copies and the actual network
+result. Links and staged-file whitespace checks pass.
+
+
+### Hugging Face Models screen and offline Chat opening — 23 October 2026
+
+The [Models screen](../../model-hub.md) now offers public MLX search, an explicitly
+qualified pinned SmolLM2 download, byte progress, Cancel and offline opening.
+Other search results explain that engine/text qualification is missing. Runtime
+admission reads current iOS process memory allowance and unified-GPU capability;
+Mac checks use the plan’s configured allowance minus current process footprint,
+not free RAM. Downloading and verification stay off the UI/native worker. Saved
+models are rehashed before the existing Chat worker is asked to load them.
+
+Astra identified a late-open race: an awaited verification could override a
+newer model selection or Expert transition. Model-changing actions now invalidate
+the operation and cancel it; competing controls are disabled while busy, and
+completion checks the operation identity and current mode. Delayed-verification
+regressions prove the normal callback runs once and that Expert/new-model/unload
+choices prevent the late callback. Other controller checks cover failed/duplicate
+requests, late progress, missing snapshots, device rejection and cancellation.
+
+All seven final strict Mac commands pass, including controller tests, ordinary
+workspace tests, real chat and original raw CPU/Metal checks. Both SDK builds
+and final signing/install pass. Real Mac execution revalidates the previously
+transferred snapshot, then passes native text checks and actual HubStore →
+FriendlyChatStore → worker generation using a temporary history and a network
+handler that refuses every request. The 32-ID controller reply retains the exact
+native eight-ID prefix and releases all model resources. No new quality or
+performance claim follows.
+
+Retained setup attempts include an existing-app preflight refusal, exact-app
+resets and a cached phone run whose native/controller checks succeed but whose
+fresh-transfer requirement correctly fails. The saved model is preserved. A
+separate explicit fresh-download diagnostic uses an exclusively created UUID
+temporary tree, rejects reuse and removes only its own data before success.
+The one-off phone verification wrapper was tightened before execution to check
+selected device/outcome/command, exact query/signal ownership, exclusive outputs,
+both diagnostic streams and same-buffer hash/parse correspondence. Earlier
+uncleared wrapper drafts were never executed and receive no test credit.
+
+The first isolated phone transfer was still progressing when its 1,400-second
+remote test bound expired. The strict wrapper retained the failed trial and
+confirmed the exact test process absent after its scoped SIGTERM. It receives no
+fresh-download credit. The observed file growth does not establish the cause of
+the slow transfer. A read-only Mac capacity-query probe was fast and did not
+justify changing storage checks. The resource timeout is now a bounded two hours;
+the 60-second request timeout, cancellation, storage and integrity checks stay
+unchanged. Astra accepted the narrow adjustment, and final-source checks repeat
+before a new isolated trial with longer, still bounded test deadlines. A killed
+trial can leave its temporary files until the OS purges them; process-kill
+recovery remains unqualified.
+
+The final fresh iPhone 14 Pro trial passes public search, a new six-file transfer,
+all snapshot hashes, native text checks and the actual offline Chat controller
+path. It explicitly reports `reusedSnapshot=false`; native and full 32-ID
+controller outputs match the Mac, and the app exits naturally after releasing
+resources and removing its owned temporary tree. The normal model cache and
+owner conversations remain separate. A preceding retry refused a missing exact
+test-helper source copy before any device command or app launch; that retained
+preflight failure was resolved by restoring the hash-matching copy.
+
+Final-source core checks pass all three commands, controller/chat/raw checks pass
+all seven commands, both SDK builds pass and the signed final app is installed.
+The [app receipt](../../../benchmarks/results/2026-10-23-model-hub-app-v1.json) binds
+the final source, historical inputs, native package, signed installation and
+retained failures. These are functional checks; the new search/download tap flow
+and keyboard/accessibility layouts remain visually unqualified. No throughput,
+answer-quality or broader M8.5 qualification follows.
+
+Astra accepted this task for commit after independently verifying all 584
+bindings, 81 current source copies and 16 historical mappings, final builds and
+signed phone proofs, fresh-transfer result, native/full-controller Mac equality,
+natural exit and retained failures. All 318 local links, staged whitespace and
+task-file privacy checks pass. The decision is to retain this bounded feature;
+wider downloadable/text profiles remain open.
+
+### Qwen native text profile and profile-specific stop IDs — 23 October 2026
+
+The existing Qwen2.5-0.5B eight-bit numerical checkpoint needs its own text assets,
+system message, stop IDs and memory admission before the friendly app can use it.
+The independent Python/Jinja export was frozen before target edits. Exact model
+configuration and tokenizer hashes now select one of two bounded text profiles,
+then validate the loaded geometry. The numerical kernels and raw-ID APIs remain
+unchanged. Qwen uses 128 MiB of separate logical text allowance; SmolLM2 retains
+64 MiB. A coarse immutable C query supplies the complete profile stop set before
+generation, avoiding SmolLM2’s stop IDs being reused for Qwen.
+
+Astra found a repository-label typo in the initial Qwen reference export. The
+original producer/fixture and executed checks are retained. The correction changes
+only that metadata label to the pinned Qwen2.5-0.5B repository; all rendered text,
+IDs, decoding and other metadata compare exactly. It grants no numerical or
+quality waiver. Astra also requested explicit stop-query bounds and thread/pointer
+coverage before final evidence acceptance. The bounded real C bridge check loads
+Qwen, rejects insufficient text allowance, generates/decode text and proves a
+forced stop produces no visible token. Native model release does not invalidate
+the immutable text handle or session. Swift/catalog integration follows separately.
+
+All seven final commands pass: Rust 1.90 formatting, strict all-target Metal
+Clippy, ordinary CPU and Metal suites, both pinned local codecs, native real GPU
+text/stop checks and independent Python replay. The [Qwen text receipt](../../../benchmarks/results/2026-10-23-qwen-app-chat-profile-v1.json)
+retains source copies and earlier checks. Protected CPU binaries remain unchanged.
+
+Astra accepted this native task after independently verifying all 157 bindings,
+47 current source copies and six historical mappings, all three seven-command
+receipts and the metadata-only correction. Final logs contain 148 CPU passes
+(11 ignored), 164 Metal-feature passes (85 ignored), two explicit codec checks
+and three native text checks. Whitespace, 237 local links and public-task privacy
+checks pass. The decision is to retain the bounded native extension.
+
+### Qwen Models integration and per-profile admission — 23 October 2026
+
+The native profile commit `7fd8c4c` enables Qwen’s bounded text boundary. Models
+now exposes the pinned Qwen2.5-0.5B eight-bit and existing Llama-family SmolLM2
+profiles separately, including exact download identities, supported-result
+selection, per-profile memory admission and offline opening. It does not enable
+the rejected Qwen four-bit candidate. Qwen’s numerical/text budgets are 1 GiB and
+128 MiB, with a conservative current 1.5 GiB process allowance; Smol’s existing
+policy remains. These reservations are not physical memory measurements.
+
+The worker queries native stops once at load, retains them across suspension and
+clears them on unload. This prevents Qwen token 0 from being hidden as a SmolLM2
+stop. Local Files configuration identification is bounded and follows security
+scope acquisition, then fresh memory admission. Unknown/changed configurations
+reject before worker loading. Profile selection cannot change during an operation;
+refresh and open retain the intended profile, and earlier cancellation guards
+remain intact. Old Smol receipts preserve their exact schema and file identities.
+
+Strict integration/core checks, both SDK builds and added profile regressions
+pass. The regressions cover old receipt compatibility, exact/changed/linked local
+configs and selected Qwen refresh/open followed by Smol refresh. Astra cleared
+the runtime source for actual trials and requested explicit Qwen token-0 parity
+and a Smol re-open with the new package. A phone preparation attempt correctly
+refused an existing app session it did not own; the user was asked to close it
+while independent Mac work continued. No owner process was terminated.
+
+The fresh real Mac Qwen transfer passes complete pinned-file verification,
+native multi-turn/state checks and the actual offline controller. The first
+eight IDs match the committed C bridge exactly, including Qwen token 0, and all
+native/controller text independently decodes with the pinned Python tokenizer.
+Smol’s old saved snapshot verifies and passes native/controller generation with
+the new package. The [Qwen app receipt](../../../benchmarks/results/2026-10-23-qwen-model-hub-app-v1.json)
+binds these sources/builds/checks and the retained phone refusal. Phone Chat,
+physical text-memory peaks, GUI taps and performance/quality remain unqualified
+by this task. Mistral is separate work.
+
+Astra accepted the Mac-functional app task after independently verifying all 311
+bindings, 84 current copies and nested package/build/check closures: 21 package,
+nine SDK, seven integration, three core, two profile and two real Mac commands.
+Independent byte-level decoding matches every Qwen and Smol native/controller
+reply. The phone refusal contains three read commands and no install, launch or
+signal. Whitespace, 323 local links and 19 public-task privacy checks pass.
+Retain the feature; actual physical Qwen Chat remains pending.
+
+### Mistral reference tools and Mac focus — 23 October 2026
+
+The user temporarily turned off the iPhone and requested Mac focus. All further
+phone operations are paused. The selected next candidate is the public pinned
+Mistral-7B-Instruct-v0.3 four-bit full-attention snapshot; other Mistral variants
+and sliding attention remain unsupported. The [reference preparation](../../mlx-mistral-oracle.md)
+adds bounded independent reconstruction, an untied-head graph and original
+instruction-template fixtures before native target work.
+
+Astra requested actual Matrix/projection composition across the1,024-row
+boundary and adapted reference-verifier mutation coverage. All nine portable
+tests now pass, with the numerical policy unchanged. The exporter observes and
+checks its lifetime footprint after each case and generation/scoring pair; this
+is an acceptance check, not an OS allocation limit. Chat-template replay,
+syntax and whitespace checks also pass. The [tools receipt](../../../benchmarks/results/2026-10-23-mistral-reference-tools-v1.json)
+records exact tested inputs. Full numerical export, target support, app routing,
+real download/chat and performance remain separate work.
+
+The evidence retains an ignored inspection-directory collision, an incomplete
+serial acquisition and subsequent exact owned-process absence checks. No partial
+checkpoint was published. The new range acquisition has its own directory,
+validated HTTP ranges and complete weight-hash admission before publication.
+
+### Bounded multi-gigabyte download prerequisite — 23 October 2026
+
+Shared explicit64-bit admission limits now allow at most4GiB per file and6GiB
+per snapshot, preparing the existing streaming core for the selected Mac
+candidate. Catalog support and numerical budgets are unchanged. The two-snapshot
+storage reserve and per-stream byte bounds remain checked, along with existing
+hash, ownership, cancellation and publication rules.
+
+Astra cleared the arithmetic and boundary tests. Strict Swift compilation, the
+complete core checks and iOS SDK type checking pass without contacting the
+phone. The [limit receipt](../../../benchmarks/results/2026-10-23-model-hub-large-limits-v1.json)
+distinguishes large-size request admission from an actual large payload transfer;
+that qualification and Mistral engine/chat support remain pending.
+
+### Complete immutable Mistral acquisition — 23 October 2026
+
+The [pinned Mistral checkpoint](../../mlx-mistral-checkpoint.md) is now admitted as data:
+all 244 disjoint ranges reconstruct the exact 4,077,480,215-byte weight hash, all
+eight files match the immutable inventory, 252 owned commands finish cleanly and
+all 252 process groups are observed absent. Astra independently verifies the
+complete file/diagnostic/range closure before CPU-reference admission. The
+[receipt](../../../benchmarks/results/2026-10-23-mistral-checkpoint-v1.json) preserves the
+incomplete serial acquisition and ignored inspection collision; neither receives
+qualification credit.
+
+The CPU reference export has started with the accepted acquisition SHA and
+unchanged reviewed numerical policy. The separate app-core URLSession transfer
+is still running. No Mistral native execution, app catalog support, physical fit,
+performance or quality is claimed by acquisition alone. The record's heading
+now reflects M7's completed amended iiPhone 14 Pro scope, and the Apple guide names
+the current Qwen-capable native package. Phone work stays paused.
+
+### Frozen independent Mistral numerical reference — 23 October 2026
+
+The streamed CPU exporter completes all **349 arrays / 35,025,920 bytes**, with
+matching four-step FP32/FP64 selections and full vocabulary distributions for
+decode and scoring. The [oracle report](../../mlx-mistral-oracle.md) records the
+externally frozen manifest/array hashes before native Mistral target edits.
+The unchanged arithmetic/prefix policy yields maximum absolute allowance 0.5
+and logits allowance 0.08046722412109375, plus relative 1e-3. These measured
+envelopes grant no held-out quality waiver.
+
+Both owned export/stdlib verification commands pass with unchanged source,
+package and data endpoints and clean process completion. Logical admission is
+5,486,766,359 bytes, counting the complete clean source mapping; lifetime
+charged physical peak is 293,752,696 bytes. The charged counter can omit clean
+file pages, so it does not replace the logical budget or qualify mobile fit.
+The [receipt](../../../benchmarks/results/2026-10-23-mistral-real-oracle-v1.json) binds
+this evidence. Native decoder, Chat/catalog integration and actual app transfer
+qualification remain separate. Phone work remains paused.
+
+### Selected native Mistral decoder on Mac — 23 October 2026
+
+The [strict Rust/Metal decoder](../../mlx-mistral-metal.md) now executes the pinned
+Mistral 7B four-bit full-attention snapshot. Shared static bias-free dispatch
+preserves resident packed weights, separate KV state and existing Qwen-only API
+contracts. Explicit null sliding-window admission rejects omitted windows and
+Llama-only metadata. Reference attention is qualified; Online remains rejected.
+
+Final formatting, strict Clippy, CPU/Metal baselines, release budget and native C
+checks pass. Real M1 Pro GPU checks pass 816 exposed snapshots / 19,302,400 values,
+four complete greedy distributions, three scoring prefixes, eight selections
+and a separate 512-capacity state test. Frozen gates are unchanged. Maximum
+logical session admission is 4,267,272,802 bytes; physical peak, held-out quality,
+performance and long-context numerical qualification remain open. The
+[receipt](../../../benchmarks/results/2026-10-23-mistral-metal-v1.json) retains the
+pre-fix baseline and final source evidence. Chat/catalog integration continues
+separately. Phone operations remain paused at the user's request.
+
+### Native Mistral instruction text on Mac — 23 October 2026
+
+The [Mistral text profile](../../app-chat-profile.md#mistral-text-profile--23-october-2026)
+adds the exact pinned default instruction template and EOS-only stopping to the
+native bridge. Its bounded tokenizer configuration and separate 64 MiB text
+reservation preserve the numerical boundary. All 771 tokenizer control literals
+are rejected after JSON decoding. SmolLM2 and Qwen semantics remain unchanged.
+
+All six baseline/tokenizer/reference commands pass. A retained sandboxed trial
+fails GPU model loading; the unchanged code passes all four real/native text
+checks with Mac GPU access, including Mistral greeting, Qwen's unchanged token-0
+reply, ownership and hidden stops. Independent Python decoding agrees. The
+[receipt](../../../benchmarks/results/2026-10-23-mistral-app-chat-profile-v1.json) keeps
+those scopes distinct. App catalog/package integration continues next; phone
+operations stay paused and no new speed or physical-memory claim is made.
+
+### Bounded retries for large Mac downloads — 23 October 2026
+
+A real near-complete Mistral full-body transfer failed on a lost connection;
+its incomplete staging was removed and no snapshot was published. The
+[range transport](../../model-hub.md#bounded-large-file-transport--23-october-2026)
+now bounds large streams to four 16 MiB chunks with strict response identities,
+three transient-only attempts, joined cancellation and a two-hour operation
+deadline. Small-file behavior and final whole-file SHA admission remain intact.
+
+Astra requested fatal close-error composition and canonical length validation;
+both now have deterministic regressions. Final strict Swift/core/SDK checks pass.
+The [receipt](../../../benchmarks/results/2026-10-23-model-hub-ranges-v1.json) preserves
+the failed full-body and sandboxed trials plus intermediate source snapshots.
+The fresh actual range transfer is separate, as are numerical fit and app Chat.
+Phone operations remain paused.
+
+### Mistral Models and offline Chat on Mac — 23 October 2026
+
+The [app catalog](../../mlx-mistral-app.md) adds exact pinned Mistral downloads/search
+selection, vocabulary and separate numerical/text/process admission. The chat
+header now names the loaded model. Older saved profiles and Smol/Qwen behavior
+remain compatible. A fresh three-slice package and final shared SDK, integration,
+core and profile checks pass without contacting the phone.
+
+Real local-checkpoint execution passes multi-turn text, context rejection,
+cancellation, suspend/replay and the friendly offline controller. Qwen and Smol
+saved-cache regressions pass with the new package. Guarded independent Python
+decoding agrees with every reply. The single completed Mistral process observes
+a 4,226,780,712-byte charged lifetime peak; logical accounting, clean mappings,
+sustained behavior and performance remain separate.
+
+Two retained trials exposed stale admission before a long verification await.
+Refresh now samples afterward and clears stale allowed state on observation
+failure, with tests in both memory directions. Budgets stay unchanged. The
+[receipt](../../../benchmarks/results/2026-10-23-mistral-model-hub-app-v1.json) distinguishes
+these failures and local seed from fresh network transfer. Actual range-download
+qualification continues separately. All physical phone work remains paused.
+
+### Preserve range cleanup failures during cancellation — 23 October 2026
+
+A final review found that cancellation or a deadline could hide a simultaneous
+close/removal failure even though tasks were joined and publication was already
+blocked. The [narrow fix](../../model-hub.md#preserve-cleanup-errors-during-interruption--23-october-2026)
+retains those causes through URLSession completion, chunk retry, both task groups
+and assembly cleanup. Every cancelled sibling is drained explicitly.
+
+New slow-protocol cases pass active cancellation plus close failure and deadline
+plus close failure, preserving interruption context without retry or later
+writes. Final strict Swift/core/SDK checks pass. Astra also requested typed
+removal errors and a bounded deadline fixture; both are included. The
+[receipt](../../../benchmarks/results/2026-10-23-model-hub-cleanup-errors-v1.json) records
+historical failed/intermediate inputs. Completed transfer and numerical paths
+are unchanged, and no new phone or performance qualification is claimed.
+
+### Bounded Mistral raw-ID observations on M1 Pro — 23 October 2026
+
+Two fresh processes complete the unchanged Mac observation protocol: three
+warmups each, 82 measured requests each, and 602.477/602.576 measured native
+seconds. The [fixed four-input/32-output probe](../../mlx-mistral-mac-observations.md)
+observes first-token medians 536.028/535.985 ms and decode medians 4.551/4.549 IDs/s.
+Charged lifetime peaks are 4,119,186,864/4,119,039,408 bytes under the existing
+4 GiB trial gate. Frozen four-ID oracles, full-sequence repeatability, clocks,
+state, ownership, source endpoints and complete artifact proofs pass.
+
+This adds measured Mac data without changing a kernel or admission gate. A
+concurrent public range download is an explicit confounder, and the single AC
+query is a pre-run observation only. The
+[receipt](../../../benchmarks/results/2026-10-23-mistral-mac-observations-v1.json) makes
+no full performance, text/UI, held-out quality or phone qualification claim.
+
+### Retry metadata and smaller downloads safely — 23 October 2026
+
+The actual ranged Mistral trial failed with timeout code -1001; incomplete
+staging was discarded and no final snapshot remained. Its old diagnostic does
+not identify the failed file/range or final byte count. Inspection exposed a
+separate asymmetry: metadata/smaller files had one attempt versus three for
+ranges. The [whole-file retry change](../../model-hub.md#whole-file-retries-and-safe-failure-context--23-october-2026)
+adds three transient-only attempts under one deadline, closed exclusive sink
+replacement, fatal cleanup errors and joined interruption. Network diagnostics
+now exclude URL-bearing NSError metadata while retaining code, attempt, range,
+actual delivered byte count and monotonic elapsed time. Chunk tuning and
+cross-launch persistence are unchanged.
+
+Astra caught a false-pass path in a new nontransient test and requested a real
+URL-bearing injected error for privacy coverage; both were fixed. Two diagnostic
+fixture trials assumed two queued bytes must reach the delegate before immediate
+failure; URLSession reported zero. The test now admits exactly zero or two,
+without altering production size/hash gates. Final strict Swift fixture checks
+and SDK type checking pass; the earlier sandbox storage failure and all fixture
+trials remain in the [receipt](../../../benchmarks/results/2026-10-23-model-hub-whole-retries-v1.json).
+No numerical kernels changed. Fresh Mistral network completion remains separate;
+physical phone work stays paused.
+
+### Fresh Mistral network snapshot and reopening on Mac — 23 October 2026
+
+The [actual new Mac download](../../mlx-mistral-hub-download.md) now passes public
+search, pinned catalog admission, all six files and independent full-file SHA256
+checks, totaling 4,079,633,318 bytes. The download reports no reuse; ordinary
+reopening of that actual cache reports reuse and passes native multi-turn/state,
+cancellation/suspension/release and offline friendly-controller Chat. All four
+reply ID/text sequences match the previously independently decoded local test.
+The weight transfer observes 3,667.422 seconds on this link; it is not an engine
+performance result or promised ETA. The first full-body loss and ranged timeout
+remain retained failures, without inferring their cause from a later success.
+The frozen app source predates the separate Mac window add-on. Physical phone,
+visible GUI, wider checkpoint, quality and full performance scopes remain
+separate.
+
+### Add native Mac Chat and Models — 23 October 2026
+
+The [Mac add-on](../../mac-app.md) provides a separate native app entry point while
+sharing Chat, Models and the original Expert form with the iPhone target. It
+adds native folder/Finder access, Command-Return Send/Stop, stable local storage,
+and joined close/quit with draft recovery and safe worker recreation. Review
+fixes cover close/reopen races, save failures, bounded build diagnostics and
+receipt/header admission. The numerical kernels and native package are unchanged.
+
+Final strict coordinator/real-model checks, six builder negative tests and both
+local iOS SDK app builds pass. The visible Mac trial passes fresh Smol download,
+independent hashes, all three real-model greetings, Mistral Stop, Expert Tiny
+`47,47`, and draft-preserving close/reopen/quit. Its stderr is empty. Earlier
+watchdog/automation and SwiftUI-warning trials remain recorded without attributing
+the warning reduction to one change. Astra reviewed the code and evidence.
+The [receipt](../../../benchmarks/results/2026-10-23-macos-window-v1.json) separates
+visible observations, saved-state proofs and automated checks. Phone work stays
+paused; no new engine-performance or wider compatibility claim is made.
+
+A staged whitespace check then exposed one extra EOF blank line in the new Expert
+file. A formatting-only follow-up removes it; the Mac receipt maps the original
+executed source to its immutable build copy. Numerical and UI behavior are unchanged.
+
+### Recover rejected Chat turns and preserve model identity — 23 October 2026
+
+The [controller recovery fixes](../../app-recovery.md) restore drafts after validation
+or known-unstarted lifecycle cancellation, without overwriting later edits even
+when intentionally cleared. Partial generation remains a terminal history turn.
+New/delete-last keeps a live model usable, unrelated folders are rejected before
+unloading, and delayed verified Open cannot target another conversation. Actual
+worker admission precedes selection changes. No numerical kernel, context gate,
+model identity gate or persisted history schema changed.
+
+A real-model baseline reproduced the forbidden-literal failure. Exact-source
+regressions cover correction/retry, context failure, six gated lifecycle cases,
+actual partial cancellation, history/model identity and stale verification.
+Strict existing controller suites and iOS SDK builds pass; Astra reviews the
+code and evidence before commit. Physical button/layout fixes and the final
+phone audit are recorded separately when completed.
+
+### Isolate Expert buttons and repair app presentation — 23 October 2026
+
+The ongoing [iPhone function/button audit](../../iphone-app-audit.md) reproduced a Form
+row bug: Tiny fixture also fired Documents/Model. Explicit per-action styling now
+isolates all three multi-button Expert rows, with vertical accessibility layout.
+The friendly view keeps qualified model controls above search results, exposes
+folder errors, treats Files cancellation normally, owns deletion confirmation in
+the visible History sheet, and follows latest chat activity while respecting
+manual scroll-back/gestures. Initial restored scroll position and full accessible
+model headings are handled explicitly. Numerical code is unchanged.
+
+SDK and Mac build checks and Astra review are recorded in the
+[UI receipt](../../../benchmarks/results/2026-10-23-iphone-ui-controls-v1.json).
+The corrected signed app was installed in place. Physical checks confirm isolated
+Expert actions and lifecycle transitions, public search, Qwen download/load/chat,
+active Stop with partial text, long-response follow/scroll-back, Settings choices,
+Files cancellation and visible History confirmation. After action-time approval,
+only the new interrupted synthetic chat was deleted. The detailed checklist
+retains unexecuted controls; the full sweep remains open after another Mac lock.
+Existing owner chats and model caches were neither deleted nor exported.
+
+### Plan modular engine expansion and freeze Qwen3 reference — 23 October 2026
+
+The [active queue](../../engine-expansion-plan.md) orders graph mechanisms, measured
+optimizations and general Hugging Face admission/download/chat. Architecture
+modules own their config, weight mapping and graph rules; shared operators remain
+separate from tokenizer/UI/download code. Capability, device fit and physical
+qualification remain distinct. Existing pinned profiles stay supported while
+compatibility grows; the complete architecture program remains open.
+
+The [first Qwen3 task](../../mlx-qwen3-oracle.md) freezes an independent tiny graph with
+hidden32/query64/KV32 and per-head Q/K RMSNorm before RoPE. Both tied/untied outputs,
+mixed packed/floating weights, offset/causal/capacity cases, actual upstream
+CPU/GPU/cached logits and wrong-norm witnesses pass. The fixture contains 891
+arrays; all 15 portable tests pass. Native Rust/Metal Qwen3 execution, real models,
+chat/thinking semantics, quality/performance and iPhone testing remain pending.
+Numerical target sources and protected release binaries are unchanged. Astra
+reviews the code and completed evidence before commit.
+
+### Add modular Qwen3 dense scalar execution — 24 October 2026
+
+The [native scalar task](../../mlx-qwen3-scalar.md) adds a separate Qwen3 config module
+and reuses the checked dense graph with explicit per-head Q/K normalization.
+Query width can differ from hidden width; projections, scratch, traces and O
+weights use the correct dimensions. Norm weights are immutable, allocated
+capacities are counted, and normalization reuses rotary scratch. No numerical
+inner-loop architecture dispatch or new steady-state allocation is introduced.
+Legacy Qwen entrypoints and Toklet Q4 geometry stay constrained; Qwen3 Metal
+rejects explicitly until independently implemented and qualified.
+
+All 430 frozen stage comparisons pass. Nine targeted Metal-feature tests cover
+malformed configs/tensors, exact admission, over-reserved norm storage, zero
+allocation decode, cache offsets/reuse/reset/overflow and pending/edit/cancel
+recovery. Rust1.90 formatting, strict Clippy in both feature configurations,
+161 CPU/179 Metal-feature ordinary tests and five explicit existing Qwen/Llama
+GPU regressions pass. Protected release binaries, shaders, Swift and installed
+apps are unchanged. Astra reviews the completed source/evidence before commit.
+Real Qwen3 models, resident Metal, thinking/chat, quality/performance and phone
+qualification remain open in the active queue.
+
+### Run resident tiny Qwen3 on Metal — 24 October 2026
+
+The [resident task](../../mlx-qwen3-metal.md) composes existing Metal operators with
+independent hidden/query layouts and immutable per-head Q/K norm vectors shared
+across the respective head types. It reuses rotary scratch and submits one
+completed command per chunk. Reference attention is explicit; profiling admits
+the additional norm encoders. Source review caught and fixed profile capacity.
+No shader or numerical-policy change was needed.
+
+The Mac passes 1,170 stage snapshots/204,288 values, eight full distributions,
+sixteen exact selections, four profiled executions and exact session/diagnostic
+budget boundaries. Both Qwen3 output variants pass raw CLI/native bridge routing,
+stops, scoring, retained ownership and cancel/pending state. The three GPU tests
+also pass in release. Rust1.90 formatting, both strict Clippy configurations,
+161 CPU/179 Metal-feature passes and five existing Qwen/Llama GPU regressions
+pass. Legacy Half/Q4 release allocation gates pass unchanged.
+
+The extra legacy Half debug allocation check fails identically on the parent
+and current source (6,320/20steps); zero-allocation release checks pass. This
+baseline result and an initial incomplete baseline snapshot are retained, without
+claiming a traced root cause or weakening the assertion. Astra reviews the final
+code and evidence before commit. Protected binaries, Swift and installed apps
+are unchanged. Real Qwen3 models, thinking/chat, quality/performance, iPhone and
+general Hugging Face admission remain open.
+
+### Acquire and inspect the real Qwen3 candidate — 24 October 2026
+
+The [pinned eight-bit checkpoint](../../mlx-qwen3-checkpoint.md) contains ten files,
+649,377,414 bytes at revision `11de96878523501bcaa86104e3c186de07ff9068`. All 48
+bounded owned transfers pass immutable identities and exclusive publication.
+Data-only inspection validates 704 tensors/197 packed matrices/113 norm vectors,
+contiguous exact payload coverage and index equality. Unlike earlier selected
+checkpoints, all 507 floating tensors use BF16. The graph has independent
+hidden1024/query2048 widths and 56 per-head Q/K norm vectors of width128.
+
+Nine acquisition and five inspector portable methods pass. Astra's review
+required retaining all diagnostic streams when descriptor cleanup also fails,
+and authenticating the same weight descriptor consumed by the header reader;
+both have deterministic regressions. No repository code or template executes.
+Numerical sources, old receipts and protected CPU binaries stay unchanged; prior engine
+checks are inherited on identical numerical/Swift sources. Retain the acquired
+data for a separately frozen real numerical reference. Native real-model
+geometry, tokenizer/thinking/chat, device fit, quality/performance, Mac/iPhone
+trials and broader Hugging Face product admission remain open.
+
+### Freeze the independent real Qwen3 reference — 24 October 2026
+
+The [real-model CPU oracle](../../mlx-qwen3-real-oracle.md) reconstructs eight-bit
+packed weights with exact BF16 metadata bits, preserving an original FP32 tied
+output table separately from Half gathers, norms and activations. A separate
+Qwen3 graph composes existing primitives with independent query width and
+per-head Q/K normalization before RoPE. Its unequal-width portable graph matches
+the ordered independent implementation. Bounded owned stripes fix Astra's
+mapped-view failure-path finding; a malformed-reader regression retains the
+original error and proves cleanup.
+
+All 50 portable methods, actual export and external-SHA stdlib verification
+pass. Six cases, selected layers 0/1/27, four greedy and three scoring distributions
+freeze 385 arrays/41,115,648 bytes before any target change. Both arithmetic paths
+select `[1096,374,264,3491]` on the declared FP64 teacher history. Unchanged
+pre-target policy yields maximum stage allowance 2.0 and logits allowance
+0.07747364044189453. Logical reference admission 2,597,950,130 bytes and observed
+completed-process lifetime physical peak 866,552,040 bytes stay below 6 GiB.
+
+One initial portable run fails because an existing test assumes no real cache;
+the isolated test fixture fixes that assumption while preserving production
+collision rejection. Failed logs and original bytes remain retained. Twelve
+new methods, seven producer sources and 445 package files are bound. The one raw
+text tokenization witness does not qualify templates or thinking/chat. Numerical
+engine/Swift sources and protected binaries are unchanged. Native real Qwen3,
+quality/performance, app/device fit and wider architecture/discovery work remain
+open.
+
+### Qualify real Qwen3 Reference execution on Mac — 24 October 2026
+
+The [selected real-model task](../../mlx-qwen3-real-metal.md) widens exact Qwen3
+geometry admission while reusing the existing graph, kernels and BF16 affine
+support. Immutable packed weights/QK norms and tied ownership remain resident;
+sessions own KV and scratch. No shader, numerical-policy or default routing
+change is needed. Unqualified geometry and Online attention reject explicitly.
+
+On M1 Pro, all 912 exposed snapshots/14,276,352 values pass the unchanged
+reference gates. Four greedy and three scoring distributions pass, with eight
+exact full/token-only selections and maximum logit error 0.03388547897338867.
+A separate actual 512-capacity/chunk128 witness discards/resumes its pending
+input tail and matches a fresh full distribution exactly. This is not generation
+cancellation or an independent long-context numerical oracle. Exact session and
+diagnostic limit-minus-one checks pass on fresh sessions for both readbacks.
+Resident weights total 633,366,062 bytes; maximum short diagnostic and 512-state
+logical admissions are 747,182,964 and 853,205,778 bytes, without a process-peak
+or phone-fit claim.
+
+Rust 1.90 formatting, both strict all-target Clippy configurations, 162 CPU and
+181 Metal-feature passes, and all 18 optimized explicit GPU tests pass. The
+regressions include tiny Qwen3, Qwen/Llama, legacy Half/Q4 allocation checks,
+shared native bridge and CLI. Protected binaries, Swift and shaders are unchanged.
+Retain selected real Qwen3 Mac Reference execution. Quality/performance, actual
+generation cancellation, tokenizer/thinking/chat, app integration, iPhone and
+broader architecture/Hugging Face qualification remain open.
+
+### Verify real Qwen3 generation callback recovery — 24 October 2026
+
+The [tests-only follow-up](../../mlx-qwen3-real-generation.md) exercises the public
+generation API with the actual selected checkpoint. Both readbacks preserve
+sampled-versus-committed state after callback cancellation and output failure,
+resume exactly like uninterrupted same-recipe generation, hide stop IDs from
+callbacks and preserve evaluated output after invalid requests. Full-logit
+recovery distributions match exactly and pass the unchanged frozen gates;
+token-only requires an available correct selection and no full logits.
+
+The optimized GPU witness, formatting, both strict Clippy configurations,
+162 CPU and 181 Metal-feature tests pass. Astra tightened two optional-token
+comparisons to require a real selected ID; initial checks and intermediate bytes
+remain retained alongside final checks. Production sources and existing real
+GPU test bodies are unchanged, so prior numerical/session evidence is inherited.
+Retain callback cancellation and recovery for selected real Qwen3 on Mac.
+Prefill/mid-GPU and physical cancellation, quality/performance, app/thinking/chat,
+iPhone and wider architecture/Hugging Face work remain open.
+
+### Share local MLX compatibility reporting — 24 October 2026
+
+The [H1 foundation](../../mlx-compatibility.md) provides an engine-owned metadata report
+for implemented Qwen2, Qwen3, Llama and Mistral graphs. The same captured bounded
+configuration, tensor admission, scalar expansion estimate and exact Metal
+geometry rules drive inspection and loading. No second architecture parser or
+numerical-loop abstraction is added. Compatible metadata, load admission,
+backend availability and pending payload/device/session/text/qualification
+checks stay separate. Affine metadata dtype is explicit; packed words remain U32.
+
+Astra required private geometry construction after validation and an overflow
+regression; both are included. Offline family/budget/malformed/nonfinite probes
+and the real Qwen3 metadata witness verify report boundaries. Final captured
+checks pass: formatting, both strict Clippy configurations, 171 CPU tests,
+191 Metal-feature tests, 19 optimized GPU regressions and one real metadata
+probe. The task receipt binds raw evidence and prior changed source versions.
+Retain this shared foundation. CLI/native/app consumers, actual Metal resource
+planning and receipt-based qualification remain open, alongside general Hub
+downloads/Chat and the remaining graph inventory. No new architecture, app,
+quality, performance or phone claim follows from inspection.
+
+### Expose compatibility to the CLI and native callers — 24 October 2026
+
+The [H1 consumer follow-up](../../mlx-compatibility-consumers.md) adds an offline JSON
+inspection command and immutable, thread-owned C report handles. Dedicated
+versioned inspection options preserve the exact numerical budget. A bounded
+64 KiB writer serializes once; size queries, repeated copies, short buffers and
+source mutation preserve a stable report. JSON ownership has its own explicit
+logical allowance. Existing text queries reuse the unchanged shared copy helper.
+
+Astra requested explicit closed-pipe exit semantics and native/text regression
+checks; both are included. Formatting, both strict Clippy configurations, 178 CPU
+and 198 Metal-feature tests pass. A fresh static library links/runs the real C
+caller, all 23 exports match the header, the local text bridge passes, and actual
+real Qwen3 CLI metadata is correct. The initial environment-only C link failure
+and successful explicit-temporary-directory retry remain captured. Retain these
+consumers. Swift app integration, actual runtime memory planning, qualification
+receipts, general Hub/Chat and the remaining engine inventory stay open.
+
+### Integrate compatibility on the app worker — 24 October 2026
+
+The [Swift adapter](../../mlx-compatibility-swift.md) inspects MLX metadata on the
+existing inference thread before actual loading. It captures an immutable report,
+checks the exact request/schema and reason/admission/backend tuple, and releases
+native report ownership before numerical work. Actual payload/device/session
+loading and independent pinned text profiles remain authoritative. No numerical
+source or token/context limit changes. The extra application allowance is stated
+as a requirement, separately from numerical admission.
+
+Astra found contradictory-wire acceptance and a queued load→Suspend stale-summary
+race. Exact tuple checks and clearing on Suspend fix them. Independent mutations
+and dequeue-gated idle-state assertions before Close cover both regressions.
+The strict Swift wrapper, C boundary, portable checker and existing worker checks
+pass: 89 portable methods, strict default/Metal Swift wrappers, existing CPU/
+Half-Metal/MLX workers, C caller and strict iOS/simulator modules. Three real Mac
+Chat profiles also pass short cancellation/replay/context/owner regressions from
+immutable snapshots. The fresh native package builds/links on all three Apple
+targets. The
+initial old-system-Python failure and explicit-interpreter retry are retained.
+Retain this adapter; runtime planning, qualification receipts, general Hub/Chat
+and the remaining engine inventory stay open. Parallel mobile UI work owns its
+presentation changes and evidence separately.
+
+### Extend bounded Chat output to 256 tokens — 24 October 2026
+
+The [Chat output extension](../../chat-output-limit.md) widens codec/native/worker
+visible output to256 while retaining the 512-token total context, 64 KiB text
+bound, existing templates/stops and Swift raw/Expert128-token command limit.
+Output/timing storage is bounded and separate from numerical admission. The
+worker publishes the actual C emitted count and clears it for unstarted requests.
+
+Astra required full-prefix preservation checks rather than count-only witnesses.
+The real Qwen run consumes the independently frozen65-ID prompt and emits256,
+with321 history/320 committed/one pending. Cancellation at128/129, exact fresh
+replay and rejection without changing saved history all pass. Portable256/257
+decode/buffer tests, formatting, both strict Clippy configurations,180 CPU and
+200 Metal-feature tests pass. The explicit Swift/C/worker/platform checks pass;
+fresh Mac/iOS/simulator libraries retain the same23 exports. All three short
+profile regressions match the previous replies and flags exactly. Retain this
+bounded extension. UI options/persistence belong to the parallel UI task; phone
+qualification at256, larger context and wider engine/Hub scope remain open.
+
+## 24 October 2026 — mobile interface stability and presentation
+
+The UI task investigated model/search controls blocked by automatic full-file
+verification, the 64-token initial reply cap, and missing Expert help/code
+formatting. Background checks are now replaceable and cancellation joins them
+without publishing stale choices. Model loading is explicit; reopening a live
+model preserves native and UI history. Supported search matches are actionable.
+
+The parallel engine commit `0b8945b` supplies the bounded 256-token text bridge.
+Chat offers 32/64/128/256 with a 128-token initial default, preserved saved
+settings, visible limit stops and the existing 512-position context preflight.
+Expert keeps its raw 128-ID bound. Inline Markdown, fenced code, lexical
+highlighting/Copy, action descriptions, examples and readable stop states add
+presentation without changing tokenizer input or numerical kernels.
+
+Strict Swift 6/concurrency/platform checks, stale/cancelled verification/Open
+regressions and real SmolLM2 load/Send/idempotent Open/invalid-folder checks pass.
+Full Release iOS and simulator apps pass against the matching package; ordinary
+Rust formatting/Clippy/CPU checks also passed, with final engine checks recorded
+separately. Light/dark highlighted-text samples were inspected; ImageRenderer
+cannot verify native scroll/button surfaces. Live Device Hub inspection stalled,
+so full tap-through and physical-iPhone behavior remain unqualified. No latency,
+quality or memory-limit improvement is claimed. Retain the functional fixes.
+See the [interface report](../../mobile-interface-fixes.md) and
+[bound receipt](../../../benchmarks/results/2026-10-24-mobile-interface-v1.json).
+
+## 24 October 2026 — shared runtime Metal resource planning
+
+Hypothesis: one concrete layout/admission plan can serve both constructors and
+cold compatibility inspection without parallel formulas or changing numerical
+execution. The new Rust-only `metal::planning::inspect_mlx` shares the loader's
+MPS-padded floating/affine layouts and the session's exact KV/scratch/history/
+output/table totals. Constructors consume those plans directly. Every numerical
+buffer uses the same device/index limit helper as allocation. Source load,
+resident load and session admission remain overlapping, separately named totals.
+
+Before extraction, 42 M1 Pro actual allocation reports were frozen across six
+tiny artifacts, chunks1/3/32, tied/untied output, mixed storage, independent query
+width, both readbacks and qualified Qwen2 Online. New plans and actual owners
+match every report. Exact/minus-one budgets, offsets, per-buffer bounds and
+overflow checks pass. Real Qwen3 retains633,366,062 resident bytes; capacity32/
+chunk3 admissions are707,649,798 FullLogits and706,434,350 GreedyToken, matching
+actual owners. Its independent final-row numerical/diagnostic budget gate passes.
+
+Formatting, strict Clippy,180 CPU and203 Metal-feature tests pass; both iOS
+library targets compile. Sixteen explicit release GPU tests pass, including
+Half/Q4/MLX numerical/state and warmed-allocation regressions. Initial test-only
+Clippy comparisons were corrected without loosening policy. An accidental debug
+GPU run reached the Half zero-allocation assertion with4640 allocations and
+failed; its complete evidence is retained. The established release invocation
+passes that unchanged gate; allocation evidence is scoped to release.
+
+Retain the shared planner. Driver/pipeline setup still allocates, the64MiB
+allowance remains an estimate, and a fit flag reserves no memory or payload
+validity. No latency, quality, free-memory or physical-iPhone qualification is
+claimed. The runtime CLI/native/app consumer and qualification receipts remain
+open. See [resource planning](../../metal-resource-planning.md) and its
+[receipt](../../../benchmarks/results/2026-10-24-metal-resource-planning-v1.json).
+
+## 24 October 2026 — runtime planning CLI and native consumers
+
+The shared Metal plan is now available through explicit `toklet plan` and the
+additive ABI-v1 `toklet_mlx_plan_create`. The56-byte C options record selects all
+session geometry/modes and separate exact budgets, without bridge deduction.
+Version/size/reserved/mode/range validation precedes runtime initialization.
+Budget-fit failures return immutable reports; unavailable builds or unqualified
+modes reject. The existing metadata command/API keep their CPU-only behavior.
+Both report kinds share bounded JSON copying, owner/thread checks and release.
+
+Formatting, strict Clippy,184 CPU/205 Metal-feature tests pass (14/105 ordinary
+ignored). Explicit release checks compare20 native and4 CLI reports with the
+direct planner; fit=false, bad modes, wrong-thread calls, changed-source snapshots
+and broken pipes pass. A fresh native package builds all three Apple slices with
+24 symbols. New C callers link on all targets and run on Mac; strict Swift6
+imports/layouts pass on Mac/iOS/simulator. Existing C/Swift metadata callers and
+21 wire-mutation/three queued-cleanup checks pass. Real Qwen3 CLI totals exactly
+match the preceding resource receipt for both readbacks.
+
+Initial test-literal Clippy and CLI position-type compiler failures are retained;
+explicit byte-array/type corrections pass the unchanged policies. No numerical
+kernel, shared planner, schema of metadata reports or app load path changes.
+Retain these consumers. Runtime initialization still allocates driver/pipeline
+resources, fit flags reserve nothing, and loading must revalidate. No physical
+phone, task-quality or timing result follows. Swift/app integration and exact
+qualification receipts remain open. See [consumer contracts](../../metal-resource-consumers.md)
+and the [receipt](../../../benchmarks/results/2026-10-24-metal-resource-consumers-v1.json).
+
+## 24 October 2026 — native factory resource policy
+
+App preflight no longer needs to reconstruct the engine's attention choice:
+explicit runtime attention2 selects the native factory policy after graph and
+geometry admission. The actual factory and inspector share one exhaustive helper;
+Qwen2/non-MLX Online and selected Llama/Mistral/Qwen3 Reference behavior is
+unchanged. Explicit modes0/1 and runtime report schema keep their behavior.
+New graph enums require an explicit policy decision.
+
+The existing20,480-byte native model/session-owner allowance is now a shared
+Rust/header constant. Checked subtraction still rejects whole budgets at/below
+that value; allowance+1 yields one numerical byte. Runtime inspection takes exact
+numerical budgets, so callers can plan the actual factory budget without a
+second hidden deduction. This is logical accounting, not a memory reservation.
+
+Formatting, strict Clippy,185 CPU/207 Metal-feature tests pass (14/106 ignored).
+Five explicit release GPU tests pass: four-family plan/factory comparisons with
+frozen parent memory and exact/minus-one load/session admission, existing20
+explicit native reports,42 frozen plans/budget tests and4 CLI direct reports.
+The fresh three-slice package retains24 exports. C callers link all SDKs and run
+four families on Mac, verifying plan+allowance equals actual session admission.
+Existing Swift6/importer and metadata21-mutation/three-cleanup checks pass; both
+complete real Qwen3 CLI reports remain equal to the preceding receipt.
+
+Retain the shared policy and allowance. No kernel, numerical memory formula,
+text profile, qualification label or phone behavior changes. Swift worker runtime
+preflight and qualification-receipt evaluation remain open. See
+[native resource policy](../../native-resource-policy.md) and the
+[receipt](../../../benchmarks/results/2026-10-24-native-resource-policy-v1.json).
+
+## 24 October 2026 — Swift app runtime preflight
+
+The app worker now consumes the engine's bounded runtime plan before MLX
+numerical allocation. It selects native policy2 and subtracts the shared owner
+allowance once for inspection, while passing the original whole budget to the
+actual factory. The Swift adapter validates request/modes, checked memory sums
+and independent fit flags; it releases the C report on its creating thread.
+Consistent non-fitting reports remain visible and reject before numerical owners.
+
+New loads and all cleanup paths clear metadata/runtime summaries. A cold
+post-inspection check prevents a superseded load from publishing or allocating
+after queued cleanup; the actual uncancellable C load still revalidates source
+and device state. Two-summary logical application allowance is1,311,232 bytes,
+not a reservation or process-peak measurement. Ten native-check helper dependency
+lists and the app project include the new adapter.
+
+Strict Swift6 default/Metal checks pass25 wire mutations, budget boundaries,
+plan/factory admission, a runtime-only budget rejection, three queued cleanups
+and source mutation after inspection. Existing21-mutation, legacy CPU/Half/MLX
+and89 helper regressions pass. Complete real SmolLM2/Qwen/Mistral Chat JSON and
+the prior Qwen256-output/cancellation/replay result remain equal. Both SDK modules
+and full Release iOS/simulator/Mac app builds pass. The first test compile's
+mixed-integer array inference error is retained; an explicit UInt64 array fixes
+it without changing policy. Rust/shader/header bytes match the accepted native
+policy package and inherit its185 CPU/207 Metal-feature evidence; a fresh
+default archive independently checks unavailable-Metal behavior.
+
+Retain the preflight. No larger output/context, new model eligibility, numerical,
+quality, timing or physical-phone claim follows. Qualification-receipt evaluation
+and broader acquisition/chat remain open. See [the contract](../../swift-runtime-preflight.md)
+and [bound receipt](../../../benchmarks/results/2026-10-24-swift-runtime-preflight-v1.json).
+
+## 24 October2026 — single-reply128K plan and decoding witnesses
+
+The user clarified131,072 output tokens in one Chat/Expert reply, with prompt
+positions additional. The [engine plan](../../long-reply-engine-plan.md) now separates
+independent text fixtures, bounded streaming, native capabilities, a concrete
+long-context graph, integration and device qualification. Existing E1–E6/H1–H4
+requirements remain open. Current executable limits are unchanged.
+
+Before target streaming code,33 complete-prefix text cases and eight exact
+131,072-ID synthetic cases are frozen from three pinned original tokenizers.
+Compact decode-only fixtures preserve every checked result. Mistral's invalid
+fallback byte can rewrite an entire preceding ASCII byte run; split Unicode and
+literal replacement characters also require explicit state/terminal behavior.
+The independent Python producer imports no Toklet implementation. Export/verify
+reproduction and eight reference checks pass with all source/runtime identities
+recorded. Exploratory assumptions about0xFF availability and single-ID replacement
+characters were corrected before freezing, without changing expected decoder
+semantics. Retain the oracle; no numerical generation or128K app/device claim.
+See [the contract](../../chat-stream-oracle.md) and
+[receipt](../../../benchmarks/results/2026-10-24-chat-stream-oracle-v1.json).
+
+## 24 October2026 — physical model-switching fix
+
+The parallel mobile task committed8a5ecff after Astra review and checks. Models
+now offers direct Use model/Download and use actions with an explicit Active
+label. Unchanged snapshots no longer publish at every poll: a separate worker
+revision counter avoids retaining old snapshot arrays while preserving callback
+and cleanup updates. Presence-only inventory avoids automatic full-model hashing;
+Use still verifies every file. Replacement admission checks fresh available memory
+after old-owner release, with initial-load/download gates preserved. Mac Finder
+recovery remains reachable.
+
+Strict Swift6/controller/callback/revision, real Smol→Qwen→Smol post-release
+admission and both SDK/Release builds pass. Physical iiPhone 14 Pro checks repeat
+Smol↔Qwen with actual replies and no earlier60-second animation-idle wait, select
+256-token Chat replies, inspect highlighted code/visible Copy controls, run
+Expert47,47 and return to Chat. Copy visibility/enabled state was checked; no
+clipboard-content claim. Owner history bytes stayed unchanged. The checked app
+is installed with immutable native policy package2d7; later decoder Rust is not
+compiled into it. No broader model,128K, quality, throughput or process-memory
+claim follows. See [the mobile report](../../mobile-model-switching.md) and
+[receipt](../../../benchmarks/results/2026-10-24-mobile-model-switch-v1.json).
+
+## 24 October2026 — bounded Rust response decoding
+
+The [L2 decoder](../../chat-stream-decoder.md) is checked against frozen witnesses. It emits
+new bounded chunks, preserves ByteLevel UTF-8 and whole-token behavior, and holds
+Mistral fallback runs until exact text is stable. It never reconstructs a whole
+response prefix per token; token lookup still allocates temporary strings.
+Failures poison the decoder and preserve counters for successfully returned text.
+Current native/app generation and input limits are unchanged.
+
+At the requested stop, formatting/strict Clippy,191 CPU/213 Metal-feature
+tests, release checks against all233,585 IDs of the three real tokenizers and the
+iOS cross-check passed. The simulator cross-check was stopped safely; raw results
+and cleanup records are preserved. After explicit testing resumption, the
+unchanged source passed that check in a fresh capture, with all original
+source/input/log identities authenticated before inheritance. Astra reviews the
+code and evidence before commit. See the
+[receipt](../../../benchmarks/results/2026-10-24-chat-stream-decoder-v1.json).
+This does not implement128K numerical/app support. Native event ownership and
+integration remain separate tasks. The architecture/Hugging Face plan stays open.
+
+## 24 October2026 — independent recurrent-attention witnesses
+
+The first gated-delta mathematical reference is frozen before its native target:
+FP32 inputs, independent FP64 NumPy normalization/gates/recurrence/readout,
+explicit grouped-head mapping and immutable initial state. Five tiny geometries
+include zero/epsilon-dominated normalization, saturated gates and 128-wide state.
+The bounded stdlib format reader requires external manifest/binary identities.
+
+Twenty-three portable and four orchestration tests pass. Fresh export and
+verification pass; pinned upstream CPU and GPU each pass all 36 comparisons at
+the unchanged source policy. Raw prefix/chunk states, outputs, runtime/source
+identities and process ownership are retained. The initial sandbox Metal import
+failure and earlier draft-source captures remain separate from the final pass.
+Astra reviews the source/evidence before commit. See
+[the contract](../../gated-delta-oracle-preparation.md) and
+[receipt](../../../benchmarks/results/2026-10-24-gated-delta-oracle-v1.json).
+
+Source review corrected overflow, publication/import ownership and failure
+retention defects before acceptance. Cooperative interruption has a bounded
+parent cleanup deadline; hard-kill loss remains explicit. Masks/vector gates and
+the upstream masked-readout discrepancy stay outside this first oracle. No native
+recurrence, Qwen3.5 graph, real checkpoint, 128K generation, quality, performance
+or mobile qualification is claimed. E1–E6/H1–H4 remain open.
+
+## 24 October2026 — checked scalar recurrent update
+
+The first native gated-delta step consumes normalized Q/K and scalar gates,
+preserves contiguous grouped-head mapping and updates a separate caller-owned
+candidate matrix with FP32 reductions. Inputs and the previous state are checked
+before output writes. Arithmetic failure leaves the previous state intact;
+candidate/output must be discarded. No numerical allocation or session commit
+occurs in this standalone operator.
+
+The literal accepted reference receipt is authenticated before its fixture
+hashes. Six offline regressions cover all frozen step states/outputs, grouping,
+every nonfinite input class, invalid gates, malformed/overflow dimensions,
+pre-write preservation and correction/candidate/readout failure/replay. The first
+check run was stopped to apply Astra's fixture-binding correction; raw snapshots
+and interruption are retained. Final corrected checks pass formatting, strict
+default/Metal Clippy, 197 CPU/219 Metal-feature tests and both iOS cross-checks.
+See [the contract](../../gated-delta-scalar.md) and
+[receipt](../../../benchmarks/results/2026-10-24-gated-delta-scalar-v1.json).
+
+This is an operator foundation, not Qwen3.5 or long-context generation. Raw Q/K
+normalization, gate construction, convolution, hybrid/session commit, GPU state,
+model admission, quality, performance and app/device qualification remain open.
+
+## 24 October2026 — recurrent raw Q/K normalization
+
+The separate raw normalizer uses sum-of-squares epsilon and folds one readout
+scale into Q. FP64 intermediate squares/sums avoid FP32 overflow, with one FP32
+output rounding. Checked dimensions, lengths, finite inputs and epsilon precede
+all writes; the operator allocates no buffers and changes no session state.
+
+Three regressions authenticate the frozen receipt and compare raw normalization
+and composed recurrent states/output. Hand cases distinguish sum/mean epsilon,
+one Q scale, zero/epsilon-dominated heads and maximum finite FP32 input. Astra
+strengthened the analytic epsilon witness so an erroneous zero cannot pass the
+unchanged tolerance. Invalid inputs preserve both outputs. Formatting, strict
+default/Metal Clippy, 200 CPU/222 Metal-feature tests and both iOS cross-checks pass.
+See [the contract](../../gated-delta-normalization.md) and
+[receipt](../../../benchmarks/results/2026-10-24-gated-delta-normalization-v1.json).
+
+The previous recurrent update body is unchanged. Gate construction, convolution,
+hybrid model/session execution, GPU state and real-model/long-context/device
+qualification remain open. No app capabilities or numerical capacity were raised.
+
+## 24 October2026 — scalar recurrent gate construction
+
+The native gate constructor uses stable FP64 softplus/sigmoid and exponential
+decay with one FP32 output rounding. Shape/finiteness admission precedes writes;
+nonfinite intermediate rates reject and partial outputs must be discarded. No
+storage or numerical state is owned by the operator.
+
+Three new regressions cover frozen gates and the complete raw
+normalization→gates→recurrence state/output path, hand values/bias/saturation,
+tiny nonzero beta, invalid input classes and intermediate overflow. The accepted
+reference and numerical policy are unchanged. Formatting, strict default/Metal
+Clippy, 203 CPU/225 Metal-feature tests and both iOS cross-checks pass. Earlier
+normalization and update bodies are byte-identical. See
+[the contract](../../gated-delta-gates.md) and
+[receipt](../../../benchmarks/results/2026-10-24-gated-delta-gates-v1.json).
+
+This completes a scalar operator chain, not the hybrid graph. Convolution, gated
+output normalization, config/weight mapping, model/session state commit, GPU
+execution and real-model/long-context/app qualification remain open. Current
+native/app limits and eligibility are unchanged.
+
+## 24 October2026 — mobile monitoring and dialog controls
+
+Commit `abe661e` adds measured process memory/allowance, response timing and
+throughput, device-fit recommendations, a local repeated benchmark and confirmed
+single/all dialog deletion. Fit recommendations describe supported capacity,
+not model quality. Failed dialog saves restore the previous workspace and expose
+recovery; injected full-disk failures exercise retained history. Simulator checks
+cover cancellation and confirmed deletion, navigation and visible metrics.
+
+Astra accepted the exact final source and
+[receipt](../../../benchmarks/results/2026-10-24-mobile-dashboard-v1.json), including
+strict Swift checks, Release iOS/Simulator builds, a passing Simulator UI test and
+separate real Mac benchmark/controller checks. This does not qualify a physical
+iPhone benchmark or new model/128K capability. The installed phone remains on its
+previous app source/native package until a separately admitted update is tested.
+
+## 24 October2026 — independent causal convolution witnesses
+
+The new mathematical convolution/SiLU reference fixes oldest-to-current tap
+order, per-channel weights and oldest-to-newest raw-input history. It uses FP64
+NumPy math over FP32 inputs with no Toklet arithmetic. Exact bounded artifact
+admission and a separately authenticated runtime precede numerical comparison.
+Selected pinned upstream assignments invoke actual MLX Conv1d/SiLU with the
+explicit converted weight layout; no whole model execution is implied.
+
+Three orchestration, nine mathematical/format/source-selection and three runtime
+admission tests pass. CPU and GPU each pass 154 comparisons and retain 154 raw
+arrays for full, prefix and chunked calls under the unchanged numerical policy.
+Astra reviews source/evidence before commit. See
+[the contract](../../causal-conv-reference.md) and
+[receipt](../../../benchmarks/results/2026-10-24-causal-conv-reference-v1.json).
+Empty input is a mathematical no-op; kernel-one source cache behavior, masks and
+length-dependent caches remain excluded. Native convolution, gated output norm,
+hybrid graph/session/Metal execution and real-model/app/device/long-context
+qualification remain open. No capability or execution limit was raised.
+
+## 24 October2026 — checked scalar causal convolution
+
+The scalar step consumes one raw token with oldest-to-current per-channel taps,
+accumulates FP64 products/sums and rounds once to FP32. It validates geometry,
+lengths and finite inputs before writes. Previous history stays immutable; only
+a fully successful output prepares the separate candidate by shifting history
+and appending raw input. No buffers or session state are allocated/owned.
+
+Four regressions authenticate the frozen reference receipt and check every
+convolution/SiLU output and exact copied history, hand tap/channel order,
+kernel-one/empty policy, intermediate cancellation, all invalid input classes,
+output overflow and replay. The previous recurrent kernels remain unchanged. Formatting, strict default/Metal
+Clippy, 207 CPU/229 Metal-feature tests and both iOS cross-checks pass.
+Astra reviews code and evidence before commit. See
+[the contract](../../causal-conv-scalar.md) and
+[receipt](../../../benchmarks/results/2026-10-24-causal-conv-scalar-v1.json).
+
+This is an operator foundation. Gated output normalization, hybrid model/session
+state commit, Metal execution and real-model/chat/long-context/device quality
+and performance gates remain open. No model eligibility or execution limit was
+raised.
+
+## 24 October2026 — physical mobile dashboard and Gemma 4 rejection checks
+
+Commit `e4dcefb` records four passing physical iPhone 14 Pro UI tests on the
+reviewed `abe661e` app and unchanged native `2d7d35b0` package. Monitoring,
+device-fit explanations, supported-model switching/generation, code Copy,
+256-token notice, Expert fixture, dialog deletion and public Gemma 4 unavailable
+labels pass. The owner's history is preserved and normal app launch succeeds.
+
+The SmolLM2 local benchmark completes one warm-up and three 64-token trials;
+rounded UI samples show 17.8–18.0 decode tokens/s and 361–364 ms to first token.
+These session observations do not establish controlled performance, quality or
+long-context capability. Config-only official/MLX Gemma 4 probes safely reject
+unknown architecture without creating a model handle. No Gemma weights,
+generation or memory-fit claim follows. The official candidate's 131072 context
+positions also do not establish 131072 output tokens plus a prompt.
+
+Astra accepted the exact source and
+[receipt](../../../benchmarks/results/2026-10-24-mobile-gemma4-phone-v1.json). See
+[device coverage and limitations](../../mobile-gemma4-testing.md). The initial
+certificate-trust failure and fresh successful run remain distinct. The full
+engine/Hugging Face and long-reply plans stay open.
+
+## 24 October2026 — gated output-normalization witness and active priorities
+
+A separate independent FP64 reference fixes mean RMS normalization, direct scale
+and subsequent stable SiLU gating over FP32 inputs. Five bounded cases include
+epsilon-dominated rows, asymmetric heads, saturation and tiny negative gates.
+The exact JSON reader rejects Boolean/invalid geometry and non-FP32 inputs.
+Three ownership, eight math/format/failure and three runtime-admission tests pass;
+pinned upstream CPU/GPU each pass all12 comparisons with immediate raw retention.
+See [the contract](../../gated-norm-reference.md) and
+[receipt](../../../benchmarks/results/2026-10-24-gated-norm-reference-v1.json).
+No native composition, graph, quality, performance or phone qualification follows.
+
+The human now prioritizes [Gemma4 and131072-token replies](../../gemma4-implementation-plan.md).
+After finishing this small witness, the next task is pinned source/config/tensor/
+tokenizer mapping and real memory/context feasibility. Gemma4 E2B's declared
+131072 total positions do not establish131072 output tokens plus a prompt.
+The installed passing phone baseline remains preserved until a committed,
+qualified native/app candidate and full handoff evidence exist. The rest of the
+architecture/Hugging Face plan stays open.
+
+## 24 October2026 — Gemma4 E2B source and artifact mapping
+
+The first pinned candidate inspection maps all540 logical text tensors to1096
+physical tensors in the actual2511-entry header/index. It checks BF16/U32 shapes,
+per-matrix affine metadata, spans and component coverage without downloading any
+tensor payload. Nine final bounded owned HTTPS commands capture metadata and
+header ranges; the initial redirect/framing/cancelled/order-correction attempts
+remain separately retained. No full-shard integrity or native execution is claimed.
+
+The text weights occupy2603981382 stored bytes, including1321205760 bytes for
+per-layer embeddings. Proposed FP16 shared/local KV at131072 total positions
+adds811597824 bytes; their sum is already about3.181GiB before other owners.
+This is a lower-bound derivation, not phone admission. The tokenizer's decoder
+has no leading-space Strip, and official/converted/nested stops differ; template
+and text execution need independent fixtures. Exact graph order, shared-cache
+producers, GELU, proportional rotary and per-layer paths are mapped in
+[the inspection](../../gemma4-e2b-inspection.md) and
+[receipt](../../../benchmarks/results/2026-10-24-gemma4-inspection-v1.json).
+
+G1 mapping is complete; G2 starts with independent tanh-GELU/GeGLU witnesses.
+Real weights, graph/session/Metal/Chat, quality and device fit remain open. The
+unchanged131072 total-context configuration cannot meet131072 output tokens plus
+a prompt, so no capability was raised and no new phone package was supplied.
+
+## 24 October2026 — independent Gemma4 GELU/GeGLU witness
+
+The first G2 witness freezes FP64 tanh-GELU and gated-product expectations over
+FP32 inputs. Hand tests distinguish erf-GELU, SiLU and reversed gate order;
+additional tests cover chunk independence, symmetry, tails/tiny values, invalid
+inputs, exact bounded format and preservation of a completed observation when a
+later call fails. Three ownership, seven portable and three runtime-admission
+methods pass. CPU/GPU each pass eight arrays/360 values under unchanged policy.
+
+Astra corrected owner filename references before the first capture; the
+unexecuted proposal is retained. Exact source/runtime, raw arrays and independent
+replay are bound by [the receipt](../../../benchmarks/results/2026-10-24-gemma-gelu-reference-v1.json)
+and [contract](../../gemma-gelu-reference.md). No native function, whole graph, quality,
+performance or phone fit follows. The scalar activation target is next; remaining
+Gemma4 and131072-output requirements stay open and current caps are unchanged.
+
+## 24 October2026 — native scalar tanh-GELU and GeGLU
+
+Two allocation-free CPU functions add the activation needed by Gemma4. FP64
+tanh-GELU rounds to FP32; GeGLU then multiplies by FP32 up, preserving separate
+activation/product rounding. All admission checks precede writes. A gated
+product overflow rejects with partial output to discard; immutable inputs allow
+replay. Existing kernels, graphs and capabilities remain unchanged.
+
+Four tests authenticate the independent receipt before fixture parsing, compare
+all nonempty frozen arrays, enforce exact composed rounding, distinguish tanh
+from erf/SiLU, exercise tiny/extreme values and invalid inputs, and check
+overflow/replay. Astra's review strengthened wrong-length output preservation
+assertions before the checked source freeze. Formatting, strict default/Metal
+Clippy, 211 CPU/233 Metal-feature tests and both iOS cross-checks pass. See
+[the contract](../../gemma-gelu-scalar.md) and
+[receipt](../../../benchmarks/results/2026-10-24-gemma-gelu-scalar-v1.json).
+
+This is a correctness operator, with no performance or full-model claim. G2
+continues with proportional rotary; remaining Gemma4 graph/session/Metal,
+real-model/Chat/device and131072-output gates stay open. The installed phone
+baseline and all output/context/byte caps remain unchanged.
+
+## 24 October2026 — Gemma4 rotary precision gap made explicit
+
+A bounded source/operator diagnostic on this M1 Pro captures nine positions on
+separate cold-admitted MLX CPU/GPU processes before implementing proportional
+rotary. It verifies the width512 denominator and pair distance256 for128 rotated
+dimensions. All observations complete; independent stdlib replay authenticates
+every raw array and all eighteen numerical comparisons. At sampled positions
+0,1,7,31,127 both backends meet the existing FP64 policy. Both fail at511,1023,
+8191,131071; the largest error/policy ratios at131071 are642.26 CPU/314.82 GPU.
+
+Saved-frequency reconstructions help isolate FP32 frequency/phase effects but
+cannot admit an independent oracle; GPU cause remains incompletely explained.
+Astra strengthened ownership/capture/collision handling before execution.
+See [the full diagnostic](../../gemma-rotary-precision.md) and
+[receipt](../../../benchmarks/results/2026-10-24-gemma-rotary-precision-v1.json).
+The tolerance is unchanged, failing comparisons stay recorded, and no native
+rotary, context/model/phone/performance qualification is claimed. G2 continues
+with an explicit independent frequency/phase contract and broader witnesses.
+
+## 24 October2026 — independent proportional rotary math frozen
+
+A pure standard-library producer constructs frequencies/angles with Decimal80
+from exact FP32 inputs and uses FP64 trig/pair output. Eight cases freeze empty,
+zero-position, half-pair, full/zero rotation, non-unit factor, actual D512/R128
+geometry and positions ending at131071. Six offline methods pass hand literals,
+signed-zero copying, chunk offsets, multiple heads, norm preservation and invalid
+geometry/position/precision/external-format checks. Independent90-digit replay
+uses logarithm/exponential construction to validate the saved arrays.
+
+See [the mathematical contract](../../gemma-rotary-math.md) and
+[receipt](../../../benchmarks/results/2026-10-24-gemma-rotary-math-v1.json).
+This is frozen before its scalar target; the previous eight upstream numerical
+failures remain explicit and unwaived. No graph, Metal execution, quality,
+performance, model/context/phone qualification or capability change follows.
+
+## 24 October2026 — scalar proportional rotary correctness reference
+
+The standalone CPU operation fixes full-width exponents and half-head pairing
+for proportional rotation. It uses FP64 inverse frequencies/absolute angles and
+trig, then explicit FP32 sine/cosine and rotation arithmetic, while inactive
+coordinates copy bit for bit. Admission validates geometry, position and size
+overflow, lengths and all finite inputs before writing. Arithmetic overflow
+leaves discardable output and immutable inputs for replay. No buffers are
+allocated and existing rotary remains unchanged.
+
+Six tests authenticate the prior mathematical receipt, compare every nonempty
+fixture output under unchanged policy, check hand values/signed-zero copies,
+full-rotation equivalence, multiple heads/exact chunks, invalid admission,
+overflow/replay and finite-parameter/position boundaries. Formatting, strict
+default/Metal Clippy, 217 CPU/239 Metal-feature tests and both iOS cross-checks
+pass. Astra reviews exact source and evidence before commit. See
+[the contract](../../gemma-rotary-scalar.md) and
+[receipt](../../../benchmarks/results/2026-10-24-gemma-rotary-scalar-v1.json).
+
+The eight upstream long-position disagreements remain unwaived. Extreme
+parameter/boundary tests establish finiteness/admission, not extra numerical or
+model quality. No graph/session/Metal integration, context or output cap, phone
+package, real-model/performance qualification follows. G2 continues with
+local/sliding attention and shared-KV ownership witnesses.
+
+## 24 October2026 — causal/sliding GQA witness and512-window boundary
+
+Independent FP64 scores, stable masked softmax and context fix the causal/local
+window predicate, contiguous grouped-head mapping and explicit Gemma4 scale1.
+Eleven cases freeze77 arrays and14640 output scalars, including actual head
+geometry and a separate small-width512-window boundary. Seven portable,
+three ownership and three runtime-admission methods pass. Pinned upstream CPU
+and GPU each match20 raw observations; masks are exact and maximum context
+error/policy ratios are about0.00810/0.00487 under unchanged tolerance.
+
+Astra reviewed the added512 boundary after the initial small-window capture;
+the preliminary result remains separate from the complete fresh capture.
+Independent replay validates all saved arrays and comparisons. See
+[the contract](../../gemma-local-attention-reference.md) and
+[receipt](../../../benchmarks/results/2026-10-24-gemma-local-attention-reference-v1.json).
+The numerical engine remains unchanged. Scalar local attention, physical
+ring/shared-KV ownership and failure recovery, whole graph, rotary parity,
+quality/performance and app/device/capability gates remain open.
+
+## 24 October2026 — scalar causal/sliding-window GQA
+
+The new allocation-free CPU operation consumes token-major queries and
+head-major KV capacity with an explicit valid prefix and logical origins. It
+preserves contiguous head grouping, explicit scale, causal/window boundaries
+and exact masked zero probabilities. Unused capacity is never read; callers
+still provide initialized Rust slices. All geometry, length, position, finite
+input and fully masked query checks precede output writes.
+
+FP64 dot/scaling stores FP32 scores, stable FP64 softmax stores FP32 probabilities,
+and context accumulates those probabilities times V in FP64 before FP32 output.
+All valid-key scores, including masked ones, remain diagnostic and may reject
+overflow. Failed arithmetic leaves discardable outputs and unchanged inputs for
+replay. The initial formatting error in test literals was fixed before capture
+and its proposal retained. Six tests compare every frozen nonempty array plus
+capacity padding, mask zeros, invalid/prewrite paths, overflow/replay and exact
+multi-head chunks. Formatting, strict default/Metal Clippy, 223 CPU/245
+Metal-feature tests and both iOS cross-checks pass. Astra reviews final evidence
+before commit; see [the contract](../../window-attention-scalar.md) and
+[receipt](../../../benchmarks/results/2026-10-24-window-attention-scalar-v1.json).
+
+The numerical core owns no cache/session and the existing engine paths remain
+unchanged. Physical ring mapping, shared-KV ownership/commit/rollback, other G2
+mechanisms, full graph/Metal/quality and device/capability gates remain open.
+No native ABI, output/context/byte limit or phone package changes.
+
+## 24 October2026 — independent KV staging and ring-state witness
+
+The required attention union, each query's visible keys and the final committed
+ring now have separate frozen expectations. Seven cases cover thirty updates
+through single-token and multi-token wraps, window1, global cache and the512
+boundary. At most two old physical spans plus immutable new tokens preserve
+keys needed by early chunk queries. The314 arrays contain23306 values; logical
+FP64 context is independent of the source's physical ring phase.
+
+Seven portable, three owned-process and three runtime-admission methods pass.
+Pinned upstream CPU/GPU each retain101 raw arrays and pass30 context comparisons;
+K/V and masks are exact, with maximum context error/policy ratios about0.00193
+and0.00230. Independent replay verifies the saved state and observations. The
+initial wrong-interpreter preflight is retained separately with no child run.
+Astra reviews exact final code/evidence before commit. See
+[the contract](../../gemma-kv-reference.md) and
+[receipt](../../../benchmarks/results/2026-10-24-gemma-kv-reference-v1.json).
+
+Abort/retry remains a required native policy, not tested native/upstream
+rollback. Shared producer reuse, native cache/session and ring-aware attention,
+full graph/Metal, rotary parity, quality/performance and device/capability gates
+remain open. Existing numerical engine, native ABI, app limits and phone package
+are unchanged.
+
+## 24 October2026 — native KV owner with checked batch commit/discard
+
+A standalone FP32 cache now owns fixed global or local-ring K/V buffers and
+exposes borrowed old spans plus immutable new-token staging. It preserves old
+keys needed by early chunk queries until commit, without copying the whole
+cache. Private frames bind owner identity, generation and offset; constructor
+identity reservation adds no decode-step atomics. Actual capacities and owner
+metadata are reported separately from borrowed staging and numerical scratch.
+
+Every batch frame is validated before writes; commit copies only new retained
+rows and advances positions once. Six tests cover all thirty frozen updates,
+exact spans/rings, discard/retry, a failed last frame preserving all owners,
+missing/reordered/duplicate/stale/foreign frames, signed zeros, oversized local
+chunks, global limits, invalid arithmetic and moved owners. Formatting, strict
+default/Metal Clippy,229 CPU/251 Metal-feature tests and both iOS cross-checks
+pass. Astra reviews final code and evidence before commit; see
+[the contract](../../window-cache-scalar.md) and
+[receipt](../../../benchmarks/results/2026-10-24-window-cache-scalar-v1.json).
+
+This establishes cache batch commit/discard, not whole-model rollback or shared
+producer/consumer integration. Ring-aware attention, resident Metal and Gemma
+graph/session/weights/quality/device qualification remain open. No ABI, app
+limits, protected binaries or installed phone package change.
+
+## 24 October2026 — shared-KV routing and current-step identity witness
+
+An independent exact routing fixture now records the35-layer Gemma4 producer
+map: first15 own KV, then local13/global14 supply the last20 consumers. Selected
+unchanged Attention, DecoderLayer and text-model control-flow bodies execute
+with strict shape/identity stand-ins. Consumer cache arguments are None, each
+receives the current-step producer's exact KV objects and offset, and only
+producers append. Four cases/fifteen repeated calls observe226 layer forwards,
+108 appends and118 consumers, including the512-window transition.
+
+Seven portable and four owned-process methods pass; four owned commands and
+independent replay bind all routing observations. Source constructors/numerical
+operators are explicitly replaced, with PLE/MoE/learned scalars disabled. Astra
+reviews final exact source/evidence before commit. See
+[the contract](../../gemma-shared-kv-reference.md) and
+[receipt](../../../benchmarks/results/2026-10-24-gemma-shared-kv-reference-v1.json).
+
+Native shared-frame/stale-input checks, numerical/full-layer/Gemma graph,
+rotary parity, whole-model rollback, quality/performance/memory/device gates
+remain open. Engine/shader sources, ABI, app limits, protected binaries and
+installed phone package remain unchanged.
+
+## 24 October2026 — task-based mobile model ranking and search controls
+
+The reviewed mobile commit `f739fabe` adds Balanced/Coding/Fast ranking and
+readable score explanations after Toklet compatibility/memory filtering. Scores
+are estimated preferences, not measured quality/speed or a grant of support.
+Fresh load admission remains authoritative. A Search button dismisses the
+keyboard so results remain usable; disclosure labels and picker waits were
+corrected after two retained failed phone suites.
+
+Eight local checks, signed build/signatures and the final five physical iPhone14
+Pro methods pass, including Fast→Smol, Coding→Qwen, real Qwen reply, unsupported
+Gemma search, model switching,256 selection and Expert controls. Dialog data
+remains byte-exact; failed suites include verified rollback and normal launch.
+Astra accepted the exact nine-file packet before commit. See
+[the mobile record](../../mobile-model-ranking.md) and
+[receipt](../../../benchmarks/results/2026-10-24-mobile-model-ranking-v1.json).
+Native `2d7d35b0` and Chat/Expert/context limits remain unchanged; this is selected
+functional evidence, not Gemma4 or131072-output qualification.
+
+## 24 October2026 — native shared-KV routing and ordered publication
+
+An immutable concrete routing plan creates only producer caches and resolves
+shared layers to same-kind owners with matching geometry. Consumer views borrow
+the actual producer spans/new input; no private cache, copy or append occurs.
+Every committed owner's mode/window/capacity/position/geometry and offset/
+generation is checked, including unpublished owners. Ordered prefix publication
+allows earlier attention before later producers exist; future proposed lengths
+are checked when published. Final commit requires the complete valid batch
+before writes. Model/session/token-history provenance stays caller-owned.
+
+Eight methods compare226 frozen layer views/108 producer updates and exercise
+geometry, last-owner state/token mismatch, missing/reordered/duplicate/foreign/
+stale publication, sequential availability, partial commit, discard/retry,
+moved identity and exact memory accounting without duplicated owner metadata.
+Formatting, strict default/Metal Clippy,237 CPU/259 Metal-feature tests and both
+iOS cross-checks pass. Astra reviews final source/evidence before commit. See
+[the contract](../../shared-kv-scalar.md) and
+[receipt](../../../benchmarks/results/2026-10-24-shared-kv-scalar-v1.json).
+
+Ring-aware numerical attention, full Gemma/session/Metal, rotary parity,
+quality/performance/device fit and capability gates remain open. No ABI, app
+limits, protected binaries or installed package changes follow from this task.
+
+## 24 October2026 — scalar attention directly over borrowed ring spans
+
+A concrete three-segment CPU operation reads two old ring spans and the new
+chunk directly, with explicit per-segment head strides and logical origins.
+It preserves the contiguous scalar's reduction order and precision, avoiding
+whole-KV linearization, allocation or dynamic dispatch. Cache views derive the
+physical slices; immutable borrowing prevents concurrent commit.
+
+Eight methods compare frozen scores/probabilities/original FP64 contexts and
+bitwise contiguous outputs, then run all thirty KV-witness updates through
+actual ring views with Hkv2 wrap, pointer identity and512-window coverage.
+Empty spans, NaN/negative-zero padding, late invalid/overflowing metadata before
+writes, fully masked later queries, arithmetic failure/replay and no-commit
+recovery are checked. Formatting, strict default/Metal Clippy,245 CPU/267
+Metal-feature tests and both iOS cross-checks pass. Astra reviews final evidence
+before commit; see [the contract](../../span-attention-scalar.md) and
+[receipt](../../../benchmarks/results/2026-10-24-span-attention-scalar-v1.json).
+
+Actual head widths and full window transitions are separate bounded cases;
+maximum-usize arithmetic checks do not grant model/context support. Full Gemma
+layer/session/weights/Metal/rotary/quality/performance/device gates remain open.
+No ABI, app limit, protected binary or installed phone package changes.
+
+## 24 October2026 — per-layer token lookup and projection witness
+
+Independent ideal FP64 and staged FP32 contracts now freeze raw main embedding
+scale, lookup scale, projection/reshape/per-P learned RMS, addition and final
+combination scale. Rounding boundaries stay explicit; a portable test detects
+illegal algebraic scale cancellation. Hand literals distinguish the norm axis,
+direct unequal learned weights and lookup sqrt(P). Seven cases include batches,
+projected-only helper, empty policy and separately bounded H1536/L35-P256 shapes.
+
+The173 arrays contain253823 values. Seven portable, three ownership and three
+runtime-admission methods and all six owned commands pass. Separately evaluated
+real FP32 operator probes and unchanged source helper outputs retain71 raw
+arrays per CPU/GPU, each passing142 comparisons against both contracts. Maximum
+error/policy ratios are about0.02092/0.02354 CPU and0.04990/0.05188 GPU. Independent
+scalar replay verifies all arrays; staged FP32 matches exactly. Astra reviews
+final exact source/evidence before commit. See
+[the contract](../../gemma-per-layer-reference.md) and
+[receipt](../../../benchmarks/results/2026-10-24-gemma-per-layer-reference-v1.json).
+
+Probes are separate executions, not helper-internal/fusion qualification.
+Harness ID rejection, projected-only helper and empty policy have explicit
+limits; BF16/quantized checkpoint, nearest-token fallback, native composition,
+full Gemma/session/rotary/quality/performance/device gates remain open. No ABI,
+capability, app limit, protected binary or installed package changes.
+
+## 24 October2026 — one-tap live Hugging Face discovery
+
+The reviewed mobile commit `17fbc4f` gives Find best model one44pt tap target
+and bounded live public Hugging Face discovery, while pinned Chat compatibility
+and fresh memory admission remain authoritative. Inventory refresh/preference
+changes no longer cancel or restart discovery. Four bounded metadata tasks
+retain partial network errors but drain every child and preserve fatal close/
+removal cleanup causes through cancellation. Focused regressions cover those
+paths; an interrupted phone attempt is retained without passing credit.
+
+Eight local checks, transport checks, real68-model discovery, signed build and
+strict signatures pass. The final six physical iiPhone 14 Pro tests pass, including
+ordinary/edge/repeated taps, live links/results, resident Qwen and keyboard/draft
+preservation plus prior controls. Owner chat bytes remain exact; the updated
+app normally launches and a verified rollback is saved. Astra accepted the
+exact nine-file packet before commit. See [the mobile record](../../mobile-model-ranking.md)
+and [receipt](../../../benchmarks/results/2026-10-24-mobile-hf-discovery-v1.json).
+This grants no new engine eligibility, speed/quality or131072-output support.
+
+## 24 October2026 — native per-layer input composition
+
+Two plain CPU functions now prepare scaled main embeddings and finish raw
+backend projections with per-P direct RMS and optional selected lookup rows.
+Projection/table ownership stays outside the mechanism, allowing later
+quantized backends without an expanded FP32 model copy. All FP32 scale/add
+boundaries stay explicit; optional lookup dispatch is outside element loops.
+Caller scratch/output are reused, with complete prewrite admission and
+discard/replay semantics for arithmetic overflow.
+
+Six methods compare full scalar paths/stages against both frozen contracts,
+exact scaled-main bits/selected-row order, hand normalization, late validation,
+intermediate overflow, replay/immutable inputs, exact chunks, buffer reuse and
+empty/signed-zero/size boundaries. Formatting, strict default/Metal Clippy,251
+CPU/273 Metal-feature tests and both iOS cross-checks pass. Astra reviews final
+source/evidence before commit; see [the contract](../../per-layer-scalar.md) and
+[receipt](../../../benchmarks/results/2026-10-24-per-layer-scalar-v1.json).
+
+Quantized/BF16 execution, per-layer gate/residual/scalar order, full Gemma/session/
+Metal/rotary/quality/performance/device fit remain open. No ABI, app limit,
+protected binary or installed package changes follow from this numerical task.
+
+## 24 October2026 — independent dense decoder order
+
+The new Gemma witness freezes exact direct-RMS/residual/FFN/PLE/scalar order
+before native composition. Authenticated unchanged DecoderLayer and MLP calls
+retain the compiled GeGLU helper and use real FP32 MLX modules. An explicit
+external attention result isolates this task; normalized input and all incoming/
+returned state identities are checked. Every PLE guard term, disabled modules,
+small distinct FFN widths and synthetic scalar absence are separately covered.
+
+Twelve cases contain540 arrays and75,720 values. An independent stdlib replay
+verifies all values, with exact staged FP32 agreement. Eight portable, three
+owner and three runtime-admission methods and all six owned commands pass.
+Each CPU/GPU source comparison retains201 raw arrays and passes402 ideal/staged
+comparisons. Maximum error/policy ratios are0.04864/0.05881 CPU and0.01746/0.02760
+GPU under unchanged gates. Astra reviews the final source/evidence before commit.
+See [the contract](../../gemma-decoder-order-reference.md) and
+[receipt](../../../benchmarks/results/2026-10-24-gemma-decoder-order-reference-v1.json).
+
+Separately evaluated probes do not claim internal helper-stage/fusion coverage.
+Constructor/config/double-wide selection, attention/KV/rotary, MoE, BF16/quantized
+weights, native layer/session, full model/device fit, quality, performance and
+long replies remain unqualified. The eight long rotary discrepancies remain
+unwaived. Existing numerical sources, ABI, app limits, protected binaries and
+installed native package remain unchanged.
+
+## 24 October2026 — native dense decoder finish
+
+A plain concrete FP32 function now composes post-attention RMS/residual, GeGLU
+FFN with pre/post norms, optional complete PLE gate and final learned scalar.
+Input normalization/attention and all cache/session ownership stay outside.
+Borrowed immutable weights and five caller-owned scratch buffers avoid numerical
+allocation, weight clones and dynamic inner-loop dispatch. Coherent optional
+PLE admission validates even skipped weights before writes; arithmetic overflow
+requires discarding output/scratch and replaying unchanged inputs.
+
+Six methods compare all11 nonempty frozen cases and final scratch stages against
+both independent contracts, then cover late invalid inputs/scalars/scratch,
+missing input/disabled PLE/scalar absence, signed zero, exact repeated chunks,
+buffer reuse, immutable operands, sizes and epsilon. Seven overflow scenarios
+prove successful prerequisites and the exact failing operator before replay.
+Formatting, strict default/Metal Clippy,257 CPU/279 Metal-feature tests and both
+iOS compile targets pass. Astra reviews final source/evidence before commit.
+See [the contract](../../dense-decoder-scalar.md) and
+[receipt](../../../benchmarks/results/2026-10-24-dense-decoder-scalar-v1.json).
+
+This is dense FP32 reference composition. Packed quantized/BF16 weights,
+whole-layer attention/cache graph, session/model/Metal, device fit, quality,
+performance and long replies remain open; existing caps/native package and
+protected binaries are unchanged. Upstream long-position rotary discrepancies
+remain unwaived.
+
+## 24 October2026 — independent unlearned V normalization
+
+The Gemma V witness fixes each D-wide head row's mean-square RMS with epsilon,
+without learned scale. Distinct anisotropic heads, hand literals, D1, zeros,
+epsilon-dominated values and D256/D512 expose identity, wrong-axis, sum/L2 and
+epsilon mistakes. Independent stdlib replay exactly reproduces all24 arrays and
+7,350 values, including staged FP32.
+
+The actual unchanged pinned source helper runs on MLX CPU/GPU. Seven portable,
+three owner and three runtime-admission methods and all six owned commands pass.
+Each device retains seven raw outputs and passes14 ideal/staged comparisons;
+maximum error/policy ratios are below0.001066. Partial outputs, failures, child
+ownership and source/protected-binary guards are retained. Astra reviews final
+source/evidence before commit. See [the contract](../../gemma-v-norm-reference.md) and
+[receipt](../../../benchmarks/results/2026-10-24-gemma-v-norm-reference-v1.json).
+
+Native mapping, V projection/storage, KV/attention/model/session/Metal graph,
+constructor/config, BF16/quantized checkpoint, fit, quality, performance and long
+replies remain open. Future scalar mapping can reuse RMS with a persistent exact-
+one D vector, counted once and owned by the adapter. No numerical source, ABI,
+capability, protected executable or installed package changes in this task.
+
+## 25 October2026 — scalar unlearned V-norm recipe
+
+The existing RMS kernel now passes the accepted V fixture with persistent
+immutable unit weights. Three methods authenticate the reference receipt/fixture,
+compare seven nonempty cases against both contracts and exact staged FP32 bits,
+then qualify independent head-row chunks, reused pointers and immutable input/
+scale data. Native-only finite extremes/subnormals/signed zero and prewrite
+invalid-input/size/epsilon cases remain separate from upstream fast RMS scope.
+
+Formatting, strict default/Metal Clippy,260 CPU/282 Metal-feature tests and both
+iOS compile targets pass. Astra reviews exact final evidence before commit.
+See [the recipe](../../gemma-v-norm-scalar.md) and
+[receipt](../../../benchmarks/results/2026-10-24-v-norm-scalar-v1.json).
+
+The initial copied-cache suite is retained as failed: a reused CLI test still
+embedded the previous target's executable path. Its actual binaries and failure
+logs are preserved. Cleaning only copied Toklet package artifacts and checking
+all fresh CLI-spawning binary paths fixes qualification provenance without
+changing code or tolerances. A second failed collection expected a binary path
+in a cfg-disabled empty harness; owned zero-test listing closes that evidence
+gap. Only its four successful checks are inherited before completing the other
+three with unchanged source guards; both failed attempts remain unaccepted. Future copied-cache trials must prevent this absolute-path reuse.
+
+No production numerical/shader code changes. A future Gemma adapter must own and
+account for its shared exact-one vector; V projection/storage, graph/cache/
+session/Metal integration, device fit, quality, performance and long replies
+remain open. No installed package, app cap, protected binary or ABI changes.
+
+## 25 October2026 — independent Qwen3 plain Chat reference
+
+The separately reviewed reference commit `6edb777` freezes original non-thinking
+Qwen3 Chat strings/IDs, original NFC behavior, response prefixes and all26 control
+literal IDs/flags. Twelve controls are non-special and remain visible on decode.
+The guarded runtime admits exact Python/Jinja/MarkupSafe/tokenizers files before
+imports; independent capture/replay,11 admission tests and4 owner failure tests
+pass. Preliminary failed assertions/attempts are retained, with unchanged original
+conversation/Unicode values. See [the witness](../../qwen3-chat-reference.md) and
+[receipt](../../../benchmarks/results/2026-10-25-qwen3-chat-reference-v1.json).
+No fourth runnable app profile, native package or phone fit is granted; cold
+profile, memory, package and device qualification follow separately.
+
+## 25 October2026 — independent final-logit softcap
+
+A tiny compiled-source witness now freezes Gemma's cap30 tanh-logit transform,
+plus explicit synthetic smaller caps. Separate ideal/staged contracts expose
+quotient, activation and multiplication rounding without claiming helper-internal
+captures. Four staged divisions overflow for finite extrema/small caps while
+external outputs remain finite; counts are retained without serializing infinity.
+
+Independent replay verifies all18 arrays/585 values, exact staged bits and zero
+signs. Seven portable, three owner and three runtime-admission methods and all
+six owned commands pass. Each MLX CPU/GPU source capture retains five outputs
+and passes ten comparisons under unchanged gates; maximum error/policy ratio
+is below0.00125. Astra reviews final source/evidence before commit. See
+[the contract](../../gemma-softcap-reference.md) and
+[receipt](../../../benchmarks/results/2026-10-25-gemma-softcap-reference-v1.json).
+
+Native transform, complete vocabulary/model graph, BF16/quantized checkpoint,
+constructor/disabled-cap routing, device fit, quality, performance and long replies
+remain open. Upstream signed-zero bit parity is unqualified; mathematical/native
+zero semantics are checked separately. No numerical source, ABI, app cap,
+protected executable or installed package changes.
+
+## 25 October2026 — native in-place logit softcap
+
+A plain FP32-slice transform now applies tanh logit capping without a second
+vocabulary-sized array. Full prewrite admission preserves invalid-input bits;
+FP64 division/tanh/product gives finite bounded output for every positive finite
+FP32 cap and finite logit, including domains where staged FP32 division overflows.
+Signed zero remains explicit. No allocation, dynamic numerical dispatch or unsafe
+code is added.
+
+Four methods compare five frozen nonempty cases against both contracts, then
+cover late invalid values/caps, storage reuse, native-only extreme/subnormal
+caps, odd/monotone/bounded properties, exact zero signs and chunk equivalence.
+Formatting, strict default/Metal Clippy,264 CPU/286 Metal-feature tests and both
+iOS compile targets pass. Package-only cleanup in the private copied target and
+all CLI-spawning executable paths are verified, with a separate zero-test proof
+for the disabled harness. Astra reviews final source/evidence before commit.
+See [the contract](../../gemma-softcap-scalar.md) and
+[receipt](../../../benchmarks/results/2026-10-25-softcap-scalar-v1.json).
+
+Model integration, quantized/BF16 checkpoint, Metal, fit, quality, performance,
+phone and long replies remain open; upstream rotary discrepancies stay unwaived.
+No ABI, app capability/limit, protected executable or installed package changes.
+
+## 25 October2026 — checked native Qwen3 plain Chat profile
+
+Commit `40bf67f` adds the exact immutable Qwen3-0.6B eight-bit text profile to
+native Chat. It preserves the original non-thinking prefix, EOS151645, all26
+reserved input literals and the visible behavior of12 non-special added tokens.
+It adds no numerical kernels or ABI declarations. The conservative256MiB text
+reservation is separate from numerical memory; no whole-app peak follows from it.
+
+Astra accepted the guarded [shared-tree integration receipt](../../../benchmarks/results/2026-10-25-qwen3-native-chat-integration-v1.json):
+266 CPU/288 Metal-feature tests, strict default/Metal Clippy, formatting, both iOS
+compile targets, four real codecs, four native C API Chat trials and five frozen
+Qwen3 GPU state/admission tests pass. All17 commands, complete test/fixture/model/
+external-array inputs, raw logs, actual binaries and process-group cleanup are
+bound. The narrower isolated evidence and stale Mistral test-boundary failure
+remain explicitly recorded. See [scope and behavior](../../qwen3-native-chat.md).
+
+Chat256/raw128/total512 limits stay unchanged. New package/app/iPhone admission,
+whole-app memory, held-out quality, performance, Gemma and long replies are
+separate tasks; this native commit alone adds no installed eligible model.
+
+## 25 October2026 — complete tiny Gemma text graph reference
+
+A complete synthetic token-to-logit fixture now composes embedding scaling,
+per-layer inputs, local/global GQA, shared KV, exact dense layer order and the
+tied capped output head. Independent replay verifies4,358 deterministic weight
+values,32 token IDs and180 stage arrays/68,224 values. Staged FP32 values match
+exactly. Three schedules cover every position0..31 and repeated sliding wraps.
+
+All7,462 source CPU comparisons pass. The source GPU run completes but rejects15
+intermediate comparisons under unchanged gates; its maximum ratio is1.35576321.
+All164 final-logit comparisons per device pass, which does not override that
+rejection. Original failed GPU command/raw arrays remain retained. Captured-stage
+reconstruction supports accumulated drift and normalization/residual sensitivity
+without establishing a specific GPU kernel root cause. Weights and tolerances
+remain unchanged. Nine portable, three owner/failure and three runtime-admission
+methods pass; Astra reviews exact code/evidence and the CPU-only decision before
+commit. See [the witness and limitations](../../gemma-text-graph-reference.md) and
+[acceptance/rejection receipt](../../../benchmarks/results/2026-10-25-gemma-text-graph-reference-v1.json).
+
+This freezes a short synthetic CPU reference, not a Gemma checkpoint or completed
+G2. Native graph/session, GPU intermediate parity, original long-position rotary,
+quantized storage, real quality/fit/performance and app/device work remain open.
+No Rust/shader, ABI, app cap, protected executable or installed package changes.
+
+## 25 October2026 — bounded native Gemma scalar graph/session
+
+A named reference module now composes the exact hidden8/vocabulary17/four-layer
+Gemma fixture using existing statically dispatched scalar operations. Immutable
+FP32 weights stay separate from model-bound sessions, producer K/V staging,
+shared/rotating caches and reusable scratch. Both producer frames remain alive
+through the shared consumers and final norm/head/softcap. Only then do all caches,
+committed token history and public logits advance. Earlier failure preserves
+their exact previous state; reset reuses buffers and invalidates old proposals.
+
+Five graph methods check all three schedules against both frozen contracts,
+including selected intermediate states of every layer, producer staging/physical
+KV positions, final logits, immutable weights, pointer reuse and reset/replay.
+Five injected late boundaries and a real finite scalar overflow qualify failure
+atomicity. A separate reset method covers stale frames and generation exhaustion.
+The scoped allocator test records zero Rust allocations across96 warmed decode
+steps, three resets/accounting and a rejected memory admission. Logical reference
+memory is build-specific and does not qualify a process or phone budget.
+
+Formatting, strict default/Metal Clippy,272 CPU/294 Metal-feature tests and both
+iOS compile targets pass. Complete source/test/fixture/helper guards, raw logs,
+fresh CLI-spawning executable identities and protected binaries are retained.
+Astra reviews final code/evidence before commit. See [behavior and limits](../../gemma-text-graph-scalar.md)
+and [receipt](../../../benchmarks/results/2026-10-25-gemma-text-graph-scalar-v1.json).
+
+This is a32-position synthetic G3 foundation. Actual checkpoint/config/quantized
+integration, remaining generation/session semantics, Metal, real quality/fit/
+performance and app/device work stay open. Neither upstream GPU discrepancy is
+waived. No ABI, installed package or app generation-limit change is included.
+
+## 25 October2026 — named Gemma4 E2B config/layout adapter
+
+A separate cold module now validates the audited E2B wrapper/text semantics and
+derives540 logical tensors/1096 physical MLX descriptors, using the existing
+four-bit/group64 affine layout and BF16 metadata. Explicit text-only policy
+separates known modality components; unknown text options, private consumer KV,
+tensor names/layouts, index mismatches and invalid/gapped/overlapping spans reject.
+Bounded duplicate-free JSON and checked arithmetic precede metadata planning.
+The existing executable dense-family/compatibility registry is unchanged.
+
+Seven offline methods authenticate original G1 config/index/header bytes and
+exercise graph/representation/shape/index/offset/overflow/duplicate/buffer-limit
+mutations. An initial parser comparison mistook equivalent JSON exponent spelling
+for a semantic difference, and one negative test used the wrong excluded name;
+both failed source/log records are retained. Finite float semantics are corrected
+without changing fixture bytes or any numerical tolerance.
+
+Formatting, strict default/Metal Clippy,279 CPU/301 Metal-feature tests and both
+iOS compile targets pass. Astra reviews final code/evidence before commit.
+See [scope and mapping](../../gemma4-config-layout.md) and
+[receipt](../../../benchmarks/results/2026-10-25-gemma4-config-layout-v1.json).
+The2,603,981,382-byte text count is a header-derived layout, not a payload-value,
+allocation/fit or performance result. Real payload/graph/tokenizer/Metal/quality,
+device and app gates remain open, with no new eligibility, ABI, output limit or
+upstream GPU waiver.
+
+## 25 October2026 — independent packed table/projection precision
+
+Before native packed Gemma graph composition, freeze three-row four-bit/group64
+tables with BF16 coefficients at widths64,128,1536 and8960. Literal packed codes,
+unequal group/row coefficients and repeated/reordered lookup IDs distinguish
+FP32 reconstruction from BF16 once-rounded and separate-rounded alternatives.
+Non-BF16-exact FP32 inputs exercise the input-rounding boundary. Independent
+ideal/ordered-FP64 contracts and exact raw ledgers precede any new native target.
+
+Actual MLX embedding/linear/tied-head calls complete on both Mac CPU and GPU.
+All28 required FP32/tied comparisons per backend pass. Each captures24 arrays /
+85,600 values; BF16 diagnostics remain separate: CPU gathers match separate
+product/add rounding, GPU gathers match once-rounded reconstruction, while28
+diagnostic comparisons per backend reject unchanged gates. No BF16 checkpoint,
+CPU/GPU equivalence or complete graph/device qualification is granted.
+
+Seven portable, three owner and three runtime-admission tests plus export and
+both backend captures pass as six owned commands. Sequential observation capture
+preserves completed raw bytes before dtype/shape/finiteness rejection and on
+later failure/interruption. Source copies and actual imported module origins
+are bound to admitted runtime identities. The initial insufficient width64
+rounding witness and pre-correction source snapshots remain unaccepted;
+non-dyadic seeds are corrected before any fixture freeze, without a gate change.
+
+See [contracts and observed differences](../../gemma-packed-reference.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-gemma-packed-reference-v1.json).
+Rust/shader/header inputs remain unchanged. Payload admission, native packed
+composition, quality, performance, Mac/phone fit and app integration remain open;
+the existing15 short-GPU and8 long-rotary discrepancies are not waived.
+
+## 25 October2026 — native packed row fetch
+
+Add `Matrix::copy_row` to fill caller-owned FP32 storage without expanding a
+quantized table. Dtype/bit dispatch occurs once, group metadata is hoisted, and
+all selected reconstruction values are preflighted before any output write.
+The second reconstruction pass preserves failure atomicity without a temporary
+row. Existing scalar value/matvec precision and behavior remain unchanged.
+
+Two focused tests pass all54 prior affine layouts and the newly frozen Gemma
+gather/projection bytes at small and actual embedding widths. They check
+repeated/reordered rows and output storage reuse,18 unaligned metadata/bit
+combinations and signed-zero bits, and unchanged outputs on bad row/length or
+reconstruction overflow in a later metadata group. The first preliminary
+two-test pass and its source are retained; final required checks include the
+strengthened later-group overflow case.
+
+Formatting, strict default/Metal Clippy,281 CPU/303 Metal-feature tests and both
+iOS compile targets pass in an isolated package-cleaned target. Astra reviews
+the exact final source/evidence before commit.
+
+See [API and scope](../../mlx-affine.md#native-row-fetch) and the
+[receipt](../../../benchmarks/results/2026-10-25-mlx-affine-row-fetch-v1.json).
+This is a reference primitive for G3, with no BF16, payload/graph, quality,
+performance, device or app-capability qualification. All existing upstream
+precision gaps remain open.
+
+## 25 October2026 — complete tiny packed Gemma graph reference
+
+Freeze a group64-compatible four-layer packed graph with tied embedding/head,
+PLE64, local64/global128 attention, two shared K/V producers, MLP64/128,
+direct norms, residual/scalar ordering and softcap. Literal packed patterns and
+separate semantic equations retain original BF16 coefficient bits, explicitly
+promoted-FP32 source parameters and independent ideal/staged graph contracts.
+The earlier dense witness stays frozen.
+
+Actual original class bodies, compiled helpers and MLX quantized modules execute
+all32 positions in three schedules, both pristine and traced. Each backend
+captures3,731 arrays/852,768 values. CPU passes all7,462 comparisons; GPU completes
+but rejects15 intermediate comparisons under unchanged gates. All164 final-logit
+comparisons per backend pass, without waiving the rejected states. This execution
+uses promoted-FP32 coefficient values and activations; original-BF16 graph parity
+remains unqualified.
+
+Independent standard-library replay verifies253,188 expanded weights,41,238
+physical values and180 mathematical arrays/567,424 values. Staged FP32 is exact;
+ideal maximum difference is1.3322676295501878e-14. Ten portable, three owner and
+three runtime-admission tests, export and both source captures pass as six owned
+commands. Numerical rejection stays separate from capture completion. Source,
+runtime, raw output, routing/cache identity and immutable parameter checks bind
+the evidence.
+
+See [scope and comparisons](../../gemma-packed-graph-reference.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-gemma-packed-graph-reference-v1.json).
+Next is native borrowed packed model/session composition. Real payload/value,
+generation/tokenizer, Metal, quality, performance, Mac/phone fit and app gates
+remain open; the prior15 dense-GPU and8 long-rotary failures remain unwaived.
+
+## 25 October2026 — native borrowed packed Gemma graph/session
+
+Compose packed embedding/PLE, four local/full/shared-KV decoder layers and the
+tied capped head using borrowed matrices. A bounded public constructor admits
+the frozen H64 profile; a private layout drives dimensions and scratch planning.
+Weights are never expanded into a retained matrix. Sessions reuse23 scratch
+buffers, persistent producer staging and two caches. All-cache validation and
+publication follow final normalization/head/cap; history and prior logits remain
+valid on failure. Reset reuses the same storage.
+
+Four unit tests cover all three schedules and selected states from every layer,
+physical cache slots, buffer identities, seven late fault/retry boundaries,
+invalid inputs/capacity, real scalar overflow and model-boundary admission. A
+separate integration test checks96 warmed decode steps/three resets/accounting
+with zero Rust allocations and rejected admission before session allocation.
+The receipt records required default/Metal checks, both iOS compile targets and
+Astra review before commit.
+
+See [scope and ownership](../../gemma-packed-model-scalar.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-gemma-packed-model-scalar-v1.json).
+This is a synthetic32-position scalar G3 foundation. Actual payload/value and
+E2B geometry, generation/tokenizer, Metal, quality/performance, Mac/phone fit and
+app stages remain open; no ABI/catalog limit is raised. All existing upstream
+GPU and long-rotary discrepancies remain unwaived.
+
+## 25 October2026 — cold Gemma4 payload ownership and value admission
+
+Add a streaming immutable text-only payload store behind the strict E2B
+metadata adapter. Hash the consumed prefix/header and every payload byte,
+including discarded audio/vision components. Reject trailing data, digest/read
+failures and nonfinite vectors/coefficients; code0/15 reconstruction bounds all
+four-bit codes without expanding weights. Cold borrowed views keep explicit
+store/model/session lifetimes and numerical loops free of name lookups.
+
+Admit packed data, converted norm storage, conversion overlap, streaming scratch
+and cold metadata before large allocations. Recheck actual vector capacities
+and peak live overlap. Five focused offline tests distinguish private synthetic
+success from public real-header budget rejection and cover fragmented reads,
+excluded-byte integrity, failure cleanup, exact budgets and signed overflow.
+Required Rust/default/Metal/iOS checks and Astra review are recorded before
+commit; preliminary source and outputs remain retained.
+
+See [storage contract and accounting](../../gemma4-payload-storage.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-gemma4-payload-storage-v1.json).
+The real container is not downloaded by this task. Acquisition/load and E2B
+geometry, generation/Metal/quality/performance, Mac/phone fit and app stages
+remain open. No new family/ABI/catalog limit is granted and all upstream
+precision discrepancies remain unwaived.
+
+## 25 October 2026 — downloadable Qwen3 Chat on iPhone
+
+Add the pinned Qwen3-0.6B eight-bit non-thinking profile as the fourth catalog
+entry, with six immutable files totaling 644,927,148 bytes. Discovery queries five
+bounded public Hugging Face pages. Preserve graph/format/tokenizer eligibility,
+download integrity, estimated ranking and fresh memory admission after releasing
+the previous model. The signed app uses the accepted 40bf67f native package;
+parallel Gemma Rust changes are outside that immutable package.
+
+All seven physical UI cases pass on iPhone 14 Pro / iOS 27.0.1, including repeated
+Qwen3/Qwen2/Smol switching, real replies after background/re-selection, colored
+Python with successful Copy feedback and existing Expert fixture controls.
+A separate fresh transfer, offline controller generation, prefix rejection,
+cancellation/resume and handle release pass. All three eight-token native
+replies match Mac IDs. Owner saved-chat bytes are unchanged; the updated app is
+normally launched and a separately signed/pinned rollback copy is preserved.
+
+The fresh process lifetime physical peak is 893,274,528 bytes, within its 2,304 MiB
+reservation. Three 64-token measured benchmark runs report 840/846/846 ms TTFT and
+9.3 tok/s each; these are short UI observations, not controlled performance or
+quality claims. Ten owned local commands, eight interface checks, signed
+app/runner checks and ten publication fault tests support the source-bound
+receipt. Four earlier locator-failed phone trials retain raw evidence and
+successful owner-byte/rollback checks.
+
+See the [model and verification report](../../mobile-qwen3-downloads.md) and
+[phone receipt](../../../benchmarks/results/2026-10-25-mobile-qwen3-phone-v1.json).
+Chat/raw/context limits remain 256/128/512. Gemma 4 real-model/device admission and
+131,072 output tokens plus prompt/history remain separate prioritized engine
+gates; this mobile addition does not qualify them.
+
+## 25 October2026 — immutable Gemma4 checkpoint and Mac storage admission
+
+Add a bounded data-only downloader for the pinned Gemma4 E2B four-bit candidate
+and an explicit native cold-load example. Nine files total3,583,087,091 bytes.
+Range/response checks, exact Git/LFS identities and the whole-container hash
+precede atomic publication. Retain the failed initial transfer and all four
+rejected/canceled rows; reviewed recovery reuses195 verified ranges and fetches
+17missing ranges, with226 actual HTTP attempts across both runs.
+
+The fresh native process admits all540 text views,278 packed matrices and262
+FP32 vectors. Tensor capacity is2,604,553,356 bytes; conservative load admission
+is2,671,730,828 bytes. On the M1 Pro Mac, observed maximum resident memory is
+1,520,435,200 bytes and peak physical footprint is2,616,527,296 bytes. A single
+debug storage validation takes183.83 seconds after file hashing; these are
+storage observations, without inference or controlled performance qualification.
+
+Eleven portable acquisition tests and four recovery fault regressions pass.
+Formatting, strict default/Metal Clippy,291 CPU and313 Metal-feature tests, both
+iOS compile targets and the example build pass; numerical fixtures/tolerances
+are unchanged. Astra reviews source and final bound evidence before commit.
+See the [scope and result](../../gemma4-checkpoint.md) and
+[receipt](../../../benchmarks/results/2026-10-25-gemma4-checkpoint-v1.json).
+Real E2B geometry/execution, tokenizer/chat/generation, Metal, quality/performance,
+phone fit and app support remain open. All existing GPU/long-rotary failures
+remain unwaived; no ABI/catalog/context limit changes.
+
+## 25 October 2026 — bounded multi-producer packed Gemma staging
+
+Replace the fixed two-owner proposal sequence with a validated private producer
+prefix and persistent session staging vector. Keep up to 15 borrowed proposals
+in an inline container through all shared consumers and the final head. All-cache
+validation precedes public KV/history/logit commit; failure preserves the prior
+prefix. Account actual staging capacity and every K/V allocation. The checked
+inline container uses 976 transient stack bytes separately from persistent memory.
+
+Three small structural tests cover 35 layers / 15 producers, routes 13/14, chunk
+agreement, physical cache slots, reset, 38 failure/retry boundaries, zero Rust
+allocations on failure/retry and 32 decode steps, independent producer bounds
+and exact budget/capacity accounting. Existing four-layer numerical fixtures,
+tolerances and allocation checks remain in force. Required Rust/default/Metal/iOS
+checks and Astra source/evidence review precede commit.
+
+See [ownership and verification](../../gemma-producer-staging.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-gemma-producers-scalar-v1.json).
+The public constructor remains the frozen four-layer profile. Reused synthetic
+weights give logical accounting, not unique physical residency or E2B parity.
+Real checkpoint execution, generation, Metal, quality/performance, phone fit and
+app gates remain open; no ABI/catalog/limit changes or waived precision failures.
+
+## 25 October 2026 — bounded independent four-bit matrix reference
+
+Add independent file-row lookup and tiled projection for packed4/group64/BF16
+weights. Reconstruct once to FP32, then accumulate projections in NumPy/BLAS
+FP64 with explicit output precision. Keep exact-affine and reconstructed-FP32
+contracts distinct with an authored cancellation case. Validate extents, unused
+codes and array reservations before reading/expanding weights.
+
+Eight offline tests, three captured-output regressions and three cold-runtime
+admission tests pass. On the actual pinned Gemma4 checkpoint, all834 selected
+rows from278 text matrices match independent scalar decoding bitwise. Two full
+projections, including the12,288-column MLP, pass all eight scalar-fsum/sequential
+comparisons under unchanged tolerances. The reference process reports
+161,611,776 bytes maximum resident memory and76,759,832 bytes peak physical
+footprint, below its separate256MiB allowance.
+
+Authenticate cold runtime files, actual imported/native origins and first-captured
+output buffers. Retain the initial receipt-field error, rejected unexecuted
+controller and failed first real runtime-admission/resource-query attempt. The
+reviewed retry preserves numerical and memory gates. Rust engine, tests,
+fixtures, examples and protected binaries remain unchanged fromab408f4.
+See [precision, resources and scope](../../affine4-tiled-reference.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-gemma4-affine-tiles-v1.json).
+Full E2B graph, tokenizer/chat/generation, Metal, quality/performance, phone fit
+and app support remain open; no ABI/catalog/limit changes or waived failures.
+
+
+## 25 October 2026 — complete short E2B mathematical reference
+
+Implement independent bounded text-graph math over file-backed packed matrices,
+with named tiny/E2B geometry, explicit precision boundaries, independently
+computed rotary angles, stable reductions, and bounded softcap temporaries.
+Preserve all180 frozen tiny-state comparisons while streaming real states
+instead of retaining an expanded model or complete live graph.
+
+Eight graph and eight established affine methods pass. The actual immutable E2B
+checkpoint produces713 states per precision contract for four raw input IDs.
+All1,426 changed-final-token prefix checks match exact typed bytes. The collector
+independently replays713 cross-precision comparisons using scalar arithmetic;
+five arrays reject57 values, with maximum error-to-bound fraction1.54940274476271.
+Retain both contracts, full raw observations and the compact68,448-byte probe
+fixture. No tolerance or quality gate changes.
+
+The successful owned reference process reports270,467,072 bytes maximum resident
+memory and101,827,400 bytes peak physical footprint under its separate512MiB
+allowance. Admit the cold dependency/native closure before NumPy import; retain
+first-captured output buffers and verify source/model/binary endpoint guards.
+Keep the early per-contract count assertion failure, contaminated source-guard
+attempt and first real controller variable-shadowing failure unaccepted. Test
+the actual corrected verification block and final guard before repeating it.
+
+See [arithmetic, failures and scope](../../gemma4-text-math.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-gemma4-text-math-v1.json).
+Rust engine/tests/examples stay unchanged fromcb2aeec. Native E2B execution,
+original-BF16/source qualification, generation, Metal, quality/performance,
+iPhone fit, app eligibility and131072-output-token support remain open.
+
+
+## 25 October 2026 — named borrowed short E2B scalar adapter
+
+Resolve the exact admitted Gemma4 E2B text names/geometry in a small cold module
+and reuse the existing packed graph. Keep immutable store -> borrowed model ->
+borrowed session lifetimes explicit, with no expanded full matrices or hot-path
+name lookup. Replace logical borrowed tensor bytes once with the same owner's
+actual capacity plus retained metadata; count source scalar vectors/capacity
+excess and exclude load-only conversion overlap. Keep the tiny constructor's
+behavior/accounting unchanged.
+
+Separate512 physical local cache slots from32 executable positions. Offline
+checks cover exact real geometry, bounded scratch, backing admission/overflow,
+all15 owner snapshots on late failure/token33 rejection and persistent buffer
+addresses. Existing tiny numerical gates and allocation checks remain intact.
+Required formatting, default/Metal strict checks,297 CPU/319 Metal-feature tests,
+both iOS targets and the explicit release probe build pass;16/109 ignored
+hardware/model tests remain explicit.
+
+The real immutable checkpoint executes four raw IDs in batched, single-token
+and mixed schedules. All three full logit arrays are bitwise identical. Each
+passes1,048,576 staged-FP32 comparisons under unchanged gates, with maximum
+error-to-bound fraction0.0013644315853741284. Each retains27 FP64-ideal failures
+(maximum1.2599434792233821) from the existing reference gap. Overall numerical
+acceptance remains false; no precision/quality gate is waived.
+
+Model accounting including its store is2,671,706,548 bytes and actual session
+capacity93,555,912 bytes. The owned Mac process reports2,174,353,408 bytes maximum
+resident memory and2,717,239,840 bytes peak physical footprint, below 6 GiB. Its
+67.96-second combined load/three-schedule/output observation is not a latency
+benchmark. Diagnostic copies/output are outside numerical accounting and inside
+the process measurement.
+
+See [ownership, numerical results and limitations](../../gemma4-short-scalar.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-gemma4-short-scalar-v1.json).
+This is short scalar raw-logit execution, not completed G3 or app support.
+Original-BF16/source qualification, precision gaps, tokenizer/chat/generation,
+resident Metal, quality/performance, phone fit and131072 output tokens remain
+open; no ABI/family/catalog/limit changes.
+
+
+## 25 October 2026 — bounded packed generation-state integration
+
+Connect the existing packed scalar graph to InferenceSession and the shared
+greedy generator without modifying either numerical kernels or generation
+policy. Keep sampled/input history separate from committed KV, expose only the
+final evaluated vocabulary row and validate full appends/replacements before
+mutation. Reuse an entire exact committed prefix; replay changed/shortened
+prompts conservatively from position0.
+
+Invalidate/reset logical state immediately and defer fallible physical reset
+until new numerical work. Actual generation-exhaustion and late-forward failures
+preserve explicit replay/pending state and hide stale distributions. Requests
+cancelled at entry or rejected during validation preserve the entire old state;
+later cancellation/callback failure preserves valid progress and pending sampled
+tokens. Stop IDs remain pending and un-emitted, and continuation evaluates them
+exactly once when requested.
+
+Admit model+raw-session+wrapper bytes before allocation and verify actual
+capacity afterward. Count both fixed histories, full32-row logit capacities,
+cache/staging buffers and the same retained store allowance once. Two cold
+accounting fields add16 bytes of model metadata; smaller requested capacities
+still admit unchanged physical32-position storage.
+
+Five new state methods pass in default, Metal-feature and release builds.
+Required formatting/strict checks,302 CPU/324 Metal-feature tests and both iOS
+targets pass, with16/109 ignored hardware/model tests explicit. Ninety-six warmed
+decode steps and three fork replays/resets/discards allocate zero Rust heap
+storage. Preserve the initial test-helper visibility compile failure without
+test-pass credit; the corrected helpers retain their original numerical bodies.
+
+See [state and accounting rules](../../gemma-generation-state.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-gemma-generation-state-v1.json).
+Real E2B continuation, tokenizer/chat and full G3 qualification remain open.
+Earlier FP64/source/GPU/long-position failures, Metal, quality/performance, phone
+fit, app support and131072 output tokens remain unqualified. No ABI/catalog or
+position-limit changes.
+
+## 25 October 2026 — independent real E2B greedy continuation witness
+
+Freeze four raw greedy selections before testing native generation. Traverse
+all713 states per graph while retaining only complete final-position norm,
+head and logits vectors. Staged FP32 chooses the history; FP64 is explicitly
+teacher-forced on that history. Record first-index argmax, exact promoted
+top-two margins and ties independently for both contracts. Flush raw selected
+arrays before finite rejection, retain incomplete steps on failure, and publish
+sampled IDs only after both complete traversals and captures succeed.
+
+The actual pinned checkpoint selects107,100,45518,107 with unique maxima and
+no selection disagreements. All12 unchanged last-row precision gates pass
+over2,103,296 pairs; maximum error-to-bound fraction0.5103206474158878.
+All six step0 vectors match the earlier accepted four-token reference bitwise.
+Retain24 complete arrays/25,239,552 bytes locally and1,152 bytes of compact
+probes in the committed fixture. Final state is seven committed IDs plus one
+pending sampled107, ready for native continuation comparison.
+
+Four new offline methods and eight existing graph/eight affine methods pass,
+including actual-driver nonfinite and partial write/interruption/endpoint
+retention. The cold process reports249,626,624 bytes maximum resident memory
+and75,465,424 bytes peak physical footprint within a separate512MiB reference
+allowance. The90.08-second combined reference observation is not a benchmark.
+The collector independently replays all raw values, selections, margins,
+prefixes and memory gates. Rust code/tests/examples remain unchanged.
+
+See [contracts, measurements and limits](../../gemma4-greedy-reference.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-gemma4-greedy-math-v1.json).
+This qualifies an independent short raw witness, not native generation or G3.
+All earlier full-graph FP64/source/GPU/long-position failures remain unwaived;
+tokenizer/chat/stop metadata, Metal, quality/performance, phone fit, app support
+and131072 output tokens remain open. No ABI/catalog/position-limit changes.
+
+## 25 October 2026 — real E2B raw generation and continuation checks
+
+Add an explicit scalar generation example over the immutable checkpoint and
+existing model-bound generation session. Stream complete vocabulary rows at
+the sampling boundary before append through a statically dispatched diagnostic
+observer. Preserve ordinary callback-time logits unavailability. Bound capture
+to16 rows/16MiB with a64KiB writer, small descriptors and no full-row clones.
+Keep kernel, session and shared generation-policy code unchanged.
+
+The four real Mac scenarios cover uninterrupted output, two-plus-two
+continuation, cancellation after two visible tokens then resume, and explicit
+caller-stop107 followed by continuation. All select107,100,45518,107 and finish
+with seven committed IDs plus one pending sampled107. Caller stop emits only
+the final three IDs; it does not qualify model EOS metadata. Every captured
+prefix, emitted sequence, report counter/reason and final memory/state invariant
+passes independent replay. All16 distributions are bitwise identical across
+schedules. All32 unchanged precision gates pass over8,388,608 values, maximum
+error-to-bound fraction0.5103206474158878 against FP64 and0.0013656471300556837
+against staged FP32. Earlier full-prompt/intermediate failures remain unwaived.
+
+Three new capture tests verify exact finite/nonfinite raw bytes, hashes,
+offsets, prewrite limits and an actual read-only-file write error. Required
+formatting/strict checks,302 CPU/324 Metal-feature tests, both iOS targets,
+release example and five release state methods pass. Numerical admission is
+2,765,262,700 bytes. The actual process reports2,143,485,952 bytes maximum
+resident memory and2,710,440,456 bytes peak physical footprint, below 6 GiB.
+Its138.13-second combined diagnostic observation is not a performance benchmark.
+
+See [scenarios, ownership and remaining gates](../../gemma4-raw-generation.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-gemma4-raw-generation-v1.json).
+This is bounded short raw continuation evidence; full G3, tokenizer/chat/model
+stop semantics, source-BF16, existing precision/GPU/long-rotary gaps, resident
+Metal, quality/performance, phone fit, app support and131072 output tokens remain
+open. No ABI/catalog/position-limit changes.
+
+## 25 October 2026 — pinned Gemma4 basic-text reference
+
+Freeze exact upstream tokenizer and authenticated template behavior before
+adding a native text profile. Admit a strict bounded non-thinking user/assistant
+subset, reject advanced options and all24 control literals, and explicitly
+resolve the selected artifact's stop IDs1/106/50. Preserve identity
+postprocessor/no-automatic-BOS behavior under both encode modes. Keep raw text,
+normalization, Unicode/whitespace, multiple turns and all control-token observations
+alongside complete/prefix byte-fallback decodes and diagnostic-only macro cases.
+
+Two fresh captures produce identical97-record/36,960-byte witnesses. Manually
+assembled turn layout matches all six rendered prompts, and an independent
+scalar vocabulary decoder replays all Replace/ByteFallback/Fuse outputs and
+prefixes. Invalid UTF-8 can rewrite the entire fallback run; leading spaces are
+not stripped. This informs the native stream design without granting append-only
+streaming or a separately implemented BPE oracle.
+
+Cold admission authenticates1,970 Python/package/native files, source/native
+loaders before import, actual origins afterward and exact endpoint lengths and
+hashes. Seven offline methods pass, including source shadowing, actual partial
+driver failures and signal restoration after publication failure. Retain the
+initial unresolved-temporary-path test failure without acceptance credit; the
+corrected five-method and final seven-method attempts pass with clean guards.
+Separate reference-process resident peaks649,592,832/671,023,104 bytes and
+physical peaks380,700,976/391,661,968 bytes fit1GiB. The2.10/1.94-second combined
+observations are not performance benchmarks. Rust sources/tests/examples remain
+unchanged; no unrelated engine build is rerun.
+
+See [subset, source policy and decoding evidence](../../gemma4-text-codec-reference.md)
+and the [receipt](../../../benchmarks/results/2026-10-25-gemma4-text-codec-reference-v1.json).
+Native text/streaming, formatted continuation, full G3 and all earlier numerical,
+source, Metal, quality/performance, device/app and131072-output gates remain
+open. No ABI/catalog/position-limit changes.
+
+## 25 October 2026 — dedicated native Gemma4 text codec
+
+Add a small concrete text module outside kernels and existing app profiles.
+Admit a conservative1GiB codec allowance before any asset access; authenticate
+small profile files first and hash/parse the same captured tokenizer buffer.
+Count tokenizer construction overlap, persistent tables, metadata, precomputed
+token lengths and bounded operation buffers within that allowance. Caller-held
+responses/history and numerical allocations remain separate owners.
+
+Render typed duplicate/unknown-safe basic messages/options with exact manual
+turn layout, reserved-literal/C0 rejection, canonical UTF-8 size and exact output
+admission. Keep raw control-token observations separate from Chat rejection.
+Validate IDs and conservative decode bytes before tokenizer output allocation,
+using cold u16 lengths rather than repeated vocabulary clones. Separate raw,
+rendered and decoded64KiB bounds and the diagnostic codec ID cap from numerical
+position/output admission. Expose selected stops explicitly without changing
+generation policy. No thinking stripper or append-only stream is added.
+
+Five offline methods and all97 real-tokenizer records/285 prefix observations
+pass against the frozen witness. Formatting, strict checks,307 CPU/329
+Metal-feature tests, both iOS targets, release example and five release methods
+pass. Retain the initial strict-style failure with no test acceptance credit.
+Three actual-controller mutations of complete inventories keep parity false.
+On the named Mac, resident/physical peaks515,948,544/488,866,560 bytes fit the
+separate1GiB codec gate; the1.73-second combined observation is not a benchmark.
+
+See [ownership, bounds and parity](../../gemma4-native-codec.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-gemma4-native-codec-v1.json).
+Formatted model continuation, text streaming, full G3, earlier numerical/source
+gaps, Metal, quality/performance, combined/mobile admission, app support and
+131072 output tokens remain open. No Profile/ABI/catalog or numerical-limit
+changes.
+
+## 25 October 2026 — bounded mobile generation consumer foundation
+
+Commit `d96fbffbea66256e3f01a6947adb9ab36c4cc35c` adds strict versioned Swift
+per-mode capability metadata and an ordered bounded response consumer. Immutable
+model identity, request-relative generated counters, full session state,
+caller-owned UTF-8 storage and terminal sealing are explicit. Metadata admission
+does not authorize model loading or generation.
+
+Astra's three findings are closed: replay cannot claim history beyond the
+request, sampled output requires the whole prompt committed, and pre-Foundation
+numeric grammar admits exact checked UInt64 digits without rounded fractions or
+exponents. Five same-closure version/build/iOS/simulator/synthetic checks pass.
+A synthetic131072-token-count/4MiB text run retains8,404,960-byte Array capacity;
+Mac resident/physical observations are73,515,008/67,420,664 bytes. These exercise
+the consumer only and do not qualify real generation or phone fit.
+
+See the [mobile contract](../../mobile-generation-contract.md) and
+[actual-results receipt](../../../benchmarks/results/2026-10-25-mobile-generation-consumer-v1.json).
+Astra accepted the exact seven-file packet and refreshed evidence. Existing app
+profiles, UI, header/native ABI, packages and installed application are unchanged.
+The engine publisher, owned cursor, combined admission, real model/device checks
+and131072-output capability remain open.
+
+## 25 October 2026 — formatted Gemma4 basic-hello reference
+
+Add an explicit closed `basic-hello` profile to the independent greedy witness;
+the original four-step raw default and accepted history remain intact. Admit
+only the authenticated text receipt/fixture's ten-token prompt and stops1/106/50,
+16 sampled IDs and at most25 evaluated positions. Both precision contracts
+traverse all713 finite states per prefix. Publish samples only after both full
+traversals/captures; stops remain pending and hidden, while output-limit tokens
+remain pending and visible. Keep capture integrity separate from numerical and
+selection/stop diagnostics.
+
+Six offline greedy methods plus eight graph/eight affine methods pass, including
+first/final stop, no-stop limit and partial retention between precisions. Actual
+controller tail tests accept four valid cases and reject nine corruptions. An
+earlier narrower controller draft missed sample-count shadowing in the inner
+numeric loop; it was corrected before model execution and its source/results
+remain explicitly superseded, without execution acceptance credit.
+
+The actual reference samples11 IDs and stops naturally at106. Ten visible IDs
+decode to “Hi! How can I help you today? 😊”; committed length20/pending1 preserve
+the complete valid prompt/reply prefix. All33 selected-row gates pass over
+5,784,064 values, maximum fraction0.7812509635026432, with zero selection/stop
+membership disagreements. Scalar replay authenticates all66 arrays/69,408,768
+bytes, exact maxima/margins/ties and the decoded output. Eight probes per vector
+form a3,168-byte portable witness. Resident/physical peaks343,932,928/152,011,976
+bytes fit the separate512MiB reference allowance;366.02 seconds combined is not
+a representative latency measurement.
+
+See [workload, state and evidence](../../gemma4-basic-chat-reference.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-gemma4-basic-chat-math-v1.json).
+Rust numerical/test/example sources remain unchanged from `e20e601`. Native
+formatted generation and streaming are next. Full G3, earlier precision/source
+failures, Metal, quality/performance, combined/mobile admission, app integration
+and131072-output qualification remain open; no ABI/catalog/position limits change.
+
+## 25 October 2026 — native formatted Gemma4 generation
+
+Extend the existing diagnostic with an explicit closed `basic-hello` profile;
+keep the raw default and its four schedules. Compose one pinned codec/model and
+reset session across uninterrupted and split2+remaining replies. Reuse selected
+stops1/106/50 on every call, resume only after output limit and decrement the
+16-token budget by sampled count. Preserve hidden pending natural stops,
+completed earlier reports and valid state on later failure. Capture the full
+logit row before sample append, stream bounded diagnostics and decode only the
+visible IDs after generation. Keep primary capture I/O failures visible.
+
+Before asset access, reserve1GiB codec and16MiB diagnostic/text ownership from
+6GiB; pass the remaining numerical budget consistently and count model/store
+once. Seven offline/release methods cover both raw/new capture bounds, closed
+profile/pre-open memory rejection, early/final stops, no-stop output limit and
+second-call output failure. Both strict checks,307 CPU/329 Metal-feature tests,
+both iOS targets and release compilation pass. Retain the earlier six-method
+preliminary result before adding direct formatted capture-bound coverage.
+The full controller-verifier regression rejects six corrupt packets and records
+a finite numerical failure without falsifying capture success.
+
+Actual Mac uninterrupted and split runs match all11 frozen sampled IDs, emit
+“Hi! How can I help you today? 😊” and finish with20 committed IDs/pending106.
+All22 full rows match bitwise across schedules;44 unchanged reference gates
+pass over11,534,336 pairs (max FP640.46041798867955425/FP320.0013559174399768907).
+Combined admission is3,855,781,740 bytes; resident/physical process peaks are
+2,273,132,544/2,900,626,216 below 6 GiB. The188.52-second combined diagnostic is
+not a representative latency benchmark.
+
+See [workload, ownership and checks](../../gemma4-basic-chat-generation.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-gemma4-basic-chat-generation-v1.json).
+A single formatted reply advances native basic-text execution only. Append-only
+streaming, broader quality/full G3, earlier precision/source failures, Metal,
+performance, mobile fit/app integration and131072 output tokens remain open.
+No public app Profile/ABI/catalog or numerical position/output limits change.
+
+## 25 October 2026 — bounded Gemma4 no-Strip text streaming
+
+Split a private owned ResponseState from the borrowed tokenizer facade and
+select ByteFallback/leading-space behavior in cold pinned factories. Reuse the
+existing byte-level and Mistral paths; Gemma retains leading spaces. Preserve
+whole fallback runs across skipped special tokens, finish on visible stop/cancel
+prefixes and poison failed mutations without leaking partial new chunks. No
+full-response IDs/text or per-token full-prefix decode is retained. A Gemma
+factory separately admits 4 MiB before allocation and reports checked actual
+capacities, counting the borrowed codec once. Per-token temporary String
+allocations remain; delayed fallback output has no per-token latency guarantee.
+
+Freeze 317 actual sparse vocabulary entries and decode-only expectations before
+decoder changes: 59 upstream cases plus generated/edge cases and five synthetic
+131072-ID patterns, including a late invalid byte after a long valid run.
+The isolated source/data extractor fits its 1 GiB gate with 370,819,072 resident/
+281,084,696 physical bytes. Preserve pre-change input identities and runtime
+alias/target byte pins; no encoder or numerical capacity follows from this data.
+
+All 310 CPU/332 Metal-feature tests, both strict checks, both iOS targets,
+22 release text methods and four probe retention methods pass. Preserve the
+initial compile/type/test-call failure and later preliminary snapshots without
+upgrading their scope. Probe prefix mismatch, expected decoder failure, partial
+framing and publication I/O failures now retain actual outputs, active stage and
+original error. Existing real profiles pass 233,585 vocabulary IDs/33 short/eight
+long cases. The actual controller/classification rejects seven corrupt packets.
+
+The real Gemma text probe checks 268 small case/partition records, 472 prefix
+chunks, 15 long records and all 262,144 isolated IDs. All 7,675,150 captured bytes
+replay against the independent scalar vocabulary oracle. Actual maximum stream
+ownership 2,097,419 bytes (single-ID 4,361) fits 4 MiB; native resident/physical
+544,669,696/489,227,032 fit 1,094,713,344 combined codec/stream/diagnostic admission.
+The 3.87-second combined observation is not an LLM performance benchmark.
+
+See [ownership, behavior and limits](../../gemma4-native-stream.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-gemma4-native-stream-v1.json).
+This qualifies the pinned text mechanism, with broader quality/full G3,
+earlier precision/source failures, Metal/performance, mobile fit/native ABI/app
+integration and 131072 LLM output tokens still open. No Profile/catalog/position
+or app output limit changes.
+
+
+## 25 October 2026 — short Gemma reply and stream composition
+
+Add an explicit basic-hello-stream diagnostic, preserving prior raw/basic-hello
+request policies and reserves. Admit another 4 MiB before asset reads, keep one
+stream across a split OutputLimit, deliver only visible callback IDs and flush
+once at actual terminal completion. Cancel after the second successful delivery
+without continuation. Copy each new chunk before mutation/comparison; retain
+numerical pending state, completed reports, partial delivery and original errors.
+Bound the diagnostic ledger to 16 callbacks plus one terminal entry.
+
+All 310 CPU/332 Metal-feature tests, both strict checks, both iOS targets and
+12 release methods pass. Five new methods check the actual scheduling helper,
+including a whole fallback run across the split, cancelled-prefix finish,
+second-request callback failure, sealed-terminal failure and admission before
+asset access. Decoder correctness remains supported by its independent fixtures.
+The actual controller rejects 12 corrupt packets and keeps finite numerical
+failure distinct from successful process capture. The owned regression's
+source/log/cleanup proof covers success only; preserve the first identical result
+without standalone invocation/log credit. Synthetic owner sizes grant no memory
+or model qualification.
+
+Actual Mac runs match the frozen eleven samples and exact full reply in both
+full schedules. The third run stops at “Hi!” after two visible IDs and retains
+11 committed plus one pending ID. Every text prefix matches the independent
+scalar oracle. All 24 complete logit rows / 25,165,824 bytes match across schedules;
+48 unchanged gates pass over 12,582,912 values. Stream ownership stays 65,816 bytes
+within 4 MiB. Combined admission is 3,859,976,044 bytes; resident/physical peaks
+2,054,062,080 / 2,776,222,504 fit 6 GiB. The 236.63-second combined observation is
+not a controlled latency benchmark.
+
+See [ownership, checks and limits](../../gemma4-stream-generation.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-gemma4-stream-generation-v1.json).
+This closes one short diagnostic composition, with full G3/quality, earlier
+precision/source/GPU/rotary gaps, resident Metal/performance, qualified model/
+codec identity, native ABI/app, phone fit and 131072 numerical output still open.
+No profile/catalog/ABI/capability or numerical-limit change.
+
+
+## 25 October 2026 — loaded Gemma content identity
+
+Retain exact config/index SHA-256 and the completed consumed container SHA-256/
+byte count in a private-field immutable identity. Hash the same metadata buffers
+admitted by inspection; count successful chunks with checked arithmetic,
+including excluded modalities. Publish only after EOF, digest/count equality,
+finite values and capacity checks. The named E2B model copies the store evidence
+only after construction succeeds; tiny/manual constructors remain unbound.
+No file reopen, numerical kernel change or per-token hashing is added.
+
+The 104-byte store value stays within the existing 64 MiB metadata reservation;
+the arm64 model's optional copy adds 112 bytes through existing size accounting.
+All 312 CPU/334 Metal-feature tests, both strict checks, both iOS targets and
+seven payload/15 model release methods pass. Exact-byte synthetic metadata,
+copied-value lifetime, off-by-one/overflow and prior late-failure checks pass.
+The controller rejects eleven corrupted packets, with successful owned execution
+provenance and no invocation-failure claim for the regression wrapper.
+
+Actual Mac cold loading resolves 540 views and checks model/store identity
+against exact metadata and the fixed full-container pin. Model bytes are
+2,671,706,676; cold-load admission remains 2,671,730,828. Resident/physical peaks
+1,602,158,592 / 2,616,641,984 fit 6 GiB. The 14.71-second combined observation is
+not a controlled latency benchmark; no forward/tokenization/generation occurs.
+Historical generation measurements keep their original memory scope.
+
+See [content proof, accounting and limitations](../../gemma4-content-identity.md) and
+the [receipt](../../../benchmarks/results/2026-10-25-gemma4-content-identity-v1.json).
+Content evidence grants no repository provenance, tokenizer pairing, live
+admission or app capability. Full G3/quality, earlier precision/source/GPU/rotary
+gaps, resident Metal/performance, native ABI/app, phone and 131072-output gates
+remain open, with no catalog/profile/ABI/limit change.
+
+## 25 October 2026 — maintained Smol consumed-byte witnesses
+
+Add separate offline producer/replay tools and frozen exact metadata/range
+witnesses for the pinned eight-bit SmolLM2 checkpoint. Compute whole-container
+and per-range digests from the same sequentially consumed chunks; independently
+reconstruct coverage and reverse-order reads without importing the producer.
+This supplies a reference for later native load-time identity, including six
+repeated tied-weight reads, rather than inferring identity from a model path.
+
+A fresh relocated execution passes twelve portable and sixteen runner methods,
+two captures and two independent replays. All 694 ranges cover 142,955,136 payload
+bytes; the five generated data files equal the frozen fixture byte for byte.
+All six children exit successfully and are reaped/drained. Completed maximum RSS
+is 32,849,920 bytes within 128 MiB; physical footprint is separately recorded.
+The first rejected runner and preliminary newline-check failure remain uncredited.
+Interpreter/scripts are pinned without a full standard-library/native closure.
+
+See [design, evidence and limits](../../smol-load-identity.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-smol-load-identity-v1.json).
+No loader, ABI, capability, app, phone, Gemma4 or long-reply qualification changes.
+The next producer boundary still requires hashing the bytes actually converted
+or uploaded before publishing a private immutable loaded-model identity.
+
+## 25 October 2026 — resident standalone Metal proportional rotary
+
+Add a fixed-shape owner with cached host FP64 coefficients, one separate precise
+Metal pipeline and resident guarded buffers. Pair opposite half-head coordinates,
+use full-dimension exponents and prevent product/sum contraction. Copy inactive
+FP32 bits exactly. Validate bounded geometry and owned capacity before allocation;
+confirm command completion before CPU access. Pre-submission errors remain
+reusable; later errors poison the owner and preserve caller output.
+
+Independent rational rounding and eight-query-head local/global witnesses were
+frozen before target implementation. Actual M1 Pro execution passes eleven cases
+twice, 86,640 comparisons and twelve bitwise-equal token partitions, plus rounding,
+guards, negative-zero/subnormal copy and completed overflow/recreate checks.
+Maximum absolute error is 5.582909308188277e-7 under unchanged tolerances. Largest
+observed owner is 100,116 bytes; context's separate 64 MiB allowance is policy,
+not measured residency. Completed test RSS/physical peaks are 37,715,968 /
+26,460,760 bytes within a separate 1 GiB diagnostic ceiling.
+
+All 312 CPU/335 Metal-feature tests, both strict checks, both iOS targets and
+release geometry pass. Sixteen controller corruptions reject. The first GPU
+child passed but its controller rejected the prefixed first record; that attempt
+remains retained as failed, followed by a fresh reviewed successful run. The
+initial independent rounding-generator assumption failure is also retained.
+
+See [layout, ownership, checks and limits](../../gemma-metal-rotary.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-gemma-metal-rotary-v1.json).
+This is a G4 mathematical building block. It does not waive source/precision gaps
+or qualify resident graph execution, driver failure recovery, mobile fit,
+representative performance, app capabilities or 131072 numerical output.
+
+## 25 October 2026 — native Smol consumed-range source identity
+
+Add an explicit audited source path for the frozen Smol checkpoint. Authenticate
+metadata from the same parsed buffers and retain the original regular shard
+handle. Hash each raw chunk before conversion/delivery, verify all 694 trusted
+ranges and every repeated visit, and publish historical source evidence only
+when complete. Sticky failure/unwind state and public post-read validation prevent
+later successful calls from resurrecting proof. Identity has private fields and
+grants no successful model assembly or app capability.
+
+Seventeen new source/consumer methods pass, including actual second-chunk
+UnexpectedEof, mutation/restore, repeated reads, path replacement, callback panic,
+post-affine validation and invalid public arguments. All 329 CPU/352 Metal-feature
+tests, both strict checks, both iOS targets and release 13/4-method repeats pass.
+The initial strict-check failure is retained without credit; no warning waived.
+Seventeen controller corruptions reject under the actual typed-schema verifier.
+
+Actual source consumption checks 272 logical tensors/700 raw reads, including six
+additional embedding role reads. Ledger ownership stays 121,326 bytes. Source
+admission plus separate diagnostic reserve fits 512 MiB; completed RSS/physical
+peaks are 36,372,480 / 35,094,912 bytes. The 1.40-second observation is not model
+inference performance. The container digest is an authenticated reference anchor,
+not a newly computed sequential runtime digest or current-disk snapshot.
+
+See [ownership, evidence and limits](../../smol-native-content.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-smol-native-content-v1.json).
+Live-model binding, codec/profile pairing, native ABI/capabilities/app integration,
+phone qualification, full Gemma graph and 131072-output gates remain open.
+
+## 25 October 2026 — audited resident Smol model binding
+
+Add an explicit audited Metal model import that reuses existing upload/assembly.
+Initialize every constructor with absent identity; attach copied historical source
+evidence only after every upload and final assembly succeeds. An incomplete audit
+cannot publish the model. Legacy imports remain unbound, and no public setter can
+retrofit proof. Move padded-weight admission ahead of device compilation while
+keeping queried buffer-length validation before weight allocation.
+
+All 329 CPU/353 Metal-feature tests, both strict checks, both iOS targets and the
+release admission method pass. Zero-selection targeted attempts remain uncredited;
+corrected debug/release filters each run the intended method once against unchanged
+binaries, with the full Metal suite already covering it. Six separate actual
+legacy/audited processes pass
+the existing graph, generation/state and 512-capacity witnesses with unchanged
+numerical gates. Each graph run checks 816 snapshots/4,988,928 values; observed
+stage/logit errors remain 16 / 0.0589752197265625. Audited models report all exact
+reference hashes and 694 verified ranges/reads; legacy models report no identity.
+Nineteen controller corruptions reject across twelve valid prefix/mode cases.
+
+The inline option is 168 bytes within the metadata policy; model structure is
+832 bytes and resident weights remain 142,955,990 bytes. Maximum audited completed
+RSS/physical peaks are 260,472,832 / 249,332,408 bytes within the existing 1.5 GiB
+diagnostic policy. These regressions add no new raw-array, pairwise-bitwise,
+quality, long-context numerical or representative performance qualification.
+
+See [publication boundary, checks and limits](../../smol-model-content.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-smol-model-content-v1.json).
+Codec/profile/device admission, native ABI/capabilities and app integration remain
+separate. Earlier Gemma/source/GPU/precision and 131072-output gates remain open.
+
+
+## 25 October 2026 — consumed Smol tokenizer/profile content pairing
+
+Add an explicit audited codec loader with a separate 64 MiB text allowance.
+Validate every fixed source field/count before opening files, accept legitimate
+repeated reads, and hash bounded regular no-follow config/tokenizer buffers before
+classification/parsing. Share only the existing post-read parser/policy; attach
+immutable evidence after it succeeds. Legacy/synthetic codecs remain unbound.
+This pairs consumed assets with supplied historical source content; source-only
+loads can supply it too, so live model ownership remains a separate boundary.
+
+Eight new portable methods exercise admission, altered/special assets, same-buffer
+authority, parser policy and failure capture. Both original codec errors and a
+bounded active result pair survive capture serialization/admission/write failure;
+second-side capture is attempted independently. All 337 CPU/361 Metal-feature
+tests, both strict checks, both iOS targets and eight release methods pass.
+Three failed preliminary checks are retained without credit; no gate is weakened.
+Seventeen verifier methods pass again under a pinned owned wrapper; the earlier
+direct run remains preliminary evidence.
+
+A fresh actual Mac load supplies resident-model source evidence to the audited
+codec; the legacy codec loads separately for comparison. After the model drops,
+historical pairing persists. All 49,152 singleton decodes,
+two frozen independent chat encode/full-decode cases and 102 same-implementation
+prefixes pass. Each complete 49,258-frame capture is 4,962,863 bytes; files match
+byte for byte. Identity/option/codec sizes are 224 / 232 / 1,744 bytes. Completed
+RSS/physical peaks are 244,580,352 / 209,289,936 bytes within the separate 1.5 GiB
+policy. Singleton/prefix parity is not an independent tokenizer oracle; no
+numerical forward or inference performance is qualified.
+
+See [admission, evidence, diagnostics and limits](../../smol-codec-content.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-smol-codec-content-v1.json).
+Live model/codec ownership, native capability/response production, app/device
+qualification and all earlier Gemma/source/precision/131072-output gaps stay open.
+
+
+## 25 October 2026 — exact live native Smol model/codec retention
+
+Add two explicit audited ABI-v1 factories while preserving old entrypoints and
+record layouts. Share MLX publication/validation and choose the loader once.
+Reject invalid text allowance, CPU and identity-less Metal before text I/O; take
+source evidence from the supplied live model, validate consumed codec assets,
+then publish the codec with one clone of that exact model allocation. Failed
+factories retain no additional owner. Legacy/synthetic chats remain independent.
+Caller model admission stays live until retaining sessions/audited chats end;
+individual allowance maxima do not qualify combined process/device fit.
+
+All 343 CPU/367 Metal-feature tests, both strict checks, both iOS targets and
+four factory/two observation release methods pass. New fault tests retain bounded
+raw buffers before status/count/UTF-8 validation. Twenty verifier methods pass
+under the final pinned owned controller. Three release static libraries match
+all 26 header exports and strict C links/platform/minimum-OS checks; iOS binaries
+are not executed. Preliminary source-check/build failures and superseded
+regression metadata remain retained without credit; no warning/gate is waived.
+
+Actual separate Mac Rust/C diagnostics pass. Rust retains 39 identical frames
+per side, 10,028 bytes each, against two independent chat cases; exact owners
+progress two to one to final destruction, with rejected factories and wrong-thread
+calls preserving counts. C retains 15 statuses, three ID/two raw-byte buffers,
+matching 32 frozen Hello IDs/98 bytes and transactional short-buffer behavior.
+Chat/owner-option sizes are 1,760/8 bytes inside the existing text allowance.
+Completed RSS/physical peaks are 223,526,912/206,897,848 for Rust and
+225,968,128/207,504,032 for C, each below its separate 1 GiB diagnostic policy.
+
+See [ownership, ABI checks and limits](../../smol-native-pair.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-smol-native-pair-v1.json).
+This closes live pairing/retention only. Native capabilities/response production,
+app integration, phone fit, broader architecture/quantization, all earlier Gemma/
+source/precision/GPU gaps and 131072-output-plus-prompt requirements stay open.
+
+## 25 October 2026 — resident FP32 Gemma RMS prerequisite
+
+Add a separate bounded weighted/unweighted Metal RMS operator for Gemma's FP32
+activation contract. Preserve direct scales and exact fixed epsilon. Use scaled
+compensated reduction and integer exponent bookkeeping so large learned weights
+can amplify tiny original inputs without an intermediate flush losing the result.
+Keep immutable weights resident, count all numerical allocations before admission,
+check completion before CPU access, and publish caller output transactionally.
+Completed overflow poisons only that owner; the same weighted variant recreates
+successfully. Existing scalar and Half paths are unchanged.
+
+Before target creation, two independent captures freeze 16 cases / 57,685 outputs;
+Decimal80 and Astra's Decimal90 replay match every rounded FP32 bit. Nine portable
+reference methods, 345 CPU / 370 Metal-feature tests, both strict checks, both iOS
+compilation targets and one optimized admission test pass. Twenty-nine synthetic
+verifier methods reject corrupted numerical, ownership/status and typed records.
+
+Actual optimized M1 Pro execution passes 115,370 numerical comparisons, exact
+repeats and 31 row partitions, plus guards, preflight reuse, weighted overflow,
+sticky poison and same-variant recreation. Maximum gate fraction is 0.00117034
+under unchanged tolerances. Largest exercised owner is 100,604 bytes; process
+RSS/physical peaks are 46,055,424 / 31,326,808 bytes under separate 1 GiB policy.
+The 64 MiB context allowance is policy, not a measured residency claim.
+
+See [contract, checks, evidence and limits](../../gemma-metal-rms.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-gemma-metal-rms-v1.json).
+Retain as a standalone correctness prerequisite; no performance/default/app/phone
+claim. Full Gemma GPU composition, all previous source/cross-precision failures,
+and 131072 output tokens plus prompt remain open.
+
+## 25 October 2026 — resident FP32 Gemma packed projection
+
+Add original four-bit/group 64/BF16 projection with FP32 inputs/outputs, preserving
+existing Half and scalar paths. Keep weights resident across smaller/full batches,
+count padded storage/scratch before allocation, and check guards across all six
+buffers, inactive input/output capacity, status and finite output before
+publication. The diagnostic also verifies all immutable tensor bytes.
+Rejected inputs preserve caller output and
+remain reusable. Driver/in-flight failure injection is not qualified.
+
+Before target creation, preserve Astra's ordered-FP64-versus-exact cancellation
+counterexample. Add a derived upward summation-error admission alongside overflow
+admission, without changing gates. Two captures and Decimal400/exact replay
+freeze 27 cases / 306 outputs, adjacent admission boundaries and deep cancellation.
+Twelve portable methods, 346 CPU / 372 Metal-feature tests, both strict checks, both
+iOS compile targets and one exact optimized admission method pass. Thirty-one
+owned verifier methods cover valid transcripts and reject corrupt numerical,
+buffer, ownership and typed records.
+
+Actual M1 Pro execution passes 1296 comparisons over 648 outputs, 50 same-owner
+partitions and 25 full-capacity resumptions. All weights/padding/guards/inactive
+capacity match; constructor/input rejections and recovery pass. Maximum gate
+fraction is 0.0004018994. Largest exercised owner is 168,640 bytes; completed
+RSS/physical peaks are 34,537,472 / 22,479,424 bytes under separate 1 GiB policy.
+Previous output-rounded FP32/affine-ideal contracts retain their original labels.
+
+See [contract, evidence and remaining gates](../../gemma-metal-affine.md) and the
+[receipt](../../../benchmarks/results/2026-10-25-gemma-metal-affine-v1.json).
+Retain as a bounded correctness prerequisite, with no speed/default/app/phone
+claim. Actual Gemma activation fit, resident full graph and all earlier precision/
+source failures and 131072-output-plus-prompt requirements remain open.
+
+## 25 October 2026 — real Gemma projection admission audit
+
+Authenticate the pinned checkpoint and complete four-token mathematical trace.
+Stream all 556 coefficient tensors / 72,316,928 pairs, including both large
+tables, and verify all possible reconstructed codes with an independent exact
+rational oracle. All 278 text codebooks fit the existing numerical domain.
+
+Map 277 staged-FP32 projection inputs: 172 direct, 35 exact two-add residuals
+and 70 outward GELU-product envelopes. Prove numerical/geometry admission for
+260 calls. Preserve 16 inconclusive FF-down envelopes and one whole-head
+geometry rejection; both whole table owners exceed the unchanged row limit.
+Maximum coarse-envelope U is 4.071010368811304e-6 against unchanged 6.25e-7.
+
+Twelve offline and two retention methods pass. Two fresh captures and rational
+replays match all raw metadata and observations; six process/resource/cleanup
+closures pass. Maximum RSS/physical peaks across processes are 48,529,408 /
+39,142,096 bytes under separate 512 MiB policy. The first sandbox resource-query
+attempt remains failed and retained, despite its passing 12 test methods.
+
+See [scope, classifications and remaining gaps](../../gemma-affine-admission.md) and
+the [receipt](../../../benchmarks/results/2026-10-25-gemma-affine-admission-v1.json).
+Retain as independent admission evidence, without native/GPU graph, performance,
+app/phone or long-output qualification. Resolve the 16 product envelopes and
+table/head storage next; no numerical/source failure or limit is waived.
+
+## 25 October 2026 — coordinate-correlated Gemma product bounds
+
+Pair each captured gate coordinate with its actual multiplier before taking
+outward FP32 product maxima. This preserves operand correlation and proves nine
+additional sufficient input envelopes under unchanged operator S/U limits.
+The frozen trace now has 269 admitted calls: 171 direct, 35 exact residual and
+63 product envelopes. Preserve seven inconclusive FF-down cases (layers 0..6)
+and the tied-head geometry rejection; neither GELU nor projections execute.
+
+Keep the row-max default mode and require the new recipe externally in the
+independent verifier. All 277 default recipe/classification records match the
+authenticated original report. Sixteen offline methods, two retention methods,
+two complete coordinate captures/replays and seven owned resource/process
+closures pass. Coordinate bounds never exceed earlier envelopes per token.
+Maximum RSS/physical peaks are 52,625,408 / 45,548,240 bytes below separate
+512 MiB policy; coefficient capture hashes are unchanged.
+
+See [results and remaining gates](../../gemma-affine-admission.md#coordinate-correlated-product-refinement)
+and the [receipt](../../../benchmarks/results/2026-10-25-gemma-affine-coordinate-v1.json).
+Retain the reference improvement. Actual/native product admission, table/head
+storage, full GPU graph, source/precision gaps, app/phone and long-output work
+remain open; no limit or rejected result is waived.
+
+## 25 October 2026 — independent per-token L1 admission proof
+
+Freeze a tighter sufficient proof before modifying the engine. Sum magnitudes
+upward per token, then bound absolute products by maxW times that L1 sum under
+the existing S/U and dual numerical gates. Preserve the current max proof as
+the intended fast path; the future fallback must preserve transaction behavior
+when both proofs reject.
+
+Nineteen synthetic cases supply 47 exact/ordered outputs; independent Decimal400
+and Fraction checks agree. Fifteen cases pass L1, including twelve newly
+admitted cases, while the historical ordered-zero/exact-one and product-overflow
+diagnostics reject. Separate row ownership, cutoff adjacency, lost positive
+terms, signed zeros, actual widths and sparse cancellation are covered.
+
+All 277 captured-input calls replay independently: 269 retain legacy passes,
+seven FF-down envelopes gain proposed L1 admission, and the full head remains
+geometry rejected. Products remain envelopes. Original coordinate records
+and their seven inconclusive classifications are preserved.
+
+Thirteen portable and two retention methods, two identical captures, two
+independent replays and six owned process/resource closures pass. The late-read
+regression retains completed and attempted records plus the original error.
+Maximum RSS/physical peaks are 58,949,632 / 38,159,008 bytes under separate
+512 MiB policies. Preserve the first failed test attempt: Python 3.12's built-in
+compensated sum was inappropriate for an ordered-add diagnostic; the test now
+uses explicit additions, matching the unchanged producer/checker.
+
+See the [proof, frozen witnesses and limits](../../gemma-affine-l1.md) and
+[receipt](../../../benchmarks/results/2026-10-25-gemma-affine-l1-v1.json).
+Retain as independent pre-target evidence. Engine admission, kernel, thresholds
+and capability are unchanged. Actual GPU qualification of a later fallback,
+table/head storage, native/resident graph, source/precision, app/phone and long
+output requirements remain open.
+
+## 25 October 2026 — standalone packed projection L1 fallback
+
+Apply the independently frozen per-token L1 proof only after the original max
+proof rejects. Preserve old fast passes without additional input traversal;
+the fallback sums magnitudes per row with conservative FP64 outward steps,
+without allocating. Original S/U limits, shader, codebook/shape domain and
+buffer ownership are unchanged. Both proofs failing returns the original
+error before staging.
+
+All 347 CPU / 374 Metal-feature tests, formatting, both strict checks,
+iOS device/simulator compilation and exact optimized admission pass. The
+new scalar fixture checks 47 ordered / 42 admitted mathematical outputs;
+portable admission matches all frozen row sums, bounds and classifications.
+Test-only counters confirm no fallback traversal for old passes.
+
+Actual M1 Pro execution passes 15 new cases twice, 84 outputs / 168 dual
+comparisons, 16 same-owner partitions and 15 full resumes. Twelve cases are
+newly admitted. Four rejects recover without caller mutation or poison.
+A first-L1-valid/later-invalid batch preserves all warmed device buffers.
+Maximum new error is 1.401298464324817e-45, admitted tiny-input loss rather
+than bitwise subnormal qualification. The old 25 accepted cases / 1296 dual
+comparisons and their rejection/recovery checks pass unchanged.
+
+Ten owned checker regressions cover original weights, guards, status, token
+layout, deterministic repeats, missing records, late buffer preservation and
+a coherent wrong result that specifically fails the numerical gate.
+New GPU RSS/physical peaks are 26,460,160 / 15,385,176 bytes under separate
+1 GiB limits; old GPU peaks are 34,521,088 / 22,463,088. Regression peaks are
+72,204,288 / 31,736,384 under separate 512 MiB limits. Owner remains 240 bytes;
+largest new exercised owner total is 119,476 bytes. No latency claim follows.
+
+See [behavior, measurements and limitations](../../gemma-metal-affine.md#per-token-l1-fallback-qualification)
+and [receipt](../../../benchmarks/results/2026-10-25-gemma-metal-affine-l1-v1.json).
+Retain the checked standalone fallback. Real/native projection composition,
+table/head storage, full graph/KV, prior source/precision failures, app/phone
+and long-output qualification remain open; no capability or failed gate changes.
+
+## 25 October 2026 — complete real-projection input/output reference
+
+Retain all 552 arrays / 26,333,184 bytes for 276 geometry-fitting projections
+from the accepted complete four-token mathematical trace. Separate 206
+captured-state input reconstructions from 70 derived mathematical GELU products;
+the latter preserve original x**3, activation rounding, multiplication and final
+FP32 rounding. Preserve head-major context order, both residual roundings and
+zero signs. Expected outputs precede norms/scales/residuals and use the existing
+rounded staged-FP32 mathematical contract, not ideal-history or new exact dots.
+
+Independent complete name/shape/output mappings and raw-byte replays agree.
+Current actual-input proofs classify 269 max passes and seven L1 passes; the
+full tied head remains geometry rejected. Input/output byte totals are
+11,128,832 / 15,204,352, below the 32 MiB binary cap; every array is at most
+196,608 bytes. Keep the model-specific binary in an explicitly bound frozen
+artifact directory rather than ordinary source checkouts.
+
+Eleven portable and two retention methods, two identical captures, both full
+independent replays and six owned process/resource closures pass. Late-read and
+post-success report-write failures retain earlier arrays, partial attempt/report,
+failed manifest and original error. Maximum RSS/physical peaks are 62,603,264 /
+44,384,904 bytes, each below separate 512 MiB reference-process policies.
+No numerical Rust or device path changes, and no unrelated benchmarks rerun.
+
+See [contracts, ownership and remaining work](../../gemma-projection-trace.md) and
+the [receipt](../../../benchmarks/results/2026-10-25-gemma-projection-trace-v1.json).
+Retain as pre-native qualification evidence. Real GPU projection checks,
+native activation parity, head/table chunking, resident graph/KV, source/precision,
+quality/performance, app/phone and long-output gates remain open.
+
+## 25 October 2026 — complete real Gemma projections on Metal
+
+Execute all 276 fitting frozen four-token projections from the original pinned
+packed/BF16 checkpoint. Reuse one Context and one matrix owner at a time; keep
+206 captured-state reconstructions distinct from 70 mathematical GELU inputs.
+Retain the full head's exact geometry rejection before reading large spans.
+Production shader, admission limits and projection API remain unchanged.
+
+All 1932 GPU steps pass: two full repeats, 1104 one-token partitions and 276
+resumes. Retain 3036 complete actual-output/native-ordered arrays totaling
+76,021,760 bytes. Independent replay checks 7,602,176 repeated GPU values /
+15,204,352 dual-rounded-reference comparisons, plus 3,801,088 native-ordered
+versus rounded-mathematical comparisons. Maximum error is zero for these
+rounded FP32 references. Do not infer unrounded exactness or activation parity.
+Reconstruct all six complete device-buffer digests, padding, inactive capacity,
+status and guards from authenticated original spans and complete raw outputs.
+
+Formatting, both strict checks, 347 CPU / 375 Metal-feature tests, both iOS
+compile targets and optimized failing-writer regression pass. Preserve the
+first strict-lint-only failed check attempt; a logically equivalent predicate
+fix passes a fresh isolated check run. Eighteen replay tests cover malformed
+JSON/read bounds/cleanup and actual-capture integrity, including coherent
+mutations that specifically fail numerical, repeat and partition checks.
+Original apply outcome/device metadata precede raw-write failure, while the
+controller retains binary/text independently and closes every owned process.
+
+On Apple M1 Pro the largest owner totals 10,838,428 bytes including its 240-byte
+structure. Native RSS/physical peaks are 65,585,152 / 57,918,064 bytes under
+separate 1 GiB limits; replay peaks are 95,862,784 / 92,095,280 and regression
+peaks 136,380,416 / 107,184,968 under separate 512 MiB limits. These diagnostic
+policies and exhaustive reads/oracles do not measure whole-model fit or latency.
+
+See [contracts, measurements and exclusions](../../gemma-real-projections.md) and
+[receipt](../../../benchmarks/results/2026-10-25-gemma-real-projections-v1.json).
+Retain the real standalone projection qualification. Head/table storage,
+native activation/full resident graph/KV, existing source/precision failures,
+quality/performance, app/phone and long-output qualification remain open.
+
+## 25 October 2026 — pre-target table/head row witnesses
+
+Freeze original four-bit/group-64/BF16 tables of 19×128 and 11×64, their complete
+reconstruction, three-token projections and repeated/out-of-order row gathers.
+Keep exact rational dots, ordered FP64 and final FP32 contracts separate.
+An independent Decimal400/exact-IEEE replay validates original bytes, contiguous
+partitions, output placement and shared source accounting. Retain 192 negative
+zero weights by bits and 12 metadata views at odd two-byte offsets, including
+exact padding identities. Twenty arrays total 22,664 bytes under a 64 KiB cap.
+
+Bound materializing helpers independently of large arithmetic checks. Validate
+complete source geometry before gather output changes. A later finite-source
+reconstruction overflow, invalid ID or truncated source preserves the entire
+multi-row destination, including earlier and repeated IDs. Ten explicit boundary
+rejections and sixteen portable/two retention methods pass. Late recipe and
+report-write failures preserve earlier arrays/attempts, partial artifacts and the
+original cause. Two captures match and both complete independent replays pass.
+
+All six owned process/resource closures pass. Maximum RSS/physical peaks are
+35,143,680 / 23,888,616 bytes under separate 512 MiB policies. No model download,
+engine or GPU execution, numerical Rust change or inference-speed claim follows.
+The three small fixture files are frozen before native implementation.
+
+See [contracts and scope](../../gemma-table-reference.md) and
+[receipt](../../../benchmarks/results/2026-10-25-gemma-table-reference-v1.json).
+Retain as a pre-target storage witness. Native borrowed rows, chunked head/table
+storage and gathers, activation/resident graph/KV, existing source/precision
+failures, quality/performance, app/phone and long-output qualification remain open.
+
+## 25 October 2026 — native immutable packed row views
+
+Add a concrete Matrix row-range method over already validated original code,
+scale and bias slices. Validate nonempty ordered bounds, layout and checked byte
+offsets before slicing. Preserve the original source lifetime, metadata validation
+and all numerical loops; no new tensor allocation, reference count, unsafe code,
+per-element dispatch or raw mutable access is introduced. Parent/child views
+share the same allocations, counted once; no stronger pointer alignment is assumed.
+
+Structural checks cover all 54 admitted bit-width/dtype/group combinations,
+including offset sources, exact pointers/strides/lengths, nested ranges and a
+view outliving its temporary parent. The pre-target fixture verifies 960 native
+selected values / 192 negative zeros, 360 partitioned scalar outputs and invalid,
+reversed, outside/extreme ranges. Outputs match frozen rounded FP32 bits exactly.
+
+Formatting, both strict configurations, 351 CPU / 379 Metal-feature tests,
+iOS device/simulator builds and optimized unit/integration checks pass. All
+12 owned processes/groups close; actual test binaries and source inputs are
+bound. Original release executables remain unchanged. No explicit GPU/model
+suite or unrelated performance benchmark is rerun for this CPU storage change.
+
+See [ownership, checks and limitations](../../mlx-row-views.md) and
+[receipt](../../../benchmarks/results/2026-10-25-mlx-row-views-v1.json).
+Retain the checked borrowed view. The full-head single-owner rejection remains;
+transactional multirow gather, admitted chunked head/table execution, native
+activation/full resident graph/KV, prior source/precision failures, app/phone
+quality/performance and long-output qualification remain open.
+
+## 2026-10-25 — bounded resident packed projection chunks
+
+Hypothesis: immutable row views plus existing affine owners can admit a larger
+logical projection without expanding packed weights and can publish output
+transactionally across multiple GPU commands. Added a concrete
+[PartitionedAffine owner](../../gemma-partitioned-affine.md), bounded cold aggregate plan,
+all-child preflight, reusable CPU chunk/full staging and sticky post-staging poison.
+Actual capacities, padding/guards, child and parent structs are counted once;
+Context, caller output and source/loading overlap remain separate admission duties.
+
+Retain decision: correctness foundation accepted on M1 Pro. All 60 diagnostic
+steps/10 owners and 1501 successful output values pass independent complete-buffer
+replay; 22 actual-capture mutation/reader tests pass. An injected composition
+failure after two completed children changes internal staging but preserves the
+caller, blocks retry and permits a fresh same-geometry owner. Later-child numerical
+preflight rejection preserves every warmed buffer and permits recovery. Native
+diagnostic maximum RSS25772032/physical15188568 bytes; separate replay/regression
+allowances512MiB. These are diagnostic process observations, not an inference
+benchmark. Formatting, strict configurations,351 CPU/381 Metal-feature tests,
+iOS device/simulator checks and optimized plan/row-view checks pass. Astra reviews
+source, execution controller/replay, results and the final evidence packet.
+
+The old single-owner head rejection and numerical gates remain unchanged. Actual
+large head/table qualification, whole graph, performance, app/phone and long-output
+gates remain open; no historical source/precision failure or capability is waived.
+
+## 2026-10-25 — complete tied-head reference extraction
+
+Hypothesis: the accepted independent mathematical trace can supply the full
+real-head comparison boundary without another model run or retaining a dense
+head. Added bounded, authenticated [complete-array extraction](../../gemma-head-reference.md)
+and a separately written checker of every source/copied byte and typed descriptor.
+The 4218880-byte frozen binary contains 6144 FP32 inputs and 1048576 FP32 pre-softcap
+outputs for four tokens. Two captures are identical; both independent replays,
+17 mutation/reader tests and 3 original-error/partial-output retention tests pass.
+
+Retain decision: accept extraction integrity for later native diagnostics. No
+numerical reference reevaluation, Rust/GPU execution or source/quality grant.
+Maximum verification RSS 83017728 / physical 39469704 bytes, below separate 512 MiB
+process caps. Source/code, checked owner, results, freeze and publication receive
+Astra review before commit. Engine/test/shader/protected binaries stay unchanged;
+full-head execution, whole graph, historical source/precision discrepancies,
+performance, app/phone and long-output gates remain open.
+
+## 2026-10-26 — original full tied head on Metal
+
+Hypothesis: the reviewed resident chunk owner can execute the actual 262144-row
+Gemma4 E2B tied head within an aggregate workload budget while preserving original
+packed bytes, exact reuse and transactional publication. Added an explicit ignored
+[full-head diagnostic](../../gemma-real-head.md), separately labeled native ordered
+FP64-to-FP32 rows, complete independent replay and actual-capture mutation checks.
+All 16 chunks remain resident and execute sequentially; original CPU packed
+source vectors are dropped after upload and scalar reference. Large-buffer hashes
+stream through 4 KiB stack scratch. Safely completed child outputs are retained
+separately from caller arrays, with the original outcome published before raw
+writes and no access to unfinished commands.
+
+Retain decision: fixed four-token standalone head qualification accepted on M1
+Pro. Seven calls, 123 complete arrays and 37748736 raw bytes pass replay; 1048576
+scalar/math and 8388608 GPU/reference comparisons have zero difference against
+the rounded FP32 references. Repeat/part/resume are bitwise stable. All 24
+mutation/reader tests pass, including coherent wrong values, tolerated adjacent
+reuse drift, source/buffer/guard/staging corruption and missing outcomes. Owner
+policy is 235543088 bytes; complete actual-capacity workload policy 572937540
+bytes. Native maximum RSS / physical footprint 498171904 / 497746832 bytes stays
+below 1 GiB; replay/regression stay below separate 512 MiB caps. These are
+diagnostic process observations, not inference performance or full-model fit.
+
+Formatting, both strict configurations, 351 CPU / 382 Metal-feature tests, iOS
+device/simulator checks and optimized writer/row-view checks pass. Astra reviews
+source, checked controllers/replay, completed results and final publication before
+commit. Production operators/shaders/admission and prior tiny test bodies remain
+unchanged. Full graph, large table gather, prior precision/source failures, quality,
+representative performance, phone/app and long-output gates remain open.
+
+## 2026-10-26 — transactional scalar packed-table gather
+
+Hypothesis: a bounded gather can preserve the existing scalar row contract and
+whole-output failure atomicity without allocating staging or expanding a table.
+Added [Matrix::gather_rows](../../mlx-table-gather.md) for 1–32 IDs with checked whole
+shape, all-index validation and all-selected finite preflight before publication.
+Factored the unchanged single-row reconstruction check and write loops into two
+private statically dispatched helpers for the two concrete consumers. No new
+owner, source clone, unsafe code or per-scalar dispatch.
+
+Retain decision: accepted bounded scalar mechanism. Frozen original tables match
+all 960 canonical values, including 192 negative zeros; one-ID and 32-ID successful
+requests preserve repeated/reordered rows. Invalid requests and a later overflowing
+row leave the entire output unchanged, and valid selections recover. The private
+54-format check qualifies batch control against the existing row primitive.
+Formatting, strict configurations, 356 CPU / 387 Metal-feature tests, both iOS
+targets and optimized control/four fixture methods pass. Astra reviews source,
+owned checks, results and final evidence before commit. No GPU/model/performance
+suite or new resource/latency claim is added; matvec and all GPU code are unchanged.
+Actual large table selections and GPU gather/storage, whole graph, prior
+source/precision failures, quality, performance, app/phone and long-output gates
+remain open.
+
+## 2026-10-26 — reusable GPU gathers share original resident packed weights
+
+Hypothesis: embedding/table lookup can share immutable resident projection
+storage, preserving transactional callers without a second packed upload or
+expanded table. Added a separate concrete Gather workspace/pipeline over the
+existing PartitionedAffine, with fixed ID/output/status and CPU full/chunk
+scratch. Packed 4-bit/group 64/BF16 reconstruction uses precise FMA; duplicates and
+original slot order survive coarse chunk routing. Full request/readiness
+preflight precedes mutation. Caller publication follows all completed chunks;
+post-staging failure poisons only the workspace and recreation reuses the weights.
+Retained commands protect original buffers after request-borrow error returns.
+Original affine/partitioned numerical bodies and affine shader remain exact.
+
+Astra reviewed code, corrections, frozen independent replay and controlled
+execution. The first strict Metal check rejected a duplicate test-fixture module;
+its original failure/source snapshots are retained without success credit. A
+shared test-only fixture import/visibility fixes that lint issue. Review also
+caught the first-affine cold-list replay bug; a portable regression was added
+after the correction and before GPU use. No numerical tolerance, fixture or
+historical failure gate changed.
+
+Required formatting, strict default/Metal lint, CPU 356/16 ignored, Metal
+388/119 ignored, iOS device/simulator compilation and optimized plan 1/fixture 4
+pass. Actual M1 Pro capture passes 52 steps over four
+cases, 19072 lookup outputs and eight alternating affine calls; independent replay
+checks all complete source/workspace/affine buffers, IDs, guards, signed zeros,
+allocation epochs and CPU scratch. Six malformed and five matrix-state rejects,
+changed staging after two completed chunks, untouched caller, sticky poison and
+fresh-workspace recovery pass. Portable 5 and actual-capture/reader 29 regressions
+pass. No driver/in-flight failure is injected.
+
+Conservative aggregate native policy 335671488 bytes includes two Contexts,
+three simultaneous matrices and old/new Gather pipeline/workspace overlap.
+Native peak RSS 36274176/physical 25510536 bytes; replay 71761920/54346424 and
+regressions 107626496/61801240 remain below 1 GiB native/512 MiB checker allowances.
+Native 0.55 s includes diagnostics and is not a performance benchmark. Retain this
+standalone correctness mechanism; original production numerical paths are
+unchanged and no routing/staging Rust heap allocation is added per request.
+
+See [contract and measurements](../../gemma-table-gather-gpu.md) and the
+[public evidence record](../../../benchmarks/results/2026-10-26-gemma-table-gather-gpu-v1.json).
+Actual large-table loading/head/PLE selections, resident graph/KV, prior
+source/precision/rotary failures, quality/performance, app/phone and 131072-output
+plus nonempty prompt qualification remain open. No capability or limit changes.
+
+## 2026-10-26 — freeze complete real embedding and PLE lookup references
+
+Hypothesis: large native table qualification should compare every selected value
+against an immutable independent result before implementing its loader and GPU
+composition. Extracted complete staged-FP32 embedding [4,1536] and PLE lookup
+[4,8960] arrays for IDs [2,100,257,100] from the previously accepted real Gemma
+math trace. The two arrays contain 41984 values/167936 bytes, including duplicate
+rows. This is integrity-preserving extraction, with no new numerical evaluation.
+
+Small named producer/checker/test modules reuse authenticated head-reference IO
+helpers at the coarse artifact boundary. Independent explicit span definitions,
+full/compact metadata, complete byte equality and finite-value checks prevent
+scaled embeddings or partial probes from replacing the raw table rows. Astra
+review found a controller cap typo and a missing test helper import before any
+execution; both were corrected. No historical numerical failure was changed.
+
+Two controlled captures and independent replays are byte identical. Seventeen
+actual-output mutation/reader methods and three original-error/partial-output
+retention methods pass. First outputs, exact copied scripts/helper modules and
+interpreter, source endpoints and six absent process groups are retained.
+Maximum RSS 69533696/physical 31933136 bytes fit the 512 MiB per-process policy;
+no model-residency or performance claim follows. All Rust/shader/test sources and
+protected executables remain unchanged, so validation uses focused Python checks.
+
+Retain the three exclusively frozen fixture files for subsequent real original
+head/PLE gather tests. See [reference contract](../../gemma-lookup-reference.md) and the
+[public evidence record](../../../benchmarks/results/2026-10-26-gemma-lookup-reference-v1.json).
+Bounded large-table source/upload overlap, aggregate resident model memory,
+native table lookup, graph/KV, historical precision/source/rotary failures,
+quality/performance, app/phone and long-output requirements remain open. No
+artifact eligibility or output/context limit changes.
+
+## 2026-10-26 — bounded reusable source upload for resident packed chunks
+
+Hypothesis: a resident table can avoid a second full CPU representation during
+loading by reusing one packed source chunk. Added a named upload module and cold
+generic fill callback beside the existing partitioned affine. Working admission
+counts the complete resident owner, all three maximum source capacities and Vec
+descriptors simultaneously; actual capacities and every device buffer limit are
+checked before callback/upload. Returned owned bytes retain resident-only meaning.
+Complete callback overwrites, authenticated artifact IO and external side effects
+are explicit caller contracts. Late source/domain errors and unwinding panics
+propagate/drop the unpublished partial owner; prior resident owners stay valid.
+No numerical shader/body or old borrowed constructor preflight changes.
+
+Astra reviewed code, frozen diagnostics, independent source/projection replay and
+controlled execution. Two pure plans cover exact adjacent budgets, actual
+capacities, geometry/overflow and the PLE shape's 82575360-byte maximum source
+chunk (versus 1321205760 full source bytes) without large allocation. Required
+formatting/strict default+Metal, CPU 356/16 ignored, Metal 390/120 ignored,
+iOS device/simulator and optimized upload-plan 2/fixture 4 pass.
+
+The first GPU attempt exposed a test classification mistake: existing invalid
+metadata returns Unsupported, while the assertion expected Options. Original
+cause, unchanged warmed owner, exact old source/binary and failed outputs are
+retained without success credit. Only that test category changed; fresh complete
+source checks and the corrected GPU run pass, with no tolerance/domain change.
+
+Actual M1 Pro captures qualify five owners/13 published chunks, 20 source
+callbacks and 25 projections/777 bit-exact outputs. Independent replay checks
+all complete source prefixes, stable disjoint allocation intervals, GPU buffers,
+metadata padding/guards and CPU scratch. Budget-minus-one invokes no callbacks;
+first/late errors, invalid late metadata, original caught panic, unchanged warmed
+owner and fresh recovery pass. Portable 5 and actual-capture/reader 31 checks pass.
+
+Conservative native policy 167820292 bytes includes possible retained failed
+uploads. Native RSS 20234240/physical 9552448 bytes, replay 29884416/19415664 and
+regressions 39043072/27411128 fit 1 GiB native/512 MiB checker limits. These are
+separate process peaks and policy accounting, not model residency or performance.
+Retain the scoped uploader; see [contract and evidence](../../gemma-stream-upload.md)
+and the [public record](../../../benchmarks/results/2026-10-26-gemma-stream-upload-v1.json).
+Actual large-table upload/gather, aggregate full-model memory, graph/KV,
+historical precision/source/rotary failures, quality/performance, app/phone and
+long-output requirements remain open. No capability or context/output limit changes.
+
+## 2026-10-26 — complete real Gemma tables loaded once and gathered on Metal
+
+Hypothesis: the bounded uploader and separate resident lookup workspace can load
+both actual embedding tables without retaining a second complete CPU representation,
+then reuse their weights across chunk-boundary, reordered and repeated requests.
+Added an explicit ignored real-model diagnostic and independent pre-capture oracle/
+replay; production kernels and prior numerical functions remain unchanged.
+Both 262144-row original packed4/group64/BF16 tables (width 1536/8960) stay resident
+as 32 total chunks, with affine capacity 1 and separate lookup capacity 32 workspaces.
+
+Before the target executes, exact original source chunks and 35 complete rows per
+table are independently reconstructed and frozen. All 41984 original trace values
+match the accepted lookup reference bitwise. All 12 alternating requests, including
+all 32 chunk-boundary IDs, reverse order, one final row and 32 duplicates, match
+1102080 returned values exactly. The 198 live device allocations remain distinct;
+whole cold/final matrix digests and all 84 workspace/caller arrays (12 cold and
+72 request arrays) are retained, with independent simulation of inactive and stale scratch tails.
+
+Astra required preparation-schema consistency, structured partial progress and
+original-error retention, plus safe buffer metadata before raw publication.
+Those were fixed before actual execution, with small-source late-read/secondary
+publication and no-GPU raw-writer fault controls. Strict formatting/Clippy both
+configurations, CPU 356/16 ignored, Metal 392/121 ignored, iOS device/simulator,
+optimized ordinary 2 and fixture 4 pass. Eight portable checks precede preparation;
+Independent replay and all 37 tests (8 portable, 29 actual-capture/reader) pass. All 19 controlled process groups are
+absent and exact source/binary/model/oracle/output identities are bound.
+
+Conservative aggregate policy 1767039660 bytes counts both resident owners,
+both pipeline/workspace policies, maximum 82575432-byte source staging/descriptors
+and bounded surrounding allocations. Actual capacities must fit exact sub-budgets.
+Native M1 Pro RSS 1578057728/physical 1661945536 bytes fit 3 GiB; replay
+82624512/61801120 and regressions 169082880/93815528 fit 512 MiB each. These are
+separate process peaks and policy allowances, not whole-model or phone fit.
+Native 18.47 seconds includes loading/hashing/capture and is not a performance result.
+
+Retain the qualified actual-table composition; see [contract](../../gemma-real-tables.md)
+and [public evidence](../../../benchmarks/results/2026-10-26-gemma-real-tables-v1.json).
+Full resident Gemma graph/KV, historical source/precision/long-rotary failures,
+quality, generation performance, app/iPhone and 131072-output gates remain open.
+No capability, download eligibility or context/output limit changes.
+
+## 2026-10-26 — immutable GPU weights independent of lookup sessions
+
+Hypothesis: model weights should outlive construction Context and serve fresh
+session workspaces, avoiding self-referential model storage and unused per-matrix
+activation/status ownership. Added a concrete original packed weight owner with
+retained device identity, bounded reusable source upload and actual-capacity
+admission. Extracted the existing byte upload without arithmetic changes. Both
+legacy and immutable paths share the existing statically selected gather shader,
+command retention/completion, guards and transactional caller publication.
+
+Four construction Contexts drop before fresh-session reuse; 40 tiny request steps,
+22272 exact returned values, five original construction failure/unwind controls,
+width rejection without mutation, valid retry and four legacy/fresh-workspace
+recoveries pass. The old complete gather witness retains 52 steps and 29 checks.
+The real two-table witness retains all original bytes and independent pre-target
+row/chunk oracles: 32 callbacks, 12 schedules, 84 arrays/32624592 capture bytes,
+1102080 exact returned values and 102 distinct unchanged live buffer identities.
+Eight explicit portable controls precede GPU; 34 tiny and 34 real capture/mutation
+checks pass. Synthetic/transformed captures exercise readers only.
+
+Astra required full-path replay controls after catching a missing checker constant,
+both deterministic snapshot paths in preflight, and bounded same-buffer size/SHA
+checks for parsed receipts. These were fixed before controlled GPU execution.
+Formatting/strict Clippy default+Metal, CPU 356/16 ignored, Metal 395/123 ignored,
+iOS device/simulator and optimized 2+1+4 checks pass; all 26 owned source/actual
+process groups close. Source, original model/oracle/captures and executed snapshots
+are pinned, with first outcomes and partial captures preserved.
+
+Requested resident immutable owners total 1547704672 bytes, 5004032 fewer than
+coupled owners; this is not a measured physical-memory or speed improvement.
+Conservative aggregate policy 1829144492 includes both Context allowances,
+37585648 lookup policies, 82575432 maximum source staging/descriptors and bounded
+surrounding state. M1 Pro real native RSS 1655652352 / physical 1663059696 fits
+3 GiB; replay 86261760 / 65340088 and regressions 149504000 / 91554584 fit
+512 MiB each. Diagnostic load/hash/capture duration is not inference performance.
+
+Retain this ownership mechanism; see [contract](../../gemma-immutable-weights.md) and
+[public evidence](../../../benchmarks/results/2026-10-26-gemma-immutable-weights-v1.json).
+No driver/in-flight or physical foreign-device fault is qualified. Full resident
+Gemma graph/KV/scheduling, historical source/precision/rotary discrepancies,
+quality/performance, app/iPhone and 131072-output-plus-prompt gates remain open.
+No compatibility eligibility, tolerance or context/output limit changes.
+
+## 2026-10-26 — reusable projection sessions over immutable packed weights
+
+Hypothesis: fixed-geometry mutable scratch can serve independently owned model
+weights, preserve whole-request failure atomicity and share weights with lookup
+without coupling model lifetime to construction Context. Added a concrete
+Projection workspace, exact actual-capacity admission and borrowed per-request
+weights. Extracted the existing affine encode/completion/readback path with its
+shader, arithmetic and legacy API/ABI unchanged. All-child device/layout/row and
+cached maximum/L1 checks precede staging. Caller publication waits for all
+children; post-staging failures poison only the workspace.
+
+Four construction Context teardowns, 24 tiny weight owners/60 chunks, 88 steps
+and 1500 exact returned values cover changing weight owners and 7/8-row child
+boundaries, sparse-only L1 admission, rejection without mutation, failure after
+two completed children, sticky poison and fresh recovery with the same weights.
+Complete cold/active/inactive/stale buffers, source/guarded hashes, odd metadata
+padding, signed zeros and 204 allocation identities pass independent replay and
+39 capture/mutation tests. Five tiny and four head portable controls precede
+GPU; their synthetic reader paths are explicitly not native evidence.
+
+The real original tied table is loaded once in 16 bounded chunks, construction
+Context drops, then the same immutable weights serve two lookups around seven
+full/single/resumed projections. All 4194304 projection and 12288 lookup returned
+values match the frozen staged-FP32 reference bitwise; 49 arrays/54772416 bytes
+and 51 observed GPU identities pass independent replay and 38 mutation tests.
+This new reuse scope captures complete staging and final shared GPU scratch,
+not overwritten intermediate child device outputs or private lookup scratch.
+Separate unchanged legacy affine/L1/partition/gather/head checks pass; the legacy
+head retains 1048576 ordered/scalar and 8388608 GPU/reference comparisons with
+zero difference against rounded FP32 arrays.
+
+Astra reviewed the production extraction, independent readers and both controlled
+owners before GPU execution. Review separated new bitwise reuse from old scalar
+qualification and corrected an actual padding mutation to target unused payload
+bits rather than a guard. Development failures remain retained: duplicate test
+fixture inclusion failed strict lint and was replaced with shared test-only
+visibility; one reader-test byte constant was corrected from 1820 to 1420.
+No domain or numerical tolerance changed. Formatting/strict default+Metal Clippy,
+CPU 356/16 ignored, Metal 400/125 ignored, both iOS targets and optimized 2+1+5+4
+checks pass. All 38 source/actual process groups close; original references,
+source snapshots, partial-output paths and protected binaries are bound.
+
+Real requested weight/projection/lookup policies are 226495664/4743496/16851208
+bytes, source staging with descriptors 14155848 bytes, conservative aggregate
+439229020 bytes. M1 Pro real native RSS/physical peaks 274694144/265503464 fit
+1 GiB; replay 95125504/88507112 and regressions 171622400/138904320 fit 512 MiB
+each. Tiny native 20054016/9126464 fits 512 MiB. These are separate process peaks
+and conservative allowances, not whole-model fit or a speed/memory improvement.
+
+Retain the ownership boundary; see [contract](../../gemma-projection-session.md) and
+[public evidence](../../../benchmarks/results/2026-10-26-gemma-projection-session-v1.json).
+Per-child waits/readbacks remain. Foreign-device and driver/in-flight failures,
+full Gemma graph/KV/attention/scheduling, historical source/precision/rotary gaps,
+quality/performance, app/iPhone and 131072-output-plus-prompt gates remain open.
+No compatibility eligibility, tolerance or context/output limit changes.
+
+## 2026-10-26 — independent full Gemma resident-storage inventory
+
+Hypothesis: the next native model loader needs complete original component and
+guarded-buffer expectations before it can assemble independently owned GPU
+weights under cumulative memory admission. Added source-only capture, independent
+replay and failure/mutation controls. All 278 packed matrices/262 vectors,
+1096 text components, 308 packed chunks and 1186 expected guarded allocations
+are covered, including resident FP32 expectations for every BF16 vector.
+
+The full-container first pass hashes the exact interpreted header and all
+physical bytes; selected second-pass component bytes must match its ledgers.
+Two 806478-byte inventories match exactly, with complete independent replays.
+Fifteen portable methods and nineteen actual cases cover signed/short reads,
+true odd metadata padding, changed source/header, partial IO/publication,
+duplicate/missing coverage, coherent numerical-hash replacements and scope claims.
+Astra caught missing partial failure observations and later-output guards before
+execution. Prefix counts/digests, offending nonfinite bits/index, original-error
+priority, stable first retention, literal reviewed script pins, all output
+endpoint guards, repeated native-source inventory and final group audits were
+added. No failed actual run or numerical tolerance change was needed.
+
+Known matrix resident arithmetic is 2603500912 bytes; expected guarded vectors
+add 1151284. Largest source staging is 82575432 including descriptors, vector
+raw overlap 3072, Context/cold policies 67108864 each. New owner ABIs, actual
+capacity overhead, aggregate model policy and complete-model admission remain
+explicitly unknown. No full CPU packed model or expanded matrix is retained by
+the reference tools, and they do not execute an engine or GPU.
+
+M1 Pro capture RSS/physical peaks 29425664/21791488 and 29163520/24101560,
+replays 28753920/21938800 and 28721152/21283440, regressions 37978112/29295216
+fit separate 512 MiB process allowances. All eight owned groups close with
+source/input/output/binary identities bound. These are reference-tool resource
+observations, not model memory or performance. Prior committed `607bbb1` Rust/
+Metal/iOS checks are explicitly carried forward under unchanged-source/include/
+build-file pins, without pretending to rerun them for Python-only changes.
+
+Retain this frozen pre-target witness; see [contract](../../gemma-resident-storage-reference.md)
+and [public evidence](../../../benchmarks/results/2026-10-26-gemma-resident-storage-reference-v1.json).
+Next are native two-pass bundle loading, actual cumulative admission/failure
+recovery, full graph/session and all existing source/precision/rotary, app/device,
+quality/performance and 131072-output-plus-prompt gates. No capability or limits change.
+
+
+## 2026-10-26 — Astra-assisted delivery plan and model-window correction
+
+Research with Astra found stale umbrella statuses and a critical path obscured
+by standalone prerequisites. The existing real 32-position Gemma scalar,
+formatted and streamed generation is now recorded as implemented, with its
+numerical/product limits explicit. The next queue is complete storage → short
+hybrid Mac graph → precision/quality decision, followed by resident scheduling,
+model-driven capacity and Mac app integration. Reuse CPU forward/cache semantics
+and GPU packed projections/gathers; avoid a second full CPU model and unrelated
+ownership/framework work. Preserve every historical numerical failure and gate.
+
+The human corrected the requirement to the input/output context window supported
+by the selected model, replacing fixed 131072-output replies. Chat and Expert
+must use model-owned total/input/output constraints, rendered prompt/history
+accounting, checked capacity arithmetic and current device admission. Declared,
+implemented, qualified and usable limits stay distinct. Smaller runnable windows
+remain partial support; the full-model-window target stays open. Normal EOS can
+still stop earlier. Sliding KV retention is separate from absolute positions.
+
+Official pinned configs and upstream source confirm Gemma E2B's shared 131072
+positions and the optional Qwen3.5 hybrid graph. The latter is no longer a
+prerequisite for Gemma delivery. Its candidate listing was observed, but browser
+retrieval of immutable config/index failed; no artifact or fit is claimed.
+Hugging Face's revision/filtered-download contract supports reusing existing
+pinned acquisition infrastructure per admitted model. Phone feasibility is now
+an explicit early gate: provisional Gemma storage already exceeds the tested
+Qwen3 phone profile's process reservation, which is not a universal iOS limit.
+
+See the [research and decision record](../../m8-plan-review-2026-10-26.md),
+[updated Gemma queue](../../gemma4-implementation-plan.md) and
+[model-driven context plan](../../long-reply-engine-plan.md). Root/M8/engine plans and adjacent mobile/hybrid planning notes are
+aligned. Documentation checks find 968 local link targets with none missing;
+whitespace and protected-binary checks pass. Rust/hardware suites are not rerun
+for these documentation edits. This task changes no code, executable ceiling,
+installed app, model eligibility or performance/device qualification. In-progress
+native storage code and unrelated Apple metadata are excluded from its commit.
+
+
+## 2026-10-26 — complete immutable Gemma GPU storage
+
+The native E2bWeights loader now authenticates and owns all 278 original packed
+matrices and 262 FP32-converted vectors without retaining a second CPU model.
+Two-pass consumption binds the same interpreted header and every selected upload
+byte; complete coverage precedes identity publication. Actual owner/chunk/source
+capacities replace minima under cumulative admission. Small named role bindings
+and separate immutable storage/session boundaries preserve the modular design.
+
+All 1186 original guarded GPU buffers match the frozen pre-target inventory
+after construction Context teardown on M1 Pro. Requested resident ownership is
+2604665212 bytes, conservative load policy 2821589444 and maximum source staging
+82575432. Observed full-process RSS/physical peaks are 2644393984/2637728120,
+below the 6 GiB Mac policy. These measure storage loading/hash diagnostics, not
+inference performance. Tiny GPU/replay checks cover all 90 projection values,
+five rejected candidates, successful replacement and unchanged previous owners.
+Failed candidate buffers remain explicitly uncaptured.
+
+Formatting, strict default/Metal Clippy, CPU356 and Metal408 tests pass, with
+16/127 ordinary ignored checks. Both iOS targets compile. Ten portable verifier
+controls and both explicit release GPU tests/replays pass. All 15 owned command
+groups close; 3762 input bindings/30 outputs and protected binaries match.
+Astra accepted core code and actual evidence, after catching pre-run expected
+budget-message and Cargo-target-selector errors. The early lint and wrong-
+Python development attempts remain recorded; no failed actual GPU run or gate
+relaxation occurred. A publication-directory collision overwrote an earlier
+collector; its exact original SHA was restored from its prior creation record,
+and the first new publication was preserved in a fresh directory. Model/test
+captures were unchanged and not rerun.
+
+See [storage contract](../../gemma-resident-weights.md) and
+[public evidence](../../../benchmarks/results/2026-10-26-gemma-resident-weights-v1.json).
+Retain this storage mechanism; G4.2 short hybrid graph is next. Full graph/session,
+precision/quality, model-defined windows, app/phone fit and broader E1–E6/H1–H4
+acceptance stay open. Current capabilities and executable limits do not change.
+
+
+## 26 October 2026 — tiny hybrid Gemma graph and sessions
+
+**Hypothesis:** the existing packed GPU projection/gather owners can execute the
+complete tiny graph through the same scalar forward and generation transaction
+order, without a second CPU packed model or a separate GPU graph implementation.
+
+The sealed static operation provider changes products/gathers only. Generic
+model/session defaults retain the readable CPU reference. The hybrid adapter
+borrows immutable weights and external Context, pools geometry-specific scratch,
+and accounts for inline owners, external actual capacities and opaque policies
+once. Failed backend scratch requires a fresh session and prefix replay. The
+public named E2B norm-copy/graph path is compiled but remains unexecuted here.
+
+The Mac release test captures3805 records/3048704 bytes. Independent replay
+passes1524352 comparisons against both frozen mathematical and staged-FP32
+contracts with unchanged tolerances. A separate reader verifies35 original
+packed matrices and105 guarded-buffer identities/hashes before and after all
+controls. Native assertions check exact/minus1 admission, a smaller logical
+capacity, foreign-source rejection, late pre-command injected project/gather
+failure, unchanged public prefix, failed reset/reuse, fresh replay while the old
+owner remains charged, and shared stop/cancel/output-failure/continuation state.
+Memory/state transcripts supplement those assertions; they are not an
+independent allocation-layout or complete KV snapshot oracle.
+
+Tiny model/raw/generation ownership is171164/101744196/101744420 bytes,
+including100663296 bytes of Context/pipeline policies. Peak physical footprints
+are10224216 bytes for numerical execution and11354688 for controls, below the
+512MiB diagnostic policy. These are small-fixture observations, with no real
+E2B or performance claim. Ten numerical-reader and eight ownership-reader
+portable controls pass. Early expected-error and strict-lint failures remain
+retained; no numerical waiver occurred.
+
+Formatting, strict default/Metal Clippy,356 CPU/408 Metal tests and both iOS
+compile targets pass;16/129 ordinary ignored checks remain explicit. All23
+owned command groups close; protected release binaries remain unchanged.
+
+Astra accepted the code, readers and actual tiny evidence. Retain this composed
+mechanism; **G4.2 remains open** for real E2B vector-copy/adapter and complete
+raw/formatted/streamed generation. Existing precision/quality discrepancies,
+resident scheduling/performance, selected-model full windows and app/phone fit
+remain open. See the [contract](../../gemma-hybrid-graph.md) and
+[public evidence](../../../benchmarks/results/2026-10-26-gemma-hybrid-tiny-v1.json).
+
+
+## 26 October 2026 — original E2B hybrid graph and generation
+
+**Hypothesis:** the tiny qualified static provider composition also executes the
+original complete resident E2B checkpoint without retaining a second CPU packed
+model. Retain shared graph, KV transactions and generation/codec state; collect
+whole-graph evidence before adding more standalone prerequisites.
+
+The public real norm-copy/adapter now executes. All262 CPU vector copies match
+original bits and frozen FP32 digests. All1186 original guarded GPU buffer
+identities/hashes remain unchanged across Context teardown, copying and repeated
+sessions. Real raw exact/minus1 admission checks expected budget variants, with
+per-layer fault snapshots, pointers and actual capacities preserved.
+
+The four-token3-schedule capture contains3016 arrays/66600960 bytes and
+33300480 comparisons. Staged FP32 passes with maximum gate fraction
+0.0013644315853741284. Original mathematical near-zero-logit failures remain27
+per forward, repeated by reset, with maximum1.2599434792233821. No gate changes.
+
+The explicit Mac `gemma4_generate --backend hybrid` shares high-level raw,
+formatted and streamed handlers with default scalar. Nine raw/codec schedules
+across three profiles capture62 full distributions;32505856 comparisons pass
+both independent contracts, with matching-prefix schedules bitwise identical.
+Pinned previously qualified scalar state/codec captures separately verify
+stop/pending/history/continuation, split/cancel and stream terminal behavior.
+Hello emits `Hi! How can I help you today? 😊`,20 committed/21 history tokens.
+Passing these sampled-prefix rows does not resolve the full-prefill failures.
+
+Actual generation admission is2862709528 bytes, with specific minus1 rejection
+and identical exact-budget Memory in each profile. Physical process peaks are
+2899692064 raw,2970880856 formatted and2981284696 streamed bytes, independently
+below 6 GiB; raw ownership/policy sum is not a physical-footprint predictor.
+Single functional request timings, including full-logit diagnostic writes,
+are retained in the report; there is no benchmark/sustained speed claim.
+
+Eight real-graph and eight generation-reader controls pass. Formatting, strict
+default/Metal Clippy,356 CPU/408 Metal tests (16/130 ignored),12 example tests in
+each configuration and both iOS compilation targets pass. All31 owned groups
+close; protected release binaries stay unchanged. Astra accepted code, readers
+and actual evidence after strengthening budget/error and per-fault assertions,
+and catching a controller variable-shadowing bug before execution.
+
+Retain this first G4.2 short hybrid diagnostic. The next work is G2.1/G5
+precision/quality decision and G4.3 resident scheduling plus progressive context,
+including the32-position boundary before claiming the whole current capacity.
+Required numerical/quality, full model windows, app/phone fit and wider E1–E6/
+H1–H4 acceptance remain open. See [real hybrid contract](../../gemma-hybrid-real.md)
+and [public evidence](../../../benchmarks/results/2026-10-26-gemma-hybrid-real-v1.json).
+
+
+## 26 October 2026 — Gemma reference precision-gap localization
+
+**Hypothesis:** same-input replay can distinguish local norm/head/softcap rounding
+from inherited graph differences before changing a kernel or precision policy.
+
+A stdlib-only producer and independent reader authenticate the original complete
+math/staged reference, packed inventory, full model and eight selected source
+components. All713 states retain their actual execution order and all57 failed
+values. Thirty-one counterfactuals reproduce exact staged endpoints and satisfy
+the existing FP64 reconstruction bound. Source excerpts and attempted results
+are durably retained before gates, including controlled incomplete attempts.
+
+First inequality is scaled embedding0,−9.750119889240239e−8, split between
+constant/output rounding and well inside tolerance. First actual gate failure
+is layer14 post-FF norm5014. At the selected norm/Q/head failures, inherited
+inputs dominate local storage. Head inherited terms are approximately1.003e−5
+to1.392e−5 versus at most7.308e−10 local storage; softcap local boundaries are
+at most8.400e−10. These ordered nonlinear counterfactuals are not unique causal
+attributions or GPU error measurements; tiny reconstruction residuals include
+original BLAS versus `fsum` reduction differences.
+
+Six mechanism and eight corruption/capture controls pass. The analysis uses
+30336 selected original source bytes; physical peak136151784 stays below512MiB.
+Four owned groups close; all engine/shader files and protected executables are
+unchanged. Astra accepted the code, evidence and interpretation. No arithmetic,
+limits, app eligibility or original gate changes.
+
+**Decision:** defer an isolated head/norm rounding change, retain the FP32
+diagnostic candidate and freeze held-out/source-quality evaluation next.
+Product precision, source-BF16/GPU/rotary discrepancies, G2.1/G5 and the full
+model-window/app/phone/architecture plan remain open. See the
+[localization report](../../gemma-precision-localization.md) and
+[public evidence](../../../benchmarks/results/2026-10-26-gemma-precision-localization-v1.json).
+
+
+## 26 October 2026 — complete Gemma quality-input contract
+
+**Hypothesis:** the original held-out quality policy can be frozen for Gemma's
+exact tokenizer/template before numerical scoring, with independent source and
+Rust codec replay. Keep the full workload even though the current diagnostic
+cannot execute its required capacity.
+
+The producer and separate source checker authenticate all four original datasets,
+candidate metadata, conversion README and official baseline lineage. The latter
+is revision70af34e20bd4b7a91f0de6b22675850c43922a03, as recorded by the conversion,
+rather than a later upstream revision. Official tokenizer/template/generation
+identities match, and complete text configurations agree. The official10.246GB
+weight file is advertised metadata only; its payload is not downloaded, verified
+or executed. Same-four-bit-source precision parity stays separate from required
+unquantized quality.
+
+All100 tasks retain first40/30/30 source selectors, exact scorer/stop semantics
+and256/32/16 output caps. All10000 loss targets retain ten independent blocks
+with at most1025 input tokens and only one preceding-token overlap. Mean NLL
+increase≤0.05 and task pass-rate loss≤2percentagepoints are unchanged. Selected
+sources/cases remain forbidden for calibration/tuning. No generated code runs.
+
+The actual largest task is567 positions: HumanEval/32 rendered311 plus requested
+256. Full-suite demand is1025. Current32-position numerical support is explicitly
+insufficient; no prompts, output caps or blocks were clipped. The versioned
+manifest/loss IDs reproduce exact bytes, while full held-out text remains ignored.
+Source replay checks complete-corpus tokenization; the Rust codec separately
+matches all100 full prompts and10001 loss IDs using a verified65,536-byte prefix.
+
+Seven recipe, eight structural, six coherent source-content corruption and two
+coherent Rust rejection controls pass, plus five Rust example unit tests. CPU356
+tests/16explicitlyignored, formatting and strict default/Metal all-target Clippy
+pass. The first collection's copied integration test embedded a stale absolute
+CLI path; its failure remains retained, and a fresh CPU target passed without
+source/test/gate changes. All17 command groups close and protected binaries stay
+unchanged. Astra accepted implementation, controllers and actual evidence.
+
+Cold preparation/source replay/source-control physical peaks are419383648,
+407931160 and399723040 bytes; maximum source-control RSS976879616 stays below
+1GiB. Rust codec physical peak487506688 fits its1GiB+32MiB diagnostic policies.
+These are preparation/codec observations, not model fit or performance results.
+
+**Decision:** retain the full contract. Next authenticate/admit a bounded
+unquantized reference and separate chunk scratch from context capacity before
+scoring. Astra's derived BF16 geometry identifies selected-row PLE reading as a
+possible memory route; the official header, arithmetic/source agreement and
+whole-process fit still need proof. Quality, required historical precision
+gates, resident scheduling, full model windows, app/phone and widerE1–E6/H1–H4
+remain open. See [contract and next dependencies](../../gemma-quality-contract.md),
+[versioned inputs](../../../benchmarks/gemma-quality-v1/README.md) and
+[public evidence](../../../benchmarks/results/2026-10-26-gemma-quality-contract-v1.json).
+
+
+## 26 October 2026 — official unquantized Gemma header/layout
+
+**Hypothesis:** inspecting the exact conversion-lineage checkpoint can replace
+assumed BF16 geometry with a complete checked layout before admitting the
+unquantized quality reference.
+
+Two bounded HTTPS ranges acquire the length/header from official revision
+70af34e20bd4b7a91f0de6b22675850c43922a03. The header is263952 bytes, with all2011
+BF16 descriptors and full gap-free/nonoverlapping payload coverage. HTTP source
+provenance and frozen header identity do not verify the advertised full10.246GB
+weight file. No payload loading or numerical graph executes.
+
+The new stdlib inspector resolves exact official names/shapes/absolute offsets.
+The independent reader instead maps the prior278-matrix/262-vector inventory.
+Both agree on540 selected tensors totaling9257138758 bytes. Official text has
+60 additional K/V parameters in shared-consumer layers15–34, totaling37761024
+bytes. Inspected pinned Transformers code excludes these from construction/load
+and uses producers13/14. Every extra name/extent is recorded explicitly;1411
+audio/vision/connector descriptors remain excluded from execution.
+
+Actual header extents confirm PLE4697620480 bytes and tied embedding/head
+805306368. All selected BF16 text exceeds6GiB; selected-row PLE plus bounded
+projection reading is the next candidate, with payload identity, conversions,
+arithmetic/source agreement and whole-process fit still requiring qualification.
+This is a concrete route to the unchanged full quality suite, not a fit result.
+
+Eleven offline unit methods pass, including eight coherent layout corruptions
+with updated external digests. The independent capture replays all2011 extents,
+540 selected tensors and60 exclusions. Producer physical peak14828168/RSS24592384
+fits the128MiB header diagnostic policy. First-attempt layout/tests passed but
+the timing tool's clock query was sandbox-denied; original failure/streams remain,
+and retry obtained a real measurement with byte-identical layout. All10 groups
+close; core Rust/tests/examples/shaders and protected release binaries are
+unchanged. No new Rust/GPU/phone qualification is claimed. Astra accepted code,
+controllers and actual evidence.
+
+**Decision:** retain the acquired metadata and inspected layout; next acquire/
+authenticate the complete official payload and qualify bounded BF16 reading.
+G2.1/G5, original precision gates, full1025-position quality execution, model
+context/app/phone and E1–E6/H1–H4 remain open. See
+[layout/source scope](../../gemma-unquantized-layout.md),
+[offline metadata](../../../tests/fixtures/gemma-unquantized-header-v1/README.md) and
+[public evidence](../../../benchmarks/results/2026-10-26-gemma-unquantized-header-v1.json).
+
+
+## 26 October 2026 — complete official Gemma baseline acquisition
+
+**Hypothesis:** the full pinned unquantized baseline can be acquired and
+authenticated through one bounded staging descriptor, avoiding a second full
+assembly copy before reference-memory qualification.
+
+The new data-only acquirer uses the exact official conversion-lineage revision,
+minimal environment, HTTPS-only redirects and independent diagnostic caps. It
+inherits an exact body-file limit and restores the parent limit after spawning.
+An immediate bounded child journal, unconditional nested-group audits and an
+outer60-second cleanup grace close the process-lifetime gap found by Astra.
+Cancellation/deadlines cover transfer, hashing and publication; partial artifacts
+remain available. Source endpoints precede exclusive same-volume publication,
+and post-publication/receipt failures preserve the actual publication state.
+
+The full10246621918-byte file matches pinned SHA-256
+2db5482b20d746879bb3ef79b5203e9075a2e2b98f54ec7c2f281c1477ddc550 through the
+retained descriptor. Original header bytes and config match; an independent
+streamed cache rehash passes. One full payload resides at
+`models/Gemma4-E2B-it-BF16-70af34e`; weights stay ignored. No model code,
+weight expansion, numerical inference or quality grading executes.
+
+Seventeen offline owner tests and eleven transport regressions pass, including
+actual pipe/file caps, deadline/cancel/journal failures and reaping, path/source
+mutation, successful exclusive publication, failed post-publication identity and
+receipt error semantics. All14 recorded groups are absent. Core Rust/tests/
+examples/shaders and protected release binaries remain unchanged. Astra accepted
+implementation, controllers, offline and actual file-identity evidence.
+
+Completed-command physical peak35881752/RSS41680896 fits the256MiB acquisition
+policy;2582.81 seconds includes network/hashing/instrumentation under uncontrolled
+network conditions. These are not model-load, inference or app-fit measurements.
+The frozen quality workload and thresholds remain byte-identical; its original
+false payload flags describe the earlier preparation scope, while this separate
+record supplies subsequent full-file evidence.
+
+**Decision:** retain the exact authenticated baseline input. Next qualify real
+row/layout binding and the bounded reference's arithmetic/whole-process fit,
+then execute the full1025-position quality workload after numerical-capacity
+expansion. Historical precision, resident scheduling, full model windows,
+app/phone and E1–E6/H1–H4 remain open. See
+[acquisition contract](../../gemma-unquantized-checkpoint.md) and
+[public evidence](../../../benchmarks/results/2026-10-26-gemma-unquantized-checkpoint-v1.json).
+
+
+## 26 October 2026 — bounded BF16 reference-file owner
+
+**Hypothesis:** one authenticated file owner with bounded row views can supply
+the unquantized reference's weights without mapping or expanding whole tensors.
+
+The new Python reference owner authenticates exact size/SHA through one retained
+regular descriptor and preserves its original FD/path identity. Before/after
+checks, short-read/IO poisoning and changed/restored-source controls prevent
+reusing a newer source baseline. Argument rejection and cancellation preserve
+valid immutable weights. Close is idempotent and retains primary exceptions.
+The bounded, domain-separated read chain commits actual returned bytes only
+after endpoint/deadline checks; it is not a per-row proof against the whole hash.
+
+Concrete BF16 row views accept scalar/narrow vectors and cap contiguous/gather
+requests at128 aggregate rows. Raw tile cap is3145728 bytes; gather can hold both
+its bytearray and immutable result. Conversion/runtime/caller-retained tiles
+are separate charges. The official adapter binds exact source/layout identity
+and selected tensor name/shape/offset; only its rejection path is checked so far.
+These IO bounds do not become product context/output limits.
+
+Existing BF16-to-FP32 conversion is reused without another rounding recipe.
+Thirteen stdlib ownership tests pass. Three cold capture versions retain37 exact
+FP32 comparisons across full/split/gather/scalar schedules, with explicit dtype/
+shape checks, signed zeros/subnormals, separate+Inf/−Inf/NaN rejection and
+conversion-end cancellation. Runtime bytes and actual module/native origins
+are admitted. MLX/text files are present in the shared inventory but do not
+execute. Final cold physical peak289637192/RSS325877760 fits512MiB.
+
+An independent sparse-file recipe authenticates4294967360 logical bytes with
+20480 allocated bytes, then compares four reads/30 bytes at offset4294967304.
+Physical29639376/RSS34144256 fits128MiB. This qualifies offset handling beyond
+4GiB, not official weights or model fit. Unchanged owner/test sources justify
+reusing the original ownership/sparse checks; the two superseded witnesses are
+verified against exact archived copies. All eight groups close. Core Rust/
+shaders/existing tests/examples and protected release binaries remain unchanged.
+Astra accepted code, actual captures, source continuity and publication scope.
+
+**Decision:** retain this bounded reference mechanism. The separately committed
+official acquisition verifies the full baseline file, but positive real-row
+binding, reference arithmetic/whole-process fit and all numerical/quality gates
+remain open. Next use independently frozen real rows before reference composition
+and full1025-position quality execution. Historical precision, resident/context/
+app/phone and E1–E6/H1–H4 scope remain open. See
+[ownership contract](../../bf16-source.md), [fixture](../../../tests/fixtures/bf16-source-v1/README.md)
+and [public evidence](../../../benchmarks/results/2026-10-26-bf16-source-v1.json).
+## 2026-10-26 — Independent original BF16 row and projection references
+
+The stdlib producer and separate checker freeze real official Gemma BF16 values
+before target-reader trials. Fixed header/inventory geometry checks all 540
+selected tensors and 60 unused shared-KV consumers. Four sampled rows per matrix,
+all 262 complete vectors and a maximum 128-by-12288 tile produce 541 cases and
+4683043 exact FP32 values. All selected candidate vector bytes match their prior
+component hashes and original BF16 source. Two full matrices with dyadic inputs
+have independently replayed scalar FP64 fsum/ordered projection references.
+Existing FP32 gates remain; a separate strict FP64 gate is frozen before targets.
+
+Eleven offline ownership/bit/geometry/failure methods and thirteen coherent
+captured-data controls pass; each control rejects its intended error after
+updating applicable binary hashes. Source descriptors are authenticated in full,
+retained and guarded. Candidate bytes and attempt descriptors precede equality
+gates; independent cleanup closes both sources while preserving primary errors.
+Raw arrays/excerpts and partial structured diagnostics remain retained. The
+capture, replay and control workers peak at 92046128, 141067032 and 264324080
+physical bytes; maximum RSS is 425066496, below the 512 MiB diagnostic policy.
+All seven owned groups close. Core Rust/shaders and protected binaries are unchanged.
+
+This is reference preparation, with no positive target-adapter, whole-graph,
+upstream BF16, model-fit, quality, performance, app or full-window qualification.
+Next compare the concrete official row adapter, compose unquantized reference
+execution through existing operators, and expand context for the complete quality
+workload. Historical precision and wider E1–E6/H1–H4 requirements remain open.
+See the [reference record](../../gemma-bf16-rows-oracle.md) and
+[public evidence](../../../benchmarks/results/2026-10-26-gemma-bf16-rows-oracle-v1.json).
+
+## 2026-10-26 — Official BF16 row/projection path checked against frozen references
+
+The original Gemma source now has positive layout-bound target-reader evidence,
+using existing BF16 conversion and bounded projection operators. A separate
+stdlib plan freezes 1366 output schedules and 4004 ordered source spans before
+launch. All 541 cases pass grouped/split/repeated gathers and recovery, with
+14061417 exact FP32 values. The 128-by-12288 tile and aggregate gather pass;
+129-row requests reject without changing the audit and a subsequent read works.
+Layout, all 60 excluded tensors, unknown-name and wrong-source controls reject.
+All 65 intended admission errors pass; the final closed/unpoisoned owner matches
+all 4004 reads, 105193170 bytes and the precomputed ordered hash chain.
+
+Two original matrices run with both FP32 and FP64 projection output, preserving
+actual arrays before gates. Both scalar fsum/ordered references pass the original
+FP32 policy (maximum errors 2.9802322387695312e-8 and 7.142079994082451e-8); FP64
+matches exactly under its separate frozen policy. Independent saved-output replay
+passes all bytes, metadata, read audit and both scalar comparisons. Five coherent
+controls reject row bits, dtype, audit, finite projection error and NaN at their
+intended gates. No source checkpoint is changed by these controls.
+
+The runtime helper accepts explicit extra caller sources with unchanged defaults;
+13 ownership tests and the original cold 37-value witness pass again. The official
+cold worker peaks at 286606296 physical bytes/308854784 RSS, including runtime,
+oracle loading and conversion/projection overlap. All measured workers remain
+below 512 MiB. Nine new and seven reused oracle groups close. Core Rust/shaders,
+examples and protected binaries remain unchanged; no fresh unrelated engine/GPU
+qualification is claimed. IO tiles do not limit model input/output context.
+
+Next compose the unquantized graph through the existing weight interface and
+separate context capacity from chunk scratch for the full quality workload.
+Upstream BF16 parity, whole-model fit/quality/performance, app/phone and full
+model-window plus broader E1–E6/H1–H4 gates remain open. See the
+[reader record](../../gemma-bf16-reader.md) and
+[public evidence](../../../benchmarks/results/2026-10-26-gemma-bf16-reader-v1.json).
+
+## 2026-10-26 — Original BF16 complete short graph reference preparation
+
+A concrete row-backed weight adapter now supplies all278 matrices and262 vectors
+to the unchanged independent E2B graph/operators. Only1143948 bytes of finite FP32
+vectors stay expanded. The named original-BF16-weight profile uses exact FP32
+weight storage, separate FP64/staged-FP32 activations, FP64 reductions and
+Decimal80 rotary. It is distinct from upstream BF16 arithmetic and product
+eligibility. No new numerical operator or whole expanded model is introduced.
+
+The pre-execution plan fixes all2852 typed states for original/future four-token
+inputs,206807040 total bytes, and38182 source reads/18236693062 bytes. Two cold
+captures match their complete original/future array files exactly and match the
+independently prepared source-read chain. Each independent stdlib replay checks
+all states,1426 causal prefixes and24 scalar boundaries. Embedding/PLE,
+normalization and K-projection checks derive from official bytes; softcap is
+independently recomputed from saved head values, without independently rebuilding
+the head. All selected boundaries pass;
+1060 raw source excerpts/3493888 bytes are preserved before their gates. Internally
+nonfinite states rejected by the unchanged graph before its sink are not promised
+as captured. Eleven offline graph/composition/error/interrupt/endpoint methods
+and seven coherent saved-capture controls pass.
+
+Every cross-precision failure remains visible: eleven values across seven
+sequence/state comparisons, with maximum gate fraction2.106351505638157. The
+original sequence has two failed values; the changed sequence has nine. Full
+independent graph agreement and upstream BF16 qualification remain false. The
+capture/preparation pass does not turn these numerical failures into passes or
+waive earlier packed/GPU/rotary failures. Original raw per-position predictions
+are[236761,106,1018,106], without Chat/generation or quality scoring.
+
+A lifetime ledger admits512MiB including runtime/BLAS, source/conversion/tile
+overlap, vectors/views, graph/head/logits, sink copies, comparisons and endpoint
+verification. Both graph workers fit: physical peaks295470136/291013640 bytes,
+RSS301760512/381485056. All other measured workers fit too. Ten new and sixteen
+reused process groups close. Rust/core/shaders/examples and protected binaries
+are unchanged. These reference measurements do not establish model/phone fit
+or generation performance. Next separate numerical context from chunk scratch,
+validate the entire frozen1025-position workload and continue unwaived quality,
+resident scheduling, selected-model full-window/app/device and E1–E6/H1–H4 work.
+See the [reference preparation record](../../gemma-bf16-text-reference.md) and
+[public evidence](../../../benchmarks/results/2026-10-26-gemma-bf16-text-reference-v1.json).
+
+## 2026-10-26 — Native Gemma host scratch bounded by chunk rows
+
+Raw scalar sessions now accept a separate validated per-call chunk bound while
+retaining the current total context and cache/history geometry. Activations,
+producer proposals and both private/published logits allocate by chunk rows;
+attention buffers allocate heads*chunk_rows*positions. Default raw calls retain
+their32-row behavior, with the new usize bound included in metadata. Generation
+prefill_chunk_size selects host scratch, and scalar/generation/hybrid admission
+share the checked count. GPU pools remain32-row allocations and fully charged.
+Oversized calls reject before backend readiness, commands or scratch writes.
+
+Full tiny32-token schedules at chunk1/3/8/32 match both frozen independent
+contracts:48 emitted records,4352 scalar comparisons, maximum gate ratio
+0.017896043200363743. Actual tiny test-session ownership is49632/77040/145560/
+474456 bytes respectively; the three-row case saves397416 bytes against the
+same-build32-row case. These exclude immutable model and caller/process memory,
+and are not real E2B/release footprints. Budgets at exact/minus-one, invalid0/33,
+context exhaustion, oversized calls after a prefix, the exact injected final
+failure, retry/reset and zero steady-state numerical allocations pass. Generation
+pending/committed/replay/stop/cancel/output-failure behavior remains checked.
+
+The independent reader reconstructs all23 scratch dimensions, stage/cache
+payloads and aggregate session ownership. Six semantic corruption controls pass.
+The legacy hybrid reader keeps its default interpretation; explicit chunk-aware
+metadata uses an opt-in mode, with nine portable methods. The synthetic GPU
+control matches35 matrices/105 unchanged owners, three-row host admission and
+two pre-command failures. In-flight GPU failure remains unqualified. Formatting,
+default/Metal strict all-target Clippy,357 default CPU tests(16 ignored),16 scoped
+Metal tests(3 ignored) and the explicitly selected synthetic GPU control pass.
+Direct CPU/GPU processes peak at4276608/13795928 physical bytes and14434304/
+35012608 RSS, below512MiB. All14 owned groups close; protected binaries are unchanged.
+
+This closes only the bounded host-scratch prerequisite. Total context/history
+remain32, existing cache geometry and GPU pools are unchanged, and real E2B
+whole32,511/512/513,1024/1025 and model-full-window qualification remain open.
+The original BF16 captures were not rerun; all eleven new and historical
+source/precision/GPU/rotary failures remain. Next parameterize actual context,
+cache/history and reference chunks, preserving the full quality workload and
+broader E1–E6/H1–H4/app/device objective. See the
+[mechanism and evidence](../../gemma-chunk-scratch.md) and
+[public result](../../../benchmarks/results/2026-10-26-gemma-chunk-scratch-v1.json).
+
+## 2026-10-26 — Actual Gemma session context, KV and history capacity
+
+Raw scalar construction now admits independent context C and per-call chunk
+bounds before allocation. Each session owns a narrowed resolved KV plan:
+full producers retain C, local producers min(model_window,C), and consumers keep
+the original shared routes. Numerical attention retains the original model
+window and absolute positions. Raw and generation histories each allocate C
+u32 slots. Aggregate planning and actual accounting include both history heaps,
+route heap storage, owner objects, caches, staging, scratch and wrapper metadata;
+hybrid preadmission uses the same calculation. GPU pools remain32 and fully
+charged. The numerical executable ceiling stays32.
+
+Astra's review corrected an old512-slot expectation and required explicit
+attention-segment and query-visible-range witnesses. The independent pre-target
+source fixture and reconstruction freeze19 schedules at C1/2/3/4/5/17/32, with
+35 consumers,15 producers, two KV heads and distinct dyadic data. Native wide512
+and narrowed plans match6860 logical/segmented views and723184 exact K/V words.
+The reader reconstructs segment key positions/counts/head strides and per-head
+content hashes, rather than comparing unused physical storage. Foreign/stale
+proposals and overflow preserve committed prefixes.
+
+Tiny raw execution passes98 emitted records/7956 comparisons against both
+existing frozen graph contracts, including the W4 boundary. Maximum gate fraction
+is0.017896043200363743, with unchanged tolerances/arithmetic. Exact/minus-one
+budgets reject before allocations; invalid capacities, steady forwards, reset,
+exact late failure and retry check allocation-free behavior and stable addresses.
+Seven generation capacities check both history allocations, frozen greedy
+selection, final pending token, failure at C-1 committed positions, retry/replay
+and restored frozen prompts. C1 correctly rejects one input plus one requested
+output; its manually pending input is not claimed as a sampled token. Sampled
+full replay checks native state consistency, not independent changed-token logits.
+
+Actual instrumented tiny raw session bytes at C1/chunk1, C3/chunk3, C5/chunk3,
+C17/chunk3 and C32/chunk3 are15948/45540/48204/61116/77256. These exclude
+immutable model/caller ownership and are not release E2B footprints. Real E2B
+cache geometry alone allocates36864/184320/1179648 payload bytes at C1/5/32;
+no real weights or numerical graph execute in that witness. All23 new saved-output
+controls, six legacy chunk controls and nine portable hybrid-reader methods pass.
+
+Formatting, default/Metal strict all-target Clippy,360 default CPU tests(16
+ignored),18 scoped Metal tests(3 ignored) and the explicit synthetic GPU control
+pass. The latter checks35 matrices/105 unchanged buffer owners and two
+pre-command failures; in-flight failure remains unqualified. KV/raw/generation/
+E2B-cache physical peaks are3440976/4866408/4555112/8143232 bytes; chunk/GPU
+regressions peak4407656/14156352. Their RSS peaks remain below36 MiB, all within
+the512 MiB diagnostic policy. All26 current owned groups close; six pre-target
+and four preserved failed-attempt groups are separately rechecked absent. The
+initial strict-Clippy loop warning is corrected without changing gates. Protected
+release binaries remain unchanged.
+
+This closes the actual context/cache/history ownership prerequisite, without
+qualifying real whole32, larger511–1025 boundaries, unchanged full quality,
+phone fit, app eligibility or the selected model's full shared window. No BF16
+captures are rerun; all eleven new and historical discrepancies remain unwaived.
+Next expand bounded reference/native capacity to the full1025-position demand,
+resolve required precision/quality and whole-process fit, then qualify useful
+partial app/device delivery and progressive full-window support while continuing
+the broader E1–E6/H1–H4 plan. See the [mechanism](../../gemma-session-capacity.md) and
+[public evidence](../../../benchmarks/results/2026-10-26-gemma-session-capacity-v1.json).
+
+## 2026-10-27 — Pre-target full-sequence tiny1025 context oracle
+
+A new explicitly bounded batch oracle retains the historical scalar graph's
+arithmetic while admitting only the existing tiny WITNESS through1025 absolute
+positions. Gather/projection calls stay at most32 rows; full sequences require
+a streaming sink. Stable fsum softmax/reductions, FP32 stage boundaries, direct
+norms, GELU/softcap and Decimal80 rotary remain. Hoisting identical max(scores)
+work preserves arithmetic, without a measured speed claim. The historical
+batch source remains byte-identical for its authenticated replay consumers.
+No incremental cache implementation or native ceiling increase existed during
+collection; Rust/core/shaders/examples and protected release binaries are unchanged.
+
+All12 offline methods pass, including every old32-token state in both frozen
+contracts,33-token projection/gather tails and unchanged prefixes, invalid/E2B
+rejection and sink failure. Two cold captures contain identical original/future
+files of109051800 bytes each,360 complete states and218103600 bytes per capture.
+The original begins with the frozen32 IDs; subsequent IDs are(7*p+3)%17. The
+future sequence changes only the final token. Local retention remains W4; this
+is not real E2B numerical evidence at its512-position local boundary.
+
+Each independent replay checks1134848 frozen short-prefix values and18157568
+causal-prefix values. Forty-eight independently recomputed boundaries cover
+complete frozen-source embedding/PLE/scaling, late rotary from captured q_norm
+and attention from captured Q/K/V at positions511/512/1024 for all four layers/
+both contracts/sequences, and complete softcap from the captured head. These
+local recomputations keep full independent graph agreement separate.
+All1662532 selected boundary values agree with zero measured difference.
+All18175300 tiny cross-precision comparisons pass the unchanged gate; the
+largest ratio0.9539444607715041 occurs at layer.3.context. This does not waive
+any of the eleven real original-BF16 or prior packed/GPU/rotary discrepancies.
+
+The compact frozen fixture contains346994 manifest bytes and6974448 binary
+bytes: complete original/future logits, all original producer K/V,17 selected
+original intermediate positions and final future intermediates. Full traces
+remain immutable local evidence. Eight coherent controls update state/file/
+manifest hashes and then fail the intended shape/scope/prefix/late-operator
+checks. Exact mutation recipes preserve replay without retaining another218 MB
+private copy for each intended failed control.
+
+The512 MiB ledger includes cold runtime/BLAS, conversion, live graph arrays,
+capture/comparison and metadata/immutable tiny weights/margin. Actual capture
+physical peaks277922656/294896504 bytes and RSS339574784/320651264 fit. Complete
+cold collection takes357.21/359.07 seconds for four forwards plus serialization
+and endpoint verification per worker; these are reference costs, not engine
+performance. All11 owned groups close, both runtime inventories are rechecked,
+and all measured test/replay/control workers fit too.
+
+This closes the long tiny batch-oracle preparation prerequisite. Native Gemma
+still executes at most32 positions; real whole32, source/quality agreement,
+phone fit, app eligibility and the selected model's full shared window remain
+open. The measured scalar attention cost motivates a separate FP64 matrix-dot
+reference experiment with the same gates, before cached reference composition
+and native progressive context. Preserve the full1025-position real quality
+workload and broader E1–E6/H1–H4 scope. See the
+[reference record](../../gemma-long-witness.md) and
+[public evidence](../../../benchmarks/results/2026-10-27-gemma-long-witness-v1.json).
+
+## 2026-10-27 — Qualified faster reference attention before cached composition
+
+Measured scalar collection cost motivated replacing only reference QK and
+probability–V reductions with bounded FP64 matrix products. Scalar max/exp/fsum
+softmax and explicit FP32 stage cuts remain. Queries tile by eight, with absolute
+causal/local coverage checked before work. Immutable weights stay outside this
+operator; the new batch graph preserves other arithmetic. The historical scalar
+batch and long witness remain unchanged. Numerical inputs and every computed
+score, including masked columns, must remain finite: this explicit stricter
+domain is covered by rejection tests. No Rust or Metal kernel changes.
+
+Before candidate implementation, two cold scalar preparations freeze eight
+cases/96 complete arrays. Independent recipe/sequential-dot replay checks932968
+values and seven coherent controls. A compact fixture preserves all48 complete
+output arrays and source offsets. New offline checks total14 methods. Independent
+readers compare48 standalone arrays/932968 values, two identical tiny1025
+captures of360 states/36350600 values each, and2852 real four-token states/
+34467840 values. All matching-contract gates pass;111608 masked probabilities
+are exactly zero, and all4100 tiny/16 real raw argmax positions agree. The eleven
+prior real cross-precision failures retain exactly their old indices. Original
+BF16 source audit remains38182 reads/18236693062 bytes. Ten coherent reader
+controls reject intended numerical/profile/mask/audit/timing discrepancies.
+
+Two matched M1 Pro reference-operation runs use three warmups and ten samples,
+with paired alternating order and reversed initial order on repeat. Global
+D512/Q9/K1025 median scalar times11.537/11.594s become0.023035/0.022857s;
+trimmed localW512/D256/Q5/K516 times1.624/1.629s become0.006171/0.006278s.
+Both median and observed-range gates pass within and across runs. These CPU
+Python/BLAS reference measurements do not establish engine performance. All
+measured workers fit512MiB: maximum physical299303800 bytes, RSS399048704.
+AC power remains attached; no recorded thermal/performance warning is reported,
+while CPU power status is unavailable. All22 current and nine pre-target owned
+groups close. Astra accepts retaining this scoped reduction experiment.
+
+Native capacity remains32. Astra confirms the next native scalar tiny C<=1025
+task can use existing full-sequence and independent KV expectations directly;
+a second cached Python graph is not a prerequisite. Real whole32/1025-position
+execution, unchanged precision/quality gates, model/device fit,
+app eligibility and full selected-model shared windows remain open. See the
+[method and limits](../../gemma-reference-attention.md) and
+[public evidence](../../../benchmarks/results/2026-10-27-gemma-reference-attention-v1.json).
+
+## 2026-10-27 — Explicit native scalar witness context through1025
+
+A separate scalar WITNESS constructor admits C1–1025 while default, real E2B and
+hybrid/GPU limits remain32. Sessions use actual context-owned KV/history/routes
+and independent per-call rows<=32; default planning/construction use min(C,32).
+Raw and generation admission reject chunk33 before allocation/backend work.
+Existing numerical kernels, packed format, proposal transaction and publication
+order are unchanged. A second cached Python graph is not required: Astra
+approved direct use of the frozen full-sequence oracle and independent KV state.
+
+The first five exact-integer W512 structural cases were frozen twice before
+production edits. Astra caught missing wrap-straddling appends; a sixth case
+510→517/1018→1025 was frozen twice after draft admission/tests and before native
+execution, with old pins preserved and timing explicit. Two heads,15 producers,
+35 routes, logical/segmented view hashes, visible intervals and physical slots
+cover C511/512/513/1024/1025. Actual replay checks9,870 views and4,230 commits.
+
+Eight native schedules pass8,901,008 comparisons against both independent frozen
+contracts, maximum gate fraction0.15695623024778313, plus13,712 raw argmax rows
+including contracts/repeated observations. All-position logits/producer KV and
+17 selected intermediate positions agree. Late layer/final failures preserve
+committed KV/history/published logits; retry, overflow rejection, exact-budget,
+zero numerical allocations, reset and pointer stability pass. C1025 generation
+checks68 fixed prompt/restored-logit values/four argmax rows and separates the
+sampled final pending token from the committed prefix; failure/retry and bitwise
+sampled-history replay pass. Generated continuation quality is not claimed.
+
+Default CPU361 passes/19 ignored, formatting and strict default/Metal all-target
+Clippy pass; scoped Metal19 passes/five ignored. Explicit release long tests run
+separately. Seventeen coherent reader controls pass. Review tightened negative
+index/complete keyset checks, exact-case chunk and independent memory geometry,
+and moved rejected-append snapshots before the call. A Clippy-only test warning
+and later577,503,232-byte reader-control RSS failure remain archived. Removing
+redundant transcript copies lowers retry RSS to458,293,248/physical332,563,224
+within512MiB. Rust builds and native capture are authenticated and reused for
+the reader-only correction; no unrelated test or native capture is repeated.
+All27 owned groups close. Protected release binaries remain unchanged.
+
+Raw C1025 session bytes are1,086,540/1,145,724/2,003,892 for chunks1/3/32;
+actual KV payload1,051,648/history4,100/staging1,536/4,608/49,152 bytes. Native
+tiny process physical/RSS peaks14,270,872/28,753,920 bytes establish this scoped
+mechanism only. Astra accepts it. Next L3 engine-owned capability/shared-window
+admission for existing Qwen3 bridge and both app modes, preserving qualified
+limits. Real Gemma whole32, bounded long BF16 reference, full unchanged1025
+quality/precision/fit and progressive real-model/device windows remain open.
+See [the mechanism](../../gemma-scalar-long-context.md) and
+[public evidence](../../../benchmarks/results/2026-10-27-gemma-scalar-long-context-v1.json).
+
+## 2026-10-27 — Engine context facts and shared request preflight (L3.1)
+
+MLX dense Source retains declared total positions from the same bounded,
+duplicate-checked config document before requested context narrows Config.
+Successful resident Metal assembly copies the value; legacy declarations remain
+unknown. No late directory read or manufactured provenance/qualification hash.
+The additive136-byte C context record separates declared fields/known bits,
+global loader ceiling, loaded graph and session limits, absolute offset and
+sampled/committed/pending history. Qualification and whole-app/device fit are
+explicitly not evaluated. Native model/session IDs are process-local, checked
+against exhaustion and retained with exact model ownership after external release.
+
+The192-byte request record reuses generation's validation arithmetic and token/
+stop checks. Prompt/Reset use base zero; Append/Continue count full sampled
+history, including pending IDs. Checked overflow and exact shared capacity
+remain. Zero-output prefill is preserved, remaining capacity includes requested
+continuation, and actual generation revalidates after a non-reserving snapshot.
+Queries/preflight inherit creating-thread, busy and poison rules; failure leaves
+caller output untouched. No numerical loop, model/app range or codec limit changes.
+
+367 ordinary CPU tests/19 ignored, formatting and strict default/Metal all-target
+Clippy pass. Native lifetime/admission/thread/busy/poison methods pass with zero
+heap allocations on successful query/five preflights. Declaration/requested
+window divergence and later config mutation are checked. The explicit tiny
+Metal native path reports declared32/load8/session8 while disk changes to128
+and the external model handle is released; all three existing independent tiny
+Qwen3 GPU regressions pass. Linked C smoke confirms136/192-byte ABI records and
+failure output, and all28 header entrypoints match exports. Mac SDK27.0/minimum15
+is recorded, with no new real-model/window/device qualification.
+
+A missing field in a private synthetic fixture and a C invocation missing its
+SDK sysroot remain archived. The C-only retry authenticates/reuses unchanged
+Rust/fixtures/header/library/results; no unrelated build or GPU test is repeated.
+All21 owned groups close; protected CLI/benchmark release binaries stay unchanged.
+Astra accepts the source and complete scoped evidence. Next L3.2 wires both app
+modes with explicit codec/text/event/qualification policy and stale-instance
+handling, preserving current qualified ranges and remaining real Gemma full
+precision/quality/fit/context work. See [the API contract](../../context-admission.md)
+and [public evidence](../../../benchmarks/results/2026-10-27-context-admission-v1.json).
+
+## 2026-10-27 — Context facts and shared-window admission in both app modes (L3.2)
+
+Chat and Expert consume the fixed native records with strict ABI, field, identity
+and overflow validation. Retained model/configuration facts are separate from
+live session/history/remaining-capacity facts. Suspend drops live identity;
+explicit Chat Send recreates a session, while Expert Append/Continue still need
+replay. Queued unload/close invalidates facts immediately and finishing work
+cannot republish them. Same-folder reloads are distinguished by model instance.
+
+Both modes preflight on the native owner thread using fresh session facts; actual
+generation revalidates. Chat counts complete rendered history/prompt and requested
+reply within the shared window. Rejection preserves token prefixes, prior turns
+and draft edit/clear intent. The UI shows declared versus selected capacity and
+partial support, while explicit policy retains existing512-input/256-output Chat,
+128-output Expert and distinct text/event bounds. Saved unsupported preferences
+remain preserved offline. No model or app limit is raised.
+
+Strict Swift6/concurrency/warnings checks pass on Mac and both iOS SDKs. Policy
+checks cover27 malformed context and12 malformed admission records plus five
+frozen native arithmetic cases. CPU exact32/+1, pending state, suspend/replay,
+cancellation, identity and two stale-publication races pass, as do existing
+mobile-interface, scoring and pinned Smol real recovery regressions. Real Qwen3
+on Mac admits385 rendered input+127 requested output and rejects+128 in both
+modes without prefix mutation; three draft recovery cases and suspended Send
+with a new session pass. This witness cancels after one emitted token and does
+not qualify completed512-position numerical execution or full40960 positions.
+
+The new native package has all three slices/28 entrypoints. Device-unsigned and
+simulator-ad-hoc-signed app builds pass. The generated framework link selects the
+admitted package with its previous binding recorded; no physical phone is used.
+The context/error component is visually inspected at393-point width. Functional
+real-process peaks are1,001,964,984 physical/1,027,850,240 RSS bytes, without a fit
+or latency claim. The first frozen compile's Swift driver-name tooling failure
+is retained; its corrected retry preserves source and scoped checks. All32
+new/failed/nested groups close, protected release binaries remain unchanged.
+
+See [the integration contract](../../context-app-integration.md) and
+[public evidence](../../../benchmarks/results/2026-10-27-context-app-integration-v2.json).
+Next L4 directly qualifies independent numerical execution at Qwen3's current512
+positions before raising limits; Gemma real precision/quality/context and broader
+architecture/Hugging Face/device work remain open.
+
+## 2026-10-27 — Complete independent Qwen3 C512 captures with retained precision gap
+
+A separate reference owner reuses unchanged batched Qwen3 math and pinned real
+weights, preserving Half activation/KV and FP32 affine-weight/logit storage with
+FP32/FP64 arithmetic witnesses. Two512-token original/future-tail cases save all
+512 logit rows, embedding/final norm and20 boundaries in layers0/1/27. Each graph
+is508,297,216 bytes; four are streamed individually, with immutable per-capture
+journals and final partial-manifest/comparison preservation on failure. The ledger
+counts weights, source mapping, live graph/BLAS/operator temporaries, comparison
+pages/stripes, short reference and runtime metadata within6GiB.
+
+Twelve portable tests pass, including coherent mask, signed-zero causal,
+nonfinite, argmax disagreement and later-forward failure controls. Exact cold
+runtime admission precedes NumPy imports and checks actual module/native origins.
+Two complete captures are byte-identical; two independent readbacks reproduce
+all records. All252 old17 comparisons,126 typed causal-prefix checks and
+25,116,672 masked zeros pass per set. All1024 case/token argmax positions agree
+between contracts, with2048 IDs/margins saved per set. Repetition establishes
+reproducibility, not independent mathematical agreement or held-out quality.
+
+The unchanged short-context gates **fail7282 scalar comparisons** across32 state
+comparisons, including3250 logits per case. Layer27 is the first failing captured
+layer; layers2–26 are unobserved. Maximum logit difference0.17894530296325684 and
+maximum gate fraction2.197846894771957 remain rejected. Raw captures, schema,
+failed summaries and exact rejection are retained; no tolerance expands. The
+first controller correctly halts, then the reviewed recovery reuses unchanged
+source/plan/unit/first capture and admits only that complete expected numerical
+rejection for repetition/readback. All six groups close. Rust sources/protected
+release binaries stay unchanged; no native/window/quality/device upgrade follows.
+
+Reference physical/RSS peaks are1,259,243,752/2,510,831,616 bytes and
+1,299,450,064/2,472,673,280 bytes, both within6GiB. These are CPU-reference
+measurements. See [the report](../../qwen3-context512-reference.md),
+[frozen records](../../../tests/fixtures/qwen3-context512-v1/README.md) and
+[public evidence](../../../benchmarks/results/2026-10-27-qwen3-context512-reference-v1.json).
+Next localize exact failures, affected token positions/margins and disjoint
+unchanged target-acceptance intervals. Any new long-context policy needs separate
+independent precision and held-out/source quality justification; CPU disagreement
+alone does not justify changing production precision. Broader plan gates remain.
+
+## 2026-10-27 — Authenticated C512 precision coordinates and exact intervals
+
+A bounded reader streams frozen array bytes in65536-element blocks, preserving
+asymmetric FP32-versus-FP64 failure classification and separately evaluating each
+oracle's target-acceptance interval. Exact rational endpoints, conservative
+outward rounding and oracle-specific relative terms prevent false disjoint
+claims near touching bounds. The rounding guard is diagnostic only; target gates
+stay unchanged. Inclusive overlap is necessary, without proving representability
+or correct execution. Existing native acceptance compares canonical FP32 values;
+this analysis introduces no dual-oracle requirement.
+
+Whole-file hashes and descriptor/path endpoints plus hashes of actually consumed
+array bytes must match before completion. Partial findings retain authentication
+status and primary errors. Reads stay within admitted extents, probing only one
+extra byte for growth. Ten new tests cover exact/touching/relative/sign intervals,
+semantic layouts, coherent byte streams, partial hash findings, nonfinite data,
+extents/symlinks, truncation and growth with original-error preservation. All22
+cold tests including12 reference regressions pass.
+
+Every7282 case-specific failure is authenticated and localized:3641 unique stage
+coordinates/value pairs,40 affected positions25–504. Ten entries have disjoint
+bounds: five distinct pairs at position65, repeated in both cases, spanning two
+V-projection features, two attention-output features and vocabulary logit83172.
+Both contracts still select1879 there, with margins6.518730163574219 and
+6.510900497436523. Layer27 is the first failing captured layer, not a claim about
+unobserved layers2–26. A separate standard-library publication replay reads all
+7282 raw pairs and independently verifies coordinates, exact intervals, semantic
+axes, IDs/margins and duplicate/count summaries.
+
+External reader peaks295,912,312 physical/349,224,960 RSS bytes fit512MiB. Both
+owned groups close. No producer math, gate, native precision, model capacity or
+qualification changes. See [the diagnosis](../../qwen3-context512-precision.md) and
+[public evidence](../../../benchmarks/results/2026-10-27-qwen3-context512-precision-v1.json).
+Next directly qualify native C512 canonical-FP32 full-logit/argmax, selected-stage
+and chunk/state behavior with unchanged gates, retaining separate FP64 failures.
+Source parity, unquantized/held-out quality and wider/device contexts remain open.
+
+## 2026-10-27 — Full native C512 capture/replay, numerical qualification rejected
+
+An explicit Mac Qwen3 diagnostic captures every chunk for two512-token cases
+across chunk32, chunk128, uneven appends and late-single-token schedules. Its
+5016 snapshots cover57 states total:18 in each selected layer0/1/27 plus
+embedding, final norm and logits, every512 rows per case/schedule. Attention scores/probabilities remain
+unexposed. Actual arrays/journals precede numerical assertions. Independent cold
+readback authenticates all raw frames and consumed complete oracle arrays,
+reconstructs all metrics/examples and4096 argmax rows, and binds metadata/admission
+and generation claims to the immutable plan. All captured full-state arrays are
+byte-identical across schedules for each case; future prefixes also match.
+
+All state witnesses pass: exact capacity errors with state checks after each
+rejected call, fully cached no-work reuse, original-only510+2 admission/cancel1,
+continuation1879/0 and final pending flush, pre-cancelled reset, injected output
+failure/retry, fresh sampled-history replay and partial discard/reappend. The
+final generation row passes151,936 comparisons per oracle. One live numerical
+session shares the model; completed sessions drop before the next replay.
+
+The strict canonical FP32 acceptance **rejects18,400 values**,2300 in each pair,
+including2038 logits; FP64 diagnostic failures total37,040. The full trial compares
+1,008,357,760 values per contract including generation. All4096 raw argmax rows
+match, but do not waive numerical/quality gates. Layer27 is the first failing
+captured layer, with layers2–26 unobserved. No production operator, precision,
+capacity, default, architecture eligibility or qualification changes.
+
+Formatting, strict default/Metal Clippy,368 ordinary CPU tests/19 ignored and31
+cold Python controls pass. The ignored Rust numerical qualifier retains its
+failing assertion. The initial reader's shortest-decimal FP32 example mismatch
+is repaired by exact declared-FP32 bit comparison; all other fields and gates
+remain exact. Only cold units/readback rerun; the complete unchanged GPU capture,
+compiler results and both failure receipts remain. Twelve owned groups close.
+Protected release binaries stay unchanged. Complete actual raw output is
+4,033,431,040 bytes, held outside Git.
+
+On Apple M1 Pro/MacBookPro18,3,16GiB/macOS26.6.2(25G83), maximum logical admission
+is1,081,145,016 bytes. Native physical/RSS peaks1,190,167,944/636,125,184 bytes fit
+6GiB; readback272,909,224/279,019,520 bytes fit512MiB. These are diagnostic memory
+results, without speed, app-fit or phone qualification. See
+[the rejected qualification](../../qwen3-context512-native.md) and
+[public evidence](../../../benchmarks/results/2026-10-27-qwen3-context512-native-v1.json).
+Next one bounded same-input layer27 Q/K/V dot diagnosis authenticates selected
+packed rows and separates inherited inputs, local reduction and Half rounding,
+with passing-coordinate controls. Keep numerical gates and the full source/
+held-out quality workload intact; no all-layer CPU trace is a prerequisite.
+
+## 2026-10-27 — Exact same-input Q/K/V projection localization
+
+Astra reviewed a frozen14-coordinate layer27 plan with two canonical failures
+and two passing controls per Q/K/V projection, plus two disjoint CPU-envelope V
+coordinates. Whole parent files and consumed weight/input/output spans are
+authenticated. Original eight-bit/BF16 rows reconstruct once to FP32; exact
+rational1024-term dots round once to nearest-even Half. Error decomposition
+separates local arithmetic, inherited input and reference rounding without
+instantiating a model graph. A separate exact binary-search rounding replay
+independently reproduces all selected results.
+
+All42 own-input outputs match saved Half bits:14 native and28 CPU reference
+results. Extra local arithmetic error is zero at every selected point. Eight
+canonical failures remain failures and six controls remain passes. This supports
+retaining Q/K/V kernels unchanged; upstream input differences explain these
+selected discrepancies, without locating their first source or qualifying the
+whole context. Existing gates, precision, capacities and full quality demands
+remain intact.
+
+All31 cold tests pass, including nine new portable controls. Reader physical/RSS
+peaks288,441,208/271,482,880 bytes fit512MiB. Two diagnostic groups and both
+publication groups close. The initial environment-admission and publisher
+access-time failures remain recorded; corrected runs preserve source/data pins.
+Rust/shader/protected release artifacts remain unchanged. See
+[the diagnosis](../../qwen3-projection-localization.md) and
+[public evidence](../../../benchmarks/results/2026-10-27-qwen3-projection-localization-v1.json).
+L4 numerical qualification, source/held-out quality, broader model context and
+independent phone qualification remain open.
+
+## 2026-10-27 — First projection divergence with identical inputs
+
+The final bounded localization freezes12 layer0 Q/K/V coordinates: first two
+native/canonical differences and two exact controls per projection. Authenticated
+full embedding and normalization rows agree across all three profiles before
+dot analysis. Actual CPU FP64 multiply/add→FP32 weight reconstruction matches
+the fused FP32 rows. Exact dots, nearest-even Half and signed midpoint distances
+separate accumulation/store differences from inherited input differences.
+
+Native and FP64 outputs match exact rounding at every selected coordinate.
+Canonical FP32 crosses one adjacent Half boundary at the six differences; six
+controls and all original local gates pass. The14-point legacy diagnosis remains
+unchanged. This establishes an initial arithmetic-profile divergence without
+attributing every later failure to it. The reviewed stopping rule is met: retain
+kernels, stop per-layer diagnosis, and prepare a separate independent calibration/
+validation proposal before further target evaluation. Historical C512 failures,
+quality demands and production limits remain unchanged.
+
+All33 cold tests pass, including11 projection controls. New diagnostic physical/
+RSS peaks287,343,528/268,206,080 bytes fit512MiB; the legacy replay also fits.
+Three diagnostic groups and one publication group close. Independent exact
+bisection replay verifies36 new dots and midpoint distances. No GPU rerun,
+performance or phone qualification follows. See [the report](../../qwen3-first-divergence.md)
+and [public evidence](../../../benchmarks/results/2026-10-27-qwen3-first-divergence-v1.json).
+
+## 2026-10-27 — Separate experimental C512 calibration/validation inputs
+
+The candidate-v2 recipe freezes two authored calibration texts and three distinct
+validation texts. Explicit16-fold text repetition and token-prefix extraction
+produce six calibration cases at32/128/512 and eight validation cases at
+127/128/129,255/256/257,511/512. These are nested-prefix numerical witnesses,
+not fourteen independent texts or quality samples. Original offline Qwen3
+tokenizer/revision and arithmetic/storage/native-profile identities are pinned.
+
+The preparer validates fixed policy/profile/quality semantics, rejects duplicate
+arrays and cross-split content/prefix reuse, preserves exclusive outputs and
+retains partial files/manifest before controller success gates. Its57 exact
+layer/stage pooling keys and six calibration prefix pairs are explicit.
+Calibration alone may derive experimental gates using the frozen formula;
+absolute envelope/adoption review remains pending. Native/canonical-FP32 and
+CPU cross-precision comparisons have separate rejection rules. Historical C512
+rejections are excluded from both splits and remain rejected.
+
+Six cold controls pass. Two actual preparations match every manifest/array byte:
+14 arrays,1344 calibration tokens and2175 validation tokens. Independent
+publication verifies complete arrays/splits/prefixes; four owned groups close.
+Physical/RSS peaks264,963,392/459,177,984 and268,600,712/469,549,056 bytes fit512MiB.
+No numerical graph, target validation, derived gate or adoption occurs. Original
+10000-target/100-task quality,1025-position demand,0.05-nat/2-point limits,
+unquantized baseline and separate source parity remain required without clipping.
+See [the frozen proposal](../../../benchmarks/qwen3-context-candidate-v2/README.md) and
+[public evidence](../../../benchmarks/results/2026-10-27-qwen3-context-inputs-v2.json).
+Next CPU calibration precedes immutable gate review and untouched validation.
+
+## 2026-10-27 — Complete experimental CPU calibration capture and readback
+
+The unchanged independent Qwen3 graph now captures all six calibration inputs
+with separate FP32/FP64 arithmetic, original reconstructed weights and Half
+storage. Validation token arrays remain unopened. One model/returned graph is
+live at a time. Each run saves12 complete graphs/756 arrays/768,983,040 values,
+including CPU attention scores/probabilities outside the57-state target map.
+Complete storage is2,569,469,952 bytes; the prior conservative5,214,106,290-byte
+memory ledger and two-capture disk admission remain within their limits.
+
+Active array descriptors retain intended/actual bytes and hashes through short
+writes. Returned nonfinite arrays are saved before rejection. Per-attempt/final
+journals preserve partial results and original errors; export-level failure
+controls verify earlier captures and owner closure. Internal graph failures
+cannot expose unreturned states and gain no capture claim. Independent streaming
+readers verify exact coverage/schema, every value's finiteness, full/array hashes
+and descriptor/path endpoints. Separate standard-library publication replays
+complete raw hashes and geometry without loading a model.
+
+All13 cold tests pass. Both cold captures have identical complete record sets;
+both full readbacks pass. Five execution groups and the publication group close.
+Capture physical/RSS peaks1,275,463,936/2,188,410,880 and
+1,245,940,064/2,190,180,352 bytes fit6GiB. Readback peaks
+292,684,760/274,661,376 and292,930,472/269,058,048 bytes fit512MiB.
+No gates, numerical/source/quality/device qualification, precision or capacity
+changes. See [the report](../../qwen3-context-calibration.md),
+[frozen metadata](../../../tests/fixtures/qwen3-context-calibration-v2/README.md) and
+[public evidence](../../../benchmarks/results/2026-10-27-qwen3-context-calibration-v2.json).
+Next experimental gate derivation and immutable review precede any validation.
+
+## 2026-10-27 — Experimental C512 envelope derived, rejected for qualification
+
+The frozen CPU calibration alone supplies57 independent stage/layer gates under
+the predeclared formula. Six cross-precision comparisons and six prefix pairs
+under both arithmetic profiles produce1026 bounded comparisons/36 parent
+admissions. Consumed prefixes have explicit hashes and immutable full-parent
+authentication; full-array hashes and endpoint checks remain mandatory. Maximum
+coordinates/value pairs support direct inspection. No native, historical-failure
+or validation values enter derivation. Partial findings survive errors; no gate
+artifact returns until all owners close successfully.
+
+Two cold runs agree exactly. Independent admitted replay with different block
+sizes verifies all1026 comparisons/witnesses, pooled errors and final formulas.
+All18 cold tests pass. Comparison-label metadata was separated from span audits;
+the corrected cold runs require the exact original gate SHA. Original reports
+and the unchanged derived pending artifact remain. Seven owned groups close.
+Corrected derivation physical/RSS peaks294,355,880/276,938,752 and
+297,436,144/292,339,712 bytes, replay304,202,640/320,536,576 bytes, fit512MiB.
+
+Astra **rejects the envelope as a qualification contract**. One prose512
+position drives24.5 layer27-output and1.1971473693847656 logit differences,
+yielding blanket atol49 and2.3942947387695312. All prefix maxima are zero, but
+no independent error/quality budget establishes those allowances remain
+discriminative. Reproducibility or exact argmax does not establish distribution/
+quality preservation. This does not prove a native bug or failed model quality,
+and introduces no arbitrary replacement ceiling. Validation stays untouched;
+precision, capacities and historical rejection statuses remain unchanged.
+
+See [the artifact and separate review](../../../tests/fixtures/qwen3-context-gates-v2/README.md)
+and [public evidence](../../../benchmarks/results/2026-10-27-qwen3-context-gates-v2.json).
+Next independently pin/execute the original quantized source precision profile
+on calibration inputs, retaining complete unquantized/held-out quality demands.
+
+## 2026-10-27 — Qwen3 Mac delivery focus and bounded decisions
+
+The human requested Qwen3 on Mac first and completion of the existing source
+experiment. Astra reviewed the [focused delivery queue](../../qwen3-mac-delivery-plan.md):
+source evidence → one precision decision → concrete C512 qualification work →
+1025/full checkpoint-specific quality → admitted Mac Chat/Expert/HF journey.
+Q1–Q5 define the near-term delivery; expansion toward40960 shared positions
+follows. Gemma, other architectures/optimizations and iPhone remain open but
+outside this critical path. Existing L3 functionality is credited and reused.
+
+The four broader plans now defer to this execution order while preserving their
+requirements and historical evidence. A failed numerical gate remains failed;
+no new contract is evaluated against untouched validation before review/freeze.
+Full10000-target/100-task quality and an unquantized baseline remain required.
+Correct primitives and schedule-independent cache behavior close their bounded
+investigations. Further preparation must finish the existing source experiment
+and lead to a retain/change/reject decision. Coherent code tasks retain Astra
+review, relevant checks, improvement recording and commits; mechanical edits
+do not become separate review cycles. Progress is delivered capacity, full
+quality and app journeys. This is a plan correction, not a new qualification.
+
+## 2026-10-27 — Original Qwen3 source experiment complete; Half candidate retained
+
+The unchanged original eight-bit source now executes all six frozen calibration
+cases twice in a genuinely isolated MLX-only environment. Both complete sets
+agree bit-for-bit:204201984 BF16 logits/set with exact FP32 widening. Two full
+bounded readbacks pass. Capture peaks1.380/1.495GB fit6GiB; readback peaks315MB
+fit512MiB. Twenty-three cold source checks and four distribution checks pass.
+Failed cold imports are preserved; no library or availability check was patched.
+
+Saved-data comparison covers1344 full distributions/1338 next-token targets,
+both CPU Half arithmetic profiles, stable FP64 losses/KL/TV and exact margins.
+Three source/CPU greedy differences represent two unique positions, including
+an exact BF16 tie repeated across prefixes. Source itself changes one greedy
+choice with execution length. Average source/CPU TV is about0.00479; diagnostic
+loss differences have mixed signs. These overlapping authored cases are not
+held-out quality, native execution or an unquantized baseline.
+
+Astra's concrete decision closes Q1/Q2: retain native Half unchanged **as an
+experimental candidate**, reject current C512 qualification, and stop further
+layer walks/envelope expansion. No BF16 change, adopted tolerance, capacity or
+app-limit increase. The [focused queue](../../qwen3-mac-delivery-plan.md) narrowly moves
+diagnostic1025/full quality before a new precision contract. Freeze the candidate
+and existing quality rules before scoring; never fit tolerances to held-out
+results. The next code task is the explicit diagnostic1025 path with bounded
+memory and boundary/state checks. See [the source report](../../qwen3-quantized-source.md)
+and [evidence](../../../benchmarks/results/2026-10-27-qwen3-quantized-source-v1.json).
+
+## 2026-10-27 — Explicit native Qwen3 diagnostic1025 capacity/state path
+
+An explicit quality-diagnostic loader admits only real Qwen3 0.6B geometry up
+to1025 positions, selecting its policy before device creation and retaining
+ordinary512/app boundaries. Packed weights, Half activations/KV, kernels and
+memory/session planners are unchanged. Smol audited identity remains restricted
+to its existing loader variant. CPU policy checks reject wrong shapes, families,
+rotary/epsilon and maximum+1 without requiring Metal.
+
+The reviewed release GPU witness passes exact/minus-one memory admission,
+capacity/offset overflow, partial-prefill discard/resume, full1025 commitment,
+atomic rejected append/replacement/continuation,128/37-row exact replay,
+position1023 causal-prefix stability with a changed future token, and sampled
+pending/cancel/later-commit semantics at the boundary. Whole-process physical
+peak1126729000/RSS992460800 bytes fit6GiB. Build/test groups close; all pinned
+source/model/reference endpoints pass. CPU suite, formatting and strict
+default/Metal all-target Clippy pass.
+
+The interrupted wrong-toolchain build and failed pending-logits test assumption
+remain retained. Rust1.90 is explicit on retry; the corrected test expects
+unavailable logits while sampled history is pending. No engine or gate changes
+were used to obtain the pass. This is diagnostic capacity/state evidence,
+not independent1025 numerics, full quality, app-window expansion or performance.
+See [the report](../../qwen3-quality-diagnostic.md) and
+[evidence](../../../benchmarks/results/2026-10-27-qwen3-quality-diagnostic-v1.json).
+
+## 2026-10-27 — Full Qwen3 quality inputs/worker frozen; baseline acquired
+
+The explicit diagnostic worker now supports complete10000-target loss and
+100-task generation under original0.05-nat/2-percentage-point policies. Full
+loss requires exactly10001 IDs; its four-token probe is separate and expressly
+non-quality. All causal rows are scored once with existing stable FP64 loss;
+task caps256/32/16, EOS151645, reset and pending semantics stay explicit.
+No app-window or numerical qualification is enlarged.
+
+Checkpoint-specific inputs freeze actual numerical/worker source bytes, pinned
+plain Qwen3 rendering/tokenization and complete source selection. Independent
+Python source replay and Rust rendering/tokenizer replay pass all100 tasks/
+10001 loss IDs, including70 actual app-codec prompts. Twelve coherent metadata/
+source/asset corruptions and two Rust controls reject. Input manifest SHA
+908e037de5b399d9e9a8dd09aa9fcc568f67abb714b06508672deac6bb8ac529;
+loss-ID SHA f53c5b0c446959164c4d2265166040123f95be5b6d9eec784895fb45a8215beb.
+Largest request HumanEval/32 needs289+256=545 positions: no clipping to512.
+
+The official contemporary BF16 baseline is acquired and hash-verified:
+1503300328 bytes, f47f71177f32bcd101b7573ec9171e6a57f4f4d31148d38e382306f42996874b.
+Config equality excluding quantization and identical tokenizer payload are
+independently checked. Converter source-revision omission remains explicit;
+official history/digest continuity supports the selected pinned baseline.
+
+Cold input tests4, portable protocol tests2, Metal example tests5, full source/
+codec replay and the bounded short GPU target/loss probe pass. Source/runtime/
+model endpoints and11 owned groups close. Python/codec physical peaks stay
+below256MB; probe946259096 bytes fits6GiB. Default/Metal strict Clippy and
+formatting pass. Held-out scoring, generated-code grading, full-quality memory,
+numerical adoption and app-window expansion remain pending. See
+[the contract](../../qwen3-quality-contract.md) and
+[evidence](../../../benchmarks/results/2026-10-27-qwen3-quality-inputs-v1.json).
+
+## 2026-10-27 — Complete Qwen3 relative-quality comparison and retained candidate
+
+Both pinned original BF16 baseline and unchanged native eight-bit/Half candidate
+complete all10000 loss targets and100 tasks under the frozen original policy.
+Mean loss3.248645013938721 baseline versus3.252649075779492 native gives
+increase0.004004061840770845, below0.05. Strict tasks score5/100 versus3/100:
+exactly the allowed two-case loss. **Absolute quality is weak and the task gate
+has no safety margin.** Astra retains only the experimental precision candidate;
+useful instruction-following and C512 numerical qualification remain unproven.
+
+All80 code cases resolve through the unchanged qualified isolated Linux evaluator;
+all120 text outcomes resolve through literal rules. No host execution, fence
+repair, answer extraction or regrading. Baseline/native code fences occur25/40
+and31/40 times; all30 prose responses per profile exceed a single letter. These
+format observations are diagnostic. Complete visible token sequences agree60/100.
+
+The new original-source quality driver pins BF16 storage, exact widening, static
+loader, full-block teacher forcing, original step256 cache, prefill128, raw-logit
+lowest-ID greedy and hidden/pending EOS. Profiles freeze before held-out scoring.
+Every output shape and target count is checked. Partial nonfinite captures retain
+their descriptors/hash before writing; early EOS is tested. The first authored
+probe catches a loader callback keyword mismatch before model construction;
+its failed evidence remains and the corrected two probes precede full scoring.
+
+Native loss/tasks peak physical1032733896/864453760 bytes; source2257569544/
+1681360816 bytes, all below 6 GiB. All seven model groups exit before grading.
+The2GiB VM returns to stopped, all80 containers are removed, and both worker
+helper lifetime and independent outer restoration checks complete. A TERM-only
+supervisor retains the owner through timeout/interruption; no forced drain can
+kill it while restoring the VM. Grader-host physical200000736 bytes is separate
+from guest reservation; whole grading-phase peak is not claimed.
+
+Nineteen cold regression groups, final CPU suite, formatting, strict default/
+Metal all-target Clippy, source/model/runtime/input/journal endpoints and owned
+cleanup pass. Q3 is complete as relative-quality acceptance; app caps512,
+historical numerical rejection, larger40960 delivery and iPhone remain open.
+Astra's next Q4 task freezes a uniform normalized-log-probability/greedy screen
+on already captured pairs before any untouched numerical validation. Failure
+rejects that contract/candidate pairing without widening or a layer walk.
+See [the report](../../qwen3-full-quality.md) and
+[evidence](../../../benchmarks/results/2026-10-27-qwen3-full-quality-v1.json).
+
+## 2026-10-27 — Bounded Qwen3 output screen completed; numerical adoption rejected
+
+The new versioned screen fixes maximum absolute normalized-log-probability
+error0.05 and exact lowest-ID greedy before measuring existing paired native/
+FP64-Half logits. All1024 rows and155582464 vocabulary entries are compared.
+Maximum error0.20223375120124842 rejects the candidate under this contract:
+22 failed case-rows/112068 entries, with overlapping original/future prefixes.
+All1024 greedy IDs agree. The eight numerical-validation inputs stay unopened.
+No dtype switch, gate expansion or further layer walk follows without a concrete
+supported implementation hypothesis. Prior canonical stage rejection remains.
+
+The small saved-data reader reuses existing frame and array ownership checks,
+binds actual numerical/helper/shared-runtime origins and retains per-position
+evidence before aggregate decisions. Thirty cold controls pass, all1996 endpoint
+audits close and both groups exit. Reader physical47104672/RSS93995008 bytes
+fit512MiB. Signal cleanup preserves partial structured reports. Failed sandbox
+memory-counter and zero-byte package-marker admissions remain archived; the
+localized runtime-only marker correction was reviewed before the numerical run.
+
+Astra reviewed code, frozen criterion and measured rejection, then approved one
+independent Q5 audit of the existing experimental C512 Mac Chat/Expert/pinned-HF
+journey. Functional success cannot imply qualified Q1–Q5 delivery. Rust numerical
+code and its preceding complete checks remain unchanged. See
+[the report](../../qwen3-output-screen.md) and
+[evidence](../../../benchmarks/results/2026-10-27-qwen3-output-screen-v1.json).
+
+## 2026-10-27 — Truthful Qwen3 app status and stale retry error repaired
+
+The pinned Qwen3-0.6B eight-bit profile now has an explicit experimental accuracy
+notice in Models, active Chat and persistent Expert instructions. Other model
+rows/active profiles do not inherit the notice. Actual Mac inspection verifies
+Models/search/Chat/Expert visibility while preserving the separate40960 model
+declaration and512 selected positions.
+
+The bounded audit finds and fixes a real error-state defect: a valid retry
+streams while the old “Conversation is full” error remains visible. Accepted
+commands now clear status/message under the queue lock; rejected submissions
+preserve state. A deterministic held-dequeue regression proves immediate error
+clearing, busy rejection, exact literal prefix preservation across failure/retry
+and explicit successful worker closure. Existing CPU worker/context and Hub
+checks, strict Mac compilation/signature verification and iOS typechecking pass.
+
+The isolated Mac journey completes public search and the644927148-byte pinned
+download, opens Qwen3, replies, stops with a valid partial response, and rejects
+a3600-byte oversized draft without altering four existing message objects or
+losing the draft. The current corrected-worker self-test reuses that snapshot;
+its offline controller forbids network while opening/chatting/unloading. Context
+rejection, cancellation and explicit Send after suspend pass. Process physical
+peak932463960/RSS1005862912 bytes fit6GiB; pre-fix visible-process lifetime peak
+944817664 bytes is separate, without a performance or whole-phase claim.
+
+Astra reviews code and the strengthened regression. Mac lock prevents final
+visible fix replay and interactive cross-model switching; those remain open,
+and the user is asked once to unlock. No new numerical validation, precision
+change, gate expansion, context increase or phone qualification follows. The
+initial incomplete iOS check invocation is preserved. See
+[the report](../../qwen3-mac-functional.md) and
+[evidence](../../../benchmarks/results/2026-10-27-qwen3-mac-functional-v1.json).
+
+## 2026-10-27 — Visible Mac recovery/switching and full raw Expert window verified
+
+After unlock, the corrected app visibly clears the previous oversized-request
+error while a valid retry streams, then completes128 outputs. Qwen3→local SmolLM
+→saved Qwen3 switching succeeds; the profile-specific notice disappears and
+returns correctly. Human input during the audit is preserved and excluded from
+controlled response results. The app subsequently quits normally with checked
+source/bundle endpoints; lifetime physical peak952174128 bytes is below 6 GiB.
+
+Expert completes384 authored inputs+128 outputs with no hidden stops, reaching
+history512/committed511/pending1. Position513 rejects; Continue(0) commits the
+pending token; suspend/replay restores512 committed positions in a fresh session.
+The existing Swift checker gains an explicit raw-window mode to assert exact
+saved tokens and scalar diagnostic availability beyond what the UI exposes.
+Eleven journaled snapshots prove both overflow states preserve the literal512-ID
+prefix, committed overflow preserves scalar fields, and replay restores saved
+tokens. No full-logit replay equality or numerical oracle is claimed.
+
+Strict Swift compile and existing CPU fixture/context checks pass; one reviewed
+real-model run peaks at751109224 physical/766738432 RSS bytes. All four owned
+groups exit. Astra accepts this raw functional closure. Chat512 completion is
+the next bounded task; normal stop behavior remains in effect. Numerical gates,
+the eight untouched validation inputs, full40960 support and phone qualification
+remain unchanged. See [the follow-up](../../qwen3-mac-functional.md) and
+[evidence](../../../benchmarks/results/2026-10-27-qwen3-mac-visible-v1.json).
+
+## 2026-10-27 — Full normal-stop Chat window completes; bounded Mac scope closed
+
+The existing context checker separately prepares an authored long-story case
+with exactly385 native-rendered input IDs and127 requested outputs. Input7312B
+SHA0b0aca92794419fc5d1d0cd3488b8b56b31ef409cb29079de717993e328bcd1a
+freezes before token generation. One ordinary Chat-worker run, with normal stops
+unchanged, emits all127 IDs and reaches history512/committed511/pending1.
+Actual admission is385+127=512; saved tokens match frozen inputs+actual outputs.
+The same conversation with128 requested outputs rejects513 atomically. Separate
+raw pending flush/scalar availability and explicit closed/joined ownership pass.
+Six snapshots retain raw outcomes before assertions; no numerical oracle claim.
+
+Strict Swift compile and existing CPU fixture/context checks pass. Chat physical
+peak898041080/RSS821886976 bytes and preparation813909192 physical bytes fit6GiB;
+all four owned groups close with source/model/archive/frozen-input endpoints
+unchanged. Astra accepts the functional result. This closes the bounded
+experimental C512 Mac milestone alongside visible recovery/model switching,
+pinned HF/offline use and full raw Expert execution.
+
+The plan now distinguishes that completed functionality from rejected Q4
+qualification/full40960 delivery. A concrete mechanism hypothesis, fixed candidate
+and reference, and unchanged acceptance criterion are prerequisites for further
+precision implementation. No additional trace/harness/envelope is justified by
+activity alone. Review complete code tasks with results ready rather than each
+routine tooling subdivision. All numerical gates and untouched validation inputs
+remain unchanged. See [the report](../../qwen3-mac-functional.md) and
+[evidence](../../../benchmarks/results/2026-10-27-qwen3-chat-window-v1.json).
+
+## 2026-10-27 — Astra resolves arithmetic distinction; opt-in attention improves
+
+The unchanged output-fidelity rule also rejects independent CPU FP32 against
+FP64:24/512 rows,96620 entries,max0.21534818, with identical greedy IDs. Native
+againstFP64 remains11rows,max0.20223375. This demonstrates arithmetic-profile
+sensitivity and clarifies the strict trajectory requirement; it neither proves
+a native bug nor waives rejection or the mean-loss quality limits.
+
+A bounded layer0 own-input check supports one concrete accuracy mechanism.
+The opt-in CompensatedReference kernel uses compensated score/mass/context sums
+and a product residual while retaining FP32 transcendental/store boundaries,
+Half KV/context, masking/GQA/scratch and default selection. Actual GPU Half
+mismatches fall9→2 at41 and7→1 at65; squared2^-48 units fall27744→272 and
+1329169→1024. Control0 stays exact. Per-position and pooled benefit rules were
+fixed before execution; independent readback reconstructs all values.
+
+Three focused GPU tests and required formatting/default+Metal Clippy/CPU checks
+pass. Exact zero/one-key, causal/offset/GQA/chunk/guard, nonfinite and signed
+midpoint controls preserve the original tolerance. The compact fixture uses only
+old native inputs, not untouched validation. Largest GPU process physical/RSS
+24592984/37928960 bytes fit6GiB; no performance or whole-phase claim. Triangle
+reader lifetime peak was not measured and is not treated as resource qualification.
+
+Astra independently reviews code/protocol/results. Retain the opt-in accuracy
+experiment for one unchanged whole-model screen; ordinary app/defaults and all
+old failures remain. No model execution, full-quality transfer, gate/reference
+change or adoption occurs in this task. See [the diagnosis](../../qwen3-attention-accuracy-experiment.md)
+and [evidence](../../../benchmarks/results/2026-10-27-qwen3-compensated-attention-v1.json).
+
+## 2026-10-27 — Complete compensated Qwen3 screen; stop rejected experiment
+
+One reviewed logits-only capture retains all151936 logits for512 positions in
+each of the original/future-tail cases, eight frames/622329856 bytes. Exact frozen
+histories, committed state and first511-row causal identity pass. The unchanged
+FP64/Half uniform0.05/exact-greedy screen completes: each case has20 failed rows
+and137559 failed entries, maximum0.1644533777242394 at45/vocabulary27921. All1024
+greedy selections match. Compared with11 failed rows/56034 entries/max0.20223375,
+this is mixed fidelity, not a qualified improvement.
+
+Formatting, strict Metal Clippy,369 CPU tests and capture compilation pass; six
+owned groups close, all2004 reader endpoint audits pass. Native physical/RSS
+971916464/983875584 bytes fit6GiB; reader56394424/119242752 fit512MiB. Debug
+accuracy execution is not a performance measurement. Failed/partial producer
+files are retained before classification; the initial preparation's detected
+runner edit and successful frozen checks/argument-only rebind remain recorded.
+
+Astra reviews code, frozen execution and complete results. Stop this numerical
+experiment with rejection; retain the opt-in variant only for its local measured
+benefit. Defaults, gates, reference, context and Q4 rejection stay unchanged;
+unused validation remains closed and old quality cannot transfer. Astra's proposed
+separate native-precision product contract is recorded as a decision proposal,
+not an applied waiver. See [the report](../../qwen3-compensated-output-screen.md),
+[plan](../../qwen3-mac-delivery-plan.md) and
+[evidence](../../../benchmarks/results/2026-10-27-qwen3-compensated-output-screen-v1.json).
+
+## 2026-10-27 — Human approves explicit native arithmetic qualification target
+
+The human approves Astra's native arithmetic recommendation and autonomous
+technical decisions. The [versioned contract](../../../benchmarks/qwen3-native-profile-v1/contract.json)
+freezes the existing MlxAffine/Compensated/Reference/Half-state profile, unchanged
+independent operator/graph gates, exact eight-case state/schedule validation,
+and complete current-native quality-output continuity. Only named timing/resource
+observations may differ in the bridge. Original0.05-nat/2-percentage-point quality
+limits remain fixed; matching full distributions and task outputs is required to
+reuse the historical baseline and grades. Changed outputs receive investigation
+and their own scoring/grading.
+
+This is an explicit product-contract decision, not a repaired fidelity result:
+both historical trajectory contracts remain rejected, and the rejected envelope
+is unused. CompensatedReference is excluded from this target. Qualification is
+pending execution and final Astra review; defaults and C512 app admission do not
+change. Full40960 support and independent iPhone qualification remain open.
+See [the profile](../../qwen3-native-profile.md) and [active plan](../../qwen3-mac-delivery-plan.md).
+
+## 2026-10-28 — Native Qwen3 C512 conformance and complete quality accepted
+
+The frozen Reference-attention native profile passes current-build qualification
+on the M1 Pro Mac. All18688 analytical Half outputs, unchanged affine/gather and
+tiny/real short graph gates pass. Eight reserved boundary cases from three texts
+produce4350 finite row hashes across chunk32/128, with five exact nested prefixes,
+16 cached/replay checks and32 exact atomic capacity rejections. No global
+CPU-trajectory tolerance or near-tie exception is introduced.
+
+The current full10000-target loss journal is byte-identical to the old native
+collection. All100 tasks/5640 events agree after excluding only five named timing
+fields and readiness resource observations; every deterministic output, stop and
+accounting field matches. The authenticated baseline and exact graded programs
+therefore apply without running generated code again. Mean loss remains3.25264908
+versus3.24864501, increase0.00400406≤0.05. Strict tasks remain3/100 versus5/100,
+exactly the permitted two-case loss and weak absolute quality.
+
+Formatting, strict default/Metal Clippy,369 default CPU tests,243 nonignored
+Metal-feature library tests and six portable bridge controls pass; overlapping
+counts are not summed as unique tests. Eleven explicit GPU tests pass. All282
+frozen bindings,73 evidence pins and nine reader endpoints pass;20 successful
+owned groups close. The highest-physical native process records1126778152 bytes
+physical/898793472 RSS; maximum native RSS is validation's1059946496 bytes. Native
+loss1033094368/1039745024, tasks864945280/873529344, reader41976360/51658752.
+Native6GiB and reader512MiB bounds hold; no throughput claim follows.
+
+Astra independently audits the contract, code, analytical values, validation and
+full quality/output ownership, and accepts scoped native-profile C512. Both
+historical trajectory-fidelity contracts remain rejected; CompensatedReference,
+useful instruction quality, full40960 and iPhone are unqualified by this result.
+Defaults and app capacity remain unchanged. The improvement is a justified native
+qualification and current-candidate binding, not a faster or wider engine.
+
+The historical CLI was restored byte-exact after Cargo's integration build
+unexpectedly rebuilt it; all successful builds use a private target. A blocked
+memory observer after a passed CPU suite is retained separately from its completed
+permitted retry. No numerical/data/threshold changes follow these failures.
+See [the profile](../../qwen3-native-profile.md),
+[evidence](../../../benchmarks/results/2026-10-28-qwen3-native-profile-v1.json) and
+[Astra's next full-window design](../../qwen3-full-window-plan.md).
+
+## 2026-10-28 — Scoped Qwen3 long-context admission mechanism checked
+
+An explicit Rust/Metal diagnostic loader now retains the pinned model's40960
+declaration and can select the longer checked session planner. It grants authority
+only through a private validated model flag, with MlxAffine/Compensated/Reference
+required. Ordinary512, quality1025, shared CPU32768, other-model and C/Swift/app
+limits stay unchanged. No shader, arithmetic or KV format changes.
+
+The actual pinned source opens with requested/loaded/declared40960 and tied output;
+all six source descriptors/full hashes/endpoints authenticate before and after.
+This metadata proof creates no GPU or numerical buffers. Pure planner tests
+independently verify allocation equations/guards, offset and integer boundaries,
+exact budget/per-buffer rejection and byte-identical512 accounting. Full40960
+chunk32 predicts5588577426 numerical bytes; chunk1286154967826. Neither establishes
+whole-process fit or admits larger app requests.
+
+Formatting, strict default/Metal Clippy,372 default CPU tests,247 Metal library
+tests, explicit planner/source probes and the unchanged ordinary short-model GPU
+oracle pass. Counts overlap. All229 bindings/18 outputs and protected historical
+binaries match; nine owned groups close. Planner physical/RSS2441600/7733248,
+source metadata4260248/10780672, ordinary short GPU766280808/768344064 bytes.
+Astra reviews the scoped design, applied code, positive source proof and results.
+
+This closes F1 mechanism/resource planning, with long numerical execution,
+deep quality, full-process memory and app delivery still open. Next freeze the
+4096 experiment; preserve the qualified native C512 profile and both historical
+fidelity rejections. See [admission](../../qwen3-context-admission.md),
+[evidence](../../../benchmarks/results/2026-10-28-qwen3-context-admission-v1.json) and
+[full-window plan](../../qwen3-full-window-plan.md).
+
+## 2026-10-28 — Qwen3 native 4096 diagnostic passes
+
+The approved native Reference arithmetic now passes the finite 4096-position
+diagnostic on M1 Pro. All 37376 prescribed commits complete: archived512 anchor,
+exact chunk32/chunk128 rows, a4095-row causal prefix, cached/reset/pending/discard
+and replay state, three32-token continuations, final flush and14 exact atomic
+overflow checks. GreedyToken matches visible IDs and final selection; FullLogits
+also matches final distribution bits. No production arithmetic or app cap changes.
+
+Prospectively frozen, independently reconstructed WikiText IDs add1024 targets
+at deep positions. Native mean NLL1.9171930208055907 versus original BF16
+1.9167905279642214 increases0.0004024928413692841≤0.05. The original complete
+10000-target/100-task evidence and weak3/100 versus5/100 strict task scores retain
+their scope. Both historical trajectory-fidelity contracts remain rejected.
+
+The bounded BF16 cache/layer schedule first passes all1025 exact stock/adapted
+rows, all28-layer valid K/V at five endpoints and six masked-head rows. All18 raw
+BF16/FP32 pairs, target identities and aggregate mean/delta arithmetic from
+retained per-target losses pass independent readback. Full quality logits are
+not retained for independent per-row rescoring. The first attempt's validator
+wrongly rounded stock cache capacity;
+Astra traced the pinned trim/concatenate recurrence and reviewed its exact
+correction and13 portable controls. Original code bytes, partial rows and failure
+receipts remain retained; passing unchanged builds/operators were authenticated
+and reused.
+
+Formatting, strict default/Metal Clippy,372 default tests,247 Metal-library
+tests, five example tests, three input controls and two explicit deep GPU controls
+pass; counts overlap. All308 final bindings and10 model files authenticate;
+27 test-owned groups close, including the failed attempt, plus the publication
+reader. Maximum native physical/RSS1426802176/1435074560 bytes, BF16 quality
+1841317520/1243398144, BF16 equivalence1834469080/1417461760 and independent
+readback20529656/32358400 stay within their limits. Historical protected binaries
+remain unchanged.
+
+Single ordinary completed-call observations expose a delivery bottleneck:
+chunk32's4064-input prefill takes456.64 seconds,31 deep decode calls206.10 seconds;
+chunk128 records166.72/206.35 seconds. No warmup/repetition, controlled thermal
+state, speedup or performance qualification is claimed. Astra recommends a
+bounded bit-exact three-pass scheduling experiment before8192, retaining Serial
+as oracle/default and requiring full F2/current-quality bridges and repeated
+measured benefit. Its reviewed private proposals remain unapplied/unqualified.
+
+The full40960 BF16 ledger also needs a separate host-reader allowance and actual
+workspace/physical proof; smaller-context peaks do not establish fit. The
+improvement closes scoped4096 diagnostic behavior, relative quality and process
+memory. Ordinary app512, full-window streaming/admission, final quality and iPhone
+remain open. See [report](../../qwen3-context4096.md),
+[receipt](../../../benchmarks/results/2026-10-28-qwen3-context4096-v1.json) and
+[corrected next sequence](../../qwen3-full-window-plan.md).
+
+## 2026-10-28 — Retain exact-order parallel Reference scheduling
+
+Hypothesis: the measured serial query/head attention lane limits deep Qwen3
+latency. The explicit diagnostic now parallelizes independent score and context
+outputs, with a separate stable-softmax dispatch. Every feature/key reduction,
+mask, division and Half rounding stays in the original order. Existing resident
+buffers are reused; optional pipelines/labels are cached once per model. No
+per-layer wait, new numerical buffer or default/app capacity change is introduced.
+
+All60 primitive comparisons and390 tied/untied tiny-stage arrays pass bit exactly.
+Complete37376-token F2 replay matches all nine historical journals,16896 row hashes
+and state/generation events. New strict historical-row bindings retain full FP32
+mismatch evidence before rejection. The complete10000-target and100-task outputs
+also match exactly; historical weak native3/100 versus BF165/100 grades and both
+trajectory-fidelity rejections remain. An initial task-only invocation supplied
+grading rather than execution input and rejected before model loading. Its
+evidence remains; a separately reviewed continuation uses the exact original
+execution input, preserving the successful loss/replay without rerunning them.
+
+Two fixed opposite-order runs each use three warmups and ten measured samples
+per schedule,53016 commits total. Completed32-row call after4064 cached tokens:
+Serial6.8801/6.8830s versus parallel1.2322/1.2324s median. One-row call after4095:
+6.5856/6.5735s versus0.1688/0.1682s. Whole short128 requests:
+6.4636/6.4711s versus2.3622/2.3675s; short480:
+23.2943/24.4209s versus6.4327/6.4296s. These raw short walls include bounded
+witness copies and final flush. Every metric has nonoverlapping faster ranges
+and no median regression in either run. Minimum primary gain82.08996% exceeds
+the unchanged5% gate and maximum between-run primary variation0.04164%.
+No whole4096-prefill or uninstrumented-app throughput claim follows.
+
+Maximum lifetime physical footprint1669318336 bytes stays below 6 GiB; shared
+weights and both session plans plus256MiB application reserve are independently
+accounted. AC power/80% battery/AC low-power-off, hardware/OS/power settings and
+all four raw no-recorded-warning thermal endpoints stay unchanged. This is
+endpoint evidence, not continuous thermal telemetry. All six benchmark groups
+close; the final reader authenticates614 bindings and independently recomputes
+raw timing summaries/variation/peak counters. Astra independently reviews code,
+quality, initial/confirmation evidence, environment and the final retention.
+
+Formatting, strict default/Metal Clippy,372 default tests,249 Metal-library tests,
+targeted example/Python checks and explicit primitive/tiny GPU controls pass;
+counts overlap. Earlier Clippy/tiny-test-envelope corrections and failed checks
+remain retained. The focused final check reuses unchanged core controls through
+authenticated source/binary continuity. Decision: retain the explicit4096
+diagnostic schedule; Serial stays default/oracle. App512, separate8192/full40960
+qualification and iPhone remain open. See [report](../../qwen3-reference-schedule.md),
+[all samples and parent identities](../../../benchmarks/results/2026-10-28-qwen3-reference-schedule-v1.json)
+and [next sequence](../../qwen3-full-window-plan.md).
+
+## 2026-10-28 — Preserve experimental8192 mechanism after goal change
+
+Added a separate guarded8192 diagnostic endpoint and fixed source/input profile,
+sharing concrete runner mechanics with the unchanged4096 protocol. Public model
+capability, offset/chunk/shape/overflow validation remain explicit. No shader,
+arithmetic or ordinary app limit changes. Cold Rust/Python checks and three GPU
+controls pass; original-BF16 short equivalence and41472 new native commits plus512
+inherited complete, including exact full8192 chunk agreement and causal prefixes.
+
+The user changed priority to broad architecture support built from shared blocks,
+per-model/device context/KV calculation and user tuning. The owned qualification
+run was stopped and its source, raw partial results, input/replay and failed
+wrapper attempts retained. A recorded cleanup permission error is retained;
+subsequent independent checks verify all recorded processes/groups absent.
+Deep native/BF16 quality, remaining generation/replay and combined independent
+audit are incomplete. **No8192 qualification, app capacity increase or performance
+claim is made.** Historical4096 qualification and fidelity rejections remain.
+
+Decision: retain the reviewed experimental mechanism as an isolated checkpoint,
+then follow the new architecture/resource-tuning goal. See the
+[scoped record](../../qwen3-context8192-experiment.md) and
+[interrupted evidence](../../../benchmarks/results/2026-10-28-qwen3-context8192-interrupted-v1.json).
+
+## 2026-10-28 — Replace single-model window priority with shared model blocks
+
+The user explicitly changed the goal: broad model architectures first, context/KV
+calculation and supported user settings, then architecture-specific optimization.
+The requested design uses shared blocks inspired by open-source engines. Two
+Astra audits inspected actual Toklet code and primary vLLM/MLX-LM/llama.cpp
+sources. The resulting [active plan](../../shared-block-model-plan.md) reuses existing
+dense and shared/window implementations, separates adapter wiring from block
+mechanisms, and keeps numerical dispatch static.
+
+The first bounded task is a common physical-state descriptor and pure checked
+capacity solver using constructor allocation recipes. Actual Llama3 scaled-RoPE,
+fused Phi and local/global compositions follow before a large frontend settings
+project. Device-fit estimates, implemented ranges, validation and text support
+stay separate. No new model capability or runtime option follows from this
+documentation. Old full-window/F3 prototypes remain preserved and unapplied.
+Only link/content and whitespace checks are needed for this plan correction.
+
+## 2026-10-28 — Plan M9 and preserve performance extension boundaries
+
+Read the complete user-linked Page, **Toklet next performance improvement plan**
+(sequence 2), and made it the [next milestone](../../next-performance-milestone.md)
+after active M8 breadth and context/KV controls. M9's first delivery is P0,
+one measured normalization or native MLX prefill candidate, then P2 adoption or
+documented rejection. Historical Page timings require a new baseline; Qwen2.5
+MLX8, Qwen3 diagnostics and Toklet Q4 remain separate configurations.
+
+The shared-block plan now records extension boundaries for numerical semantics
+versus scheduling, physical KV codecs and scratch, state transactions,
+per-position/output demand and bounded profile coverage. Later split-KV, I8 KV,
+strict verification and checkpoint-specific shared-KV/MTP work remain conditional.
+These are architecture obligations, not implemented optimization claims or new
+public options. Astra reviews the mapping; link/content and whitespace checks
+apply to this documentation task.
+
+## 2026-10-28 — Shared physical KV sizing and pure capacity search
+
+Implemented the small B0 core: one checked F16/F32 physical-producer descriptor
+for dense CPU, Metal and existing window/shared plans, plus a pure monotone
+capacity solver with exact adjacent exclusion witnesses. Metal resolves fixed
+layouts once and reuses actual constructor equations. An additive library
+inspection exposes the range without changing existing report schemas, model
+eligibility, arithmetic, caps or app settings. Load/process fit remains separate
+from session allocation fit.
+
+Formatting, strict default/Metal Clippy, 375 default tests, 254 Metal-library
+tests and all three explicit tiny GPU controls pass; counts overlap. Independent
+Astra review authenticates sources, raw outputs and closed process groups with
+no blockers. Retain this shared core; no new real-model, performance, phone or
+universal-architecture qualification is claimed. See the
+[implementation and limits](../../capacity-core.md) and
+[source-bound evidence](../../../benchmarks/results/2026-10-28-capacity-core-v1.json).
+
+## 2026-10-28 — Live iteration checklist
+
+Added [TODO.md](TODO.md) with evidence-backed completed items, the active
+M8 B1–B5 queue, M9's first delivery and separately conditional follow-ons.
+Repository guidance now requires updating the checklist after every iteration,
+including research, failures and interruptions, while preserving the existing
+checks/Astra-review/commit rule for code. README and PLAN link to the tracker.
+Corrected the planning inventory to reflect B0's completed solver. This is a
+documentation change; link/content and whitespace checks apply.
+
+## 2026-10-28 — Llama3 scalar positional block and pinned next artifact
+
+Added validated canonical Llama3 inverse-frequency scaling and allocation-free
+split-half scalar rotation. An independent Decimal80 fixture freezes all three
+bands, exact boundaries and high offsets; ordinary rotary is unchanged. Six
+targeted, 381 default and 260 Metal-library tests pass (overlap), with formatting,
+strict default/Metal Clippy and byte-identical fixture regeneration. Independent
+Astra review authenticates all source/output bindings and closed process groups.
+
+Astra also pinned public Llama 3.2 1B eight-bit metadata, tokenizer and tensor
+header. Actual F16/affine8 layout is explicit; no weight payload, model run or
+new app capability is claimed. The canonical low-edge rule deliberately differs
+from a strict-boundary MLX implementation; actual candidate frequencies avoid
+that edge, and source-profile/numerical qualification remains separate. Retain
+the primitive, then propagate the positional plan and implement native admission.
+See [scope and next tasks](../../llama3-rotary-core.md),
+[evidence](../../../benchmarks/results/2026-10-28-llama3-rotary-core-v1.json) and
+[updated progress](TODO.md).
+
+## 2026-10-28 — Source/model positional semantics and scalar graph composition
+
+Added an immutable Ordinary/Llama3 positional plan, strict explicit scaling
+parsing and Source-to-CPU-model propagation. Old constructors keep Ordinary;
+consuming plan selection cannot change a borrowed model's live KV semantics.
+All CPU rotation sites use the plan. A shared source-aware guard prevents
+scaled metadata from entering ordinary Metal compatibility, inspection or
+loading until its actual kernel exists.
+
+Four independent tiny tied/untied graphs and 2560 frozen values pass the unchanged
+FP32 gate, including cached chunks, offsets, reuse/reset and failure preservation.
+Formatting, strict default/Metal Clippy, 383 default / 260 Metal-library and
+targeted 9/10 Llama tests pass (overlap); Astra independently authenticates final
+sources, outputs and all seven closed groups. The first lint compilation's
+missing field in a synthetic test helper is fixed and retained in the evidence;
+no numerical gate or fixture changed. Retain the shared wiring. No real-model,
+scaled-Metal, Chat, performance or larger-context qualification is claimed.
+See [report](../../llama3-position-plan.md),
+[evidence](../../../benchmarks/results/2026-10-28-llama3-position-plan-v1.json) and
+[iteration checklist](TODO.md).
+
+## 2026-10-28 — Isolated resident Llama3 Half rotary
+
+Added a private optional precise pipeline and immutable FP32 inverse frequencies,
+with borrowed session buffers/command encoding and no per-call buffer allocation
+or host wait.
+Ordinary shader/pipeline inventory and scaled-model rejection remain unchanged;
+the new operator is test-only pending structural model integration.
+
+Astra froze and reviewed independent mathematical plus cancellation-aware
+rounded-profile gates before GPU outcomes. Seven cases, repeats and partitions
+pass 17,408 scaled output comparisons; the unchanged ordinary rotary regression
+passes 13,824 values. Guards, immutability, Half-overflow signalling and recovery
+pass. Standard checks, 383 default / 261 Metal-library / targeted 9/10 Llama
+tests (overlap) and release compilation pass. Astra independently audits raw
+values, all identities and ten closed groups. A failed private launcher rewrite
+is retained and fixed before any numerical work; no gates or fixtures changed.
+
+Retain the isolated block on the tested M1 Pro within positions 0–511. No model,
+app, iPhone, larger scaled context, throughput or source-profile quality claim
+is made. See [report](../../llama3-metal-rotary.md),
+[evidence](../../../benchmarks/results/2026-10-28-llama3-metal-rotary-v1.json) and
+[updated TODO](TODO.md).
+
+## 2026-10-28 — Explicit composite UInt32 address admission
+
+Closed the strided-address gap between host-sized buffers and UInt32 MLX shader
+indices. One actual helper checks product input/output and gather output; the
+planner now bounds its already computed guarded KV/score counts before allocation
+or casts. Existing queried layouts, packing checks and arithmetic remain intact.
+
+Exact/overflow/physical bounds and synthetic allocation-free planner thresholds
+pass. Formatting, strict default/Metal Clippy, 383 default / 263 Metal-library /
+targeted 9/10 Llama tests (overlap), release compilation and the unchanged strided
+projection/gather GPU regression pass. Astra independently authenticates both
+files, all evidence and nine closed groups. Retain these safety contracts before
+broader structural admission; no shader, eligibility, budget, context, real-model
+or performance scope changes. See [report](../../metal-index-contracts.md),
+[evidence](../../../benchmarks/results/2026-10-28-metal-index-contracts-v1.json) and
+[progress](TODO.md).
+
+## 2026-10-28 — Preserve the next model-integration decisions
+
+Recorded Astra's B1c2b accounting and fixture decisions in [TODO.md](TODO.md)
+so the next iteration can implement them directly. Learned weights and positional
+residency stay separate; zero-omitted memory fields require the shared Swift
+decoder to include them in checked totals. Inspection cannot allocate the
+frequency buffer while claiming otherwise. The new tiny Half graph retains
+the existing stage-envelope policy and actual packed-versus-lookup semantics.
+This records design only; no model-admission or completion checkbox changes.
+
+## 2026-10-28 — Structural Llama and resident scaled rotary composition
+
+Composed the proven optional Llama3 rotary into native model execution using one
+immutable model-owned frequency buffer/pipeline and borrowed session commands.
+Replaced Llama checkpoint geometry tuples with implemented block, index, device
+and budget contracts in the initial 512-position Reference-attention scope.
+Learned weights remain unchanged; separate zero-omitted positional fields count
+shared residency once in loading, sessions, capacity search and example totals.
+The shared Swift decoder verifies the same checked totals and legacy wire form.
+
+Astra reviewed the independent Half producer/export and fixed native policy
+before GPU outcomes. It caught an extreme below-1 theta angle/FTZ domain gap;
+the initial native profile now requires theta >= 1 and normal positive FP32
+epsilon/frequencies, while scalar/source semantics stay broader. No gate was
+loosened. Packed tied-output coefficients retain their original reconstruction.
+
+Formatting, strict default/Metal Clippy, 384 default / 265 Metal-library tests
+(overlapping suites), current CPU/Metal Swift workers and unsigned iOS typecheck
+pass. Seven explicit GPU checks pass: 1,680 scaled graph snapshots / 110,208
+values, exact numeric schedule/prefix/resume, cache and memory boundaries, plus
+ordinary Llama/rotary and packed strided regressions. Initial lint and private
+wrapper errors are retained and corrected; final owned groups close cleanly.
+
+Retain this composition; real checkpoint/source/text quality, app admission,
+iPhone qualification and performance remain separate. See
+[report](../../llama3-metal-composition.md),
+[evidence](../../../benchmarks/results/2026-10-28-llama3-metal-composition-v1.json) and
+[updated TODO](TODO.md). B1d is next.
+
+## 2026-10-28 — Real Llama3 short Mac vertical and independent text contract
+
+Verified the complete public pinned Llama 3.2 1B eight-bit artifact and all
+metadata/header identities. The initial bounded transfer timed out near its end;
+a separate exact206 range completed the retained prefix, and the complete payload
+SHA passes. Added an explicit pinned capture example, bounded dual-profile CPU
+reference and strict capture checker. No numerical kernel or application
+allowlist changed. Every completed array has a flushed journal descriptor;
+interrupted captures preserve a started record and partial bytes.
+
+Astra reviewed the independent main/wide Half-storage policy before outcomes,
+then source values, BOS/stop/ByteLevel text replay and the native controller.
+Packed tied output remains FP32 reconstruction while lookup rounds to Half.
+Native generation is a separate raw four-step control from source-selected
+teacher forcing. The fixed checker requires complete stages/rows, array hashes,
+finite gates and exact numeric logits for schedules, causal prefixes and state.
+
+All 28,791,552 source comparisons pass, maximum gate fraction0.5198856252, with
+zero failures. Actual512 state/capacity, partial discard/resume, reset and both
+readbacks pass. Learned/positional residency is1,313,116,622/196 bytes; native
+observed lifetime physical peak is1,587,398,264 bytes. Standard strict checks,
+384 default /265 Metal-library tests (overlap), three runner, seven reader,
+two renderer and three checker controls pass. A non-Serialize timing development
+compile and a cleanup-mock test error were corrected without numerical changes;
+failed attempts remain documented.
+
+Retain this bounded path; it does not qualify application Chat, throughput,
+iPhone or full held-out quality. Next is the separate1,024-target consistency
+screen, scoped B1 closure and B2 architecture work. Text/app and full adoption
+quality remain explicit B5/M8 closure requirements. See
+[contract/results](../../llama3-real-model-contract.md),
+[compact evidence](../../../benchmarks/results/2026-10-28-llama3-real-short-vertical-v1.json)
+and [TODO](TODO.md).
+
+## 2026-10-28 — Fixed Llama3 consistency screen; scoped B1 closure
+
+Added a re-encoded, independently replayed 1,025-ID held-out input contract,
+sequential one-block CPU main/wide source scorer, explicit native loss worker
+and paired statistics reader. Four reset257-token blocks score1,024 distinct
+next-token targets. The exact primary gate remains paired `fsum(native-wide)/1024
+<=0.05`; eight-ULP metadata coherence never augments it. Source/record hashes are
+authenticated, but full logits are not retained or claimed independently rescored.
+
+Shared only actual common diagnostic needs: fixed artifact identity and existing
+stable maximum/Kahan/exp/NLL functions. Existing scoring order, old worker policy
+and engine kernels stay unchanged. Astra caught an input hash/second-read gap;
+the exact consumed bounded bytes are now hashed. Mismatching rows are journaled
+before error. Canonical signed-zero row hashes preserve exact native numeric
+consistency without imposing source-profile hash or greedy equality.
+
+Both native chunks32/128 pass: mean2.9947039894934804, paired wide-reference
+delta−0.00004411466914202308. All1,028 rows/schedule agree numerically. Native
+observed lifetime physical peak is1,587,906,168B, source1,247,431,464B, below 6 GiB.
+Formatting, strict default/Metal Clippy,384 default /265 Metal-library /15 targeted
+example tests (overlap) and nine Python controls pass. An initial Metal lint
+failure in a legacy include is fixed with an equivalent type alias; no math or
+gate changed and its failed receipt remains.
+
+Retain/close B1 only in the selected Mac512 engine-adapter scope and continue
+B2 architecture breadth. Production Chat/codec/stop controls, original
+unquantized10k/100 adoption quality, app/phone and performance remain unfinished.
+See [screen and closure](../../llama3-loss1024.md),
+[evidence](../../../benchmarks/results/2026-10-28-llama3-loss1024-screen-v1.json) and
+[TODO](TODO.md).
+
+## 2026-10-28 — Checked fused row spans and bounded source reads
+
+Added one checked original-row byte plan shared by borrowed affine matrices and
+source range reads. Codes/scales/biases retain packing and row order; float rows
+stream through the existing64KiB buffer without alignment assumptions. All three
+affine destination lengths are checked before writes. Partial failures require
+discard, and unaudited reads can explicitly retry. Audited range attempts always
+reject before I/O/callback and sticky-poison whole-content identity; whole read
+methods and scalar arithmetic remain unchanged.
+
+Astra reviewed the proposal and final source/evidence. Formatting, strict default
+and Metal Clippy,397 default /278 Metal-library tests (overlap), targeted row18,
+raw-range4 and Metal Llama9 pass in eight cleanly closed owned groups. Controls
+cover all six CPU bit widths, all metadata dtypes, boundaries, unaligned payloads,
+selected/unselected NaNs and audit failures. An initial repeated--lib invocation
+was rejected before compilation; the corrected targeted check passes.
+
+Retain the storage mechanism. Phi config/execution, real payload, numerical and
+text qualification remain open; no GPU or performance claim. Next is B2b's cold
+logical row mapping and strict bounded Phi composition. See
+[report](../../fused-row-source.md),
+[evidence](../../../benchmarks/results/2026-10-28-fused-row-source-v1.json) and
+[TODO](TODO.md).
+
+## 2026-10-28 — Shared cold logical projection loading
+
+Added one concrete crate-private logical tensor plan for whole tensors or complete
+original row partitions. Physical names, quantization overrides and unique source
+payloads remain authoritative. Scalar loading/peak estimates, Metal loading and
+actual padding, and compatibility grouping consume the same effective specs.
+No descriptors or name lookups enter numerical loops. Whole reads preserve their
+existing audits; selected reads preserve the bounded range contracts.
+
+Formatting, strict default/Metal Clippy,403 default /285 Metal-library /8 targeted
+logical tests (overlap) and the existing explicit tied/untied tiny Metal graph
+pass. A synthetic80-byte source needs88 actual resident bytes after splitting;
+exact totals and admission boundaries pass. The sandbox initially hid Metal;
+only that GPU job was repeated with hardware access, with unchanged source and
+policy. All eight owned groups close. A private test-initializer typo was caught
+before application and corrected in preserved successor v2.
+
+Astra reviewed the proposal and final source/evidence. Retain this shared loading
+mechanism; Phi admission, source-window reporting, head96 graph and real-model
+qualification remain separate. See [report](../../logical-projection-loading.md),
+[evidence](../../../benchmarks/results/2026-10-28-logical-projection-loading-v1.json)
+and [TODO](TODO.md). Continue B2b2.
+
+Also acquired the pinned public Phi3 four-bit payload for later checks. The full
+2,149,696,167 bytes, SHA256,455-entry header/index and contiguous tensor extents
+pass; Astra independently rehashed the entire file. No remote Python executes.
+The unaligned51,879-byte payload start remains valid. This acquisition does not
+qualify Phi numerical execution, text, application or device behavior.
+
+## 2026-10-28 — Phi3 independent reference preparation (target checks pending)
+
+Prepared strict ordinary-RoPE Phi parsing, original fused inventory and source
+window reporting. Parser controls and Metal compilation pass. A new independent
+stdlib producer preserves the original fused rows, head96 positions, actual F16
+storage and packed FP32 output head. Five source cases include absolute511 with
+17 local keys and a separate tied-weight control. Existing B1 producers remain
+unchanged.
+
+Source export/replay is byte-identical. Astra independently verifies195 stage
+groups/585 arrays, exact extents, per-case-stage frozen Half envelopes and the
+unchanged CPU gate. Six reviewed fixture files are promoted. This records source
+preparation only; Rust graph/session/GPU comparisons, final review and commit
+remain pending. No real Phi execution, app or performance claim.
+
+The initial targeted CPU consumer check caught a test-only slice/reference type
+mismatch before graph execution. Its corrected borrow preserves exact equality;
+engine arithmetic and fixed gates are unchanged. The failed receipt is retained
+and the fresh targeted run remains pending.
+
+The next attempt exposed JSON exponent spelling retained by arbitrary_precision;
+policy assertions now compare authenticated numeric values. No tolerance changed.
+Both failed attempts are retained. The final targeted CPU run passes all four
+tests:195 independent source stages/513,704 values, exact cached schedules,
+causal prefix/reset, physical/scalar accounting and bounded window/native-domain
+controls. Metal comparisons remain pending consumer review.
+
+## 2026-10-28 — Reviewed Phi3 tiny CPU/Metal composition
+
+Composed strict Phi source configuration, original fused-row mapping and declared
+window reporting with existing dense CPU/Metal blocks. Initial context requests
+reject beyond512, the source declaration or window; no sliding/LongRoPE fallback.
+Native structural/index/frequency limits and Reference-only attention apply.
+Existing families retain their earlier semantics and absent window wire form.
+
+All195 CPU stages/513,704 values pass; exact cached schedules/prefix/reset and
+window/accounting controls pass. Formatting, strict default/Metal Clippy,
+410 default /288 Metal-library tests (overlap) and both explicit tiny GPU tests
+pass. GPU checks cover19 schedules/3,815 snapshots/1,996,224 accepted main values,
+maximum gate fraction0.8143322476; wide diagnostic exceedances0. Astra corrected
+an extra wide fatal comparison prospectively, preserving the already-frozen
+main-only policy. Signed zeros compare numerically; raw witnesses remain intact.
+
+State/readback/raw generation/stop/cancel/output failure and exact budgets pass.
+Tiny resident weights add70 norm-guard bytes to original source payloads. Cold
+real-artifact inspection accepts291 logical specs but rejects15,284,318,208-byte
+FP32 weights under6GiB. This is no real Phi execution, whole-process peak,
+full-window, application, phone or performance qualification. Passing native
+intermediates are checked in the Rust consumer, not externally retained/rescored.
+Astra approves final source/evidence and retain/commit. It independently rescores
+17,984 retained logits; full passing intermediates remain consumer-checked. See
+[report](../../phi3-dense-composition.md),
+[evidence](../../../benchmarks/results/2026-10-28-phi3-dense-composition-v1.json) and
+[TODO](TODO.md). Next is B2c's real protocol.
+
+## 2026-10-28 — Real Phi3 reference preparation (export pending)
+
+Added a reviewed independent lazy source reader and ordinary Phi Half graph.
+Original fused rows, gathered-only embedding lookup and one temporary FP32
+projection matrix keep the full15.28GB scalar expansion out of the process.
+Astra approves the fixed six probes,349 main/wide pairs and exact-array main-only
+gates before outcomes; canonical Torch/MLX runtime and original-quality parity
+are explicitly not claimed. The conservative source ledger is4,489,855,655 bytes,
+with an independent observed6GiB process cap required.
+
+Ten portable original-row/corruption/lifetime tests and five plain-text guard
+controls pass. The separately reviewed text reference preserves exact template
+bytes, no automatic BOS, the two source stops and explicit rejection of53
+unmapped head slots; it does not introduce a native Chat codec. Actual runtime,
+source export/replay and text export remain pending their frozen controller.
+
+Before real export, staged whitespace checking caught an extra EOF blank line in
+the new Phi graph. It was removed in immutable successor v2 and all ten controls
+pass again. Existing B1 producer bytes and the numerical policy are unchanged;
+controller identities are renewed rather than reusing stale checked pins.
+
+## 2026-10-28 — Reviewed real Phi3 source and text reference
+
+The independent lazy Phi reader now exports349 main/wide array pairs without
+expanding the complete15.28GB FP32 model. All8,197,056 values per profile are
+finite; exact shapes/extents, hashes and per-array main/wide envelopes pass.
+Astra independently decodes every saved array and verifies the fixed greedy
+histories. The native main-only policy remains frozen before target outcomes.
+
+The plain-text fixture covers16 rendered cases, exact template/tokenizer replay,
+source stop union, added-token/metaspace/byte fallback and rejection of all53
+unmapped head slots. Ten synthetic reader/graph and five text controls pass.
+Five owned source/verify/text groups close without endpoint errors. OS peak RSS
+is2,846,588,928 bytes and lifetime physical footprint522,881,880 bytes, below 6 GiB.
+This closes source preparation only: no real native execution, canonical runtime
+parity, production Chat, phone, full-window, adoption quality or speed claim.
+See [report](../../phi3-real-reference.md),
+[evidence](../../../benchmarks/results/2026-10-28-phi3-real-reference-v1.json) and
+[TODO](TODO.md). Continue B2c2 with Astra review.
+
+## 2026-10-28 — Real Phi3 native preparation (target results pending)
+
+Added a bounded diagnostic capture and independent checker for the frozen source
+reference. Queried real source/resident/session plans, exact-budget construction
+and exact one-byte-under rejection are separate from sampled process peaks.
+Raw generation, cancellation/output failure and full512 capacity rejection keep
+explicit state witnesses. Nonfinite failures retain offending index/IEEE bits;
+wide comparisons stay diagnostic and never change main-only acceptance.
+
+Formatting, strict default/Metal Clippy,410 default /288 Metal-library tests,
+three runner and four checker controls pass. Astra prospectively corrected copied
+probe IDs, exact boundary error checks and failure evidence retention before any
+real native outcome. Binary/controller approval and actual Metal checks remain
+pending; no qualification upgrade is implied.
+
+## 2026-10-28 — Real Phi3 native vertical
+
+The pinned Phi3 four-bit export now passes23,946,432 frozen main comparisons
+with zero failures, maximum gate fraction0.9399477807. All native intermediate
+captures are retained for independent rescoring; wide diagnostics do not decide
+acceptance. Exact logits across chunks, causal prefix, cached reuse, raw
+four-token/readback generation, cancellation/output-error recovery and full512
+state/schedule controls pass. Append/set513 reject with exact errors and unchanged
+valid state. Native raw IDs are3/3/3/3; this does not qualify production text.
+
+Queried plans agree with real resident weights and four exact session budgets;
+model/session one-byte-under controls reject precisely. Weights are2,149,645,198
+bytes including910 norm guards. Maximum diagnostic admission plus extra reserve
+is2,698,625,144 bytes; observed lifetime physical maximum2,517,715,224 bytes stays
+below 6 GiB. Source and native runs are sequential. Formatting, strict checks,
+410 default /288 Metal-library /3 runner /4 checker controls pass.
+
+Astra independently rescores every native comparison and source envelope,
+authenticates6,857 consumed identities and approves bounded retention/commit.
+The selected Mac512 B2 adapter closes in that scope. App/codec, phone, full-window, original adoption quality and comparative
+performance remain open. See [report](../../phi3-real-model.md),
+[evidence](../../../benchmarks/results/2026-10-28-phi3-real-short-vertical-v1.json) and
+[TODO](TODO.md). Continue B3, preserving B5/M8 integration and quality gates.
+
+## 2026-10-28 — Gemma3 cold local/global plan
+
+Astra selected the compact public Gemma3 270M four-bit representative and
+independently checked metadata, primary sources and all490 physical extents.
+The strict cold adapter resolves236 logical tensors, fifteen local and three
+full layers, unequal residual/query widths, raw BF16 coefficients and a single
+tied table. Shared concrete metadata helpers preserve the existing Gemma4 API.
+No graph, payload integrity, device or Chat eligibility is implied.
+
+Five targeted controls cover identity/inventory, unsupported config changes,
+missing/extra tensors, malformed extents and bounded unique JSON. Formatting and
+strict default/Metal Clippy pass; full tests and final Astra evidence review are
+in progress. Numerical profiles and actual resident window transactions remain
+separate next tasks. See [design](../../gemma3-local-global.md) and [TODO](TODO.md).
+
+The first full B3a test run rejected the genuine index because its metadata also
+contains `total_parameters:268098176`. The older Gemma4 index has only total_size;
+that schema assumption was incorrect. Immutable v2 now validates both exact
+fields and rejects changed/missing parameter counts. The failed v1 receipt is
+preserved; source fixtures and numerical criteria are unchanged. Full checks
+are rerunning before final review.
+
+The corrected full run passes415 default /293 Metal-library tests, all five
+Gemma3 controls and14 Gemma4 regression tests (overlap), plus formatting and
+strict Clippy. Seven process groups close without endpoint errors. No payload,
+model or hardware execution occurred. Astra authenticates3,914 current bindings,
+all retained outputs and closed groups, and approves cold-plan retention/commit.
+Continue independent CPU graph and transactional local/global composition.
+
+## 2026-10-28 — Independent Gemma3 CPU reference
+
+Frozen a separate tiny local/global graph with raw BF16 offset-gamma storage,
+FP32 effective coefficients, unequal residual/query widths and one packed tied
+table. Four cases produce192 arrays/108,816 finite FP32 values; all six export
+files replay identically. Component witnesses cover unit-offset rounding,
+embedding25.25 and actualD256/W512 visibility without claiming a full model run.
+
+Six portable controls pass. Astra independently verifies source packing, every
+array identity and causal prefixes, analytical components and1,856 tied-head
+logits. Process groups close normally. No Rust target, real payload, Half/GPU,
+app, phone or quality/performance qualification is implied. The concrete CPU
+model/session remains a private draft for the next reviewed code task. See
+[reference](../../gemma3-cpu-reference.md),
+[evidence](../../../benchmarks/results/2026-10-28-gemma3-cpu-reference-v1.json) and
+[TODO](TODO.md).
+
+B3b2's first compile stops before numerical target tests: the old-path sealed
+reexport needs its actual Apple/Metal feature guard, and checked staging-size
+errors need explicit CPU→model→session conversion. The corrected v3
+preserves numerical code and frozen source/gates; the failed receipt is retained
+and a fresh complete check run follows.
+
+## 2026-10-28 — Concrete Gemma3 packed CPU graph
+
+Composed existing packed gather/projection, FP32 unit-offset norms, Q/K norms,
+per-layer ordinary RoPE, local/full span attention and postnorm GeGLU residuals.
+Immutable weights and one tied table are separate from session-owned staging,
+window/full caches, scratch and publication. Shared packed-operation bodies stay
+unchanged and old Gemma4 paths are reexported. KV1 and32 inline proposals are
+explicit; no old fifteen-producer constraint leaks into the new graph.
+
+All428,832 frozen comparisons pass (maximum gate fraction0.0753252425), with
+complete per-chunk stage inventories, exact numeric schedules/causality and
+ordinary/TRACE equality. Twenty-four two-/18-layer failure points preserve prior
+cache/history/logits;72 measured failure/retry/reset phases allocate nothing.
+Exact/minus-one budgets and actualD256/W512CPU ring/operator steps513→514 pass.
+These are synthetic graph and CPU operator checks, not a513-token real model.
+Formatting, strict supported checks,420 default /298 Metal-library tests and
+old packed-graph regressions pass. Astra verifies3,927 current bindings,20 retained
+outputs and all closed groups, approving bounded CPU retention/commit.
+
+Passing target intermediates are consumer-checked rather than externally retained.
+Real checkpoint loading, native/Half rolling state, app/codec, phone, full declared
+context, quality and performance remain separate. See [report](../../gemma3-cpu-composition.md),
+[evidence](../../../benchmarks/results/2026-10-28-gemma3-cpu-composition-v1.json) and
+[TODO](TODO.md).
+
+## 2026-10-28 — Half RMS with FP32 scales (preparation)
+
+Astra identified the missing resident precision mechanism: existing Half RMS
+narrows norm weights, while the separate Gemma RMS operates on FP32 activations.
+The new optional borrowed-encode draft preserves Half input/output with FP32
+effective coefficients and the existing compensated reduction order. A source-only
+rounding control requires0x3fa7; narrowing scales to Half gives0x3fa6. Four portable
+reference controls pass. Exported bytes, GPU results and integration remain
+pending. Default shaders/pipelines and app eligibility stay unchanged.
+
+The 29 October continuation verifies the export/replay and all frozen source
+words independently with Astra, adding exact positive/negative Half subnormal
+controls before target outcomes. Review strengthens true alias/short-buffer
+rejection and measured Rust encoding allocation checks. Formatting, strict
+Clippy,420 default /300 Metal-library tests and existing regressions pass.
+The final private binary selector expected Cargo's `lib` kind instead of this
+package's `rlib/staticlib`; its failed receipt is preserved. An authenticated
+metadata-only continuation freezes the already-built test binary without
+repeating numerical checks. GPU collection and graph integration remain pending.
+
+The first explicit GPU job rejects debug-mode encoding's five Rust allocations
+per invocation. Astra independently verifies all64 saved first-case outputs
+bit-for-bit, immutable inputs, status and guards. Dependency inspection predicts
+five debug-only Objective-C signature-parser allocations; this is source-grounded
+localization rather than a captured allocation stack. The failure remains
+rejected. The same source and zero-allocation/numerical gates compile and pass
+both cold controls in release; hardware execution must now qualify that profile.
+No debug checks are disabled and no allocation or numerical limit is increased.
+
+## 2026-10-29 — Qualified standalone Half/F32-scale RMS
+
+The unchanged release profile passes all three explicit Metal jobs on Apple
+M1 Pro. Astra independently rescores all108,544 main/wide source comparisons
+bit-for-bit,192 recovery values and64 subnormal active words. Every raw output,
+guard, status transition and immutable input/scale hash passes. All twelve
+measured encodes make zero calling-thread Rust allocations in release; driver
+encoder allocations are outside that measurement. The debug5/5 failure stays
+preserved and rejected.
+
+Source export/replay, four portable controls, formatting, strict checks,
+420 default /300 Metal-library tests and existing regressions pass. The optional
+pipeline remains an internal test-only leaf until concrete graph composition.
+No whole-model memory, throughput, real model, app or phone claim follows from
+this operator. See [report](../../gemma3-half-rms.md),
+[evidence](../../../benchmarks/results/2026-10-29-gemma3-half-rms-v1.json) and
+[TODO](TODO.md). Continue B3c2 Half GELU and embedding scale with physical
+Half store boundaries before rolling KV and complete graph integration.
+
+## 2026-10-29 — Half GELU and embedding scale preparation
+
+Astra recommends two small borrowed pipelines and reusing existing tight
+gating after a physical Half GELU intermediate. The independent reference and
+four portable controls pass prospective review and execution. Exact witnesses
+distinguish the required GELU product `0x39fc` from delayed-store `0x39fd`, and
+embedding scale after the Half gather store from premature scaling. Both
+operations include exact signed subnormal controls. The private kernel drafts
+remain unqualified; source export/replay and native checks follow. The preceding
+RMS task is committed as `9b68a22`.
+
+The pointwise export and replay are identical; Astra independently verifies all
+152,512 values in each profile, exact controls and six stage gates. Review also
+requires complete raw capture before guard assertions and explicit command-error
+checking; both are applied before target execution. Initial strict Metal Clippy
+rejects redundant `width: width` field spelling; field shorthand corrects it
+without numerical changes. The failed cold receipt is retained and a fresh
+complete check run follows.
+
+## 2026-10-29 — Qualified Half GELU, scale and stored-Half gating
+
+Two small optional borrowed Metal pipelines now preserve the explicit Half
+activation and embedding boundaries. Existing tight gating consumes the actual
+GPU Half intermediate in the same command; no new product kernel or host
+readback between operations is introduced. The internal leaves remain test-only
+until full graph composition.
+
+Both release GPU jobs pass. Astra independently verifies all218,432 MAIN
+comparisons bit-for-bit, exact intermediate-store/subnormal/scale witnesses,
+strided/tight equality, immutable input/up hashes, all guards and command status
+with no error. WIDE has21,051 differing words, maximum absolute difference
+4.76837158203125e-7 and zero diagnostic gate exceedances; it is not bit-exact.
+Eight measured release encodes make zero Rust allocations. Seven invalid
+controls pass21 error/sticky/reset phases with5,888 checked recovery words.
+Source replay, four portable controls, formatting, strict Clippy,
+420 default /302 Metal-library tests and both debug/release cold controls pass.
+
+The initial field-spelling Clippy failure remains preserved. Direct-process
+memory samples are not execution peaks or whole-model fit. No full graph,
+real checkpoint, app/phone, throughput or quality claim follows. See
+[report](../../gemma3-half-pointwise.md),
+[evidence](../../../benchmarks/results/2026-10-29-gemma3-half-pointwise-v1.json) and
+[TODO](TODO.md). Next: shared rolling-state geometry, immutable old/new
+attention views and a two-phase GPU copy/publication transaction.
+
+## 2026-10-29 — Shared window geometry preparation
+
+The pointwise task is committed as `a954146`. Astra confirms that the physical
+local cache retains W rows while a new attention view needs at most W−1 old
+rows. A small crate-private row helper now supplies both existing CPU view
+representations and contiguous per-head commit copies, ready for the future
+GPU cache to use the same descriptors. Public admission, finite input checks,
+owner identity, generation and all-owner validation are preserved.
+
+New tests compare bounded descriptors against an independent per-token oracle,
+include near-usize boundaries and verify signed-zero physical bits, multihead
+segments and four chunk partitions. Checks/review remain pending. GPU attention,
+two-phase state and real-model composition are separate tasks.
+
+## 2026-10-29 — Checked shared KV row descriptors
+
+Three ordinary functions and fixed Copy descriptors now serve both CPU cache
+view forms and bounded contiguous per-head commit copies. Constructor/prepare,
+finite inputs, ownership, generation and all-owner validation are unchanged.
+Local/full selection occurs before copying rows; model/session fields and
+persistent allocation sizes are unchanged. This is the concrete row mechanism
+that the upcoming GPU cache will reuse.
+
+All checks pass: formatting, strict default/Metal Clippy,424 default tests,
+306 Metal-library tests and11 targeted window tests (overlap). Independent
+oracles cover678 old-span and9,772 copy-plan cases. Sixty-four multihead/dimension/
+retention/partition combinations complete576 commits with exact physical bits,
+signed zeros, logical segments and unchanged pointers/bytes. Existing frozen
+cache/shared-KV/Gemma3 graph/failure/zero-allocation tests pass. Target states
+are asserted within the reviewed Rust consumer, not retained as external raw
+numerical captures. No GPU, latency, throughput, real-model or app/phone claim
+is added. See [report](../../window-row-geometry.md),
+[evidence](../../../benchmarks/results/2026-10-29-window-row-geometry-v1.json) and
+[TODO](TODO.md). Continue independent Half rolling attention, followed by
+all-owner two-phase copy and poisoned-state recovery.
+
+## 2026-10-29 — Frozen staged Half attention reference
+
+The shared row task is committed as `7635606`. An independent source now fixes
+eight local/full old-ring plus immutable-new-staging cases at D32/256, including
+the seeded512→513→514 boundary and an early-query chunk-wrap hazard. Physical
+retentionW and numerical old viewW−1 remain distinct. The 104 saved arrays include
+48 main/wide numerical profiles and56 before/staged/expected-after raw states.
+
+Five portable controls pass and both owned exports replay byte-for-byte. Astra
+independently recomputes722,896 numerical values,24 envelopes/gates,
+3,553,672 raw physical words,10,120 masked-zero entries, copy runs and chained
+states. The two committed fixture files preserve those exact expectations.
+This task invokes no Toklet graph/attention kernel or native transaction; seeded
+states do not qualify model prefill, a GPU copy or poisoned-session recovery.
+No app/phone, quality or performance claim is added. See
+[reference](../../gemma3-staged-attention-reference.md),
+[evidence](../../../benchmarks/results/2026-10-29-gemma3-staged-attention-reference-v1.json)
+and [TODO](TODO.md). The optional native operator and cache transaction remain
+separate reviewed code tasks.
+
+## 2026-10-29 — Native staged-attention preparation
+
+The independent reference is committed as `2ba2a42`. A small borrowed Metal
+operation now reads the shared old-ring spans and immutable new Half KV without
+changing persistent cache bytes. Its host plan checks the bounded UInt32 domain,
+all nine operand owners, aliases, device identity and guarded physical bytes.
+Serial FP32 score/softmax/context arithmetic matches the frozen profile.
+
+The raw-first test consumer compares all eight source cases and adds fixed
+W1/c0 single-visible-value identities, nine short buffers, typed aliases and
+nonfinite/sticky/reset controls. Release Rust allocation checks remain separate
+from driver allocations. Cold checks and prospective final review are running;
+no native outcome, cache transaction, graph or model qualification is claimed.
+
+## 2026-10-29 — Qualified native staged Half attention
+
+The optional resident Reference operation now passes both explicit Metal jobs
+on Apple M1 Pro. Astra independently verifies all 27 raw records: 361,448 source
+MAIN values have one differing probability value, maximum error 7.450580596923828e-9
+and zero unchanged-gate failures. WIDE has zero diagnostic exceedances. Another
+16,016 recovery MAIN values are bit-exact; exact W1/c0 identities, masked zeros,
+uniform window boundaries, all input hash pairs and inactive/guard words pass.
+Nine short operands, typed aliases and five invalid-input/sticky/reset controls
+pass, including acceptance of an unused old NaN row with unchanged outputs.
+
+All eight measured release encodes make zero calling-thread Rust allocations;
+driver encoders remain outside that measurement. Physical operands reuse the
+shared row descriptors and `KvOwner` F16 accounting, with no KV-head expansion,
+cache copy, host wait or input mutation during encoding. Formatting, strict
+default/Metal Clippy, 424 default /308 Metal-library tests and both targeted
+debug/release cold controls pass. Source and numerical policy are unchanged.
+
+Memory observations are direct-process samples, not execution peaks or whole-model
+fit. The leaf remains internal/test-only until graph composition. No real model,
+cache publication, graph, app/phone, quality or throughput claim follows. See
+[report](../../gemma3-staged-attention.md),
+[evidence](../../../benchmarks/results/2026-10-29-gemma3-staged-attention-v1.json) and
+[TODO](TODO.md). Continue the all-owner two-phase GPU cache transaction with
+explicit poisoned-state recovery.
+
+## 2026-10-29 — Resident cache transaction design
+
+The native attention task is committed as `229eb8b`. Astra's next concrete
+design keeps the Phase-A command inside the cache set and creates an opaque
+readiness token only after all owner frames and active Half K/V rows validate.
+An initial same-command NaN fill prevents an omitted producer from reusing stale
+finite staging. A separate all-owner blit phase publishes metadata only after
+completed/no-error execution; submitted partial-copy uncertainty poisons the
+entire set until terminal reset/rebuild and replay.
+
+Independent Astra review focuses every early-error/discard/reset path on actual
+command state before mapped access or buffer reuse. The private proposal reuses
+`KvOwner` and row-copy descriptors with fixed metadata slots; no framework or
+caller-supplied boolean success proof is introduced. Implementation checks and
+GPU transaction evidence remain pending.
+
+Initial cache-set cold checks stop on two strict-lint issues before target
+tests: an unnecessary unsafe block around the safe fill API and a collapsible
+snapshot guard. Both are mechanically corrected with the state/lifetime
+conditions unchanged, and the failed receipt is retained. Astra confirms the
+transaction design and clarifies that the consumer observes 27 complete
+begin/finish/commit boundaries, with zero Rust allocations required on the
+12 source-path boundaries. Driver allocations remain outside that measurement.
+
+## 2026-10-29 — Qualified all-owner resident KV transaction
+
+The concrete cache set now validates every producer after an initial same-command
+NaN stamp, mints opaque readiness after completed/no-error Phase A, and performs
+one all-owner GPU blit phase before publishing offset/generation. It reuses the
+existing F16 owner equations and shared row descriptors with fixed metadata.
+Submitted-copy uncertainty poisons the whole set; mapped reuse/reset requires
+terminal completion, then zero-prefix reset/rebuild and trusted replay.
+
+All strict checks, 424 default /310 Metal-library tests, debug/release cold
+controls and three explicit GPU jobs pass. Astra independently reconstructs all
+67 snapshots and 6,210,796 Half words, including 1,623,152 expected source-copy
+words, the actual 513→514 chain, omitted/partial producers, frame/state rejection,
+actual first-K-only mutation with whole-set poison, and 1,052 final GPU replay
+words. Input hashes and every Half/status guard pass. All 27 observed release
+boundary allocation counts are zero; 12 source-path counts are required-zero.
+These are whole-boundary Rust measurements, excluding driver allocations.
+
+The partial-copy error is injected after a real successful terminal command;
+it is not a hardware-error or rollback claim. Sparse direct-process samples
+cannot establish peaks or whole-model fit. This remains an internal/test-only
+cache mechanism, without full graph, real model, token replay, app/phone or
+performance qualification. See [report](../../gemma3-resident-cache.md),
+[evidence](../../../benchmarks/results/2026-10-29-gemma3-resident-cache-v1.json) and
+[TODO](TODO.md). Continue resident Gemma3 graph composition with shared packed
+upload, an independent Half graph reference and actual model/session consumers.
+
+## 2026-10-29 — Resident graph composition decisions
+
+The cache transaction is committed as `8f0b092`. Astra's actual-code inspection
+confirms that existing packed projection/gather already support unequal hidden
+and query widths, so the next task adds no projection kernel. A shared checked
+original-byte upload helper will serve the existing affine Context and the new
+packed Matrix entry, preserving audited Qwen/Phi Source loading unchanged.
+
+Graph composition then needs its own frozen Half reference, explicit ordinary
+RoPE D32/256 coverage, tight-row layout admission and a concrete Model/Session
+that finishes every layer/head before the checked cache transaction. Weights,
+cache state, shared scratch and readback must be counted once each. Actual
+270M checkpoint gamma interpretation remains a payload/provenance question for
+B3d; these choices do not claim graph or model execution.
+
+## 2026-10-29 — Shared original-byte packed upload in validation
+
+Astra approves a two-file cold-path change sharing checked byte upload between
+the existing affine Context and a test-only Matrix entry for resident graph
+composition. It preserves original unaligned packed/coefficient bytes, nested
+row views, exact destination extents and the unchanged GPU numerical domain;
+only metadata alignment padding is zeroed. Existing audited Source loading and
+projection/gather arithmetic are byte-identical. Strict checks and424 default /
+313 Metal-library tests pass; explicit hardware regression is next. A separate
+independent Astra review is checking the new Half graph/RoPE source proposal.
+No complete Gemma3 GPU graph, real-model or performance result is claimed.
+
+## 2026-10-29 — Qualified shared packed Matrix upload
+
+The checked cold copy now serves the existing Context and a test-only original
+Matrix entry. It handles unaligned/nested row views without repacking and rejects
+invalid layout, extents or the existing numerical domain before writes. Existing
+Source loading, arithmetic shaders and numerical gates remain unchanged.
+
+All required strict/default/Metal/debug/release checks and seven explicit Mac
+hardware tests pass. Astra independently reconstructs3894 source bytes and2352
+resident bytes across18 formats, including padding and2352 unchanged bytes after
+rejection. Existing Context regressions pass54 storage cases,864 completed calls
+and390096 exact value assertions, checked inside Rust rather than external raw
+rescore; the existing tiny Qwen session recovery regression also passes. Sparse
+process samples establish no peak or model admission. This is an upload mechanism
+qualification, with complete Gemma3 graph/real-model/app/phone work still open.
+See [report](../../original-matrix-upload.md) and
+[evidence](../../../benchmarks/results/2026-10-29-original-matrix-upload-v1.json).
+
+## 2026-10-29 — Independent complete Half graph reference
+
+The exact original tiny artifact now has a separate explicit48-stage Gemma3 Half
+graph, shared once-reconstructed FP32 packed weights, widened effective norms,
+required Half store boundaries and FP32 tied logits. Four cases cover full12
+tokens and future-token causality. Eight ordinary-RoPE components cover D32/256,
+both rotary bases and Q4/KV1 at positions0/511/512/513, keeping the unchanged
+mathematical envelope. The main serial FP32 profile is independent of native
+compensated projection; wide is diagnostic and fixes source-only main gates.
+
+Seven portable controls and two fresh byte-identical exports pass. Astra
+independently reconstructs all424 arrays/715648 bytes, all192 graph groups,
+both causal prefixes, every source gate and23040 rotary envelope comparisons.
+The promoted fixture is source evidence; native graph, checkpoint semantics,
+quality, app/phone and performance remain unqualified. See
+[report](../../gemma3-half-reference.md),
+[evidence](../../../benchmarks/results/2026-10-29-gemma3-half-reference-v1.json) and
+[TODO](TODO.md). A separate resident Model/Session proposal is under review.
+
+## 2026-10-29 — Resident core review before application
+
+The complete Model/Session draft composes original packed projections, FP32-scale
+Half norms, rotary, staged attention, explicit GELU stores and checked all-owner
+publication. It includes all48 source stage snapshots, caller-buffer readback and
+a physical-owner ledger. Independent Astra review catches a mixed-width zero-bias
+maximum omission and model-only peak reporting inherited by the Session. Both
+receive bounded fixes and controls before application; no numerical tolerance
+or architecture tuple is changed. The full native fixture/state/fault/allocation
+consumer is being prepared separately. No decoder execution is claimed yet.
+
+The corrected resident core now passes all eight owned cold commands: formatting,
+strict default/Metal Clippy, five debug/release controls,424 default tests and318
+Metal-library tests, with a frozen release binary. Initial missing-trait-import
+and Config-borrow compile errors are mechanically fixed and independently
+reviewed; their failed receipt is retained. Complete GPU stage/state/fault and
+allocation qualification remains pending before this code task is complete.
+
+The prospective GPU consumer receives explicit evidence controls before execution:
+nonzero tail guards, complete old history/published-buffer comparisons after
+rejection or failure, and per-call allocation logging before assertions. Existing
+fixed source gates and production arithmetic remain unchanged. The selected real
+checkpoint converter research also positively supports raw gamma: the pinned
+0.26.3 sanitize/cast/quantize/save chain does not fold normalization weights.
+Payload/header/card authentication and real numerical checks still remain B3d.
+
+Three reviewed release native collection jobs now pass with unchanged gates:
+2400 stage snapshots/428832 main values (maximum error/gate0.41270), exact native
+full/chunk and causal/replay controls, actual NaN rollback and submitted partial
+copy poison/reset/replay, immutable originals, nonzero guards and twelve zero
+Rust forward allocation counts. Ordinary rotary passes11520 values, including
+D256 and511/512/513, under the same source and mathematical envelopes. Raw
+evidence remains under independent Astra audit before qualification/commit;
+35/4/1 process samples cannot establish peaks or performance.
+
+## 2026-10-29 — Qualified complete tiny resident Gemma3 graph
+
+The concrete Model/Session now composes the shared original packed upload,
+projection/gather, effective-scale Half RMS, rotary, explicit GELU stores,
+staged attention and all-owner publication. It retains one tied table and
+resident session scratch/cache, caches tight input views, and publishes only
+after completed finite math plus copy. Diagnostic snapshots have explicit
+physical ownership and caller-buffer readback; source overlap/application bytes
+and the shared framework estimate are accounted separately.
+
+All required cold/strict checks and three release Mac jobs pass. Astra
+independently rescores428832 main values/2400 stages (6549 bit differences,
+zero failures, maximum error/gate0.41270), both source profiles and every native
+schedule/replay/causal witness. It reconstructs170 physical states/122 commits,
+129396 old-cache words,2352 exact masked probability zeros,59196 guard words,
+immutable15 original matrices/30 metadata owners/13 FP32 norms, complete failed
+publication/history preservation and the real first-K partial-copy poison path.
+All twelve measured forwards allocate zero Rust objects in release. The32
+rotary commands/11520 values pass both fixed gates and the unchanged mathematical
+envelope. Initial compiler/lint failures and independent-reader-only corrections
+are retained; no target/gate change was used to pass.
+
+Budget/getter controls remain passing Rust assertions where no individual raw
+record exists; snapshot addresses are not exposed. Sparse35/4/1 process samples
+prove no peak, real-model fit or speed. This closes the bounded complete tiny
+Mac graph, not real Gemma3 payload/text/window, app, iPhone or performance
+qualification. See [report](../../gemma3-resident-graph.md),
+[evidence](../../../benchmarks/results/2026-10-29-gemma3-resident-graph-v1.json) and
+[TODO](TODO.md). Continue B3d with verified immutable acquisition and source.
+
+## 2026-10-29 — Verified selected Gemma3 artifact and tokenizer files
+
+The exact public270M four-bit revision is now local: eleven files/190208344
+bytes, including the original150939130-byte payload and both tokenizer formats.
+Eight cached metadata files and three bounded credential-free HTTPS transfers
+verify hashes before one exclusive atomic directory publication. Failed/partial
+paths are retained; successful payload partials share physical inodes with the
+published files. No existing model directory is overwritten.
+
+Astra independently authenticates all eleven files,490 contiguous indexed
+tensors,127 affine triples,109 finite BF16 norm vectors and closed transfer
+groups. The pinned converter0.26.3 no-fold lineage supports the explicit raw
+gamma source decision; unknown original Google revision stays separate. These
+are byte/layout/provenance results, without model, tokenizer, text, app, iPhone
+or performance execution. See [report](../../gemma3-artifact-acquisition.md) and
+[evidence](../../../benchmarks/results/2026-10-29-gemma3-artifact-acquisition-v1.json).
+Next freeze real source IDs/profiles and then qualify native window execution.
+
+The next real-source protocol captures all400 stage identities at eight selected
+case/absolute rows, using a declared NumPy FP32 BLAS NativeHalf reference and
+FP64 diagnostic profile. Only selected full-head distributions are retained.
+Tokenizer-only discovery is replayed with a fresh cache prefix before freezing
+IDs; no numerical model has run. The loader proposal retains one original byte
+payload with small BF16 gamma conversion, explicit requested capacity1..544 and
+separate declared32768/window512 metadata. For capacities below512, physical
+retention narrows to capacity without changing any admitted attention position.
+
+The original-byte loader passes all eight cold commands on its first checked
+run:431 default tests,327 Metal-library tests and26 overlapping targeted
+Gemma3/Gemma4 controls in debug/release, plus strict checks and release freeze.
+All ten real-reference portable controls also pass. Review corrects an assumption
+about score visibility: the existing kernel stores raw dot scores for materialized
+keys, including masked ones; probabilities alone are zero. The unchanged source
+contract compares only materialized native columns and retains actual masked-zero
+probability assertions. No source/target/gate change follows from that correction.
+
+The first actual source graph exposed a required Half adaptation: BOS layer8
+adds64864+14520=79384 and the strict Half store rejects it. Partial398 groups/
+669568 bytes and the clean failed source receipt are preserved. Independent
+Astra primary/saved-byte analysis confirms MLX-LM0.26.3 clips both FP16 residual
+additions to±65504 after FP32 addition; ordinary BF16/FP32 semantics differ.
+The authenticated gamma708/effective709 stays unchanged. A separately named
+clipped profile and Gemma3-only operation are prepared with unchanged other
+finite checks/gates; generic residual behavior remains. One native author hit
+service capacity twice, so the parent drafts implementation for Astra review.
+
+The corrected source passes twelve portable controls. The native change passes
+formatting, strict Metal Clippy, library regressions and a fresh release binary
+freeze. Astra independently confirms the original residual shader and existing
+kernel indices remain intact; only Gemma3 selects the new clipped operation.
+Actual GPU primitive and tiny graph checks precede the new source export. The
+failed unclipped export remains separate evidence; no real-model qualification
+is claimed from these build and portable results.
+
+All four explicit release GPU jobs pass. The clipped primitive preserves exact
+Half words across20,962 active values, rejects five invalid inputs, preserves
+guards/sticky status, observes a real same-command store boundary and retains
+the legacy residual overflow result. Eight warmed primitive encodes and twelve
+complete tiny forwards allocate zero Rust objects in their stated scopes. The
+complete tiny graph and rotary gates remain unchanged and pass. Independent
+saved-output review precedes publication; real-model qualification stays open.
+
+Astra independently rescored all primitive words and the complete tiny graph
+regression, including170 physical states and all guard/store/error controls.
+The correction qualifies as a separate task; see the
+[report](../../gemma3-half-residual.md) and
+[evidence](../../../benchmarks/results/2026-10-29-gemma3-half-residual-v1.json).
+The real original-byte loader and corrected numerical reference remain distinct
+follow-on work. Their uncommitted preparation is not a real-model support claim.
+
+The clipped-Half correction is committed as `8528b5b` after exact staged Astra
+review. The corrected real source exports and replays identically:3,232 stage
+groups/13,473,568 values per profile, preserving the old valid prefix exactly.
+Source-only OS RSS peaks remain below2.81GB; all source groups close. Independent
+saved-source review is pending before its separate reference-code commit.
+
+The next storage/upload controller stops before launching a child because its
+approval retained an older inventory path. That preflight failure is preserved;
+a metadata-only successor corrects the placement without changing test code,
+numerical operations or gates. No model/GPU work occurred in that rejection.
+
+The corrected storage/upload controller passes both actual release checks. A
+separate original-range reader reconstructs every packed component and all109
+effective norm hashes, then verifies491 unique resident buffers before/after
+CPU-store drop. The reader initially assumes different capacity-control inputs;
+its preserved successor uses the actual literal Rust inputs. No target code,
+output or gate changes follow. This proves original storage/upload ownership,
+not numerical inference.
+
+Astra independently verifies the complete saved real reference, including
+original109 norm conversions,368,640 residual-store words/40 saturations,
+589,824 gating-store words and10,240 embedding-scale words. All fixed gates,
+finite arrays, exact replay and historical-prefix checks pass. The frozen
+[real reference](../../gemma3-real-reference.md) closes B3d2 in its source-only scope;
+actual native comparison and application/adoption quality remain open.
+
+The real source reference is committed as `ba88fcc` after exact seven-file Astra
+review. Original-byte storage/upload is separately complete in its bounded
+ownership scope:150,885,632 payload bytes,127 original matrices,109 raw norm
+vectors and491 unique resident buffers survive source-store drop exactly.
+Requested capacity is explicitly1..544 while declared32,768 stays metadata.
+The [loader report](../../gemma3-original-loader.md) keeps actual inference, window
+comparisons, Chat and phone qualification open.
+
+The original-byte loader task is committed as `a38142d` after exact staged Astra
+review. The next bounded diagnostic runner reuses the public Model/Session APIs,
+compares selected stages across two544-token partitions, and keeps source
+comparison separate from raw capture. Its private proposal and independent
+checker are under review before any real native numerical run.
+
+Astra approves guarded application of the bounded real native diagnostic runner.
+It reuses the original loader and public Model/Session APIs, captures6,400
+selected stage records across two native schedules, and retains exact replay,
+public rejection, codec and source/native separation controls. Only the runner
+and its Cargo example entry change; cold checks and independent checker review
+are required before actual native execution.
+
+The first native-runner build reaches strict Metal Clippy and stops on a single
+collapsible-if spelling. A frozen mechanical let-chain correction preserves the
+comparison condition/body exactly. Failed checks remain recorded; no native
+model outcome or numerical-policy change occurred.
+
+The corrected runner passes all eight cold commands, including strict checks,
+431 default/327 Metal library tests, three debug/release controls and a frozen
+optimized binary. Astra confirms the lint-only fix and reviews the independent
+checker before application. Six synthetic checker controls precede target
+outcomes; all numerical tolerances and absolute-column semantics remain fixed.
+
+The first bounded real native Gemma3 capture completes both544-token partitions
+and its public state/codec/replay controls:6,400 stage records,2,351 committed
+tokens and187 forward calls. The closed process records a lifetime physical
+maximum812,025,152 bytes across693 observations, below 6 GiB. The141,258,016 raw
+bytes are preserved. Source comparison remains an independent next gate; this
+structural result does not yet qualify numerical execution, Chat or performance.
+
+The independent complete numerical comparison rejects92 of18,537,288 MAIN
+values, with98 WIDE diagnostic exceedances and maximum error/gate3.16603. The
+first rejection is plain-France row5/layer3 post-attention normalization. All
+6,496 raw records, source arrays and clean closed failed-checker evidence remain.
+Public state/codec/ledger checks completed; numerical qualification and commit
+remain open. Astra now investigates exact saved operands/reductions before any
+code change, policy decision or target retry; tolerances are unchanged.
+
+A second independent saved-byte audit exactly confirms the numerical rejection.
+The first RMS output is correct for all640 own-input words with authenticated
+gamma73/effective74; the preceding projection channel also matches accurate
+original-weight reconstruction. The difference originates in earlier attention
+context, while exact native partitions rule out scheduling/cache drift. This
+narrows the investigation to attention precision without changing a gate or
+rerunning the full model.
+
+A direct six-token trace confirms the independently predicted mixed-precision
+rounding branch; Astra verifies13 full snapshots/42,528 words and11,520 exact
+own-input RMS words. The reference successor uniformly uses certified accurate
+projection stores with exact dyadic fallback, FP32 RMS and serial reference
+attention. All3,232 old atol/rtol coefficients remain literal; the MAIN center
+and therefore relative element bounds change explicitly, while new envelopes
+are diagnostic. Old source/capture rejections remain. Astra approves exact
+three-file application and18 controls before any new source export.
+
+The native-store reference exports/replays exactly and passes independent full
+saved-byte review. All legacy gate coefficients, WIDE hashes and teacher inputs
+remain exact. Its143,984,128 projection stores include126,546 exact fallbacks;
+all32 exported destination words and original weight hashes verify independently,
+with31 input-retained dots reconstructed. The MAIN center and relative bounds
+change explicitly; the old92 rejection remains rejected. The
+[native-store contract](../../gemma3-native-store-reference.md) records the correction,
+direct trace, mathematical assumptions and source-only scope.
+
+The verified native-store reference is committed as `0ef34f6`. Separate
+consumer review fixes qualification eligibility remaining true after endpoint
+failure; its added control protects that boundary. The reviewed consumer adds
+explicit historical-only rescore and fresh-profile capture modes, retaining
+old coefficients and WIDE identities. Four Rust/ten Python controls and strict
+checks precede any saved-native or fresh target comparison.
+
+The updated consumers pass strict checks, four debug/release Rust controls and
+ten Python controls. The historical owner rejects a copied truncated array hash
+before launching any child; the original bytes and numerical checker are
+unchanged. That preflight receipt is retained while a provenance-only successor
+corrects the literal. No new numerical result is inferred from the rejection.
+
+The corrected historical reader completes the source3 screen and still rejects
+84 MAIN intermediate values, with98 WIDE diagnostic exceedances. Saved-operand
+investigation accounts for all84 as42 paired values; every rejected scalar
+matches its independent own-input operation. Thirty-three whole groups contain
+24,984 checked values with zero existing local-gate failures. All12,582,912 strict
+coupled final/teacher values pass. Astra reviews that evidence and verifies that
+the selected GELU/rotary differences fit fixed published intrinsic contracts.
+This is bounded evidence, not a proof for every unselected producer.
+
+The prospective [Gemma3 native conformance policy](../../gemma3-native-conformance.md)
+keeps a fatal check on every18,537,288 selected value. Scores/context/head/teacher
+retain coupled gates; other operators use actual saved inputs, original weights,
+exact store/RMS semantics, true faithful projection brackets and independently
+propagated provider contracts, together with unchanged local coefficient gates.
+It explicitly changes the acceptance method and local centers, preserves both
+failed trajectory screens, and requires policy review/commit before checker
+implementation and fresh collection. No engine or reference change, quality
+waiver, app/phone qualification or measured performance improvement follows.
+
+The policy task is committed as `ae7a457` after exact staged Astra review and
+passing documentation checks. The next code task implements that fixed universal
+checker and portable corruption controls before any fresh target collection.
+
+The [next concrete mechanism](../../lfm2-hybrid-plan.md) is now scoped to LFM2-350M's
+two-row short-convolution history composed with six full-attention layers.
+Astra checks the cached primary source/config/header and estimated budget. The
+queue separates strict loader/profile provenance, scalar transactional state,
+tiny hybrid composition, resident execution and real bounded qualification.
+This improves the implementable roadmap; no LFM2 tensor payload, inference,
+physical-fit result or architecture support is claimed. Historical converter
+identity stays unknown; an explicitly authenticated current same-artifact loader
+profile can be qualified independently. B3 remains the active implementation.
+
+LFM2 selection/planning is committed as `a4f6f4c`. The active Gemma3 checker now
+implements the reviewed universal actual-input policy in two small independent
+math/dispatch helpers and a narrow saved-byte reader integration. Sixteen
+operator and twelve reader controls pass from the working tree after all five
+private development attempts passed. Cases include exact cancellation/RMS/Half
+boundaries, discrete intrinsic-set holes, a shared rotary pair, complete400-stage
+inventory, masks, provenance and endpoint eligibility. The old coupled aggregate
+remains separate and unchanged. Astra approves the exact five-file code; all237
+Rust/Metal/Cargo source files still match passing cold checks. Saved-data replay
+and fresh target qualification remain separate pending steps.
+
+The complete historical saved-byte diagnostic passes every new fatal route:
+13,185,444 strict coupled attention/output values and5,351,844 actual-input values,
+with eight exact projection fallbacks and no local semantic/numeric failures.
+All18,537,288 original coupled comparisons are retained:84 MAIN/98 WIDE failures
+remain rejected. The bounded reader finishes in252.36s with a368,150,712-byte
+lifetime physical counter and743,981,056-byte observed RSS maximum, closes its
+owned group and passes every endpoint check. This is diagnostic evidence only;
+fresh collection and independent final review remain mandatory for qualification.
+
+Astra independently authenticates all6,496 raw records,508 original weight ranges,
+9,132 masked positive zeros and2,378 process observations, with the owned group
+absent. The [checker code task](../../gemma3-conformance-checker.md) closes separately
+from the still-open fresh native runner/qualification task. The eight projection
+fallback branches are reported aggregates, not individually retained independent
+certificates. Both historical rejections and all adoption/app/device limitations
+remain explicit in the tracked result.
+
+The checker task is committed as `3cfd38a` after exact nine-file Astra staged
+review. The separately reviewed fresh native collection now starts with the
+unchanged optimized binary/workload and actual successful posthoc/audit pins.
+Its capture and independent fresh checker must complete before native closure.
+
+The fresh native capture completes187 forwards/2,351 tokens and all6,496 records
+cleanly, with815,334,720-byte lifetime physical counter. Astra verifies complete
+raw-byte identity and15,003 structural journal events. The separate fresh reader
+then passes all18,537,288 fatal-route values, retaining the original84/98 failed
+trajectory diagnostics; its lifetime physical counter is371,427,632 bytes and
+all endpoints/owned cleanup pass. Final independent bounded qualification and
+the separate runner commit remain pending; neither diagnostic time is throughput.
+
+Independent Astra review now approves the selected Mac544 native conformance
+scope, independently replaying all13,185,444 coupled gates and authenticating
+all5,351,844 reviewed local results,508 original ranges, masks and closed resource
+endpoints. The [bounded release decision](../../gemma3-real-native.md) closes B3's engine
+contract and retains every historical rejection and original quality/app/device
+gap. The source-identical diagnostic runner receives its own reviewed commit;
+B4a's LFM2 cold plan is next. No production Chat or throughput claim is added.
+
+The bounded B3 runner task is committed as `aed0a56`. B4a research now resolves
+the declared current MLX-LM/MLX0.32.3 strict load, direct gains and depthwise
+orientation without inventing the historical converter version. Astra chooses
+single-store native FP32-scale RMS with direct BF16 gains, explicitly distinct
+from MLX's intermediate output-dtype cast. Independent review flags the required
+later epsilon1e-5 qualification at both64/1024 and actual16:8/D64 GQA checks.
+The [profile](../../lfm2-hybrid-plan.md) freezes that choice before numerical fixtures;
+the current implementation task is a cold metadata/layer/owner plan only.
+
+The reviewed LFM2 cold adapter is applied with93 affine,45 direct-norm and10
+explicit depthwise owners,30 borrowed fused-row spans and separate6-KV/10-history
+recipes. Private checks pass; broader parent checks catch an older Metal-feature
+compatibility control that predates structural Llama admission. Astra verifies
+the history and approves a test-only correction to a truly unsupported base0.5,
+plus a metadata-only12345 acceptance control that keeps qualification false.
+The failed receipt is preserved and complete checks rerun; no production
+geometry, numerical limit or runtime eligibility changes to make the test pass.
+
+The [LFM2 cold plan](../../lfm2-cold-plan.md) now passes all five complete parent
+checks: formatting, strict default/Metal all-target Clippy, 438 default and 519
+Metal-feature tests. The metadata adapter preserves original physical ownership,
+separate six-KV/ten-history geometry and explicit absent implemented/qualified
+context. The reviewed compatibility repair changes tests only. Failed evidence
+is retained. B4b will reuse the existing scalar causal convolution before adding
+transactional history; no LFM2 inference or memory-fit claim follows here.
+
+B4a is committed as `a3c3a6f` after Astra's exact staged review. B4b starts
+with the existing scalar leaf and a concrete prepared history owner. Unlike KV,
+a two-row history cannot rewind to an arbitrary earlier prefix; changed/shortened
+committed histories require reset/replay. This policy will be checked before
+hybrid session composition, rather than inheriting dense longest-prefix reuse.
+
+[B4b scalar history](../../short-conv3-history.md) reuses the existing numerical leaf
+and adds opaque prepared candidates, full-batch identity/step validation before
+publication and checked reset/replay. Six meaningful state controls and a warmed
+allocation integration pass;64 preparations/32 commits/eight resets report zero
+Rust allocations. Full checks pass445 default and526 Metal-feature tests plus
+strict all-target Clippy/formatting. Astra independently verifies code/private
+evidence and the exact integer fixture. Hybrid KV/logit/token atomicity and
+Half/native execution remain separate. B4c1 freezes its independent tiny reference
+before graph implementation, using actual head64 and two KV heads.
+
+The scalar history task is committed as `9c18a4f` after exact10-file Astra
+approval. B4c1 now prepares independent original-packed mixed-layer fixtures
+before Rust composition. Head64/two KV heads and two separate convolution owners
+will exercise physical state and causal partitions without downloading a model.
+
+[B4c1 independent tiny scalar reference](../../lfm2-scalar-reference.md) passes eight
+portable controls and byte-identical six-file export/replay. Astra audits every
+252-group/548,944-value array,165,888 original packed words,143,360 state values,
+540 masked positive zeros and215,512 earlier causal values. This freezes direct
+BF16 gains, actual head64/two-KV GQA, unactivated three-tap histories and declared
+mixed FP64/FP32 stores before target outcomes. Rust graph, complete compound
+publication and native/device qualification remain separate tasks.
+
+The independent scalar source task is committed as `97d8b4d` after exact15-file
+Astra approval. B4c2 now implements the tiny Rust graph against those immutable
+fixtures, preserving the fixed scalar gate and distinct target state checks.
+
+B4c2's first private compile stops on Rust literal spelling and a sizing-error
+conversion before numerical tests. The failed receipt is retained; the corrected
+attempt preserves source expectations, gates and numerical operators.
+
+[B4c2 tiny scalar hybrid](../../lfm2-scalar-hybrid.md) composes the shared projection,
+norm, rotary, full GQA, convolution and MLP leaves without new numerical kernels.
+One validation/publication boundary protects KV, convolution, tokens and logits;
+reset prevalidates both state families. The fixed source gate passes1,651,856
+comparisons; unique coverage is405,584 math plus99,072 active state values,
+with44,288 inactive source-zero slots explicitly excluded. Exact partition,
+rollback/retry and warmed zero-allocation controls pass. Full checks pass450
+default/531 Metal-feature tests and strict Clippy/formatting. Astra verifies
+code and private evidence; scalar tiny scope does not qualify native/real models.
+
+B4c2 is committed as `cb24079` after exact13-file Astra approval. Next is the
+existing Half RMS operation's explicit epsilon1e-5/direct-gain qualification,
+followed by causal convolution and true multi-KV staged attention. Artifact-only
+acquisition can proceed independently after its own reviewed bounded controller.
+
+[B4e1 original LFM2 artifact](../../lfm2-artifact-acquisition.md) is acquired and
+independently verified: one199,527,820-byte public weight download plus eight
+Git-blob-authenticated cached metadata files,204,378,119 bytes total. Full LFS
+SHA,334 contiguous tensor ranges and all nine published files pass. Exclusive
+publication, bounded transfer and closed cleanup are checked; no numerical or
+tokenizer execution occurs. This removes acquisition work from the later real
+source/native journey without changing engine/app admission.
+
+The original artifact record is committed as `a9a53bf`. The next RMS source
+passes six portable controls and exact four-file replay; Astra independently
+reconstructs75,008 MAIN and75,008 WIDE words from direct BF16 gains and checks
+the exact epsilon/subnormal and gain-underflow witnesses. The host encodes its
+admitted epsilon bits explicitly; native GPU qualification is still pending.
+
+D1's full cold checks pass450 default/534 Metal-feature tests plus strict Clippy,
+formatting and release freeze. Before hardware launch, Astra catches and closes
+consumed-JSON identity and raw-log bounds in the controller; earlier unrun drafts
+are retained. Five fixed release GPU checks now run under the unchanged source
+gates, including all legacy Gemma RMS controls. No native result is claimed yet.
+
+The first D1 GPU attempt stops with SIGXFSZ before numerical output under the
+controller's global file-size cap. Logs were116B/0B; the exact incidental write
+is unknown. Both Astra investigations preserve the failure and recommend a
+transport-only successor: strict per-stream bounded pipes, same binary/source/
+gates and deadlines. Four real owned CPU pipe controls pass; native qualification
+still awaits the reviewed hardware retry.
+
+[B4d1 native direct-gain RMS](../../lfm2-half-rms.md) is qualified on Apple M1 Pro.
+The host retains exact admitted epsilon bits while shader arithmetic and old
+Gemma admission stay unchanged. Astra independently rescores150,016 normal+640
+recovery LFM outputs and all legacy108,544 normal+192 recovery+64 subnormal
+words exactly; guards, immutable inputs, status/recovery and26 total release
+zero-allocation encodes pass. Six cold/build jobs pass450 default/534 Metal
+checks. The failed global-file-cap wrapper is retained and corrected through
+reviewed pipe-only transport with identical numerical binary/data/gates. Sparse
+memory samples establish no peak or model fit. Next is the raw convolution leaf.
+
+Native RMS qualification is committed as `7ef4cab` after exact17-file Astra
+approval. D2 now freezes the reusable raw conv3 contract, retaining immutable old
+history and exact candidate suffix. The adviser flags the one-token dispatch
+case before implementation: a channel thread must write both candidate rows.
+
+D2's independent raw Half conv3 source passes eight controls and exact replay.
+Astra reconstructs every46,571 output word per profile and7,238 raw candidate
+words, plus all35 partition schedules/233 boundaries. The source fixes explicit
+FP32 products/adds, direct BF16 coefficients, signed-zero/store witnesses and
+nine invalid domains before native outcomes. Operator and transaction support
+remain unqualified until the separate hardware journey passes.
+
+[Raw native Half Conv3](../../causal-conv3-half.md) qualifies on Apple M1 Pro using
+explicit FP32 tap order and exact UInt16 raw candidate copies. Astra reconstructs
+312,670 valid outputs and every candidate bit across274commands/286captures,
+35schedules/233boundaries, with immutable old/input/coefficient state, guards,
+nine invalid/sticky/reset sites and24zero-Rust-allocation encodes. Full cold
+checks pass450default/536Metal tests. A controller-only missing constant is caught
+before launch and fixed without changing numerical source, gates or binary.
+This is a universal raw leaf; model transaction, GQA and real inference remain.
+
+Raw Conv3 is committed as `782fd0b` after exact18-file Astra approval. The next
+all-query GQA source fixes11cases/143arrays, full deep query coverage and explicit
+per-head physical fill/validation/copy intervals before native extension. Source
+workers use the reviewed pipe supervision pattern with600s/1GiB bounds.
+
+The all-query GQA source passes eight controls and exact three-file replay.
+Astra independently reconstructs143arrays/22,405,366bytes,8,358,427physicalwords,
+all MAIN/WIDE context/score/probability cells and36,232masked positive zeros.
+Fixed32-row head strides, per-head copy/validation intervals and512→513 chains
+are checked. No nativeReady/cache/model admission follows from seeded fixtures.
+
+Astra reviews the nine-file native GQA/cache successor; malformed-metadata
+controls now retain terminal evidence before asserting rejection. All six parent
+checks pass450default/539Metal tests, strict Clippy/formatting and an optimized
+release freeze. The new four GPU jobs retain16MiB per-stream limits; seven legacy
+jobs use a separately reviewed64MiB owner because existing complete captures
+include47.6MB Gemma and27.7MB cache logs. This prospective split preserves raw
+coverage and all numerical gates. Native hardware qualification remains pending.
+
+All eleven frozen release GPU jobs pass on Apple M1 Pro: four new GQA/cache and
+seven legacy attention/cache/tiny-Gemma controls. Both owners retain complete
+logs, close all child groups and report no endpoint error. The exact110,720,592B
+executable is retained with its executed-path distinction for later rebuilds.
+New tests report1,978,360 MAIN comparisons and53 zero Rust allocation boundaries;
+independent saved-raw qualification remains required before declaring closure.
+
+[Multi-KV GQA/cache](../../staged-gqa-half.md) now passes independent saved-raw
+qualification. Astra gates1,978,360 new MAIN values, verifies all119 raw records,
+98 submissions, per-head physical storage and the same-Set512→513 chain, plus
+six-owner rejection/partial-copy poison/reset/replay. Seven legacy jobs preserve
+377,464 attention values,67 cache states and428,832 tiny-Gemma values; all100
+observed release allocation boundaries are zero. Actual cache metadata grows
+eight bytes in the current ABI, explicitly separated from physical buffers.
+The reviewer's process-local identity correction is preserved without target or
+gate changes. Next is reusable strided B*x/C*z, then the resident mixed graph;
+no real LFM2/app/context/performance/mobile support is inferred.
+
+The exact22-file GQA/cache task is committed as`0effda1` after final Astra
+approval. D4a starts with a small independently frozen strided-product source:
+both convolution gates borrow the same BCx parent, with no split/copied B/C/x
+owners. Five prospective cases/67,072 values per profile pin finite products,
+signed/subnormal stores, readonly aliasing and checked physical extents before
+native outcomes. Source review/execution and the native consumer remain open.
+
+D4a's source and bounded owner pass Astra review, eight portable controls and
+four-file exact export/replay. Five cases retain17arrays/738,248B and67,072
+outputs per profile. Physical readonly aliasing, nonzero offsets, last-row/guard
+extents and finite validation even against zero are fixed before native work.
+Independent saved-array review remains before declaring source qualification.
+
+Astra's saved-source audit exactly reconstructs both67,072-word product profiles
+using independent integer-dyadic/RNE arithmetic,234,980 physical input words,
+67,240 physical outputs including168 canaries,11 schedules/96 boundaries and
+64,256 causal-prefix words. All10 store witnesses and eight invalid controls
+pass. The six-file fixture is promoted without byte transformation. The native
+product and later mixed graph remain pending; the checklist now names those
+separate steps explicitly.
+
+[Native strided Half product](../../strided-half-product.md) qualifies on Apple M1 Pro
+without modifying existing shaders. The wrapper resolves checked view extents,
+permits readonly BCx parent identity and rejects writable/status aliases before
+encoding. Actual unique-owner accounting avoids duplicate B/x buffers. Full
+checks pass450default/541Metal tests and both optimized GPU jobs. Astra exactly
+reconstructs347,384 finite outputs, including342,784 MAIN/WIDE comparisons,
+133raw/128submissions,1,749 canaries,96 partition boundaries,24 invalid/sticky/
+reset phases and10 allocation-free Rust encodes. No graph or performance claim.
+The next independent Half graph source uses the original packed container and
+uniform exact-dyadic projections; analytic witnesses prove each Bx/Conv/Cz store
+matters before any source export or target outcome.
+
+The exact18-file product task is committed as`451e2cf` after final Astra review.
+The independently reviewed Half graph source passes twelve controls, but its
+first export stops before components/graph arrays: a diagnostic witness assumed
+Python builtin float sum was naive ordered FP64; this interpreter returns the
+more accurate1 instead of0. Both Astra advisers support replacing only that
+counterexample with explicit ordered FP64 additions, recording0 alongside the
+exact integer result1 and strengthening the existing control. Failed v1 source,
+logs and closed-worker receipt are preserved. Graph math, cases and gates stay
+fixed; the unexecuted successor awaits review before a bounded retry.
+
+[Independent tiny Half graph source](../../lfm2-half-reference.md) now qualifies after
+the separately reviewed witness-only correction. Twelve controls and exact
+four-file replay pass. Astra reconstructs all504 descriptors/1,097,888 saved
+values bit-exactly,252 gates,1,327,104 original affine weights and290,304 exact
+dot results/74,317,824 scalar products. Both history families, active/inactive
+KV snapshots,1,080 masked zeros, causal visible prefixes, separate-store/direct
+rounding and RoPE components pass. The failed first run stays preserved; source
+projection math and gates never change. The new six-file reference is ready for
+the resident graph; source workers stay below173MB and imply no native model fit.
+Rust engine bytes are unchanged from the passing450/541 checks. The concrete
+mixed-state design/ledger is independently approved and implementation is private.
+
+All six repository checks also pass for the source task: formatting, strict
+default/Metal all-target Clippy,450default/541Metal tests and optimized test
+compilation. The original Rust engine bytes remain unchanged. Active plan text
+is reconciled around the completed leaves/reference and remaining resident
+graph, rather than leaving earlier next-step statements contradictory.
+
+The exact14-file source task is committed as`e577eb9` after final Astra approval.
+D4c now implements the concrete resident mixed graph privately. Its reviewed
+design reuses all qualified blocks and the KV Set's command/status, validates
+both stamped history candidates, and permits only infallible publication after
+KV-copy success. Diagnostic availability is invalidated before scratch mutation;
+published logits remain separate. Code review and all target checks remain.
+
+D4c's reviewed resident graph passes full450default/545Metal repository checks.
+Its first source GPU job passes independent1,923,728-value math and199,936-value
+boundary-state reconstruction with no MAIN/WIDE exceedance. Recovery reaches the
+actual partial-copy fault but its mutation witness is invalid: prior complete
+replay left all128 destination K words identical to the new staged words. Both
+Astra audits confirm completed commands, correct poison and preserved publication;
+this is a test precondition defect. A reviewed test-only successor drops/recreates
+the owned FirstCopy Session, retains the mutation assertion and verifies the exact
+copied range. Graph arithmetic, source/gates/counts stay fixed. Failed executable,
+raw logs and clean closed-group receipt remain; full check/recollection is pending.
+
+[Resident tiny mixed graph](../../lfm2-resident-tiny.md) now qualifies on Apple M1 Pro.
+All six successor repository checks and nine GPU jobs pass; Astra independently
+gates1,923,728 mathematical and199,936 observed boundary-state values with zero
+MAIN/WIDE exceedance, validates all57 physical snapshot reconstructions, actual
+raw-u suffix/KV copies, published banks/tokens, nine faults and exact128-word
+partial-copy poison/reset/replay. Twelve ordinary forwards allocate no Rust
+memory; all legacy counters give93 observed zero boundaries total. Original
+weights and66 model owners remain immutable and correctly accounted. The failed
+v1 stays rejected and retained, with only test setup/proof changed. Status bytes/
+guards are checked without a logged address; sparse usage is not a process peak.
+B4d closes only the tiny Mac scope. Real LFM2 source/text/native/memory, B5 app/
+context/adoption, quality, performance and separate phone qualification remain.
+
+The exact14-file resident graph task is committed as`2f594eb` after final Astra
+approval. B4e2 next fixes a bounded real LFM2 reference before any model output.
+Astra's authenticated coefficient-only scan covers all93 affine matrices and
+derives conservative exact-FP64/checked-int64 bounds with exact fallback; runtime
+activation certificate coverage is still unknown. The proposed64-token source
+trajectory and fixed teacher/native-operand inventories are being reviewed with
+strict coupled score/context/head/teacher gates and all-stage actual-input checks.
+This does not change the tiny profile, imply512-token trajectory evidence or
+waive original-unquantized adoption quality.
+
+Astra has approved the prospective B4e2 protocol for implementation after an
+independent check of all24 pins,334 contiguous tensor extents, literal token IDs
+and source/native capture counts. TODO.md now separates the streamed exact-affine
+helper, codec-only fixture and full reference experiment so each code task can
+be checked, reviewed and committed separately. The helper begins with synthetic
+controls for all certificate/fallback paths and direct destination rounding;
+real source and text execution still await their concrete reviewed code and
+bounded controllers. Protocol approval is not a numerical result.
+
+### M8 B4e2a — Streamed exact-affine source operation,29 October2026
+
+The [independent affine reference](../../lfm2-exact-affine-reference.md) now streams
+original Q4/BF16 row stripes and rounds exact stored-Half/original-FP32 dots
+directly to Half or FP32. Checked pre-arithmetic certificates select exact
+binary64, int64 or fixed64-element exact subtotals; only uncertifiable bounded
+blocks use per-element Python integers. All branches retain the same numerical
+center, canonical exact zero, signed underflow and overflow rejection. No full
+expanded model or integer object per model weight is retained.
+
+Thirteen independent Fraction/finite-word controls pass, including complete
+projection double-rounding witnesses, cancellation, certificate limits/stale
+bounds, extreme finite weights multiplied by zero, all fallback paths,
+unaligned original metadata, stream ownership and row/token partitions. All six
+repository checks pass:450default/545Metal tests(overlap),20/181 ignored,
+formatting, both strict Clippy configurations and release test compilation.
+Astra's saved audit verifies runtime pins/actual NumPy and Accelerate origins,
+all seven closed groups and source bytes. Synthetic OSmaxRSS is67,846,144B;
+the32MiB numerical reserve and512MiB process ceiling are separate quantities.
+
+The two earlier owner versions were never executed. Version3 adds actual
+runtime-origin, nonblocking-open and interpreter/customization checks; helper
+and test bytes remain identical. Rust/Metal kernels, existing numerical
+fixtures, source gates and adoption-quality obligations are unchanged. This
+closes the helper task only; codec-only fixtures, real reference/native model,
+app/context controls and device qualification remain. Evidence and exact pins
+are in the [result record](../../../benchmarks/results/2026-10-29-lfm2-exact-affine-reference-v1.json).
+
+### M8 B4e2b — Pinned LFM2 text reference,29 October2026
+
+The helper task is committed as`dbe855b` after exact seven-file Astra review.
+The separate [text reference](../../lfm2-text-reference.md) now freezes manual rendering,
+actual tokenizer IDs and raw whole-prefix decoding for the selected original
+LFM2 artifact. Ten cases independently match the pinned Jinja bytes; both
+generation flags, empty content, system/history and Unicode are covered. BOS1
+appears once, diagnostic postprocessing exposes duplication, stop7 is distinct
+from non-stop2, and unmapped padded-head IDs reject before decoding without
+masking/remapping. All505 special literals reject while ordinary added tokens
+`Mathias` and `python` retain their actual IDs and decoded content.
+
+Eight portable controls, explicit export/replay and all six repository checks
+pass(default450/Metal545, overlapping;20/181 ignored). Both stable files replay
+identically:23,078-byte fixture and123,852-byte539-record raw capture. Astra
+independently reconstructs29decoded strings/382ID occurrences directly from the
+original vocabulary, audits every raw record/runtime identity and verifies all
+nine closed process groups. Codec-worker OSmaxRSS is at most195,379,200 bytes
+under its1GiB ceiling; this is not combined app/model fit. Fresh runtime cache
+paths and observations remain separate from stable golden bytes.
+
+The [published fixtures](../../../tests/fixtures/lfm2-text-v1/README.md) retain exact
+source/runtime provenance. This is independent rendering and saved-decode
+checking, not a second BPE implementation or Transformers equivalence. No model,
+GPU, Rust codec/app profile, Chat or phone execution is claimed. The complete
+real numerical reference remains B4e2c, followed by native/session/memory B4e3;
+all existing numerical gates and adoption-quality obligations remain.
+
+The exact11-file codec task is committed as`c1e740e`. B4e2c's complete16-layer
+reference has passed prospective Astra review of code, arithmetic, ownership,
+all2,817 inputs and the frozen48,049,152-byte capture. The exact two new source
+files are applied and all six repository checks pass. Its bounded synthetic/
+export/replay collection is now running; this records progress only, not a
+qualified real numerical outcome. A separate independent saved-input reader
+will audit the results before source adoption or native engine work.
+
+### M8 B4e2c — Bounded real LFM2 source qualification,29 October2026
+
+The [full reference](../../lfm2-real-reference.md) now executes all16 layers from the
+authenticated original container using streamed exact affine rows and qualified
+operator stores. Four fixed source histories, ten selected rows/all293 stages,
+four teacher distributions and complete producer/history sidebands produce6204
+descriptors/48,049,152 bytes. Both exports replay all four files exactly;13
+synthetic controls and all six repository checks pass(default450/Metal545 with
+20/181 ignored, overlapping suites). MAIN/WIDE centers and their literal gates
+are fixed before any native LFM2 target outcome.
+
+A separately authored standard-library reader checks all22,072,064 finite values,
+3102gates and exact state/mask/causal/teacher-prefix invariants. It independently
+reconstructs every selected local nonprojection coordinate and3720first/last
+projection coordinates across1860calls using exact integer accumulation and
+binary-search rounding. It imports neither producer nor its helpers and runs
+no second full graph. Remaining projection coordinates, nonselected producer
+formulas and teacher1–3internal trajectories retain explicit limitations. Astra
+reauthenticates6912current identities and all ten closed groups.
+
+Both arithmetic profiles observe28,151,808 certified binary64 affine outputs,
+18048stripe calls and no int64/block/scalar fallback; those fallbacks remain
+qualified by independent synthetic controls, not claimed as observed here.
+Maximum source-worker OSRSS is469,549,056 bytes under6GiB. The reader takes17.37s
+and59,981,824-byte OSRSS. These are bounded reference/resource measurements, not
+native generation speed, whole-app fit or phone qualification. Apple Accelerate
+full-binary64 behavior remains the explicit backend premise; wider rotary is
+same-method Decimal stability, not certified transcendental rounding.
+
+The [published protocol/components/gate contract](../../../tests/fixtures/lfm2-real-source-v1/README.md)
+preserves byte-identical protocol/components and all3102 literal source gates
+with complete source-array/manifest pins. The48MB raw capture stays in retained
+owned evidence. B4e2 closes only source/text reference work. B4e3 now separates
+original payload preparation, concrete16-layer resident composition and the
+bounded native checker/experiment. No native/app admission or original quality
+gate is changed; [exact evidence](../../../benchmarks/results/2026-10-29-lfm2-real-reference-v1.json)
+records all observations and remaining limitations.
+
+The exact twelve-file real-reference task is committed as`ada0910`. B4e3a now
+adds only an original payload store and cold direct-weight preparation. Astra
+approves its three Rust paths; formatting, both strict Clippy configurations and
+default457/Metal552 tests pass, including seven new storage/identity/budget/
+unaligned-word controls. The first private proposal was never compiled; an
+unused test import is removed in its reviewed successor before live application.
+A separate actual-original-file CPU/data probe is running after its own review;
+this does not construct a backend, model graph, session or app profile.
+
+### M8 B4e3a — Original LFM2 payload and direct weights, 29 October 2026
+
+The [original payload adapter](../../lfm2-original-loader.md) authenticates the complete
+container/header/config/index and retains one original payload. All 93 matrices
+borrow original bytes; 45 direct norms and ten rank-three tap arrays decode
+safely into typed BF16 vectors without relying on byte-buffer alignment.
+Preparation resolves sixteen routes, six KV and ten history owners once, outside
+numerical loops. Tied input/output storage is counted once, with no expanded
+FP32 model.
+
+Seven synthetic controls and all six repository checks pass: default 457/Metal
+552, with 20/181 ignored and overlapping suites. The four-job real CPU probe
+passes two sequential File loads, 279 matrix/558 endpoint observations and all
+130,560 BF16 comparisons across capacities 1/512. Independent original bytes and
+a separate Fraction-to-FP32 rescore verify 186 distinct endpoints. All 32 routes,
+110 direct-vector records, identities and exact/under budget boundaries pass;
+load-under reads only 36,748 header/prefix bytes before refusing payload.
+
+Load admission is 266,976,701 bytes and preparation 267,016,841, including caller
+274,489 bytes, 64 MiB metadata allowance, actual header/payload capacities,
+130,560 bytes of typed data and 11,856 bytes of descriptors. Sparse CPU readings
+reach 203,522,048 resident/202,818,040 lifetime physical-footprint bytes; these
+are not complete process or aggregate compiler peaks. The actual library,
+dependencies and executable are pinned; original CLI/benchmark binaries are
+unchanged. Astra verifies all ten owned groups closed, with zero mismatches.
+
+Initial private versions were unexecuted: successors remove one unused import
+and invoke pinned compiler paths, without changing data, workload or gates.
+This closes payload/preparation only; declared 128000 remains metadata and
+Config1..512 is not native or trajectory qualification. Scalar/Metal numerical
+code, ordinary factories and app profiles stay unchanged. The concrete resident
+extension follows; [evidence](../../../benchmarks/results/2026-10-29-lfm2-original-loader-v1.json)
+records exact scope and limitations.
+
+The nine-file payload task is committed as`a85f143`. B4e3b's five-file resident
+extension resolves tiny/selected-real geometry, six KV and ten history owners,
+293 diagnostic slots and capacity/chunk sizing once. Astra's prospective review
+passes with unchanged kernels, cache helpers, source gates and arithmetic. The
+first cold run fails only Metal Clippy's unused-enumerate-index lint after stage
+bases move into the cold plan; no test or GPU job is reached. Its reviewed
+successor removes production enumeration while preserving test fault indices.
+Formatting, both strict Clippy checks and default tests pass on the retry; final
+Metal/release/tiny-GPU qualification is still pending. Real-model GPU collection
+remains a separate B4e3c prerequisite.
+
+### M8 B4e3b — Bounded real geometry and retained Tiny behavior, 29 October 2026
+
+The [concrete resident composition](../../lfm2-real-composition.md) now resolves the
+selected16-layer LFM2 layout, six attention and ten convolution owners,293
+snapshot slots, requested capacity1–512 and chunk views1–32 during cold setup.
+All history candidates preflight before KV publication; failure poisons the
+whole session when copies are uncertain. No new shader, graph VM, per-step name
+lookup or arithmetic change is introduced. Real buffer totals are checked
+predictions; actual real-model GPU construction remains pending.
+
+Four new cold controls and all six repository checks pass(default457/Metal556,
+20/181 ignored, overlapping suites). Both unchanged Tiny GPU tests pass. Astra
+independently checks all2,123,664 mathematical/boundary comparisons with zero
+MAIN/WIDE exceedances,144 states, physical guards/hashes,66 immutable model
+owners,9 faults/18 replay chunks,7 validator refusals and12 zero Rust allocations.
+Maximum fatal fraction remains0.030098723814110283. All numerical owner bytes
+are unchanged; current Rust metadata adds168 bytes to each session admission.
+
+The first cold lint failure and first no-device GPU attempt remain failed;
+reviewed successors change only loop bookkeeping and Metal access respectively.
+The successful GPU retry executes the exact retained optimized binary and
+unchanged gates/workloads. Sparse maximum RSS is49,463,296 bytes across the two
+Tiny jobs, not a process-peak, real-model or whole-app claim. Both GPU groups,
+all six cold groups and the source closure are clean. The seven unchanged
+legacy cache/Gemma checks retain their earlier evidence and were not rerun.
+[Exact evidence](../../../benchmarks/results/2026-10-29-lfm2-real-composition-v1.json)
+keeps real native/app/phone/quality/performance work open; next is B4e3c1's
+actual-input operator checker and then complete native capture/experiment.
+
+The exact nine-file resident composition is committed as`e734d81`. The next
+operator task resolves signed-zero projection/intrinsic membership before any
+execution; the two held proposals stay unexecuted. Shared Gemma contracts and
+all source gates/provider widths remain unchanged.
+
+### M8 B4e3c1 — Independent actual-input operators, 29 October 2026
+
+The [bounded conformance operators](../../lfm2-native-conformance.md) consume observed
+native operands rather than restarting a coupled source trajectory. They check
+direct RMS, exact original affine faithful brackets, raw-u convolution/history,
+Half stores, discrete stable SiLU, joint ordinary RoPE and Q16 probability
+bounds. Every local semantic result still requires the same frozen literal
+numeric guard; strict score/context/head/teacher gates remain separate.
+
+Fourteen synthetic controls and all six repository checks pass: default457/
+Metal556,20/181 ignored and overlapping suites. Astra independently authenticates
+6877 current identities, actual NumPy2.3.2/Accelerate module/image origins and
+all seven closed process groups. Controls take0.597s and100,007,936-byte OSmaxRSS
+under512MiB. The planned48MiB numerical/64MiB metadata reserves are not measured
+suballocations or whole-reader/model fit. Probability semantics remain a
+conservative per-value enclosure; affine full-binary64 and published provider
+domain premises are explicit.
+
+Review catches zero-word membership and missing trigonometric zero enumeration
+before tests: the LFM-only enumerator preserves both legal signed-zero words
+while requiring a common rotary candidate for both outputs. Exact projection
+zero is canonical+0; raw history/KV/masks retain their stronger word rules.
+[Exact evidence](../../../benchmarks/results/2026-10-29-lfm2-conformance-math-v1.json)
+records held unexecuted proposals and actual checks. This closes operators only;
+the complete293-stage native reader, captured state/text/resource checks and
+fresh real-model experiment remain open. Borrowed test-only visitors and streamed
+binary/JSON observations are the next implementation task, avoiding large
+transient serde/snapshot copies without changing numerical hot code.
+
+The exact six-file actual-input operator task is committed as`333de0f`.
+
+### M8 B4e3c2a — Streamed evidence and terminal observation, 29 October 2026
+
+The [test-only observation path](../../lfm2-capture-io.md) adds capped append-only
+little-endian output and synchronous borrowed cache/snapshot/packed-metadata
+visitors. No production numerical/transaction/shader body changes. It avoids
+whole-buffer clones and large per-word JSON trees in the future real capture;
+source arithmetic, text and eligibility remain outside the writer.
+
+Four CPU writer controls and all six checks pass(default457/Metal560 with
+20/182 ignored, overlapping suites). The one Tiny GPU test passes103 saved
+records,98 unique observed owners, terminal refusal before callbacks and actual
+successful completion of the extra stamp command. Astra independently rebuilds
+all36 packed metadata hashes from original raw BF16 bytes plus alignment padding.
+Cache/snapshot parity is evidenced by reviewed completed whole-word assertions;
+the saved hashes/booleans do not support independent complete reconstruction.
+
+The writer rejects malformed counts/shapes, overflows, caps and iterator lengths,
+retains partial output and cannot later report success. Prefix/footer hashing
+has explicit noncircular scopes. The hardware log retains25,779 bytes;21 sparse
+samples observe17,809,408-byte RSS and6,619,736-byte lifetime footprint, without a
+complete-peak or real-model claim. A saved-reader enum Debug-format assumption
+is corrected using the pinned dependency's Completed=4; initial reader retained,
+no engine/data/gate change. [Exact evidence](../../../benchmarks/results/2026-10-29-lfm2-capture-io-v1.json)
+authenticates5988 bindings and seven closed current groups. The complete real
+capture workload, exhaustive reader and bounded native experiment remain open.
+
+The exact nine-file capture-I/O task is committed as`a776029`.
+
+### M8 C2b — Concrete real capture implementation, 29 October 2026
+
+The [preregistered workload runner](../../lfm2-real-capture.md) is implemented as
+concrete resource/observation/workload test modules, with one immutable Model
+and sequential Sessions. It records actual stored operands/state/guards before
+assertions and keeps numerical/codec decisions in the independent reader.
+Original payload ownership drops after upload; metadata remains in original
+packed form, with direct BF16 gains/taps handled separately. No production
+numerical, shader, ordinary factory or app body changes.
+
+The bounded protocol covers all6739 selected primary stage groups, full u/Krot/V,
+physical history/KV state, teacher/free/fault/replay/ordinary paths and exact/
+one-byte-under budgets. Maximum104 attempts/367 rows,14,672 arrays and
+155,483,328 raw bytes are prospective inventory bounds, not measured results.
+Initial/reset history and guard records are explicitly counted; no missing
+observations are fabricated or truncated to fit. The independent reader retains
+source-state diagnostics separately from fatal semantic/coupled checks.
+
+Four cold controls and six repository checks pass(default457/Metal564,
+20/183 ignored, overlapping suites). Astra verifies4076 input bindings,12
+outputs and the retained actual optimized test binary. Its116,847,040 bytes
+are build evidence only; the real model is not executed. The first proposal is
+held unexecuted for an inspection-authority edge case, and the first cold
+attempt's json! syntax failure stays failed. Reviewed successors change only
+safety bookkeeping and syntax, with unchanged source/gates/workload. All six
+current and three historical check groups close cleanly.
+
+[Exact evidence](../../../benchmarks/results/2026-10-29-lfm2-native-capture-code-v1.json)
+keeps the full reader/control task, fresh real GPU/reader experiment and app/
+phone/full-quality/performance qualification open. Code compilation is not
+relabeled numerical eligibility or actual measured real-model fit.
+
+The exact nine-file capture-runner task is committed as`1c20180`.
+
+### M8 C2b — Full independent native reader, 29 October 2026
+
+The [complete byte/contract/workload/CLI reader](../../lfm2-native-reader.md) implements
+all293 selected stages and exact actual-state/owner/control validation. It keeps
+303 strict coupled and6440 local semantic-plus-numeric groups fatal, while
+retaining source trajectory and all168 source-state identities as diagnostics.
+No source forward is executed and no missing native operand is manufactured.
+Original stored-word rules, causal masks, actual history/KV writes, failure/
+poison/reset/replay and separate ordinary-mode evidence stay explicit.
+
+Twenty-nine corruption, omission, endpoint, publication, format and arithmetic-
+dispatch controls pass in0.321s. All six repository checks pass(default457/
+Metal564,20/183 ignored and overlapping suites). Astra audits actual NumPy
+runtime origins, current input/output identity union and seven closed groups.
+OSmaxRSS97,484,800 bytes is a synthetic-worker result, not real-model fit.
+Raw codec traces and sampled/stop/pending behavior do not establish app emission
+or Chat. The original-unquantized quality gates remain open.
+
+Peer/root review resolves original Conv tensor-axis, guard-tail accounting,
+exact FirstCopy128-word mutation, ordinary diagnostic-row metadata, strict
+lookup/view signed zeros and bounded consumed-file hashing before execution.
+Source/projection gates and provider widths remain unchanged. Separate source-
+state drift reporting covers4212 groups/21,657,600 values per profile without
+fabricating within-chunk committed snapshots. [Exact evidence](../../../benchmarks/results/2026-10-29-lfm2-native-reader-code-v1.json)
+records code/control scope only; actual fresh native capture, full reader and
+independent outer qualification are the next gate.
+
+The complete reader is committed as`cc6de7e`. The first real-owner metadata
+freeze stops before executable retention or launch-package creation: its generic
+passed-field check does not match the older source attestation schema. That
+failure is retained, with no model/GPU execution. The successor checks the exact
+source-qualified decision/scope and receipt/output identities; engine arithmetic,
+workload and acceptance gates remain unchanged.
+
+The first real capture completes104 attempts/367 rows and retains all14,672
+arrays. Independent framing/hash/closure audit passes, without numerical
+qualification. Its saved reader stops before selected math comparisons because
+source KV sidebands are head-major while native producer rows are token-major.
+The failed reader and original capture remain unchanged. A narrow axis mapping
+fix and nonuniform/nonzero-start regression control are reviewed before retry;
+source values, gates and producer code are unchanged.
+
+
+### M8 — Source KV diagnostic layout correction, 30 October 2026
+
+The reader now maps token-major captured KV producers into the source's
+head-major coordinates and slices only the source token axis. A nonuniform
+regression uses different head/token counts and a nonzero chunk offset; a
+separate injected error must still fail. All 30 controls pass in 0.301s, with
+69,009,408 bytes OS maximum RSS. All six repository checks pass, including
+457 default and 564 Metal tests (overlapping suites). Astra independently
+verifies the saved controls, runtime origins and seven closed process groups.
+
+The original saved-reader axis error and the malformed zero-tolerance synthetic
+fixture remain recorded. The latter was corrected to the existing required
+coefficients; production gates and source values are unchanged. This correction
+qualifies the verifier code only. Complete replay of the unchanged native
+capture and independent numerical qualification follow separately.
+
+The correction is committed as `b99fbaa`. Its real saved-reader retry passes
+43 local groups/74,752 values and 54 source-state groups per profile, then
+rejects a second reference layout assumption: attention score/probability
+arrays are stored flat. The failed report and clean process closure are
+retained. Astra is checking the remaining layout contracts before another
+narrow correction; the capture and numerical criteria remain unchanged.
+
+The next reviewed correction restores the reference exporter's explicit
+head-major flat attention layout before prefix slicing. Exact case lengths,
+F32 dtype, descriptor rank/length and integer key bounds remain mandatory.
+Two added controls check all four case lengths, signed-zero preservation,
+nonuniform head/key indexing, malformed inputs, strict masked-score failure,
+visible probability corruption and masked probability rejection. A metadata
+layout audit covers all 3,102 source groups and 14,672 native arrays. The
+correction changes the reader and its controls only; full validation is pending.
+
+All 32 controls now pass in 0.319s, with 98,074,624 bytes OS maximum RSS;
+all six repository checks pass. The unchanged real capture still awaits a
+complete verifier pass and independent outer qualification.
+
+The attention-layout correction is committed as `69c94ff`. The complete
+arithmetic replay passes all 6,440 actual-input groups / 11,971,552 values and
+303 strict coupled groups / 1,965,024 values. All 168 source-state identities,
+4,212 groups / 21,657,600 values per profile, pass their diagnostic gates.
+Original MAIN/WIDE trajectory diagnostics retain 3/8 failing coordinates;
+these are not relabeled as passing source fidelity.
+
+The reader then stops at the injected nonfinite-head fault: the shader writes
+status bit 4 while the reader expected Boolean 1. Omitted-history status is 1;
+partial-copy failure has status 0 and a poisoned session. The failed reader,
+raw data and clean process closure remain retained. Astra is correcting the
+reader's exact bit contract and inspecting the remaining recovery paths; full
+bounded qualification is still pending.
+
+A separate stdlib-only audit independently decodes the saved native and source
+bytes, replays all 303 strict coupled gates with zero failures, and reproduces
+all 6,743 MAIN/WIDE trajectory groups and exact 3/8 rejected groups/coordinates.
+It matches the original maximum errors/fractions and guards input endpoints.
+The audit keeps numerical qualification false because the full reader's later
+state/codec/ordinary path has not yet completed successfully.
+
+A separately reviewed diagnostic completes the entire saved state and codec
+path: all 104 attempts / 367 rows, three faults and reset/replay, ordinary mode,
+exact budget boundaries, immutable owners and raw codecs. It explicitly stubs
+numerical dispatch and preserves false reader-passed/eligibility/qualification
+fields; diagnostic job success cannot qualify the model. Its peak OS RSS is
+374,489,088 bytes with 37 direct process samples. After process and endpoint
+closure, V5's narrow status-bit correction and boundary regression are applied.
+All six repository checks pass; the 33-control suite and full replay follow.
+
+The exact status correction passes all 33 controls in 0.302s with 70,385,664
+bytes OS maximum RSS and all six repository checks (default 457/Metal 564).
+Astra authenticates the current runtime/bindings and seven closed groups, plus
+the saved nonqualifying state/codec diagnostic and its two explicitly historical
+source bindings. The narrow code task is checked; one complete full numerical
+and state reader replay remains necessary before bounded qualification.
+
+The exact six-file correction is committed as `74ab2f8`. The final combined
+reader runs against the unchanged real capture under the same bounded owner;
+complete eligibility and independent outer qualification remain pending.
+
+
+### M8 B4 — Bounded real LFM2 Mac conformance complete, 30 October 2026
+
+The [pinned LFM2 native report](../../lfm2-real-native.md) closes the selected Mac
+engine-adapter scope after the complete unstubbed numerical/state/codec reader
+and independent Astra qualification. All 6,440 actual-input groups / 11,971,552
+values and 303 strict coupled groups / 1,965,024 values pass with zero fatal
+failures. All 168 source-state identities, complete guard/owner/recovery and
+ordinary-mode checks pass. Three MAIN and eight WIDE diagnostic coordinates
+remain rejected under their original gates; the independent stdlib audit
+reproduces those results.
+
+The native experiment covers 104 attempts / 367 rows, including late failures,
+exact 128-word partial-copy poisoning/reset/replay, two raw greedy repeats and
+two ordinary calls with zero observed Rust allocations. All 335 model allocation hashes/sizes match
+before/after. Native sparse observations reach 533,544,960 bytes resident and
+562,005,048 bytes physical/lifetime footprint. The full reader records OS
+maximum RSS 472,580,096 bytes and clean process closure; elapsed wall time was
+not retained. Ledger reservations, process observations and whole-app peaks
+remain distinct. This is a correctness/memory result, without throughput claims.
+
+[Astra's final evidence](../../../benchmarks/results/2026-10-30-lfm2-real-native-v1.json)
+retains all original inputs, the three explicit reader supersessions, every
+failed attempt and nonqualifying diagnostic. The actual scope is 64 positions
+with capacity 512, distinct from the declared 128,000. Original-unquantized
+quality, ordinary app discovery/load/Chat, context/KV controls, iPhone 14 Pro and
+performance adoption stay open. B5 begins with the existing numerical capacity
+solver exposed through the native-policy C API; no new planner is required.
+
+
+### M8 B5a — Native capacity-report API applied, 30 October 2026
+
+After B4 closure in `415b831`, the reviewed five-file change adds an ordinary
+native-policy capacity wrapper and additive C report entrypoint over the
+existing pure solver. Both entrypoints share cold validation, error mapping and
+handle ownership; the original flat resource report remains unchanged. The new
+range preserves load-fit flags and grants no new factory or model admission.
+
+All six Rust checks, release static library, exact header exports and C caller
+compilation pass. The final Swift build fails in the runner: canonicalizing
+`swiftc` changes its invocation name to `swift-frontend`. The failed receipt and
+13 passed jobs/products remain pinned. A reviewed alias-preserving Swift-only
+retry will reuse those unchanged successful checks; no engine arithmetic or
+source-data change is involved. Actual Mac planning and C/Swift execution remain
+pending, so this task is not yet committed or qualified.
+
+The alias-preserving Swift retry passes and the explicit 13+1 aggregate remains
+current and authenticated. All five Mac hardware planning/ABI jobs pass:
+four factory cases exercise range 3–31 at offset 1 and exact/below budgets;
+20 direct reports preserve snapshot/ownership behavior. C and strict Swift 6
+callers validate the additive symbol and range/resource assertions. The original
+29-export set including the new symbol matches the header. Default 457 and
+Metal 564 tests pass, with 20/184 ignored; suites overlap.
+
+Astra independently verifies actual retained products, source/runtime/aliases,
+build provenance, outputs and closed process groups. These are compiled range
+assertions; full nested capacity JSON was not retained for an additional
+independent decoder. [API evidence](../../native-capacity-report.md) preserves the
+failed compiler-dispatch job and all scope limits. No real-model forward,
+new context/factory admission, phone or performance qualification is granted.
+B5b next shares the enforced ordinary geometry/context-cap policy with a
+metadata-only limits snapshot, before typed Swift previews and safe settings.
+
+The capacity API task is committed as `0027ad6`. B5b's reviewed seven-file
+implementation now shares existing ordinary geometry/context-cap policy with a
+metadata-only limits report. Ordinary and audited-Smol entrypoints are distinct
+profiles. Phi3's existing declared sliding-window admission is preserved and
+reported separately; no universal context/window minimum or larger diagnostic
+route is substituted. The snapshot grants no payload identity, runtime/budget
+fit or qualification. Fresh checks and the separate typed Swift/worker task
+remain next.
+
+The shared limits API passes all 14 fresh build/check/link jobs, default 462
+and Metal 569 tests (20/184 ignored), exact 30-header-export matching and five
+explicit Mac planning/metadata-C/old-Swift checks. Four new integration tests
+and one native ABI test preserve upper/adjacent rejection, source profiles,
+null unsupported bounds, declarations and Phi3's existing window limit. Astra
+verifies all actual products, source/runtime/aliases and closed groups.
+
+[Limits evidence](../../native-context-limits.md) records metadata-only behavior and
+compiled assertion scope, without a real-model forward or new context/factory/
+phone qualification. Typed Swift consumers and request/worker/UI integration
+remain separate. This checked task is ready for its exact staged review/commit.
+
+The shared limits API is committed as `c900d2a`. B5c1's reviewed typed Swift
+limits/capacity consumers are applied with strict profile/state/bounds/request,
+ledger/fit and adjacent-witness validation. The existing resource decoder
+reuses an extracted guard with its old arguments and behavior unchanged.
+No directory-based payload identity, audited-profile authentication or load
+permission is inferred from matching reports. Standalone synthetic and actual
+producer/default/Metal checks plus the unchanged decoder/worker regression are
+pending; no worker, settings or UI integration has been applied.
+
+Typed planning consumers pass nine build/compile/CPU jobs and two Mac checks,
+including 75 new synthetic rejections, actual C producers in both build modes,
+and the unchanged old decoder/worker regression's 25 wire mutations per mode,
+three Metal cleanup paths and source revalidation. New code compiles under
+strict Swift 6; the old worker regression retains strict Swift 5. Exact 333-input
+engine/header identity proof reuses the checked Rust suites and Metal archive;
+only the default archive is rebuilt.
+
+Astra independently verifies all inputs, seven products, aliases/runtime, raw
+results and closed groups. [Consumer evidence](../../swift-planning-consumers.md)
+keeps compiled-assertion and standalone scope explicit. This task neither
+changes worker/UI/project membership nor infers payload identity or audited
+capacity authentication. B5c2 next separates preview results/identities from
+active model/session/chat and generation evidence.
+
+Typed consumers are committed as `5118327`. B5c2's independently reviewed
+preview command and request/selection-keyed result are applied to the existing
+single worker queue. The preview branch bypasses ordinary generation/score/
+budget clearing, checks identities before planning/publication and suppresses
+stale successes and errors on selection or lifecycle changes. Audited-Smol
+previews remain metadata-only because capacity inspection has no profile
+selector. New default/Metal controls and project/typecheck verification remain
+pending; UI/settings and coherent current-bridge app linking are not yet
+qualified.
+
+The first preview verification passes strict type/source checks, then catches a
+missing closing brace in the standalone test harness during default compilation.
+No runtime or Metal controls are reached. The failed logs and clean closure are
+retained; the next reviewed correction is restricted to test syntax, preserving
+worker/preview/project behavior and every prospective control.
+
+The syntax-only retry passes all compile/type checks, then fails its first CPU
+preview runtime test. Astra identifies a test setup error: the selected tiny
+reference directory contains arrays, not a loadable checkpoint. The failed
+receipt is preserved. A narrow test/owner fixture correction will use the
+existing proven loadable CPU artifact and old worker oracle-compatible MLX
+fixture; the new preview Metal fixture, production code and gates stay fixed.
+
+Worker previews now pass all twelve compile/CPU and three explicit Mac Metal
+checks. Sixteen default and twenty-one Metal preview cases cover stale queued/
+in-flight success and error, cancellation, lifecycle changes, source metadata
+changes and actual generation/score/error preservation. Unchanged old resource
+checks retain 25 wire mutations per mode, three Metal cleanup paths and source
+revalidation; old worker checks retain their original token/state/timing oracle.
+Astra independently authenticates the saved checks, current four-file source,
+eight retained products, inherited engine inputs, runtime and closed groups.
+Both failed harness attempts stay preserved. This closes standalone worker
+sequencing; rebuilt current bridge/app linking, UI controls, persistence and
+safe session reconfiguration remain separate tasks.
+
+Isolated worker previews are committed as `9419617` after exact eight-file
+Astra review, 811 local-link checks and staged whitespace verification. The next
+gate rebuilds the 30-export bridge and compiles/links artifact-local unsigned
+Mac, iOS and simulator apps. The currently selected older package is preserved
+until these checks pass. Rebuildable Cargo incremental cache was cleared to
+restore the prospective disk reserve; retained evidence and models are intact.
+
+The current bridge now passes all 30 build/link checks: fresh Mac, iOS and
+simulator archives each match all 30 header exports, and complete apps link
+against those coherent slices with the expected arm64 platform/minimum OS.
+Astra audits 2,413 inputs, 77 outputs and all closed groups. After exact guards,
+the checkout selects that verified framework while preserving its older
+package. There was no explicit codesign/provisioning stage; Mac/simulator
+linker-produced signature load commands are recorded honestly. No app, model,
+GPU or phone runtime qualification is inferred from build/link success.
+
+The coherent bridge/app build record is committed as `694063a` after exact
+five-file Astra review and 828 local-link checks. The next reviewed seven-file
+change adds preview-only Settings inputs and plain capacity/memory estimates,
+with detailed allocation accounting expandable. Accepted load/worker/model/
+conversation correlation and bounded edits invalidate stale results. Actual
+Chat settings and persistence stay unchanged. Synthetic controls, a separately
+bounded loaded-Qwen3 preservation test, a current-bridge tiny regression and
+complete app compilation remain required before this UI task can commit.
+
+The first C4 compile is blocked by the sandbox preventing Xcode’s SwiftUI
+macro-plugin service from starting. No runtime controls run; the failed logs
+and clean closure are preserved. The retry keeps the exact source, assertions
+and 13-command protocol, using the execution context already used for the
+successful C3 whole-app builds. No source fix is inferred from the cascading
+macro diagnostics.
+
+The escalated C4 retry compiles all three test executables. Its synthetic run
+then fails the unloaded-worker snapshot preservation assertion before full app
+builds or model execution. The failed result and four cleanly closed groups are
+retained. Astra is checking the exact difference; this test includes polling
+revision, whereas the existing worker preservation oracle excludes it.
+
+The reviewed C4 test-only correction now passes all 57 synthetic controls and
+all 13 compile/CPU/app-link jobs. Raw before/after snapshots show revision
+0→3 with every other reflected field unchanged; an injected functional
+mutation is rejected by the comparator. Mac, iOS and simulator app builds pass
+and every process group closes. Actual binaries are retained for the separate
+loaded-Qwen3 and tiny Metal checks; runtime and final audit remain pending.
+
+The two C4 Mac checks pass and Astra audits their raw results. Cached Qwen3
+returns fitting 512/256 estimates with accounted footprints 783,840,402 /
+753,430,674 bytes and KV 58,721,040 / 29,360,912 bytes. Active capacity512,
+chunk32, model/session IDs and full ordinary state remain unchanged. Workspace
+and disk hashes plus persistence counts remain exact after baseline setup.
+The existing 21-case tiny Metal regression and generation witness also pass
+against the selected bridge. These are estimates and controller checks, not
+performance or whole-device-fit measurements. The attempted rendered Mac check
+finds a locked Mac, launches no app and remains pending; phone evidence is
+separate. Transition accounting is the next independent implementation task.
+
+Settings previews are committed as `5d03e68` after exact eleven-file Astra
+review and 813 local-link checks. The next reviewed ten-file change adds a
+model/session-bound transition report: actual current storage plus planned
+candidate storage, known shared model owners counted once, conservative
+allowances for both sessions and explicit caller reserves. The early ordinary-
+forward marker rejection was corrected before application and has a post-step
+regression control. It creates no candidate and changes no numerical kernel.
+The additive 31st C export requires a future coherent app bridge before app
+consumption; the selected 30-export bundle retains its historical UI scope.
+Full Rust, ABI/export and explicit tiny Mac verification remain pending.
+
+B5d1 formatting passes. The early default Clippy preflight catches a missing
+Option tuple annotation when the Metal branch is compiled out. The failed logs
+and closed groups are retained; the correction is type-only and precedes full
+default/Metal checks. No runtime behavior or acceptance criterion changes.
+
+All 16 B5d1 cold jobs pass: 466 default and 574 Metal-feature tests (20/185
+explicit ignores), strict checks, two release libraries with all 31 exports and
+the CPU C ABI smoke. The first tiny Metal check then fails while enabling
+profiling on its second test session: required 134,253,388 bytes exceed its
+134,197,248-byte numerical setup budget. Astra authenticates this fixture
+boundary and clean closure; no final success report is emitted and the C Metal
+job is not reached. The correction is limited to adequate ignored-test setup
+memory, preserving production limits and exact/one-byte-under assertions.
+Unchanged passing suites/libraries will be inherited; only the modified test
+and the two pending Mac checks need fresh validation.
+
+The reviewed Metal fixture correction changes only its ignored-test candidate
+setup budget to 256 MiB for the later profile case; the current 128 MiB session,
+production paths, portable controls and exact/under aggregate assertions remain
+unchanged. The minimal retry rebuilds only the test binary after formatting and
+strict Metal compilation, inheriting the valid 16-job phase and libraries.
+Astra also confirms explicit empty-candidate recreation as the first Friendly
+Apply path: Send already encodes the full saved conversation with reset+prompt.
+Conversation/draft preservation, explicit cache reset, panic/cancel isolation
+and postallocation admission stay mandatory; exact-history Expert migration is
+separate. No Apply implementation or behavior is added by this decision.
+
+B5d1 now passes its three focused retry build checks and both tiny Metal jobs,
+with the original 16 passing cold jobs inherited explicitly. Astra audits all
+inputs/products/closures and independently recomputes 134,460,044 bytes: known
+shared storage 28,364 + current-owned 17,472 + planned candidate 11,776 +
+reserves 134,402,432. The separately constructed test candidate’s session-owned component is exactly
+11,776 bytes. Current history/committed/pending counts remain 6/5/1; reviewed
+completed assertions preserve state/logits and exact-budget/rejection behavior.
+Full raw state arrays were not exported, and sparse memory is not a peak. The
+report API itself allocates no candidate. Both earlier failures remain failed
+evidence. The selected 30-export app bundle is unchanged by the verified
+31-export Rust/C library; session replacement and app consumption remain next.
+
+Model-bound transition accounting is committed as `e0e06be` after exact
+fourteen-file Astra review and the completed 16+3+2 evidence. D2 now prepares
+an explicit empty candidate while retaining the current session. It must
+re-admit actual allocations and isolate cancellation/errors/panics so failure
+leaves the old session usable. Worker adoption, Apply, persistence, text-limit
+reconciliation and a fresh coherent app package remain separate.
+
+### 2026-10-30 — B5d2 source applied; verification pending
+
+Astra reviewed and root applied the additive empty-candidate preparation API. It
+keeps the active session usable through candidate errors, cancellation and Rust
+unwinding, then checks actual candidate allocation against both budgets before
+returning a new handle. No test outcome or worker adoption is claimed yet; the
+selected Apple bundle still predates these transition APIs.
+
+The first D2 cold attempt stops at strict Clippy: the test-only constructor fault
+hook exposes a private error type. Formatting passed, both groups closed, and
+no runtime test ran. The failed receipt remains at
+`artifacts/new-goal-b5d2-empty-candidate-verification-owner-v1/cold-v1/checks.json`;
+a visibility-only correction is under Astra review.
+
+B5d2 now passes all 16 fresh compile/CPU jobs and both explicit tiny Mac jobs.
+Default 469 (20 ignored) and Metal 577 (186 ignored) tests pass, as do both strict
+Clippy checks, formatting, both 32-export libraries and C callers. Astra
+independently verifies source, products, runtime bindings and closed groups.
+The empty candidate owns 11,776 bytes, exactly as planned; the old session’s final
+raw counts are 6/6/0 and candidate counts 0/0/0. Earlier pending 6/5/1 and
+visible-logit/panic/cancellation rollback are reviewed completed assertions,
+not exported raw arrays. Actual individual and coexistence admission pass.
+
+The first failed test-hook compile remains preserved; its correction only
+narrows test-only visibility. The completed [native report](../../native-empty-session-candidate.md)
+does not enable worker adoption, app Apply, a larger loaded window, phone or
+performance qualification. The selected 30-export app bundle is unchanged;
+rebuilding a coherent 32-export bridge is next before Swift consumption.
+
+Empty-candidate preparation is committed as `c83625c` after exact twelve-file
+Astra review. The next task refreshes the coherent Mac/iOS/simulator bridge from
+this revision, before the worker can consume the two new transition APIs.
+
+The bridge refresh now has a frozen package bound to committed D2 and the
+current project source membership. A first metadata invocation stopped before
+any child launch because a relative review path failed exact identity matching;
+the unchanged owner succeeded with absolute arguments. That invocation record
+is retained. The prospective 8 GiB disk reserve is based on the previous
+1.52 GB build tree; it changes no historical acceptance result or evidence.
+
+The [32-export bridge refresh](../../apple-session-transition-package.md) passes all
+30 build/link jobs for Mac, iOS and simulator. Astra authenticates 2,428 inputs,
+77 outputs, all archive/header sets and the complete current app sources. The
+new framework is selected atomically and the old C3 bundle remains available.
+No app or model was launched. Mac/simulator binaries have implicit signature
+load commands; no explicit signing or provisioning stage ran. This closes the
+package prerequisite for the next dedicated worker transaction, while runtime,
+Apply, persistence and context-limit work remain separate.
+
+Bridge32 verification and selection evidence is committed as `d7a81d9` after
+exact five-file Astra review. The dedicated worker adoption transaction is next;
+its tests will exercise the actual new archive rather than infer runtime
+behavior from these successful links.
+
+### 2026-10-30 — Dedicated worker transaction applied; checks pending
+
+Astra reviewed the four-file worker/typed-consumer proposal, and root applied
+its exact bytes. The new command prepares and validates off to the side, accepts
+under the worker lock only for the current request/model/session, and retires
+the old handle afterward. Rejection preserves ordinary visible state; cleanup
+failure after acceptance is explicitly committed and requires restart. Authored
+controls cover stale requests, cancellation, lifecycle barriers and retirement.
+No compiled or runtime outcome is claimed yet; UI Apply and persistence remain
+separate tasks.
+
+The first worker Metal check failed at its acceptance barrier deadline; the
+process group closed cleanly and the second Mac job did not run. Buffered
+stdout was empty, so the exact decoder error was not captured. Astra traced a
+strict Swift consumer equation error by comparing it with the native producer:
+Metal constructor
+admission excludes its separate 4,480-byte shared host table, while coexistence
+counts it once; CPU constructor admission includes its shared metadata. The
+fix preserves both native budget policies and adds explicit positive/negative
+backend controls plus unbuffered failure diagnostics. The 14 prior successes
+remain historical evidence; changed Swift/app checks will run fresh.
+
+The corrected [worker transaction](../../native-worker-session-transition.md) now
+passes 14 fresh compile/CPU/app jobs and both tiny Mac jobs. Both backends pass
+37 pure controls, 15 stale/lifecycle barriers and two retirement controls; the
+existing 21-case preview/generation regression passes on the new archive. Astra
+checks all source/product bindings, raw records and closed groups. The Metal
+witness adopts capacity 3/chunk 2 from capacity 32 while retaining loaded limit
+32; its individual admission is 67,158,620 bytes and coexistence is 136,538,396.
+Late cancellation keeps the accepted session, and retirement failure reports a
+committed swap with restart required. Full-snapshot guarantees remain reviewed
+completed assertions, not independent raw-logit reconstruction.
+
+The first Metal failure stays recorded. The Swift-only correction follows each
+backend’s existing constructor equation and preserves aggregate accounting; no
+native policy or budget changed. UI integration next needs a durable applied
+configuration because cancellation clears transient results after acceptance.
+Friendly Apply and full-artifact/plan-keyed persistence remain separate tasks;
+no real-model transition, rendered UI, phone, context expansion or performance
+qualification is claimed by this worker task.
+
+Worker replacement is committed as `498280e` after exact eight-file Astra review.
+Next is the small durable applied-configuration boundary, before Friendly Apply:
+accepted settings must remain observable after transient-result cancellation,
+while session retirement and retained resume preferences remain distinct.
+
+### 2026-10-30 — Durable applied-session configuration source applied
+
+Astra reviewed and root applied a three-file metadata change. Accepted model/
+session IDs, capacity, chunk, budget and request correlation are staged before
+locked adoption and retained across ordinary same-session work and late
+cancellation. Session retirement clears this descriptor; retained resume
+settings remain separate. It describes accepted configuration and cannot
+authorize token-history reuse. Eleven pure controls and expanded lifecycle
+witnesses are authored; compile and runtime verification are pending.
+
+The D4a verification handoff initially remained idle because a message did not
+restart a completed adviser turn. Root restarted it explicitly; no check had
+run or failed, and the source remained unchanged. Future Apply memory-policy
+work prepared during that interval is private and unexecuted.
+
+The [durable configuration boundary](../../native-session-configuration.md) now passes
+14 fresh compile/CPU/app jobs and both tiny Mac jobs, with independent Astra
+audit. Both backends pass 37 transition and 11 configuration controls, 15 stale
+barriers and two retirement cases; the 21-case preview/generation regression
+passes. Twelve records per backend retain the accepted UUID through late
+cancellation and generation, reset it on a new replay session and clear the
+descriptor on cancelled replay and shutdown. Configuration remains metadata,
+with no token-history, artifact identity or restart authority. UI Apply,
+persistence and real-model/device transition checks remain separate.
+
+Durable configuration is committed as `f7872c3` after exact seven-file review.
+Friendly Apply implementation starts from that verified boundary, with private
+source isolation while current session values, memory gates and controller
+rollback behavior are composed. No settings persistence is added by this step.
+
+### 2026-10-30 — Explicit Friendly Apply source applied; checks pending
+
+The reviewed twelve-file composition adds one explicit Apply action for exact
+preview-selected values within the loaded bound, preserving reply preference,
+conversation, draft and persistence. Resident-model D1 accounting and a fresh
+worker-side process-headroom check precede native construction. The declared
+application allowance is 272 MiB, including 16 MiB incremental staging; it is
+a policy reserve, not measured heap ownership or a reservation. A small shared
+process-memory module preserves the existing footprint and platform headroom
+semantics without pulling the full measurement module into standalone workers.
+
+Pre-execution review corrected the loaded test’s wrapped-error expectation,
+cleared a stale Applied notice after new edits and removed one terminal blank
+line found by strict patch checking. Source review passes; compile, CPU, Metal
+and cached-model controller checks are pending. Legacy M7 standalone wrappers
+already omit newer dependencies; their inventory repair is tracked explicitly
+and is not claimed by this task’s new complete compiler lists.
+
+The [Friendly Apply implementation](../../friendly-chat-apply.md) passes all 22
+compile/CPU/app jobs and four Mac jobs with independent Astra saved audit.
+Three actual Qwen3 replacements share one loaded model and select capacity 256,
+chunk 16 and the retained 1.5 GiB session budget. Each fresh incremental memory
+requirement is 125,957,028 bytes; these are policy checks, not OS reservations.
+Conversation/draft/workspace/file hashes stay exact and writes remain 2→2
+through Apply and committed-notice edits. The later Send correctly rejects a
+281-token combined request against 256 without generation, restores messages
+and preserves a newer draft edit; its ordinary saves have a separate scope.
+
+Existing 57 planning, 28 Apply, headroom boundary, transaction/configuration and
+21-case preview/generation controls pass. Source, controller and app-build
+qualification remain distinct from rendered UI: the Mac is still locked and
+no app was selected or launched. Physical phone, successful real-model
+generation after resizing, full artifact identity and persisted preferences
+remain open. All pre-execution review corrections are retained separately from
+runtime outcomes; no numerical policy or native budget was relaxed.
+
+Friendly Apply is committed as `ecfcadd` after exact sixteen-file Astra review.
+The completed checks and saved audit were reused through the service recovery;
+no passing build or model load was repeated. Next, persistence needs actual
+consumed model/codec identity. The initial bounded task reuses the existing
+audit mechanism for a pinned managed profile; path/config recognition and a
+pre-open receipt remain insufficient, and external folders stay ephemeral.
+
+### 2026-10-30 — Standalone Swift inventory repair in verification
+
+Ten legacy M7 wrappers now share the explicit current NativeWorker source
+dependencies, including context/capacity, preview, transition and process-memory
+modules. Each receipt binds the helper as well as the expanded sources. Score
+and legacy programs use separate named lists rather than obsolete index slices.
+Astra approved source application; parser controls and eleven Mac plus six
+mobile compiler branches are in progress. No app/model/GPU execution or full
+wrapper journey is claimed. Two private generator preflight errors were fixed
+before live application and target checks.
+
+The [inventory repair checks](../../../benchmarks/results/2026-10-30-standalone-swift-inventories-v1.json)
+pass all 21 owned commands: 89 Python tests, eleven Mac compile/link groups,
+four teacher/task mobile module builds, two lifecycle mobile typechecks and
+three SDK queries. All 15 retained products, 286 inputs and command logs pass
+hash rechecks, and every owned process/group is absent. These ordinary source
+and compiler checks do not freeze the complete compiler/Python runtime or run
+full nested wrappers. Numerical, app, model and device qualifications are unchanged.
+Astra independently rechecked all source/product/log identities and the exact
+source groups and accepts this inventory-only repair for commit.
+
+The inventory repair is committed as `f09da28` after exact fourteen-file Astra
+review. The active identity task now includes a concrete opt-in Qwen3 source
+consumer, rather than adding unused test-only verification machinery. Successful
+source consumption, loaded-model attachment and codec pairing remain distinct
+acceptance boundaries before settings persistence.
+
+B5d5 is split into concrete source consumption, successful model/codec pairing,
+and preference restoration. The frozen first implementation covers authenticated
+Qwen3 config/index/container delivery only. A complete six-file expected manifest
+is an anchor, not evidence that tokenizer or ancillary files were consumed.
+Seventeen synthetic controls and one explicit cached streaming probe are authored;
+code review and checks are still pending.
+
+Astra approved the seven-path concrete source change and guarded application
+passed. The audit replaces the opt-in source stream buffer and retains one
+file handle with bounded range hashes; errors and partial reads invalidate later
+identity publication. Standard Rust checks and the explicit cached streaming
+check are running. Ordinary and existing Smol routes remain unchanged.
+
+The [Qwen3 source audit](../../qwen3-consumed-source.md) passes all eight owned
+commands: fmt, strict Clippy for both configurations, 486 default/594 Metal
+tests and the explicit cached source stream. All 704 tensors, 706 physical
+ranges and 633,364,480 payload bytes are verified; retained audit ownership is
+99,840 bytes. Invalid later public access correctly prevents new identity
+publication. The expected canonical manifest is independently reconstructed
+from the Swift catalog. No numerical kernel, native factory, Apple package,
+model assembly, codec, app preferences or qualification scope changes.
+Astra independently verifies all 248 input and 16 log identities, seventeen new
+controls in each suite, the actual one-test stream marker and closed groups.
+The scoped source task is approved for publication and commit.
+
+The source-only audit is committed as `6f6e427` after exact eleven-file Astra
+review. No passing check or cached source stream was repeated. B5d5b now
+implements successful model-assembly attachment and exact model/codec ownership
+pairing privately; no new native factory or app route has been applied yet.
+
+### 2026-10-30 — Audited model/codec pairing source applied
+
+Astra approved eleven paths that attach Qwen3 source evidence only after
+successful resident model assembly, authenticate the actual tokenizer parser
+buffer, distinguish verified policy/ancillary assets and retain the exact model
+Rc after complete codec construction. Two additive native factories preserve
+ordinary/Smol behavior and the existing geometry/memory contracts. Eight
+portable controls and one cached ownership probe are authored. Standard Rust,
+C header/export and invalid-input ABI checks are running. The cached Metal
+probe requires successful cold checks and review of the actual built test
+product. The selected Apple package, Swift app and preferences are unchanged.
+
+All twelve cold pairing checks pass: 494 default/602 Metal tests, strict Clippy
+and formatting, exact 34-export library, C header/link/invalid-call probe and
+release test build. Astra found an unbounded read in the private, unexecuted
+product-copy helper; it now checks retained-descriptor extent, limits reads to
+remaining expected bytes plus one and rejects growth before writing excess.
+Three byte-identical build products are preserved locally before launch review.
+No source or passing check was rerun for that helper correction.
+
+The [audited Qwen3 pairing](../../qwen3-audited-pairing.md) passes its single retained
+Metal probe and Astra saved audit. One assembled model pairs with authenticated
+codec buffers; model-owner count is 1→2→1→released. Missing assets return a null
+chat without retaining an owner; the surviving codec encodes/decodes the synthetic
+hello request after external model release, with stop 151645. All six historical
+asset roles and 706 source reads match. All thirteen command groups close.
+
+Ninety-two direct sparse samples observe RSS 838,483,968 bytes, physical
+footprint 772,719,744 and OS lifetime-maximum field 812,532,864. They are bounded
+native-probe observations, not a complete peak, app/device fit or speed result.
+No session/KV, generation, Swift adoption or preference qualification is added.
+The 34-export library is retained separately; the selected bridge stays at 32.
+Next, a read-only report must bind exact model/chat ownership and explicit
+backend/load/text/planning semantics before a coherent Swift consumer and prefs.
+
+Audited model/codec pairing is committed as `567d8ad` after exact fifteen-file
+Astra review. All passing checks are retained without reruns. A cold exact-owner
+identity report is next, followed by coherent Swift/package consumption and
+freshly admitted preference restoration. The selected app bridge is unchanged.
+
+### 2026-10-30 — Accepted-load identity report source applied
+
+Astra approved a cold model-plus-chat report with exact retained Rc, both owner
+threads and complete source-receipt equality. Engine-owned backend/load/text/
+planning policy versions and historical six-file roles form the future key;
+paths, process instance IDs and current capacity do not. The existing bounded
+JSON report owner is reused without borrowing session state. Seven portable
+controls and a no-model C ABI probe are authored; standard checks are running.
+Successful assembled-model getter use stays an explicit later integration gate.
+
+The [accepted-load report](../../accepted-load-identity.md) passes all eleven cold/API
+checks and Astra saved audit: 501 default/609 Metal tests, seven new portable
+controls in each configuration, exact 35 exports and C null-input behavior.
+Two compiled products are preserved; all eleven groups close. Ordinary CPU
+fixtures execute, while no additional cached audited-model or GPU test runs.
+
+Positive pure report construction and public unsupported/mismatch rejection
+remain separate from successful getter use with an assembled model. That gate
+stays open for the next coherent Swift controller. The selected package remains
+32 exports; no app preference or numerical/context policy change is claimed.
+
+The accepted-load report is committed as `a07416f` after exact ten-file Astra
+review. C2 now integrates strict Swift decoding and explicit managed-Qwen routing
+with one coherent 35-export package and an actual getter/controller check.
+Preference restoration still follows that accepted-load integration.
+
+C2 native compilation runs independently from the private Swift draft, using
+the existing isolated three-slice builder on committed `a07416f`. To restore
+the prospective disk reserve, the Cargo debug lock was acquired and only the
+ignored, unbound regenerated incremental compiler cache was removed, freeing
+2,716,065,792 bytes. Models, logs, compiled products and selected framework are
+preserved. A fresh default35 library follows the three Metal slices; Cargo
+compilers are not run concurrently. The one-load controller will also check
+identity preservation across one actual empty-session replacement.
+
+Astra approved the nine-file strict Swift integration, including immutable
+managed intent across unload and exact worker/request/model correlation. Private
+review moved final state setup inside the cleanup transaction before identity
+publication and corrected stale-worker completion handling. Both corrections
+preceded live application and runtime tests. Guarded application passes; 51 wire
+and 37 routing controls plus the one-load/getter/replay/replacement controller
+await the bounded 19-cold/two-Mac verification. Native/default35 products are
+already audited and reused. The selected bridge remains32 and prefs are absent.
+
+The C2 owner review was idle because an informational handoff did not restart
+a completed adviser. Root detected this with the agent-state query and issued
+an explicit followup; no verification command had run or failed. Every ready
+proposal/owner now requires a root-issued followup and state check, rather than
+assuming an adviser-to-adviser message has restarted the checker.
+
+The first C2 cold attempt stops at full worker/store compilation: new chat
+creation and existing stop-ID setup both declare local `code`. Strict Swift6
+identity compilation had passed. The failed receipt and both closed groups are
+preserved; no runtime, app or model check was reached. A minimal status-name
+correction and exact-input reuse of the independent typed executable are being
+reviewed. No assertion, acceptance policy or native implementation changes.
+
+The [coherent Swift identity integration](../../swift-accepted-identity.md) now passes
+18 fresh plus one inherited cold jobs, 51 wire/37 routing controls, all three
+app build/link checks and both Mac jobs. Actual model1 identity remains exact
+through session2→3→4 and loaded512/selected256/chunk16. Fresh headroom and
+coexistence gates pass; workspace/file hashes and writes2→2 remain exact through
+replacement. The later stale-conversation phase intentionally writes3, dispatches
+no second model and clears identity. The actual getter path is now exercised;
+no real-model generation, rendered UI, phone or performance claim is added.
+
+After Astra saved audit, the exact35-export XCFramework is selected atomically
+with all candidate files freshly checked and the old32 package retained. The
+failed duplicate-name compile, corrected source and inherited typed product
+remain auditable. Next is bounded namespace-keyed settings save/restore with
+fresh admission, rejected-record preservation and reply/late-commit handling.
+
+Strict Swift accepted identity and bridge35 integration is committed as
+`e58eb3d` after exact fifteen-file Astra review. All passed checks and the first
+failed compile are preserved. Next, the managed preference layer uses that
+accepted namespace and fresh admission, with global reply-edit and late-commit
+reconciliation; native code and package rebuilding are unnecessary.
+
+All-model persistence remains explicitly open after the first managed Qwen3
+route: other adopted profiles and later app adapters need their own accepted
+content/codec identity coverage before saved settings can be restored for them.
+
+The private managed-preference draft now includes bounded namespace-keyed local
+records, fresh restoration and one reply-setting boundary. Astra identifies a
+busy-to-idle invalidation race: observing completion in a second snapshot could
+discard a deferred save without reconciling it. The draft is being corrected
+before source approval, with behavior controls for stale/rejected restoration,
+postcommit storage failure and ordinary-route no-save. No preference source has
+been applied or executed; existing native35 products will be reused.
+
+Astra approves the corrected exact eight-file preference proposal; guarded
+application and whitespace checks pass. Terminal reconciliation now uses the
+same captured snapshot, and only healthy idle completion can save settings or
+install a restored reply. Sixty CPU controls and the one-load controller are
+authored, with synthetic and loaded scopes kept separate. Compile/CPU/app checks
+and actual-product Mac validation remain pending; native code is unchanged.
+
+Validation preflight catches the new CPU entry point's missing temporary-directory
+argument and a control-name parser that counted literal sites instead of
+loop-generated runtime cases. Both are corrected before invocation; these are
+unexecuted runner drafts, not failed engine checks.
+
+All 23 fresh compile/CPU/app jobs pass, including 60 preference controls,
+28 Apply, 57 planning, 37 routing, current worker transaction/configuration and
+tiny CPU preview regressions, plus Mac/iOS/simulator app build checks. All owned
+processes close without endpoint errors. Existing strict identity/native results
+are authenticated and inherited; no native build or suite is repeated. Actual
+retained products await Astra review before the two Mac checks.
+
+Both Mac checks now pass: the 21-barrier tiny Metal preview regression and one
+cached Qwen3 preference controller. Fresh restore to256/chunk16/reply64 writes
+zero records; precommit cancellation and postcommit editing retain actual state,
+newer drafts/replies and terminal-only saving. The mode-valid33/reply32 request
+actually needs45 rendered tokens, so it rejects before generation and preserves
+the newer draft and empty native prefix. Final injected retirement quarantine
+commits64/chunk8 but keeps the healthy33 record at five explicit writes. Owning
+close completes. No successful real-model generation or UI/phone/performance
+claim is added; Astra saved audit and exact publication review are next.
+
+The [managed Qwen3 preference task](../../managed-model-preferences.md) passes Astra's
+independent saved audit: all23+2jobs,5990bindings,66outputs,10products,10record
+hashes and25closed process groups are authenticated. Workspace preservation is
+checked across the stated busy/terminal and rejection/close scopes, not across
+intentional reply/draft edits. Existing native35 products remain selected.
+Other-model persistence stays open. Astra recommends Smol first, completing its
+codec evidence and reusing its existing audit/getter ownership mechanism before
+Swift adoption; Qwen2.5/Mistral subsequently reuse the bounded reader with their
+own layout, size and text-policy checks. Private Smol native work starts while
+this completed preference task goes through final publication review.
+
+Managed Qwen3 settings are committed as `ab4742e` after exact14-file Astra final
+review, all23+2checks and local-link/whitespace checks. Only the unrelated Apple
+DSStore remained. The next private Smol native extension preserves its trusted
+694-range source audit and legacy three-asset codec factory, adding complete
+ancillary evidence through the shared identity path. It is not applied or
+executed yet and does not enable Smol preference restoration by itself.
+
+Astra approves the exact15-file Smol native extension: one shared complete-audited
+chat factory, six-file completion, witness-anchor role and existing getter reuse.
+Nine portable controls and one ignored cached probe are authored. The first
+root application guard rejects a dictionary-shaped dependency inventory before
+any writes; corrected traversal authenticates all inputs and applies the exact
+approved source. Whitespace passes. Standard Rust/C/exports checks and separately
+reviewed actual-model validation are pending; selected Apple35/Swift stay unchanged.
+
+Astra's app follow-up inspection distinguishes ordinary resource estimates from
+audited loading and fresh model-bound transition admission. Smol's audited
+preview is currently metadata-only, so adding identity/preference restoration
+will preserve that limit. Its numerical-capacity preview and Apply UI need a
+separate explicit contract and remain open in TODO; the identity task does not
+silently claim all-model context controls. Native checks continue independently.
+
+The first Smol validation stops at default library tests:323pass and two new
+missing-file controls fail because they expect NotFound. The unchanged shared
+verified reader converts file-open errors to InvalidInput. Formatting/default
+Clippy pass and all five groups close without endpoint errors. The failed receipt
+is preserved; Astra investigates a minimal test-only correction before any retry.
+Metal/release/model checks were not reached and no gate is relaxed.
+
+Astra authenticates the failure and approves a one-file test correction:
+missing-file errors must contain the ancillary path and InvalidInput, while
+malformed sizes must match the exact extent/digest diagnostic. Other14paths,
+production behavior and numerical criteria are unchanged. Guarded application
+and whitespace pass; a reviewed successor cold run follows with failedV1 retained.
+
+All12fresh V2 native/C jobs pass: formatting, strict default/Metal Clippy,
+510default/618Metal tests (21/189 intentionally ignored), exact36exports, C ABI
+and release staticlib/test builds. All12groups close without endpoint errors;
+failedV1 remains preserved. The three actual products are retained for Astra
+review before one cached Smol model/codec/getter probe. Selected Apple35 and
+Swift app behavior remain unchanged.
+
+The separately reviewed cached Smol probe passes seven frames with one model,
+694physical ranges and694verified reads. Missing ancillary data adds no owner;
+the legacy codec still works but its incomplete evidence is rejected by the
+getter. Complete codec/getter succeed with exact retained ownership, and captured
+JSON survives model/codec release before its own release. All owners close; no
+session, generation, app/device, quality or performance qualification is claimed.
+Astra saved audit and exact publication review precede commit.
+
+The [Smol complete-identity task](../../smol-complete-identity.md) passes Astra saved
+audit:3817inputs,26logs,3retainedproducts,current15source paths and13current plus
+5prior process groups are authenticated. Seven frames and the canonical manifest
+reconstruct exactly. Lifetime, stop and surviving-snapshot behavior also rely on
+completed compiled assertions, not an independent reconstruction of native state.
+FailedV1 remains preserved and selected Apple35 stays unchanged. Final publication
+review/commit precedes shared Swift identity/preference integration and package36;
+Smol numerical preview/Apply remains a separate explicit contract.
+
+Complete native Smol identity is committed as `14f1001` after exact20-file Astra
+publication review and all12+1checks. Only preserved Apple DSStore remained.
+The next private C4b work shares Swift identity/routing/preference validation
+between Qwen3 and Smol while preserving Qwen keys and Smol's metadata-only
+preview. A separate native36 component owner prepares coherent default and
+Mac/iOS/simulator libraries; execution and selection still require checks/review.
+
+A fresh computer-use inventory still reports a locked Mac and no native apps.
+No app was selected/launched and no UI input was sent. Rendered checks remain
+pending while independent Swift/native-package work continues; no new UI or
+physical-device qualification follows from the build/controller results.
+
+C4b early review finds no blocker in the shared five-production-file Swift
+integration and65wire/64routing/68preference authored controls. The native36
+builder's independent review requests the actual Xcode executable pin alongside
+the launcher. Its metadata-only successor preserves the exact25-job runner;
+no build was invoked from the earlier draft. Final source/component pins remain
+to be reviewed before application and execution.
+
+Astra approves the exact nine-file Swift integration after59pin/baseline/draft
+checks. Guarded application and whitespace pass; changed Swift paths have no
+overlap with the active native36 builder's input guards. The independently
+approved25-job component build is running with current package35 preserved.
+Swift65wire/64routing/68preference controls and the one-load controller remain
+prospective until actual native products and subsequent checks pass.
+
+All25native36 component jobs pass with candidate unselected and selected35
+unchanged. After all groups close, only ignored, unbound debug incremental cache
+is removed under exclusive Cargo lock; observed free space rises1,836,847,104bytes
+and retained products rehash identically. Models/logs/evidence are retained.
+One Astra worker encounters transient model capacity during audit/Swift-owner
+preparation; the same worker is retried, preserving existing results and private
+files without repeating builds or tests.
+
+The retried Astra worker completes the native36 saved audit:3798inputs,69outputs,
+50logs and25closed process groups match, with all three Metal slices and the
+default library exporting exactly36 APIs. Candidate remains unselected. Early
+Swift-owner review finds no command/parser blocker in25cold jobs and the two
+later Mac checks; final metadata and actual Swift/controller results remain open.
+
+All25fresh Swift compile/CPU/app jobs pass:65strict wire controls,68preferences,
+64routing/six stale actions,28Apply,57planning, current worker/configuration and
+CPU preview regressions, and all three app builds. All owned groups close without
+endpoint errors. Eleven actual products are retained for Astra review before the
+tiny Metal regression and one cached Smol restore/reply-save/lifecycle controller;
+no rendered/device or real-model generation outcome is claimed.
+
+Both C4b Mac checks pass. One audited Smol load restores512→256/chunk16/reply64
+with zero preference writes; fresh incremental94199068bytes fits observed process
+policy headroom6234701056. Reply128 saves once, unavailable512 rejects without
+changes, Qwen bytes remain exact, and suspend/replay creates session4 without
+another restore. Owning close clears identity. Astra authenticates5979bindings,
+11products,54logs and27closed groups, then approves atomic package35→36 adoption.
+All10candidate files rehash before/after selection and package35 remains preserved.
+The [shared Smol settings report](../../smol-managed-preferences.md) keeps metadata-only
+preview/Apply limits and UI/phone/generation/quality/performance gaps explicit.
+Final publication review/commit is next; the later advisory-preview draft remains
+private and does not change this result.
+
+Shared Smol/Qwen identity and settings are committed as `7ccadf9` after exact16-file
+Astra final review and all25native+25Swift+2Mac checks. Only the unrelated DSStore
+remained. Next is the explicit resident-bound Smol advisory estimator and Apply,
+reusing selected package36 and the existing native transition/admission path;
+its private draft is frozen only against this actual committed base.
+
+Astra approves the exact seven-file bound Smol advisory-preview proposal after
+49pin/baseline/draft checks. An explicit resident mode correlates model/session/
+loaded-upper at worker checkpoints and publication, while shared Apply retains
+actual D1/headroom/D2 authority. Default audited metadata-only behavior remains.
+Guarded application/whitespace pass;33controls and one-load stale/underestimate/
+actual Apply checks remain prospective. Native36 source/package are unchanged.
+
+Pre-execution review catches a maintained-controller regression: the old Smol
+preference entry still asserts metadata-only after calling the Friendly API that
+now explicitly opts into advisory estimates. Astra confirms it and holds owner
+approval. A narrow test successor and compile-only check preserve that entry
+without another model load; C4b archived source/results remain intact and default
+source-profile metadata-only behavior stays separately covered. No check ran or
+failed in this iteration.
+
+Astra approves the one maintained-controller test correction; the original seven
+paths are unchanged. Updated assertions require bound advisory/Reference behavior,
+no numerical preview allocation, and preserved session/workspace/preferences with
+truthful output labels. Guarded application/whitespace pass. The successor adds
+one compile-only job (26cold/12products), retaining the same two Mac jobs and one
+real Smol load. Archived C4b source/results remain intact.
+
+Root's first delta guard treated V2 as a full reapplication and stopped without
+writes: its prior seven before-pins deliberately retain the original Git base.
+The corrected narrow guard verifies those live paths against both reviewed after
+copies, then applies only the maintained test against its before-copy. All eight
+after-pins and whitespace now pass; no source semantics, gate or execution changed.
+
+The first C4c compile fails in the new synthetic test's dictionary/NSNull
+ternaries, before any executable or runtime result. One process group closes
+without endpoint errors; Astra authenticates inputs/logs and retains failedV2.
+Static follow-up also finds an unreached member-path typo in the maintained
+controller (`request.profile` versus `request.selection.profile`). V3 corrects
+only those two test files, with production values/behavior and gates unchanged.
+CPU/app/Metal/model checks were not reached.
+
+Astra approves exact test-only Any casts and the maintained selection.profile
+member path. Guarded two-file application and whitespace pass; six other files,
+production, values/assertions and workload are unchanged. The26+2retry retains
+the observed compiler failure separately from the statically found member typo,
+without reusing failed-attempt outcomes.
+
+For the next shared-source task, bounded root metadata reads inspect no payload:
+Qwen2 has68998header bytes/628tensor ranges; Mistral84239/743. Both are contiguous,
+index-consistent and within existing128KiB header/4096range/4GiB file caps. Astra
+selects one source-only Qwen2 opener over shared FileAudit orchestration, retaining
+Qwen3 accessor filtering, tied-head/bias semantics and later Qwen2 Online versus
+Mistral/Qwen3 Reference policies. Mistral's138039-byte policy file needs its
+existing256KiB cap later. Implementation remains private while C4c checks run;
+there is no payload authentication, assembly or new admission from this metadata.
+
+All26fresh C4c cold jobs now pass:33advisory,68preference,64routing controls,
+the maintained-controller compile, existing Apply/planning/worker/preview cases
+and all three apps. Unchanged65wire evidence is authenticated and inherited;
+the original compile failure remains preserved. Twelve actual products await
+Astra review before tiny Metal and the one-load Smol advisory/Apply controller.
+
+The first C4c Mac run passes tinyMetal and reaches Smol's two stale previews,
+bounded estimate and actual D1 rejection of the explicit synthetic underestimate.
+Its final Apply assertion fails after preference write1; owning close and both
+process groups complete without endpoint errors. Six raw frames and failed
+receipt are preserved. No accepted-time pre-close snapshot exists, so full Apply
+success is not inferred from the write alone. Astra investigates transient-result
+clearing against durable configuration before any correction/retry; production
+behavior and gates are not changed to satisfy the test.
+
+Astra confirms the evidence-lifetime issue: UI target reconciliation can clear
+the transient transition after durable adoption. Test-onlyV4 will record terminal
+worker evidence before that observation, correlate submitted request/old plan/new
+candidate/configuration, then independently check final durable UI/save state.
+The retry is limited to the changed controller compile and loaded job, with
+unaffected cold products and passed tinyMetal inherited through exact closures.
+A second transient Astra capacity failure is retried on the same worker; no
+production change or successful-check rerun is required by that service event.
+
+Astra approves the one loaded-controller evidence correction; seven other files
+and production stay byte-identical. Raw terminal data is emitted before UI
+reconciliation and assertions, with exact submitted request/oldplan/newcandidate/
+configuration/headroom correlation, then final durable/save state is asserted
+separately. Guarded application/whitespace pass. The lean one-compile/one-loaded
+continuation still needs review; the six-frame failure remains failed and retained.
+
+Continuation preflight catches a bookkeeping mismatch before execution: the old
+failed loaded row records tool exit-5, while its validator expected nil primary
+errors for both old jobs. An immutable successor requires the exact known exit/
+error sequence and unchanged closure/cleanup guards. The failure is not promoted
+to a pass and no target command was invoked from that draft.
+
+The lean continuation compiles the corrected loaded controller successfully in
+one fresh command. Twenty-five unaffected cold outcomes, eleven products and
+the passed tinyMetal21 result are authenticated and inherited. Current eight
+source pins match V4 with no production changes. The corrected actual product
+awaits review before one loaded Mac retry; both earlier failures stay preserved.
+
+The corrected C4c loaded Mac run passes eight raw frames plus summary. Loaded
+upper512 bounds requested1024; actual D1 rejects the explicit synthetic1MiB
+underestimate without replacing user state. The real256/chunk16 transition has
+aggregate660314446 within805306368, and planned constructor220246514 equals
+actual candidate admission. Fresh incremental94199068 fits the configured
+process-policy headroom6230342936. Terminal request/configuration/plan evidence
+is captured before UI reconciliation; durable settings and one preference save
+remain after transient evidence clears. Owning close succeeds.
+
+Astra's independent saved audit passes raw correlation, arithmetic, exact
+inherited checks/products and31current/historical process closures. The logical
+current set is26cold checks (25unchanged plus1corrected compile) and2Mac jobs
+(unchanged tiny21 plus1corrected loaded run). Both observed failures remain
+preserved. No native rebuild, larger context, generated text, rendered UI,
+iPhone, quality or performance qualification is claimed. See
+[bound Smol advisory preview](../../smol-advisory-preview.md) and its public result.
+Next is shared Qwen2.5 consumed-source verification, then complete pairing and
+Swift/preferences; all-model persistence remains open.
+
+C4c is committed as `17ae08a` after Astra's exact sixteen-file final review;
+only the unrelated Apple DSStore remains. C5a continues the shared source-only
+Qwen2.5 reader on that actual base, with pairing/preferences kept as later gates.
+
+Astra approves C5a's exact nine-file source-only change on `17ae08a`.
+Qwen2.5 reuses concrete config/index/container orchestration; engine-owned
+profile selection and architecture checks precede loading. Existing Qwen3
+accessor remains filtered; the neutral accessor exposes either receipt.
+Catalog anchors and shared delivery bodies remain unchanged. Guarded source
+application passes; required Rust/source-only checks remain prospective.
+
+C5a's eight-job verification owner passes Astra review and root starts it
+using the existing Cargo target and toolchain. Fresh computer-use inventory
+still reports a locked Mac with no available native apps; no selection, launch
+or UI input occurs. Rendered Mac and phone qualification remain pending.
+
+All eight C5a checks pass: formatting, strict default/Metal Clippy,516default
+and624Metal-feature tests, six new controls in each, and one exact release
+cached source-only stream. The source delivers524976896payload bytes across
+628tensors,630physical ranges/verified reads and retains96192audit-owner bytes.
+Independent catalog digest and three delivered-file hashes agree; invalid
+public read poisons identity. All eight groups close without endpoint errors.
+Astra saved audit/publication review precede commit. See
+[Qwen2 consumed source](../../qwen2-consumed-source.md); assembly/codec/preferences,
+GPU execution, rendered UI, phone, new context and performance remain separate.
+
+C5a's independent Astra saved audit passes3814input/16log/current9source
+bindings and eight closed PID/process groups, independently summed test totals
+and all source-stream evidence. Final publication review/commit follows; C5b
+shared model/codec pairing remains a private draft with no assembly execution.
+
+C5a is committed as `d70dc75` after all eight checks and exact fourteen-file
+Astra publication review. Only unrelated Apple DSStore remained. The next
+sixteen-file C5b source passes Astra review and guarded application: one shared
+Qwen model receipt slot, shared complete codec reader with filtered legacy APIs,
+Qwen2 Online policy and actual profile text bounds, and one additive model
+factory/export37. Numerical upload/assembly and existing factories remain
+unchanged. Cold/native checks and one cached ownership probe are prospective;
+selected package36, Swift activation/preferences and generation stay separate.
+
+C5b's first cold attempt stops on strict Clippy enum-variant naming after
+adding the third Audited suffix. Formatting and tool identities pass; four
+process groups close without endpoint errors. No tests, release products or
+model/GPU run are reached. The failed receipt is preserved. A minimal internal
+variant rename keeps all serialized policy strings and behavioral gates exact;
+Astra reviews that correction before a successor run.
+
+Astra authenticates C5b's four closed failed-attempt groups/logs and approves
+exactly three private enum names plus their three references. Serde strings and
+all fifteen other source files stay byte-identical. Guarded one-file delta and
+whitespace pass; the successor twelve-command owner still needs approval.
+
+Corrected C5b passes all twelve cold jobs:523default/631Metal tests,37exact
+header/exports, C ABI and release library/test build. Three actual products are
+bounded-copied for retention and six cached assets verified; all twelve groups
+close without endpoint errors. First lint failure remains preserved. Astra
+actual-product review precedes the one cached Qwen2 ownership probe.
+
+C5b's one cached Qwen2 model/complete-codec/getter probe passes seven frames.
+Actual identity reports model1/loaded512, all six consumed/verified roles and
+630physical source reads/ranges. Missing-codec-directory fails at config, not
+ancillary stage; wrong-profile rejects. Failure Rc1, success Rc2, exact-owner
+assertions, final ownership exhaustion and snapshot survival all pass. No
+session/generation occurs. Astra saved audit authenticates source/products,
+523/631test totals, raw roles and thirteen current/four prior closed groups.
+First lint failure remains preserved; final publication review precedes commit.
+[Report](../../qwen2-audited-pairing.md). Native37coherent packaging and shared Swift
+activation/preferences remain next; no new quality/window/device/performance
+qualification follows from this identity-only probe.
+
+C5b is committed as `dd84196` after exact twenty-file Astra final review and
+all twelve cold/one ownership checks. C5c native37 component starts only after
+Astra reviews a bounded compiler-cache cleanup: debug/release Cargo locks,
+closed groups/compiler exclusion and exact protected-product guards pass;
+5537manifest-listed unbound rustc objects and regenerated incremental cache
+are removed. Observed free increase3444531200bytes leaves8685273088bytes,
+meeting the existing8GiB start reserve. All models/logs/archives/executables
+and eighteen protected products are preserved. This is build housekeeping, not
+model-memory or performance evidence. Astra-approved25serial native37/default
+build/link jobs now run; selected36 stays guarded,37candidate unselected.
+
+C5c's seven-file shared Swift extension passes Astra review and guarded
+application. It adds Qwen2 to existing descriptors/routing, uses its audited
+model/complete-codec route and leaves the shared preference engine unchanged.
+Wire bounds use Qwen2's actual global ceiling, not Qwen3/Smol512; larger-window
+qualification remains separate.81wire/88routing/77preference controls and one
+eight-frame loaded restore/reply/Apply driver await actual native37products.
+The independent native build has no overlapping Swift inputs. Astra's cleanup
+saved audit confirms all removed caches absent and18protectedproducts exact.
+
+All twenty-five C5c native/default build/link commands pass, with three37-export
+Metal slices and default37/header/C ABI agreement. All groups close without
+endpoint errors. The original shared-target Metal archive is intentionally
+superseded by default37 only after retained-Metal equality; no other inherited
+product/input is mutable. Saved native523/631proof is reused without rerunning
+tests or model loads. Candidate37 remains unselected, selected36 preserved;
+Astra component audit precedes actual-product-bound Swift/app validation.
+
+The Swift build owner retains the existing8GiB start reserve. After native
+builds, a separate Astra-reviewed object-only cache manifest removes8261old
+unbound debug codegen objects under debug/release Cargo locks and compiler
+exclusion. All87protectedoutputs remain exact, no archives/executables/models/
+logs are removed, and observed free space rises2150612992bytes to9846628352.
+This restores the actual gate without lowering it;28Swift checks remain pending.
+
+All28C5c Swift/CPU/app checks pass:81strict identity controls,88routing with
+nine stale actions,77preference,33Smol advisory, existing28Apply/57planning
+and worker/preview regressions, maintainedSmol compile-only and all three apps.
+Thirteen actual products are retained with closed process groups/no endpoint
+errors. Astra actual-package approval precedes two Mac jobs; no Qwen2 actual
+restore/Apply or package-adoption outcome is yet claimed.
+
+Both C5c Mac jobs pass. One audited Qwen2 load restores512→256/chunk16/reply64
+with zero writes, saves reply32 once, then previews/applies128/chunk8 and saves
+once more. Actual D1 aggregates1122933718/1102414390fit1610612736; planned
+constructors607308634/600468858equal actual candidates. Fresh incremental
+headroom99238588/92398812fits observed configured process allowances. Exact
+terminal-before-observe and final durable/save evidence are separate; other
+profile records and post-reply workspace hashes remain intact and close succeeds.
+Tiny21regression passes. Astra saved audit/adoption remain pending. No real
+generation, suspend/replay, visible UI, phone or performance claim.
+
+C5c's independent Astra saved audit passes the raw correlations, Online
+ledgers, exact products and all28+2closed groups. Guarded atomic selection
+adopts37only after full current source/runtime/alias/model/protected binding
+precheck,30closed groups and ten candidate-file hashes before/after. Old36
+remains intact; no app install/launch or model work occurs during adoption.
+[Qwen2 managed settings](../../qwen2-managed-preferences.md) and public result record
+the bounded completion. Final exact publication review/commit follows, then
+shared Mistral source-only work. Its code+routine runner will receive one
+combined pre-execution review while retaining all validation gates.
+
+C5c is committed as `b0faf7a` after exact fourteen-file Astra publication
+review and all25native/28Swift/2Mac checks; only unrelated Apple DSStore
+remained. C6a freezes eleven source paths plus the ordinary eight-job runner
+together on that actual commit and selected37. Combined review reduces serial
+review handoffs without dropping any checks. Early private review caught an
+accidental ordinary-parser rename; it was restored before freeze with no live
+source or target impact. Mistral source-only validation is still prospective.
+
+Astra approves C6a source and routine checks together; guarded application of
+all eleven paths and whitespace pass. DenseAudit shares the same cold delivery
+mechanism across Qwen/Mistral, with neutral receipt, compatibility Qwen alias
+and filtered old Qwen accessors. Existing two-case Qwen codec/Metal profile
+contracts and ordinary parser remain intact. No hot-loop, assembly, codec,
+C ABI, Swift or native-package change. Required validation now starts.
+
+C6a's first attempt passes fmt/strict default Clippy, then default library
+tests report338passes/seven failures from three stale synthetic getter calls
+in two helpers. Their artificial manifest correctly fails the narrowed Qwen
+family accessor; those helpers must use the neutral dense getter. Five process
+groups close without endpoint errors, before Metal tests or the real stream.
+The failed receipt remains preserved. Astra reviews the test-only migration
+and successor workflow together; no production filter or gate is relaxed.
+
+Combined C6aV2 passes Astra review. Guarded application changes only three
+synthetic-helper getter calls in two test files; all original eleven after-files,
+assertions and production filters remain exact. Failed five-group evidence
+is authenticated/preserved. The same eight fresh checks retry with unchanged
+bounds and source-only scope.
+
+All eight corrected C6a checks pass:530default/638Metal tests, seven new
+portable controls in both suites and one cached source-only stream. Actual
+743tensors/745physical ranges and reads deliver4077395968payload bytes from
+4077480215container bytes, with101712audit-owner bytes. Canonical digest and
+three file hashes agree; all Qwen getters remain absent and invalid read poisons
+identity. Eight groups close/no endpoints; failed five-group evidence remains.
+Fresh Mac UI inventory is still locked with no app selection/launch/input.
+Astra saved audit/publication review precedes commit;
+[Mistral source report](../../mistral-consumed-source.md). No assembly, codec, GPU,
+app/device, new context or performance qualification.
+
+C6a's independent Astra saved audit passes all thirteen current source paths,
+inputs, sixteen current/ten failed logs,530/638test totals and all raw source
+evidence. Eight current and five failed groups are independently absent; V1
+remains failed. Final exact publication review/commit follows, then Mistral
+model/codec pairing. No failed outcome is promoted or qualification widened.
+
+Final C6a publication review corrects the documented source allowance from5GiB
+to actual6GiB INITIAL_MEMORY_LIMIT_BYTES and clarifies that Qwen getters are
+explicitly profile-filtered. No code, workload, gates or results change; only
+content/whitespace review repeats.
+
+C6a is committed as `4a6ce61` after exact eighteen-file Astra final review and
+all eight passing checks; failed evidence remains retained. Only unrelated
+Apple DSStore remained. C6b prepares shared Mistral model/codec/getter identity
+and its routine cold checks together; actual-product probe remains a later
+gate. Source-only6GiB allowance is distinct from the prospective ownership
+probe's5GiB numerical/64MiB text/256MiB application envelope.
+
+C6b's combined sixteen-file source and twelve-job routine checks pass Astra
+review. Guarded application/whitespace pass. One neutral model/codec receipt
+slot and shared verified-buffer reader extend to Mistral, preserving Qwen
+aliases/const filters and existing numerical assembly. Mistral keeps Reference/
+512 and4MiB tokenizer/256KiB policy/64MiB text bounds. One new audited model
+factory raises header inventory to38; selected37, Swift and sessions remain
+unchanged. Cold/C ABI checks start before separately reviewed ownership probe.
+
+C6b passes all twelve cold/native checks:537default/645Metal tests, seven new
+and eight moved codec controls in both suites,38exactexports/C ABI and release
+builds. Three actual products are retained and six cached assets verified; all
+process groups close without endpoint errors. Astra retained-product approval
+precedes the one Mistral ownership probe. No session, generation, app settings
+or native package selection change is yet claimed.
+
+C6b's cached Mistral ownership probe passes seven frames: actual model1/
+loaded512/745source reads and all six exact roles, including the138039-byte
+policy under256KiB. Failure Rc1, complete/getter Rc2, exact-owner/Reference/
+stop assertions, final Weak exhaustion and JSON snapshot survival pass.
+No session or generation occurs. Astra saved audit passes source/products/logs,
+537/645test totals and all thirteen closed groups. Sparse process observations
+remain separate from the5GiB/64MiB/256MiB declared envelope; no peak/fit or
+performance inference. [Report](../../mistral-audited-pairing.md); final publication
+review/commit precedes native38/shared Swift settings.
+
+C6b is committed as `66aca8c` after all twelve cold/one ownership checks and
+exact twenty-file Astra publication review; only unrelated Apple DSStore
+remained. Astra approves C6c's seven Swift paths and native38builder together.
+Guarded application/whitespace pass: fourth shared descriptor/managed route,
+unchanged store/old namespaces, existing Mistral budgets/Reference512.100wire/
+116route/90preference controls and one loaded controller remain prospective.
+The native builder has no overlapping Swift inputs; reserve cleanup remains
+a separate reviewed housekeeping gate before execution.
+
+C6c's Astra-reviewed bounded cleanup runs under both Cargo locks and compiler
+exclusion:18677unbound codegen objects and regenerated incremental cache are
+removed;91protectedoutputs remain exact. Observed free increase5071908864bytes
+leaves9494249472, meeting the unchanged8GiB gate. No models/logs/archives/
+executables are removed. Combined-reviewed25serial native38/default build/link
+jobs now run independently of Swift source changes; selected37stays guarded.
+Exact537/645native proof is reused without repeat tests/model loads.
+
+All25C6c native/default build/link jobs pass with three38-exportMetal slices,
+default38/header/C ABI agreement and closed groups/no endpoint errors. Sole
+planned bare archive supersession preserves retainedMetal38; selected37 stays
+unchanged. Native537/645source proof is reused without rerunning suites or
+models. Astra component audit precedes actual-product-bound28Swift/CPU/app
+checks and one cached settings controller.
+
+Astra's native38saved audit passes all25closed jobs, threeMetal/default38
+exports/platforms,3803native proof paths and69outputs; selected37unchanged.
+Before cold invocation, adviser-approved ownerV2 scopes real-model bytes to
+the phase that consumes them: compile/CPU/app checks bind true inputs and
+model expectations, while product freeze authenticates exact6+2cached files
+and hardware requires the complete set with full per-job guards. Partial sets
+reject. This avoids repeatedly hashing4GBduring28nonconsumer jobs without
+removing source/runtime/fixture/product checks or actual model-run protection.
+V1 is preserved uninvoked.28Swift/CPU/app jobs now run.
+
+C6c's28cold/CPU/app jobs pass:100strict identity,116routing with twelve stale
+actions,90preference/33advisory, existing shared controls and all three apps.
+Product freeze authenticates all six native/two auxiliary cached files and
+retains thirteen actual products; all groups close without endpoint errors.
+The user requests finishing this task and then pausing. Only twoMacchecks,
+reviewed adoption/publication/commit remain authorized now; private B5e1 work
+is stopped and no next implementation task will start.
+
+C6c's two Mac jobs and Astra saved audit pass. One Mistral load restores256/
+chunk16/reply64 with zero writes, reply32 saves once and Apply128/chunk8 saves
+once more. Actual aggregates4685205878/4623712214fit5905580032; planned constructor admissions
+4184279074/4164305474equal returned candidate admissions; incremental123790740/103817140
+fits configured observed headroom. Terminal-before-observe and final durable
+evidence stay distinct, three other profile records remain exact and owning
+close succeeds. No real-model generation occurs.
+
+Guarded atomic adoption selects38after full current prechecks,30closed jobs
+and ten candidate hashes before/after; old37remains. No app launches/installs
+by adoption. [Mistral shared settings](../../mistral-managed-preferences.md) records
+the bounded completion. Final publication review/commit is the last work before
+the requested pause. Astra's next-load-upper then text-policy recommendation is
+recorded only as pending B5e1/B5e2; private future work is stopped.
+
+## 2 November 2026 — Separate Qwen2 load limit and current KV (B5e1)
+
+The managed Qwen2 next-load choice512/1024 is captured before teardown;
+initial KV stays512. An explicit Models reopen action applies changed load
+limits. Preview/Apply growth retains the model, rejects beyond-upper requests
+without changing owners/history/preferences, and preserves an incompatible
+saved1024 record when explicitly reopening at512.
+
+Checks:116 routing,90 preference,57 planning,28 Apply and new policy controls;
+strict iOS/simulator source checks; cached Mac growth/rejection/reopen pass.
+Actual current/candidate KV is6292128/12583584 bytes (fixed guards included).
+Transition aggregate1142906774 and candidate admission627281690 are accounting,
+not process peaks. [Evidence](../../../benchmarks/results/2026-11-02-context-load-upper-v1.json)
+retains setup interruptions/fixes and both corrected test assumptions. Astra
+final review approves the bounded change. No longer Chat input, rendered UI, phone, full-window
+quality or performance claim. Workflow combines controls, reuses unchanged
+native checks and keeps one compact task record plus full external logs.
+
+## 2 November 2026 — Bounded rendered-token codec support (B5e2a)
+
+The Rust/native codec accepts rendered input up to the engine32768 ceiling,
+independently of actual model/session admission. It checks length before cloning
+IDs;64KiB text,63messages and256output limits remain. Independent byte-token
+fixtures check full IDs at513/1024/32768, reject32769 and preserve native query,
+exact/undersized copy and rejection-buffer contracts. The old Mistral600-token
+rejection now correctly accepts. Formatting, strict Clippy and539default/647Metal
+tests pass;23/193hardware/model tests remain ignored. [Evidence](../../../benchmarks/results/2026-11-02-rendered-codec-ceiling-v1.json).
+Astra approves with no blockers. App bridge/Swift integration and actual longer
+Chat generation remain B5e2b; no numerical or phone qualification follows.
+
+## 2 November 2026 — Chat uses the admitted session window (B5e2b)
+
+Swift input admission now follows the active window and declared input cap,
+up to the codec32768 ceiling; reply256 and text/message bounds remain. Updated
+UI wording distinguishes the default512 window from the active setting.
+Astra-approved checks cover21native jobs/3slices/38exports, existing strict
+Swift controls and3unsigned app builds with6arch/platform inspections. Mac
+Qwen2 generates32tokens from629rendered input after growth;992+32 exactly fits
+1024, while1025 rejects with the full prefix, owners, preferences and draft
+unchanged. [Evidence](../../../benchmarks/results/2026-11-02-session-window-chat-v1.json).
+Guarded atomic adoption selects the rebuilt package and preserves native38's
+previous package. No rendered UI, physical phone, full-window quality or
+performance qualification is claimed. Core change committed as `fc7cbfe`.
+
+## 2 November 2026 — Compact workflow and reporting audit
+
+Saved the compact task/diff/review/log workflow in AGENTS.md and corrected three
+stale512-policy documents. Astra's reporting audit identifies the next concrete
+gap: session-bound actual owner buffers, refreshed or explicitly labelled at
+creation/replacement, with unsupported inspection leaving valid sessions usable.
+Historical load estimates and admission totals remain separate from allocations,
+loading peaks and whole-device fit. Today's reviewed code commits: `69ebeb0`,
+`fc7cbfe`, `c346382`; all completed tasks have check evidence linked above.
+
+## 2 November 2026 — Session-bound owner reporting (B5f1)
+
+The app now separates actual shared/session owner bytes at creation/replacement
+from historical load estimates and driver/bridge/text allowances. Model/session/
+configuration binding hides stale snapshots; suspend/close clear them and resume
+refreshes them. Unsupported inspection leaves valid loading/generation usable.
+Declared/global/loaded/active input and reply limits are shown separately.
+
+Astra approves. Strict Swift controls, CPU fallback, real Mac resize/generation/
+rejection/replay, CPU+Metal transition regressions and3unsigned app builds pass.
+The final request-limit wording correction passes3SDK source checks. Mac KV
+changes6292128→12583584bytes with shared weights unchanged. [Evidence](../../../benchmarks/results/2026-11-02-session-owner-memory-v1.json)
+retains the synthetic-fixture setup failure and correction; no numerical gate
+changed. Snapshots are explicitly historical, not per-token memory readings.
+Loading peaks, whole-device fit, advanced KV-byte controls, rendered UI and phone
+checks remain separate. No Rust/ABI/native-package changes or new performance claim.
+
+## 3 November 2026 — KV-constrained capacity search (B5g1)
+
+Common capacity search now accepts an optional physical KV-byte ceiling and
+reports independent KV fit. Legacy reports omit all new optional fields; the
+old entrypoint and56-byte options remain unchanged. The additive C function
+uses exact existing owner accounting; zero is explicit, not unlimited.
+Independent mixed full/ring enumeration and exact/one-byte-below/no-fit/overflow
+checks pass. Formatting, strict Clippy and542default/650Metal tests pass;23/193
+hardware/model tests remain ignored. A Metal-only optional-pattern compile
+failure is preserved and corrected. [Evidence](../../../benchmarks/results/2026-11-03-kv-capacity-core-v1.json).
+Astra approves the scoped change. Compatibility covers C ABI and legacy JSON;
+Rust struct-literal callers require the added fields. Device API execution,
+rebuilt packaging and app Apply
+enforcement remain separate. Planning does not qualify model/device fit.
+
+## 3 November 2026 — KV ceiling Preview/Apply integration (B5g2)
+
+Advanced Preview/Apply accepts a blank/unlimited or explicit0..6144MiB KV ceiling.
+Strict decoding checks independent KV fit and adjacent exclusion; edited request
+values invalidate old estimates. Apply checks resident planned KV before
+preparation and actual candidate owner KV before acceptance, failing closed if
+accounting is unavailable. The limit is ephemeral; saved schema1 stays unchanged.
+
+Astra approves. The39-export/3slice package, strict controls, legacy Mac Chat,
+CPU+Metal transition suites and3unsigned final app builds pass. Mac8MiB selects
+682tokens with8381088actual KV bytes;683 rejects while preserving owner/record.
+Zero has no fit; blank restores the requested1024 window. The test-only draft-
+reset assumption failure is retained. [Evidence](../../../benchmarks/results/2026-11-03-kv-preview-apply-v1.json).
+Pinned atomic adoption preserves the prior package. No phone runtime, rendered
+UI, whole-device fit or new quality/performance qualification is claimed.
+
+## 3 November 2026 — Opt-in load-memory checkpoints (B5h1)
+
+Two nonfatal physical-footprint observations bracket the load command, including
+validation, initial session/text setup and synchronous cleanup. A consistent new
+process-lifetime high-water mark establishes a process peak in this interval;
+equal/decreasing/inconsistent/unavailable readings never become a loading-peak
+claim. The opt-in defaults off and performs no new observation reads while off.
+Attempt/model/request binding keeps initial-load facts separate from later
+resizing/generation. No timers, native ABI changes or model-only attribution.
+
+Astra approves; synthetic counter/failure/disabled/binding controls, actual Mac
+loading/KV/chat, CPU+Metal transitions and3unsigned app builds pass. The fresh Mac
+controller observed4801088→675644544physical bytes and a new675644544peak.
+[Evidence](../../../benchmarks/results/2026-11-03-load-memory-checkpoints-v1.json).
+Final toggle wording passes3SDK source checks. This does not qualify a rendered app,
+physical phone, whole-device fit or performance, and prior higher peaks can
+leave load-only peaks unknown.
+
+## 3 November 2026 — Scrollable Mac Settings
+
+The automatic Mac Form clipped expanded context and memory details. Explicit
+grouped styling makes the Settings content scroll and wrap while Close remains
+reachable. An isolated production-view Mac fixture verifies editable context,
+8 MiB KV Preview selecting682, Apply updating the active session and dismissal.
+Historical load512 stays distinct from replacement682.
+[Evidence](../../../benchmarks/results/2026-11-03-mac-settings-rendered-v1.json).
+Astra approves; strict macOS/iOS/simulator source checks and the Mac app build pass.
+The first fixture compile and compiler-sandbox failure are retained. Physical
+iPhone UI and broader quality/performance qualification remain separate.
+
+## 3 November 2026 — Pinned Llama3 text codec
+
+A direct cold Rust codec supports the pinned Llama3 plain prompt policy: exact
+three-asset identity, frozen date, Python trimming, one BOS, reserved-input
+rejection and three hidden stops. Independent rendered-byte fixtures and the
+explicit cached-tokenizer comparison pass. Strict default/Metal Clippy, fmt and
+544/652 tests and Astra review pass. [Report](../../llama3-plain-codec.md),
+[evidence](../../../benchmarks/results/2026-11-03-llama3-plain-codec-v1.json).
+Native pairing, app activation, full quality and phone remain open.
+
+## 3 November 2026 — Llama3 native session composition
+
+The pinned codec now has an explicit real Mac512 session test:511rendered prompt
+tokens plus one requested reply fit, another reply rejects without state loss,
+and cancellation retains one pending ID before reset/replay succeeds. Native
+callbacks report cancellation errors without unwinding. Counts/hidden-stop
+contracts are checked; no actual stop occurred in these requests. All cold
+checks544/652, cached Metal execution and Astra review pass.
+[Evidence](../../../benchmarks/results/2026-11-03-llama3-native-chat-v1.json),
+[scope](../../llama3-native-chat-boundary.md). Generic loading here grants no audited
+Chat/app identity, full-adoption quality, phone or performance qualification.
+
+## 3 November 2026 — Audited Llama3 native pair
+
+A bounded loader and complete codec reuse the dense consumed-source pipeline,
+shared tokenizer implementation and owner-bound identity report. Generic Llama
+imports stay outside Chat. Actual Mac tests cover C-returned IDs/stops, identity,
+mutated tokenizer and allowance rejection, owner lifetime,511+1 admission,
+overflow preservation and cancel/replay.548default/656Metal, final strict lint,
+13cold controls, cached tokenizer,40-export C linkage and Astra review pass. Failed compile
+attempts remain recorded.
+[Report](../../llama3-audited-pair.md),
+[evidence](../../../benchmarks/results/2026-11-03-llama3-audited-pair-v1.json).
+The selected39-export framework and app remain unchanged. Full adoption quality,
+app activation, phone, larger contexts and speed remain separate gates. Reviewed
+compiler-cache cleanup restores the8GiB reserve for the next package build.
+
+## 3 November 2026 — Opt-in Llama3 Mac app
+
+The Mac launch flag `--experimental-llama3` enables the exact pinned profile
+through the shared Models/search/download and audited Chat route. Default/iOS
+catalogs stay unchanged. Ordinary folder rejection preserves the existing chat
+and native session. Default/flag controls,3unsigned apps, actual Mac Send/Stop/
+recover/reopen/preferences and isolated visible Use/Send checks pass. The visible
+reply is “Hello.” UI cancellation correctly preserves a committed47-token prefix
+with pending0; the earlier callback-only test expectation remains recorded.
+[Report](../../llama3-mac-app.md),
+[evidence](../../../benchmarks/results/2026-11-03-llama3-mac-app-v1.json).
+Astra approves; guarded native40 adoption passes and preserves native39. Original full quality, fresh downloads,
+iPhone runtime, larger contexts and measured performance remain separate.
+
+## 3 November 2026 — Real download to offline Chat
+
+The ordinary Smol profile downloads 146,607,552 bytes into a fresh cache, verifies
+all six files and completes real Chat. A separate process with network denied
+proves socket/metadata rejection, opens that cache and replies “Hello!”. Missing
+and mutated private cache data fail the expected inventory/SHA checks without
+changing the existing chat; recovery succeeds. Strict three-SDK and Hub controls and Astra review pass.
+[Report](../../smol-download-offline.md),
+[evidence](../../../benchmarks/results/2026-11-03-smol-download-offline-v1.json).
+Failed test expectations remain recorded. Production retries, system networking
+and numerical kernels are unchanged. No new phone/UI/quality/speed claim.
+
+## 3 November 2026 — Genuine original Llama reference
+
+Acquired and verified the 2.47 GB original BF16 checkpoint through a public mirror
+matching Meta’s immutable inventory. A bounded independent FP32 graph and
+stdlib row replay pass four frozen raw-prefix consistency checks and native
+target alignment. Memory stays below 6 GiB; short mean NLL difference −0.01427516
+is descriptive, not full adoption. Twelve cold controls and strict native-driver
+compilation and Astra review pass. [Report](../../llama3-original-reference.md),
+[evidence](../../../benchmarks/results/2026-11-03-llama3-original-short-v1.json).
+All 100 task budgets are retained: one requires 566 positions; the frozen full-loss
+blocks require 1025. iPhone 14 Pro remains unavailable, and full quality stays open
+until a bounded larger diagnostic range and unchanged full gates pass.
+
+## 3 November 2026 — Bounded Llama quality execution
+
+A Rust-only authenticated Llama diagnostic admits 1,025 positions without granting
+the app identity or increasing its 512 ceiling. Shared frequency/index checks and
+validated per-dispatch rotary bounds remain. On Mac M1 Pro, 15 full-row comparisons,
+independent prefixes and overflow preservation pass. Peak RSS is 1,271,480,320
+bytes; maximum admission with diagnostics and app allowance is 1,727,887,552 bytes.
+All 549 default and 657 Metal tests, strict lint, formatting, release build and
+Astra review pass. Failed cold checks remain recorded. Commit: `efe843d`.
+[Report](../../llama3-quality-context.md),
+[evidence](../../../benchmarks/results/2026-11-03-llama3-quality-context-v1.json).
+Original long alignment and full adoption gates are separate requirements.
+
+## 3 November 2026 — Original Llama long alignment
+
+Frozen 10,001 corpus IDs retain every original loss target and block/reset rule.
+A separately hashed 1,026-ID prefix supplies the long probe’s held-out target.
+Selected-row FP32 execution preserves the short 512 entry point and bounds the
+quality route to 1,025. Four original boundary prefixes and eight saved-row replays
+pass frozen gates; source peak RSS is 3,181,379,584 bytes. Fifteen focused controls,
+the previous short replay and Astra review pass. Commit: `7ac121e`.
+The four-case native NLL difference of 0.02133 is descriptive; full loss/task
+quality remains open. Earlier failed controls are retained.
+[Evidence](../../../benchmarks/results/2026-11-03-llama3-original-long-v1.json).
+
+## 3 November 2026 — Full original Llama loss gate
+
+All 10,000 frozen targets pass the original-reference loss gate on Mac M1 Pro.
+Native mean NLL 2.782652475 versus original 2.782632744 gives an increase of
+0.000019731 nats/token, below 0.05. Target IDs, block resets and earlier alignment
+checks pass. Three Rust controls, six checker controls, strict lint, formatting,
+release build and Astra review pass. A Python compatibility fix replayed saved
+results; numerical workers and thresholds stayed unchanged. Failed orchestration
+and compatibility checks remain recorded. The 100-task gate is still open.
+[Report](../../llama3-original-loss.md),
+[evidence](../../../benchmarks/results/2026-11-03-llama3-original-loss-v1.json).
+
+## 3 November 2026 — Incremental original Llama reference
+
+A bounded FP32 KV reference now prefills once and decodes one token at a time.
+Its 566-position cache is 37,093,376 bytes. All 11 real-model prefix comparisons,
+22 saved-row replays, exact greedy choices, margins, overflow/reset checks and
+21 cold controls pass. Failed-layer and history-allocation cases preserve the
+valid prefix. Peak RSS is 3,058,221,056 bytes; Astra approves the code and results.
+The earlier default rotary remains bit-identical. A reference-only probe motivates
+profiling before any weight cache. The 100-task gate remains open.
+[Report](../../llama3-original-incremental.md),
+[evidence](../../../benchmarks/results/2026-11-03-llama3-original-incremental-v1.json).
+
+## 3 November 2026 — Reference cost attribution and cache recovery
+
+A fixed warmed CPU probe attributes roughly three quarters of reference decode
+time to BF16 widening: about 493 ms for layer weights and 122 ms for the tied
+head, against an 828 ms uninstrumented median. All 40 profiled rows and 428 NumPy
+provider files match qualification. Astra recommends a separately qualified,
+bounded full FP32 cache before task collection. This is reference preparation,
+not a native/app speed claim. A locked manifest cleanup removes 4,332 standalone
+compiler objects and preserves protected linked products; observed free space
+ends at 3,765,780,480 bytes. Astra approves the cleanup and research results.
+[Evidence](../../../benchmarks/results/2026-11-03-llama3-reference-profile-v1.json).
+
+## 3 November 2026 — Retained streamed FP32 reference cache
+
+Bounded conversion now builds one read-only FP32 model and closes the original
+BF16 descriptor/mmap before execution. Both isolated runs match all 22 mapped
+row hashes and greedy decisions. Median reference decode falls from 827.95 ms to
+172.68/169.40 ms, about 4.8× faster. Maximum measured RSS is 5,584,928,768 bytes,
+below 6 GiB; the separate admission estimate is 5,584,330,752 bytes. The largest
+planned replay shape, 24 controls and stdlib row replay pass. Astra approves
+retention. This improves reference preparation only; the 100-task gate is open.
+[Report](../../llama3-original-cache.md),
+[evidence](../../../benchmarks/results/2026-11-03-llama3-original-cache-v1.json).
+
+## 3 November 2026 — Frozen shared Llama task inputs
+
+Both forthcoming workers now share all 100 prompt IDs, reserves, stop IDs and
+model identities. Independent offline Jinja reproduces the 70 instructed prompts;
+30 raw continuations and the original grading payload stay unchanged. Per-ID
+category/reserve checks reject swapped cases. All tasks fit 566 positions,
+including HumanEval/32 at 310+256. Three controls, preparation/replay and Astra
+review pass. This freezes inputs only; no task outcomes are claimed.
+[Contract](../../llama3-task-contract.md),
+[evidence](../../../benchmarks/results/2026-11-03-llama3-task-inputs-v1.json).
+
+## 3 November 2026 — Llama task workers and authored probes
+
+The native worker uses existing generation; the cached original worker checks
+each trajectory against a stateless replay. Both preserve sampled versus
+committed state and reset between cases. The structural verifier rejects invalid
+stops, counters, case order or reported predictions. Eight controls, strict lint,
+formatting and release build pass. Separate authored probes emit identical four
+IDs and pass pending-state/replay checks; their real stop reason is output limit.
+Astra approves the code and probes. Full 100-case collection remains next.
+[Evidence](../../../benchmarks/results/2026-11-03-llama3-task-workers-v1.json).
+
+## 3 November 2026 — Original Llama 100-task gate passed
+
+The shared isolated grading runner now serves model-specific Qwen and Llama
+adapters while preserving existing executor admission and restoration checks.
+All100 original trajectories pass replay. Native scores23/100 versus22/100
+original, passing the frozen two-point relative gate. All80 literal code records
+and120 text outcomes replay; the outer owner verifies VM shutdown and process
+exit. Nineteen controls and Astra review pass. Disk-reserve and timezone failures
+remain recorded; completed model outputs are reused. This closes the task gate
+for the pinned diagnostic configuration, with app/device adoption still separate.
+[Report](../../llama3-task-quality.md),
+[evidence](../../../benchmarks/results/2026-11-03-llama3-task-quality-v1.json).
+
+## 3 November 2026 — Pinned Llama quality qualification joined
+
+The original10k-target loss and100-task gates now have one scoped decision:
++0.0000197305nats/token and−1percentage-point task loss both pass. Receipt hashes,
+model identities and numerical profiles match. Astra approves closure for this
+configuration; Mac512 catalog adoption still requires a fresh ranged-download
+journey, and iPhone qualification remains open.
+[Decision](../../llama3-quality-qualification.md).
+
+## 3 November 2026 — Fresh Llama ranged download and offline Chat
+
+The pinned Mac Llama profile now completes real remote search, device admission,
+fresh ranged download and verification of1,322,325,118bytes. Online and separate
+network-denied Chat both succeed. Damaged private caches are rejected without
+changing the accepted owner or conversation; recovery succeeds. Strict compile,
+existing Hub controls and Astra review pass. This closes the Mac transfer
+prerequisite; ordinary catalog adoption remains a separate task.
+[Report](../../llama3-download-offline.md).
+
+## 4 November 2026 — Default bounded Mac Llama support
+
+The pinned Llama3.2 1B eight-bit model is available in the default Mac catalog,
+with an explicit512-position window. iOS retains four profiles. Platform-specific
+discovery/ranking and3GiB admission checks pass, alongside strict Mac/iOS/simulator
+compilation. Unflagged controller and visible UI open/send/Stop/recovery/reopen
+checks pass; Astra approves. The historical opt-in report is labelled and linked
+to the current [adoption report](../../llama3-mac-adoption.md). No native package,
+larger-context, physical-phone or performance qualification changes.
+
+## 4 November 2026 — Exact coverage and scoped Mac checklist
+
+One [coverage table](../../model-coverage.md) separates nine pinned artifacts, backend
+routes, declarations, tested positions, app limits and device evidence. Completed
+Mac settings/persistence/Apply/memory rollups are reconciled against their child
+receipts. Qwen3's passed relative quality remains distinct from rejected C512
+numerical fidelity. KV-byte limits stay per-Apply and load-only peaks conditional.
+Astra approves; content/link/whitespace checks pass. M8 remains open for Gemma
+state/numerical work, unreconciled journeys and physical-phone validation.
+
+## 4 November 2026 — Real Gemma4 32-position boundary
+
+Three schedules and reset reproduce all15 KV owners and selected logits exactly;
+the33rd token is rejected with the32-token prefix intact. Four full-vocabulary
+rows pass both independent contracts, across24 captures. Native peak RSS is
+3,005,054,976bytes below6GiB. Three cold controls,549default/657Metal tests,
+fmt/strictClippy/release and combined Astra review pass. Earlier four-token
+near-zero failures, unquantized quality, app/phone and larger contexts remain
+open. [Report](../../gemma-hybrid32.md),
+[evidence](../../../benchmarks/results/2026-11-04-gemma-hybrid32-v1.json).
+
+## 4 November 2026 — Explicit Gemma4 diagnostic512 admission
+
+A bounded diagnostic constructor reuses immutable E2B weights while preserving
+default32 positions and32-row scratch. Actual512 session allocation grows by
+18,679,680bytes; exact admission and one-byte-less rejection pass. All32 baseline
+logit rows and15 valid KV prefixes remain bitwise equal.550default/658Metal,
+fmt/strictClippy/release and combined Astra review pass. Execution beyond31,
+long numerical reference, app and phone remain open.
+[Report](../../gemma-context-probe.md).
+
+## 4 November 2026 — Independent Gemma4 E2B512 oracle
+
+The reference computes512 inputs while projecting only four selected hidden
+rows through the head. Ordered FP64 products retain math.fsum and byte-identical
+real32 results; four cold controls and a64 pilot pass. The full run saves12MiB
+of dual-contract rows at860,078,080bytes peak RSS. Source/runtime/resource guards
+and combined Astra review pass. This prepares native comparison; earlier
+four-token failures and unquantized/app/phone quality remain open.
+[Report](../../gemma-e2b-context-reference.md).
+
+## 4 November 2026 — All adopted Mac profile journeys
+
+Explicit pinned selection and Stop/recovery extend the shared journey helper.
+Fresh Qwen2/Qwen3/Mistral/Smol downloads, audited Chat and separately network-denied
+offline/bad-cache checks pass, complementing Llama.14selector/existingHub controls,
+strict compile and combined Astra review pass. An optimized unmodified-source Mac
+app builds without touching the user's session. Quality warnings, generic-model
+support and physical-phone qualification remain separate.
+[Report](../../mac-hub-journeys.md).
+
+## 4 November 2026 — Real Gemma4 diagnostic512 boundary
+
+Two chunk schedules produce identical 512-token/KV state. Overflow preserves
+the prefix; reset reproduces every initial 32-row output. Both independent
+contracts pass 2,097,152 selected comparisons each, with no failures. Peak RSS
+is 3,063,037,952 bytes; two cold controls, 550 default/658 Metal tests, strict
+Clippy, formatting, release and combined Astra review pass. Local eviction,
+earlier precision failures, original quality and app/device support remain open.
+[Report](../../gemma-hybrid512.md).
+
+## 4 November 2026 — Gemma4 diagnostic 1,025 admission
+
+The explicit diagnostic ceiling now admits 1,025 positions with bounded 32-row
+scratch and unchanged ordinary construction. Measured session growth is
+7,356,420 bytes; exact-budget admission and all 512 prior output/KV rows pass.
+Reset and ownership checks, 550 default/658 Metal tests, strict Clippy, formatting,
+release and combined Astra review pass. Execution beyond absolute511 and real
+local-cache wrap remain separate. [Report](../../gemma-context1025-probe.md).
+
+## 4 November 2026 — Gemma4 real wrap diagnostics
+
+Two1,025-position schedules pass state, eviction/wrap, overflow and reset checks.
+Independent replay checks24,123,392values per contract: mathematical4logit and
+staged8KV observations (four stored coordinates) fail unchanged gates. All
+mathematicalKV and selectedstagedlogits pass; numerical qualification stays
+rejected. Required Rust/cold checks and source/resource guards pass. Astra approves
+diagnostic code and rejection evidence; numerical qualification stays open.
+[Report](../../gemma-hybrid1025.md).
+
+## 4 November 2026 — BF16 source profiling preparation
+
+A standalone adapter measures authenticated reads/guards/hash, decoding and
+projection intervals with explicit overlapping buckets and a separate tied head.
+Two tiny controls preserve exact graph bytes in both contracts, source read
+chains, ownership and rejection behavior. Astra approves the preparation. Real
+model timing, upstream agreement and full quality remain pending.
+[Next experiment](../../gemma-original-quality-next.md).
+
+## 4 November 2026 — Same-input V boundary witness
+
+A651-token pass reproduces three full failing V rows and exact cache transfer.
+Projection and normalization each use the actual native input; all2,048values
+per contract pass, with zero staged differences. Three cold controls, required
+Rust checks, source/resource guards and Astra review pass. Full-sequence4math
+logit/8stagedKV failures remain rejected. [Report](../../gemma-v-boundary.md).
+
+## 4 November 2026 — Original-BF16 short source experiment
+
+All2,852saved states and the complete18.24GB read audit reproduce exactly.
+The47.11s correctness worker peaks at372,899,840bytes RSS and separates source
+authentication, reads, decoding, projection/conversion and head costs. Source,
+runtime, resource and NLL controls pass; Astra approves. Upstream BF16 agreement,
+full quality and earlier precision rejections remain open.
+[Report](../../gemma-bf16-source-experiment.md).
+
+## 4 November 2026 — Tiny upstream BF16 streaming control
+
+Stock upstream forward matches resident BF16 layer/logit bits across9-token
+window-crossing and causal controls. One-layer leases, sharedKV, tail head,
+nonpersistent buffers and partial-read recovery pass. Frozen weights, complete
+runtime/input guards, retained generated source and Astra review pass; peakRSS
+is383,270,912bytes. Real-checkpoint fit/accuracy and earlier failures remain open.
+[Report](../../gemma-upstream-tiny.md).
+
+## 4 November 2026 — Official upstream BF16 reader
+
+All540selected tensors and60shared-consumer exclusions reconcile with stock
+persistent state, including35scalars and tied head ownership. Raw bounded BF16
+reads and a prospective request journal pass five cold controls and Astra review. Real checkpoint
+execution, measured fit and numerical/quality agreement remain next.
+[Report](../../gemma-upstream-reader.md).
+
+## 4 November 2026 — Real upstream BF16 comparison
+
+Official four-token cases pass sealed source/request/runtime/resource and causal
+checks;12finite arrays and independent NLL/greedy readback pass. RSS688MB; greedy
+matches mathematical/staged references, while logit differences remain descriptive.
+Astra approves the prospective upstreamBF16 quality baseline; old fidelity failures
+and full quality stay open. [Report](../../gemma-upstream-real.md).
+
+## 4 November 2026 — Real BF16 tied-head equality
+
+Full-width stock projection/softcap exactly reproduces2,097,152saved tiled-head
+BF16 words. Astra review, independent raw replay and source/runtime/resource guards pass;
+peakRSS1.24GB. This covers the two four-row cases only; arbitrary shapes and
+full quality remain unqualified. [Report](../../gemma-upstream-head.md).
+
+## 4 November 2026 — Original BF16 bounded loss scorer
+
+One stock causal text forward plus32-position full-width head batches scores
+exact next-token targets. Eight cold controls and the real32-target pilot pass
+8.39million exactBF16 words and independent NLL replay; Astra approves, peakRSS1.54GB. Full1,025
+shape and aggregate/native quality remain open. [Report](../../gemma-upstream-loss-pilot.md).
+
+## 4 November 2026 — Full original BF16 loss block
+
+All1,024targets in the frozen1,025-ID block pass bounded independent NLL/greedy
+replay; meanNLL7.37456, maxreplayerror7.11e-15, peakRSS1.49GB. First32rows match
+the pilot exactly. Astra approves block-one reuse; native pairing and full10k/100
+quality remain open. [Report](../../gemma-upstream-loss1025.md).
+
+## 4 November 2026 — Paired native Gemma loss block
+
+Native1,024-target collection passes exact eight-row prior alignment, seven
+independent anchor reductions, complete statistics/coverage and required checks.
+Astra approves; peakRSS2.91GB. One-block NLLdelta−0.54775 is descriptive; full10k
+loss and100-task gates remain open. [Report](../../gemma-native-loss-block.md).
+
+## 4 November 2026 — Full Gemma original-relative loss gate
+
+All10,000paired targets pass exact coverage/reset/provenance checks; nativeNLL
+9.26412 vs original9.99578 gives−0.73166 against≤+0.05. Required checks,nine
+controls and Astra review pass; peakRSS1.84GBsource/2.89GBnative. The100-task
+gate and prior fidelity/app limitations remain open. [Report](../../gemma-full-loss.md).
+
+## 4 November 2026 — Resident original BF16 task reference
+
+Resident4.56GBweights, on-disk PLE and session-owned stockKV pass three controls
+and six real greedy/reset/boundary checks below6GiB. Astra approves; peakphysical
+5.02GB. Incremental logit bits differ, so every task trajectory must pass stateless
+verification before grading. [Report](../../gemma-resident-generation.md).
+
+## 4 November 2026 — Original task controller
+
+Three-category pilot verifies all65sampled decisions/hidden stops, pending state
+and reset under6GiB. Three cold controls and Astra review pass; source-read chain
+replays independently. No grading/full100task qualification yet.
+[Report](../../gemma-task-controller-pilot.md).
+
+## 4 November 2026 — Native task collector
+
+Existing generation/session APIs pass a three-category real pilot with exact
+stop/cap/pending/reset checks. Required checks, independent validation and Astra
+review pass; peakphysical2.90GB. Full100task collection/grading remains open.
+[Report](../../gemma-native-task-controller.md).
+
+## 4 November 2026 — Exact source trajectory recovery
+
+Stock execution confirms an upstream cached/fresh BF16 tie difference. Uniform
+first-mismatch repair discards the suffix and rechecks every decision; HumanEval17
+passes247IDs after one repair. Three controls and Astra review pass below6GiB.
+The original rejection and full-task/adoption limits remain. [Report](../../gemma-task-recovery.md).
+
+## 4 November 2026 — Gemma grading adapter preparation
+
+Gemma inference admission maps exact literal scoring fields to the unchanged
+qualified isolated grader. Seven controls and Astra review pass, including
+worker/journal hash binding and pre-VM rejection. No generated code executed;
+full source completion/paired grading remains pending. [Report](../../gemma-task-grading.md).
+
+## 4 November 2026 — Owned Gemma grading window
+
+The outer supervisor verifies child/group exit, independently stopped VM,
+receipt identity and all200 resolved outcomes before publishing a recomputed
+decision. Astra review and21 targeted controls pass after fixing its inventory
+finding. Actual grading waits for source100 completion. [Evidence](../../../benchmarks/results/2026-11-04-gemma-grading-window-v1.json).
+
+## 4 November 2026 — Gemma Mac conformance design
+
+Astra records native arithmetic, selected Mac512 coupled rows and local
+witnesses in a [prospective design](../../gemma4-native-conformance.md). Provider/SIMD
+specification and independent-reference validation remain prerequisites; no
+numerical or app qualification changes. Local links and whitespace pass.
+
+## 4 November 2026 — Independent native projection replay
+
+Bounded CPU Q4/BF16 replay specifies FMA residuals, compensated lane updates and
+merge order. Sixteen controls and Astra review pass; archived128-word V tile
+matches at assumed32lanes. Diagnostic timings and initial runner correction are
+recorded. Actual Metal width/flush and coupled graph remain open.
+[Report](../../gemma-native-projection.md).
+
+## 4 November 2026 — Actual projection environment
+
+Fresh precise M1Pro pipeline reports32lanes; four subnormal probes return zero.
+Normal controls and27 authored outputs match CPU replay exactly. Required checks,
+two cold controls and Astra review pass. General flush semantics and coupled
+graph remain open. [Report](../../gemma-projection-environment.md).
+
+## 4 November 2026 — Bounded reference row workers
+
+One/four-worker projections preserve exact outputs and ordered source reads,
+including a partial tile. Seven controls and Astra review pass; measured32-token
+reference latency is134–135ms/42.6–42.7ms at30.2MBRSS. Graph arithmetic remains
+open. [Evidence](../../../benchmarks/results/2026-11-04-gemma-native-row-workers-v1.json).
+
+## 4 November 2026 — Projection underflow exclusion
+
+Optional dyadic-grid admission proves normal-or-zero internal projection
+arithmetic before dispatch; insufficient bounds retain inconclusive coordinates.
+Thirteen controls, strict real head replay and Astra review pass with unchanged
+output hashes. Host-provider/coupled graph remain open.
+[Evidence](../../../benchmarks/results/2026-11-04-gemma-projection-domain-v1.json).
+
+## 4 November 2026 — Host arithmetic investigation
+
+Astra resolves actual optimized provider call sites/constants/store boundaries
+and recommends a small independent host reference. Live provider/FP-environment
+seals and controls remain prerequisites. Links/whitespace pass; no new numerical
+qualification. [Design](../../gemma-native-host-profile.md).
+
+## 4 November 2026 — Paired host primitive and provider witness
+
+Bounded Darwin paired sincos, live provider UUIDs and actual-process RNE/FP32
+subnormal checks pass four controls/Astra review. Binary/import/runtime evidence
+is retained. Future coupled callers need fresh seals; whole graph remains open.
+[Evidence](../../../benchmarks/results/2026-11-04-gemma-native-host-v1.json).
+
+## 4 November 2026 — Complete Gemma task collections
+
+All100 responses per role pass admission; original trajectories verify exactly
+with six one-repair cases below6GiB. Astra approves collection reuse. The grader
+correctly withholds a score for ambiguous HumanEval39 exit137 and restores the
+VM. Authored process-CPU witness qualification is next. [Report](../../gemma-full-tasks.md).
+
+## 4 November 2026 — Qualified authored process-CPU witness
+
+An external observer measures the exact process PROF counter used by Linux's
+four-second CPU limit. Ten paired authored runs,46 controls and Astra review
+pass; early/external under-budget deaths stay unresolved. The failed scheduler
+counter experiment remains failed. Model-grading integration is next.
+[Report](../../gemma-cpu-limit-witness.md).
+
+## 4 November 2026 — Controlled ambiguous-137 grading retry
+
+Ordinary grading stays first; one qualified identical-payload retry can resolve
+CPU-budget exhaustion. Original failures remain journaled, contradictory frames
+stay unresolved, and the outer policy/decision guard remains strict.38 controls,
+five authored replays and Astra review pass. Full model grading is next.
+[Evidence](../../../benchmarks/results/2026-11-04-gemma-cpu-retry-integration-v1.json).
+
+## 4 November 2026 — Complete task gate exposes Q4 regression
+
+All200 outcomes and raw evidence replay pass; the VM restores stopped. Original
+52/100 vsnative43/100 rejects Q4 at the unchanged2-point limit. One qualified
+CPU retry preserves its original attempt. Astra approves evidence; a four-case
+same-checkpoint MLX witness is next. [Result](../../gemma-full-tasks.md).
+
+## 4 November 2026 — Stock MLX reproduces four Q4 decisions
+
+Strict stock MLX chooses Toklet’s token at all four frozen disagreement prefixes.
+Four controls, complete-row replay, owned exit/runtime/memory checks and Astra
+review pass; peakphysical3.24GB. The first generated-module audit failure is
+preserved. Q4’s9-point task loss remains rejected; assess8-bit feasibility
+before new kernels. [Report](../../gemma-mlx-decisions.md).
+
+## 5 November 2026 — Reject Gemma8 before weight download
+
+Actual immutable headers confirm4.918GB selected text; current512/chunk32
+combined-owner estimate exceeds6GiB by102,686,350bytes. Exact config/tokenizer,
+header/arithmetic checks and Astra review pass. No weight payload, Q8 execution
+or quality claim; preserve Q4 rejection and reconcile M8 admissions next.
+[Report](../../gemma8-feasibility.md).
+
+## 5 November 2026 — Reconcile M8 admission decisions
+
+Publish five managed Mac profiles, four iOS catalog entries and explicit
+diagnostic/rejected scopes; correct completed Mistral/Llama parents. Catalog,
+receipt/link/source checks and Astra review pass. Production Mac app process
+peak and physical14Pro checks remain open; M8 is not declared complete.
+[Audit](../../m8-admission-audit.md).
+
+## 5 November 2026 — Measure the production Mac app
+
+Unmodified production Qwen2 at512/chunk32/reply128 completes load→reply→quit.
+LifetimeRSS816.7MB and observedphysical728.1MB fit its1.5GiB allowance. Source,
+model, owned-process/workspace guards, saved replay and Astra review pass;
+failed UI attempt remains. Otherprofile/phone peaks stay unmeasured.
+[Report](../../mac-production-memory.md).
+
+## 5 November 2026 — Refocus on Mac coverage and performance
+
+User defers iPhone; Astra recommends0.5B profiling, real1.5B shared-dense
+qualification and one measured optimization. Preserve device/rejected gates;
+separate architecture execution, app admission and performance claims.
+[Queue](../../mac-coverage-performance-next.md).
+
+## 5 November 2026 — Execute Qwen2.5-1.5B MLX8
+
+Reuse the dense engine for a second geometry: stock greedy/stop agreement,
+real512 boundary, chunk/reset/overflow checks and <6GiB process peaks pass.
+550default/658Metal tests, strict checks, release builds and Astra review pass.
+No full fidelity, held-out or managed Chat claim. [Report](../../qwen15-engine-execution.md).
+
+## 5 November 2026 — Add reusable per-layer rotary selection
+
+SmolLM3’s validated mask selects existing CPU/Metal Q/K buffers directly on
+bypass layers. Existing models keep their prior rotation. Independent
+nonzero-offset fixtures,1,680GPU snapshots,554default/662Metal tests, strict
+checks and Astra review pass. Real3B execution remains next.
+[Report](../../smollm3-rotary-schedule.md).
+
+## 5 November 2026 — Execute SmolLM3-3B MLX4
+
+Seven stock/native decisions, real512/chunk parity, reset and overflow pass;
+peakRSS1.82GB and numerical admission1.86GB. Shared probe preserves both prior
+Qwen1.5 rows exactly.554default/662Metal, strict/release checks and Astra pass.
+Fidelity/held-out quality and managed Chat stay separate.
+[Report](../../smollm3-engine-execution.md).
+
+## 5 November 2026 — Reuse dense blocks for Granite scaling
+
+Strict Granite adapter supplies checkpoint embedding, attention, both residual
+and logit scales. Half coefficient/product boundaries and physical strides are
+preserved; legacy graphs stay unchanged.558CPU/667Metal tests, six explicit GPU
+checks, strict/release checks and Astra pass. Real2B execution is next; no
+quality, performance, managed Chat or phone claim.
+[Report](../../granite-scaling-blocks.md).
+
+## 5 November 2026 — Execute Granite3.3-2B MLX8
+
+Stock/native return4 and hidden stop; full512, chunks1/32, overflow/reset and
+process-memory checks pass. Native RSS2.78GB; admission2.82GB. Typed shared probe,
+558CPU/667Metal, strict/release checks and Astra pass. Managed Chat, full fidelity,
+quality, phone and performance remain separate. Both setup failures are retained.
+[Report](../../granite33-engine-execution.md).
+
+## 5 November 2026 — Freeze the first sparse-MoE contract
+
+Authenticated Granite3.1 MoE header and conditional 4.33GB owner screen; no
+weights acquired. Astra approves deterministic routing, selected-only FP32
+softmax, ordered reduction and bounded BF16-to-Half import design. Exact planning,
+finite conversion and numerical execution remain open.
+[Design](../../granite-moe-next.md).
+
+## 5 November 2026 — Add deterministic sparse-expert routing
+
+Allocation-free scalar top-k uses ascending-ID ties and selected-only ordered
+FP32 normalization. Independent fixtures, overflow/mass/cutoff controls,
+562CPU/671Metal, strict/release checks and Astra pass. Expert projection/reduction,
+import, Metal and real MoE execution remain open.
+[Report](../../moe-router-block.md).
+
+## 5 November 2026 — Add selected-expert projections and reduction
+
+Borrowed fused gate/up expert views reuse scalar GLU; reduction preserves supplied
+slot order and separate FP32 products. Independent stages, validation/overflow
+controls, 567CPU/676Metal, strict/optimized checks and Astra pass. Repeated calls
+allocate no Rust buffers. Import, Half/Metal and full MoE execution remain open.
+[Report](../../moe-expert-blocks.md).
+
+## 5 November 2026 — Add authenticated BF16 MoE import
+
+Strict source/fused-tensor validation and bounded direct Half conversion return
+receipts only after successful authenticated delivery. Tight load planning separates
+actual importer storage from reservations and prospective KV. 574CPU/683Metal,
+strict/optimized checks and Astra pass. Real payload, Metal/session allocation and
+model qualification remain open.
+[Report](../../moe-bf16-import.md).
+
+## 5 November 2026 — Remove temporary build and staging files
+
+Removed 215.5GB of rebuildable files and verified duplicates. Available space
+rose from 73 to 192GiB. Models, executables, active target and evidence retained;
+[cleanup inventory](../../../artifacts/cleanup-2026-11-05/cleanup.json).
+
+## 5 November 2026 — Qualify the resident Metal router leaf
+
+Half scores route deterministically into FP32 gates using a checked, consumed
+allocation plan. Apple M1 Pro: 1,527 slots, status/guards and zero Rust encode
+allocations pass. 574CPU/684Metal, strict/release and Astra pass. Experts, full
+session and real model remain open. [Report](../../moe-metal-router.md).
+
+## 5 November 2026 — Qualify Metal expert projection and reduction
+
+Resident Half expert stages consume a checked allocation plan and preserve
+ordered FP32 reduction. The M1 Pro matched 45,612 stage words with zero measured
+Rust encode allocations. Full checks and Astra review passed. Combined session
+wiring follows. [Report](../../moe-metal-experts.md)
+
+## 5 November 2026 — Share Metal MoE routing scratch
+
+One scratch owner supplies route IDs and gates to both stages in the same
+command. The GPU verified exact outputs, planned bytes and late failure status.
+Astra review and required checks passed.
+[Result](../../../benchmarks/results/2026-11-05-moe-ffn-shared-v1.json)
+
+## 5 November 2026 — Feed projected scores into Metal MoE routing
+
+The compensated Half projection writes directly into shared score scratch.
+Six GPU checks verify routing, exact outputs and rejected invalid views or
+buffers. Required checks and Astra review passed.
+[Result](../../../benchmarks/results/2026-11-05-moe-ffn-projection-v1.json)
+
+
+## 5 November 2026 — Run authenticated Granite MoE in a Metal session
+
+The resident Half graph shares attention, KV and transaction logic with the
+dense path. Its checked plan charges the expert scratch and router bias buffers
+before allocation. The two-layer oracle matches bitwise across three schedules.
+Astra and 13 explicit M1 Pro checks pass. Real checkpoint testing follows.
+[Result](../../../benchmarks/results/2026-11-05-moe-metal-session-v1.json)
+
+## 5 November 2026 — Qualify the pinned Granite MoE checkpoint on Mac
+
+Stock BF16 and native Half agree on both frozen decisions and both final-layer
+expert sets. Native chunk 1/32, 512-token state, capacity rejection and reset
+pass. Sampled native peak physical footprint was 2.72 GB. Astra and required
+checks pass. Full-row drift is recorded, and broader quality and adoption
+remain open. [Report](../../granite-moe-execution.md)
+
+## 5 November 2026 — Refresh the Mac MLX8 performance baseline
+
+Separate workers collected 75 profiles and 39 timing requests. Affine
+projection dominated 128-row prefill counter time. The 1,024-token median
+first distribution was 6.775 s. Both processes stayed below 2.5 GiB.
+Strict checks, release build and Astra review pass. [Report](../../m9-mac-baseline.md)
+
+## 5 November 2026 — Freeze the affine prefill experiment
+
+P0 selects four-token affine8 reuse for 1,024-token prefill. The frozen
+comparison requires a 5% median gain beyond measured dispersion and
+bitwise baseline parity. Astra reviewed the selection and gates.
+[Contract](../../m9-p1-affine-prefill.md)
+
+## 5 November 2026 — Reconcile model scope and follow-on diagnostics
+
+The coverage index now includes the pinned Granite MoE diagnostic. Astra
+localized the next Llama Online and Gemma probes to specific recorded failures.
+Documentation links and whitespace pass. [Plans](../../todo-implementation-plans.md)
+
+## 5 November 2026 — Add the experimental affine8 prefill tile
+
+One SIMD group reuses each reconstructed weight across up to four tokens
+while retaining independent compensated sums. The M1 Pro fixture matches
+the baseline and independent calculation, including tails and overflow.
+Astra and required checks pass. The matched performance screen follows.
+[Result](../../../benchmarks/results/2026-11-05-m9-affine-tile4-v1.json)
+
+## 5 November 2026 — Measure affine tile parity and first performance screen
+
+All 13 prefill and 381 decode distributions match bitwise. The primary
+1,024-token prefill drops 13.71% and total request time drops 6.28%.
+The 512-token decode control rises 15.669 ms, so Astra approved the
+collection with reverse-order investigation pending.
+[Report](../../m9-p1-affine-screen.md)
+
+## 5 November 2026 — Defer rotary phase storage for the pinned workload
+
+Position-level replay of 75 profiles places rotary at 0.123% of prefill
+and 1.721% of decode at the largest observed ratios. Astra approved deferring
+the phase table for this workload. [Decision](../../m9-rotary-opportunity.md)
+
+## 5 November 2026 — Repeat the affine decode control in reverse order
+
+The 512-token decode difference fell within dispersion. The primary
+1,024-token prefill gain repeated at 13.76%. Both pairs and the 128-token
+control variation are retained. The next qualification preserves the original
+loss recipe and adds paired tiled rows. [P2 plan](../../m9-p2-affine-qualification.md).
+[Result](../../../benchmarks/results/2026-11-05-m9-affine-decode-control-v1.json)
+
+## 5 November 2026 — Confirm the Mac prefill gain independently
+
+The fresh matched pair reproduces a 13.69% reduction in 1,024-token prefill
+and 6.22% in total request time. Astra confirms the timing subgate. The
+quality, state and app gates remain active. [P2 plan](../../m9-p2-affine-qualification.md)
+
+## 5 November 2026 — Pass the full original and tiled loss gate
+
+All 10,000 distributions match bitwise across the two schedules. The
+original target statistics replay exactly and mean loss passes the frozen
+gate. Astra approved after strict checker and mutation validation.
+[Evidence](../../../benchmarks/results/2026-11-05-m9-affine-loss-v1.json)
+
+## 5 November 2026 — Replay all 100 frozen tasks with tiled prefill
+
+The paired Mac collector preserves every sampled trajectory and literal
+completion. Exact identity reuses the accepted 2/100 grading. Astra and
+strict checks pass. [Evidence](../../../benchmarks/results/2026-11-05-m9-affine-tasks-v1.json)
+
+## 5 November 2026 — Qualify tiled prefill state and fault recovery
+
+The real Qwen tile session preserves committed distributions across failure,
+replay, cancellation and capacity checks. The injected input exercises native
+GPU status. Astra and required checks pass. [Evidence](../../../benchmarks/results/2026-11-05-m9-affine-state-v1.json)
+
+## 5 November 2026 — Qualify the Mac tiled Chat controller
+
+An isolated diagnostic build verifies actual tiled prefill, Send, Stop,
+New Chat and clean close under the process budget. A separate raw request
+reuses 36 tokens and matches fresh reset. Astra approved the scoped
+controller proof. [Evidence](../../../benchmarks/results/2026-11-05-m9-affine-app-v1.json)
+
+## 5 November 2026 — Publish the Mac opt-in retain decision
+
+M9 first delivery closes in the pinned M1 Pro scope. Independent prefill
+improves 13.69%, and full quality, state and diagnostic Chat gates pass.
+Managed-default deployment stays separate. [Decision](../../m9-mac-affine-decision.md)
+
+## 5 November 2026 — Isolate the Gemma final head and softcap
+
+The four rejected output IDs pass both frozen contracts from the actual
+native normalized row. The complete native row matches its archived hash.
+Astra approves the local witness. Earlier propagated errors remain open.
+[Evidence](../../../benchmarks/results/2026-11-05-gemma-head-witness-v1.json)
+
+## 5 November 2026 — Verify the two Gemma normalization boundaries
+
+Both RMSNorms pass the frozen gates from actual native inputs. Staged
+outputs match the archived V and head operands exactly. Astra approves
+local evidence and retains the full graph rejection.
+[Evidence](../../../benchmarks/results/2026-11-05-gemma-norm-witness-v1.json)
+
+## 5 November 2026 — Reproduce Llama Online on identical attention inputs
+
+The frozen projection difference follows one Half context word. Both Online
+schedules match and the output is invariant to unused cache poison.
+Astra approved the local diagnostic. [Evidence](../../../benchmarks/results/2026-11-05-llama-online-witness-v1.json)
+
+## 5 November 2026 — Isolate Llama softmax accumulation
+
+GPU FP32 probability staging recovers the expected Half context word from the
+failing input. Compensated GPU sums followed by a host FP64 quotient recover the
+same word. Astra approved the diagnostic. The complete Llama gate remains open.
+[Evidence](../../../benchmarks/results/2026-11-05-llama-online-ablation-v1.json)
+
+## 5 November 2026 — Screen Gemma E2B 6-bit memory
+
+Pinned Q6 metadata leaves 1,054,384,498 bytes of estimated Mac512/chunk32
+headroom. Astra approved the header and ledger. Runtime memory and stock
+decision evidence are the next gates. [Report](../../gemma6-feasibility.md)
+
+## 5 November 2026 — Replay frozen Llama with staged probabilities
+
+The isolated 32-token build passes 1,050 snapshots and 149,568 frozen
+comparisons across both tied and untied Llama graphs. Astra approved the
+experiment. Production Llama retains Reference attention. A separate deeper
+candidate needs workspace admission and real-checkpoint checks.
+[Evidence](../../../benchmarks/results/2026-11-05-llama-online-staged-v1.json)
+
+## 5 November 2026 — Check the split-KV decode primitive
+
+The test-only two-kernel path passes 32,249 independent FP64 comparisons
+on the M1 Pro. The Qwen-shaped fixture uses 18,480 bytes of raw partial
+workspace. Astra approved the primitive. The latency comparison and
+session admission are separate tasks.
+[Evidence](../../../benchmarks/results/2026-11-05-m9-split-kv-primitive-v1.json)
+
+## 5 November 2026 — Check the I8 KV capacity trigger
+
+The existing I8 format offers a projected 2.20 GB raw saving at Qwen3’s
+declared 40,960 positions. The current Mac Chat profile is 512 positions.
+Astra reviewed the estimates and deferred integration until a selected
+larger profile establishes its capacity need.
+[Plan](../../todo-implementation-plans.md#p4-i8-kv)
+
+## 5 November 2026 — Verify tentative greedy decisions
+
+The comparison leaf checks every target row and returns the accepted visible
+prefix plus a correction, bonus, or hidden stop. Astra approved the code.
+It made zero allocations in 48 calls. A five-row verifier microbenchmark
+at vocabulary 151,936 measured about 2.97 ms per batch on the M1 Pro.
+[Evidence](../../../benchmarks/results/2026-11-05-m9-strict-greedy-v1.json)
+
+## 5 November 2026 — Measure split-KV decode on resident fixtures
+
+Both split kernels together reduce completed GPU command time by
+75.09–78.08% at valid depths 1,025, 1,056, 1,088 and 1,151 on the M1 Pro.
+The depth-128 control falls below the 5% threshold. Astra approved both
+opposite-order runs. A real Qwen2 session still needs qualification.
+[Evidence](../../../benchmarks/results/2026-11-05-m9-split-kv-timing-v1.json)
+
+## 5 November 2026 — Check CPU tentative append and rollback
+
+The CPU fixture compares 40 batched target rows to sequential greedy decisions.
+Rollback and replay restore equal logits and valid prefix state at two offsets.
+Astra approved the fixture. Live cancellation and model near-tie gates remain.
+[Evidence](../../../benchmarks/results/2026-11-05-m9-greedy-transaction-v1.json)
+
+## 5 November 2026 — Check four stock Gemma Q6 decisions
+
+The authenticated Q6 checkpoint changes all four disputed Q4 decisions to
+the original BF16 token. Strict load and independent full-row replay pass
+under the 6 GiB worker policy. Astra approved the bounded result.
+[Report](../../gemma6-feasibility.md#stock-decision-preflight)
+
+## 5 November 2026 — Check stock Gemma Q6 task state
+
+Three frozen cases pass all 50 cached and stateless greedy comparisons,
+including terminal EOS. Peak physical memory is 4.65 GB. Astra approved
+the pilot. Full task grading and loss remain open.
+[Evidence](../../../benchmarks/results/2026-11-05-gemma6-stock-task-pilot-v1.json)
+
+## 5 November 2026 — Reject the first real split-KV session candidate
+
+On the pinned Qwen2.5 workload, all 128 complete decode rows exceed the
+frozen numerical gate. One greedy token changes at depth 1,049. Astra
+approved the rejection, and the session candidate was removed from the
+engine. The operation timing remains a fixture result.
+[Evidence](../../../benchmarks/results/2026-11-05-m9-split-kv-session-v1.json)
+
+## 5 November 2026 — Retain the failed Q6 stock trajectory gate
+
+All 100 stock cases journal successfully. Stateless replay differs on 26
+of 4,036 sampled IDs across 13 cases. The failed assertion skips the final
+live-module audit, so the journal remains diagnostic and ungraded.
+[Evidence](../../../benchmarks/results/2026-11-05-gemma6-stock-tasks-v1.json)
+
+## 5 November 2026 — Localize two stock Q6 stateless decisions
+
+Fresh cached and complete-sequence rows reproduce the archived hashes.
+Stateless evaluation of only the prefix selects the cached ID in both cases.
+Astra approved the bounded observation and queued exact trajectory recovery.
+[Evidence](../../../benchmarks/results/2026-11-05-gemma6-stock-localization-v1.json)
+
+## 5 November 2026 — Defer the current split-KV reduction
+
+The first same-input difference is one layer-0 Half word at depth 1,025.
+FP64 attention rounds to the Online word. FP64 merging of the stored partial
+packets still rounds to the split word. Astra approved deferring the current
+candidate. Future work needs a separately qualified partial reduction.
+[Evidence](../../../benchmarks/results/2026-11-05-m9-split-kv-witness-v1.json)
+
+## 5 November 2026 — Verify 99 stock Q6 trajectories after bounded recovery
+
+The frozen first-mismatch procedure verifies 99 of 100 cases. HumanEval/37
+hits a proposal cycle, so the complete collection remains ungraded. Astra
+approved the decision and the completed runtime audit.
+[Evidence](../../../benchmarks/results/2026-11-05-gemma6-stock-recovery-v1.json)
+
+## 5 November 2026 — Measure the prompt lookup proposer
+
+The bounded lookup copies up to eight known continuation IDs into caller
+storage. Astra approved the deterministic disjoint-match policy and checks.
+At 1,024 tokens, the authored hit and miss medians are 1.67 µs and 15.87 µs.
+Live acceptance and generation speed remain open.
+[Evidence](../../../benchmarks/results/2026-11-05-m9-prompt-lookup-v1.json)
+
+## 5 November 2026 — Defer the current Gemma Q6 candidate
+
+Fresh causal-prefix generation of the sole unresolved case still differs
+on one of 188 sampled IDs in complete replay. Astra approved the bounded
+diagnostic and defer decision. Grading remains withheld.
+[Evidence](../../../benchmarks/results/2026-11-05-gemma6-stock-prefix37-v1.json)
+
+## 5 November 2026 — Screen deeper staged Llama attention
+
+An isolated SIMD score and staged softmax build passes 1,050 frozen
+snapshots. Ten real Llama 1B decisions match Reference through depth 512
+in one incremental schedule. Full logits differ by up to 0.06174. Astra
+approved the diagnostic. Ordinary Llama continues to use Reference.
+[Evidence](../../../benchmarks/results/2026-11-05-llama-staged-depth-v1.json)
+
+## 5 November 2026 — Verify staged Llama workspace and schedules
+
+The isolated leaf passes 116,800 FP64 comparisons on the M1 Pro. Single-row
+and batched output bits match on identical inputs. Astra approved workspace
+guards, status handling and scratch reset. Real-model qualification remains open.
+[Evidence](../../../benchmarks/results/2026-11-05-llama-staged-leaf-v1.json)
+
+## 5 November 2026 — Verify an explicit CPU proposal transaction
+
+The CPU session evaluates a tentative chunk into caller-admitted target
+rows. It publishes the accepted prefix and leaves one correction, bonus or
+hidden stop pending. Astra approved cancellation, replay and admission checks.
+[Evidence](../../../benchmarks/results/2026-11-05-m9-cpu-greedy-round-v1.json)
+
+## 5 November 2026 — Check staged Llama on the pinned corpus
+
+Each route matches 511 complete canonical row hashes between chunk sizes
+1 and 32. All greedy IDs match between staged and Reference, with mean NLL
+2.36070 and 2.36057 respectively. Astra approved the bounded screen.
+[Evidence](../../../benchmarks/results/2026-11-05-llama-staged-corpus-v1.json)
+
+## 5 November 2026 — Exercise bounded CPU prompt lookup generation
+
+The explicit nonstreaming path matches sequential greedy output and state
+on authored ties and near ties, with zero allocations in the measured runs.
+Astra approved its valid-prefix, stop and pending-state behavior. Real-model
+and throughput checks remain open.
+[Evidence](../../../benchmarks/results/2026-11-05-m9-cpu-lookup-v1.json)
+
+## 5 November 2026 — Measure staged Llama completed requests
+
+Staged SIMD reduces median request time by 43.13% and 43.06% on the pinned
+Mac 128-input/128-decode workload. Decode improves by about 50%. Astra
+approved both worker orders. Full original quality and app gates remain open.
+[Evidence](../../../benchmarks/results/2026-11-05-llama-staged-timing-v1.json)
+
+## 5 November 2026 — Verify real Qwen2 Metal lookup target parity
+
+Five pinned Qwen2 cases pass exact greedy and replay controls. The test
+observes zero difference across 6,077,440 logit values. Astra approved
+the witness. Its abandonment path restores a published batch, so atomic
+Metal cancellation remains separate.
+[Evidence](../../../benchmarks/results/2026-11-05-m9-qwen2-lookup-parity-v1.json)
+
+## 5 November 2026 — Pass the staged Llama original loss gate
+
+All 10,000 frozen targets pass the retained-statistics replay. Mean NLL
+rises 0.00004424 nats/token against the 0.05 limit. Astra approved the
+diagnostic 1,025-position scope. The task gate remains separate.
+[Evidence](../../../benchmarks/results/2026-11-05-llama-staged-loss-v1.json)
+
+## 5 November 2026 — Pass the staged Llama original task gate
+
+All 100 staged trajectories and decoded completions match the previously
+graded Reference inputs. The authenticated isolated grade replays to 23
+staged versus 22 original. Astra approved reuse. Explicit session and app
+qualification remain separate.
+[Evidence](../../../benchmarks/results/2026-11-05-llama-staged-tasks-v1.json)
+
+## 5 November 2026 — Verify atomic Qwen2 Metal proposal publication
+
+The explicit Qwen2 Mac256 round uses the admitted all-row workspace.
+Five cancelled rounds preserve published state and four successful rounds
+publish only the accepted prefix plus a pending target. Astra approved the
+transaction. Bounded Metal generation and performance remain open.
+[Evidence](../../../benchmarks/results/2026-11-05-m9-qwen2-atomic-round-v1.json)
+
+## 5 November 2026 — Add the explicit staged Llama Mac512 selector
+
+The feature-gated selector uses the existing FP32 workspace, admits the
+model-owned pipeline, and reproduces the isolated real Llama row exactly.
+Astra approved admission, cancellation and replay checks. Mac app
+qualification remains separate.
+[Evidence](../../../benchmarks/results/2026-11-05-llama-staged-session-v1.json)
+
+## 6 November 2026 — Share bounded prompt lookup with audited Qwen2 Metal
+
+The CPU and Metal entry points share one statically dispatched loop. A pinned
+Mac release run matches both serial transcripts and state, including 15 of 23
+accepted proposals. Astra approved the explicit nonstreaming path. The
+paired performance comparison is pending.
+[Evidence](../../../benchmarks/results/2026-11-06-m9-qwen2-metal-generation-v1.json)
+
+## 6 November 2026 — Measure bounded Qwen2 lookup in both orders
+
+Exact greedy state and logits recovered after the timed interval match across
+trials. Astra approved the evidence. The repeated contract prompt gains 53.33%/53.76% in decode. The code prompt misses the 5%
+gate, with 19 of 46 proposals accepted. Retain the explicit API and reject
+default adoption. The caller-owned target workspace is 5,469,696 bytes.
+[Evidence](../../../benchmarks/results/2026-11-06-m9-qwen2-lookup-timing-v1.json)
+
+## 6 November 2026 — Exercise staged Llama in the Mac Chat controller
+
+The opt-in Mac probe selects the authenticated Mac512/chunk32 session.
+Both loads and all 43 completed chunks show staged dispatch. Stop preserves
+the valid prefix, and Settings Apply rejects the unsupported replacement
+without changing the session. The sampled physical peak is 1.55 GB.
+Astra approved the isolated controller scope.
+[Evidence](../../../benchmarks/results/2026-11-06-llama-staged-app-v1.json)
+
+## 6 November 2026 — Align Qwen1.5B MLX8 with the original FP32 baseline
+
+The original causal baseline replays all 10,000 rows. The short native run
+scores 32 targets with identical chunk1/chunk32 rows and a +0.005026-nat mean
+difference from original FP32. Both tokenizers reproduce the pinned plain
+prompt. Astra approved the short scope, which precedes both full quality gates.
+[Evidence](../../../benchmarks/results/2026-11-06-qwen15-original-alignment-v1.json)
+
+## 6 November 2026 — Record the remaining conditional M9 decisions
+
+Astra confirms the raw Llama Online failure comes from a different reduction
+crossing a Half midpoint under the same operands. Keep the frozen rejection
+and the separately qualified staged path. Defer I8 integration until a
+selected profile needs capacity that FP16 cannot admit under its budget.
+[Decision and evidence](../../todo-implementation-plans.md#llama-online-correctness)
+[Capacity ledger](../../todo-implementation-plans.md#p4-i8-kv)
+
+## 6 November 2026 — Replay Gemma attention from the actual operands
+
+Layer 12 at position 433 passes both independent contracts for 2,048 context
+values and 1,536 O-projection values. The staged results are exact and the
+captured K/V matches the archive. Astra approved the local attribution.
+The original 1,025-position numerical rejection remains open.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-attention-boundary-v1.json)
+
+## 6 November 2026 — Pass the Qwen1.5B MLX8 full loss gate
+
+The native scorer resets ten frozen blocks and covers all 10,000 targets
+once. Original FP32 averages 2.485958 nats and native MLX8 averages 2.487487,
+an increase of 0.001528 against the 0.05 limit. Peak physical memory is
+1.90 GB. Astra approved the result. Literal task grading remains separate.
+[Evidence](../../../benchmarks/results/2026-11-06-qwen15-full-loss-v1.json)
+
+## 6 November 2026 — Qualify the Qwen1.5B raw task producer
+
+The normal CLI rejects the distinct Chat template. A byte-verified numerical
+clone uses its existing raw-ID mode. After native exit, the pinned tokenizer
+decodes the bounded transcripts. All three pilot cases pass, including hidden
+EOS and output-limit state. Astra approved the producer and original grade
+binding. Full collection and grading follow.
+[Evidence](../../../benchmarks/results/2026-11-06-qwen15-task-pilot-v1.json)
+
+## 6 November 2026 — Screen pinned mixed-precision Gemma in stock MLX
+
+The text-only checkpoint authenticates and strictly loads all 1,096 tensors.
+Live module audit finds 142 Q4 and 136 Q8 matrices. Four saved decision rows
+replay, one matching original BF16 and three matching Q4. Physical peak is
+4.86 GB. Astra approved feasibility and the unchanged next trajectory gate.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-optiq-stock-v1.json)
+[Pinned Hub revision](https://huggingface.co/mlx-community/gemma-4-e2b-it-OptiQ-4bit/tree/ffcf5c056bdd0df50627867ee8c7cba890eabe33)
+
+## 6 November 2026 — Pass Qwen1.5B frozen literal task quality
+
+The raw native collection reproduces all 100 transcripts after process exit.
+Isolated grading gives 12/100 versus matched original FP32 11/100, with no
+unresolved cases. The VM returns to its stopped state. Both original-weight
+gates pass for this numerical profile. Managed Mac Chat remains a separate task.
+[Evidence](../../../benchmarks/results/2026-11-06-qwen15-task-quality-v1.json)
+
+## 6 November 2026 — Verify the previously unresolved Gemma trajectory
+
+OptiQ matches all 122 cached and complete stateless decisions on the frozen
+HumanEval/37 case, including hidden EOS106. No repair is needed. Astra approved
+the one-case scope and full stock follow-up.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-optiq-trajectory37-v1.json)
+
+## 6 November 2026 — Bind the audited Qwen1.5B Reference owner and codec
+
+The larger checkpoint has a distinct manifest and reuses the byte-identical
+plain ChatML text assets. Native creation and transition planning use
+Reference attention. The real Mac512 witness passes exact/below budgets,
+encoded fixtures and both stops. Astra approved the native scope.
+[Evidence](../../../benchmarks/results/2026-11-06-qwen15-native-owner-v1.json)
+
+## 6 November 2026 — Retain the OptiQ stock task rejection
+
+All 100 stock trajectories replay in both runs. The receipted repeat binds
+the live process group, and qualified CPU-witness grading resolves all 200
+outcomes. OptiQ scores 49/100 against original 52/100 and misses the two-point
+limit. Astra approved preserving the failed gate and deferring native mixing.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-optiq-task-quality-v1.json)
+
+## 6 November 2026 — Screen a distinct Gemma affine6/8 artifact
+
+The pinned oQ6 header has the canonical 1,096 selected text tensors and the
+same tokenizer. The existing ledger estimates 5.52 GB after excluding the
+separate assistant and redundant shared-layer K/V. Astra approved one
+bounded stock preflight. Runtime fit and quality remain unmeasured.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-oq6-header-v1.json)
+[Pinned Hub revision](https://huggingface.co/mlx-works/gemma-4-E2B-it-oQ6-mtp/tree/16ab042b9961009b7d9741fba2434c659b675b4b)
+
+## 6 November 2026 — Adopt Qwen1.5B in managed Mac Chat
+
+The exact MLX8 profile uses Reference attention and a 512-position load cap.
+Fresh download, Send/Stop, Apply256 and network-denied reopen pass. Peak
+sampled physical memory is 1.88 GB. Strict Swift controls, all three Apple
+package slices and Astra review pass. Native41 is selected and native40 is
+preserved. The model journey used the controller. Physical iPhone is deferred.
+[Evidence](../../../benchmarks/results/2026-11-06-qwen15-mac-app-v1.json)
+
+## 6 November 2026 — Verify the Gemma layer-12 post-attention tail
+
+Both arithmetic contracts pass all 1,536 output values at position 433.
+Four diagnostic stages also pass, and the archived boundary rows match
+exactly. Metal checks, seven malformed-record controls and Astra review
+pass. Retain the tested tail and end the local layer walk. Full 1,025
+qualification remains rejected.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-layer12-tail-v1.json)
+
+## 6 November 2026 — Test the two Gemma reference bands for overlap
+
+All 24,123,392 retained comparisons admit at least one FP32 value within
+both bands, coordinate by coordinate. Replay reproduces the four
+mathematical and eight staged failures. Astra approved the narrow result.
+The joint graph computation and full gate remain unresolved.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-reference-intersection-v1.json)
+
+## 6 November 2026 — Reject the oQ6 trajectory and screen stock Q8
+
+Strict oQ6 matches all four original decisions at 4.48 GB peak. The
+HumanEval/37 replay reaches a proposal cycle after three repairs at
+4.94 GB, so grading is withheld. Astra approves a separate stock-only
+Q8 screen with 205 MB projected headroom. Native/app Q8 admission still fails.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-oq6-stock-v1.json)
+[Q8 model card](https://huggingface.co/mlx-community/gemma-4-e2b-it-8bit)
+
+## 6 November 2026 — Localize the first observed Gemma staged propagation
+
+Prefix64 reproduces both archived K/V endpoints at position48. Layer3
+attention and FF up match bitwise. Eight per-layer gate words differ,
+followed by 54 output words. All 25 captured stages pass tolerance.
+Metal checks and Astra review pass. Replay layer3 FF next.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-first-staged-v1.json)
+
+## 6 November 2026 — Reconcile the M8 Mac evidence
+
+Checked all six managed Mac identities, the four-profile iOS scope and the
+selected package. Added Granite MoE to the diagnostic coverage table. Gemma
+and deferred iPhone gates keep M8 open. The selected package predates the
+test-only Gemma edits.
+[Audit evidence](../../../benchmarks/results/2026-11-06-m8-mac-audit-v1.json)
+
+## 6 November 2026 — Identify one misrounded Gemma feed-forward projection
+
+The same 32-row execution with identical FF inputs isolates gate row2149.
+An exact rational dot is 1.776e-15 above the midpoint, so the upper FP32
+word is correct. All eight stage comparisons still pass tolerance.
+Metal checks and Astra review pass. A separate rounding experiment follows.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-layer3-ff-v1.json)
+
+## 6 November 2026 — Correct the captured Gemma gate in an isolated shader
+
+The baseline lane/tree loses 1.776e-15 of compensation. The third
+component recovers it. Exact CPU controls and the original plus candidate
+Metal projections pass on the M1 Pro. Astra approved an isolated graph
+A/B. Production and full qualification stay unchanged.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-affine-expansion-v1.json)
+
+## 6 November 2026 — Remove the observed position-48 Gemma propagation
+
+The isolated shader passes the frozen affine fixture and matches all 25
+staged prefix captures bitwise. The earlier layer3 output and layer4 K/V
+differences disappear. Metal checks and Astra review pass. The full
+1,025-position test is separate.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-affine-prefix-v1.json)
+
+## 6 November 2026 — Qualify the bounded stock Q8 checks
+
+Both shards authenticate. Strict affine8 matches all four original
+decisions and all77 HumanEval/37 samples without repairs. Trajectory
+physical peak is5.89GB. Astra approved a memory-limited full stock
+collection. Native/app admission is separate.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-q8-stock-v1.json)
+
+## 6 November 2026 — Reject the expansion in the full Gemma graph
+
+Both schedules pass state, reset, overflow and the historical prefix.
+The isolated shader fails five mathematical and four staged observations.
+The exact staged oracle also misses two mathematical logit tolerances.
+Astra approved the rejection. Production keeps the previous shader.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-affine-full-v1.json)
+
+## 6 November 2026 — Reject full stock Q8 admission
+
+The first attempt retained 32 completed cases and 31 verified trajectories.
+HumanEval/24 cycles after two repairs. The owner receipt fails during the
+endpoint check. The hardened HumanEval/32 retry reaches
+6,457,283,264bytes and is stopped above the 6GiB limit. A separate group
+query confirms exit. Astra approved the scoped rejection. Grading stays open.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-q8-stock-cap-v1.json)
+
+## 6 November 2026 — Size Gemma Metal pools to the admitted chunk
+
+Mac512 Q4 admission drops by130.7MB at chunk3 and139.7MB at chunk1.
+Exact/minus-one budgets, full-logit parity, rejection and reset pass.
+Default and Metal checks and Astra review pass. No throughput or Q8
+qualification follows from the ownership savings.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-chunk-pools-v1.json)
+
+## 6 November 2026 — Screen a distinct Gemma QAT artifact
+
+The pinned header contains 173 affine4 and 105 affine8 text matrices, with
+1.74GB estimated stock headroom. The tokenizer and stop IDs match. Template
+and generation settings differ. Astra approved a bounded raw-token stock
+test. Parent revision and conversion recipe remain unknown.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-qat-header-v1.json)
+[Google quickstart](https://gemma.ai/get-started/)
+
+## 6 November 2026 — Refresh the source-matched Apple package
+
+All three arm64 slices retain 41 C exports. The linked Mac app,
+network-denied Qwen1.5B controller and both iOS SDK builds pass. Astra
+approved atomic selection with the previous package preserved. Physical
+iPhone qualification remains deferred.
+[Evidence](../../../benchmarks/results/2026-11-06-chunk-pools-native41-v1.json)
+
+## 6 November 2026 — Verify QAT basic-text portability
+
+All 97 frozen records and installed loader text arguments match.
+The template difference only affects tool media. Astra approved the
+bounded result and the conditional mixed projection plan. QAT keeps a
+separate native identity and admission gate.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-qat-text-v1.json)
+
+## 6 November 2026 — Pass bounded Gemma QAT stock checks
+
+The resumed shard authenticates. Strict mixed loading peaks at 3.97GB.
+All 144 sampled decisions verify on HumanEval/37 after one repair, at
+4.47GB peak. Astra approved the unchanged full quality sequence.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-qat-stock-v1.json)
+
+## 6 November 2026 — Preserve the full Gemma QAT trajectory rejection
+
+All 100 cases complete and 98 verify. HumanEval/4 and lambada/row-29 cycle
+after two repairs each. Peak physical memory is4.98GB and endpoint
+checks pass. Astra approved withholding grading and loss. A separate
+affine8 leaf task covers the missing projection mechanism.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-qat-full-tasks-v1.json)
+
+## 6 November 2026 — Attribute the QAT stock cycles to tested replay shapes
+
+Both workers reproduce all 32 full-row captures. Same-length future
+variants agree bitwise. Changing only padded length flips both disputed
+decisions. Astra approved a separate native diagnostic plan. The frozen
+stock trajectory gate remains rejected.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-qat-shape-v1.json)
+
+## 6 November 2026 — Qualify the standalone Gemma affine8 projection
+
+The separate context preserves FP32 compensated arithmetic. All 256
+codes, exact budgets and residual-sensitive dots pass. Frozen Q4
+projection and real-prefix output remain exact. Astra approved the leaf.
+Mixed resident loading and Chat stay outside this result.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-affine8-leaf-v1.json)
+
+## 6 November 2026 — Admit the pinned QAT cold tensor layout
+
+The raw config, index and header pins select the mixed layout explicitly.
+The shared physical descriptor now uses the packed byte stride and group
+size. Real metadata, mutation controls, default and Metal checks and
+Astra review pass. Payload authentication and execution remain separate.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-qat-cold-v1.json)
+
+## 6 November 2026 — Authenticate mixed Gemma QAT resident storage
+
+All 278 matrices and 262 vectors load from the pinned shard under an exact
+3,600,157,124-byte policy. One byte less rejects after metadata. Affine8
+tiles retain original packed bytes, peak physical memory is3.53GB on Mac,
+and the full Q4 storage regression passes. Astra approved immutable
+storage. Execution and quality remain separate.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-qat-resident-v1.json)
+
+## 6 November 2026 — Freeze independent QAT prefix references
+
+The mathematical FP64 and staged FP32 oracles capture124 records across
+the 213- and 71-token causal prefixes. All576 authored rational controls
+pass and peak physical memory is268MB. Astra verified the row hashes,
+runtime pins and owned exit. Native fidelity still requires comparison.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-qat-native-reference-v1.json)
+
+## 6 November 2026 — Admit an explicit mixed Gemma QAT session
+
+One device and queue retain both precise pipelines. Affine8 is confined to
+the feed-forward projections. Four-token logits and KV match across three
+chunk sizes and the causal future extension. Exact admission and reset
+pass, and the original Q4 capture remains bitwise identical. Astra
+approved the diagnostic code. Longer fidelity and Chat remain open.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-qat-session-v1.json)
+
+## 6 November 2026 — Pass both frozen Gemma QAT prefix comparisons
+
+The 213- and 71-token runs pass all 7,331,840 values across both
+contracts and all eight greedy observations. Logits and committed KV
+stay identical across chunks and the future extension. Astra verified
+the receipts. The 1,025-token wrap and original quality gates remain open.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-qat-prefix-parity-v1.json)
+
+## 6 November 2026 — Validate mixed QAT wrap state
+
+The test-only 1,025-token route preserves all logits across two schedules,
+retained KV at all four milestones, overflow state, and reset/replay. Exact
+admission is3.72GB and peak physical memory is3.85GB. The legacy Q4
+capture remains bitwise identical. Astra approved the state probe. Both
+independent numerical contracts and adoption quality remain open.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-qat-wrap-state-v1.json)
+
+## 6 November 2026 — Qualify the QAT quality collection pilots
+
+Fresh raw replay verifies all62 decisions in three task categories,
+including hidden stops. The first1,024 loss targets and eight wrap
+anchors pass the score checks. Legacy Q4 reproduces the same task IDs,
+loss rows and raw capture. Astra approved the workers. Full original
+quality and the independent long fidelity gate remain open.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-qat-quality-pilot-v1.json)
+
+## 6 November 2026 — Pass original-relative Gemma QAT loss
+
+All 10,000 frozen targets score. Mean NLL is6.064917 versus9.995776 for
+the archived original baseline. The difference passes the unchanged
++0.05 limit. Mac peak physical memory is3.713GB. Astra verified the
+result. Task grading and independent long fidelity remain open.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-qat-full-loss-v1.json)
+
+## 6 November 2026 — Preserve the first QAT wrap oracle outcome
+
+Both independent calculations match the complete native capture. The
+initial owner failed to save the memory and exit receipts after a sandbox
+denial. Astra verified the scoped comparison. Same-pin guarded repeats
+are running and the numerical gate remains open.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-qat-wrap-initial-v1.json)
+
+## 6 November 2026 — Preserve the native Gemma QAT task rejection
+
+All100 native responses complete and all3,631 decisions verify. Isolated
+grading scores46/100 versus original52/100, a six-point drop against the
+two-point limit. Astra confirmed the rejection. QAT stays diagnostic.
+Official BF16 with file-backed PLE is the next feasibility candidate.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-qat-full-quality-v1.json)
+
+## 6 November 2026 — Admit the official Gemma BF16 cold plan
+
+The pinned config and all2,011 tensor intervals match the inventory.
+The real metadata probe reads263,960 bytes. The raw split is4.56GB
+resident candidates and4.70GB file-backed PLE. Astra approved. Payload
+authentication, full memory admission and execution remain separate.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-cold-v1.json)
+
+## 6 November 2026 — Authenticate file-backed BF16 PLE rows
+
+The official shard authenticates and five real rows widen bitwise.
+Per-row integrity retains8,388,712 requested bytes, and chunk32 gathers
+need573,480 bytes. Late read or digest failures preserve caller output.
+Astra approved. Full model residency and latency remain open.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-ple-source-v1.json)
+
+## 6 November 2026 — Close frozen QAT wrap fidelity
+
+The guarded math and staged repeats reproduce the initial bytes and
+complete their independent memory and exit checks. Native passes all
+52,441,088 values and32 greedy observations. Astra verified the result.
+The QAT task rejection still governs adoption.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-qat-wrap-parity-v1.json)
+
+## 6 November 2026 — Qualify the original BF16 Metal projection leaf
+
+Aligned BF16 words widen to FP32 in the dedicated kernel. The authored
+residuals and real attention/feed-forward rows pass, with exact budgets
+and atomic guard failure. Q4 and mixed QAT captures remain bitwise.
+Astra approved. Whole-model fit and throughput remain open.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-projection-v1.json)
+
+## 6 November 2026 — Retain the official BF16 projection storage
+
+The pinned shard authenticates while writing277 matrices directly into
+guarded buffers and widening262 norm vectors. PLE stays file-backed.
+Exact requested load is4.644GB and peak physical memory is4.587GB.
+Legacy captures match bitwise. Astra approved storage; graph fidelity,
+quality and Chat remain separate.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-resident-v1.json)
+
+## 6 November 2026 — Run the official BF16 shared graph
+
+Both four-token sequences pass4,341,760 independent comparisons and16
+greedy observations. Chunk sizes1/3/32 preserve logits and KV. Late
+head and PLE failures preserve committed state. Physical peak is4.699GB.
+Astra approved the short scope. Long fidelity, quality and Chat remain open.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-short-graph-v1.json)
+
+## 6 November 2026 — Verify official BF16 long cache state
+
+Both test-only 1,025-token schedules preserve complete logits, retained
+KV and rollback/reset behavior. All resident matrix, guard and norm bytes
+remain exact. Peak physical memory is4.858GB. Astra and the unchanged Q4
+capture pass. Independent long fidelity and quality remain open.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-wrap-state-v1.json)
+
+## 6 November 2026 — Verify the official BF16 basic-text codec
+
+Exact official config pins select the same tokenizer, template and
+stops. All97 frozen records match and both crossed profiles reject.
+Peak physical memory is488.2MB under the existing1GiB policy. Astra
+approved standalone text. Combined model/codec admission remains open.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-codec-v1.json)
+
+## 6 November 2026 — Verify the official BF16 quality workers
+
+First1,024 original-relative loss targets and66 sampled decisions pass.
+Fresh replay includes hidden stop tokens. Astra approves after588 default
+and706 Metal tests and six owned Mac checks. Historical Q4 loss and
+Q4/QAT task controls match. Full quality and long fidelity remain open.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-quality-pilot-v1.json)
+
+## 6 November 2026 — Correct Qwen2.5-1.5B catalog identity
+
+The Mac profile now has its own display name, lookup key and discovery query.
+The exact repository returned from Hugging Face. Astra approved after the
+strict Swift checks and Mac bundle verification. Initial test warning and
+missing iOS runner input were corrected. Physical iPhone work stays deferred.
+[Evidence](../../../benchmarks/results/2026-11-06-qwen15-catalog-repair-v1.json)
+
+## 6 November 2026 — Close the dual-reference decision and BF16 loss gate
+
+Both original long references sealed. Native has664 mathematical and26 staged
+failures across52,441,088 comparisons. All32 greedy checks pass. Exact bounds
+leave61 unique coordinates with no common FP32 result. Astra confirmed the
+rejection and the separate original-relative loss pass of−0.03085 nats across
+10,000 targets. Task grading and native arithmetic qualification remain open.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-long-decision-v1.json)
+
+## 6 November 2026 — Trace the official BF16 producer prefix
+
+The staged96-token trace passes1,435,648 comparisons and reproduces120
+prior K/V rows. The first captured bit differences at94 and95 are in
+layer1 attention context. Astra approves this test-only diagnostic.
+The staged cache failures at508 and826 require their own cause witness.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-producer-trace-v1.json)
+
+## 6 November 2026 — Screen the ordered BF16 reference
+
+The sealed chronological reference reproduces the same26 V failures across
+26,220,544 values. All selected logits and greedy checks pass. The earliest
+captured cache drift is producer1 at position70. Astra approved the scoped
+rejection and the next two-producer trace. Initial prototype failures are
+retained, and the separate holdout remains unused.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-ordered-exploratory-v1.json)
+
+## 6 November 2026 — Attribute the official BF16 late value drift
+
+All5,120 projection and normalization components and prior cache transfer
+are bitwise exact on actual inputs. The first verifier exceeded the source
+row bound. The bounded retry, old short trace and Astra pass. The original
+long rejection remains, with the source of these differences upstream.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-late-v-attribution-v1.json)
+
+## 6 November 2026 — Pass both official BF16 original-quality gates
+
+Fresh replay matches all4,149 decisions from100 tasks. Isolated grading
+passes51/100 versus52/100, and the VM is restored stopped. The same
+numerical binary passes10,000 loss targets. Astra confirms this quality
+result. Independent long fidelity and managed app adoption remain open.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-original-quality-v1.json)
+
+## 6 November 2026 — Locate the first official BF16 rounding error
+
+Six same-input attention rows reproduce exact scores, probabilities and
+context. Producer0 output column1093 at position70 differs by one FP32 word.
+The exact dot is `17/2^53` above the midpoint. Astra confirms the measured
+32-lane replay and the need for a BF16-specific rounding candidate.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-first-drift-v1.json)
+
+## 6 November 2026 — Pass the ordered BF16 numerical subgates
+
+The third compensation term and midpoint-aware store correct the real dot.
+All1,085,440 prefix values are bitwise exact. Fresh wrap and holdout pass
+45,000,704 values, all32 greedy checks and both state schedules. Legacy Q4/QAT
+reproduce their saved bytes. Astra approves the code and numerical evidence.
+The corrected quality rerun remains required before retention.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-rounding-numerical-v1.json)
+
+## 6 November 2026 — Retain the official BF16 rounding repair
+
+The corrected binary passes all10,000 loss targets at−0.03085 nats and the
+isolated task gate at51/100 versus52/100. All4,149 sampled decisions replay
+exactly, and the earlier trajectory bytes match. Astra approves retention
+with the fresh numerical, state, legacy and late-failure evidence. Managed
+Mac ownership and app adoption remain separate.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-rounding-quality-v1.json)
+
+The separate holdout fixture reuses the wrap checks for the first eviction.
+Astra approves the test refactor and exact regression of the original capture.
+
+## 6 November 2026 — Pair the official BF16 source and codec on Mac
+
+The safe Rust owner passes exact load5.718GB and session5.814GB admission,
+one byte below each, and real generation at capacity512. The combined
+process peaks at5.032GB. Reset, cancellation and the old task pilot pass.
+Astra approves after strict checks. The native and app routes remain separate.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-official-mac-owner-v1.json)
+
+## 6 November 2026 — Add the official BF16 Mac raw bridge
+
+Two additive C entry points open the audited raw model and report combined
+memory. Real generation and scoring survive external model release. Session
+admission is5.814GB and physical peak is4.914GB. Astra approves after strict
+checks,43 Mac exports and both iOS compiler targets. Managed Chat and
+replacement remain separate.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-native-raw-v1.json)
+
+## 6 November 2026 — Bind the official BF16 codec to audited native Chat
+
+Chat reuses the reserved codec and reports the exact six pinned assets.
+The real Mac reply, bounds, lifetime and dense Qwen2 regression pass.
+Peak physical memory is 4.92 GB. Astra approves after 589 default and
+707 Metal tests. Two overlapping CLI checks passed on the serial rerun.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-native-chat-v1.json)
+
+## 6 November 2026 — Open official Gemma BF16 through the Mac Swift worker
+
+The explicit Metal route publishes exact identity, context and combined
+memory after successful setup. The optimized offline reply, Stop and replay
+pass at 4.92 GB peak, with 20.05 MB of KV buffers. The first witness used the
+test binary's session size, 16 bytes above production. The corrected checks,
+both iOS SDK builds and Astra review pass.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-mac-worker-v1.json)
+
+## 6 November 2026 — Add the exact Mac Gemma BF16 Hub profile
+
+The signed Mac build uses the selected native43 package. Exact online ranges
+above 4 GiB, authenticated cached publication and network-denied Chat pass.
+The offline managed process peaks at 4.93 GB. Astra approves after both iOS
+SDK builds and the Mac ranking/discovery regressions. The full public transfer
+timed out after 256 MiB and cleaned staging. That acceptance stays open.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-mac-hub-v1.json)
+
+## 6 November 2026 — Plan exact Gemma BF16 KV bytes before opening
+
+The cold C query reuses the graph's cache and staging equations. Real Mac
+allocations match at 128/1, 384/16, and 512/32. The largest is 20.05 MB.
+Astra approves after 589 default and 708 Metal tests and all 44 native exports.
+Metal lint initially flagged helper placement and passed after relocation.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-kv-plan-v1.json)
+
+## 6 November 2026 — Choose the Mac Gemma window and KV limit before opening
+
+The signed native44 Mac build keeps a loaded limit of 512 and opens a selected
+384-token window with chunk16 and exactly 14.75 MB of KV. Rejected edits keep
+the active prefix and draft, and suspend/replay restores the selected settings.
+Astra approves after Swift6 checks. Full reload failed the unchanged headroom
+gate with 2.67 GB retained. Active replacement stays a separate task.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-window-open-v1.json)
+
+## 6 November 2026 — Prepare an empty Gemma session on the same Mac owner
+
+Typed planning shares model and codec once and checks both session budgets.
+The 384/16 candidate needs 124.06 MB incrementally. Exact and minus-one
+checks, cancellation and old-prefix preservation pass at 4.94 GB peak.
+Astra approves after 589 default and 708 Metal tests and the native45 build.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-live-transition-v1.json)
+
+## 6 November 2026 — Apply Gemma context and KV changes on the resident model
+
+Mac Settings keeps the model and codec while resizing 384/16 to 256/8.
+KV drops from 14.75 MB to 9.73 MB. Rejection preserves the prefix; accepted
+changes keep the conversation and draft and reset KV. The real Swift
+process peaks at 4.96 GB. AppKit, dense regressions, both iOS SDKs and Astra
+pass. A late corrupted PLE row preserves 15 committed tokens.
+[Settings evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-live-window-v1.json)
+[PLE evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-late-ple-v1.json)
+
+## 6 November 2026 — Qualify the last-row Gemma prefill candidate for timing
+
+The test-only path matches real last logits and all KV bits through 512
+positions. Tiny schedules and fault controls pass with 590 default and
+709 Metal tests. Astra approves the candidate and timing runner. Paired
+measurements and multirow failure coverage precede runtime selection.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-g2-candidate-v1.json)
+
+## 6 November 2026 — Reconcile current Mac model and package evidence
+
+Seven Mac profiles, four iOS profiles and 45 exports per arm64 slice match the
+checked evidence. The audit corrects the Q8 rejection link and identifies
+transient Gemma Settings. Astra and 49 local links pass. Full public target
+transfer and deferred physical iPhone checks keep M8 open.
+[Evidence](../../../benchmarks/results/2026-11-06-m8-mac-audit-v2.json)
+
+## 6 November 2026 — Authenticate the official Gemma assistant
+
+The complete 157.6 MB shard passes its pinned SHA-256. The importer checks
+49 BF16 tensors and every canonical token ID. The real ordered head matches
+4,096 independently selected IDs. Astra, 591 default and 710 Metal tests
+pass. Scalar proposal, target verification and app eligibility stay separate.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-official-assistant-import-v1.json)
+
+## 6 November 2026 — Retain last-row prefill on Mac Gemma BF16
+
+For 384 input and 128 output tokens, paired prefill time falls 60.9% and
+60.8%, and complete request time falls 27.7% and 28.1%. Both controls improve
+and all 78 pairs match token IDs. Timed physical peak is 4.92 GB. Multirow
+rollback/retry, native and Swift Chat, strict checks and Astra pass. The
+signed Mac package is selected for the exact official BF16 profile.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-g2-retention-v1.json)
+
+## 6 November 2026 — Run a scalar Gemma assistant proposal over committed KV
+
+The official BF16 assistant borrows chronological target KV and uses shared
+CPU numerical blocks. At real Mac position 14, all 4,096 IDs and logits and
+1,536 projected hidden values match the independent staged FP32 reference.
+Peak physical memory is 5.07 GB. Strict checks and Astra pass.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-official-assistant-scalar-v1.json)
+
+## 6 November 2026 — Verify only the accepted Gemma target prefix
+
+The staged verifier keeps the original proposal stride and publishes the
+accepted KV, logits and target hidden. Corrections and stops remain pending.
+Real cancellation and serial parity pass, as do the two-head wrap case,
+G2 regression, strict checks and Astra. The speculative route is test-only.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-strict-shared-kv-v1.json)
+
+## 6 November 2026 — Screen strict Gemma assistant generation on Mac
+
+All ten pairs preserve exact tokens, stops, history, logits and KV. Median
+request time falls 21.4% at 128+32 and rises 5.9% at 384+32. Peak physical
+memory is 5.18 GB. Strict checks and Astra pass. Production retention awaits
+the frozen longer-output primary and guard.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-assistant-mtp-pilot-v1.json)
+
+## 6 November 2026 — Resume accepted Gemma download ranges
+
+The exact official Mac shard uses 4 MiB ranges. A transient failure retries
+from the accepted prefix within the original three-attempt bound. Swift
+controls verify exact assembly, malformed suffix rejection and cleanup. The
+signed Mac build and Astra pass. Complete public transfer remains open.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-bf16-resumable-ranges-v1.json)
+The older 4 MiB trial assembled 2.01 GB before its deadline and cleared staging.
+[Trial](../../../benchmarks/results/2026-11-06-gemma-bf16-public-4m-v1.json)
+
+## 6 November 2026 — Keep Gemma assistant generation experimental
+
+At 128+128, median complete request time is 34.99 seconds ordinary and
+27.54 seconds assisted. At 384+128, it is 50.57 and 61.05 seconds. All 26
+pairs preserve exact tokens and state and peak physical memory is 5.18 GB.
+Astra approves stopping at the failed guard. Ordinary G2 remains selected.
+[Decision](../../../benchmarks/results/2026-11-06-gemma-assistant-mtp-retention-v1.json)
+
+## 6 November 2026 — Select the source-matched Mac package
+
+The current checked source produces 45 exports per arm64 slice and a signed
+Mac app with retained G2 prefill and scoped Gemma range resumption. Six
+Swift checks and Astra pass. The previous native package remains available.
+[Audit](../../../benchmarks/results/2026-11-06-m8-mac-audit-v3.json)
+
+## 6 November 2026 — Keep exact Gemma download progress across attempts
+
+The Mac transport checkpoints contiguous bytes under an exclusive lease and
+validates the local digest before resuming. A fully verified shard survives
+a later file failure. Snapshot publication retires the checkpoint. The
+two-hour per-attempt limit, final SHA and staging cleanup remain enforced.
+Swift checks, the signed app and Astra pass.
+[Evidence](../../../benchmarks/results/2026-11-06-gemma-durable-public-checkpoint-v1.json)
+
+## 7 November 2026 — Qualify the public official Gemma Mac journey
+
+The six-file 10.28 GB snapshot downloaded through the production Hub, verified
+and published. A byte-verified 772 MB prefix from an earlier public attempt
+seeded four durable attempts. Online Chat and Stop recovery passed. A separate
+network-denied process reopened the same snapshot, chatted and rejected missing
+and corrupt cache controls. Observed physical peaks were 4.92 GB online and
+4.92 GB offline. The controller journey and signed Mac build have separate
+evidence. Astra approved the public journey record. Physical iPhone validation
+stays deferred.
+[Public journey](../../../benchmarks/results/2026-11-07-gemma-public-resume-mac-v1.json)

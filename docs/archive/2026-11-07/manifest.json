@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-07",
+  "source_commit": "338c4e5b7a3a8a83b600a0cb400c1d0e6231faaa",
+  "purpose": "Preserve complete working-document snapshots while reducing routinely loaded context. Only relative Markdown link destinations are rebased.",
+  "files": [
+    {
+      "source": "TODO.md",
+      "archive": "docs/archive/2026-11-07/TODO.md",
+      "source_sha256": "15d78fbdf87edd60de885d6ba0e90287229ba5abd243d55fb2848bf6ded7440d",
+      "archive_sha256": "b182b2509b7eb4f32a169bc5666b4b22b9daace8b04e430232154c55f092ce0e",
+      "source_bytes": 334605,
+      "archive_bytes": 336965,
+      "rebased_links": 525
+    },
+    {
+      "source": "PLAN.md",
+      "archive": "docs/archive/2026-11-07/PLAN.md",
+      "source_sha256": "648e2067c6c06a925274661c3969f916374bff63c3ce68c3574c7720e04176db",
+      "archive_sha256": "cb8dc1520a89ed17021c5afb2f0aca2fe001e88a5e0dc261aada039b71c92c45",
+      "source_bytes": 203098,
+      "archive_bytes": 203875,
+      "rebased_links": 273
+    },
+    {
+      "source": "docs/improvements.md",
+      "archive": "docs/archive/2026-11-07/improvements.md",
+      "source_sha256": "096e1247d21d5adcda3e70f77de6704e4fc67314cceea1255a9dc8d2ce8742c3",
+      "archive_sha256": "e759bcbe54956a52ebc44841f4e4ebeb1d0ab7a4d82d1fb2e7e37ada5576a840",
+      "source_bytes": 776013,
+      "archive_bytes": 781332,
+      "rebased_links": 927
+    }
+  ]
+}

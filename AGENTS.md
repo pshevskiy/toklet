@@ -14,6 +14,9 @@ commit completed tasks and keep [docs/improvements.md](docs/improvements.md) cur
 
 - Keep implementation context compact: read the current TODO task, relevant plan
   criteria and targeted code/diffs; link completed history rather than repeating it.
+- Read `docs/archive/` only when a current task needs specific historical evidence.
+  Exclude it from broad content searches; open raw artifacts by their linked
+  evidence paths instead of recursively inventorying the artifact directory.
 - Submit each code task to Astra with its diff, invariants and check results in
   one review request. Follow up for fixes or unresolved findings; avoid separate
   routine source, runner and publication review rounds.
