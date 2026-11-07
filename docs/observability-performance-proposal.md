@@ -5,6 +5,13 @@
 [M9](next-performance-milestone.md); it does not change selected kernels,
 qualification, memory budgets or the deferred iPhone scope.
 
+The selected [model/metric plan](model-observability-plan.md) now sets delivery
+priority: **observability first on Gemma 4 E2B**, then measured performance,
+Qwen3.5-4B and Qwen3.5-9B. It defines metric units/boundaries and the preferred
+uncensored MLX candidates, plus five strictly under-4B models. The earlier O1
+draft remains stopped before integration/checks/review; the plan is not a
+completion or support claim.
+
 **Recommendation:** make every request explain its cost, then use that evidence
 to remove unnecessary work and qualify the best existing optimization for the
 actual Mac application. Start with a small request summary and one matched
@@ -140,14 +147,16 @@ actual selected runtime and from observed command/dispatch counts.
 
 Keep this as a description derived from existing concrete plans. It does not
 require a general graph interpreter, dynamic kernel registry or JIT. Cache
-variant selection outside inner loops. Initially support the same dense MLX
-route as the selected request-summary pilot; list other families as unsupported.
+variant selection outside inner loops. Initially describe the selected Gemma 4
+BF16 request-summary route using its concrete graph and owners. Qualify Qwen3.5
+explanations as those routes arrive; list unsupported fields/routes explicitly.
 
 For profiles, attach stable operation role/layer/shape identifiers when encoding
 instead of inferring them later from event order and a hardcoded layer count.
 Preserve bounded counter storage and clock calibration. A trace exporter can then
 show host encoding, GPU work and readback on aligned lanes, with request/chunk
-IDs and a coverage manifest. Extend Gemma/MoE only with their concrete captures.
+IDs and a coverage manifest. Do not reuse dense 24-layer attribution for Gemma,
+Qwen3.5 hybrid or MoE graphs; each needs its concrete bounded captures.
 
 Add a small offline report over exported records: slowest comparable requests,
 prefill versus decode cost, cache/replay cost, host-visible bytes, allocation
@@ -158,13 +167,14 @@ external consumers of the versioned export if multi-device collection is needed.
 
 ## 4. Performance experiments, selected by observed cost
 
-The first performance candidate should be **managed adoption of the existing
-affine tile for its qualified checkpoint**, after a current baseline and the
-missing app/context checks. The earlier gain is evidence of potential, not proof
-for the app's chunk-32 and capacity-transition configurations. The current
-managed dense route selects FullLogits. Separately measure whether qualifying
-GreedyToken for ordinary Chat is more valuable; preserve full-logit/scoring
-consumers and update the actual resource/planning contract if that route changes.
+Choose the first performance change from **O1/O2 measurements on Gemma 4 E2B**,
+preserving the retained BF16/G2 route as reference. Candidate uncensored MLX
+weights and reduced precision need their own quality/admission checks. Apply the
+same measurement-first process to Qwen3.5-4B and then 9B; primitive availability
+does not establish hybrid model or app support. Existing Qwen2 affine-tile gains
+remain useful evidence for that exact checkpoint, not the next adoption task or
+a prediction for these new graphs. Qualify token-only readback only where the
+actual caller and resource/scoring contracts permit it.
 
 | Observed bottleneck | Bounded experiment | Evidence needed to retain |
 | --- | --- | --- |
@@ -196,15 +206,16 @@ These are proposed tasks, not implementation completion claims. Use the existing
 
 | Order | Concrete delivery | Exit condition |
 | --- | --- | --- |
-| O1 | Freeze summary fields and adapt one managed Qwen2 Mac request path, with disabled/summary modes and bounded export | Success, pre-start rejection, execution/output failure, cancellation and replay summaries agree with authoritative session state; clock/memory meanings verified; overhead target qualified or mode remains opt-in |
-| O2 | Matched baseline and small offline comparison report using existing workers | Separate app and numerical tracks; exact manifests, raw samples, profile parity and explicit missing observations; identify one actionable cost |
+| O1 | Implement the [metric contract](model-observability-plan.md#metric-contract) on managed Gemma 4 E2B BF16 Mac, with disabled/summary modes and bounded export | Success, pre-start rejection, execution/output failure, cancellation and replay summaries agree with authoritative session state; clock/memory meanings verified; overhead target qualified or mode remains opt-in |
+| O2 | Matched Gemma baseline and small offline comparison report before optimization; repeat for Qwen3.5-4B and 9B when qualified | Separate app and numerical tracks; exact manifests, raw samples, profile parity and explicit missing observations; identify one actionable cost |
 | P1 | One existing-route adoption or measured kernel/caller experiment | Frozen primary metric, unchanged correctness/quality/state/memory gates, independent confirmation; retain or reject explicitly |
 | O3 | Extend runtime explanation and stable profile attribution for that route | Predicted versus actual dispatch/owner inventory checked; unsupported routes and bounded-capture overflow explicit |
 | R1 | Reusable regression job for the selected route | Comparable baselines admitted by identity; failures/noisy results reported separately; artifact links and accepted revision retained |
 
 O3 can move earlier if O2 cannot identify the cost with existing instrumentation.
 This avoids making a broad observability rewrite a prerequisite for one useful
-optimization. Later model families need explicit scope and owners.
+optimization. The [selected delivery order](model-observability-plan.md#delivery-order)
+governs new model work; every family needs explicit scope and owners.
 
 Use the existing 128/512/1,024-input, 128-output numerical matrix only where
 admitted. Keep the historical Qwen2 capacity-1,152/chunk-128/FullLogits benchmark

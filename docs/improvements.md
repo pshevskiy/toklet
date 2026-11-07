@@ -60,6 +60,16 @@ qualification scope live in [TODO](../TODO.md); acceptance policy is in
 
 ## Latest documentation work
 
+The [selected model plan](model-observability-plan.md) now makes observability
+the first deliverable: defined latency/throughput/memory/state/outcome metrics,
+bounded collection and paired overhead checks before optimization. Order:
+Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B; five strictly under-4B candidates follow.
+Uncensored MLX is preferred with per-artifact quality/admission gates; conversion
+gaps and an over-budget F32 derivative are explicit. Content/link/whitespace
+[checks pass](../artifacts/model-observability-plan-2026-11-07/checks.json), with
+binding acceptance policy unchanged. This adds no qualified runtime capability
+and does not resume O1.
+
 The user stopped O1 before integration/checks/Astra review and requested
 [current model research](models-under-30b-2026-11-07.md). The ten-model shortlist
 distinguishes total from active parameters and capability from local memory fit.

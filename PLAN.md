@@ -19,9 +19,34 @@ Current extension contracts:
 - [M9 measured performance](docs/next-performance-milestone.md) and
   [Mac affine decision](docs/m9-mac-affine-decision.md).
 - [Observability/performance proposal](docs/observability-performance-proposal.md):
-  research/design only; implementation has not started.
+  design rationale; partial O1 draft was stopped before integration/checks/review.
+- [Selected model and metric plan](docs/model-observability-plan.md): observability
+  first, then measured performance on Gemma 4 E2B, Qwen3.5-4B and Qwen3.5-9B.
 - [Gemma3 native conformance](docs/gemma3-native-conformance.md): preserve historic
   fidelity rejections and original adoption-quality gates.
+
+## Current model priority and observability gates
+
+1. **Gemma 4 E2B first:** O1 request-summary metrics and O2 matched baseline on
+   the existing qualified BF16 Mac route; then one measured optimization and
+   independent evaluation of the preferred uncensored MLX artifact.
+2. **Qwen3.5-4B next, then Qwen3.5-9B:** prefer qualified uncensored MLX affine
+   4-bit artifacts. These replace Qwen2.5-1.5B as forward adoption targets;
+   preserve its historical regression evidence. Inspect real graph/packing and
+   qualify each artifact before ordinary app adoption.
+3. **Under-4B track:** MiniCPM5-2B, LFM3-1.7B, Granite 4.2 3B, Ministral 3 3B
+   Reasoning and Qwen3.5-2B. Exact total counts, ranking rationale, inspected MLX
+   variants and conversion gaps are in the [shortlist](docs/model-observability-plan.md#five-candidates-strictly-below-4b-total-parameters).
+
+The [metric contract](docs/model-observability-plan.md#metric-contract) is the
+first implementation deliverable: request/phase timings, event/visible/answer
+TTFT, prefill/decode throughput, state/cache work, owned/observed memory,
+outcomes/cancellation, execution counters and telemetry completeness/overhead.
+Collect baselines before optimization; unknown observations stay explicit.
+Qualify summary overhead at ≤1% median TTFT/request time or keep it opt-in.
+Keep the existing ≥5% default performance retain gate and 6 GiB working-set
+ceiling. No model download, conversion or implementation is claimed by this
+planning update; interrupted O1 code remains stopped.
 
 The initial settings below describe the foundation. Later selected models and
 routes use their own authenticated configuration and scoped acceptance evidence;

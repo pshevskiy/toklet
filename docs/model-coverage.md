@@ -7,6 +7,11 @@ still authorize loading. Other Hugging Face results remain discoverable without
 becoming executable. Model declarations are shared input/history/output windows,
 not tokens per second or a promise that the engine can use that whole window.
 
+The [forward model/metric plan](model-observability-plan.md) prioritizes Gemma 4
+E2B, Qwen3.5-4B and Qwen3.5-9B plus a smaller-model research track. It prefers
+uncensored MLX candidates but adds no entries to this qualified-coverage table;
+existing Qwen2.5-1.5B evidence remains valid in its recorded scope.
+
 | Pinned artifact (revision prefix) | Backend / route | Declared positions | Qualified or tested scope | Ordinary app |
 | --- | --- | ---: | --- | --- |
 | Qwen2.5-0.5B-Instruct-8bit (`6474d4c`) | Native Metal dense, managed | 32,768 | Mac load/session growth and rendered Chat through1,024; larger values require separate qualification | Mac/iOS catalog; next-load upper512 or1,024, initial KV512 |

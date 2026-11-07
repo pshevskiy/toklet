@@ -28,6 +28,11 @@ are outside this shortlist; none is admitted solely through an active count.
 
 ## Implications for Toklet
 
+The subsequent [selected model/metric plan](model-observability-plan.md) takes
+priority over this survey ranking: Gemma 4 E2B first, then Qwen3.5-4B and 9B,
+with observability before optimization and a preference for qualified uncensored
+MLX artifacts. The suggestions below remain research context.
+
 - Quality target for a larger machine: Qwen3.8-27B.
 - Performance-first MoE experiments: Gemma 4 26B-A4B and LFM2.5-24B-A2B.
 - First new candidates for the current Mac: Qwen3.5-4B, then Qwen3.5-9B;
