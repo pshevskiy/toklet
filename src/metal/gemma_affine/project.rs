@@ -38,6 +38,16 @@ pub(super) struct Observation<'a> {
     pub attribution: TileAttribution,
 }
 
+// OR cannot cancel differences, so zero is equivalent to every tail word
+// matching the sentinel. Integer reduction permits compiler vectorization while
+// preserving complete guard/inactive-capacity coverage and checked slice bounds.
+fn sentinel_tail_unchanged(words: &[u32], active: usize) -> bool {
+    words[active..]
+        .iter()
+        .fold(0_u32, |different, &word| different | (word ^ SENTINEL))
+        == 0
+}
+
 fn elapsed(observation: &Option<Observation<'_>>) -> f64 {
     observation.as_ref().map_or(0., |o| o.trace.elapsed())
 }
@@ -273,15 +283,21 @@ fn execute(
         if command.status() != MTLCommandBufferStatus::Completed {
             return Err(Error::Completion);
         }
-        let tail = |words: &[u32], active| words[active..].iter().all(|&v| v == SENTINEL);
-        let guarded = |part: ImmutableBuffer<'_>| part.buffer.with_slice(|s| tail(s, part.words));
+        let guarded = |part: ImmutableBuffer<'_>| {
+            part.buffer
+                .with_slice(|s| sentinel_tail_unchanged(s, part.words))
+        };
         if !guarded(weights.coefficients)
             || weights
                 .affine_metadata
                 .is_some_and(|parts| !parts.into_iter().all(guarded))
-            || !buffers.input.with_slice(|s| tail(s, input.len()))
-            || !buffers.output.with_slice(|s| tail(s, output.len()))
-            || !buffers.status.with_slice(|s| tail(s, 1))
+            || !buffers
+                .input
+                .with_slice(|s| sentinel_tail_unchanged(s, input.len()))
+            || !buffers
+                .output
+                .with_slice(|s| sentinel_tail_unchanged(s, output.len()))
+            || !buffers.status.with_slice(|s| sentinel_tail_unchanged(s, 1))
         {
             return Err(Error::Options(
                 "Gemma affine guard/inactive capacity changed",
@@ -311,4 +327,78 @@ fn execute(
         *buffers.pending = None;
         Ok(())
     })
+}
+
+#[cfg(test)]
+mod guard_tests {
+    use super::{SENTINEL, sentinel_tail_unchanged};
+    fn scalar_reference(words: &[u32], active: usize) -> bool {
+        for &word in &words[active..] {
+            if word != SENTINEL {
+                return false;
+            }
+        }
+        true
+    }
+    #[test]
+    fn all_bits_positions_and_active_boundaries_match_scalar_reference() {
+        for len in [
+            0, 1, 2, 3, 4, 7, 15, 16, 17, 31, 32, 33, 63, 64, 65, 127, 128, 129, 257,
+        ] {
+            for active in 0..=len {
+                let mut words = vec![SENTINEL; len];
+                assert!(sentinel_tail_unchanged(&words, active));
+                for index in 0..len {
+                    for bit in 0..32 {
+                        words[index] ^= 1 << bit;
+                        assert_eq!(sentinel_tail_unchanged(&words, active), index < active);
+                        assert_eq!(
+                            sentinel_tail_unchanged(&words, active),
+                            scalar_reference(&words, active)
+                        );
+                        words[index] ^= 1 << bit;
+                    }
+                }
+            }
+        }
+    }
+    #[test]
+    fn identical_corruptions_in_two_tail_words_never_cancel() {
+        for active in 0..32 {
+            for bit in 0..32 {
+                let mut words = [SENTINEL; 65];
+                words[active] ^= 1 << bit;
+                words[64] ^= 1 << bit;
+                assert!(!sentinel_tail_unchanged(&words, active));
+                assert_eq!(
+                    sentinel_tail_unchanged(&words, active),
+                    scalar_reference(&words, active)
+                );
+            }
+        }
+    }
+    #[test]
+    fn real_capacity_tails_preserve_all_word_alignments_and_last_word() {
+        for len in [393_223, 262_151] {
+            for offset in 0..8 {
+                let mut storage = vec![SENTINEL; len + 8];
+                let words = &mut storage[offset..offset + len];
+                for active in [0, 1, 1536, 8192, 12288, len - 7, len] {
+                    assert!(sentinel_tail_unchanged(words, active));
+                    if active == len {
+                        continue;
+                    }
+                    for index in [active, active + (len - active) / 2, len - 1] {
+                        words[index] ^= u32::MAX;
+                        assert!(!sentinel_tail_unchanged(words, active));
+                        assert_eq!(
+                            sentinel_tail_unchanged(words, active),
+                            scalar_reference(words, active)
+                        );
+                        words[index] ^= u32::MAX;
+                    }
+                }
+            }
+        }
+    }
 }

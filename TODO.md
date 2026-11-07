@@ -20,9 +20,17 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current task: **measure the guard-validation performance hypothesis**, then
-retain/reject it under the unchanged5% gate. The full selected goal stays active.
-[Predeclared hypothesis](artifacts/o3-gemma-runtime-2026-11-07/guard-validation-hypothesis.json).
+Current task: **evaluate the preferred uncensored Gemma MLX artifact's format and
+quality gates**, then continue Qwen3.5-4B. The full selected goal stays active.
+
+- [x] Exact guard reduction retained on recorded Mac BF16/G2 cases: two primary
+  request reductions25.0–26.6%;512 matched deeper decode-state pairs bit-identical.
+  Sustained268/358 requests pass over ten minutes each (26.3% lower median).
+  Fresh604CPU/729Metal tests, strict Clippy, six GPU controls, three native slices/
+  46exports and Mac C smoke pass. Astra approves; all guard words remain checked,
+  with no numerical/shader/allocation change or tolerance relaxation.
+  [Scope](docs/gemma-guard-validation.md),
+  [checks/review/commit](artifacts/gemma-guard-validation-2026-11-08/publication-checks.json).
 
 - [x] O3 selected BF16/G2 explanation and bounded profile complete: cold/live
   inventory, full-logit/state/fault/overflow controls,604CPU/726Metal tests,
@@ -38,14 +46,14 @@ retain/reject it under the unchanged5% gate. The full selected goal stays active
 
 Earlier release-cache reuse and an incorrect pending-logit test assumption were
 caught, retained and corrected before final checks/measurements. No native model
-format or numerical tolerance was relaxed. First diagnostic decode identifies
-validation/copy as a candidate cost, not an accepted optimization.
+format or numerical tolerance was relaxed. O3 identified validation/copy cost;
+the exact guard reduction above is now retained in its measured scope.
 
 UI lab remains paused: third capture has13 exact trials but25 invalid callbacks;
 fourth interrupted before reference verification. It remains unqualified with
 capture/Astra gates open; [UI evidence](artifacts/o2-ui-frames-2026-11-07).
-After O3, evaluate measured performance hypotheses before further model breadth;
-keep the full selected goal active and iPhone runtime deferred.
+The first measured performance change is retained. Continue preferred Gemma
+MLX artifact evaluation before Qwen3.5 breadth; iPhone runtime remains deferred.
 
 O2.B2.A bounded Send/preparation/publication correlation is reviewed and delivered
 in the existing summary ring; no lifecycle/render conflation.
@@ -149,6 +157,7 @@ Preserve these rejected or restricted results:
 
 | Date | Result and checks | Evidence / next action |
 | --- | --- | --- |
+| 2026-11-08 | Exact guard reduction retained:25.0–26.6% primary/26.3% sustained request reduction;512 deeper bitwise pairs and626 sustained requests pass. Required CPU/Metal/GPU/native checks and Astra approval pass;6GiB preserved. | [Scope](docs/gemma-guard-validation.md), [checks/review/commit](artifacts/gemma-guard-validation-2026-11-08/publication-checks.json); next preferred Gemma MLX format/quality evaluation. |
 | 2026-11-07 | O2.B2.A bounded UI publication complete: six real Gemma controls, 104 paired requests across UI/headless tracks, fresh strict Swift/app checks and 29 portable tests pass. Astra approves state/count join fix; timing captures recompute unchanged. Both 1% overhead bounds remain unqualified/default-disabled. | [Scope](docs/o2-ui-publication.md), [result](benchmarks/results/2026-11-07-o2-ui-publication-v1.json), [checks/commit](artifacts/o2-ui-publication-2026-11-07/checks.json); visible-frame/O3 remain open. |
 | 2026-11-07 | O2.B1 numerical coverage complete: strict Swift/new Python and reused production gates pass; two batches plus 601 seconds sustained, max lifetime peak 4.924 GB. Astra approves. Earlier counter-assumption/interference run is superseded by fresh captures; no quality gate changed. | [Scope](docs/o2-gemma-workloads.md), [result](benchmarks/results/2026-11-07-o2b-gemma-workloads-v1.json), [checks/commit](artifacts/o2b-gemma-workloads-2026-11-07/checks.json); next UI/O3. |
 | 2026-11-07 | R1 offline regression screening complete: comparable frozen identity/work, independent cohorts, explicit noisy/failure receipts and named portable CI. Local17 tests/Astra pass; no runtime or optimization qualification. O2.B1 corrected suite running. | [Job](docs/gemma-regression-job.md), [checks/commit](artifacts/r1-gemma-regression-2026-11-07/checks.json); next O2.B1 completion, then UI/O3. |

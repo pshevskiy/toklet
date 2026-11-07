@@ -1,0 +1,163 @@
+{
+  "status": "retained_astra_approved",
+  "retained": true,
+  "base": "772247ef4018ad72a9e3d22c0db89320fc7db187",
+  "hardware": "Apple M1 Pro16GiB",
+  "model_revision": "70af34e20bd4b7a91f0de6b22675850c43922a03",
+  "source_change": "Same-word exact OR-of-XOR sentinel predicate; no numerical/kernel/allocation changes",
+  "primary": [
+    {
+      "cohort": 1,
+      "request_reduction_percent": 26.591114467814602,
+      "ttft_reduction_percent": 16.736990304509636
+    },
+    {
+      "cohort": 2,
+      "request_reduction_percent": 25.049335174093034,
+      "ttft_reduction_percent": 14.830513550547398
+    }
+  ],
+  "secondary": [
+    {
+      "cohort": 1,
+      "input": 128,
+      "outputs": 128,
+      "phases": {
+        "prefill": {
+          "baseline_seconds": 2.946401959,
+          "candidate_seconds": 2.660349,
+          "reduction_percent": 9.70855175161116
+        },
+        "decode": {
+          "baseline_seconds": 32.76291279,
+          "candidate_seconds": 24.391736171,
+          "reduction_percent": 25.550770386798682
+        }
+      },
+      "all_logit_bits_match": true
+    },
+    {
+      "cohort": 1,
+      "input": 384,
+      "outputs": 128,
+      "phases": {
+        "prefill": {
+          "baseline_seconds": 12.669877082,
+          "candidate_seconds": 11.883066164,
+          "reduction_percent": 6.210091170638233
+        },
+        "decode": {
+          "baseline_seconds": 38.394950336,
+          "candidate_seconds": 29.764708885,
+          "reduction_percent": 22.47754294633918
+        }
+      },
+      "all_logit_bits_match": true
+    },
+    {
+      "cohort": 2,
+      "input": 128,
+      "outputs": 128,
+      "phases": {
+        "prefill": {
+          "baseline_seconds": 2.909886625,
+          "candidate_seconds": 2.7024179999999998,
+          "reduction_percent": 7.129783793552447
+        },
+        "decode": {
+          "baseline_seconds": 32.950319496,
+          "candidate_seconds": 24.137157794,
+          "reduction_percent": 26.74681713805498
+        }
+      },
+      "all_logit_bits_match": true
+    },
+    {
+      "cohort": 2,
+      "input": 384,
+      "outputs": 128,
+      "phases": {
+        "prefill": {
+          "baseline_seconds": 12.708848332,
+          "candidate_seconds": 11.80565271,
+          "reduction_percent": 7.1068250907190045
+        },
+        "decode": {
+          "baseline_seconds": 38.646080085,
+          "candidate_seconds": 29.849395625,
+          "reduction_percent": 22.762164857735023
+        }
+      },
+      "all_logit_bits_match": true
+    }
+  ],
+  "required": {
+    "cpu": {
+      "passed": 604,
+      "failed": 0,
+      "ignored": 32
+    },
+    "metal": {
+      "passed": 729,
+      "failed": 0,
+      "ignored": 288
+    }
+  },
+  "native_slices": 3,
+  "c_exports_each": 46,
+  "sustained": {
+    "passed": true,
+    "runs": [
+      {
+        "variant": "baseline",
+        "requests": 268,
+        "wall_seconds": 601.500009042,
+        "requests_per_second": 0.4455527780071684,
+        "caller_seconds": {
+          "median": 2.2167000000000003,
+          "iqr": 0.02918645774999984,
+          "minimum": 2.182828459,
+          "maximum": 2.8159585
+        },
+        "ttft_seconds": {
+          "median": 0.39689716649999995,
+          "iqr": 0.00391924999999993,
+          "minimum": 0.3917815,
+          "maximum": 0.582407375
+        },
+        "peak_bytes": 4920676648,
+        "periodic_host_samples": 10
+      },
+      {
+        "variant": "candidate",
+        "requests": 358,
+        "wall_seconds": 600.544316417,
+        "requests_per_second": 0.596125864841947,
+        "caller_seconds": {
+          "median": 1.6327823545,
+          "iqr": 0.0356687600000003,
+          "minimum": 1.5753685,
+          "maximum": 2.153796042
+        },
+        "ttft_seconds": {
+          "median": 0.3342207705,
+          "iqr": 0.004072010499999945,
+          "minimum": 0.32872125,
+          "maximum": 0.525788708
+        },
+        "peak_bytes": 4922085696,
+        "periodic_host_samples": 10
+      }
+    ],
+    "request_reduction_percent": 26.3417533044616,
+    "scope": "One at-least600second controlled stability run per variant after independent primary confirmation. Exact Reset work; no sustained tail/energy/UI or broader-model qualification."
+  },
+  "astra": {
+    "status": "approved",
+    "reviewer": "/root/astra_o1_review",
+    "evidence": "artifacts/gemma-guard-validation-2026-11-08/astra-final-review.json"
+  },
+  "evidence_root": "artifacts/gemma-guard-validation-2026-11-08",
+  "scope": "Recorded Mac BF16/G2 engine cases only; no UI/tail/energy/model adoption/cross-engine claim",
+  "publication": "artifacts/gemma-guard-validation-2026-11-08/publication-checks.json"
+}

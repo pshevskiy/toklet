@@ -16,6 +16,8 @@ mod engine_compare;
 mod g2;
 #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
 mod g3;
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+mod guard_timing;
 mod lifecycle;
 #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
 mod profile;
