@@ -8,6 +8,7 @@ pub(crate) struct Prepared {
     before: [u64; 7],
     plan: TextPlan,
     table: Table,
+    expected_sha256: &'static str,
 }
 
 impl Prepared {
@@ -18,6 +19,28 @@ impl Prepared {
             before,
             plan,
             table,
+            expected_sha256: CONTAINER_SHA256,
+        })
+    }
+
+    #[cfg(test)]
+    pub(crate) fn modified_parent(
+        file: File,
+        config: &[u8],
+        available: usize,
+    ) -> Result<Self, Error> {
+        let (before, plan, table) = read_plan_with(
+            &file,
+            config,
+            available,
+            super::super::modified_parent::inspect,
+        )?;
+        Ok(Self {
+            file,
+            before,
+            plan,
+            table,
+            expected_sha256: super::super::modified_parent::CONTAINER_SHA256,
         })
     }
 
@@ -49,7 +72,8 @@ impl Prepared {
     where
         E: From<Error>,
     {
-        self.deliver_pinned(source_bytes, CONTAINER_SHA256, receive)
+        let expected = self.expected_sha256;
+        self.deliver_pinned(source_bytes, expected, receive)
     }
 
     fn deliver_pinned<E>(
@@ -148,6 +172,36 @@ mod tests {
     use super::{super::tests::TestFile, *};
     use crate::mlx::gemma4::{Dtype, layer_plans};
 
+    #[test]
+    fn modified_parent_preparation_keeps_a_distinct_payload_pin() {
+        use super::super::super::modified_parent as parent;
+        let location = TestFile::new();
+        let file = std::fs::OpenOptions::new()
+            .read(true)
+            .write(true)
+            .create_new(true)
+            .open(location.path())
+            .unwrap();
+        file.set_len(super::super::super::CONTAINER_BYTES).unwrap();
+        let header =
+            include_bytes!("../../../../../tests/fixtures/gemma-unquantized-header-v1/header.json");
+        file.write_all_at(&(header.len() as u64).to_le_bytes(), 0)
+            .unwrap();
+        file.write_all_at(header, 8).unwrap();
+        let prepared =
+            Prepared::modified_parent(file.try_clone().unwrap(), parent::CONFIG, usize::MAX)
+                .unwrap();
+        assert_eq!(prepared.expected_sha256, parent::CONTAINER_SHA256);
+        assert_ne!(prepared.expected_sha256, CONTAINER_SHA256);
+        assert!(Prepared::new(file.try_clone().unwrap(), parent::CONFIG, usize::MAX).is_err());
+        let original =
+            include_bytes!("../../../../../tests/fixtures/gemma-unquantized-header-v1/config.json");
+        assert!(
+            Prepared::modified_parent(file.try_clone().unwrap(), original, usize::MAX).is_err()
+        );
+        assert!(Prepared::modified_parent(file, parent::CONFIG, 0).is_err());
+    }
+
     fn fixture() -> (TestFile, Prepared, Vec<u8>) {
         let location = TestFile::new();
         let base = super::super::super::HEADER_BYTES + 8;
@@ -190,6 +244,7 @@ mod tests {
                 before,
                 plan,
                 table: ple,
+                expected_sha256: CONTAINER_SHA256,
             },
             raw,
         )

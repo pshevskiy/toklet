@@ -19,6 +19,8 @@ mod attention_boundary;
 #[cfg(target_os = "macos")]
 mod bf16;
 mod context_probe;
+#[cfg(target_os = "macos")]
+mod heretic;
 mod loss_block;
 mod qat;
 mod task_controller;

@@ -185,6 +185,14 @@ impl<'weights> Norms<'weights> {
             positions,
         )?)
     }
+    /// Frozen loss/tasks only; does not change the public diagnostic capacity.
+    #[cfg(test)]
+    pub(crate) fn model_for_quality_probe(&self, positions: usize) -> HResult<Model<'_, 'weights>> {
+        if !(1..=1025).contains(&positions) {
+            return Err(Error::Options("Heretic quality probe limit1025").into());
+        }
+        self.model_for_limit(positions)
+    }
     fn matrix(&self, index: usize) -> Result<MatrixRef<'_, 'weights>> {
         if index >= self.source.slots.len() {
             return Err(Error::Options("Heretic matrix role outside source"));
@@ -273,34 +281,7 @@ impl<'weights> Norms<'weights> {
         last_row: bool,
     ) -> std::result::Result<GenerationSession<'model, 'a, 'weights, 'context>, session::Error>
     {
-        let create = || -> HResult<Backend<'a, 'weights, 'context>> {
-            self.check_model(model, options.memory_limit_bytes)?;
-            let raw = model
-                .planned_backend_session_bytes_for_capacity::<Backend<'a, 'weights, 'context>>(
-                    options.capacity,
-                    options.prefill_chunk_size,
-                )?;
-            let extra = GenerationSession::<'model, 'a, 'weights, 'context>::planned_wrapper_bytes(
-                options.capacity,
-            )?;
-            let required = add(model.model_bytes(), add(raw, extra)?)?;
-            admit(
-                add(
-                    required,
-                    Backend::minimum_bytes(self, options.prefill_chunk_size)?,
-                )?,
-                options.memory_limit_bytes,
-            )?;
-            let backend = Backend::new(
-                self,
-                context,
-                options.prefill_chunk_size,
-                subtract(options.memory_limit_bytes, required)?,
-            )?;
-            Ok(backend)
-        };
-        engine::generation::validate_options(model, options)?;
-        let backend = create().map_err(session::Error::from)?;
+        let backend = self.generation_backend(model, context, options)?;
         let mut session = engine::GenerationSession::with_backend(model, backend, options)?;
         if last_row {
             session.use_last_row_prefill();
@@ -316,8 +297,20 @@ impl<'weights> Norms<'weights> {
         after_projections: usize,
     ) -> std::result::Result<GenerationSession<'model, 'a, 'weights, 'context>, session::Error>
     {
+        let mut backend = self.generation_backend(model, context, options)?;
+        backend.test_fail_after = Some(after_projections);
+        let mut session = engine::GenerationSession::with_backend(model, backend, options)?;
+        session.use_last_row_prefill();
+        Ok(session)
+    }
+    fn generation_backend<'model, 'a, 'context>(
+        &'a self,
+        model: &'model Model<'a, 'weights>,
+        context: &'context HereticContext,
+        options: Options,
+    ) -> std::result::Result<Backend<'a, 'weights, 'context>, session::Error> {
         engine::generation::validate_options(model, options)?;
-        let create = || -> HResult<Backend<'a, 'weights, 'context>> {
+        let planned = || -> HResult<(usize, usize)> {
             self.check_model(model, options.memory_limit_bytes)?;
             let raw = model
                 .planned_backend_session_bytes_for_capacity::<Backend<'a, 'weights, 'context>>(
@@ -327,31 +320,34 @@ impl<'weights> Norms<'weights> {
             let extra = GenerationSession::<'model, 'a, 'weights, 'context>::planned_wrapper_bytes(
                 options.capacity,
             )?;
-            let required = add(model.model_bytes(), add(raw, extra)?)?;
-            admit(
-                add(
-                    required,
-                    Backend::minimum_bytes(self, options.prefill_chunk_size)?,
-                )?,
-                options.memory_limit_bytes,
-            )?;
-            let mut backend = Backend::new(
-                self,
-                context,
-                options.prefill_chunk_size,
-                subtract(options.memory_limit_bytes, required)?,
-            )?;
-            backend.test_fail_after = Some(after_projections);
-            Ok(backend)
+            Ok((
+                add(model.model_bytes(), add(raw, extra)?)?,
+                Backend::minimum_bytes(self, options.prefill_chunk_size)?,
+            ))
         };
-        let mut session = engine::GenerationSession::with_backend(
-            model,
-            create().map_err(session::Error::from)?,
-            options,
-        )?;
-        session.use_last_row_prefill();
-        Ok(session)
+        let (base, backend) = planned().map_err(session::Error::from)?;
+        // The aggregate session limit is absolute. Reject it with the typed
+        // session error before translating lower-level backend failures.
+        let remaining = generation_budget(base, backend, options.memory_limit_bytes)?;
+        Backend::new(self, context, options.prefill_chunk_size, remaining)
+            .map_err(session::Error::from)
     }
+}
+
+fn generation_budget(
+    base: usize,
+    backend: usize,
+    limit: usize,
+) -> std::result::Result<usize, session::Error> {
+    let required =
+        base.checked_add(backend)
+            .ok_or(session::Error::Model(crate::model::Error::Kernel(
+                crate::cpu::Error::SizeOverflow,
+            )))?;
+    if required > limit {
+        return Err(session::Error::MemoryBudget { required, limit });
+    }
+    Ok(limit - base)
 }
 
 pub struct Backend<'a, 'weights, 'context> {
@@ -451,5 +447,34 @@ impl<'a, 'weights> Operations<MatrixRef<'a, 'weights>> for Backend<'a, 'weights,
     fn memory(&self) -> std::result::Result<BackendMemory, crate::model::Error> {
         self.memory_report()
             .map_err(|_| crate::model::Error::InvalidConfig("Heretic scratch accounting overflow"))
+    }
+}
+
+#[cfg(test)]
+mod admission_tests {
+    use super::*;
+    #[test]
+    fn generation_budget_preserves_absolute_scope_and_exact_boundary() {
+        assert_eq!(generation_budget(100, 20, 120).unwrap(), 20);
+        assert_eq!(generation_budget(100, 20, 140).unwrap(), 40);
+        assert_eq!(generation_budget(100, 0, 100).unwrap(), 0);
+        assert_eq!(
+            generation_budget(100, 20, 119),
+            Err(session::Error::MemoryBudget {
+                required: 120,
+                limit: 119
+            })
+        );
+        assert_eq!(
+            generation_budget(100, 20, 0),
+            Err(session::Error::MemoryBudget {
+                required: 120,
+                limit: 0
+            })
+        );
+        assert!(matches!(
+            generation_budget(usize::MAX, 1, usize::MAX),
+            Err(session::Error::Model(_))
+        ));
     }
 }

@@ -6,6 +6,8 @@ use sha2::{Digest, Sha256};
 use std::{io::Read, sync::atomic::AtomicBool};
 
 #[cfg(target_os = "macos")]
+mod heretic;
+#[cfg(target_os = "macos")]
 mod official_bf16;
 mod qat;
 mod replay;

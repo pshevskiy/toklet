@@ -130,7 +130,7 @@ fn run_bf16_blocks(blocks: &[usize]) {
     );
 }
 
-fn score_blocks<M, B>(
+pub(super) fn score_blocks<M, B>(
     blocks: &[usize],
     session: &mut Session<'_, '_, M, B>,
     expected_allocated: usize,

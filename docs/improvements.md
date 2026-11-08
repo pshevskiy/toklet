@@ -174,3 +174,13 @@ against FP64/stagedFP32 under the original gate; no greedy mismatches. Required
 checks and combined Astra review pass with no findings; full held-out quality/adoption remain open.
 [Scope](gemma-heretic-fidelity.md),
 [checks/review/commit](../artifacts/gemma-heretic-quality-2026-11-08/publication-checks.json).
+
+G1.Cb quality probes and rejection decision complete; Astra approves.611CPU/745Metal,27Python,
+fmt/strictClippy, nine GPU controls, native52 three slices/46exports and both
+Mac C smokes pass. Both full1,025fidelity gates reject despite exact sampled
+IDs. Both10kNLL gates pass; isolated tasks score original52/modified50/
+quantized43 of100. Reject quantized adoption:9pp loss versus original,7pp
+versus parent exceed2pp. Both raw replays match; VM restoration verified.
+Public512/6GiB and gates unchanged; typed aggregate-budget preflight fixed.
+[Scope](gemma-heretic-quality-probes.md),
+[checks/review/commit](../artifacts/gemma-heretic-quality-probes-2026-11-08/publication-checks.json).

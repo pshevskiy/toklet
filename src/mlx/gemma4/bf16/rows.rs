@@ -169,6 +169,15 @@ fn read_plan(
     config: &[u8],
     available_bytes: usize,
 ) -> Result<([u64; 7], TextPlan, Table), Error> {
+    read_plan_with(file, config, available_bytes, inspect)
+}
+
+fn read_plan_with(
+    file: &File,
+    config: &[u8],
+    available_bytes: usize,
+    inspect: impl FnOnce(&[u8], &[u8], u64, ModalityPolicy) -> Result<TextPlan, Error>,
+) -> Result<([u64; 7], TextPlan, Table), Error> {
     let before = file_identity(file)?;
     if before[2] != CONTAINER_BYTES {
         return Err(invalid("Gemma4 BF16 source length differs"));

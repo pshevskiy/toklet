@@ -10,6 +10,9 @@ use std::collections::BTreeMap;
 
 pub mod execution;
 
+#[cfg(test)]
+pub(crate) mod modified_parent;
+
 #[cfg(unix)]
 pub mod rows;
 
@@ -62,7 +65,7 @@ impl TextPlan {
     }
 }
 
-/// Only the pinned official single-shard artifact can produce this text plan.
+/// Only the pinned official single-shard artifact can use this public inspector.
 /// Inspecting metadata neither reads nor authenticates the source payload.
 pub fn inspect(
     config: &[u8],
@@ -81,7 +84,18 @@ pub fn inspect(
     {
         return Err(invalid("Gemma4 BF16 pinned source metadata differs"));
     }
-    let document = crate::mlx::qwen::parse_json(config)?;
+    layout(
+        crate::mlx::qwen::parse_json(config)?,
+        header,
+        container_bytes,
+    )
+}
+
+fn layout(
+    document: serde_json::Value,
+    header: &[u8],
+    container_bytes: u64,
+) -> Result<TextPlan, Error> {
     if document["model_type"] != "gemma4"
         || document["architectures"] != json!(["Gemma4ForConditionalGeneration"])
         || !same_semantics(&document["text_config"], &expected_text_config())

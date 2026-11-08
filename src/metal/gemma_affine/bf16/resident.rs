@@ -49,6 +49,28 @@ impl Bf16Weights {
         available_bytes: usize,
     ) -> Result<Self> {
         let prepared = Prepared::new(file, config, available_bytes)?;
+        Self::load_prepared(context, prepared, available_bytes)
+    }
+
+    #[cfg(test)]
+    pub(crate) fn load_modified_parent_for_quality(
+        context: &Bf16Context,
+        file: File,
+        config: &[u8],
+        available_bytes: usize,
+    ) -> Result<Self> {
+        Self::load_prepared(
+            context,
+            Prepared::modified_parent(file, config, available_bytes)?,
+            available_bytes,
+        )
+    }
+
+    fn load_prepared(
+        context: &Bf16Context,
+        prepared: Prepared,
+        available_bytes: usize,
+    ) -> Result<Self> {
         let source_minimum = prepared.minimum_source_memory()?;
         let plan = prepared.plan();
         let gpu = &context.0.gpu;

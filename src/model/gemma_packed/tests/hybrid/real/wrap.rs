@@ -144,7 +144,7 @@ fn official_bf16_wrap(fixture: WrapFixture) {
     );
 }
 
-fn run_wrap<'model, 'weights, M, B>(
+pub(super) fn run_wrap<'model, 'weights, M, B>(
     model: &'model Model<'weights, M>,
     new_session: impl Fn() -> Session<'model, 'weights, M, B>,
     expected_allocated: usize,

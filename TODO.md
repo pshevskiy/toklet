@@ -20,8 +20,8 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current task: **G1.C independent native fidelity and original/modified/quantized
-held-out quality gates**, then explicitly adopt/reject and continue Qwen3.5-4B.
+Current task: **Qwen3.5-4B independent actual-source fidelity**, then GPU,
+codec/quality and the same request metrics before optimization.
 The full selected goal stays active.
 
 - [x] G1.Ca independent mixed-source fidelity and parent pinning: all1,094
@@ -32,10 +32,17 @@ The full selected goal stays active.
   Astra approves scoped prerequisite with no findings. No full quality/adoption.
   [Scope](docs/gemma-heretic-fidelity.md),
   [checks/review/commit](artifacts/gemma-heretic-quality-2026-11-08/publication-checks.json).
-- [ ] G1.Cb qualify separately pinned modified-BF16 and test-only1,025loss/
-  567task probes, then unchanged10kNLL/100task original/modified/quantized gates.
-  Preserve public512limit,6GiB ceiling and isolated task grader.
-  [Frozen inputs](artifacts/gemma-heretic-quality-2026-11-08/quality-input-inventory.json).
+- [x] G1.Cb quality probes and rejection decision complete; Astra approves.
+  Fresh611CPU/745Metal,27Python, fmt/strictClippy, nine GPU controls, native52
+  three slices/46exports and both Mac C smokes pass. Both1,025fidelity gates
+  reject; all16selected greedy IDs match. Both10kNLL gates pass; tasks score
+  original52/modified50/quantized43 of100. Quantized quality rejects9pp loss
+  versus original and7pp versus modified. Raw replays4,244/4,378decisions match;
+  isolated graders restore stopped VM. Public512/6GiB and all gates unchanged.
+  Typed aggregate-budget rejection fixed; historical failures/pins preserved.
+  [Scope](docs/gemma-heretic-quality-probes.md),
+  [checks/review/commit](artifacts/gemma-heretic-quality-probes-2026-11-08/publication-checks.json),
+  [quality/rejection](artifacts/gemma-heretic-quality-probes-2026-11-08/quality-summary.json).
 
 - [x] G1.B authenticated Mac mixed-format diagnostic:277 original affine4
   matrices plus one BF16 projection, immutable owners/session scratch, matched
