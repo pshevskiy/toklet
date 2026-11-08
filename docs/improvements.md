@@ -67,7 +67,8 @@ Ollama121/119ms and vLLM-Metal147/149ms. Precision, weights, cache hits and timi
 boundaries differ; no engine speedup ratio or adoption qualification. All observed
 memory guards and observed external lifetime sums stay below6GiB. Ollama0.40.15 and
 local vLLM0.33.0/Metal0.33.0 are installed/verified. Original BF16 external runs
-fail tested admission; native Q4 format remains strict and rejects this candidate.
+fail tested admission. The ordinary native affine4 inspector remains strict;
+the mixed artifact uses the separate diagnostic below.
 Offline report/document checks pass; Astra approves scoped publication.
 [Comparison / limitations](console-engine-comparison.md),
 [full evidence](../artifacts/engine-comparison-2026-11-07/console-comparison-report.json).
@@ -155,3 +156,13 @@ bytes fall about 97%; all 32 milestone criteria, four binding policy sections an
 both open items are preserved. Integrity/link/content/whitespace
 [checks pass](../artifacts/context-archive-2026-11-07/checks.json). This is a
 documentation-only change, with no new runtime or performance claim.
+
+Native uncensored Gemma has an explicit Mac diagnostic API.
+Original277affine matrices plus the BF16 projection load through matched byte
+proofs; all-row/G2 logit/state/fault-replay controls and512 deeper bitwise pairs
+pass, observed control peak3.104GB. Final610CPU/742Metal checks, strict Clippy,
+seven GPU regressions, three native slices/46exports and Mac C smokes pass.
+Paired caller time improves26.2%; sustained322/434requests over600s each confirm
+26.18% and stay below2.947GB. Astra approves scoped implementation/retention;
+no held-out quality or managed-model adoption. [Scope](gemma-heretic-native.md),
+[checks/review/commit](../artifacts/gemma-heretic-runtime-2026-11-08/publication-checks.json).

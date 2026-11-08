@@ -4,6 +4,8 @@ use crate::mlx::gemma4::{ModalityPolicy, QAT_CONTAINER_BYTES};
 use std::io::{Read, Seek};
 
 pub(super) mod bindings;
+#[cfg(target_os = "macos")]
+pub mod heretic;
 pub mod hybrid;
 mod plan;
 mod source;

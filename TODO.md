@@ -20,8 +20,23 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current task: **evaluate the preferred uncensored Gemma MLX artifact's format and
-quality gates**, then continue Qwen3.5-4B. The full selected goal stays active.
+Current task: **G1.C independent native fidelity and original/modified/quantized
+held-out quality gates**, then explicitly adopt/reject and continue Qwen3.5-4B.
+The full selected goal stays active.
+
+- [x] G1.B authenticated Mac mixed-format diagnostic:277 original affine4
+  matrices plus one BF16 projection, immutable owners/session scratch, matched
+  byte proof and explicit load/memory/request metrics. Cap512/chunk32; no managed
+  adoption. Final fmt/strict CPU+Metal Clippy,610CPU/742Metal (33/294 ignored),
+  seven GPU regressions, three native slices/46exports and Mac C smokes pass.
+  Paired caller time falls26.2%, eventTTFT61.4–61.5%;512 deeper logit pairs match.
+  Sustained322/434requests over600s each confirm26.18%, peaks below2.947GB;
+  two-session fault/replay control peak3.104GB. No decode speedup claimed.
+  Astra approves scoped implementation/retention with no findings.
+  [Scope](docs/gemma-heretic-native.md),
+  [checks/review/commit](artifacts/gemma-heretic-runtime-2026-11-08/publication-checks.json).
+  Initial import/Clippy failures and premature report probe remain in linked logs;
+  [next quality preparation](artifacts/gemma-heretic-runtime-2026-11-08/next-quality-preparation.json).
 
 - [x] G1.A pinned cold mixed-format plan complete:277affine4 matrices and the
   original BF16 PLE projection remain explicit;140unused-KV/1415media exclusions.
@@ -29,8 +44,7 @@ quality gates**, then continue Qwen3.5-4B. The full selected goal stays active.
   pass (about6.2ms, zero payload reads). Astra approves structural scope only.
   [Scope](docs/gemma-heretic-mlx.md),
   [checks/review/commit](artifacts/gemma-heretic-mlx-2026-11-08/publication-checks.json).
-  Next: authenticated resident mixed-format loading/session metrics, then
-  numerical/state/quality/memory/performance gates and explicit adoption decision.
+  Native diagnostic is recorded above; full fidelity/quality and adoption remain.
 
 - [x] Exact guard reduction retained on recorded Mac BF16/G2 cases: two primary
   request reductions25.0–26.6%;512 matched deeper decode-state pairs bit-identical.

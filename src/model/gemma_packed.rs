@@ -218,6 +218,8 @@ enum StorageProfile {
     MixedQat,
     #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
     OfficialBf16,
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    HereticMlx,
 }
 
 #[derive(Clone, Copy)]
@@ -230,21 +232,29 @@ enum MatrixFormat {
 }
 
 impl StorageProfile {
-    fn formats(self) -> [MatrixFormat; 3] {
+    fn formats(self) -> [MatrixFormat; 4] {
         use MatrixFormat::Affine;
         match self {
-            Self::Affine4 => [Affine(4); 3],
+            Self::Affine4 => [Affine(4); 4],
             #[cfg(all(
                 feature = "metal",
                 any(target_os = "macos", target_os = "ios"),
                 target_arch = "aarch64"
             ))]
-            Self::MixedQat => [Affine(4), Affine(8), Affine(4)],
+            Self::MixedQat => [Affine(4), Affine(8), Affine(4), Affine(4)],
             #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
             Self::OfficialBf16 => [
                 MatrixFormat::Bf16 { file_backed: false },
                 MatrixFormat::Bf16 { file_backed: false },
                 MatrixFormat::Bf16 { file_backed: true },
+                MatrixFormat::Bf16 { file_backed: false },
+            ],
+            #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+            Self::HereticMlx => [
+                Affine(4),
+                Affine(4),
+                Affine(4),
+                MatrixFormat::Bf16 { file_backed: false },
             ],
         }
     }
@@ -352,7 +362,7 @@ impl<'a> Model<'a> {
         self.session_with_backend_for_capacity(Scalar, capacity, chunk_rows, budget)
     }
 }
-/// Known backing is supplied only by the two admitted artifact owners. Includes
+/// Known backing is supplied only by admitted artifact owners. Includes
 /// their real capacities once; no source loader scratch is retained as live data.
 #[derive(Clone, Copy)]
 pub(crate) struct Backing {
@@ -399,7 +409,7 @@ impl<'a, M: MatrixSource> Model<'a, M> {
                 actual: weights.layers.len(),
             });
         }
-        let [resident, feed_forward, ple_embedding] = profile.formats();
+        let [resident, feed_forward, ple_embedding, root_projection] = profile.formats();
         let mut bytes = 0;
         for (m, r, c, format) in [
             (&weights.embedding, l.vocab, l.hidden, resident),
@@ -413,7 +423,7 @@ impl<'a, M: MatrixSource> Model<'a, M> {
                 &weights.per_layer_projection,
                 l.layers.len() * l.ple,
                 l.hidden,
-                resident,
+                root_projection,
             ),
         ] {
             bytes = add_bytes(bytes, matrix(m, r, c, format)?)?;

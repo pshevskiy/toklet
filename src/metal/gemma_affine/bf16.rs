@@ -6,6 +6,8 @@ mod official;
 #[cfg(target_os = "macos")]
 mod resident;
 #[cfg(target_os = "macos")]
+pub(super) mod shared;
+#[cfg(target_os = "macos")]
 pub use official::{OfficialBf16, OfficialBf16Memory};
 #[cfg(all(test, target_os = "macos"))]
 pub(crate) use resident::graph::Fault as Bf16GraphFault;

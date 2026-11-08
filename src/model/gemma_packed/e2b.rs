@@ -106,6 +106,22 @@ impl<'a, M: MatrixSource> Model<'a, M> {
         }
         Ok(result)
     }
+
+    #[cfg(target_os = "macos")]
+    pub(crate) fn from_heretic_parts(
+        weights: Weights<'a, M>,
+        geometry: &[crate::mlx::gemma4::LayerPlan],
+        backing: Backing,
+        position_limit: usize,
+    ) -> Result<Self, Error> {
+        Self::from_e2b_format(
+            weights,
+            geometry,
+            backing,
+            position_limit,
+            StorageProfile::HereticMlx,
+        )
+    }
 }
 
 impl<'a> Model<'a> {

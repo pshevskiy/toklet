@@ -4,6 +4,8 @@ use crate::mlx::gemma4::{E2bPlan, Storage, inspect, inspect_qat};
 use sha2::{Digest, Sha256};
 use std::collections::BTreeMap;
 use std::io::{Read, Seek, SeekFrom};
+#[cfg(target_os = "macos")]
+pub(super) mod heretic;
 #[cfg(test)]
 pub(super) mod test_support;
 #[cfg(test)]
@@ -277,7 +279,17 @@ impl Inputs {
         index: usize,
         raw: &mut [u8],
     ) -> Result<()> {
-        let region = &mut self.regions[self.vectors[index].region];
+        self.component_read(reader, self.vectors[index].region, raw)
+    }
+    // Shared raw BF16/vector component proof; interpretation follows only after
+    // the same selected bytes match their first-pass authenticated digest.
+    fn component_read(
+        &mut self,
+        reader: &mut (impl Read + Seek),
+        index: usize,
+        raw: &mut [u8],
+    ) -> Result<()> {
+        let region = &mut self.regions[index];
         if !self.authenticated || !region.text || region.consumed || raw.len() != region.bytes {
             return Err(Error::Options("Gemma source vector coverage differs"));
         }

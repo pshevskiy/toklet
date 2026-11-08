@@ -35,6 +35,31 @@ pub(in crate::metal::gemma_affine) struct Bindings {
 }
 impl Bindings {
     #[cfg(target_os = "macos")]
+    pub(super) fn heretic(cold: &crate::mlx::gemma4::uncensored::Plan) -> Result<Self> {
+        use crate::mlx::gemma4::uncensored::MatrixStorage;
+        let matrix = |name: &str, rows, columns| {
+            cold.matrices()
+                .iter()
+                .enumerate()
+                .find_map(|(index, m)| {
+                    let shape = match m.storage {
+                        MatrixStorage::Affine(l) => (l.rows(), l.columns()),
+                        MatrixStorage::Bf16 { rows, columns } => (rows, columns),
+                    };
+                    (m.name == name && shape == (rows, columns)).then_some(index)
+                })
+                .ok_or(Error::Options("Heretic named matrix differs"))
+        };
+        let vector = |name: &str, values| {
+            cold.text_tensors()
+                .iter()
+                .filter(|(_, t)| t.shape.len() == 1)
+                .position(|(n, t)| n == name && t.shape == [values])
+                .ok_or(Error::Options("Heretic named vector differs"))
+        };
+        Self::resolve(cold.layers(), "language_model.model.", matrix, vector)
+    }
+    #[cfg(target_os = "macos")]
     pub(in crate::metal::gemma_affine) fn operation_identity(
         &self,
         source: usize,
