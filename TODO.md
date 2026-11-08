@@ -44,6 +44,15 @@ The full selected goal stays active.
   [checks/review/commit](artifacts/gemma-heretic-quality-probes-2026-11-08/publication-checks.json),
   [quality/rejection](artifacts/gemma-heretic-quality-probes-2026-11-08/quality-summary.json).
 
+- [x] Q1.A cold Qwen3.5-4B recipe: pinned119,829B header,
+  249affine matrices/153BF16 vectors/24four-tap convolutions, distinct24delta/
+  8KV owner indices and tied embedding/head. Fresh618CPU/750Metal tests,
+  fmt/strict CPU+Metal Clippy and two3warm+10metadata probes pass (about2.53ms,
+  zero payload reads). Astra approves with no findings. No numerical execution,
+  6GiB model fit or managed adoption is claimed.
+  [Scope](docs/qwen35-4b-cold.md),
+  [checks/review/commit](artifacts/qwen35-4b-cold-2026-11-08/publication-checks.json).
+
 - [x] G1.B authenticated Mac mixed-format diagnostic:277 original affine4
   matrices plus one BF16 projection, immutable owners/session scratch, matched
   byte proof and explicit load/memory/request metrics. Cap512/chunk32; no managed

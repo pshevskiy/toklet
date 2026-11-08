@@ -1,0 +1,19 @@
+{
+  "repository": "avan-ag/Qwen3.5-4B-Uncensored-MLX-4bit",
+  "revision": "fb98fbc59c71a567f3e23435386c9e93951261db",
+  "config_bytes": 3024,
+  "config_sha256": "ac6f8df4f4c1fd9d2583996bdd7070ea801b703e8a2b36f6d4b673a94ea419b5",
+  "header_bytes": 119829,
+  "header_sha256": "7284f68df36a7761569b48321066e92d616306e33b4a9487029673a0ff344cb2",
+  "container_bytes": 2367237149,
+  "declared_container_sha256": "0dfd6217f56cadcc373c90283d58d5e673833650fed1d6c299313fb536999043",
+  "physical_tensors": 924,
+  "dtype_counts": {
+    "U32": 249,
+    "BF16": 675
+  },
+  "logical_parameters": 4205751296,
+  "metadata_only": true,
+  "payload_authenticated": false,
+  "execution_qualified": false
+}

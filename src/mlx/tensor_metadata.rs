@@ -1,4 +1,4 @@
-//! Concrete cold tensor metadata shared by the Gemma and LFM2 inspectors.
+//! Concrete cold tensor metadata shared by the pinned model inspectors.
 //! No tensor payload, numerical dispatch or execution eligibility is introduced.
 use super::affine::Layout;
 use crate::weights::Error;
@@ -117,7 +117,7 @@ fn integer(value: &Value) -> Result<usize, Error> {
     value
         .as_u64()
         .and_then(|n| usize::try_from(n).ok())
-        .ok_or_else(|| invalid("bounded unsigned Gemma4 metadata integer required"))
+        .ok_or_else(|| invalid("bounded unsigned tensor metadata integer required"))
 }
 pub(super) fn descriptor(value: &Value, payload: usize) -> Result<PhysicalTensor, Error> {
     let object = value
@@ -133,17 +133,17 @@ pub(super) fn descriptor(value: &Value, payload: usize) -> Result<PhysicalTensor
     let dtype = match value["dtype"].as_str() {
         Some("U32") => Dtype::U32,
         Some("BF16") => Dtype::Bf16,
-        _ => return Err(invalid("unsupported Gemma4 metadata dtype")),
+        _ => return Err(invalid("unsupported tensor metadata dtype")),
     };
     let shape = value["shape"]
         .as_array()
         .ok_or_else(|| invalid("tensor shape array required"))?;
     if shape.len() > 8 {
-        return Err(invalid("tensor rank exceeds bounded Gemma4 header"));
+        return Err(invalid("tensor rank exceeds bounded header"));
     }
     let shape: Vec<usize> = shape.iter().map(integer).collect::<Result<_, _>>()?;
     if shape.iter().any(|&n| n >= 1 << 31) {
-        return Err(invalid("tensor dimension exceeds bounded Gemma4 header"));
+        return Err(invalid("tensor dimension exceeds bounded header"));
     }
     let elements = shape.iter().try_fold(1_usize, |n, &d| {
         n.checked_mul(d)

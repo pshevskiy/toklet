@@ -184,3 +184,11 @@ versus parent exceed2pp. Both raw replays match; VM restoration verified.
 Public512/6GiB and gates unchanged; typed aggregate-budget preflight fixed.
 [Scope](gemma-heretic-quality-probes.md),
 [checks/review/commit](../artifacts/gemma-heretic-quality-probes-2026-11-08/publication-checks.json).
+
+Q1.A cold Qwen3.5-4B metadata validation is complete in its scoped recipe.
+The separate pinned recipe describes24gated-delta/four-tap and8full-attention
+layers,249affine matrices and177unquantized BF16 owners. Tensor extents retain
+an unaligned byte origin.618CPU/750Metal, fmt/strict Clippy and two metadata
+cohorts pass; Astra approves with no findings. No runtime, model-fit or adoption claim.
+[Scope](qwen35-4b-cold.md),
+[checks/review/commit](../artifacts/qwen35-4b-cold-2026-11-08/publication-checks.json).

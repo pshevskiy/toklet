@@ -16,5 +16,6 @@ mod payload;
 mod phi3;
 pub mod qwen;
 mod qwen3;
+pub mod qwen35;
 pub mod reference;
 mod tensor_metadata;
