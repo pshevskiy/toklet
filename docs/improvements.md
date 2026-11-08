@@ -208,3 +208,8 @@ and five damaged-capture controls pass. Two actual32-layer CPU one-input
 captures match, physicalpeak2.638GB, zero warmed allocations. Astra approves with no findings;
 no independent real coupled/GPU/codec/quality/adoption qualification.
 [Scope](qwen35-hybrid.md), [checks/review/commit](../artifacts/qwen35-hybrid-2026-11-08/publication-checks.json).
+
+Combined reviewed G1.Cb/Q1.A–C source passes631CPU/765Metal, formatting and both
+strict Clippy configurations. Native53 retains three slices/46exports and both
+Mac C smokes pass. Code/fixtures exactly match the union of approved revisions;
+only documentation required conflict resolution. [Integration checks](../artifacts/model-integration-2026-11-08/checks.json).

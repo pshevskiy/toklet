@@ -24,6 +24,11 @@ Current task: **Qwen3.5-4B independent actual-source fidelity**, then GPU,
 codec/quality and the same request metrics before optimization.
 The full selected goal stays active.
 
+Combined reviewed G1.Cb/Q1.A–C source passes631CPU/765Metal, strict Clippy/fmt,
+native53 three slices/46exports and Mac C smokes; [integration checks](artifacts/model-integration-2026-11-08/checks.json).
+The next [one-input independent Qwen oracle contract](artifacts/qwen35-real-oracle-2026-11-08/acceptance-contract.json)
+is frozen; its implementation and contextual/GPU/quality gates remain open.
+
 - [x] G1.Ca independent mixed-source fidelity and parent pinning: all1,094
   consumed components reproduce from authenticated modified BF16 parent;22 full
   rows/5.77M values through512 pass unchanged FP64/staged-FP32 gates with no
