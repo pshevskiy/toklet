@@ -20,9 +20,25 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current task: **Qwen3.5-4B concrete Metal-projection executor and coupled state qualification**,
-then admitted contexts, codec/quality and the same request metrics before optimization.
+Current task: **Qwen3.5-4B admitted contexts and bounded controller/codec metrics**,
+then full-request and quality gates before managed selection or further optimization.
 The full selected goal stays active.
+
+- [x] Q1.G static Metal projection/gather with consumed CPU matrix ownership:
+  independent one/context17 pass32.135M/32.667M comparisons, maxratio0.447;
+  physical peak3.425GB, full state/bit recovery and late-head repair pass.
+  CPU631/Metal765, fmt/both strict Clippy, native54/Csmokes and18Python/
+  20coupled+6performance evidence controls pass. Reader timeline coverage fixed;
+  earlier compile/reader/Clippy corrections retained, parity-fix binary identical.
+  Both matched forward cohorts pass:138.03s→3.31s/138.02s→3.10s,97.6–97.8%
+  lower; physicalpeak5.307GB. Astra approves scoped retention, no findings.
+  [Scope](docs/qwen35-metal-executor.md),
+  [checks/review/commit](artifacts/qwen35-metal-executor-2026-11-08/publication-checks.json).
+  Next-scope metadata: [4B codec](artifacts/qwen35-codec-preflight-2026-11-08/preflight-summary.json)
+  authenticated tokenizer exposes248044/248046EOS disagreement; codec/controller
+  qualification remains open;
+  [9B header](artifacts/qwen35-9b-preflight-2026-11-08/preflight-summary.json)
+  has an untied output head and a 5.038 GB container. Neither admits a route.
 
 - [x] Q1.F all-249 FP32 Metal projection diagnostic: both batches pass
   24.846M independent comparisons in each of two owned processes; max ratio

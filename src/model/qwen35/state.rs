@@ -43,7 +43,7 @@ pub struct Memory {
     pub admitted_bytes: usize,
 }
 impl Memory {
-    fn sum(&mut self) -> Result<()> {
+    pub(super) fn sum(&mut self) -> Result<()> {
         self.admitted_bytes = [
             self.weights_and_model_bytes,
             self.recurrent_bank_bytes,
@@ -59,7 +59,7 @@ impl Memory {
         .try_fold(0, add)?;
         Ok(())
     }
-    fn admit(self, limit: usize) -> Result<()> {
+    pub(super) fn admit(self, limit: usize) -> Result<()> {
         let limit = limit.min(MEMORY_LIMIT);
         if self.admitted_bytes > limit {
             return Err(Error::MemoryBudget {
@@ -277,8 +277,9 @@ impl Scratch {
     }
 }
 
-pub struct Session<'model, 'weights> {
-    pub(super) model: &'model Model<'weights>,
+pub struct Session<'model, 'weights, M: MatrixStorage = Matrix<'weights>, E: Execution<M> = Cpu> {
+    pub(super) model: &'model Model<'weights, M>,
+    pub(super) execution: E,
     pub(super) options: Options,
     pub(super) delta: Vec<DeltaState>,
     pub(super) kv: Vec<Kv>,
@@ -287,11 +288,15 @@ pub struct Session<'model, 'weights> {
     published: Vec<f32>,
     staged: Vec<f32>,
     published_rows: usize,
-    memory: Memory,
+    pub(super) memory: Memory,
     work: Work,
 }
-impl<'model, 'weights> Session<'model, 'weights> {
-    pub fn planned_memory(model: &Model<'_>, options: Options) -> Result<Memory> {
+impl<'model, 'weights, M: MatrixStorage, E: Execution<M>> Session<'model, 'weights, M, E> {
+    pub(super) fn planned_with_execution(
+        model: &Model<'_, M>,
+        options: Options,
+        execution_bytes: usize,
+    ) -> Result<Memory> {
         let c = model.config;
         let o = options;
         if o.capacity == 0
@@ -316,7 +321,7 @@ impl<'model, 'weights> Session<'model, 'weights> {
                 mul(mul(c.kv_width()?, o.capacity)?, c.attention_count())?,
                 8,
             )?,
-            scratch_bytes: Scratch::planned(c, o.capacity)?,
+            scratch_bytes: add(Scratch::planned(c, o.capacity)?, execution_bytes)?,
             logits_bytes: mul(mul(o.chunk, c.vocab)?, 8)?,
             history_bytes: mul(o.capacity, 4)?,
             metadata_bytes: add(
@@ -332,8 +337,12 @@ impl<'model, 'weights> Session<'model, 'weights> {
         memory.sum()?;
         Ok(memory)
     }
-    pub(super) fn new(model: &'model Model<'weights>, options: Options) -> Result<Self> {
-        let mut memory = Self::planned_memory(model, options)?;
+    pub(super) fn with_execution(
+        model: &'model Model<'weights, M>,
+        options: Options,
+        execution: E,
+    ) -> Result<Self> {
+        let mut memory = Self::planned_with_execution(model, options, execution.owned_bytes()?)?;
         memory.admit(options.memory_limit_bytes)?;
         let c = model.config;
         let mut delta = reserved(c.delta_count())?;
@@ -362,7 +371,7 @@ impl<'model, 'weights> Session<'model, 'weights> {
         memory.kv_bytes = kv.iter().try_fold(0, |n, k| {
             add(n, mul(add(k.k.capacity(), k.v.capacity())?, 4)?)
         })?;
-        memory.scratch_bytes = scratch.bytes()?;
+        memory.scratch_bytes = add(scratch.bytes()?, execution.owned_bytes()?)?;
         memory.logits_bytes = mul(add(published.capacity(), staged.capacity())?, 4)?;
         memory.history_bytes = mul(history.capacity(), 4)?;
         memory.metadata_bytes = add(
@@ -376,6 +385,7 @@ impl<'model, 'weights> Session<'model, 'weights> {
         memory.admit(options.memory_limit_bytes)?;
         Ok(Self {
             model,
+            execution,
             options,
             delta,
             kv,
@@ -504,8 +514,9 @@ impl<'model, 'weights> Session<'model, 'weights> {
                 layer: None,
                 cancel,
             };
-            super::forward::frame::<TRACE, F>(
+            super::forward::frame::<TRACE, F, M, E>(
                 self.model,
+                &mut self.execution,
                 &mut self.delta,
                 &mut self.kv,
                 &mut self.scratch,
@@ -531,6 +542,14 @@ impl<'model, 'weights> Session<'model, 'weights> {
             })?;
         }
         check_cancel(cancel)
+    }
+}
+impl<'model, 'weights> Session<'model, 'weights> {
+    pub fn planned_memory(model: &Model<'weights>, options: Options) -> Result<Memory> {
+        Self::planned_with_execution(model, options, 0)
+    }
+    pub(super) fn new(model: &'model Model<'weights>, options: Options) -> Result<Self> {
+        Self::with_execution(model, options, Cpu)
     }
 }
 pub(super) fn check_cancel(cancel: &AtomicBool) -> Result<()> {

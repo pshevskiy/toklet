@@ -81,9 +81,24 @@ Do not use quantized container word counts to claim a smaller parameter class.
 Availability of a publisher's conversion is not a passing local benchmark.
 
 The isolated [all-source FP32 Metal projection gate](qwen35-gpu-projections.md) passes.
-Next is a concrete executor with coupled state/recovery validation and the same
+The [concrete executor](qwen35-metal-executor.md) passes its scoped coupled
+state/recovery checks and both matched forward performance cohorts; Astra
+approves scoped retention with no findings.
+Next are admitted contexts, codec/quality and the same
 completed-work/request metrics. An isolated operator result does not admit a
 managed route; codec, quality, admitted-context and full-request gates still apply.
+
+Pinned [4B codec metadata](../artifacts/qwen35-codec-preflight-2026-11-08/preflight-summary.json)
+has a distinct tokenizer; the old dense Qwen3 codec cannot be reused by
+model-family name. After performance collection, the tokenizer payload was
+authenticated. Model/generation EOS 248044 resolves to `<|endoftext|>`, while
+the tokenizer's named EOS resolves to `<|im_end|>` at 248046. Stop semantics
+remain an unresolved codec gate; no source metadata is silently rewritten.
+The [9B header preflight](../artifacts/qwen35-9b-preflight-2026-11-08/preflight-summary.json)
+finds 250 packed matrices with a distinct, untied output head and a 5.038 GB
+container. It requires separate head binding, bounded reference-reader support
+above 4 GiB, complete source authentication and measured cold/steady admission.
+Header metadata alone does not establish fit or runtime qualification.
 
 ## Metric contract
 

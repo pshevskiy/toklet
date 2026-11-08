@@ -30,8 +30,14 @@ impl<F: for<'b> FnMut(Observation<'b>) -> Result<()>> Trace<'_, F> {
         Ok(())
     }
 }
-fn project(m: &Matrix<'_>, input: &[f32], output: &mut [f32], work: &mut Work) -> Result<()> {
-    m.matvec(input, output).map_err(|e| invalid(e.0))?;
+fn project<M: MatrixStorage, E: Execution<M>>(
+    execute: &mut E,
+    m: &M,
+    input: &[f32],
+    output: &mut [f32],
+    work: &mut Work,
+) -> Result<()> {
+    execute.project(m, input, output)?;
     work.projections_completed += 1;
     Ok(())
 }
@@ -71,9 +77,15 @@ fn sigmoid(x: f32) -> f32 {
 }
 
 #[allow(clippy::too_many_arguments)]
-fn delta<const TRACE: bool, F: for<'b> FnMut(Observation<'b>) -> Result<()>>(
+fn delta<
+    const TRACE: bool,
+    F: for<'b> FnMut(Observation<'b>) -> Result<()>,
+    M: MatrixStorage,
+    E: Execution<M>,
+>(
     c: Config,
-    w: &DeltaWeights<'_>,
+    w: &DeltaWeights<'_, M>,
+    execute: &mut E,
     state: &mut DeltaState,
     s: &mut DeltaScratch,
     input: &[f32],
@@ -82,13 +94,13 @@ fn delta<const TRACE: bool, F: for<'b> FnMut(Observation<'b>) -> Result<()>>(
     work: &mut Work,
     t: &mut Trace<'_, F>,
 ) -> Result<()> {
-    project(&w.qkv, input, &mut s.qkv, work)?;
+    project(execute, &w.qkv, input, &mut s.qkv, work)?;
     t.emit::<TRACE>("delta_qkv", None, &s.qkv)?;
-    project(&w.z, input, &mut s.z, work)?;
+    project(execute, &w.z, input, &mut s.z, work)?;
     t.emit::<TRACE>("delta_z", None, &s.z)?;
-    project(&w.a, input, &mut s.a, work)?;
+    project(execute, &w.a, input, &mut s.a, work)?;
     t.emit::<TRACE>("delta_a", None, &s.a)?;
-    project(&w.b, input, &mut s.b, work)?;
+    project(execute, &w.b, input, &mut s.b, work)?;
     t.emit::<TRACE>("delta_b", None, &s.b)?;
     let (history, next_history) = state.history.next(local);
     cpu::causal_depthwise_conv_step(
@@ -146,13 +158,19 @@ fn delta<const TRACE: bool, F: for<'b> FnMut(Observation<'b>) -> Result<()>>(
     t.emit::<TRACE>("delta_norm", None, &s.norm)?;
     cpu::gated_silu(&s.z, &s.norm, &mut s.gated)?;
     t.emit::<TRACE>("delta_gated", None, &s.gated)?;
-    project(&w.out, &s.gated, output, work)
+    project(execute, &w.out, &s.gated, output, work)
 }
 
 #[allow(clippy::too_many_arguments)]
-fn attention<const TRACE: bool, F: for<'b> FnMut(Observation<'b>) -> Result<()>>(
+fn attention<
+    const TRACE: bool,
+    F: for<'b> FnMut(Observation<'b>) -> Result<()>,
+    M: MatrixStorage,
+    E: Execution<M>,
+>(
     c: Config,
-    w: &AttentionWeights<'_>,
+    w: &AttentionWeights<'_, M>,
+    execute: &mut E,
     kv: &mut Kv,
     s: &mut AttentionScratch,
     input: &[f32],
@@ -163,7 +181,7 @@ fn attention<const TRACE: bool, F: for<'b> FnMut(Observation<'b>) -> Result<()>>
     work: &mut Work,
     t: &mut Trace<'_, F>,
 ) -> Result<()> {
-    project(&w.q_gate, input, &mut s.q_gate, work)?;
+    project(execute, &w.q_gate, input, &mut s.q_gate, work)?;
     t.emit::<TRACE>("attention_q_gate", None, &s.q_gate)?;
     for head in 0..c.query_heads {
         let target = head * c.head_dim;
@@ -172,8 +190,8 @@ fn attention<const TRACE: bool, F: for<'b> FnMut(Observation<'b>) -> Result<()>>
         s.gate[target..target + c.head_dim]
             .copy_from_slice(&s.q_gate[source + c.head_dim..source + 2 * c.head_dim]);
     }
-    project(&w.k, input, &mut s.k, work)?;
-    project(&w.v, input, &mut s.v, work)?;
+    project(execute, &w.k, input, &mut s.k, work)?;
+    project(execute, &w.v, input, &mut s.v, work)?;
     t.emit::<TRACE>("attention_q", None, &s.q)?;
     t.emit::<TRACE>("attention_k", None, &s.k)?;
     t.emit::<TRACE>("attention_v", None, &s.v)?;
@@ -252,12 +270,18 @@ fn attention<const TRACE: bool, F: for<'b> FnMut(Observation<'b>) -> Result<()>>
     }
     cpu::finite("Qwen3.5 gated attention", &s.gated)?;
     t.emit::<TRACE>("attention_gated", None, &s.gated)?;
-    project(&w.out, &s.gated, output, work)
+    project(execute, &w.out, &s.gated, output, work)
 }
 
 #[allow(clippy::too_many_arguments)]
-pub(super) fn frame<const TRACE: bool, F: for<'b> FnMut(Observation<'b>) -> Result<()>>(
-    model: &Model<'_>,
+pub(super) fn frame<
+    const TRACE: bool,
+    F: for<'b> FnMut(Observation<'b>) -> Result<()>,
+    M: MatrixStorage,
+    E: Execution<M>,
+>(
+    model: &Model<'_, M>,
+    execute: &mut E,
     states: &mut [DeltaState],
     kv: &mut [Kv],
     s: &mut Scratch,
@@ -271,10 +295,7 @@ pub(super) fn frame<const TRACE: bool, F: for<'b> FnMut(Observation<'b>) -> Resu
     t: &mut Trace<'_, F>,
 ) -> Result<()> {
     let c = model.config;
-    model
-        .embedding
-        .copy_row(token as usize, &mut s.x)
-        .map_err(|e| invalid(e.0))?;
+    execute.gather(&model.embedding, token, &mut s.x)?;
     work.gathers_completed += 1;
     t.emit::<TRACE>("embedding", None, &s.x)?;
     for (layer_index, layer) in model.layers.iter().enumerate() {
@@ -291,9 +312,10 @@ pub(super) fn frame<const TRACE: bool, F: for<'b> FnMut(Observation<'b>) -> Resu
         )?;
         t.emit::<TRACE>("input_norm", None, &s.input_norm)?;
         match &w.mixing {
-            MixingWeights::Delta(d) => delta::<TRACE, F>(
+            MixingWeights::Delta(d) => delta::<TRACE, F, M, E>(
                 c,
                 d,
+                execute,
                 &mut states[layer.owner],
                 &mut s.delta,
                 &s.input_norm,
@@ -302,9 +324,10 @@ pub(super) fn frame<const TRACE: bool, F: for<'b> FnMut(Observation<'b>) -> Resu
                 work,
                 t,
             )?,
-            MixingWeights::Attention(a) => attention::<TRACE, F>(
+            MixingWeights::Attention(a) => attention::<TRACE, F, M, E>(
                 c,
                 a,
+                execute,
                 &mut kv[layer.owner],
                 &mut s.attention,
                 &s.input_norm,
@@ -328,13 +351,13 @@ pub(super) fn frame<const TRACE: bool, F: for<'b> FnMut(Observation<'b>) -> Resu
             c.rms_epsilon,
         )?;
         t.emit::<TRACE>("post_norm", None, &s.post_norm)?;
-        project(&w.gate, &s.post_norm, &mut s.gate, work)?;
+        project(execute, &w.gate, &s.post_norm, &mut s.gate, work)?;
         t.emit::<TRACE>("mlp_gate", None, &s.gate)?;
-        project(&w.up, &s.post_norm, &mut s.up, work)?;
+        project(execute, &w.up, &s.post_norm, &mut s.up, work)?;
         t.emit::<TRACE>("mlp_up", None, &s.up)?;
         cpu::gated_silu(&s.gate, &s.up, &mut s.activated)?;
         t.emit::<TRACE>("mlp_activated", None, &s.activated)?;
-        project(&w.down, &s.activated, &mut s.output, work)?;
+        project(execute, &w.down, &s.activated, &mut s.output, work)?;
         t.emit::<TRACE>("mlp_output", None, &s.output)?;
         cpu::residual_add(&mut s.x, &s.output)?;
         t.emit::<TRACE>("layer_output", None, &s.x)?;
@@ -349,6 +372,6 @@ pub(super) fn frame<const TRACE: bool, F: for<'b> FnMut(Observation<'b>) -> Resu
         c.rms_epsilon,
     )?;
     t.emit::<TRACE>("final_norm", None, &s.final_norm)?;
-    project(&model.embedding, &s.final_norm, logits, work)?;
+    project(execute, &model.embedding, &s.final_norm, logits, work)?;
     t.emit::<TRACE>("logits", None, logits)
 }

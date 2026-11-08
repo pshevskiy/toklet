@@ -39,6 +39,8 @@ pub use bf16::{
 };
 pub use partitioned::{Gather, PartitionedAffine};
 pub use projection::Projection;
+#[cfg(all(test, target_os = "macos"))]
+pub(crate) use projection::with_projection_failure;
 pub use weights::Weights;
 
 pub const CONTEXT_ALLOWANCE_BYTES: usize = 64 * 1024 * 1024;

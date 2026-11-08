@@ -1,4 +1,5 @@
-//! Concrete scalar packed Qwen3.5 text graph; no codec or ordinary model route.
+//! Packed Qwen3.5 text graph with static CPU/Metal projection execution.
+//! No codec or ordinary model route.
 //!
 //! Model weights are immutable borrowed spans. Delta/history and attention KV
 //! have distinct session owners. This is a correctness reference, not BF16 GPU
@@ -9,7 +10,13 @@ use crate::{
 };
 use std::fmt;
 
+mod execution;
 mod forward;
+pub use execution::{Cpu, Execution, MatrixStorage};
+#[cfg(all(feature = "metal", target_os = "macos"))]
+mod metal;
+#[cfg(all(feature = "metal", target_os = "macos"))]
+pub use metal::{MetalExecution, MetalMatrix, MetalModel, MetalSession};
 mod state;
 pub use state::{Memory, Options, Outcome, Session, Work};
 #[cfg(test)]
@@ -24,7 +31,14 @@ const METADATA_ALLOWANCE: usize = 64 * 1024 * 1024;
 pub enum Error {
     Model(super::Error),
     Weights(crate::weights::Error),
-    MemoryBudget { required: usize, limit: usize },
+    #[cfg(all(feature = "metal", target_os = "macos"))]
+    Metal(crate::metal::Error),
+    #[cfg(all(feature = "metal", target_os = "macos"))]
+    ExecutionPoisoned,
+    MemoryBudget {
+        required: usize,
+        limit: usize,
+    },
     Cancelled,
     Observation(&'static str),
 }
@@ -48,6 +62,12 @@ impl fmt::Display for Error {
         match self {
             Self::Model(e) => e.fmt(f),
             Self::Weights(e) => e.fmt(f),
+            #[cfg(all(feature = "metal", target_os = "macos"))]
+            Self::Metal(e) => e.fmt(f),
+            #[cfg(all(feature = "metal", target_os = "macos"))]
+            Self::ExecutionPoisoned => f.write_str(
+                "Qwen3.5 GPU workspace requires explicit repair; committed prefix remains valid",
+            ),
             Self::MemoryBudget { required, limit } => {
                 write!(
                     f,
@@ -81,7 +101,7 @@ fn zeros(n: usize) -> Result<Vec<f32>> {
     Ok(super::zeros(n)?)
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, serde::Deserialize)]
+#[derive(Clone, Copy, Debug, PartialEq, serde::Deserialize, serde::Serialize)]
 pub struct Config {
     pub hidden: usize,
     pub intermediate: usize,
@@ -162,55 +182,55 @@ impl Config {
     }
 }
 
-pub struct DeltaWeights<'a> {
-    pub qkv: Matrix<'a>,
-    pub z: Matrix<'a>,
-    pub a: Matrix<'a>,
-    pub b: Matrix<'a>,
-    pub out: Matrix<'a>,
+pub struct DeltaWeights<'a, M = Matrix<'a>> {
+    pub qkv: M,
+    pub z: M,
+    pub a: M,
+    pub b: M,
+    pub out: M,
     pub convolution: &'a [f32],
     pub a_log: &'a [f32],
     pub dt_bias: &'a [f32],
     pub norm: &'a [f32],
 }
-pub struct AttentionWeights<'a> {
-    pub q_gate: Matrix<'a>,
-    pub k: Matrix<'a>,
-    pub v: Matrix<'a>,
-    pub out: Matrix<'a>,
+pub struct AttentionWeights<'a, M = Matrix<'a>> {
+    pub q_gate: M,
+    pub k: M,
+    pub v: M,
+    pub out: M,
     pub q_norm: &'a [f32],
     pub k_norm: &'a [f32],
 }
-pub enum MixingWeights<'a> {
-    Delta(DeltaWeights<'a>),
-    Attention(AttentionWeights<'a>),
+pub enum MixingWeights<'a, M = Matrix<'a>> {
+    Delta(DeltaWeights<'a, M>),
+    Attention(AttentionWeights<'a, M>),
 }
-pub struct LayerWeights<'a> {
+pub struct LayerWeights<'a, M = Matrix<'a>> {
     pub input_norm: &'a [f32],
     pub post_norm: &'a [f32],
-    pub gate: Matrix<'a>,
-    pub up: Matrix<'a>,
-    pub down: Matrix<'a>,
-    pub mixing: MixingWeights<'a>,
+    pub gate: M,
+    pub up: M,
+    pub down: M,
+    pub mixing: MixingWeights<'a, M>,
 }
-pub struct Weights<'a> {
-    pub embedding: Matrix<'a>,
+pub struct Weights<'a, M = Matrix<'a>> {
+    pub embedding: M,
     pub final_norm: &'a [f32],
-    pub layers: Vec<LayerWeights<'a>>,
+    pub layers: Vec<LayerWeights<'a, M>>,
 }
-struct Layer<'a> {
-    weights: LayerWeights<'a>,
+struct Layer<'a, M> {
+    weights: LayerWeights<'a, M>,
     owner: usize,
 }
-pub struct Model<'a> {
+pub struct Model<'a, M: MatrixStorage = Matrix<'a>> {
     config: Config,
-    embedding: Matrix<'a>,
+    embedding: M,
     final_norm: &'a [f32],
-    layers: Vec<Layer<'a>>,
+    layers: Vec<Layer<'a, M>>,
     learned_bytes: usize,
     owned_bytes: usize,
 }
-fn matrix(m: &Matrix<'_>, rows: usize, columns: usize) -> Result<usize> {
+fn matrix(m: &impl MatrixStorage, rows: usize, columns: usize) -> Result<usize> {
     let l = m.layout();
     if l.rows() != rows
         || l.columns() != columns
@@ -227,10 +247,10 @@ fn vector(v: &[f32], n: usize) -> Result<usize> {
     cpu::finite("Qwen3.5 vector", v)?;
     mul(n, 4)
 }
-impl<'a> Model<'a> {
+impl<'a, M: MatrixStorage> Model<'a, M> {
     /// Borrow admitted numerical spans. Any caller ownership beyond those spans
     /// needs a separate allowance. The CPU-store factory accounts its capacities.
-    pub fn new(config: Config, weights: Weights<'a>) -> Result<Self> {
+    pub fn new(config: Config, weights: Weights<'a, M>) -> Result<Self> {
         let c = config;
         c.validate()?;
         if weights.layers.len() != c.layers {
@@ -291,7 +311,7 @@ impl<'a> Model<'a> {
         }
         let owned_bytes = add(
             std::mem::size_of::<Self>(),
-            mul(layers.capacity(), std::mem::size_of::<Layer<'_>>())?,
+            mul(layers.capacity(), std::mem::size_of::<Layer<'_, M>>())?,
         )?;
         Ok(Self {
             config: c,
@@ -308,14 +328,16 @@ impl<'a> Model<'a> {
     pub fn model_bytes(&self) -> Result<usize> {
         add(self.learned_bytes, self.owned_bytes)
     }
-    pub fn session(&self, options: Options) -> Result<Session<'_, 'a>> {
-        Session::new(self, options)
-    }
     /// Explicit scalar diagnostic only. No tokenizer pairing, ordinary catalog,
     /// sampled-token controller or native/Metal eligibility follows from this.
-    pub fn from_cpu_store(store: &'a crate::mlx::qwen35::payload::PayloadStore) -> Result<Self> {
+    fn bind_source(
+        plan: &crate::mlx::qwen35::Plan,
+        mut matrix: impl FnMut(&str) -> Result<M>,
+        mut vector: impl FnMut(&str) -> Result<&'a [f32]>,
+        mut convolution: impl FnMut(&str) -> Result<&'a [f32]>,
+        backing_bytes: usize,
+    ) -> Result<Self> {
         use crate::mlx::qwen35::LayerRecipe;
-        let plan = store.plan();
         let LayerRecipe::GatedDelta(d) = plan.layers()[0] else {
             return Err(invalid("Qwen3.5 first delta recipe"));
         };
@@ -343,8 +365,8 @@ impl<'a> Model<'a> {
         let mut layers = reserved(config.layers)?;
         for (i, kind) in plan.layers().iter().enumerate() {
             let b = format!("{prefix}layers.{i}.");
-            let mat = |role: &str| store.matrix(&format!("{b}{role}.weight"));
-            let vec = |role: &str| store.vector(&format!("{b}{role}"));
+            let mut mat = |role: &str| matrix(&format!("{b}{role}.weight"));
+            let mut vec = |role: &str| vector(&format!("{b}{role}"));
             let mixing = match kind {
                 LayerRecipe::GatedDelta(_) => MixingWeights::Delta(DeltaWeights {
                     qkv: mat("linear_attn.in_proj_qkv")?,
@@ -352,7 +374,7 @@ impl<'a> Model<'a> {
                     a: mat("linear_attn.in_proj_a")?,
                     b: mat("linear_attn.in_proj_b")?,
                     out: mat("linear_attn.out_proj")?,
-                    convolution: store.convolution(&format!("{b}linear_attn.conv1d.weight"))?,
+                    convolution: convolution(&format!("{b}linear_attn.conv1d.weight"))?,
                     a_log: vec("linear_attn.A_log")?,
                     dt_bias: vec("linear_attn.dt_bias")?,
                     norm: vec("linear_attn.norm.weight")?,
@@ -378,8 +400,8 @@ impl<'a> Model<'a> {
         let mut model = Self::new(
             config,
             Weights {
-                embedding: store.matrix(&format!("{prefix}embed_tokens.weight"))?,
-                final_norm: store.vector(&format!("{prefix}norm.weight"))?,
+                embedding: matrix(&format!("{prefix}embed_tokens.weight"))?,
+                final_norm: vector(&format!("{prefix}norm.weight"))?,
                 layers,
             },
         )?;
@@ -388,11 +410,27 @@ impl<'a> Model<'a> {
             add(bytes.affine_codes, bytes.affine_metadata)?,
             mul(add(bytes.bf16_vectors, bytes.bf16_convolutions)?, 2)?,
         )?;
-        if model.learned_bytes != wanted || wanted > store.report().retained_tensor_capacity_bytes {
+        if model.learned_bytes != wanted || wanted > backing_bytes {
             return Err(invalid("Qwen3.5 source backing count"));
         }
-        model.learned_bytes = store.report().retained_tensor_capacity_bytes;
+        model.learned_bytes = backing_bytes;
         Ok(model)
+    }
+}
+
+impl<'a> Model<'a> {
+    pub fn session(&self, options: Options) -> Result<Session<'_, 'a>> {
+        Session::new(self, options)
+    }
+    /// Authenticated scalar storage; no tokenizer or ordinary managed route.
+    pub fn from_cpu_store(store: &'a crate::mlx::qwen35::payload::PayloadStore) -> Result<Self> {
+        Self::bind_source(
+            store.plan(),
+            |name| Ok(store.matrix(name)?),
+            |name| Ok(store.vector(name)?),
+            |name| Ok(store.convolution(name)?),
+            store.report().retained_tensor_capacity_bytes,
+        )
     }
 }
 

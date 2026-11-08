@@ -246,5 +246,21 @@ impl Projection<'_> {
 }
 #[cfg(test)]
 thread_local! {static FAILURE_AFTER:std::cell::Cell<Option<usize>>=const{std::cell::Cell::new(None)};}
+#[cfg(all(test, target_os = "macos"))]
+pub(crate) fn with_projection_failure<T>(completed_chunks: usize, action: impl FnOnce() -> T) -> T {
+    struct Reset;
+    impl Drop for Reset {
+        fn drop(&mut self) {
+            FAILURE_AFTER.with(|s| s.set(None));
+        }
+    }
+    assert!(completed_chunks > 0);
+    FAILURE_AFTER.with(|s| {
+        assert!(s.get().is_none());
+        s.set(Some(completed_chunks));
+    });
+    let _reset = Reset;
+    action()
+}
 #[cfg(test)]
 mod tests;

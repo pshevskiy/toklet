@@ -196,9 +196,9 @@ impl Plan {
 }
 /// Cold actual-capacity observations, admitted before callbacks/upload. Keeping
 /// this separate preserves the immutable owner's qualified layout and lifetime.
-pub(super) struct UploadStats {
-    pub(super) working_bytes: usize,
-    pub(super) source_capacity_bytes: usize,
+pub(crate) struct UploadStats {
+    pub(crate) working_bytes: usize,
+    pub(crate) source_capacity_bytes: usize,
 }
 impl Context {
     /// Upload an immutable matrix through three reusable initialized source
@@ -221,7 +221,7 @@ impl Context {
         self.upload_from_fill(plan, available_working_bytes, fill)
             .map(|(weights, _)| weights)
     }
-    pub(super) fn weights_from_fill_reported<F>(
+    pub(crate) fn weights_from_fill_reported<F>(
         &self,
         layout: Layout,
         maximum_rows: usize,

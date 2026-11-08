@@ -246,3 +246,16 @@ native receipts remain unchanged. Ordinary engine/package inputs
 are unchanged outside test modules; no coupled GPU model, overhead or adoption
 claim. [Scope](qwen35-gpu-projections.md),
 [checks/review/commit](../artifacts/qwen35-gpu-projections-2026-11-08/publication-checks.json).
+
+
+Q1.G concrete Metal projection/gather executor passes both matched performance
+cohorts; Astra approves scoped retention, no findings. It consumes authenticated CPU matrix
+ownership, retains original GPU affine4/G64/BF16 and small CPU tensors, and shares
+CPU numerical/state transactions through static dispatch. One/context17 pass
+64.802M independent comparisons combined, maxratio0.447; peak3.425GB. Required
+631CPU/765Metal, fmt/both strict Clippy, native54/Csmokes,18Python/20coupled+6performance
+evidence controls and tiny GPU recovery pass. Coupled forward medians fall97.6–97.8%
+(138.03s→3.31s/138.02s→3.10s); matched physicalpeak5.307GB. Explicit GPU poison repair admits overlap
+and preserves committed prefix. No codec/full-GPU/request/adoption qualification.
+[Scope](qwen35-metal-executor.md),
+[checks/review/commit](../artifacts/qwen35-metal-executor-2026-11-08/publication-checks.json).

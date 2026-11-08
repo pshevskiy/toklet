@@ -8,6 +8,8 @@ use crate::mlx::payload::{buffer, read_exact, validate_q4_bf16};
 use half::bf16;
 use std::io::Read;
 
+#[cfg(all(feature = "metal", target_os = "macos"))]
+pub mod metal;
 #[cfg(test)]
 mod tests;
 

@@ -1,5 +1,7 @@
 use super::*;
 mod context;
+#[cfg(all(feature = "metal", target_os = "macos"))]
+mod metal;
 mod reset;
 use crate::mlx::affine::{Layout, MetadataDtype};
 use crate::model::gemma_reference::tests::Measurement;
@@ -227,7 +229,7 @@ fn close(actual: &[f32], expected: &[f64]) -> f64 {
     }
     max
 }
-fn snapshot(s: &Session<'_, '_>) -> String {
+fn snapshot<M: MatrixStorage, E: Execution<M>>(s: &Session<'_, '_, M, E>) -> String {
     let mut h = Sha256::new();
     for &v in s.history() {
         h.update(v.to_le_bytes());

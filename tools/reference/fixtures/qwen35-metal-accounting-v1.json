@@ -1,0 +1,38 @@
+{
+  "layout": {
+    "model": 184,
+    "layer": 232,
+    "session": 1344,
+    "delta_state": 144,
+    "kv": 48,
+    "projection": 240,
+    "gather": 160,
+    "metal_store": 2168,
+    "gpu_weights": 112
+  },
+  "load_report": {
+    "matrices": 249,
+    "packed_gpu_bytes": 2365273872,
+    "small_cpu_capacity_bytes": 3846144,
+    "retained_requested_bytes": 2369122184,
+    "retained_policy_bytes": 2503339912,
+    "admitted_load_policy_bytes": 2884435192,
+    "maximum_upload_source_capacity_bytes": 23593032,
+    "retained_cpu_matrix_bytes": 0
+  },
+  "model_owned_bytes": 7608,
+  "model_learned_bytes": 2503339912,
+  "memory": {
+    "weights_and_model_bytes": 2503347520,
+    "recurrent_bank_bytes": 150994944,
+    "convolution_bank_bytes": 7077888,
+    "kv_bytes": 33554432,
+    "scratch_bytes": 35701092,
+    "logits_bytes": 63569920,
+    "history_bytes": 2048,
+    "metadata_bytes": 5184,
+    "metadata_allowance_bytes": 67108864,
+    "admitted_bytes": 2861361892
+  },
+  "execution_owned_bytes": 35196772
+}
