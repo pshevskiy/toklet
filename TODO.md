@@ -1,6 +1,6 @@
 # Toklet progress checklist
 
-Updated **8 November 2026**. **Prior Mac milestones complete in recorded scopes; improvement goal active.**
+Updated **9 November 2026**. **Prior Mac milestones complete in recorded scopes; improvement goal active.**
 iPhone runtime work remains deferred by user.
 Read this file first, then the relevant plan criteria and targeted code/diff.
 Completed history is in the [dated archive](docs/archive/2026-11-07/README.md).
@@ -24,6 +24,21 @@ Current task: **Qwen3.5-4B admitted contexts and bounded controller/codec metric
 then full-request and quality gates before managed selection or further optimization.
 The full selected goal stays active.
 
+- [x] Q1.H pinned bounded text codec: two frozen witnesses and native100records/
+  165stream schedules pass, including exact whitespace, bothEOS IDs and padding
+  rejection. Controlled638CPU/772Metal, fmt/bothClippy and native56/Csmokes pass.
+  Default13load baseline rejects512MiB cap at686MB; explicit child-only
+  `MallocLargeCache=0` baselines pass at261MB, construction360/358ms.
+  InheritedNano0 retry now records/sanitizes only child settings. Limits and
+  app/library defaults unchanged; nonblocking/no-follow opens now qualified.
+  Astra approves scoped retention with no findings;
+  [checks/review/commit](artifacts/qwen35-text-codec-2026-11-08/publication-checks.json).
+  Controller/request metrics, deeper contexts, quality and adoption remain next gates;
+  [next-scope analysis](artifacts/qwen35-text-codec-2026-11-08/next-scope-analysis.json).
+  [Scope](docs/qwen35-text-codec.md),
+  [contract](artifacts/qwen35-text-codec-2026-11-08/acceptance-contract.json),
+  [investigation](artifacts/qwen35-text-codec-2026-11-08/memory-investigation.json).
+
 - [x] Q1.G static Metal projection/gather with consumed CPU matrix ownership:
   independent one/context17 pass32.135M/32.667M comparisons, maxratio0.447;
   physical peak3.425GB, full state/bit recovery and late-head repair pass.
@@ -35,8 +50,8 @@ The full selected goal stays active.
   [Scope](docs/qwen35-metal-executor.md),
   [checks/review/commit](artifacts/qwen35-metal-executor-2026-11-08/publication-checks.json).
   Next-scope metadata: [4B codec](artifacts/qwen35-codec-preflight-2026-11-08/preflight-summary.json)
-  authenticated tokenizer exposes248044/248046EOS disagreement; codec/controller
-  qualification remains open;
+  authenticated tokenizer exposes248044/248046EOS disagreement; Q1.H qualifies
+  the selected union for bounded text, while controller qualification stays open;
   [9B header](artifacts/qwen35-9b-preflight-2026-11-08/preflight-summary.json)
   has an untied output head and a 5.038 GB container. Neither admits a route.
 

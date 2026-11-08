@@ -259,3 +259,15 @@ evidence controls and tiny GPU recovery pass. Coupled forward medians fall97.6â€
 and preserves committed prefix. No codec/full-GPU/request/adoption qualification.
 [Scope](qwen35-metal-executor.md),
 [checks/review/commit](../artifacts/qwen35-metal-executor-2026-11-08/publication-checks.json).
+
+Q1.H bounded text codec passes100source records/165stream schedules against two
+frozen witnesses; exact whitespace, NFC/ByteLevel, flags and bothEOS IDs preserved.
+Controlled638CPU/772Metal, fmt/bothClippy and native56/Csmokes pass. Default13load
+reconstruction rejects512MiB at686MB; explicit process-only `MallocLargeCache=0`
+baselines pass at261MB, construction360/358ms. App/library defaults stay unchanged;
+inheritedNano0 retry is child-isolated; regular opens are nonblocking/no-follow.
+Astra approves scoped retention with no findings; no controller,
+deeper-context, request or adoption qualification.
+[Scope](qwen35-text-codec.md),
+[investigation](../artifacts/qwen35-text-codec-2026-11-08/memory-investigation.json),
+[checks/review/commit](../artifacts/qwen35-text-codec-2026-11-08/publication-checks.json).

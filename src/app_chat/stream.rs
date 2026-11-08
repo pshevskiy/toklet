@@ -77,6 +77,13 @@ impl Codec {
     }
 }
 impl<'codec> ResponseStream<'codec> {
+    pub(super) fn byte_level(
+        tokenizer: &'codec Tokenizer,
+        vocab: u32,
+        limits: ResponseLimits,
+    ) -> Self {
+        Self::new(tokenizer, vocab, Decoder::ByteLevel, false, limits)
+    }
     pub(super) fn byte_fallback(
         tokenizer: &'codec Tokenizer,
         vocab: u32,

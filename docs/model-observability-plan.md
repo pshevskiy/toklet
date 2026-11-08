@@ -1,6 +1,6 @@
 # Model roadmap: observability before optimization
 
-Updated 8 November 2026. Selected order: **Gemma 4 E2B → Qwen3.5-4B →
+Updated 9 November 2026. Selected order: **Gemma 4 E2B → Qwen3.5-4B →
 Qwen3.5-9B**. Qwen2.5-1.5B remains a historical regression reference, not the
 next adoption target. The [O1 opt-in pilot](o1-gemma-request-summaries.md) now
 implements available worker-boundary observations. The additive
@@ -92,8 +92,13 @@ Pinned [4B codec metadata](../artifacts/qwen35-codec-preflight-2026-11-08/prefli
 has a distinct tokenizer; the old dense Qwen3 codec cannot be reused by
 model-family name. After performance collection, the tokenizer payload was
 authenticated. Model/generation EOS 248044 resolves to `<|endoftext|>`, while
-the tokenizer's named EOS resolves to `<|im_end|>` at 248046. Stop semantics
-remain an unresolved codec gate; no source metadata is silently rewritten.
+the tokenizer's named EOS resolves to `<|im_end|>` at 248046. The
+[bounded text codec](qwen35-text-codec.md) now reproduces the selected upstream
+union of both IDs, exact template/IDs and stream behavior. Its controlled phase
+baselines pass only under an explicit process profile; default repeated
+reconstruction fails the component memory cap. Astra approves this text scope;
+controller, deeper-context, request/quality/adoption gates remain open. No metadata
+is rewritten. [Checks/review/commit](../artifacts/qwen35-text-codec-2026-11-08/publication-checks.json).
 The [9B header preflight](../artifacts/qwen35-9b-preflight-2026-11-08/preflight-summary.json)
 finds 250 packed matrices with a distinct, untied output head and a 5.038 GB
 container. It requires separate head binding, bounded reference-reader support

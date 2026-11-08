@@ -1,0 +1,38 @@
+{
+  "format": "toklet-qwen35-text-codec-v1",
+  "frozen_before_native_implementation": true,
+  "repository": "avan-ag/Qwen3.5-4B-Uncensored-MLX-4bit",
+  "revision": "fb98fbc59c71a567f3e23435386c9e93951261db",
+  "assets": {
+    "tokenizer_config.json": {
+      "bytes": 9432,
+      "sha256": "8fd4316758163961892a98841fe13c6354373a9080e13eaa86b1bff257f6ff9d"
+    },
+    "config.json": {
+      "bytes": 3024,
+      "sha256": "ac6f8df4f4c1fd9d2583996bdd7070ea801b703e8a2b36f6d4b673a94ea419b5"
+    },
+    "tokenizer.json": {
+      "bytes": 19989343,
+      "sha256": "87a7830d63fcf43bf241c3c5242e96e62dd3fdc29224ca26fed8ea333db72de4"
+    },
+    "generation_config.json": {
+      "bytes": 115,
+      "sha256": "0c35bb39fbaed1ac0656baabc4f4e9bda20214e12336d0e4e8755aac1f487c2e"
+    },
+    "chat_template.jinja": {
+      "bytes": 7967,
+      "sha256": "19b43ed4a381c5ff680a33611685df18c9af5f64c381878f0614b7f8f2cc5755"
+    }
+  },
+  "records": 100,
+  "witness_bytes": 48721,
+  "witness_sha256": "ffc3ca64bf65f337d58bfef0f565d6f5c993eb480d349ebd400bdfb2ce8011db",
+  "producer_sha256": "bdbcdcb83df0bdbc51e94e6e815596b1487db00e240529313b1925240485e0eb",
+  "processes": 2,
+  "reference_physical_peaks": [
+    295797480,
+    308921112
+  ],
+  "scope": "Original Jinja/Tokenizers with closed runtime; EOS source-slice convention. No nativecode/controller/model/quality qualification."
+}
