@@ -213,3 +213,12 @@ Combined reviewed G1.Cb/Q1.A–C source passes631CPU/765Metal, formatting and bo
 strict Clippy configurations. Native53 retains three slices/46exports and both
 Mac C smokes pass. Code/fixtures exactly match the union of approved revisions;
 only documentation required conflict resolution. [Integration checks](../artifacts/model-integration-2026-11-08/checks.json).
+
+Q1.D independent actual-source Qwen oracle is complete in its one-input scope. Bounded row views
+preserve the odd payload origin and original scalar arithmetic; all tiny fixture
+bytes regenerate exactly. Nineteen Python/nine damaged-evidence controls pass;
+both native captures pass32.135M full-array comparisons each, maxratio0.239,
+no greedy mismatch. Closed reference peak0.540GB;3,923Rust inputs unchanged,
+required/native receipts reused. Astra approves with no findings;
+contextual/GPU/quality/adoption gates remain open. [Scope](qwen35-real-fidelity.md),
+[checks/review/commit](../artifacts/qwen35-real-oracle-2026-11-08/publication-checks.json).

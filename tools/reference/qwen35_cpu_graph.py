@@ -33,8 +33,9 @@ def bf16(x):
     return bits, struct.unpack('<f',struct.pack('<I',bits<<16))[0]
 
 
-def specs():
-    g=GEOMETRY;h=g['hidden'];i=g['intermediate'];q=g['query_heads']*g['head_dim'];k=g['kv_heads']*g['head_dim']
+def specs(geometry=None):
+    g=GEOMETRY if geometry is None else geometry
+    h=g['hidden'];i=g['intermediate'];q=g['query_heads']*g['head_dim'];k=g['kv_heads']*g['head_dim']
     dk=g['key_heads']*g['key_dim'];dv=g['value_heads']*g['value_dim']
     out={P+'embed_tokens.weight':('matrix',[g['vocab'],h]),P+'norm.weight':('bf16',[h])}
     for layer in range(g['layers']):
@@ -85,7 +86,8 @@ def artifact():
 
 
 class Math:
-    def __init__(self,staged):self.staged=staged
+    def __init__(self,staged,geometry=None):
+        self.staged=staged;self.geometry=GEOMETRY if geometry is None else geometry
     def r(self,x):return f32(x) if self.staged else x
     def dot(self,a,b):
         if not self.staged:return math.fsum(x*y for x,y in zip(a,b,strict=True))
@@ -96,7 +98,7 @@ class Math:
     def norm(self,x,gamma,width):
         result=[]
         for start in range(0,len(x),width):
-            row=x[start:start+width];denom=math.sqrt(math.fsum(v*v for v in row)/width+f32(1e-6))
+            row=x[start:start+width];denom=math.sqrt(math.fsum(v*v for v in row)/width+f32(self.geometry['rms_epsilon']))
             result.extend(self.r(v/denom*w) for v,w in zip(row,gamma,strict=True))
         return result
     def sigmoid(self,x):
@@ -109,21 +111,24 @@ class Math:
         out=list(x)
         for head in range(heads):
             for j in range(rot//2):
-                angle=position*GEOMETRY['rope_theta']**(-2.*j/rot);co=self.r(math.cos(angle));si=self.r(math.sin(angle))
+                angle=position*self.geometry['rope_theta']**(-2.*j/rot);co=self.r(math.cos(angle));si=self.r(math.sin(angle))
                 a=head*dim+j;b=a+rot//2
                 out[a]=self.r(self.r(x[a]*co)-self.r(x[b]*si));out[b]=self.r(self.r(x[b]*co)+self.r(x[a]*si))
         return out
 
 
-def forward(matrices,vectors,tokens,offset,staged):
-    g=GEOMETRY;m=Math(staged);trace=[];states={};histories={};keys={};values={}
+def forward(matrices,vectors,tokens,offset,staged,*,geometry=None,math_type=Math,sink=None):
+    g=GEOMETRY if geometry is None else geometry
+    m=math_type(staged,g);trace=[];states={};histories={};keys={};values={}
     dk=g['key_heads']*g['key_dim'];dv=g['value_heads']*g['value_dim'];channels=2*dk+dv
     for layer in range(g['layers']):
         if layer%4!=3:states[layer]=[0.]*(g['value_heads']*g['value_dim']*g['key_dim']);histories[layer]=[[0.]*channels for _ in range(3)]
         else:keys[layer]=[];values[layer]=[]
     def save(t,layer,stage,x):
         if any(not math.isfinite(v) for v in x):raise ValueError('Nonfinite reference')
-        trace.append(dict(token=t,layer=layer,stage=stage,values=list(x)))
+        row=dict(token=t,layer=layer,stage=stage,values=list(x))
+        if sink is None:trace.append(row)
+        else:sink(row)
     for t,token in enumerate(tokens):
         x=list(matrices[P+'embed_tokens.weight'][token]);save(t,None,'embedding',x)
         for layer in range(g['layers']):
