@@ -222,3 +222,13 @@ no greedy mismatch. Closed reference peak0.540GB;3,923Rust inputs unchanged,
 required/native receipts reused. Astra approves with no findings;
 contextual/GPU/quality/adoption gates remain open. [Scope](qwen35-real-fidelity.md),
 [checks/review/commit](../artifacts/qwen35-real-oracle-2026-11-08/publication-checks.json).
+
+Q1.E real17input/offset37 replay is complete in its scoped prerequisite; Astra approves. The contract covers
+nonzero recurrence/history, causal KV, full final-stage/logit comparisons,
+chunk equivalence and failure/cancel/retry with completed-work counters.
+27Python/12negative controls and fresh631CPU/765Metal, fmt/strictClippy pass.
+Final native bits/recovery and32.667M comparisons pass, maxratio0.447, greedy22
+matches. Reference/native peaks0.668/2.655GB. Earlier setup/report/comparison
+corrections remain in evidence; no128/512/GPU/quality/adoption qualification.
+[Scope](qwen35-context-fidelity.md),
+[checks/review/commit](../artifacts/qwen35-context-2026-11-08/publication-checks.json).

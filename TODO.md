@@ -20,8 +20,8 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current task: **Qwen3.5-4B independent actual-source fidelity**, then GPU,
-codec/quality and the same request metrics before optimization.
+Current task: **Qwen3.5-4B GPU projection qualification and resident execution**,
+then admitted contexts, codec/quality and the same request metrics before optimization.
 The full selected goal stays active.
 
 Combined reviewed G1.Cb/Q1.A–C source passes631CPU/765Metal, strict Clippy/fmt,
@@ -29,6 +29,18 @@ native53 three slices/46exports and Mac C smokes; [integration checks](artifacts
 The next [one-input independent Qwen oracle contract](artifacts/qwen35-real-oracle-2026-11-08/acceptance-contract.json)
 is frozen; source collection and both full-array comparisons pass.
 Contextual/GPU/quality gates remain open; Astra approves the scoped oracle.
+
+- [x] Q1.E actual-source17input/offset37 context replay: complete final-stage,
+  recurrent/history/KV/logit oracle plus chunk/reset/failure/cancel/retry and
+  authoritative completed-work checks.27Python/12negative controls and fresh
+  631CPU/765Metal, fmt/both strictClippy pass. Final native bit/recovery replay
+  passes;32.667M comparisons pass original gates, maxratio0.447, no greedy
+  mismatch. Three actual warmed resets allocate0; reference/native peaks0.668/
+  2.655GB. Final counters describe the
+  last rejection; retry12 counters are asserted before it. Earlier setup,
+  report and value-equality corrections stay scoped. Astra approves with no findings;
+  no128/512/GPU/quality/adoption qualification. [Scope](docs/qwen35-context-fidelity.md),
+  [checks/review/commit](artifacts/qwen35-context-2026-11-08/publication-checks.json).
 
 - [x] Q1.D independent actual-source oracle: bounded packed rows/unaligned BF16,
   parameterized streaming scalar math and unchanged tiny fixture bytes.

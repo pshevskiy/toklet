@@ -21,14 +21,17 @@ def read(path, bound):
     return raw
 
 
-def document(path, bound=2*1024**2):
+def decode(raw):
     def finite(value):
         number = float(value)
         need(math.isfinite(number), 'Nonfinite JSON number')
         return number
     def constant(value): raise ValueError('Nonfinite JSON constant: ' + value)
-    return json.loads(read(path, bound), object_pairs_hook=adapter.unique,
+    return json.loads(raw, object_pairs_hook=adapter.unique,
         parse_float=finite, parse_constant=constant)
+
+
+def document(path, bound=2*1024**2): return decode(read(path,bound))
 
 
 def exact(got, expected):
@@ -39,8 +42,8 @@ def exact(got, expected):
     return got == expected
 
 
-def key(item):
-    need(type(item['token']) is int and item['token'] == 0, 'Frozen token index differs')
+def key(item, token=0):
+    need(type(item['token']) is int and item['token'] == token, 'Frozen token index differs')
     need(item['layer'] is None or type(item['layer']) is int and 0 <= item['layer'] < 32, 'Layer type/range differs')
     need(type(item['stage']) is str, 'Stage string required')
     name = item['stage']; match = re.fullmatch(r'(attention_(?:k_cache|v_cache|scores|probabilities))\.(\d+)', name)
@@ -48,8 +51,18 @@ def key(item):
     return (item['layer'], match[1], int(match[2])) if match else (item['layer'], name, None)
 
 
-def reference(folder):
+def expected(tokens=1):
+    need(type(tokens) is int and 1 <= tokens <= 512, 'Bounded integer context required')
+    wanted = native_check.expected()
+    for k in wanted:
+        if k[1] in ['attention_k_cache', 'attention_v_cache', 'attention_scores', 'attention_probabilities']:
+            wanted[k] *= tokens
+    return wanted
+
+
+def reference(folder, phase='one'):
     import numpy as np
+    tokens, position, values = producer.plan(phase)
     receipt = document(folder/'checks.json')
     need(receipt['collection_passed'] is True and type(receipt['exit_code']) is int and receipt['exit_code'] == 0
          and receipt['error'] is None and receipt['group_absent'] is True and receipt['changed_sources'] == [],
@@ -65,10 +78,11 @@ def reference(folder):
     need(result['completed'] is True and result['primary_error'] is None and result['endpoint_errors'] == []
          and result['format'] == 'toklet-qwen35-real-reference-v1', 'Complete numerical result required')
     for name, value in dict(repository=adapter.REPOSITORY, revision=adapter.REVISION, source_sha256=pin.FILE_SHA,
-        tokens=[1], position_offset=0, geometry=adapter.GEOMETRY, gate=graph.GATE,
-        planned_rows_bytes=producer.VALUES*12, ledger=producer.LEDGER, engine_executed=False,
+        tokens=tokens, position_offset=position, geometry=adapter.GEOMETRY, gate=graph.GATE,
+        planned_rows_bytes=values*12, ledger=producer.LEDGER, engine_executed=False,
         contextual_numerical_qualified=False, quality_qualified=False, managed_adoption_qualified=False).items():
         need(exact(result[name], value), 'Frozen independent contract differs: ' + name)
+    need(result.get('phase', 'one') == phase, 'Named reference phase differs')
     source = result['source']
     need(source['closed'] is True and source['poisoned'] is False and source['poison_reason'] is None
          and source['bytes'] == pin.FILE_BYTES and type(source['bytes']) is int
@@ -104,15 +118,15 @@ def reference(folder):
     need(all(p in runtime['files'] for p in result['runtime_endpoint']['numpy_modules'].values()),
          'Loaded NumPy origin outside admitted runtime')
     raw = read(folder/'capture/rows.bin', producer.MAX_CAPTURE)
-    need(len(raw) == producer.VALUES*12 and hashlib.sha256(raw).hexdigest() == result['rows_sha256'], 'Independent body identity differs')
+    need(len(raw) == values*12 and hashlib.sha256(raw).hexdigest() == result['rows_sha256'], 'Independent body identity differs')
     need(type(result['arrays']) is list and len(result['arrays']) == producer.ARRAYS*2, 'Complete independent array inventory required')
-    wanted = native_check.expected(); rows = {}; offset = 0
+    wanted = expected(len(tokens)); rows = {}; offset = 0
     for profile, width, dtype in [('ideal_fp64', 8, '<f8'), ('staged_fp32', 4, '<f4')]:
         selected = result['arrays'][len(rows)*producer.ARRAYS:(len(rows)+1)*producer.ARRAYS]
         arrays = {}
         for item in selected:
             need(set(item) == {'profile', 'token', 'layer', 'stage', 'count', 'offset', 'bytes', 'sha256'}, 'Exact array descriptor fields required')
-            k = key(item)
+            k = key(item, len(tokens)-1)
             need(item['profile'] == profile and k in wanted and k not in arrays, 'Array profile/owner/uniqueness differs')
             for field in ['count', 'offset', 'bytes']: need(type(item[field]) is int, 'Strict integer array extents required')
             need(item['count'] == wanted[k] and item['offset'] == offset and item['bytes'] == wanted[k]*width, 'Complete array geometry differs')

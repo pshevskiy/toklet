@@ -1,4 +1,6 @@
 use super::*;
+mod context;
+mod reset;
 use crate::mlx::affine::{Layout, MetadataDtype};
 use crate::model::gemma_reference::tests::Measurement;
 use serde_json::Value;
@@ -206,6 +208,12 @@ fn greedy(v: &[f32]) -> usize {
     }
     best
 }
+fn assert_float_bits(actual: &[f32], expected: &[f32]) {
+    assert_eq!(actual.len(), expected.len());
+    for (index, (a, b)) in actual.iter().zip(expected).enumerate() {
+        assert_eq!(a.to_bits(), b.to_bits(), "float bits differ at{index}");
+    }
+}
 fn close(actual: &[f32], expected: &[f64]) -> f64 {
     assert_eq!(actual.len(), expected.len());
     let mut max = 0.0f64;
@@ -332,11 +340,11 @@ fn whole_chunk_partitions_and_reset_are_bit_identical() {
         for part in ids.chunks(chunk) {
             got.extend_from_slice(s.forward(part).unwrap());
         }
-        assert_eq!(all, got);
+        assert_float_bits(&all, &got);
         assert_eq!(end, snapshot(&s));
         s.reset();
         assert!(s.history().is_empty() && s.logits().is_none());
-        assert_eq!(s.forward(&ids).unwrap(), all);
+        assert_float_bits(s.forward(&ids).unwrap(), &all);
         assert_eq!(end, snapshot(&s));
     }
 }
