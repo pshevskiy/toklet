@@ -271,3 +271,16 @@ deeper-context, request or adoption qualification.
 [Scope](qwen35-text-codec.md),
 [investigation](../artifacts/qwen35-text-codec-2026-11-08/memory-investigation.json),
 [checks/review/commit](../artifacts/qwen35-text-codec-2026-11-08/publication-checks.json).
+
+Q1.I generation state bridge is in progress: pending sampled/input history stays
+separate from committed hybrid state; exact whole-prefix reuse and conservative
+edit/shortening replay feed the existing generation controller. Detailed memory
+owners and last numerical work stay observable.644CPU/778Metal, strict Clippy/fmt,
+native58/Csmokes and tiny GPU controls pass. Actual17 state/logits and failure/
+repair/retry bits match, peak2.765GB. Two release baselines pass: generation
+2.985/2.950s versus direct2.968/2.961s, no speed/overhead claim;8Python/36resealed
+evidence controls pass. Astra approves scoped retention with no findings; no managed
+route or quality qualification.
+[Checks/review/commit](../artifacts/qwen35-generation-state-2026-11-09/publication-checks.json).
+[Scope](qwen35-generation-state.md),
+[contract](../artifacts/qwen35-generation-state-2026-11-09/acceptance-contract.json).

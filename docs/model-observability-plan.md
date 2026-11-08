@@ -99,6 +99,12 @@ baselines pass only under an explicit process profile; default repeated
 reconstruction fails the component memory cap. Astra approves this text scope;
 controller, deeper-context, request/quality/adoption gates remain open. No metadata
 is rewritten. [Checks/review/commit](../artifacts/qwen35-text-codec-2026-11-08/publication-checks.json).
+The [bounded generation state bridge](qwen35-generation-state.md) is in progress:
+pending/committed history, conservative hybrid replay and detailed memory/work
+snapshots feed the existing controller. Required/source checks and both scoped
+release baselines pass; Astra approves this state bridge with no findings. This
+grants no managed route.
+[Checks/review/commit](../artifacts/qwen35-generation-state-2026-11-09/publication-checks.json).
 The [9B header preflight](../artifacts/qwen35-9b-preflight-2026-11-08/preflight-summary.json)
 finds 250 packed matrices with a distinct, untied output head and a 5.038 GB
 container. It requires separate head binding, bounded reference-reader support

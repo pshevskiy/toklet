@@ -24,6 +24,22 @@ Current task: **Qwen3.5-4B admitted contexts and bounded controller/codec metric
 then full-request and quality gates before managed selection or further optimization.
 The full selected goal stays active.
 
+- [x] Q1.I bounded generation state bridge: separate pending history, exact whole
+  committed-prefix reuse and reset/replay for changed or shortened prompts.
+  Detailed hybrid/wrapper memory and last numerical work snapshots; no route or
+  sampling-mask change.644CPU/778Metal, fmt/both strictClippy, native58/Csmokes
+  and tiny Metal repair/budget controls pass. Actual17/offset37 state/logits/retry
+  are exact; peak2.765GB. Initial context-name/unused-helper errors, superseded
+  source-changing checks and footer-collector rejection are retained; corrected
+  source/collector pass. Both release cohorts pass: generation2.985/2.950s,
+  direct2.968/2.961s, peaks2.765GB;8Python/36resealed controls pass.
+  Astra approves with no findings; request summaries/overhead and quality remain open.
+  [Checks/review/commit](artifacts/qwen35-generation-state-2026-11-09/publication-checks.json),
+  [next-scope constraints](artifacts/qwen35-generation-state-2026-11-09/next-scope-analysis.json).
+  [Contract](artifacts/qwen35-generation-state-2026-11-09/acceptance-contract.json),
+  [scope](docs/qwen35-generation-state.md),
+  [corrections](artifacts/qwen35-generation-state-2026-11-09/source-corrections.json).
+
 - [x] Q1.H pinned bounded text codec: two frozen witnesses and native100records/
   165stream schedules pass, including exact whitespace, bothEOS IDs and padding
   rejection. Controlled638CPU/772Metal, fmt/bothClippy and native56/Csmokes pass.

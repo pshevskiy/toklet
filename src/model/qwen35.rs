@@ -12,7 +12,9 @@ use std::fmt;
 
 mod execution;
 mod forward;
+mod generation;
 pub use execution::{Cpu, Execution, MatrixStorage};
+pub use generation::{GenerationMemory, GenerationSession, GenerationState, PrefixAction};
 #[cfg(all(feature = "metal", target_os = "macos"))]
 mod metal;
 #[cfg(all(feature = "metal", target_os = "macos"))]

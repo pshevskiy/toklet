@@ -4,6 +4,7 @@ use crate::metal::gemma_affine::{
     CONTEXT_ALLOWANCE_BYTES, Context, Weights as GpuWeights, with_projection_failure,
 };
 
+mod generation;
 mod real;
 
 fn map_weights<'a, M, N>(weights: Weights<'a, M>, mut map: impl FnMut(M) -> N) -> Weights<'a, N> {

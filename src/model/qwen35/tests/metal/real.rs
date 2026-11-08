@@ -1,4 +1,5 @@
 //! Real-source closed GPU projection/CPU-state probes, separate from ordinary tests.
+mod generation;
 use super::*;
 use crate::mlx::qwen35::{self as source, payload};
 use std::{

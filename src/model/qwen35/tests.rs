@@ -55,11 +55,11 @@ fn bytes(v: &Value) -> &'static [u8] {
     assert_eq!(format!("{:x}", Sha256::digest(b)), v["sha256"]);
     b
 }
-struct Fixture {
+pub(super) struct Fixture {
     vectors: BTreeMap<String, Vec<f32>>,
 }
 impl Fixture {
-    fn new() -> Self {
+    pub(super) fn new() -> Self {
         let vectors = manifest()["weights"]
             .as_object()
             .unwrap()
@@ -147,7 +147,7 @@ impl Fixture {
             },
         )
     }
-    fn model(&self) -> Model<'_> {
+    pub(super) fn model(&self) -> Model<'_> {
         let (c, w) = self.inputs();
         let m = Model::new(c, w).unwrap();
         assert_eq!(
@@ -165,7 +165,7 @@ fn options() -> Options {
         memory_limit_bytes: MEMORY_LIMIT,
     }
 }
-fn tokens() -> Vec<u32> {
+pub(super) fn tokens() -> Vec<u32> {
     manifest()["cases"][1]["tokens"]
         .as_array()
         .unwrap()
@@ -210,7 +210,7 @@ fn greedy(v: &[f32]) -> usize {
     }
     best
 }
-fn assert_float_bits(actual: &[f32], expected: &[f32]) {
+pub(super) fn assert_float_bits(actual: &[f32], expected: &[f32]) {
     assert_eq!(actual.len(), expected.len());
     for (index, (a, b)) in actual.iter().zip(expected).enumerate() {
         assert_eq!(a.to_bits(), b.to_bits(), "float bits differ at{index}");
@@ -229,7 +229,7 @@ fn close(actual: &[f32], expected: &[f64]) -> f64 {
     }
     max
 }
-fn snapshot<M: MatrixStorage, E: Execution<M>>(s: &Session<'_, '_, M, E>) -> String {
+pub(super) fn snapshot<M: MatrixStorage, E: Execution<M>>(s: &Session<'_, '_, M, E>) -> String {
     let mut h = Sha256::new();
     for &v in s.history() {
         h.update(v.to_le_bytes());
