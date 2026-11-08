@@ -192,3 +192,11 @@ an unaligned byte origin.618CPU/750Metal, fmt/strict Clippy and two metadata
 cohorts pass; Astra approves with no findings. No runtime, model-fit or adoption claim.
 [Scope](qwen35-4b-cold.md),
 [checks/review/commit](../artifacts/qwen35-4b-cold-2026-11-08/publication-checks.json).
+
+Q1.B bounded CPU payload storage is complete in its scoped prerequisite: original packed matrices,
+exact small BF16 decoding, immutable views and explicit admission accounting.
+624CPU/756Metal, strict Clippy/fmt, five Python and six damaged-evidence
+controls pass. Two source proofs match924components/747rows each;2.382GBpeak.
+Astra approves with no findings. No graph/runtime/quality/adoption claim.
+[Scope](qwen35-4b-payload.md),
+[checks/review/commit](../artifacts/qwen35-4b-payload-2026-11-08/publication-checks.json).

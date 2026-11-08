@@ -11,6 +11,7 @@ use sha2::{Digest, Sha256};
 use std::collections::BTreeMap;
 
 mod configuration;
+pub mod payload;
 mod recipe;
 #[cfg(test)]
 mod tests;

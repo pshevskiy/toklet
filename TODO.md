@@ -44,6 +44,16 @@ The full selected goal stays active.
   [checks/review/commit](artifacts/gemma-heretic-quality-probes-2026-11-08/publication-checks.json),
   [quality/rejection](artifacts/gemma-heretic-quality-probes-2026-11-08/quality-summary.json).
 
+- [x] Q1.B bounded authenticated CPU payload owner: preserve249packed matrices,
+  decode153BF16 vectors/24four-tap weight tensors, hash the full source before publish
+  and expose explicit load/capacity accounting.624CPU/756Metal, fmt/strict
+  Clippy, five Python/six damaged-evidence controls and two full source proofs
+  pass;2.382GB physical peaks,747rows/2.70Mvalues bit-exact per capture.
+  Initial type error and stale model label fixed/retained; Astra approves.
+  No hybrid graph, codec, runtime fit or adoption qualification.
+  [Scope](docs/qwen35-4b-payload.md),
+  [checks/review/commit](artifacts/qwen35-4b-payload-2026-11-08/publication-checks.json).
+
 - [x] Q1.A cold Qwen3.5-4B recipe: pinned119,829B header,
   249affine matrices/153BF16 vectors/24four-tap convolutions, distinct24delta/
   8KV owner indices and tied embedding/head. Fresh618CPU/750Metal tests,
