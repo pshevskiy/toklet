@@ -1,6 +1,6 @@
 # Model roadmap: observability before optimization
 
-Updated 7 November 2026. Selected order: **Gemma 4 E2B → Qwen3.5-4B →
+Updated 8 November 2026. Selected order: **Gemma 4 E2B → Qwen3.5-4B →
 Qwen3.5-9B**. Qwen2.5-1.5B remains a historical regression reference, not the
 next adoption target. The [O1 opt-in pilot](o1-gemma-request-summaries.md) now
 implements available worker-boundary observations. The additive
@@ -79,6 +79,11 @@ main first model. Qwen3.5-4B is also outside this strict tier. Nanbeige4.2-3B wa
 investigated but has 4,169,800,704 stored parameters at `b82e54bd`, so is excluded.
 Do not use quantized container word counts to claim a smaller parameter class.
 Availability of a publisher's conversion is not a passing local benchmark.
+
+The isolated [all-source FP32 Metal projection gate](qwen35-gpu-projections.md) passes.
+Next is a concrete executor with coupled state/recovery validation and the same
+completed-work/request metrics. An isolated operator result does not admit a
+managed route; codec, quality, admitted-context and full-request gates still apply.
 
 ## Metric contract
 

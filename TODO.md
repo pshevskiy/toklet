@@ -20,9 +20,19 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current task: **Qwen3.5-4B GPU projection qualification and resident execution**,
+Current task: **Qwen3.5-4B concrete Metal-projection executor and coupled state qualification**,
 then admitted contexts, codec/quality and the same request metrics before optimization.
 The full selected goal stays active.
+
+- [x] Q1.F all-249 FP32 Metal projection diagnostic: both batches pass
+  24.846M independent comparisons in each of two owned processes; max ratio
+  0.000580, native peak 5.299 GB. Four cohorts: scalar 8.047–8.149 s,
+  Metal 0.191–0.202 s; retain isolated operator candidate. CPU 631/Metal 765,
+  fmt/both strict Clippy, 20Python/20evidence controls and GPU transactions pass;
+  Astra approves after reader-admission P2 fix; no remaining findings. Original native
+  receipts are unchanged. Initial zero-test discovery was corrected and retained.
+  [Scope](docs/qwen35-gpu-projections.md),
+  [checks/review/commit](artifacts/qwen35-gpu-projections-2026-11-08/publication-checks.json).
 
 Combined reviewed G1.Cb/Q1.A–C source passes631CPU/765Metal, strict Clippy/fmt,
 native53 three slices/46exports and Mac C smokes; [integration checks](artifacts/model-integration-2026-11-08/checks.json).

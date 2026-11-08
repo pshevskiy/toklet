@@ -232,3 +232,17 @@ matches. Reference/native peaks0.668/2.655GB. Earlier setup/report/comparison
 corrections remain in evidence; no128/512/GPU/quality/adoption qualification.
 [Scope](qwen35-context-fidelity.md),
 [checks/review/commit](../artifacts/qwen35-context-2026-11-08/publication-checks.json).
+
+
+Q1.F FP32 Metal projection diagnostic is complete in its isolated scope; Astra approves.
+All 249 original Qwen matrices pass batches 1/17 in two owned processes:
+24.846M independent comparisons each, no failures, max ratio 0.000580; peak
+5.299 GB. Four cohorts reduce completed sequence medians from 8.047–8.149 s
+scalar to 0.191–0.202 s Metal; retain this operator candidate. Required
+631CPU/765Metal, fmt/both strict Clippy, 20Python/20evidence controls and the
+four-case/88-step GPU transaction witness pass. Astra’s reader-admission P2 is
+fixed with independently derived owner reconciliation/footer agreement; original
+native receipts remain unchanged. Ordinary engine/package inputs
+are unchanged outside test modules; no coupled GPU model, overhead or adoption
+claim. [Scope](qwen35-gpu-projections.md),
+[checks/review/commit](../artifacts/qwen35-gpu-projections-2026-11-08/publication-checks.json).

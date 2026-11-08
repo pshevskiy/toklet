@@ -1,6 +1,9 @@
 use super::*;
 use std::io::Cursor;
 
+#[cfg(all(feature = "metal", target_os = "macos"))]
+mod metal;
+
 const EMBED: &str = "language_model.model.embed_tokens.weight";
 const NORM: &str = "language_model.model.norm.weight";
 const CONV: &str = "language_model.model.layers.0.linear_attn.conv1d.weight";
