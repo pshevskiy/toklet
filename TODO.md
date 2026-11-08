@@ -24,6 +24,19 @@ Current task: **G1.C independent native fidelity and original/modified/quantized
 held-out quality gates**, then explicitly adopt/reject and continue Qwen3.5-4B.
 The full selected goal stays active.
 
+- [x] G1.Ca independent mixed-source fidelity and parent pinning: all1,094
+  consumed components reproduce from authenticated modified BF16 parent;22 full
+  rows/5.77M values through512 pass unchanged FP64/staged-FP32 gates with no
+  greedy mismatches and exact repeated prefixes.610CPU/742Metal,18Python,
+  fmt/strictClippy and native512/state controls pass; peak2.942GB for512capture.
+  Astra approves scoped prerequisite with no findings. No full quality/adoption.
+  [Scope](docs/gemma-heretic-fidelity.md),
+  [checks/review/commit](artifacts/gemma-heretic-quality-2026-11-08/publication-checks.json).
+- [ ] G1.Cb qualify separately pinned modified-BF16 and test-only1,025loss/
+  567task probes, then unchanged10kNLL/100task original/modified/quantized gates.
+  Preserve public512limit,6GiB ceiling and isolated task grader.
+  [Frozen inputs](artifacts/gemma-heretic-quality-2026-11-08/quality-input-inventory.json).
+
 - [x] G1.B authenticated Mac mixed-format diagnostic:277 original affine4
   matrices plus one BF16 projection, immutable owners/session scratch, matched
   byte proof and explicit load/memory/request metrics. Cap512/chunk32; no managed

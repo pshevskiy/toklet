@@ -166,3 +166,11 @@ Paired caller time improves26.2%; sustained322/434requests over600s each confirm
 26.18% and stay below2.947GB. Astra approves scoped implementation/retention;
 no held-out quality or managed-model adoption. [Scope](gemma-heretic-native.md),
 [checks/review/commit](../artifacts/gemma-heretic-runtime-2026-11-08/publication-checks.json).
+
+Independent mixed-source numerical/quality qualification is in progress. The
+modified BF16 parent is separately authenticated and all1094consumed components
+reproduce exactly. Independent32/64/512context checks pass5.77Mvalues/22rows
+against FP64/stagedFP32 under the original gate; no greedy mismatches. Required
+checks and combined Astra review pass with no findings; full held-out quality/adoption remain open.
+[Scope](gemma-heretic-fidelity.md),
+[checks/review/commit](../artifacts/gemma-heretic-quality-2026-11-08/publication-checks.json).

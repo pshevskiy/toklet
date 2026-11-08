@@ -14,6 +14,7 @@ const PROMPT: [u32; 15] = [
     2, 105, 2364, 107, 1567, 506, 5279, 529, 7001, 236761, 106, 107, 105, 4368, 107,
 ];
 mod bench;
+mod fidelity;
 fn opts() -> Options {
     Options {
         capacity: 512,
