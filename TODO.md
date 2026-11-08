@@ -44,6 +44,19 @@ The full selected goal stays active.
   [checks/review/commit](artifacts/gemma-heretic-quality-probes-2026-11-08/publication-checks.json),
   [quality/rejection](artifacts/gemma-heretic-quality-probes-2026-11-08/quality-summary.json).
 
+- [x] Q1.C concrete packed scalar hybrid model/session:32-layer source binding,
+  distinct recurrent/history/KV owners, transactional chunk rollback and work/
+  memory counters. Frozen ideal/staged fixtures pass3.675Mstage comparisons
+  (max gate ratio0.153),107observer failures, chunk/cancel/reset/admission and
+  zero-allocation controls. Fresh630CPU/762Metal, strict Clippy/fmt,14Python
+  and five damaged-capture controls pass. Two actual32-layer one-input CPU
+  captures match1051arrays each, zero warmed allocations, physicalpeak2.638GB.
+  Astra approves with no findings; real coupled fidelity/GPU/codec/quality remain open.
+  First fixture-number representation assertion and mixed Clippy-toolchain
+  preflight failures retained; no tolerance/fixture changes.
+  [Scope](docs/qwen35-hybrid.md),
+  [checks/review/commit](artifacts/qwen35-hybrid-2026-11-08/publication-checks.json).
+
 - [x] Q1.B bounded authenticated CPU payload owner: preserve249packed matrices,
   decode153BF16 vectors/24four-tap weight tensors, hash the full source before publish
   and expose explicit load/capacity accounting.624CPU/756Metal, fmt/strict

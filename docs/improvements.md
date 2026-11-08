@@ -200,3 +200,11 @@ controls pass. Two source proofs match924components/747rows each;2.382GBpeak.
 Astra approves with no findings. No graph/runtime/quality/adoption claim.
 [Scope](qwen35-4b-payload.md),
 [checks/review/commit](../artifacts/qwen35-4b-payload-2026-11-08/publication-checks.json).
+
+Q1.C packed scalar Qwen hybrid model/session is complete in its scoped reference: distinct state
+owners, atomic chunk publication, explicit memory/completed-work observations
+and independent ideal/staged fixtures.630CPU/762Metal, strict Clippy/fmt,14Python
+and five damaged-capture controls pass. Two actual32-layer CPU one-input
+captures match, physicalpeak2.638GB, zero warmed allocations. Astra approves with no findings;
+no independent real coupled/GPU/codec/quality/adoption qualification.
+[Scope](qwen35-hybrid.md), [checks/review/commit](../artifacts/qwen35-hybrid-2026-11-08/publication-checks.json).

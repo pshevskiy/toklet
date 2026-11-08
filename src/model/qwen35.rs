@@ -1,0 +1,408 @@
+//! Concrete scalar packed Qwen3.5 text graph; no codec or ordinary model route.
+//!
+//! Model weights are immutable borrowed spans. Delta/history and attention KV
+//! have distinct session owners. This is a correctness reference, not BF16 GPU
+//! arithmetic emulation or a declaration of real-source quality qualification.
+use crate::{
+    cpu,
+    mlx::affine::{Matrix, MetadataDtype},
+};
+use std::fmt;
+
+mod forward;
+mod state;
+pub use state::{Memory, Options, Outcome, Session, Work};
+#[cfg(test)]
+mod tests;
+
+pub const CAPACITY_LIMIT: usize = 512;
+pub const CHUNK_LIMIT: usize = 32;
+const MEMORY_LIMIT: usize = 6 * 1024 * 1024 * 1024;
+const METADATA_ALLOWANCE: usize = 64 * 1024 * 1024;
+
+#[derive(Debug)]
+pub enum Error {
+    Model(super::Error),
+    Weights(crate::weights::Error),
+    MemoryBudget { required: usize, limit: usize },
+    Cancelled,
+    Observation(&'static str),
+}
+impl From<cpu::Error> for Error {
+    fn from(e: cpu::Error) -> Self {
+        Self::Model(e.into())
+    }
+}
+impl From<super::Error> for Error {
+    fn from(e: super::Error) -> Self {
+        Self::Model(e)
+    }
+}
+impl From<crate::weights::Error> for Error {
+    fn from(e: crate::weights::Error) -> Self {
+        Self::Weights(e)
+    }
+}
+impl fmt::Display for Error {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Model(e) => e.fmt(f),
+            Self::Weights(e) => e.fmt(f),
+            Self::MemoryBudget { required, limit } => {
+                write!(
+                    f,
+                    "Qwen3.5 admission requires {required} bytes, limit {limit}"
+                )
+            }
+            Self::Cancelled => f.write_str("Qwen3.5 chunk cancelled before publication"),
+            Self::Observation(reason) => write!(f, "Qwen3.5 observation rejected: {reason}"),
+        }
+    }
+}
+impl std::error::Error for Error {}
+type Result<T> = std::result::Result<T, Error>;
+fn invalid(message: &'static str) -> Error {
+    super::Error::InvalidConfig(message).into()
+}
+fn add(a: usize, b: usize) -> Result<usize> {
+    a.checked_add(b).ok_or(cpu::Error::SizeOverflow.into())
+}
+fn mul(a: usize, b: usize) -> Result<usize> {
+    Ok(cpu::product(a, b)?)
+}
+fn reserved<T>(n: usize) -> Result<Vec<T>> {
+    let mut result = Vec::new();
+    result
+        .try_reserve_exact(n)
+        .map_err(|_| super::Error::Allocation)?;
+    Ok(result)
+}
+fn zeros(n: usize) -> Result<Vec<f32>> {
+    Ok(super::zeros(n)?)
+}
+
+#[derive(Clone, Copy, Debug, PartialEq, serde::Deserialize)]
+pub struct Config {
+    pub hidden: usize,
+    pub intermediate: usize,
+    pub vocab: usize,
+    pub layers: usize,
+    pub query_heads: usize,
+    pub kv_heads: usize,
+    pub head_dim: usize,
+    pub rotated_dims: usize,
+    pub key_heads: usize,
+    pub value_heads: usize,
+    pub key_dim: usize,
+    pub value_dim: usize,
+    pub max_positions: usize,
+    pub rope_theta: f32,
+    pub rms_epsilon: f32,
+}
+impl Config {
+    fn validate(self) -> Result<()> {
+        for n in [
+            self.hidden,
+            self.intermediate,
+            self.vocab,
+            self.layers,
+            self.query_heads,
+            self.kv_heads,
+            self.head_dim,
+            self.key_heads,
+            self.value_heads,
+            self.key_dim,
+            self.value_dim,
+            self.max_positions,
+        ] {
+            cpu::nonzero(n, "Qwen3.5 geometry")?;
+        }
+        if self.layers > 32
+            || !self.layers.is_multiple_of(4)
+            || !self.query_heads.is_multiple_of(self.kv_heads)
+            || !self.value_heads.is_multiple_of(self.key_heads)
+            || self.rotated_dims == 0
+            || !self.rotated_dims.is_multiple_of(2)
+            || self.rotated_dims > self.head_dim
+            || !self.rope_theta.is_finite()
+            || self.rope_theta <= 0.
+            || !self.rms_epsilon.is_finite()
+            || self.rms_epsilon <= 0.
+            || self.max_positions as u128 > 1u128 << 53
+        {
+            return Err(invalid("Qwen3.5 text geometry/position convention"));
+        }
+        self.query_width()?;
+        self.kv_width()?;
+        self.key_width()?;
+        self.value_width()?;
+        self.conv_width()?;
+        Ok(())
+    }
+    fn query_width(self) -> Result<usize> {
+        mul(self.query_heads, self.head_dim)
+    }
+    fn kv_width(self) -> Result<usize> {
+        mul(self.kv_heads, self.head_dim)
+    }
+    fn key_width(self) -> Result<usize> {
+        mul(self.key_heads, self.key_dim)
+    }
+    fn value_width(self) -> Result<usize> {
+        mul(self.value_heads, self.value_dim)
+    }
+    fn conv_width(self) -> Result<usize> {
+        add(mul(2, self.key_width()?)?, self.value_width()?)
+    }
+    fn delta_count(self) -> usize {
+        self.layers - self.layers / 4
+    }
+    fn attention_count(self) -> usize {
+        self.layers / 4
+    }
+}
+
+pub struct DeltaWeights<'a> {
+    pub qkv: Matrix<'a>,
+    pub z: Matrix<'a>,
+    pub a: Matrix<'a>,
+    pub b: Matrix<'a>,
+    pub out: Matrix<'a>,
+    pub convolution: &'a [f32],
+    pub a_log: &'a [f32],
+    pub dt_bias: &'a [f32],
+    pub norm: &'a [f32],
+}
+pub struct AttentionWeights<'a> {
+    pub q_gate: Matrix<'a>,
+    pub k: Matrix<'a>,
+    pub v: Matrix<'a>,
+    pub out: Matrix<'a>,
+    pub q_norm: &'a [f32],
+    pub k_norm: &'a [f32],
+}
+pub enum MixingWeights<'a> {
+    Delta(DeltaWeights<'a>),
+    Attention(AttentionWeights<'a>),
+}
+pub struct LayerWeights<'a> {
+    pub input_norm: &'a [f32],
+    pub post_norm: &'a [f32],
+    pub gate: Matrix<'a>,
+    pub up: Matrix<'a>,
+    pub down: Matrix<'a>,
+    pub mixing: MixingWeights<'a>,
+}
+pub struct Weights<'a> {
+    pub embedding: Matrix<'a>,
+    pub final_norm: &'a [f32],
+    pub layers: Vec<LayerWeights<'a>>,
+}
+struct Layer<'a> {
+    weights: LayerWeights<'a>,
+    owner: usize,
+}
+pub struct Model<'a> {
+    config: Config,
+    embedding: Matrix<'a>,
+    final_norm: &'a [f32],
+    layers: Vec<Layer<'a>>,
+    learned_bytes: usize,
+    owned_bytes: usize,
+}
+fn matrix(m: &Matrix<'_>, rows: usize, columns: usize) -> Result<usize> {
+    let l = m.layout();
+    if l.rows() != rows
+        || l.columns() != columns
+        || l.bits() != 4
+        || l.group_size() != 64
+        || l.metadata_dtype() != MetadataDtype::BF16
+    {
+        return Err(invalid("Qwen3.5 original Q4/G64/BF16 matrix geometry"));
+    }
+    Ok(l.total_bytes())
+}
+fn vector(v: &[f32], n: usize) -> Result<usize> {
+    cpu::length("Qwen3.5 vector", v.len(), n)?;
+    cpu::finite("Qwen3.5 vector", v)?;
+    mul(n, 4)
+}
+impl<'a> Model<'a> {
+    /// Borrow admitted numerical spans. Any caller ownership beyond those spans
+    /// needs a separate allowance. The CPU-store factory accounts its capacities.
+    pub fn new(config: Config, weights: Weights<'a>) -> Result<Self> {
+        let c = config;
+        c.validate()?;
+        if weights.layers.len() != c.layers {
+            return Err(super::Error::LayerCount {
+                expected: c.layers,
+                actual: weights.layers.len(),
+            }
+            .into());
+        }
+        let mut learned = add(
+            matrix(&weights.embedding, c.vocab, c.hidden)?,
+            vector(weights.final_norm, c.hidden)?,
+        )?;
+        let mut layers = reserved(c.layers)?;
+        for (i, w) in weights.layers.into_iter().enumerate() {
+            for n in [
+                vector(w.input_norm, c.hidden)?,
+                vector(w.post_norm, c.hidden)?,
+                matrix(&w.gate, c.intermediate, c.hidden)?,
+                matrix(&w.up, c.intermediate, c.hidden)?,
+                matrix(&w.down, c.hidden, c.intermediate)?,
+            ] {
+                learned = add(learned, n)?;
+            }
+            let owner = match &w.mixing {
+                MixingWeights::Delta(d) if i % 4 != 3 => {
+                    for n in [
+                        matrix(&d.qkv, c.conv_width()?, c.hidden)?,
+                        matrix(&d.z, c.value_width()?, c.hidden)?,
+                        matrix(&d.a, c.value_heads, c.hidden)?,
+                        matrix(&d.b, c.value_heads, c.hidden)?,
+                        matrix(&d.out, c.hidden, c.value_width()?)?,
+                        vector(d.convolution, mul(c.conv_width()?, 4)?)?,
+                        vector(d.a_log, c.value_heads)?,
+                        vector(d.dt_bias, c.value_heads)?,
+                        vector(d.norm, c.value_dim)?,
+                    ] {
+                        learned = add(learned, n)?;
+                    }
+                    i - i / 4
+                }
+                MixingWeights::Attention(a) if i % 4 == 3 => {
+                    for n in [
+                        matrix(&a.q_gate, mul(2, c.query_width()?)?, c.hidden)?,
+                        matrix(&a.k, c.kv_width()?, c.hidden)?,
+                        matrix(&a.v, c.kv_width()?, c.hidden)?,
+                        matrix(&a.out, c.hidden, c.query_width()?)?,
+                        vector(a.q_norm, c.head_dim)?,
+                        vector(a.k_norm, c.head_dim)?,
+                    ] {
+                        learned = add(learned, n)?;
+                    }
+                    i / 4
+                }
+                _ => return Err(invalid("Qwen3.5 three-delta/one-attention layer order")),
+            };
+            layers.push(Layer { weights: w, owner });
+        }
+        let owned_bytes = add(
+            std::mem::size_of::<Self>(),
+            mul(layers.capacity(), std::mem::size_of::<Layer<'_>>())?,
+        )?;
+        Ok(Self {
+            config: c,
+            embedding: weights.embedding,
+            final_norm: weights.final_norm,
+            layers,
+            learned_bytes: learned,
+            owned_bytes,
+        })
+    }
+    pub fn config(&self) -> Config {
+        self.config
+    }
+    pub fn model_bytes(&self) -> Result<usize> {
+        add(self.learned_bytes, self.owned_bytes)
+    }
+    pub fn session(&self, options: Options) -> Result<Session<'_, 'a>> {
+        Session::new(self, options)
+    }
+    /// Explicit scalar diagnostic only. No tokenizer pairing, ordinary catalog,
+    /// sampled-token controller or native/Metal eligibility follows from this.
+    pub fn from_cpu_store(store: &'a crate::mlx::qwen35::payload::PayloadStore) -> Result<Self> {
+        use crate::mlx::qwen35::LayerRecipe;
+        let plan = store.plan();
+        let LayerRecipe::GatedDelta(d) = plan.layers()[0] else {
+            return Err(invalid("Qwen3.5 first delta recipe"));
+        };
+        let LayerRecipe::GatedFullAttention(a) = plan.layers()[3] else {
+            return Err(invalid("Qwen3.5 fourth attention recipe"));
+        };
+        let config = Config {
+            hidden: plan.hidden_size(),
+            intermediate: plan.intermediate_size(),
+            vocab: plan.vocab_size(),
+            layers: plan.layers().len(),
+            query_heads: a.query_heads,
+            kv_heads: a.kv_heads,
+            head_dim: a.head_dim,
+            rotated_dims: a.rotated_dims,
+            key_heads: d.key_heads,
+            value_heads: d.value_heads,
+            key_dim: d.key_dim,
+            value_dim: d.value_dim,
+            max_positions: plan.declared_total_positions(),
+            rope_theta: plan.rope_theta() as f32,
+            rms_epsilon: 1e-6,
+        };
+        let prefix = "language_model.model.";
+        let mut layers = reserved(config.layers)?;
+        for (i, kind) in plan.layers().iter().enumerate() {
+            let b = format!("{prefix}layers.{i}.");
+            let mat = |role: &str| store.matrix(&format!("{b}{role}.weight"));
+            let vec = |role: &str| store.vector(&format!("{b}{role}"));
+            let mixing = match kind {
+                LayerRecipe::GatedDelta(_) => MixingWeights::Delta(DeltaWeights {
+                    qkv: mat("linear_attn.in_proj_qkv")?,
+                    z: mat("linear_attn.in_proj_z")?,
+                    a: mat("linear_attn.in_proj_a")?,
+                    b: mat("linear_attn.in_proj_b")?,
+                    out: mat("linear_attn.out_proj")?,
+                    convolution: store.convolution(&format!("{b}linear_attn.conv1d.weight"))?,
+                    a_log: vec("linear_attn.A_log")?,
+                    dt_bias: vec("linear_attn.dt_bias")?,
+                    norm: vec("linear_attn.norm.weight")?,
+                }),
+                LayerRecipe::GatedFullAttention(_) => MixingWeights::Attention(AttentionWeights {
+                    q_gate: mat("self_attn.q_proj")?,
+                    k: mat("self_attn.k_proj")?,
+                    v: mat("self_attn.v_proj")?,
+                    out: mat("self_attn.o_proj")?,
+                    q_norm: vec("self_attn.q_norm.weight")?,
+                    k_norm: vec("self_attn.k_norm.weight")?,
+                }),
+            };
+            layers.push(LayerWeights {
+                input_norm: vec("input_layernorm.weight")?,
+                post_norm: vec("post_attention_layernorm.weight")?,
+                gate: mat("mlp.gate_proj")?,
+                up: mat("mlp.up_proj")?,
+                down: mat("mlp.down_proj")?,
+                mixing,
+            });
+        }
+        let mut model = Self::new(
+            config,
+            Weights {
+                embedding: store.matrix(&format!("{prefix}embed_tokens.weight"))?,
+                final_norm: store.vector(&format!("{prefix}norm.weight"))?,
+                layers,
+            },
+        )?;
+        let bytes = plan.payload_bytes();
+        let wanted = add(
+            add(bytes.affine_codes, bytes.affine_metadata)?,
+            mul(add(bytes.bf16_vectors, bytes.bf16_convolutions)?, 2)?,
+        )?;
+        if model.learned_bytes != wanted || wanted > store.report().retained_tensor_capacity_bytes {
+            return Err(invalid("Qwen3.5 source backing count"));
+        }
+        model.learned_bytes = store.report().retained_tensor_capacity_bytes;
+        Ok(model)
+    }
+}
+
+/// Actual candidate-stage slices. `head` is used for strided cache/attention
+/// rows; no observer runs after the first publication swap.
+pub struct Observation<'a> {
+    pub token: usize,
+    pub position: usize,
+    pub layer: Option<usize>,
+    pub stage: &'static str,
+    pub head: Option<usize>,
+    pub values: &'a [f32],
+}
