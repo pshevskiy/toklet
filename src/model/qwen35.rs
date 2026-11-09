@@ -10,6 +10,7 @@ use crate::{
 };
 use std::fmt;
 
+mod binding;
 mod execution;
 mod forward;
 mod generation;
@@ -227,6 +228,7 @@ struct Layer<'a, M> {
 pub struct Model<'a, M: MatrixStorage = Matrix<'a>> {
     config: Config,
     embedding: M,
+    output_head: Option<M>,
     final_norm: &'a [f32],
     layers: Vec<Layer<'a, M>>,
     learned_bytes: usize,
@@ -253,6 +255,19 @@ impl<'a, M: MatrixStorage> Model<'a, M> {
     /// Borrow admitted numerical spans. Any caller ownership beyond those spans
     /// needs a separate allowance. The CPU-store factory accounts its capacities.
     pub fn new(config: Config, weights: Weights<'a, M>) -> Result<Self> {
+        Self::new_with_output(config, weights, None)
+    }
+    /// A separate original output projection, with the same vocabulary/hidden
+    /// dimensions as the embedding. Use `new` for tied storage, counted once.
+    /// The source-qualified9B factory resolves its independently owned table.
+    pub fn new_untied(config: Config, weights: Weights<'a, M>, head: M) -> Result<Self> {
+        Self::new_with_output(config, weights, Some(head))
+    }
+    fn new_with_output(
+        config: Config,
+        weights: Weights<'a, M>,
+        output_head: Option<M>,
+    ) -> Result<Self> {
         let c = config;
         c.validate()?;
         if weights.layers.len() != c.layers {
@@ -266,6 +281,9 @@ impl<'a, M: MatrixStorage> Model<'a, M> {
             matrix(&weights.embedding, c.vocab, c.hidden)?,
             vector(weights.final_norm, c.hidden)?,
         )?;
+        if let Some(head) = &output_head {
+            learned = add(learned, matrix(head, c.vocab, c.hidden)?)?;
+        }
         let mut layers = reserved(c.layers)?;
         for (i, w) in weights.layers.into_iter().enumerate() {
             for n in [
@@ -318,105 +336,21 @@ impl<'a, M: MatrixStorage> Model<'a, M> {
         Ok(Self {
             config: c,
             embedding: weights.embedding,
+            output_head,
             final_norm: weights.final_norm,
             layers,
             learned_bytes: learned,
             owned_bytes,
         })
     }
+    fn head(&self) -> &M {
+        self.output_head.as_ref().unwrap_or(&self.embedding)
+    }
     pub fn config(&self) -> Config {
         self.config
     }
     pub fn model_bytes(&self) -> Result<usize> {
         add(self.learned_bytes, self.owned_bytes)
-    }
-    /// Explicit scalar diagnostic only. No tokenizer pairing, ordinary catalog,
-    /// sampled-token controller or native/Metal eligibility follows from this.
-    fn bind_source(
-        plan: &crate::mlx::qwen35::Plan,
-        mut matrix: impl FnMut(&str) -> Result<M>,
-        mut vector: impl FnMut(&str) -> Result<&'a [f32]>,
-        mut convolution: impl FnMut(&str) -> Result<&'a [f32]>,
-        backing_bytes: usize,
-    ) -> Result<Self> {
-        use crate::mlx::qwen35::LayerRecipe;
-        let LayerRecipe::GatedDelta(d) = plan.layers()[0] else {
-            return Err(invalid("Qwen3.5 first delta recipe"));
-        };
-        let LayerRecipe::GatedFullAttention(a) = plan.layers()[3] else {
-            return Err(invalid("Qwen3.5 fourth attention recipe"));
-        };
-        let config = Config {
-            hidden: plan.hidden_size(),
-            intermediate: plan.intermediate_size(),
-            vocab: plan.vocab_size(),
-            layers: plan.layers().len(),
-            query_heads: a.query_heads,
-            kv_heads: a.kv_heads,
-            head_dim: a.head_dim,
-            rotated_dims: a.rotated_dims,
-            key_heads: d.key_heads,
-            value_heads: d.value_heads,
-            key_dim: d.key_dim,
-            value_dim: d.value_dim,
-            max_positions: plan.declared_total_positions(),
-            rope_theta: plan.rope_theta() as f32,
-            rms_epsilon: 1e-6,
-        };
-        let prefix = "language_model.model.";
-        let mut layers = reserved(config.layers)?;
-        for (i, kind) in plan.layers().iter().enumerate() {
-            let b = format!("{prefix}layers.{i}.");
-            let mut mat = |role: &str| matrix(&format!("{b}{role}.weight"));
-            let mut vec = |role: &str| vector(&format!("{b}{role}"));
-            let mixing = match kind {
-                LayerRecipe::GatedDelta(_) => MixingWeights::Delta(DeltaWeights {
-                    qkv: mat("linear_attn.in_proj_qkv")?,
-                    z: mat("linear_attn.in_proj_z")?,
-                    a: mat("linear_attn.in_proj_a")?,
-                    b: mat("linear_attn.in_proj_b")?,
-                    out: mat("linear_attn.out_proj")?,
-                    convolution: convolution(&format!("{b}linear_attn.conv1d.weight"))?,
-                    a_log: vec("linear_attn.A_log")?,
-                    dt_bias: vec("linear_attn.dt_bias")?,
-                    norm: vec("linear_attn.norm.weight")?,
-                }),
-                LayerRecipe::GatedFullAttention(_) => MixingWeights::Attention(AttentionWeights {
-                    q_gate: mat("self_attn.q_proj")?,
-                    k: mat("self_attn.k_proj")?,
-                    v: mat("self_attn.v_proj")?,
-                    out: mat("self_attn.o_proj")?,
-                    q_norm: vec("self_attn.q_norm.weight")?,
-                    k_norm: vec("self_attn.k_norm.weight")?,
-                }),
-            };
-            layers.push(LayerWeights {
-                input_norm: vec("input_layernorm.weight")?,
-                post_norm: vec("post_attention_layernorm.weight")?,
-                gate: mat("mlp.gate_proj")?,
-                up: mat("mlp.up_proj")?,
-                down: mat("mlp.down_proj")?,
-                mixing,
-            });
-        }
-        let mut model = Self::new(
-            config,
-            Weights {
-                embedding: matrix(&format!("{prefix}embed_tokens.weight"))?,
-                final_norm: vector(&format!("{prefix}norm.weight"))?,
-                layers,
-            },
-        )?;
-        let bytes = plan.payload_bytes();
-        let wanted = add(
-            add(bytes.affine_codes, bytes.affine_metadata)?,
-            mul(add(bytes.bf16_vectors, bytes.bf16_convolutions)?, 2)?,
-        )?;
-        if model.learned_bytes != wanted || wanted > backing_bytes {
-            return Err(invalid("Qwen3.5 source backing count"));
-        }
-        model.learned_bytes = backing_bytes;
-        Ok(model)
     }
 }
 

@@ -356,3 +356,12 @@ regression. Astra approves scoped retention; no model/GPU/codec/request/quality/
 qualification follows, and OS cache residency is not inferred from warmups.
 
 [Q2.B checks/review/commit](../artifacts/qwen35-9b-storage-2026-11-09/publication-checks.json).
+
+Q2.C's [explicit untied numerical head](qwen35-untied-head.md) preserves tied4B
+interfaces and adds a diagnostic9B CPU factory. Required667CPU/801Metal,
+fmt/both strictClippy,3Python, independent tiny CPU/Metal graph/state and
+native61/Csmokes pass. Both old4B capture scopes are bitwise unchanged;60release
+samples show4B+0.13%/−2.43% and9BCPU15.480/15.546s at5.31GBpeak. No speedup,
+full9B fidelity or managed adoption claim; deeper4B rejection stays binding.
+Astra approves scoped retention with no findings;
+[checks/review/commit](../artifacts/qwen35-9b-head-2026-11-09/publication-checks.json).

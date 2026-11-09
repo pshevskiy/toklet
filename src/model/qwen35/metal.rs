@@ -37,7 +37,7 @@ pub type MetalSession<'model, 'weights, 'context> =
 fn bindings<'a>(model: &MetalModel<'a>) -> Result<Vec<&'a GpuWeights>> {
     let c = model.config;
     let count = add(
-        1,
+        1 + usize::from(model.output_head.is_some()),
         add(mul(c.delta_count(), 8)?, mul(c.attention_count(), 7)?)?,
     )?;
     let mut slots = reserved(count)?;
@@ -53,6 +53,9 @@ fn bindings<'a>(model: &MetalModel<'a>) -> Result<Vec<&'a GpuWeights>> {
         Ok(())
     };
     bind(&model.embedding)?;
+    if let Some(head) = &model.output_head {
+        bind(head)?;
+    }
     for layer in &model.layers {
         let w = &layer.weights;
         for m in [&w.gate, &w.up, &w.down] {

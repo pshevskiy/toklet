@@ -7,7 +7,10 @@ use crate::metal::gemma_affine::{
 mod generation;
 mod real;
 
-fn map_weights<'a, M, N>(weights: Weights<'a, M>, mut map: impl FnMut(M) -> N) -> Weights<'a, N> {
+pub(super) fn map_weights<'a, M, N>(
+    weights: Weights<'a, M>,
+    mut map: impl FnMut(M) -> N,
+) -> Weights<'a, N> {
     Weights {
         embedding: map(weights.embedding),
         final_norm: weights.final_norm,
@@ -48,7 +51,7 @@ fn map_weights<'a, M, N>(weights: Weights<'a, M>, mut map: impl FnMut(M) -> N) -
             .collect(),
     }
 }
-fn upload(context: &Context, fixture: &Fixture) -> Vec<GpuWeights> {
+pub(super) fn upload(context: &Context, fixture: &Fixture) -> Vec<GpuWeights> {
     let (_, weights) = fixture.inputs();
     let mut gpu = Vec::new();
     let _ = map_weights(weights, |matrix| {

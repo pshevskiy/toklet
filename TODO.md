@@ -20,15 +20,25 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **Q2.C explicit untied numerical head binding** after reviewed
-Q2.B. The full selected goal stays active;4B managed adoption remains ineligible
-under its unchanged numerical gate.
+Current/next task: **Q2.D independent pinned9B one-input oracle and bounded
+>4GiB reference rows**, after reviewed Q2.C. The full selected goal stays active;
+4B managed adoption remains ineligible under its unchanged numerical gate.
 
-- [ ] Q2.C preserve tied4B constructors and add explicit separate-head numerical
-  binding with independent tiny graph/state/accounting controls. Freeze a contract
-  before edits. Actual9B oracles, >4GiB reference layout, GPU/default allocator/
-  codec/application fit, request/overhead and quality/adoption remain later gates;
-  [inspected next scope](artifacts/qwen35-9b-storage-2026-11-09/next-scope-analysis.json).
+- [ ] Q2.D: freeze a separate9B real-source oracle/row-bound contract before edits.
+  Keep strict4B identities and both numerical profiles; no fullFP32 model owner.
+  [Inspected next scope](artifacts/qwen35-9b-head-2026-11-09/next-scope-analysis.json).
+
+- [x] Q2.C separate immutable head/typed9B CPU binding preserve tied4B APIs.
+  Fmt/both strictClippy,667CPU/801Metal(45/324ignored),3Python, tiny CPU/Metal
+  3.675Mcomparisons each(maxratio0.153), native61/Csmokes pass. Old4B capture bits
+  unchanged in both scopes(+16Bmetadata);16report controls reject. Six release
+  cohorts/60samples:4B+0.13%/−2.43%,9BCPU15.480/15.546s at5.31GBpeak. No speedup/
+  1%bound or full9B fidelity claim. Astra approves, no findings. Prior compile/
+  JSON/reader/link and cache/preflight corrections retained;6GiB/2GiB guards hold.
+  [Scope](docs/qwen35-untied-head.md),
+  [checks/review/commit](artifacts/qwen35-9b-head-2026-11-09/publication-checks.json).
+  Independent9B oracle, GPU/default allocator/codec/appfit, request/overhead and
+  quality/adoption remain open;4B128/256 rejection stays binding.
 
 - [x] Q2.B separate pinned9B CPU store: full-stream authentication before publishing
   original packed owners/exact small values;4B APIs preserved. Required fmt/both

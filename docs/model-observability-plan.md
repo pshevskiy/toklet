@@ -197,6 +197,14 @@ residency or speedup claim. Astra approves after a reader timing fix;
 Full model/default allocator/GPU/codec/
 request/quality/adoption gates stay open and4B eligibility does not expand.
 
+Q2.C's [explicit untied head](qwen35-untied-head.md) preserves tied interfaces,
+with a separate diagnostic9B CPU factory. Required667CPU/801Metal, tiny dual-profile
+CPU/Metal graphs, native61/Csmokes and both bitwise4B capture scopes pass. Six
+release cohorts/60samples show4B+0.13%/−2.43% (no repeated5% regression) and
+9BCPU15.480/15.546s at5.31GBpeak. Astra approves scoped retention, with no findings. Full9B oracle,
+GPU/default allocator/codec/appfit, request/quality/adoption gates stay open;
+4B128/256 rejection remains binding.
+
 ## Metric contract
 
 O1 must make each handled request observable before performance changes. Reuse

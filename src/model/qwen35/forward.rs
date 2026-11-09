@@ -372,6 +372,6 @@ pub(super) fn frame<
         c.rms_epsilon,
     )?;
     t.emit::<TRACE>("final_norm", None, &s.final_norm)?;
-    project(execute, &model.embedding, &s.final_norm, logits, work)?;
+    project(execute, model.head(), &s.final_norm, logits, work)?;
     t.emit::<TRACE>("logits", None, logits)
 }

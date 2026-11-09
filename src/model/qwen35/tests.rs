@@ -3,6 +3,7 @@ mod context;
 #[cfg(all(feature = "metal", target_os = "macos"))]
 mod metal;
 mod reset;
+mod untied;
 use crate::mlx::affine::{Layout, MetadataDtype};
 use crate::model::gemma_reference::tests::Measurement;
 use serde_json::Value;
