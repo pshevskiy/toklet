@@ -1,0 +1,40 @@
+{
+  "format": "toklet-working-document-archive-v1",
+  "source_revision": "88950b110634a4ef339b9c85a5605235d6ec3a8d",
+  "source": "Reviewed base only; in-progress Q2.G changes remain in live documents",
+  "files": [
+    {
+      "source": "TODO.md",
+      "archive": "docs/archive/2026-11-09/TODO.md",
+      "source_revision": "88950b110634a4ef339b9c85a5605235d6ec3a8d",
+      "original_sha256": "dda037d69242d619fbb489f451b28867fe52b16220c766f67265889da2945af4",
+      "archived_sha256": "3acd532c5ebb390a47bcfa32a5af32751b48489b696171bcf308049a4d2332d3",
+      "original_bytes": 36780,
+      "archived_bytes": 37476,
+      "rebased_links": 135,
+      "source_text_exact_after_inverse_rebase": true
+    },
+    {
+      "source": "PLAN.md",
+      "archive": "docs/archive/2026-11-09/PLAN.md",
+      "source_revision": "88950b110634a4ef339b9c85a5605235d6ec3a8d",
+      "original_sha256": "541ad1919007f77b387d0b9c007af04c962f95ec72b9eaf7eeb5cdafe184d58e",
+      "archived_sha256": "084c117a76ece93f1433036fd2065028dd6fc8a173d6b3971efd9efa4f869080",
+      "original_bytes": 29407,
+      "archived_bytes": 29331,
+      "rebased_links": 24,
+      "source_text_exact_after_inverse_rebase": true
+    },
+    {
+      "source": "docs/improvements.md",
+      "archive": "docs/archive/2026-11-09/improvements.md",
+      "source_revision": "88950b110634a4ef339b9c85a5605235d6ec3a8d",
+      "original_sha256": "3a137e584da14962658d6c1223d138d1cc4114721168e307e95662cfac3baba7",
+      "archived_sha256": "d1aebee62570d00648acfff0d5c8de308a1cf7e465745f4697ff963d96ceeba0",
+      "original_bytes": 30120,
+      "archived_bytes": 30670,
+      "rebased_links": 102,
+      "source_text_exact_after_inverse_rebase": true
+    }
+  ]
+}

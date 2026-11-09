@@ -6,6 +6,7 @@ use crate::metal::gemma_affine::{
 
 mod generation;
 mod nine_b_context17;
+mod nine_b_context256;
 mod nine_b_real;
 mod real;
 

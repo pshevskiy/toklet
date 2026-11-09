@@ -243,6 +243,20 @@ engine speed, deeper contexts and adoption remain unqualified. All175 portable Q
 are reused only after input audits. Astra approves scoped retention with no findings;
 [checks/review/commit](../artifacts/qwen35-reference-vector-2026-11-09/publication-checks.json).
 
+Q2.G's [9B128/256 evaluation](qwen35-9b-context256.md) rejects deeper coupled
+fidelity:45,332/79.35M comparisons fail per capture, with14,847 disjoint original
+profile intervals. Native functional/recovery checks pass at5.667GBpeak;3positive/
+39damage controls pass. Both original profiles/gates remain binding. Required
+Rust checks,190portable Python tests, native build/ABI and two strict release-probe
+builds pass. The first performance attempt rejects its environment before model
+startup. Retry2 saves raw preflight before admission and passes12metric/preflight
+tests. After power correction,40measured/12warm samples close at nominal boundaries:
+128medians32.068/30.848s,256medians68.399/63.330s, exact outputs,5.676GB maximum
+conservative charge. First256 cohort is noisy; all samples are retained.1positive/
+17performance controls pass. Astra approves scoped diagnostic retention/commit,
+no findings. These
+are descriptive baselines; numerical rejection, overhead and adoption restrictions remain.
+
 ## Metric contract
 
 O1 must make each handled request observable before performance changes. Reuse
