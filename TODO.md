@@ -20,13 +20,22 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **Q2.E source-specific9B consuming GPU ownership/hybrid Metal
-binding**, after reviewed Q2.D. The full goal stays active;4B managed adoption
+Current/next task: **Q2.F9B context17 numerical qualification**, after reviewed
+Q2.E consuming GPU ownership/hybrid Metal binding. The full goal stays active;4B managed adoption
 remains ineligible under its unchanged numerical gate.
 
-- [ ] Q2.E: freeze the consuming-upload/binding contract and physical/owner budget
-  before edits; preserve typed source identity,6GiB and independent one-input gate.
-  [Inspected next scope](artifacts/qwen35-9b-oracle-2026-11-09/next-scope-analysis.json).
+- [x] Q2.E consuming9B GPU store/hybrid binding: checks/evidence complete;
+  Astra approves scoped retention with no actionable findings.667CPU/803Metal(46/328ignored), fmt/both strict
+  Clippy,38Python, native62/Csmokes and tiny failure/repair/zeroalloc pass.
+  Two real9B captures pass33.32Mvalues each,maxratio0.1874,5.667GBpeak; both4B
+  scopes remain bit-exact.19native/16report damage controls reject.
+  Eight release cohorts/80samples:9B scalar15.284/15.366s→hybrid236/239ms
+  (64.72×/64.42×),4B−3.28%/+0.34%; all peaks<6GiB. AC/nominal thermal/lowpower
+  off at boundaries; no continuous/tail/sustained/request/overhead claim.
+  Corrected macro/cfg/launcher/path and4B output-extent reader failures retained;
+  cache target missed, preservation/minimum headroom/2GiB guard pass.
+  [Scope/evidence](docs/qwen35-9b-metal.md). Context/default allocator/codec/
+  appfit/request/quality/adoption remain open; next Q2.F9B context17 qualification.
 
 - [x] Q2.D separate bounded >4GiB rows/independent9B one-input oracle: both captures
   pass33.32Mvalues each, zero failures/maxratio0.1874 and identical native body bits.

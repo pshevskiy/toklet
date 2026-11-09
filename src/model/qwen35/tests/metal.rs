@@ -5,6 +5,7 @@ use crate::metal::gemma_affine::{
 };
 
 mod generation;
+mod nine_b_real;
 mod real;
 
 pub(super) fn map_weights<'a, M, N>(

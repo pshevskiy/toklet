@@ -1,4 +1,4 @@
-//! Separate pinned9B CPU ownership; no model, GPU, codec or device admission.
+//! Separate pinned9B CPU ownership; GPU conversion needs explicit consuming admission.
 use super::{
     CONFIG_BYTES, CONTAINER_BYTES, CONTAINER_SHA256, HEADER_BYTES, ModalityPolicy, Plan, inspect,
 };
@@ -8,10 +8,13 @@ use crate::{
 };
 use std::io::Read;
 
+#[cfg(all(feature = "metal", target_os = "macos"))]
+pub mod metal;
+
 pub use cold::{ContentIdentity, LoadOptions, LoadReport};
 
 /// Immutable original packed components and exactly promoted small BF16 values.
-/// The distinct head remains an independent owner, without numerical binding.
+/// The distinct head remains an independent owner; numerical views borrow it.
 pub struct PayloadStore {
     plan: Plan,
     components: cold::Components,

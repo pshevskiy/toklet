@@ -376,3 +376,14 @@ approves scoped retention, no blocking findings; wider contexts and all remainin
 GPU/default allocator/codec/appfit/request/quality/adoption gates stay open.
 
 [Q2.D checks/review/commit](../artifacts/qwen35-9b-oracle-2026-11-09/publication-checks.json).
+
+
+Q2.E's [consuming9B GPU store and hybrid binding](qwen35-9b-metal.md) preserve
+strict4B APIs and numerical kernels. Both real9B captures pass33.32Mvalues each,
+maxratio0.1874, with5.667GBpeak and zero retained CPU matrix bytes. Required
+667CPU/803Metal,38Python, native62/Csmokes and35damaged-evidence controls pass;
+both4B capture scopes stay bit-exact. Eight release cohorts/80samples show9B
+scalar15.284/15.366s→hybrid236/239ms (64.72×/64.42×) for raw input1 only;
+4B−3.28%/+0.34%. AC/nominal thermal/Low Power Mode off are boundary observations.
+Astra approves scoped retention, no findings. Context/default allocator/codec/appfit/request/overhead/
+quality/adoption stay open;4B128/256 rejection remains binding.

@@ -94,6 +94,21 @@ impl<'a, M: MatrixStorage> Model<'a, M> {
             backing_bytes,
         )
     }
+    pub(super) fn bind_nine_b_source(
+        plan: &crate::mlx::qwen35::nine_b::Plan,
+        matrix: impl FnMut(&str) -> Result<M>,
+        vector: impl FnMut(&str) -> Result<&'a [f32]>,
+        convolution: impl FnMut(&str) -> Result<&'a [f32]>,
+        backing_bytes: usize,
+    ) -> Result<Self> {
+        Self::bind_recipe(
+            SourceBinding::nine_b(plan)?,
+            matrix,
+            vector,
+            convolution,
+            backing_bytes,
+        )
+    }
     fn bind_recipe(
         plan: SourceBinding<'_>,
         mut matrix: impl FnMut(&str) -> Result<M>,
@@ -166,8 +181,8 @@ impl<'a> Model<'a> {
     pub fn from_nine_b_cpu_store(
         store: &'a crate::mlx::qwen35::nine_b::payload::PayloadStore,
     ) -> Result<Self> {
-        Self::bind_recipe(
-            SourceBinding::nine_b(store.plan())?,
+        Self::bind_nine_b_source(
+            store.plan(),
             |name| Ok(store.matrix(name)?),
             |name| Ok(store.vector(name)?),
             |name| Ok(store.convolution(name)?),

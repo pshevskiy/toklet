@@ -618,3 +618,6 @@ fn actual_payload_corruption_is_not_published() {
         json!({"last_byte_changed_in_reader":true,"source_file_mutated":false,"store_published":false,"hash_rejected":true})
     );
 }
+
+#[cfg(all(feature = "metal", target_os = "macos"))]
+mod metal;

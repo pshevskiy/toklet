@@ -193,6 +193,22 @@ impl<'a> MetalModel<'a> {
             store.report().retained_policy_bytes,
         )
     }
+    /// Hybrid diagnostic binding of the distinct-head9B GPU store. GPU
+    /// projection/gather does not qualify contexts,codec,quality or a route.
+    pub fn from_nine_b_metal_store(
+        store: &'a crate::mlx::qwen35::nine_b::payload::metal::MetalStore,
+    ) -> Result<Self> {
+        Self::bind_nine_b_source(
+            store.plan(),
+            |name| {
+                let (slot, weights) = store.matrix(name)?;
+                Ok(MetalMatrix { weights, slot })
+            },
+            |name| Ok(store.vector(name)?),
+            |name| Ok(store.convolution(name)?),
+            store.report().retained_policy_bytes,
+        )
+    }
     pub fn planned_session_memory(&self, options: Options) -> Result<Memory> {
         MetalSession::planned_with_execution(self, options, MetalExecution::planned(self)?)
     }
