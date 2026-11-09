@@ -20,13 +20,25 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **Q2.D independent pinned9B one-input oracle and bounded
->4GiB reference rows**, after reviewed Q2.C. The full selected goal stays active;
-4B managed adoption remains ineligible under its unchanged numerical gate.
+Current/next task: **Q2.E source-specific9B consuming GPU ownership/hybrid Metal
+binding**, after reviewed Q2.D. The full goal stays active;4B managed adoption
+remains ineligible under its unchanged numerical gate.
 
-- [ ] Q2.D: freeze a separate9B real-source oracle/row-bound contract before edits.
-  Keep strict4B identities and both numerical profiles; no fullFP32 model owner.
-  [Inspected next scope](artifacts/qwen35-9b-head-2026-11-09/next-scope-analysis.json).
+- [ ] Q2.E: freeze the consuming-upload/binding contract and physical/owner budget
+  before edits; preserve typed source identity,6GiB and independent one-input gate.
+  [Inspected next scope](artifacts/qwen35-9b-oracle-2026-11-09/next-scope-analysis.json).
+
+- [x] Q2.D separate bounded >4GiB rows/independent9B one-input oracle: both captures
+  pass33.32Mvalues each, zero failures/maxratio0.1874 and identical native body bits.
+  Native peaks5.311GB/reference530MB; prefix/replay/zeroalloc, fmt/bothClippy,
+  667CPU/801Metal(46/325ignored),33Python/19damaged-evidence controls pass.
+  Native61/package/engine baseline reuse audited for test-only Rust changes.
+  Helper40samples show+1.05%/−1.27%, exact outputs; no engine gain/1%bound.
+  Astra approves with no blocking findings; unavailable hardware/thermal queries
+  are explicit, post-collection AC only. Cache meets9GB/preserves690pins; unused
+  setup relative-path error happened before writes. [Scope](docs/qwen35-9b-oracle.md),
+  [checks/review/commit](artifacts/qwen35-9b-oracle-2026-11-09/publication-checks.json).
+  Context/GPU/default allocator/codec/appfit/request/quality/adoption remain open.
 
 - [x] Q2.C separate immutable head/typed9B CPU binding preserve tied4B APIs.
   Fmt/both strictClippy,667CPU/801Metal(45/324ignored),3Python, tiny CPU/Metal

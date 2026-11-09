@@ -365,3 +365,14 @@ samples show4B+0.13%/−2.43% and9BCPU15.480/15.546s at5.31GBpeak. No speedup,
 full9B fidelity or managed adoption claim; deeper4B rejection stays binding.
 Astra approves scoped retention with no findings;
 [checks/review/commit](../artifacts/qwen35-9b-head-2026-11-09/publication-checks.json).
+
+Q2.D's [independent9B one-input oracle](qwen35-9b-oracle.md) passes all33.32Mvalues
+in both captures at the unchanged dual-profile gate(maxratio0.1874). Native peaks
+5.311GB/reference530MB; prefix/replay/zeroalloc, required667CPU/801Metal,33Python
+and19damaged-evidence controls pass. Old4B readers remain unchanged; native61/
+engine baseline reuse is explicit for test-only Rust changes. Helper timings
+show no engine speedup claim; hardware/thermal snapshots were unavailable. Astra
+approves scoped retention, no blocking findings; wider contexts and all remaining
+GPU/default allocator/codec/appfit/request/quality/adoption gates stay open.
+
+[Q2.D checks/review/commit](../artifacts/qwen35-9b-oracle-2026-11-09/publication-checks.json).

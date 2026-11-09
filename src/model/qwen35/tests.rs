@@ -2,6 +2,7 @@ use super::*;
 mod context;
 #[cfg(all(feature = "metal", target_os = "macos"))]
 mod metal;
+mod nine_b_real;
 mod reset;
 mod untied;
 use crate::mlx::affine::{Layout, MetadataDtype};

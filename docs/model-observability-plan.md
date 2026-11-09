@@ -205,6 +205,15 @@ release cohorts/60samples show4B+0.13%/−2.43% (no repeated5% regression) and
 GPU/default allocator/codec/appfit, request/quality/adoption gates stay open;
 4B128/256 rejection remains binding.
 
+Q2.D's [independent9B one-input oracle](qwen35-9b-oracle.md) passes both captures:
+33.32Mvalues each, maxratio0.1874, zero failures and matching greedy IDs. Separate
+bounded >4GiB reads preserve the strict4B path; native peaks5.311GB/reference530MB.
+Required667CPU/801Metal,33Python and19damaged-evidence controls pass. Native61/
+engine baseline reuse is explicitly audited for test-only Rust changes; helper
+measurements imply no engine gain; hardware/thermal queries were unavailable.
+Astra approves scoped retention, no blocking findings. Full9B context/GPU/
+default allocator/codec/appfit/request/quality/adoption and4B rejection stay binding.
+
 ## Metric contract
 
 O1 must make each handled request observable before performance changes. Reuse
