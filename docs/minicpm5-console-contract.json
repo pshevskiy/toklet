@@ -1,0 +1,134 @@
+{
+  "format": "toklet-minicpm5-console-short-contract-v1",
+  "scope": "First complete42layer short numerical/session console vertical for pinnedHeretic8bit; no source/quality/adoption gate is waived",
+  "engine_base": "97e0d9f54ebf3929680ec269b87e7bcc6e3d7e09",
+  "model_revision": "50ab1b226834c290cdf68e460eb899e5cff7c61d",
+  "model_sha256": "6fadca0fcdefe8b77fc144851ee2c2fd3c8949ccc0ec756b8ada27e3156c8910",
+  "cases": {
+    "single": {
+      "tokens": [
+        0
+      ],
+      "position_offset": 0
+    },
+    "short": {
+      "tokens": [
+        0,
+        7,
+        13,
+        3
+      ],
+      "position_offset": 0
+    },
+    "future_changed": {
+      "tokens": [
+        0,
+        7,
+        13,
+        17
+      ],
+      "position_offset": 0
+    },
+    "offset5": {
+      "tokens": [
+        7,
+        13,
+        3
+      ],
+      "position_offset": 5
+    },
+    "tile17": {
+      "tokens": [
+        0,
+        7,
+        13,
+        3,
+        0,
+        7,
+        13,
+        3,
+        0,
+        7,
+        13,
+        3,
+        0,
+        7,
+        13,
+        3,
+        0
+      ],
+      "position_offset": 0
+    },
+    "offset509": {
+      "tokens": [
+        7,
+        13,
+        3
+      ],
+      "position_offset": 509
+    }
+  },
+  "layers": [
+    0,
+    1,
+    41
+  ],
+  "policy": {
+    "atol_floor": 0.0001,
+    "envelope_multiplier": 2,
+    "rtol": 0.001,
+    "pooling": "same stage/layer across frozen six authored cases; independent NumPy/BLASFP32/FP64 Half storage profiles only",
+    "gate": "abs(native-source)<=max(1e-4,2*pooled_main_wide_max_abs)+1e-3*abs(source); both original profiles must pass",
+    "no_equivalent_prefix_enlargement": true,
+    "source_greedy_agreement": "diagnostic only; native same-prefix FullLogits/GreedyToken selection must match exactly"
+  },
+  "memory": {
+    "engine_ceiling_bytes": 6442450944,
+    "context_capacity": 512,
+    "prefill_chunk": 32,
+    "codec_allowance_bytes": 536870912,
+    "reference": "Bounded pread row tiles, no full expanded model or whole mmap; explicit ledger and observed process peaks required",
+    "native": "One resident source owner; normalsessionKV/scratch and completedGPUwork; independent source and native jobs sequential"
+  },
+  "state": {
+    "chunk_sizes": [
+      1,
+      3,
+      32
+    ],
+    "exact_prefix_reuse": true,
+    "reset": true,
+    "overflow_reject_preserves_valid_prefix": true,
+    "cancel_or_partial_resume": true,
+    "boundary512": true,
+    "full_vs_greedy_token_same_native_history": true,
+    "teacher_forced_source_prefixes": 4
+  },
+  "metrics": [
+    "source authentication and lineage status",
+    "completed loading/conversion/compilation",
+    "exact model/KV/scratch/planned memory",
+    "observed process peakRSS/lifetime footprint",
+    "prefill/decode/sample/request timing only at completed boundaries",
+    "native cache work and committed/pending positions",
+    "outcomes and telemetry coverage"
+  ],
+  "checks": [
+    "offline portable reference/consumer damage controls",
+    "fmt/both strictClippy/CPUandMetalrequired when tracked code inputs change",
+    "explicit GPU native complete model/session checks",
+    "native63reuse only417numerical/ABI/toolinputs unchanged",
+    "one combined Astra review with diff/invariants/results beforecodecommit"
+  ],
+  "performance": "Freeze dedicated matched workload and releaseproducer beforetiming;3warmups10measured/repeat/ACthermalLowPoweroff; no optimization or<=1%telemetry claim from this diagnostic",
+  "open_beyond_short_vertical": [
+    "wholeparent cryptographic identity and tensor conversionlineage",
+    "codec/chat/stop qualification",
+    "full10k-target/100task original adoption quality",
+    "deeper512 numerical qualification distinctfromfunctionalKVboundary",
+    "qualifiedrequest/performance and managedadoption"
+  ],
+  "iphone_deferred": true,
+  "screen_capture_deferred": true,
+  "all_original_4b_9b_rejections_binding": true
+}

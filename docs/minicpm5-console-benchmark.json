@@ -1,0 +1,113 @@
+{
+  "format": "toklet-minicpm5-console-benchmark-v1",
+  "engine_base_commit": "97e0d9f54ebf3929680ec269b87e7bcc6e3d7e09",
+  "repository": "bumblebuttpow/MiniCPM5-2B-heretic-abliterated-MLX-8bit",
+  "revision": "50ab1b226834c290cdf68e460eb899e5cff7c61d",
+  "model_file_sha256": {
+    "config.json": "ba1fda219aca07e7809d454db02512fe3fb29ff49e1eb2364c8e9487e35a6fe3",
+    "model.safetensors.index.json": "50747e37090508f851cdea2f4d5a71c59c2a26a09c8e95c505371ac669e2ac36",
+    "model.safetensors": "6fadca0fcdefe8b77fc144851ee2c2fd3c8949ccc0ec756b8ada27e3156c8910"
+  },
+  "source_manifest_sha256": "360cf36c6f743fb4af37c07dbd0e0c78d22e0c9922653629f0707131c88657b3",
+  "prompt": [
+    0,
+    7,
+    13,
+    3
+  ],
+  "teacher_tokens": [
+    6,
+    978,
+    44004,
+    130073
+  ],
+  "precision": {
+    "weights": "MLXaffine8/BF16 group64; separate output head",
+    "activations": "Half",
+    "kv": "Half",
+    "logits": "FP32"
+  },
+  "capacity": 512,
+  "prefill_chunk": 32,
+  "context_at_decisions": [
+    4,
+    5,
+    6,
+    7
+  ],
+  "cache": "Loaded model; warm filesystem; one persistent session reset to empty history before every request",
+  "stop_policy": "Fixed four teacher tokens, including final EOS; final sampled token remains pending,7committed/1pending/8history",
+  "tokenizer_used": false,
+  "chat_template_used": false,
+  "variants": [
+    "full-logits",
+    "greedy-token"
+  ],
+  "order": [
+    {
+      "run": 1,
+      "mode": "full-logits"
+    },
+    {
+      "run": 1,
+      "mode": "greedy-token"
+    },
+    {
+      "run": 2,
+      "mode": "greedy-token"
+    },
+    {
+      "run": 2,
+      "mode": "full-logits"
+    }
+  ],
+  "warmups": 3,
+  "measured_requests": 10,
+  "runs": 2,
+  "primary_metric": "Complete raw fixed-teacher request wall time; from set_tokens through final pending append, excludes reset and JSON",
+  "secondary_metrics": [
+    "Internal token-decisionTTFT",
+    "Prefill4tokens/completedprefillwall",
+    "Decode3/(lastdecision-firstdecision)",
+    "Per-depth completedwall/host/GPU phases and commandcount",
+    "SelectionaccessorCPUwall; GPUtokenreduction remains in completedGPUphase",
+    "Planned owner/admission and exact wait4 peakRSS; live-PID footprint scope conditional"
+  ],
+  "expected_session_memory": {
+    "full-logits": {
+      "weights_bytes": 2674218150,
+      "kv_bytes": 22021272,
+      "scratch_bytes": 21478868,
+      "history_bytes": 2048,
+      "logits_bytes": 1044480,
+      "metadata_bytes": 5184,
+      "metadata_allowance_bytes": 67108864,
+      "admitted_bytes": 2785878866
+    },
+    "greedy-token": {
+      "weights_bytes": 2674218150,
+      "kv_bytes": 22021272,
+      "scratch_bytes": 21478900,
+      "history_bytes": 2048,
+      "logits_bytes": 8,
+      "metadata_bytes": 5184,
+      "metadata_allowance_bytes": 67108864,
+      "admitted_bytes": 2784834426
+    }
+  },
+  "application_allowance_bytes": 33554432,
+  "mac_memory_ceiling_bytes": 6442450944,
+  "disk_free_floor_bytes": 2147483648,
+  "environment": "Named AppleM1Pro/MacBookPro18,3/macOS26.6.2/25G83/16GPUcores; rawAC/thermal0/LowPoweroff before/after every cohort, no continuous stability claim",
+  "acceptance": "Keep allraw3warm10measuredsamples; compare medians/IQR/stdev and both runs. >=5%request improvement must exceed observed run variation without unexplainedTTFT/other-workload regression before a scoped optimization claim. Otherwise no default/performance retention. These are existingreadback choices; model/adoption gates remain separate.",
+  "unknown_metrics": [
+    "streamed/user-visibleTTFT",
+    "operator/dispatchcounts",
+    "allocationcounts",
+    "energy"
+  ],
+  "telemetry_overhead_one_percent_qualified": false,
+  "model_quality_adoption_qualified": false,
+  "screen_capture_deferred": true,
+  "prospective_before_first_benchmark": true
+}

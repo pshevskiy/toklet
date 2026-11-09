@@ -112,6 +112,18 @@ model execution, codec, quality, physical fit, requests and adoption stay open.
 [measurements](../artifacts/minicpm5-default-rope-2026-11-10/metadata-comparison-v3.json),
 [access/recovery record](../artifacts/minicpm5-payload-2026-11-10/decision.json).
 
+S1.B short console checks pass: complete publisher identity, 698 CPU reference
+arrays, 52,896,768 dual-profile native comparisons (zero failures), exact state
+checks, fresh 670 CPU/810 Metal tests and native64 three-slice/C-smoke checks.
+Forty measured requests plus 12 warmups show token-only readback 0.64–0.70% slower
+on the fixed raw 4..7-context workload; keep defaults and both explicit options.
+No optimization, full quality, codec, deeper numerical, adoption or 1% overhead
+claim follows. Parent whole hashes/lineage remain open; disk/toolchain failures
+and protected cache recovery evidence are preserved. Astra timing-enclosure and
+owner-ledger findings are fixed with exact offline revalidation; scoped retention
+is approved. [Review/commit](../artifacts/minicpm5-heretic8-payload-2026-11-10/publication-checks.json).
+[Scope, measurements and limitations](minicpm5-console.md).
+
 ## Selected model decisions
 
 Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the five under-4B

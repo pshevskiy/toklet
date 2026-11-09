@@ -123,3 +123,9 @@ required-features = ["metal"]
 [[example]]
 name = "mlx_tile_tasks"
 required-features = ["metal"]
+
+[[example]]
+name = "minicpm5_probe"
+path = "tools/bench/minicpm5_probe.rs"
+required-features = ["metal"]
+test = true

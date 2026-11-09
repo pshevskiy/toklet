@@ -102,6 +102,13 @@ mixed3/4/5/6/8-bit overrides and no declared parent in its short card; existing
 affine layouts represent those widths, but no execution or lineage is qualified.
 [Implementation contract](../artifacts/minicpm5-default-rope-2026-11-10/acceptance-contract.json).
 
+The [first short console vertical](minicpm5-console.md) authenticates the 8-bit
+publisher object and passes 52.9M dual-profile native comparisons plus state and
+fresh package checks. Matched readback cohorts find no 5% request benefit;
+existing defaults stay unchanged. Whole-parent conversion lineage, original
+quality, codec/deeper numerical and adoption remain open; this is bounded Mac
+evaluation rather than blanket MiniCPM support.
+
 The [LFM3 metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)
 checks286BF16 tensors/3.458GB for the new candidate and594physical tensors/0.973GB
 for the official Q4 reference. Its conversion manifest links to an accessible,

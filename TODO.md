@@ -11,15 +11,31 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **S1.B bounded MiniCPM5 payload/parent authentication and
-console numerical evaluation**, after the completed S1.A source-admission change.
+Current/next task: **engine/CLI GPU profiling and remaining S1.B MiniCPM5 gates**,
+after the reviewed short console evaluation and S1.A source-admission change.
 The user deferred screen capture; engine/CLI metrics, performance and automated
 checks lead work. The full goal stays active; 4B/9B deeper rejections stay binding.
 
-- [ ] S1.B: admit the full accessible Heretic MLX 8-bit payload only with pinned
-  identity, disk headroom and the 6 GiB engine ceiling. Authenticate parent dtype
-  and tensor lineage, then freeze independent numerical/session/codec/quality,
-  physical-memory and console request/performance gates before adoption.
+- [x] S1.B short console vertical: authenticated 2.674 GB Heretic MLX8 object;
+  parent headers match 381 BF16 tensors, whole-parent/lineage still open. The
+  698 CPU arrays and 52,896,768 dual-profile native comparisons pass with zero
+  failures/max gate fraction 0.97221; exact schedules, causal prefix and 512-token
+  functional state pass. Fresh fmt/both strict Clippy, 670 CPU/810 Metal tests,
+  native64 three slices/46 exports each and CPU/Metal C smokes pass. Portable
+  7 numerical/10 capture-reader/11 request-reader tests and 32/41/39 resealed
+  negative controls pass. Forty measured requests plus 12 warmups close four
+  eligible cohorts: token-only readback is
+  0.64–0.70% slower; reject a performance/default change. Memory observations
+  stay below 6 GiB in named scopes; final physical peaks remain unavailable.
+  Failed invocations, toolchain mismatch, disk admission/floor observation and
+  verified cache recoveries are retained. Astra timing-enclosure and balanced
+  owner-ledger findings are fixed in consumers; Astra approves scoped retention.
+  [Review/commit](artifacts/minicpm5-heretic8-payload-2026-11-10/publication-checks.json).
+  Next: attribute the dominant GPU work before one bounded CLI experiment.
+  Whole-parent/lineage and original codec/quality/deeper-numerical gates stay open.
+  No model adoption, visible-text timing or 1% overhead qualification.
+  [Scope and all evidence](docs/minicpm5-console.md).
+
 - [x] S1.A: explicit default-RoPE declarations for the existing Llama graph;
   equivalent aliases preserve kernels/state/budgets and cold CLI reports.
   Required fmt/both strict Clippy, 670 CPU/806 Metal tests, five targeted GPU
