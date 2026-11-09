@@ -574,12 +574,257 @@ impl CopyArtifact {
         c[key] = value;
         fs::write(file, serde_json::to_vec(&c).unwrap()).unwrap();
     }
+    fn default_rope(&self, keep_flat: bool) {
+        let file = self.0.join("config.json");
+        let mut c: Value = serde_json::from_slice(&fs::read(&file).unwrap()).unwrap();
+        c["rope_parameters"] = json!({"rope_type":"default","rope_theta":c["rope_theta"]});
+        if !keep_flat {
+            c.as_object_mut().unwrap().remove("rope_theta");
+        }
+        fs::write(file, serde_json::to_vec(&c).unwrap()).unwrap();
+    }
 }
 impl Drop for CopyArtifact {
     fn drop(&mut self) {
         fs::remove_dir_all(&self.0).unwrap();
     }
 }
+
+#[test]
+fn default_llama_exports_match_frozen_scalar_stages_and_cached_state() {
+    let m = manifest();
+    let mut arrays = 0;
+    for keep_flat in [false, true] {
+        for variant in ["tied", "untied"] {
+            let artifact = CopyArtifact::new(variant);
+            artifact.default_rope(keep_flat);
+            let before = fs::read(artifact.0.join("config.json")).unwrap();
+            let source = Source::open_dense(&artifact.0, options()).unwrap();
+            assert_eq!(source.position_plan(), PositionPlan::Ordinary);
+            assert_eq!(source.tied_output(), variant == "tied");
+            assert!(Source::open(&artifact.0, options()).is_err());
+            let loaded = reference::load_dense(&artifact.0, options()).unwrap();
+            for (case, spec) in m["variants"][variant]["cases"].as_object().unwrap() {
+                let ts = tokens(&spec["tokens"]);
+                let offset = spec["position_offset"].as_u64().unwrap() as usize;
+                let mut scratch = loaded.model.scratch(ts.len()).unwrap();
+                let trace = loaded
+                    .model
+                    .forward_diagnostic(&ts, offset, &mut scratch)
+                    .unwrap();
+                for (stage, actual) in values(&trace) {
+                    close(
+                        actual,
+                        &array(&m, &format!("{variant}.fp32.cases.{case}.{stage}")),
+                    );
+                    arrays += 1;
+                }
+                if offset == 0 {
+                    for backend in ["CPU", "GPU"] {
+                        close(
+                            &trace.logits,
+                            &array(&m, &format!("{variant}.native.{backend}.{case}.logits")),
+                        );
+                    }
+                }
+                let expected = array(&m, &format!("{variant}.fp32.cases.{case}.logits"));
+                for chunk in [1, 3, ts.len()] {
+                    let mut session = Session::new(
+                        &loaded.model,
+                        session::Options {
+                            capacity: 32 - offset,
+                            prefill_chunk_size: chunk,
+                            position_offset: offset,
+                            memory_limit_bytes: 128 * 1024 * 1024,
+                        },
+                    )
+                    .unwrap();
+                    session.set_tokens(&ts).unwrap();
+                    session.evaluate().unwrap();
+                    close(session.logits().unwrap(), &expected[expected.len() - 64..]);
+                    let prefix = session.logits().unwrap().to_vec();
+                    session.set_tokens(&ts).unwrap();
+                    session.evaluate().unwrap();
+                    assert_eq!(session.logits().unwrap(), prefix);
+                    assert!(session.set_tokens(&vec![1; 33 - offset]).is_err());
+                    assert_eq!(session.logits().unwrap(), prefix);
+                    session.reset();
+                    session.set_tokens(&ts).unwrap();
+                    session.evaluate().unwrap();
+                    assert_eq!(session.logits().unwrap(), prefix);
+                }
+            }
+            assert_eq!(fs::read(artifact.0.join("config.json")).unwrap(), before);
+        }
+    }
+    assert_eq!(arrays, 780);
+}
+
+#[test]
+fn default_llama_rope_declarations_reject_unknown_conflicting_and_missing_semantics() {
+    let original: Value =
+        serde_json::from_slice(&fs::read(root().join("tied/config.json")).unwrap()).unwrap();
+    let theta = original["rope_theta"].clone();
+    for parameters in [
+        Value::Null,
+        json!(true),
+        json!([]),
+        json!({}),
+        json!({"rope_type":"default"}),
+        json!({"rope_theta":theta}),
+        json!({"rope_type":"llama3","rope_theta":theta}),
+        json!({"rope_type":"dynamic","rope_theta":theta}),
+        json!({"rope_type":"default","rope_theta":"10000"}),
+        json!({"rope_type":"default","rope_theta":true}),
+        json!({"rope_type":"default","rope_theta":null}),
+        json!({"rope_type":"default","rope_theta":theta,"factor":1}),
+        json!({"rope_type":"default","rope_theta":theta,"partial_rotary_factor":1}),
+        json!({"rope_type":"default","rope_theta":10001}),
+    ] {
+        let artifact = CopyArtifact::new("tied");
+        artifact.config("rope_parameters", parameters);
+        assert!(Source::open_dense(&artifact.0, options()).is_err());
+    }
+    for declaration in ["10000.0000000000000000000001", "1e4"] {
+        let artifact = CopyArtifact::new("tied");
+        artifact.config("rope_parameters", json!({"rope_type":"default", "rope_theta":serde_json::from_str::<Value>(declaration).unwrap()}));
+        let error = Source::open_dense(&artifact.0, options()).err().unwrap();
+        assert!(error.to_string().contains("must match exactly"));
+    }
+    let artifact = CopyArtifact::new("tied");
+    artifact.config("rope_theta", json!(9_007_199_254_740_993_u64));
+    artifact.config(
+        "rope_parameters",
+        json!({"rope_type":"default","rope_theta":9_007_199_254_740_992_u64}),
+    );
+    assert!(
+        Source::open_dense(&artifact.0, options())
+            .err()
+            .unwrap()
+            .to_string()
+            .contains("must match exactly")
+    );
+    let artifact = CopyArtifact::new("tied");
+    artifact.default_rope(true);
+    artifact.config("rope_scaling", llama3_scaling());
+    assert!(
+        Source::open_dense(&artifact.0, options())
+            .err()
+            .unwrap()
+            .to_string()
+            .contains("cannot accompany")
+    );
+    for declaration in ["0", "-1", "1e9999", "1e-9999"] {
+        let artifact = CopyArtifact::new("tied");
+        artifact.default_rope(false);
+        artifact.config("rope_parameters", json!({"rope_type":"default","rope_theta":serde_json::from_str::<Value>(declaration).unwrap()}));
+        assert!(Source::open_dense(&artifact.0, options()).is_err());
+    }
+    let artifact = CopyArtifact::new("tied");
+    artifact.default_rope(true);
+    artifact.config("model_type", json!("mistral"));
+    artifact.config("architectures", json!(["MistralForCausalLM"]));
+    artifact.config("sliding_window", Value::Null);
+    assert!(Source::open_dense(&artifact.0, options()).is_err());
+}
+
+#[test]
+fn published_minicpm5_header_admission_is_metadata_only_and_preserves_existing_budgets() {
+    use std::io::Write;
+    use toklet::mlx::compatibility::{self, Backend, LoadAdmission, Reason, Status};
+    let fixture = PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("tests/fixtures/minicpm5-heretic8-metadata-v1");
+    let raw = fs::read(fixture.join("manifest.json")).unwrap();
+    assert_eq!(
+        format!("{:x}", Sha256::digest(&raw)),
+        "8144188d9fbc37cf697d2171bd7fd0c372eeb1302a5a60cb97b087bbefb88480"
+    );
+    let manifest: Value = serde_json::from_slice(&raw).unwrap();
+    assert_eq!(manifest["payload_in_fixture"], false);
+    for (name, pin) in manifest["files"].as_object().unwrap() {
+        let data = fs::read(fixture.join(name)).unwrap();
+        assert_eq!(data.len() as u64, pin["bytes"]);
+        assert_eq!(format!("{:x}", Sha256::digest(&data)), pin["sha256"]);
+    }
+    let artifact = CopyArtifact::new("untied");
+    for name in ["config.json", "model.safetensors.index.json"] {
+        fs::copy(fixture.join(name), artifact.0.join(name)).unwrap();
+    }
+    let header = fs::read(fixture.join("header.bin")).unwrap();
+    let mut sparse = fs::File::create(artifact.0.join("model.safetensors")).unwrap();
+    sparse
+        .write_all(&(header.len() as u64).to_le_bytes())
+        .unwrap();
+    sparse.write_all(&header).unwrap();
+    // The holes are NOT publisher weights. No model or tensor values are read.
+    sparse
+        .set_len(manifest["container_expected_bytes"].as_u64().unwrap())
+        .unwrap();
+    drop(sparse);
+    let before = fs::read(artifact.0.join("config.json")).unwrap();
+    let opts = LoadOptions {
+        context_limit: 512,
+        memory_limit_bytes: 6 * 1024 * 1024 * 1024,
+    };
+    let source = Source::open_dense(&artifact.0, opts).unwrap();
+    assert_eq!(source.architecture(), Architecture::Llama);
+    assert_eq!(source.position_plan(), PositionPlan::Ordinary);
+    assert!(!source.tied_output());
+    assert_eq!(source.config().rope_theta, 5_000_000.0);
+    assert_eq!(source.config().rms_norm_eps, 1e-6);
+    assert_eq!(source.config().max_positions, 512);
+    assert_eq!(source.tensors().len(), 381);
+    assert_eq!(source.tensor_payload_bytes(), 2_674_216_960);
+    assert_eq!(source.admitted_load_bytes(), 2_741_391_360);
+    assert!(Source::open(&artifact.0, opts).is_err());
+    let report = compatibility::inspect(&artifact.0, Backend::Metal, opts);
+    assert_eq!(report.status, Status::CompatibleUntested);
+    assert!(
+        report.tensor_metadata_validated
+            && report.payload_validation_required
+            && report.session_admission_required
+    );
+    assert!(!report.qualification_evaluated && !report.text_profile_checked);
+    assert_eq!(report.load_admission, LoadAdmission::DevicePlanningRequired);
+    let scalar = compatibility::inspect(&artifact.0, Backend::ScalarReference, opts);
+    assert_eq!(scalar.reason, Reason::LoadBudgetExceeded);
+    assert_eq!(scalar.load_admission, LoadAdmission::ExceedsBudget);
+    assert!(scalar.payload_validation_required && !scalar.qualification_evaluated);
+    for limit in [0, 32_769] {
+        assert!(
+            Source::open_dense(
+                &artifact.0,
+                LoadOptions {
+                    context_limit: limit,
+                    ..opts
+                }
+            )
+            .is_err()
+        );
+    }
+    assert!(matches!(
+        Source::open_dense(
+            &artifact.0,
+            LoadOptions {
+                memory_limit_bytes: source.admitted_load_bytes() - 1,
+                ..opts
+            }
+        ),
+        Err(Error::Budget { .. })
+    ));
+    assert!(
+        Source::open_dense(
+            &artifact.0,
+            LoadOptions {
+                memory_limit_bytes: source.admitted_load_bytes(),
+                ..opts
+            }
+        )
+        .is_ok()
+    );
+    assert_eq!(fs::read(artifact.0.join("config.json")).unwrap(), before);
+}
+
 #[test]
 fn ordinary_smollm_export_metadata_preserves_bias_free_graph() {
     let a = CopyArtifact::new("tied");

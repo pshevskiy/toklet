@@ -1,6 +1,6 @@
 # Toklet implementation plan
 
-Updated 7 November 2026. Read [TODO.md](TODO.md) first for the current task.
+Updated 10 November 2026. Read [TODO.md](TODO.md) first for the current task.
 This live plan retains architecture, session invariants, milestone task criteria
 and the complete validation/performance policy. Detailed chronology and original
 execution orders are in the [dated archive](docs/archive/2026-11-07/PLAN.md).
@@ -52,6 +52,12 @@ its measured overhead bound remains unqualified and missing native/UI probes
 remain explicit follow-on work. O2.A now exposes completed native phases;
 [O2.B2.A](docs/o2-ui-publication.md) adds Send/controller publication correlation.
 Actual visible-frame timing remains unqualified.
+
+The user's10November priority is engine and CLI improvement. Defer interactive
+screen-capture qualification and further picker requests; preserve its isolated
+WIP and failed evidence. Continue automated console metrics, numerical/state
+checks and measured performance, with Astra review before each code commit.
+This priority leaves all numerical, memory, quality and telemetry gates intact.
 
 The initial settings below describe the foundation. Later selected models and
 routes use their own authenticated configuration and scoped acceptance evidence;

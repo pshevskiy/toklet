@@ -1,6 +1,6 @@
 # Toklet progress checklist
 
-Updated **9 November 2026**. **Improvement goal active; earlier Mac milestones
+Updated **10 November 2026**. **Improvement goal active; earlier Mac milestones
 complete only in their recorded scopes.** iPhone runtime work remains deferred.
 Read the current task, relevant plan criteria and targeted source. Completed
 history is in the [dated archive](docs/archive/2026-11-09/README.md).
@@ -11,44 +11,36 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **O2.B2.B captured-display qualification using ready7**, after
-reviewed Q2.G evaluation. The full goal stays active;4B/9B deeper trajectories
-remain ineligible under their unchanged numerical gates.
+Current/next task: **S1.B bounded MiniCPM5 payload/parent authentication and
+console numerical evaluation**, after the completed S1.A source-admission change.
+The user deferred screen capture; engine/CLI metrics, performance and automated
+checks lead work. The full goal stays active; 4B/9B deeper rejections stay binding.
 
-- [x] Q2.G pinned9B128/256 evaluation: separate producer/strict reader and native
-  checkpoint/all-logit/partition/prefix128-repair witness implemented. Fresh fmt/
-  both strictClippy/667CPU/803Metal (46/330ignored) pass;190Python,2collector
-  cleanup and2primary-receipt controls pass. Native7f5049b9, fresh ABI and explicit native62 reuse audit
-  pass; both release-depth probes compile with strict warnings/190pins each.
-  Measured probe version2 includes explicit session setup timing; complete
-  collector/strict report logic and10synthetic metadata/closure tests pass.
-  Metrics include load/upload/bind/context/session, completed input throughput,
-  physical/owner memory, system pressure/swap and8hardware/GPU/power snapshots.
-  Native collector v2 saves the guard/cleanup result before parsing; strict
-  primary/final/raw linkage and bounded lifetime reject rewritten outcomes.
-  [Receipt controls](artifacts/qwen35-9b-context256-2026-11-09/native-primary-receipt-checks.json).
-  Reference and both Metal captures are closed: all functional/recovery checks
-  pass below6GiB, but each79.35M-value gate rejects45,332 comparisons. Both bodies
-  match bitwise; greedy IDs match. Outward interval analysis proves14,847 saved
-  coordinates have disjoint original profile tolerances; no adoption or policy
-  change.3positive/39damage controls pass. First performance attempt rejects its
-  environment before any model sample; fresh unsandboxed state is battery/
-  LowPoweron. Retry2 saves raw preflight before admission;12metric/preflight tests
-  and a new frozen contract pass. User connects power;40measured/12warm samples
-  close with nominal AC/thermal/LowPoweroff boundaries and exact full outputs.
-  Medians128:32.068/30.848s,256:68.399/63.330s; first256 cohort noisy, all samples
-  retained. Peak5.676GB conservative charge;1positive/17performance controls pass.
-  No optimization/overhead/adoption claim. Astra approves scoped diagnostic
-  retention/commit, no findings; administrative wording corrected, code unchanged.
-  [Review/commit](artifacts/qwen35-9b-context256-2026-11-09/publication-checks.json).
-  [Decision](artifacts/qwen35-9b-context256-2026-11-09/decision.json).
-  First type mismatch corrected; disk
-  guards stopped Metal/build, reference cleanup masked its primary error with
-  EPERM before checkpoint writes. All old groups absent; independent APFSclones
-  recover3.70GB/preserve948pins, no cache files deleted.6GiB/512/32/512MiBcodec,
-  original profiles/gates and4B rejection unchanged.
-  [Contract](artifacts/qwen35-9b-context256-2026-11-09/acceptance-contract.json),
-  [scope](docs/qwen35-9b-context256.md).
+- [ ] S1.B: admit the full accessible Heretic MLX 8-bit payload only with pinned
+  identity, disk headroom and the 6 GiB engine ceiling. Authenticate parent dtype
+  and tensor lineage, then freeze independent numerical/session/codec/quality,
+  physical-memory and console request/performance gates before adoption.
+- [x] S1.A: explicit default-RoPE declarations for the existing Llama graph;
+  equivalent aliases preserve kernels/state/budgets and cold CLI reports.
+  Required fmt/both strict Clippy, 670 CPU/806 Metal tests, five targeted GPU
+  tests, three positive/four negative CLI controls and three native slices with
+  46 exports each plus CPU/Metal C smokes pass. Six metadata cohorts retain
+  60 measured/18 warm batches, after medians 2.107–2.145 ms/open; no repeated
+  ≥5% legacy regression, but unchanged-before-binary drift was 36.6%.
+  Astra approves after the timing-envelope fix: 10 portable tests and all six
+  unchanged cohorts revalidate. No model execution/codec/quality/fit/adoption
+  or optimization qualification. Original source-access/probe failures preserved.
+  [Scope](docs/minicpm5-default-rope.md),
+  [checks/review/commit](artifacts/minicpm5-default-rope-2026-11-10/publication-checks.json).
+
+- [x] Q2.G9B128/256 evaluation retained as a rejection in `8215d96a`:
+  both79.35M-value captures reject45,332 values;14,847 saved coordinates have
+  disjoint original profile intervals. Functional/recovery, required667CPU/
+  803Metal,190Python and two performance runs pass in their scoped senses.
+  First256 cohort is noisy; no optimization/adoption claim. Astra approves
+  diagnostic retention; feature-integrated, no push/main change, rootWIP kept.
+  [Full scope/failed attempts](docs/qwen35-9b-context256.md),
+  [checks/review/commit](artifacts/qwen35-9b-context256-2026-11-09/publication-checks.json).
 
 - [x] Refresh completed working-document history from reviewed `88950b11`;
   exact inverse-link reconstruction, local link/anchor and whitespace checks
@@ -80,16 +72,13 @@ model, context, device or adoption qualification.
 
 ## Remaining observability gates
 
-- [ ] Qualify bounded display-frame observations with fresh capture, clock,
-  coverage and resource evidence; resolve Astra review before committing the lab.
-  Earlier ready3 had 13 exact trials but 25 invalid callbacks; ready4 stopped
-  after its reference capture for console priority. An isolated UI worktree now
-  rejects reproduced Boolean/fraction/unknown statuses; ready7 passes7build/unit/
-  signature checks and34portable tests;43pins verified,archive46 unchanged. Ready6's
-  failed first guard is retained. No model/picker/capture launched; next run must
-  use ready7 from its UI worktree. Historical25invalid callbacks remain unexplained.
-  [Hardening checks](artifacts/o2-ui-frames-2026-11-07/status-audit-1/hardening-checks.json).
-  [Resume audit](artifacts/qwen35-9b-context256-2026-11-09/observability-scope-audit.json).
+- [ ] Display-frame qualification **deferred by user, engine/CLI priority**.
+  Ready9 reuses checked43source/native46 inputs and completes13exact trials;
+  fresh viewport/crop visually inspected, new receipt bound to its own UUID.
+  Coverage rejects433/1721future-display callbacks, zero occlusion;32numeric
+  samples retained. The owned session is closed; no further sharing requests.
+  Earlier7/8failures and isolated UI WIP remain preserved/unreviewed/uncommitted.
+  [Deferred status](artifacts/o2-ui-frames-2026-11-07/status-audit-1/current-state.json).
 - [ ] Keep first-visible/final-answer and ordinary summary-overhead qualification
   explicit. Controller publication is not rendering; fixed-answer frame matches
   provide upper bounds only. iPhone work remains deferred.

@@ -1,0 +1,31 @@
+{
+  "format": "toklet-minicpm5-heretic8-header-fixture-v1",
+  "scope": "Publisher metadata only. Tests construct a sparse container; holes are not publisher weights. No numerical/model/quality/physical-fit or adoption qualification.",
+  "repository": "bumblebuttpow/MiniCPM5-2B-heretic-abliterated-MLX-8bit",
+  "revision": "50ab1b226834c290cdf68e460eb899e5cff7c61d",
+  "container_expected_bytes": 2674327346,
+  "container_expected_sha256": "6fadca0fcdefe8b77fc144851ee2c2fd3c8949ccc0ec756b8ada27e3156c8910",
+  "header_bytes": 110378,
+  "payload_origin": 110386,
+  "physical_tensors": 973,
+  "logical_tensors": 381,
+  "affine_matrices": 296,
+  "small_tensors": 85,
+  "source_payload_bytes": 2674216960,
+  "logical_parameters": 2516756480,
+  "files": {
+    "config.json": {
+      "bytes": 1056,
+      "sha256": "ba1fda219aca07e7809d454db02512fe3fb29ff49e1eb2364c8e9487e35a6fe3"
+    },
+    "model.safetensors.index.json": {
+      "bytes": 68721,
+      "sha256": "50747e37090508f851cdea2f4d5a71c59c2a26a09c8e95c505371ac669e2ac36"
+    },
+    "header.bin": {
+      "bytes": 110378,
+      "sha256": "b6fdf59a1fce7d5fb3caf76725156c53c222d1e5f481624981cc3cb3abcacf07"
+    }
+  },
+  "payload_in_fixture": false
+}

@@ -68,7 +68,7 @@ and every derivative's actual shapes at admission.
 
 | Rank | Official reference | Total parameters | Reason to evaluate | Uncensored / MLX path |
 | --- | --- | ---: | --- | --- |
-| 1 | [MiniCPM5-2B](https://huggingface.co/openbmb/MiniCPM5-2B) | 2,516,756,480 | Strong small reasoning, coding and tool-use candidate; ordinary Llama-style model type | [mondk uncensored MLX 4-bit](https://huggingface.co/mondk/MiniCPM5-2B-Abliterated-Uncensored-MLX-4Bit), `8ebe35e0`; affine/group 64, independently qualify |
+| 1 | [MiniCPM5-2B](https://huggingface.co/openbmb/MiniCPM5-2B) | 2,516,756,480 | Strong small reasoning, coding and tool-use candidate; ordinary Llama-style model type | Prefer accessible [Heretic MLX 8-bit](https://huggingface.co/bumblebuttpow/MiniCPM5-2B-heretic-abliterated-MLX-8bit), `50ab1b22`, with declared insraq parent `8d83eaf4`; independently qualify. Original mondk `8ebe35e0` 4-bit now returns401; retain its historical preflight |
 | 2 | [LFM3-1.7B](https://huggingface.co/LiquidAI/LFM3-1.7B) | 1,728,801,536 | Recent compact agent/instruction-following model; useful performance experiment with a new architecture | Prefer the separate [mchen04 Heretic BF16 MLX](https://huggingface.co/mchen04/LFM3-1.7B-Heretic-Abliterated-MLX-bf16), `88636d45`, then independently qualify bounded Q4 conversion. Its declared Vortecks BF16 parent is pinned; payload/quality/admission are open. The previous `095df4e8` GGUF-to-F32 artifact still exceeds6GiB in weights alone and remains rejected |
 | 3 | [Granite 4.2 3B](https://huggingface.co/ibm-granite/granite-4.2-3b) | 3,659,737,600 | Dense reasoning/tool-use baseline with adjustable thinking effort | [Heretic source](https://huggingface.co/saidutta69/granite-4.2-3b-heretic), `db83ced6`; uncensored MLX conversion pending. [Official MLX Q4](https://huggingface.co/ibm-granite/granite-4.2-3b-q4-mlx), `0c6f39b1`, is a reference fallback; strict config translation and qualification remain open |
 | 4 | [Ministral 3 3B Reasoning](https://huggingface.co/mistralai/Ministral-3-3B-Reasoning-2512) | 3,849,090,048 | Compact STEM and vision reasoning; count includes vision encoder | [Heretic source](https://huggingface.co/xtools-at/Ministral-3-3B-Reasoning-UNCENSORED-heretic), `46fb9a42`; uncensored MLX conversion pending. [MLX 4-bit reference](https://huggingface.co/mlx-community/Ministral-3-3B-Reasoning-2512-4bit), `2cd2087a`, has a stale index; its single-file header is diagnostic only |
@@ -87,6 +87,20 @@ would require10.067GB, so use a bounded independent reference. The declared
 modified BF16 parent's current anonymous API requests return401; cached listings
 do not authenticate its availability or lineage. No payload was downloaded,
 and source/codec/numerical/quality/admission gates and model order stay unchanged.
+
+A10November availability check now gets401 for that conversion's pinned API,
+HEAD and config as well as its declared parent; official/search controls succeed.
+No weights were downloaded. The separate [accessible8bit preflight](../artifacts/minicpm5-heretic8-preflight-2026-11-10/preflight-summary.json)
+verifies973physical entries/381logical descriptors, the2.674GBdeclared object,
+exact index and unaligned110386-byte payload origin. Its nested and flat default
+RoPE declarations both say5e6; S1.A adds explicit source admission without
+rewriting publisher files or inventing defaults. The parent config declaresBF16,
+while the conversion card calls itFP16; parent headers/bytes still need proof.
+Full source, model execution, codec, physical fit, quality/request/adoption and
+any quantization tradeoff remain unqualified. A separate ARA4bit alternative has
+mixed3/4/5/6/8-bit overrides and no declared parent in its short card; existing
+affine layouts represent those widths, but no execution or lineage is qualified.
+[Implementation contract](../artifacts/minicpm5-default-rope-2026-11-10/acceptance-contract.json).
 
 The [LFM3 metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)
 checks286BF16 tensors/3.458GB for the new candidate and594physical tensors/0.973GB

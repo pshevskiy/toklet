@@ -96,6 +96,43 @@ struct Llama3Parameters {
     original_max_position_embeddings: usize,
 }
 
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct DefaultLlamaParameters {
+    rope_type: String,
+    rope_theta: serde_json::Number,
+}
+
+// Interpret an explicit export declaration once, before ordinary validation.
+// Source bytes remain untouched. Compare arbitrary-precision JSON declarations
+// before f32 conversion; differently encoded duplicate numbers are not coerced.
+fn default_llama_rope(value: &mut Value) -> Result<(), Error> {
+    let Some(parameters) = value.get("rope_parameters") else {
+        return Ok(());
+    };
+    let parameters: DefaultLlamaParameters = serde_json::from_value(parameters.clone())?;
+    if parameters.rope_type != "default" {
+        return Err(invalid(
+            "only explicit default Llama rope_parameters are supported",
+        ));
+    }
+    if value.get("rope_scaling").is_some_and(|v| !v.is_null()) {
+        return Err(invalid(
+            "default Llama rope_parameters cannot accompany rope_scaling",
+        ));
+    }
+    let theta = Value::Number(parameters.rope_theta);
+    if value.get("rope_theta").is_some_and(|flat| flat != &theta) {
+        return Err(invalid("Llama RoPE theta declarations must match exactly"));
+    }
+    let object = value
+        .as_object_mut()
+        .ok_or_else(|| invalid("Llama configuration must be an object"))?;
+    object.insert("rope_theta".into(), theta);
+    object.remove("rope_parameters");
+    Ok(())
+}
+
 fn positions(value: Option<Value>, architecture: Architecture) -> Result<PositionPlan, Error> {
     let Some(value) = value else {
         return Ok(PositionPlan::Ordinary);
@@ -160,6 +197,9 @@ pub(crate) fn config(mut value: Value, options: LoadOptions) -> Result<ParsedCon
         }),
         Some("phi3") => super::phi3::config(value, options),
         Some("llama" | "mistral" | "smollm3" | "granite") => {
+            if value["model_type"] == "llama" {
+                default_llama_rope(&mut value)?;
+            }
             let scales = if value["model_type"] == "granite" {
                 granite::prepare(&mut value)?
             } else {

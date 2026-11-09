@@ -470,6 +470,88 @@ impl Drop for ScaledArtifact {
 }
 
 #[test]
+#[ignore = "Explicit Apple GPU default-RoPE export aliases against unchanged tiny Half oracles; not MiniCPM5 qualification"]
+fn default_rope_exports_preserve_half_logits_cached_prefix_and_offsets() {
+    let m = manifest();
+    let mut schedules = 0;
+    let mut compared = 0;
+    for keep_flat in [false, true] {
+        for variant in ["tied", "untied"] {
+            let mut config: Value = serde_json::from_slice(
+                &fs::read(root().join(variant).join("config.json")).unwrap(),
+            )
+            .unwrap();
+            config["rope_parameters"] =
+                serde_json::json!({"rope_type":"default","rope_theta":config["rope_theta"]});
+            if !keep_flat {
+                config.as_object_mut().unwrap().remove("rope_theta");
+            }
+            let mut fixture = serde_json::json!({"format":if keep_flat {"default-rope-both"} else {"default-rope-nested"},"config_templates":{}});
+            fixture["config_templates"][variant] = config;
+            let artifact = ScaledArtifact::new(variant, &fixture);
+            let before = fs::read(artifact.0.join("config.json")).unwrap();
+            let model = metal::Model::load_mlx(
+                &artifact.0,
+                LoadOptions {
+                    context_limit: 32,
+                    memory_limit_bytes: 128 * 1024 * 1024,
+                },
+            )
+            .unwrap();
+            assert_eq!(model.positional_resident_bytes(), 0);
+            for (case, spec) in m["variants"][variant]["cases"].as_object().unwrap() {
+                let tokens: Vec<u32> = spec["tokens"]
+                    .as_array()
+                    .unwrap()
+                    .iter()
+                    .map(|v| u32::try_from(v.as_u64().unwrap()).unwrap())
+                    .collect();
+                let offset = spec["position_offset"].as_u64().unwrap() as usize;
+                let key = format!("{variant}.half.cases.{case}.logits");
+                let expected = array(&m, &key);
+                for chunk in [1, 3, tokens.len()] {
+                    let mut s = session(
+                        &model,
+                        chunk,
+                        offset,
+                        ReadbackMode::FullLogits,
+                        AttentionMode::Reference,
+                    );
+                    s.set_tokens(&tokens).unwrap();
+                    s.evaluate().unwrap();
+                    qualify(
+                        s.logits().unwrap(),
+                        &expected[expected.len() - 64..],
+                        &m["arrays"][&key]["gate"],
+                        &key,
+                    );
+                    compared += 64;
+                    schedules += 1;
+                    let prefix = s.logits().unwrap().to_vec();
+                    s.set_tokens(&tokens).unwrap();
+                    s.evaluate().unwrap();
+                    assert_eq!(s.logits().unwrap(), prefix);
+                    assert!(s.set_tokens(&vec![1; 33 - offset]).is_err());
+                    assert_eq!(s.logits().unwrap(), prefix);
+                    s.reset();
+                    s.set_tokens(&tokens).unwrap();
+                    s.evaluate().unwrap();
+                    assert_eq!(s.logits().unwrap(), prefix);
+                }
+            }
+            assert_eq!(fs::read(artifact.0.join("config.json")).unwrap(), before);
+        }
+    }
+    assert_eq!(schedules, 60);
+    assert_eq!(compared, 3840);
+    println!(
+        "LLAMA_DEFAULT_ROPE_EXPORTS {}",
+        serde_json::json!({"cache_schedules":schedules,
+        "compared_logits":compared,"real_checkpoint_qualified":false,"iphone_qualified":false})
+    );
+}
+
+#[test]
 #[ignore = "Explicit Apple GPU scaled Llama Half graph and session checks; not real checkpoint qualification"]
 fn scaled_llama_half_graph_and_session_match_frozen_independent_oracle() {
     check_half_graph(&scaled_fixture(), true);

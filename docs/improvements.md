@@ -1,6 +1,6 @@
 # Toklet improvement index
 
-Updated **9 November 2026**. This is the compact index of retained capabilities,
+Updated **10 November 2026**. This is the compact index of retained capabilities,
 measured gains and material restrictions. The [full dated history](archive/2026-11-09/improvements.md)
 preserves every previous entry, source revision, failed check and evidence link.
 Read it only when the current task needs that detail.
@@ -88,14 +88,29 @@ and commit references are in the [completed history](archive/2026-11-09/improvem
 Summary collection stays opt-in/default-disabled: the 1% overhead bound remains
 unqualified. Controller publication does not establish visible text.
 
-The display-frame lab is still unqualified: ready3 failed coverage with 25 invalid
-callbacks, and ready4 stopped after its inset reference capture for console
-priority. Isolated status hardening now rejects malformed Boolean/fraction and
-unknown values before copying pixels; ready7 passes seven build/unit/signature
-checks and34portable tests. Its43source pins and native46 archive match; only the
-capture and synthetic-unit sources differ from ready5. It is unlaunched. Fresh sharing/reference verification, complete
-frame/resource evidence and Astra remain pending;
-[resume audit](../artifacts/qwen35-9b-context256-2026-11-09/observability-scope-audit.json).
+The user has deferred screen-capture qualification to concentrate on engine/CLI
+work. Ready9 finishes13exact trials but rejects433/1721future-display callbacks,
+with zero occlusion;32numeric samples are retained. The session is closed, and
+no further sharing requests are planned. Prior failures, isolated UI code and
+all raw evidence remain preserved, unreviewed and uncommitted. First-visible
+metrics remain unqualified; console metrics and automated checks lead active work.
+[Deferred status](../artifacts/o2-ui-frames-2026-11-07/status-audit-1/current-state.json).
+
+MiniCPM5 S1.A adds explicit default-RoPE declarations for the existing Llama
+graph. Required fmt/both strict Clippy, 670 CPU/806 Metal tests and five explicit
+GPU tests pass. Three equivalent CLI reports and four rejection controls pass;
+after metadata medians are 2.107–2.145 ms/open. No repeated ≥5% legacy regression
+appears, but unchanged-before-binary drift was 36.6%; no optimization claim.
+Three native slices/46 exports each and CPU/Metal C smokes pass. Astra approves
+after the timing-envelope fix:10portable tests and all six unchanged cohorts
+revalidate. Checks/review/commit are in the linked publication record. The original 4-bit source
+now returns401; the accessible labelled-uncensored 8-bit candidate has consistent
+metadata and a declared accessible parent. Whole payload/parent authentication,
+model execution, codec, quality, physical fit, requests and adoption stay open.
+[Scope](minicpm5-default-rope.md),
+[checks/review/commit](../artifacts/minicpm5-default-rope-2026-11-10/publication-checks.json),
+[measurements](../artifacts/minicpm5-default-rope-2026-11-10/metadata-comparison-v3.json),
+[access/recovery record](../artifacts/minicpm5-payload-2026-11-10/decision.json).
 
 ## Selected model decisions
 
