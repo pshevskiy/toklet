@@ -397,3 +397,12 @@ changes. Two release context17 baselines are 4.093 / 4.121 s, full outputs equal
 with nominal AC/thermal/low-power boundary observations. No optimization, request,
 tail, sustained or overhead claim. Astra approves scoped retention, no findings. Deeper 9B contexts,
 default allocator/codec/appfit/quality/adoption and the 4B 128/256 restriction remain.
+
+Q2.G0's [separate exact recurrence reference](qwen35-reference-vector.md) matches
+all67.17M one/context17 FP32/FP64 values bitwise. Scalar sources, frozen fixtures,
+default readers and gates stay unchanged. Two matched reversed cohorts lower
+complete helper-step time60.02/60.25% FP64 and95.55/95.23% FP32, including
+conversion/validation, with108.3MB helper peak. This is a reference component gain;
+engine speed, deeper contexts and adoption remain unqualified. All175 portable Qwen tests and evidence controls pass; required Rust/native checks
+are reused only after input audits. Astra approves scoped retention with no findings;
+[checks/review/commit](../artifacts/qwen35-reference-vector-2026-11-09/publication-checks.json).

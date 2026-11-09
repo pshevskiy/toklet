@@ -21,8 +21,22 @@ roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
 Current/next task: **Q2.G9B128/256 numerical evaluation**, after reviewed
-Q2.F context17/nonzero-prefix recovery qualification. The full goal stays active;4B managed adoption
+Q2.F context17/recovery and Q2.G0 exact-reference qualification. The full goal stays active;4B managed adoption
 remains ineligible under its unchanged numerical gate.
+
+- [x] Q2.G0 exact recurrence reference: one/context17 captures match all67.17M
+  FP32/FP64 values bitwise; scalar graph/goldens/default reader unchanged.175Python,
+  old CPU/Metal scalar regressions,2positive/18reference damage controls and
+  1positive/8timing damage controls pass;667CPU/803Metal/native62 reuse audited
+  against3,966 unchanged Cargo inputs. Two reversed3warm+10 cohorts (80measured)
+  lower helper time60.02/60.25% FP64,95.55/95.23% FP32; peaks108.3MB helper/
+  612.3MB reference. Astra approves scoped retention, no findings;
+  explicit reference use eligible. Corrected dense-vs-packed fixture/test
+  tile assumptions retained; first context17 attempt hit unchanged2GiB disk guard,
+  fresh retry passes. Cleanup preserves932pins; byte-identical cache clones only.
+  No engine gain/deeper-context/quality/adoption claim; whole goal stays active.
+  [Scope/evidence](docs/qwen35-reference-vector.md),
+  [checks/review/commit](artifacts/qwen35-reference-vector-2026-11-09/publication-checks.json).
 
 - [x] Q2.F context17/offset37: both captures pass33.85Mvalues each,0failures/
   maxratio0.4141; all partition/state/nonzero-prefix repair/retry/zeroalloc checks

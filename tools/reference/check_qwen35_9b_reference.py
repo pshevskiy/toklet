@@ -160,7 +160,35 @@ def native(folder):
     return rows,receipt
 
 
-def reference(folder, phase='one'):
+VECTOR_SOURCES={'tools/reference/'+name for name in [
+    'reference_runtime.py','gemma4_affine_reference.py','affine4_tiles.py','qwen35_9b_vector_reference.py',
+    'qwen35_vector_graph.py','qwen35_recurrent_vector.py','build_qwen35_vector_graph.py','qwen35_9b_weights.py',
+    'qwen35_real_weights.py','affine4_large_rows.py','qwen35_cpu_graph.py','bf16_source.py',
+    'check_qwen35_9b_payload.py','check_qwen35_payload.py']}
+
+def reference_variant(variant,freeze,root):
+    need(type(variant) is str and variant in ['scalar','vector'],'Named reference implementation required')
+    if variant=='scalar':
+        need(freeze.get('reference_variant','scalar')=='scalar','Vector evidence cannot enter scalar reader implicitly')
+        return 'qwen35_9b_reference.py',dict(format='toklet-qwen35-9b-real-reference-v1')
+    import build_qwen35_vector_graph as builder
+    need(freeze.get('reference_variant')=='vector','Explicit pre-execution vector variant required')
+    need(type(freeze.get('files')) is dict and set(freeze['files'])==VECTOR_SOURCES,'Exact vector source inventory required')
+    paths=dict(original_sha256='tools/reference/qwen35_cpu_graph.py',vector_sha256='tools/reference/qwen35_vector_graph.py',
+        helper_sha256='tools/reference/qwen35_recurrent_vector.py',builder_sha256='tools/reference/build_qwen35_vector_graph.py')
+    need(set(paths.values())<=set(freeze['files']),'Complete vector provenance sources required')
+    hashes={name:freeze['files'][path] for name,path in paths.items()}
+    need(all(file_sha(root/path)==hashes[name] for name,path in paths.items()),'Vector provenance source endpoints changed')
+    need(hashes['original_sha256']==file_sha(Path(graph.__file__)),'Original scalar graph identity differs')
+    original=(root/paths['original_sha256']).read_text()
+    need((root/paths['vector_sha256']).read_bytes()==builder.generated(original).encode(),'Exact vector graph patch required')
+    proof=dict(hashes,inverse_patch_exact=True)
+    need(exact(freeze.get('graph_provenance'),proof),'Pre-execution graph provenance differs')
+    return 'qwen35_9b_vector_reference.py',dict(format='toklet-qwen35-9b-vector-reference-v1',
+        reference_variant='ordered_vector_recurrence',graph_provenance=proof)
+
+
+def reference(folder, phase='one', variant='scalar'):
     tokens, position, planned_values = producer.plan(phase)
     import numpy as np
     files={'console.log','time-and-errors.log','native-memory.jsonl','process.json','inputs.json',
@@ -184,6 +212,7 @@ def reference(folder, phase='one'):
     for name in ['runtime','native']:
         need(file_sha(folder/(name+'.json'))==inputs[name+'_manifest_sha256']==file_sha(Path(inputs[name+'_manifest'])),
              'Runtime manifest changed')
+    filename,variant_fields=reference_variant(variant,freeze,root)
     result=document(folder/'capture/result.json')
     need(result['completed'] is True and result['primary_error'] is None and result['endpoint_errors']==[],
          'Closed successful independent result required')
@@ -191,6 +220,7 @@ def reference(folder, phase='one'):
         source_sha256=adapter.pin.FILE_SHA,phase=phase,tokens=tokens,position_offset=position,geometry=adapter.GEOMETRY,
         gate=graph.GATE,planned_rows_bytes=planned_values*12,ledger=producer.LEDGER,engine_executed=False,
         contextual_numerical_qualified=False,quality_qualified=False,managed_adoption_qualified=False)
+    fixed.update(variant_fields)
     need(set(result)==set(fixed)|{'completed','arrays','runtime_admission','source','primary_error',
          'endpoint_errors','source_endpoint_sha256','rows_sha256','runtime_endpoint','profile_ns',
          'source_open_and_bind_ns','source_endpoint_ns','collection_ns'},'Exact reference result fields required')
@@ -200,7 +230,7 @@ def reference(folder, phase='one'):
     timing(phases,list(phases),receipt['elapsed_seconds'])
     need(type(result['collection_ns']) is int and sum(phases.values())<=result['collection_ns']<=receipt['elapsed_seconds']*1e9,
          'Independent phase/collection/owned timing enclosure differs')
-    need(inputs['command']==['/usr/bin/time','-l',inputs['python'],'-s',str(root/'tools/reference/qwen35_9b_reference.py'),
+    need(inputs['command']==['/usr/bin/time','-l',inputs['python'],'-s',str(root/'tools/reference'/filename),
          '--model-directory',inputs['model_directory'],'--output',str(freeze_path.parent/'independent-1/capture'),
          '--runtime-manifest',inputs['runtime_manifest'],'--expected-runtime-sha256',inputs['runtime_manifest_sha256'],
          '--native-manifest',inputs['native_manifest'],'--expected-native-sha256',inputs['native_manifest_sha256'],'--phase',phase],
