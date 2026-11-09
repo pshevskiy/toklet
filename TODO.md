@@ -20,9 +20,50 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current task: **Qwen3.5-4B admitted contexts and bounded controller/codec metrics**,
-then full-request and quality gates before managed selection or further optimization.
-The full selected goal stays active.
+Current/next task: **Qwen3.5-9B cold source/head/fit qualification** after the
+reviewed Q1.J diagnostic commit. The4B managed route remains ineligible under its
+unchanged gate. The full selected goal stays active.
+
+- [x] Q1.J full128/256-input evaluation: closed4,204-array/76.98M comparison
+  rejects numerical qualification (13,505failures; maxratio34.066). The original
+  references have3,132disjoint tolerance intervals; greedy IDs still match.
+  Keep512capacity/32chunk/6GiB and the original dual-profile gate unchanged.
+  Native replay/recovery/zero-allocation controls pass at2.765GB; reference peak
+  810MB. Required fmt/bothClippy,644CPU/778Metal,26Python/24native/30reference
+  evidence controls pass; native58 reuse is audited. Prior failed attempts remain
+  recorded. The separate prototype matches all38.49M originalFP32 values bitwise;
+  8unit/32actual evidence controls pass, with no collector promotion or model-speed claim.
+  Persistent-codec singleton stress passes4processes/15controls within512MiB;
+  repeated-construction and aggregate fit restrictions remain. Astra approves
+  scoped retention with no findings; full requests/overhead/quality/adoption
+  do not inherit qualification.
+  [Scope](docs/qwen35-context256.md),
+  [checks/review/commit](artifacts/qwen35-context256-2026-11-09/publication-checks.json),
+  [decision](artifacts/qwen35-context256-2026-11-09/decision.json),
+  [codec memory scope](docs/qwen35-text-codec.md),
+  [continuation/evidence](artifacts/qwen35-context256-2026-11-09/continuation-state.json).
+
+- [x] Under-4B metadata research: MiniCPM5 header/index cover296packed/85small
+  tensors and match the2.517B declaration. Declared BF16-parent API access returns401;
+  fullFP32 expansion exceeds6GiB. No payload/execution/adoption or order change.
+  [Preflight and open gates](artifacts/minicpm5-preflight-2026-11-09/preflight-summary.json).
+  A separate LFM3 BF16 candidate has286tensors/3.458GB and a manifest linked to
+  public pinned BF16-parent metadata. Header checks pass; new graph, payload,
+  conversion/quality and physical admission remain open; old F32 rejection stays.
+  [LFM3 preflight](artifacts/lfm3-preflight-2026-11-09/preflight-summary.json).
+  [Granite/Ministral/Qwen2B headers](artifacts/small-model-metadata-2026-11-09/preflight-summary.json)
+  expose config/YaRN, stale-index/size and norm-precision gaps;53files/12headers
+  pass metadata checks with rejected declarations retained. Runtime gates stay open.
+
+- [x] Authenticate the selected9B source bytes while Q1.J closes: all5.038GB,
+  927header tensors and config/index hashes pass an independent read-only check.
+  No9B parser/engine/fit/quality or route qualification follows. Verified cache
+  cleanup frees3.14GB with retained outputs unchanged;2GiB disk guard holds and
+  recorded start/live headroom covers1GiB pending capture/evidence growth.
+  [Byte verification](artifacts/qwen35-9b-payload-2026-11-09/verified.json),
+  [Source contract](artifacts/qwen35-9b-payload-2026-11-09/contract.json),
+  [growth audit](artifacts/qwen35-9b-payload-2026-11-09/growth-audit.json),
+  [cache preservation](artifacts/qwen35-context256-2026-11-09/cache-space-reclaimed-9b.json).
 
 - [x] Q1.I bounded generation state bridge: separate pending history, exact whole
   committed-prefix reuse and reset/replay for changed or shortened prompts.

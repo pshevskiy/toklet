@@ -1,6 +1,6 @@
 # Toklet improvement index
 
-Updated **8 November 2026**. This is the compact index of retained capabilities,
+Updated **9 November 2026**. This is the compact index of retained capabilities,
 measured gains and material restrictions. The [full dated history](archive/2026-11-07/improvements.md)
 preserves every previous entry, source revision, failed check and evidence link.
 Read it only when the current task needs that detail.
@@ -284,3 +284,49 @@ route or quality qualification.
 [Checks/review/commit](../artifacts/qwen35-generation-state-2026-11-09/publication-checks.json).
 [Scope](qwen35-generation-state.md),
 [contract](../artifacts/qwen35-generation-state-2026-11-09/acceptance-contract.json).
+
+Q1.J's closed128/256-input evaluation rejects numerical qualification:
+13,505failures/76.98M comparisons, maxratio34.066, with matching greedy IDs.
+The two original references have3,132disjoint checkpoint tolerance intervals;
+no threshold or profile requirement changes. Native replay/recovery passes at
+2.765GB; the reference peaks at810MB. Required644CPU/778Metal, fmt/bothClippy,
+26Python/24native/30reference evidence controls pass; native58 reuse is audited.
+Astra approves scoped retention with no findings. Source/storage failures are
+retained; no full-request,
+quality, managed route or context expansion follows.
+[Scope](qwen35-context256.md),
+[decision](../artifacts/qwen35-context256-2026-11-09/decision.json),
+[checks/review/commit](../artifacts/qwen35-context256-2026-11-09/publication-checks.json).
+
+The separate [reference-step prototype](../artifacts/qwen35-context256-2026-11-09/recurrent-vector-experiment-summary.json)
+now matches all38.49M originalFP32 values/2,102arrays bitwise, after tiny/real17
+checks. Eight unit/32actual evidence controls pass at722MBpeak. Isolated recurrence
+cohorts improve, but full collection timings are not comparable and no model
+speedup or collector promotion follows; original source and failed controls remain.
+[Full parity](../artifacts/qwen35-context256-2026-11-09/reference-graph-vector-experiment/full256-parity.json).
+
+[Persistent-codec cache stress](../artifacts/qwen35-context256-2026-11-09/codec-cache-stress-2/validated-final.json)
+passes four owned processes and15resealed evidence controls on22,000 distinct
+near-limit words. Singleton peaks are289MB default/260MB controlled, within512MiB.
+Whole50KB decode rejects the existing conservative bound; ASCII chunks verify
+roundtrips. Astra approves this additional singleton scope; prior repeated-
+construction rejection and aggregate fit restrictions remain.
+
+[MiniCPM5 metadata preflight](../artifacts/minicpm5-preflight-2026-11-09/preflight-summary.json)
+confirms the pinned973-tensor header/index and2.517B logical count. The declared
+modified BF16 parent's current API access returns401; its lineage and every
+payload/runtime/quality gate stay open. FullFP32 expansion exceeds6GiB; no source
+payload was downloaded and selected implementation order is unchanged.
+The separate [LFM3 BF16 preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)
+identifies a3.458GB uncensored candidate with pinned BF16-parent metadata and a
+0.973GB official Q4 reference. Header geometry and manifest hash links pass;
+source bytes, new graph/codec, numerical/quality/fit and adoption remain open.
+The earlier over-budget GGUF-to-F32 artifact stays rejected.
+The [Granite/Ministral/Qwen2B audit](../artifacts/small-model-metadata-2026-11-09/preflight-summary.json)
+passes53metadata/12header checks with explicit stale-index/declared-size
+rejections retained. It identifies config/YaRN and Qwen norm-precision work;
+no payload authentication, runtime qualification or policy/cap change follows.
+The [9B source](../artifacts/qwen35-9b-payload-2026-11-09/verified.json) now passes
+independent5.038GB byte/header/config/index verification after guarded cache
+recovery. No9B parser, runtime/fit/quality or route claim follows; implementation
+order and6GiB stay fixed.

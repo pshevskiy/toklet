@@ -101,6 +101,30 @@ evidence controls pass. Astra approves this codec and restricted diagnostic
 profile with no actionable findings;
 [checks/review/commit](../artifacts/qwen35-text-codec-2026-11-08/publication-checks.json).
 
+Additional singleton-cache stress now passes four fresh release processes on
+22,000 distinct250-character words, with660 total phase requests. Default
+physical peaks are287/289MB; explicit child-only `MallocLargeCache=0` peaks are
+260/259MB, all below512MiB. The Rust probe passes release build/strict Clippy/fmt
+with unchanged registry dependency identities. The offline reader independently
+reconstructs every wire input and confirms identical token IDs across profiles;
+15resealed evidence controls reject damaged records. Direct cache occupancy is
+unavailable. This is memory evidence for the recorded singleton workload; the
+earlier default repeated-construction failure and aggregate engine/app admission
+remain separate gates. Astra approves this additional singleton evidence with
+no actionable findings; [Q1.J checks/review/commit](../artifacts/qwen35-context256-2026-11-09/publication-checks.json).
+
+The first stress attempt stopped at the existing conservative whole-batch decode
+bound and is preserved as rejected. The corrected protocol keeps the same50KB
+encoder inputs, explicitly requires all165 whole-batch decode rejections per
+process, then verifies ASCII roundtrips using64-ID chunks. Byte/token/decode
+limits and product behavior are unchanged.
+[Validation](../artifacts/qwen35-context256-2026-11-09/codec-cache-stress-2/validated-final.json),
+[evidence controls](../artifacts/qwen35-context256-2026-11-09/codec-cache-stress-2/negative-controls.json),
+[initial rejection/correction](../artifacts/qwen35-context256-2026-11-09/codec-cache-first-correction.json).
+The [pinned cache-source audit](../artifacts/qwen35-context256-2026-11-09/codec-cache-preflight.json)
+records the entry/word-length bounds used to design this stress; cache occupancy
+itself remains unobserved.
+
 [Contract](../artifacts/qwen35-text-codec-2026-11-08/acceptance-contract.json),
 [frozen witness](../artifacts/qwen35-text-codec-2026-11-08/frozen-witness.json),
 [profile text fidelity](../artifacts/qwen35-text-codec-2026-11-08/fidelity-hardened-final.json),

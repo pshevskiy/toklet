@@ -69,16 +69,48 @@ and every derivative's actual shapes at admission.
 | Rank | Official reference | Total parameters | Reason to evaluate | Uncensored / MLX path |
 | --- | --- | ---: | --- | --- |
 | 1 | [MiniCPM5-2B](https://huggingface.co/openbmb/MiniCPM5-2B) | 2,516,756,480 | Strong small reasoning, coding and tool-use candidate; ordinary Llama-style model type | [mondk uncensored MLX 4-bit](https://huggingface.co/mondk/MiniCPM5-2B-Abliterated-Uncensored-MLX-4Bit), `8ebe35e0`; affine/group 64, independently qualify |
-| 2 | [LFM3-1.7B](https://huggingface.co/LiquidAI/LFM3-1.7B) | 1,728,801,536 | Recent compact agent/instruction-following model; useful performance experiment with a new architecture | [mchen04 uncensored MLX](https://huggingface.co/mchen04/LFM3-1.7B-Uncensored-MLX), `095df4e8`, exists but expands quantized GGUF into F32. About 6.44 GiB of weights alone: do not adopt under 6 GiB. Find/convert a high-precision uncensored source to bounded MLX quantization; artifact gate remains open |
-| 3 | [Granite 4.2 3B](https://huggingface.co/ibm-granite/granite-4.2-3b) | 3,659,737,600 | Dense reasoning/tool-use baseline with adjustable thinking effort | [Heretic source](https://huggingface.co/saidutta69/granite-4.2-3b-heretic) found; uncensored MLX conversion pending. [Official MLX Q4](https://huggingface.co/ibm-granite/granite-4.2-3b-q4-mlx) is a reference fallback, not uncensored |
-| 4 | [Ministral 3 3B Reasoning](https://huggingface.co/mistralai/Ministral-3-3B-Reasoning-2512) | 3,849,090,048 | Compact STEM and vision reasoning; count includes vision encoder | [Heretic source](https://huggingface.co/xtools-at/Ministral-3-3B-Reasoning-UNCENSORED-heretic) found; uncensored MLX conversion pending. [MLX 4-bit reference](https://huggingface.co/mlx-community/Ministral-3-3B-Reasoning-2512-4bit), `2cd2087a`, uses affine/group 64 |
-| 5 | [Qwen3.5-2B](https://huggingface.co/Qwen/Qwen3.5-2B) | 2,274,069,824 | Small vision/reasoning candidate that can reuse mechanisms qualified for Qwen3.5-4B/9B | [TheCluster uncensored MLX BF16](https://huggingface.co/TheCluster/Qwen3.5-2B-Uncensored-HauhauCS-Aggressive-MLX-bf16), `78efacde`; inspect its changed tensor count/lineage before conversion, then evaluate affine Q4 for deployment |
+| 2 | [LFM3-1.7B](https://huggingface.co/LiquidAI/LFM3-1.7B) | 1,728,801,536 | Recent compact agent/instruction-following model; useful performance experiment with a new architecture | Prefer the separate [mchen04 Heretic BF16 MLX](https://huggingface.co/mchen04/LFM3-1.7B-Heretic-Abliterated-MLX-bf16), `88636d45`, then independently qualify bounded Q4 conversion. Its declared Vortecks BF16 parent is pinned; payload/quality/admission are open. The previous `095df4e8` GGUF-to-F32 artifact still exceeds6GiB in weights alone and remains rejected |
+| 3 | [Granite 4.2 3B](https://huggingface.co/ibm-granite/granite-4.2-3b) | 3,659,737,600 | Dense reasoning/tool-use baseline with adjustable thinking effort | [Heretic source](https://huggingface.co/saidutta69/granite-4.2-3b-heretic), `db83ced6`; uncensored MLX conversion pending. [Official MLX Q4](https://huggingface.co/ibm-granite/granite-4.2-3b-q4-mlx), `0c6f39b1`, is a reference fallback; strict config translation and qualification remain open |
+| 4 | [Ministral 3 3B Reasoning](https://huggingface.co/mistralai/Ministral-3-3B-Reasoning-2512) | 3,849,090,048 | Compact STEM and vision reasoning; count includes vision encoder | [Heretic source](https://huggingface.co/xtools-at/Ministral-3-3B-Reasoning-UNCENSORED-heretic), `46fb9a42`; uncensored MLX conversion pending. [MLX 4-bit reference](https://huggingface.co/mlx-community/Ministral-3-3B-Reasoning-2512-4bit), `2cd2087a`, has a stale index; its single-file header is diagnostic only |
+| 5 | [Qwen3.5-2B](https://huggingface.co/Qwen/Qwen3.5-2B) | 2,274,069,824 | Small vision/reasoning candidate that can reuse mechanisms qualified for Qwen3.5-4B/9B | [TheCluster uncensored MLX BF16](https://huggingface.co/TheCluster/Qwen3.5-2B-Uncensored-HauhauCS-Aggressive-MLX-bf16), `78efacde`; header differences include15omitted MTP tensors and18norm vectors narrowed to BF16. Authenticate/qualify these changes before affine Q4 conversion |
 
 Gemma 4 E2B's effective name does not make it under 4B total; it remains the
 main first model. Qwen3.5-4B is also outside this strict tier. Nanbeige4.2-3B was
 investigated but has 4,169,800,704 stored parameters at `b82e54bd`, so is excluded.
 Do not use quantized container word counts to claim a smaller parameter class.
 Availability of a publisher's conversion is not a passing local benchmark.
+
+The [MiniCPM5 metadata preflight](../artifacts/minicpm5-preflight-2026-11-09/preflight-summary.json)
+finds296packed matrices/85small tensors in the pinned1.416GB conversion; its
+2.517B logical parameters match the official declaration. FullFP32 expansion
+would require10.067GB, so use a bounded independent reference. The declared
+modified BF16 parent's current anonymous API requests return401; cached listings
+do not authenticate its availability or lineage. No payload was downloaded,
+and source/codec/numerical/quality/admission gates and model order stay unchanged.
+
+The [LFM3 metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)
+checks286BF16 tensors/3.458GB for the new candidate and594physical tensors/0.973GB
+for the official Q4 reference. Its conversion manifest links to an accessible,
+pinned modified BF16 parent's expected hash; complete payload bytes are still
+unauthenticated. This graph needs7-tap convolution, rotating256-token windows,
+sandwich/QK norms, per-head attention gates and layer-specific partial RoPE.
+Existing LFM2 support and publisher parity results do not qualify those mechanisms.
+
+The [remaining small-model audit](../artifacts/small-model-metadata-2026-11-09/preflight-summary.json)
+checks53metadata files and12canonical/diagnostic headers across8pinned sources.
+Granite's BF16 payload is7.319GB; its original index understates physical bytes by
+514MB, while the inspected header owns both untied tables. Ministral's text-only
+BF16 weights already require6.858GB. Both exceed6GiB before session/application
+owners and need separately qualified bounded conversion. Ministral also needs
+3,072hidden/4,096query width and YaRN source semantics; the core model represents
+independent widths, but its current source adapter does not admit this model.
+The selected Ministral Q4 index has stale filenames, tensor inventory and size;
+its header diagnostic changes no source-admission policy.
+Qwen2B's removed15MTP tensors explain60,828,160fewer stored parameters. Its18norm
+precision changes and convolution/vision layouts are metadata observations,
+not tensor-byte parity. Separate24-layer/16-value-head binding, codec, numerical/
+quality, physical fit and request/overhead gates remain open. No payloads were
+downloaded and model order/context caps stay unchanged.
 
 The isolated [all-source FP32 Metal projection gate](qwen35-gpu-projections.md) passes.
 The [concrete executor](qwen35-metal-executor.md) passes its scoped coupled
@@ -99,17 +131,52 @@ baselines pass only under an explicit process profile; default repeated
 reconstruction fails the component memory cap. Astra approves this text scope;
 controller, deeper-context, request/quality/adoption gates remain open. No metadata
 is rewritten. [Checks/review/commit](../artifacts/qwen35-text-codec-2026-11-08/publication-checks.json).
-The [bounded generation state bridge](qwen35-generation-state.md) is in progress:
+Separate [persistent-codec stress](../artifacts/qwen35-context256-2026-11-09/codec-cache-stress-2/validated-final.json)
+now fits the512MiB component target in default/controlled singleton processes on
+the recorded corpus. Astra approves this additional singleton scope; repeated construction and
+aggregate admission remain open.
+The [bounded generation state bridge](qwen35-generation-state.md) is retained:
 pending/committed history, conservative hybrid replay and detailed memory/work
 snapshots feed the existing controller. Required/source checks and both scoped
 release baselines pass; Astra approves this state bridge with no findings. This
 grants no managed route.
 [Checks/review/commit](../artifacts/qwen35-generation-state-2026-11-09/publication-checks.json).
+The closed [128/256-input evaluation](qwen35-context256.md) rejects the4B
+trajectory under the original dual-profile gate:13,505failed values across76.98M
+comparisons, maxratio34.066. Greedy IDs agree, while3,132checkpoint coordinates
+have disjoint idealFP64/stagedFP32 tolerance intervals. No output could pass both
+there; neither tolerance nor profile requirement changes. Native state/recovery
+controls pass. Astra approves scoped retention of the rejection diagnostics
+with no findings; [checks/review/commit](../artifacts/qwen35-context256-2026-11-09/publication-checks.json).
+No request, quality or managed-route qualification follows. The separate reference
+prototype matches all38.49M originalFP32 values bitwise with closed endpoints and
+32damaged-evidence controls; it changes no collector or engine behavior.
 The [9B header preflight](../artifacts/qwen35-9b-preflight-2026-11-08/preflight-summary.json)
 finds 250 packed matrices with a distinct, untied output head and a 5.038 GB
 container. It requires separate head binding, bounded reference-reader support
-above 4 GiB, complete source authentication and measured cold/steady admission.
+above 4 GiB and measured cold/steady admission; full source-byte identity is
+now verified below.
 Header metadata alone does not establish fit or runtime qualification.
+The [9B planning estimate](../artifacts/qwen35-9b-preflight-2026-11-08/admission-estimate-2026-11-09.json)
+puts current-mechanism numerical ownership near5.54GB and cold upload near5.78GB,
+before the changed head metadata, codec and application owners. These are
+hypotheses, not admission evidence. Its5.04GB source requires at least7.19GB free
+disk, plus other concurrent growth, to preserve the2GiB guard. After reclaiming
+3.14GB of verified regenerable compiler cache, all5.038GB and927header tensors
+pass [independent byte/header/config/index verification](../artifacts/qwen35-9b-payload-2026-11-09/verified.json).
+The [source contract](../artifacts/qwen35-9b-payload-2026-11-09/contract.json) and
+[growth audit](../artifacts/qwen35-9b-payload-2026-11-09/growth-audit.json) retain
+the2GiB disk guard; recorded start/live headroom covers1GiB of pending capture/
+evidence growth. This authenticates publisher bytes only. The numerical parser,
+untied-head binding, oracle ceiling, codec/quality/physical fit and request metrics
+remain open; staging changes no implementation order or managed route.
+The [formula control](../artifacts/qwen35-9b-preflight-2026-11-08/admission-estimate-formula-control.json)
+reproduces the existing4B requested-owner ledger; actual9B physical fit stays open.
+The [phase admission hypothesis](../artifacts/qwen35-9b-preflight-2026-11-08/phase-admission-plan-2026-11-09.json)
+loads weights before constructing the codec so upload temporaries and codec
+construction do not overlap. It preserves the512MiB codec allowance and estimates
+a6.08GB peak before application/changed-head metadata. This sequence is not yet
+implemented or physically qualified; allocator retention still needs measurement.
 
 ## Metric contract
 

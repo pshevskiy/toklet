@@ -1,4 +1,5 @@
 //! Real-source closed GPU projection/CPU-state probes, separate from ordinary tests.
+mod context256;
 mod generation;
 use super::*;
 use crate::mlx::qwen35::{self as source, payload};
@@ -34,6 +35,10 @@ fn config() -> Vec<u8> {
     bytes
 }
 fn load() -> Loaded {
+    load_with_diagnostic(DIAGNOSTIC)
+}
+fn load_with_diagnostic(diagnostic: usize) -> Loaded {
+    assert!(diagnostic > 0 && diagnostic < MEMORY_LIMIT - CONTEXT_ALLOWANCE_BYTES);
     let start = Instant::now();
     let context = Context::new(CONTEXT_ALLOWANCE_BYTES).unwrap();
     let context_ns = start.elapsed().as_nanos();
@@ -43,14 +48,14 @@ fn load() -> Loaded {
         &config,
         File::open(directory().join("model.safetensors")).unwrap(),
         payload::LoadOptions {
-            memory_limit_bytes: MEMORY_LIMIT - DIAGNOSTIC - CONTEXT_ALLOWANCE_BYTES,
+            memory_limit_bytes: MEMORY_LIMIT - diagnostic - CONTEXT_ALLOWANCE_BYTES,
             modality: source::ModalityPolicy::TextOnly,
         },
     )
     .unwrap();
     let cpu_load_ns = start.elapsed().as_nanos();
     let start = Instant::now();
-    let store = cpu.into_metal(&context, MEMORY_LIMIT - DIAGNOSTIC).unwrap();
+    let store = cpu.into_metal(&context, MEMORY_LIMIT - diagnostic).unwrap();
     let upload_ns = start.elapsed().as_nanos();
     assert_eq!(store.report().matrices, 249);
     assert_eq!(store.report().retained_cpu_matrix_bytes, 0);
