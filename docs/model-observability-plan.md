@@ -187,6 +187,16 @@ retention with no findings; [checks/review/commit](../artifacts/qwen35-9b-cold-2
 No9B payload reader,
 numerical head binding, memory admission or managed route follows from this work.
 
+Q2.B retains [separate9B CPU payload ownership](qwen35-9b-storage.md), with
+complete source authentication, original affine components and exact promoted
+small values before publication. Required661CPU/795Metal and actual independent
+927component/750row checks pass at5.053GBpeak in controlled child processes.
+Six loading cohorts/60samples pass (9B22.731/22.675s;4B−1.02%/−0.18%); no cache-
+residency or speedup claim. Astra approves after a reader timing fix;
+[checks/review/commit](../artifacts/qwen35-9b-storage-2026-11-09/publication-checks.json).
+Full model/default allocator/GPU/codec/
+request/quality/adoption gates stay open and4B eligibility does not expand.
+
 ## Metric contract
 
 O1 must make each handled request observable before performance changes. Reuse

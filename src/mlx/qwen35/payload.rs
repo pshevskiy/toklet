@@ -33,6 +33,14 @@ pub struct ContentIdentity {
     bytes: u64,
 }
 impl ContentIdentity {
+    pub(super) fn pending(config: &[u8], header: &[u8], bytes: u64) -> Self {
+        Self {
+            config: Sha256::digest(config).into(),
+            header: Sha256::digest(header).into(),
+            container: [0; 32],
+            bytes,
+        }
+    }
     pub fn config_sha256(&self) -> &[u8; 32] {
         &self.config
     }
@@ -57,11 +65,35 @@ pub struct LoadReport {
     pub admitted_load_bytes: usize,
 }
 
-struct Packed {
-    layout: Layout,
-    codes: Vec<u8>,
-    scales: Vec<u8>,
-    biases: Vec<u8>,
+pub(super) struct Packed {
+    pub(super) layout: Layout,
+    pub(super) codes: Vec<u8>,
+    pub(super) scales: Vec<u8>,
+    pub(super) biases: Vec<u8>,
+}
+
+// Borrowed cold descriptors only. Public stores keep their source-specific Plan;
+// the streaming mechanism never chooses a source or a numerical backend.
+pub(super) struct SourceRecipe<'a> {
+    pub(super) common: &'a [TensorPlan],
+    pub(super) convolutions: &'a [ConvolutionPlan],
+    pub(super) physical: &'a BTreeMap<String, PhysicalTensor>,
+    pub(super) bytes: PayloadBytes,
+}
+pub(super) struct Components {
+    pub(super) matrices: BTreeMap<String, Packed>,
+    pub(super) vectors: BTreeMap<String, Vec<f32>>,
+    pub(super) convolutions: BTreeMap<String, Vec<f32>>,
+    pub(super) identity: ContentIdentity,
+    pub(super) report: LoadReport,
+}
+fn source_recipe(plan: &Plan) -> SourceRecipe<'_> {
+    SourceRecipe {
+        common: &plan.common,
+        convolutions: &plan.convolutions,
+        physical: &plan.physical,
+        bytes: plan.bytes,
+    }
 }
 
 /// Immutable original matrix components plus exact BF16-to-FP32 small tensors.
@@ -120,15 +152,19 @@ fn budget(required: usize, limit: usize) -> Result<(), Error> {
     }
     Ok(())
 }
-struct Reservation {
+pub(super) struct Reservation {
     tensors: usize,
     overlap: usize,
-    total: usize,
+    pub(super) total: usize,
 }
+#[cfg(test)]
 fn reservation(plan: &Plan) -> Result<Reservation, Error> {
+    reservation_for(&source_recipe(plan))
+}
+pub(super) fn reservation_for(plan: &SourceRecipe<'_>) -> Result<Reservation, Error> {
     let mut tensors = 0;
     let mut overlap = 0;
-    for t in &plan.common {
+    for t in plan.common {
         let size = match (t.storage, t.shape) {
             (Storage::Affine(l), Shape::Matrix { .. }) => l.total_bytes(),
             (Storage::Bf16Vector, Shape::Vector(n)) => {
@@ -139,7 +175,7 @@ fn reservation(plan: &Plan) -> Result<Reservation, Error> {
         };
         tensors = add(tensors, size)?;
     }
-    for c in &plan.convolutions {
+    for c in plan.convolutions {
         let n = mul(c.channels, c.taps)?;
         overlap = overlap.max(mul(n, 2)?);
         tensors = add(tensors, mul(n, 4)?)?;
@@ -185,25 +221,13 @@ pub fn load<R: Read>(
     mut reader: R,
     options: LoadOptions,
 ) -> Result<PayloadStore, Error> {
-    budget(with_metadata(0, 0)?, options.memory_limit_bytes)?;
+    metadata_admission(options.memory_limit_bytes)?;
     if options.modality != ModalityPolicy::TextOnly || config.len() != CONFIG_BYTES {
         return Err(invalid("pinned Qwen3.5 config/text-only request required"));
     }
-    let mut sha = Sha256::new();
-    let mut length = [0; 8];
-    read_exact(&mut reader, &mut length, &mut sha)?;
-    if u64::from_le_bytes(length) != HEADER_BYTES as u64 {
-        return Err(invalid("pinned Qwen3.5 header length differs"));
-    }
-    let mut header = buffer(HEADER_BYTES)?;
-    read_exact(&mut reader, &mut header, &mut sha)?;
+    let (header, sha) = source_header(&mut reader, HEADER_BYTES)?;
     let plan = inspect(config, &header, CONTAINER_BYTES, options.modality)?;
-    let identity = ContentIdentity {
-        config: Sha256::digest(config).into(),
-        header: Sha256::digest(&header).into(),
-        container: [0; 32],
-        bytes: CONTAINER_BYTES,
-    };
+    let identity = ContentIdentity::pending(config, &header, CONTAINER_BYTES);
     load_admitted(
         &mut reader,
         plan,
@@ -215,6 +239,24 @@ pub fn load<R: Read>(
     )
 }
 
+pub(super) fn metadata_admission(limit: usize) -> Result<(), Error> {
+    budget(with_metadata(0, 0)?, limit)
+}
+pub(super) fn source_header<R: Read>(
+    reader: &mut R,
+    expected: usize,
+) -> Result<(Vec<u8>, Sha256), Error> {
+    let mut sha = Sha256::new();
+    let mut length = [0; 8];
+    read_exact(reader, &mut length, &mut sha)?;
+    if u64::from_le_bytes(length) != expected as u64 {
+        return Err(invalid("pinned Qwen3.5 header length differs"));
+    }
+    let mut header = buffer(expected)?;
+    read_exact(reader, &mut header, &mut sha)?;
+    Ok((header, sha))
+}
+
 fn take(physical: &mut BTreeMap<String, Vec<u8>>, name: &str) -> Result<Vec<u8>, Error> {
     physical
         .remove(name)
@@ -223,13 +265,47 @@ fn take(physical: &mut BTreeMap<String, Vec<u8>>, name: &str) -> Result<Vec<u8>,
 fn load_admitted<R: Read>(
     reader: &mut R,
     plan: Plan,
+    sha: Sha256,
+    identity: ContentIdentity,
+    consumed: u64,
+    expected: &str,
+    limit: usize,
+) -> Result<PayloadStore, Error> {
+    let Components {
+        matrices,
+        vectors,
+        convolutions,
+        identity,
+        report,
+    } = read_components(
+        reader,
+        source_recipe(&plan),
+        sha,
+        identity,
+        consumed,
+        expected,
+        limit,
+    )?;
+    Ok(PayloadStore {
+        plan,
+        matrices,
+        vectors,
+        convolutions,
+        identity,
+        report,
+    })
+}
+
+pub(super) fn read_components<R: Read>(
+    reader: &mut R,
+    plan: SourceRecipe<'_>,
     mut sha: Sha256,
     mut identity: ContentIdentity,
     mut consumed: u64,
     expected: &str,
     limit: usize,
-) -> Result<PayloadStore, Error> {
-    let reserve = reservation(&plan)?;
+) -> Result<Components, Error> {
+    let reserve = reservation_for(&plan)?;
     budget(reserve.total, limit)?;
     let mut admitted = reserve.total;
     let mut spans: Vec<_> = plan.physical.iter().collect();
@@ -273,7 +349,7 @@ fn load_admitted<R: Read>(
     let mut vectors = BTreeMap::new();
     let mut convolutions = BTreeMap::new();
     let mut retained = 0;
-    for t in &plan.common {
+    for t in plan.common {
         match t.storage {
             Storage::Affine(layout) => {
                 let base = t
@@ -303,7 +379,7 @@ fn load_admitted<R: Read>(
             }
         }
     }
-    for c in &plan.convolutions {
+    for c in plan.convolutions {
         let v = convert(&mut physical, &c.name, &mut live, &mut admitted, limit)?;
         if v.len() != mul(c.channels, c.taps)? {
             return Err(invalid("Qwen3.5 convolution length differs"));
@@ -328,8 +404,7 @@ fn load_admitted<R: Read>(
         metadata_reservation_bytes: METADATA_BYTES,
         admitted_load_bytes: admitted,
     };
-    Ok(PayloadStore {
-        plan,
+    Ok(Components {
         matrices,
         vectors,
         convolutions,

@@ -343,3 +343,16 @@ Fresh native59 three slices/46exports each and Mac CPU/Metal Csmokes pass;
 Astra approves scoped retention with no findings.
 [Contract](../artifacts/qwen35-9b-cold-2026-11-09/acceptance-contract.json),
 [checks/review/commit](../artifacts/qwen35-9b-cold-2026-11-09/publication-checks.json).
+
+Q2.B's separate [9B CPU payload store](qwen35-9b-storage.md) is retained with Astra approval.
+It authenticates the full stream before publishing original affine owners and
+exact promoted small values, preserving strict4B APIs. Required661CPU/795Metal,
+fmt/both strictClippy,17Python/native60/Csmokes and actual4B/9B byte/row/corruption
+checks pass. Independent9B verification covers927components/750rows/3.858Mvalues
+per capture at5.053GBpeak;8actual evidence controls pass. Astra's reader timing P2
+is fixed with explicit consumer-only reuse; no remaining findings. Six loading cohorts/
+60samples pass:9B22.731/22.675s; matched4B−1.02%/−0.18%, with no repeated5%
+regression. Astra approves scoped retention; no model/GPU/codec/request/quality/adoption
+qualification follows, and OS cache residency is not inferred from warmups.
+
+[Q2.B checks/review/commit](../artifacts/qwen35-9b-storage-2026-11-09/publication-checks.json).

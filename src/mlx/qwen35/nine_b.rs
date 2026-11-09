@@ -25,6 +25,8 @@ const HIDDEN: usize = 4096;
 const INTERMEDIATE: usize = 12288;
 const HEAD: &str = "language_model.lm_head.weight";
 
+pub mod payload;
+
 pub struct Plan {
     layers: [LayerRecipe; super::LAYERS],
     common: Vec<TensorPlan>,

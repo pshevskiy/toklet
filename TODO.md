@@ -20,16 +20,30 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **Q2.B pinned Qwen3.5-9B CPU payload qualification** after
-reviewed Q2.A. The4B managed route remains ineligible under its unchanged gate.
-The full selected goal stays active.
+Current/next task: **Q2.C explicit untied numerical head binding** after reviewed
+Q2.B. The full selected goal stays active;4B managed adoption remains ineligible
+under its unchanged numerical gate.
 
-- [ ] Q2.B separate9B payload ownership: authenticate the full stream before
-  publication, preserve original affine bytes and exact converted small values,
-  measure actual capacity/physical loading peak within6GiB. Keep4B APIs/source
-  strict; no numerical head binding, GPU/codec/request or managed route in this
-  bounded step. Freeze its contract before edits;
-  [next scope and inspected gaps](artifacts/qwen35-9b-cold-2026-11-09/next-scope-analysis.json).
+- [ ] Q2.C preserve tied4B constructors and add explicit separate-head numerical
+  binding with independent tiny graph/state/accounting controls. Freeze a contract
+  before edits. Actual9B oracles, >4GiB reference layout, GPU/default allocator/
+  codec/application fit, request/overhead and quality/adoption remain later gates;
+  [inspected next scope](artifacts/qwen35-9b-storage-2026-11-09/next-scope-analysis.json).
+
+- [x] Q2.B separate pinned9B CPU store: full-stream authentication before publishing
+  original packed owners/exact small values;4B APIs preserved. Required fmt/both
+  strictClippy,661CPU/795Metal(44/322ignored),17Python, native60 three slices/
+  46exports and Mac Csmokes pass. Actual9B927components/750rows/3.858Mvalues per
+  capture pass at5.053GBpeak;4B bytes/rows and corruption controls pass. Six loading
+  cohorts/60samples:9B22.731/22.675s,5.051GB;4B−1.02%/−0.18%, no repeated5%
+  regression. Controlled child allocator only; no request gain or whole-model fit.
+  Astra approves after timing-enclosure P2 fix;8actual evidence controls pass.
+  Two reader/test consumer changes are explicitly hash-bound;3,955other historical
+  inputs/408package inputs and producer/probe/binaries unchanged. Prior cleanup,
+  schema/oracle/build/report-check failures remain linked;2GiB disk guard held.
+  [Scope](docs/qwen35-9b-storage.md),
+  [checks/review/commit](artifacts/qwen35-9b-storage-2026-11-09/publication-checks.json),
+  [contract](artifacts/qwen35-9b-storage-2026-11-09/acceptance-contract.json).
 
 - [x] Q2.A pinned9B cold recipe: distinct head/embedding,250affine matrices/
   153BF16 vectors/24convolutions; exact source/shape/dtype/span checks. Strict4B
