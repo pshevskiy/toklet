@@ -1,4 +1,4 @@
-//! Same-source9B scalar/hybrid one-input comparison, selected at compile time.
+//! Same-source9B scalar/hybrid frozen-workload probe, selected at compile time.
 use std::{
     fs::File,
     io::{BufWriter, Read, Write},
@@ -8,6 +8,14 @@ use std::{
 use toklet::model::qwen35::{Execution, MatrixStorage, Memory, Options, Outcome, Session, Work};
 const LIMIT: usize = 6 * 1024 * 1024 * 1024;
 const DIAGNOSTIC: usize = 64 * 1024 * 1024;
+#[cfg(not(toklet_context17))]
+const IDS: &[u32] = &[1];
+#[cfg(toklet_context17)]
+const IDS: &[u32] = &[1, 7, 13, 3, 9, 5, 11, 2, 17, 4, 6, 10, 19, 8, 21, 23, 29];
+#[cfg(not(toklet_context17))]
+const POSITION_OFFSET: usize = 0;
+#[cfg(toklet_context17)]
+const POSITION_OFFSET: usize = 37;
 
 fn config(folder: &Path) -> Vec<u8> {
     let file = File::open(folder.join("config.json")).unwrap();
@@ -71,7 +79,7 @@ fn measure<M: MatrixStorage, E: Execution<M>>(session: &mut Session<'_, '_, M, E
         let ns;
         let n;
         {
-            let values = session.forward(&[1]).unwrap();
+            let values = session.forward(IDS).unwrap();
             ns = start.elapsed().as_nanos();
             n = values.len();
             compare(&mut expected, values);
@@ -81,13 +89,13 @@ fn measure<M: MatrixStorage, E: Execution<M>>(session: &mut Session<'_, '_, M, E
         }
         let work = session.work();
         assert!(matches!(work.outcome, Outcome::Success));
-        assert_eq!(work.tokens_completed, 1);
-        assert_eq!(work.tokens_committed, 1);
-        assert_eq!(work.projections_completed, 249);
-        assert_eq!(work.gathers_completed, 1);
-        assert_eq!(work.convolution_steps_completed, 24);
-        assert_eq!(work.recurrence_steps_completed, 24);
-        assert_eq!(work.attention_heads_completed, 128);
+        assert_eq!(work.tokens_completed, 1 * IDS.len());
+        assert_eq!(work.tokens_committed, 1 * IDS.len());
+        assert_eq!(work.projections_completed, 249 * IDS.len());
+        assert_eq!(work.gathers_completed, 1 * IDS.len());
+        assert_eq!(work.convolution_steps_completed, 24 * IDS.len());
+        assert_eq!(work.recurrence_steps_completed, 24 * IDS.len());
+        assert_eq!(work.attention_heads_completed, 128 * IDS.len());
         emit(ordinal, ns, n, session.memory(), work);
     }
 }
@@ -117,13 +125,14 @@ fn run(folder: &Path, output: &Path) {
         .session(Options {
             capacity: 512,
             chunk: 32,
-            position_offset: 0,
+            position_offset: POSITION_OFFSET,
             memory_limit_bytes: LIMIT - DIAGNOSTIC,
         })
         .unwrap();
     println!(
-        "NINE_B_INITIAL {{\"backend\":\"cpu\",\"load_ns\":{load_ns},\"context_ns\":0,\"upload_ns\":0,\"bind_ns\":{bind_ns},\"source_bytes\":{},\"gpu_matrices\":0,\"gpu_weight_bytes\":0,\"retained_cpu_matrix_bytes\":5035917312}}",
-        store.identity().container_bytes()
+        "NINE_B_INITIAL {{\"backend\":\"cpu\",\"load_ns\":{load_ns},\"context_ns\":0,\"upload_ns\":0,\"bind_ns\":{bind_ns},\"source_bytes\":{},\"input_tokens\":{},\"position_offset\":{POSITION_OFFSET},\"gpu_matrices\":0,\"gpu_weight_bytes\":0,\"retained_cpu_matrix_bytes\":5035917312}}",
+        store.identity().container_bytes(),
+        IDS.len()
     );
     measure(&mut session, output);
 }
@@ -164,14 +173,15 @@ fn run(folder: &Path, output: &Path) {
             Options {
                 capacity: 512,
                 chunk: 32,
-                position_offset: 0,
+                position_offset: POSITION_OFFSET,
                 memory_limit_bytes: LIMIT - DIAGNOSTIC,
             },
         )
         .unwrap();
     println!(
-        "NINE_B_INITIAL {{\"backend\":\"metal_hybrid\",\"load_ns\":{load_ns},\"context_ns\":{context_ns},\"upload_ns\":{upload_ns},\"bind_ns\":{bind_ns},\"source_bytes\":{},\"gpu_matrices\":{},\"gpu_weight_bytes\":{},\"retained_cpu_matrix_bytes\":{},\"admitted_load_policy_bytes\":{}}}",
+        "NINE_B_INITIAL {{\"backend\":\"metal_hybrid\",\"load_ns\":{load_ns},\"context_ns\":{context_ns},\"upload_ns\":{upload_ns},\"bind_ns\":{bind_ns},\"source_bytes\":{},\"input_tokens\":{},\"position_offset\":{POSITION_OFFSET},\"gpu_matrices\":{},\"gpu_weight_bytes\":{},\"retained_cpu_matrix_bytes\":{},\"admitted_load_policy_bytes\":{}}}",
         store.identity().container_bytes(),
+        IDS.len(),
         report.matrices,
         report.packed_gpu_bytes,
         report.retained_cpu_matrix_bytes,

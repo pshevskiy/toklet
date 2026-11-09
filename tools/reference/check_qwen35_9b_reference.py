@@ -160,7 +160,8 @@ def native(folder):
     return rows,receipt
 
 
-def reference(folder):
+def reference(folder, phase='one'):
+    tokens, position, planned_values = producer.plan(phase)
     import numpy as np
     files={'console.log','time-and-errors.log','native-memory.jsonl','process.json','inputs.json',
            'runtime.json','native.json','capture/result.json','capture/rows.bin'}
@@ -187,8 +188,8 @@ def reference(folder):
     need(result['completed'] is True and result['primary_error'] is None and result['endpoint_errors']==[],
          'Closed successful independent result required')
     fixed=dict(format='toklet-qwen35-9b-real-reference-v1',repository=adapter.REPOSITORY,revision=adapter.REVISION,
-        source_sha256=adapter.pin.FILE_SHA,phase='one',tokens=[1],position_offset=0,geometry=adapter.GEOMETRY,
-        gate=graph.GATE,planned_rows_bytes=producer.VALUES*12,ledger=producer.LEDGER,engine_executed=False,
+        source_sha256=adapter.pin.FILE_SHA,phase=phase,tokens=tokens,position_offset=position,geometry=adapter.GEOMETRY,
+        gate=graph.GATE,planned_rows_bytes=planned_values*12,ledger=producer.LEDGER,engine_executed=False,
         contextual_numerical_qualified=False,quality_qualified=False,managed_adoption_qualified=False)
     need(set(result)==set(fixed)|{'completed','arrays','runtime_admission','source','primary_error',
          'endpoint_errors','source_endpoint_sha256','rows_sha256','runtime_endpoint','profile_ns',
@@ -202,7 +203,7 @@ def reference(folder):
     need(inputs['command']==['/usr/bin/time','-l',inputs['python'],'-s',str(root/'tools/reference/qwen35_9b_reference.py'),
          '--model-directory',inputs['model_directory'],'--output',str(freeze_path.parent/'independent-1/capture'),
          '--runtime-manifest',inputs['runtime_manifest'],'--expected-runtime-sha256',inputs['runtime_manifest_sha256'],
-         '--native-manifest',inputs['native_manifest'],'--expected-native-sha256',inputs['native_manifest_sha256'],'--phase','one'],
+         '--native-manifest',inputs['native_manifest'],'--expected-native-sha256',inputs['native_manifest_sha256'],'--phase',phase],
          'Exact independent command required')
     audit=result['source']
     need(audit['closed'] is True and audit['poisoned'] is False and audit['poison_reason'] is None
@@ -220,14 +221,14 @@ def reference(folder):
     need(all(path in allowed and exact(value,allowed[path]) for path,value in endpoint['non_system_native_images'].items())
          and all(path in runtime['files'] for path in endpoint['numpy_modules'].values()),'Runtime endpoint origin differs')
     raw=read(folder/'capture/rows.bin',producer.MAX_CAPTURE)
-    need(len(raw)==producer.VALUES*12 and hashlib.sha256(raw).hexdigest()==result['rows_sha256'],'Independent body differs')
+    need(len(raw)==planned_values*12 and hashlib.sha256(raw).hexdigest()==result['rows_sha256'],'Independent body differs')
     need(type(result['arrays']) is list and len(result['arrays'])==2*1051,'Full independent observation inventory required')
-    wanted=adapter.expected_native();rows={};offset=0
+    wanted=adapter.expected_native(len(tokens));rows={};offset=0
     for index,(profile,width,dtype) in enumerate([('ideal_fp64',8,'<f8'),('staged_fp32',4,'<f4')]):
         arrays={}
         for item in result['arrays'][index*1051:(index+1)*1051]:
             need(set(item)=={'profile','token','layer','stage','count','offset','bytes','sha256'},'Exact independent descriptor required')
-            key=common.key(item)
+            key=common.key(item,token=len(tokens)-1)
             need(item['profile']==profile and key in wanted and key not in arrays,'Independent owner/profile differs')
             for field in ['count','offset','bytes']:need(type(item[field]) is int,'Strict independent extent required')
             need(item['count']==wanted[key] and item['offset']==offset and item['bytes']==wanted[key]*width,'Independent extent differs')

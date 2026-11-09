@@ -1,4 +1,4 @@
-"""Closed independent9B one-input coupled reference; not a target execution.
+"""Closed independent9B one-input/context17 coupled reference; not a target execution.
 
 The scalar graph predates Rust composition. Streaming and bounded row projections
 change storage/access only; fixture regeneration must retain every original byte.
@@ -25,8 +25,11 @@ LEDGER = dict(python_state_and_temporaries=2*1024**3, interpreter_and_runtime=51
 
 
 def plan(phase):
-    if phase != 'one': raise ValueError('Frozen9B one-input phase required')
-    return [1], 0, VALUES
+    if phase == 'one': tokens, offset = [1], 0
+    elif phase == 'context17': tokens, offset = list(graph.TOKENS), 37
+    else: raise ValueError('Frozen9B one-input or context17 phase required')
+    values = VALUES + (len(tokens)-1)*(8*2*4*256 + 8*2*16)
+    return tokens, offset, values
 
 
 def extras():
@@ -133,7 +136,7 @@ if __name__ == '__main__':
     parser.add_argument('--expected-runtime-sha256', required=True)
     parser.add_argument('--native-manifest', type=Path, required=True)
     parser.add_argument('--expected-native-sha256', required=True)
-    parser.add_argument('--phase', choices=['one'], default='one')
+    parser.add_argument('--phase', choices=['one', 'context17'], default='one')
     args = parser.parse_args()
     admission, endpoint = runtime_owner.runtime_context(args.runtime_manifest,
         args.expected_runtime_sha256, args.native_manifest, args.expected_native_sha256,

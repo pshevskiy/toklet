@@ -72,7 +72,8 @@ class Controls(unittest.TestCase):
 
     def test_reference_plan_and_source_closure_stay_one_input_and_bounded(self):
         self.assertEqual(producer.plan('one'),([1],0,16660224))
-        with self.assertRaises(ValueError):producer.plan('context17')
+        self.assertEqual(producer.plan('context17'),(list(producer.graph.TOKENS),37,16926464))
+        with self.assertRaises(ValueError):producer.plan('context18')
         self.assertEqual(sum(check.adapter.expected_native().values())*12,199922688)
         self.assertLess(199922688,producer.MAX_CAPTURE)
         self.assertLess(sum(producer.LEDGER.values()),6*1024**3)

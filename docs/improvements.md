@@ -387,3 +387,13 @@ scalar15.284/15.366s→hybrid236/239ms (64.72×/64.42×) for raw input1 only;
 4B−3.28%/+0.34%. AC/nominal thermal/Low Power Mode off are boundary observations.
 Astra approves scoped retention, no findings. Context/default allocator/codec/appfit/request/overhead/
 quality/adoption stay open;4B128/256 rejection remains binding.
+
+Q2.F's [9B context17 qualification](qwen35-9b-context17.md) passes both captures:
+33.85M comparisons each, zero failures, max ratio 0.4141, identical complete bodies
+and 5.667 GB peak. Real nonzero-prefix failure/cancel/poison/repair/retry, partitions
+and zero-allocation checks pass. Required 667 CPU / 803 Metal, 46 Python and
+25 damaged-evidence controls pass; native62 reuse is audited for test-only Rust
+changes. Two release context17 baselines are 4.093 / 4.121 s, full outputs equal,
+with nominal AC/thermal/low-power boundary observations. No optimization, request,
+tail, sustained or overhead claim. Astra approves scoped retention, no findings. Deeper 9B contexts,
+default allocator/codec/appfit/quality/adoption and the 4B 128/256 restriction remain.

@@ -20,9 +20,21 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **Q2.F9B context17 numerical qualification**, after reviewed
-Q2.E consuming GPU ownership/hybrid Metal binding. The full goal stays active;4B managed adoption
+Current/next task: **Q2.G9B128/256 numerical evaluation**, after reviewed
+Q2.F context17/nonzero-prefix recovery qualification. The full goal stays active;4B managed adoption
 remains ineligible under its unchanged numerical gate.
+
+- [x] Q2.F context17/offset37: both captures pass33.85Mvalues each,0failures/
+  maxratio0.4141; all partition/state/nonzero-prefix repair/retry/zeroalloc checks
+  pass at5.667GBpeak. Required667CPU/803Metal(46/329ignored),fmt/both strictClippy,
+  46Python,3positive/25damage controls and oldone-input CPU/Metal regressions pass.
+  Fresh native/ABI and explicit native62 reuse audit pass. Release baselines
+  4.093/4.121s (20samples), exact full outputs/5.666GBpeak; AC/nominal thermal/
+  lowpower off at boundaries. No optimization/overhead/tail claim. Astra approves, no findings. Initial private-import/runtime-path/premature-clone
+  preparation failures corrected; strict runtime unchanged. Cache preserves906
+  pins;7GBtarget missed,minimum4.5GB/2GiB guard pass.6GiB/512/32/512MiBcodec and
+  prior4B rejection stay binding. [Scope/evidence](docs/qwen35-9b-context17.md).
+  Next Q2.G9B128/256 gates; default allocator/codec/appfit/requests/quality/adoption open.
 
 - [x] Q2.E consuming9B GPU store/hybrid binding: checks/evidence complete;
   Astra approves scoped retention with no actionable findings.667CPU/803Metal(46/328ignored), fmt/both strict

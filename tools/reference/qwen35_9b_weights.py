@@ -92,7 +92,8 @@ def math_type(matrices):
     return OutputMath
 
 
-def expected_native():
+def expected_native(tokens=1):
+    need(type(tokens) is int and 1 <= tokens <= 512, 'Bounded integer9B context required')
     result = {(None, 'embedding', None): 4096, (None, 'final_norm', None): 4096,
               (None, 'logits', None): 248320}
     common = dict(input_norm=4096, operator_output=4096, operator_residual=4096,
@@ -110,7 +111,7 @@ def expected_native():
             result[layer, name, None] = count
         if layer%4 == 3:
             for head in range(4):
-                for name in ['attention_k_cache', 'attention_v_cache']: result[layer, name, head] = 256
+                for name in ['attention_k_cache', 'attention_v_cache']: result[layer, name, head] = 256*tokens
             for head in range(16):
-                for name in ['attention_scores', 'attention_probabilities']: result[layer, name, head] = 1
+                for name in ['attention_scores', 'attention_probabilities']: result[layer, name, head] = tokens
     return result
