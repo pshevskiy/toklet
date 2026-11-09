@@ -1,0 +1,40 @@
+{
+  "repository": "lukey03/Qwen3.5-9B-abliterated-MLX-4bit",
+  "revision": "8ff61b6a3af49b4f3973a5ed8ff0937de812c0d3",
+  "config_sha256": "a765dc71b9fd04c2104920f0ce8c500c53a435250106fb833eba3ad6c8258a82",
+  "header_sha256": "af0f407b4caf8bcd824272e8bf20136a6bfd66b923619e6509c6c72b62cbc615",
+  "container_expected_bytes": 5038160953,
+  "container_expected_sha256": "74855e1b61dc1955bdb835c2a3c9af8d6ce22aa9e46b1b99644fbda4afb540d2",
+  "physical_tensors": 927,
+  "matrices": 250,
+  "bf16_vectors": 153,
+  "convolutions": 24,
+  "logical_owners": 427,
+  "logical_parameters": 8953803264,
+  "payload_bytes": {
+    "affine_codes": 4476370944,
+    "affine_metadata": 559546368,
+    "bf16_vectors": 549888,
+    "bf16_convolutions": 1572864,
+    "total": 5038040064
+  },
+  "payload_offset": 120889,
+  "hidden": 4096,
+  "intermediate": 12288,
+  "vocab": 248320,
+  "embedding_name": "language_model.model.embed_tokens.weight",
+  "head_name": "language_model.lm_head.weight",
+  "embedding_code_range": [
+    3564153856,
+    4072713216
+  ],
+  "head_code_range": [
+    4313268352,
+    4821827712
+  ],
+  "metadata_only": true,
+  "numerical_execution_qualified": false,
+  "memory_fit_qualified": false,
+  "quality_qualified": false,
+  "managed_adoption_qualified": false
+}

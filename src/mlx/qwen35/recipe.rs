@@ -27,15 +27,27 @@ fn matrix(
 }
 
 pub(super) fn build() -> Result<Recipe, Error> {
+    build_for(HIDDEN, INTERMEDIATE, None)
+}
+
+// Cold factories only:4B has one tied table;9B has a distinct output projection.
+pub(super) fn build_for(
+    hidden: usize,
+    intermediate: usize,
+    output_head: Option<&str>,
+) -> Result<Recipe, Error> {
     let mut common = Vec::new();
     let mut convolutions = Vec::new();
     matrix(
         &mut common,
         format!("{PREFIX}embed_tokens.weight"),
         VOCAB,
-        HIDDEN,
+        hidden,
     )?;
-    vector(&mut common, format!("{PREFIX}norm.weight"), HIDDEN);
+    if let Some(name) = output_head {
+        matrix(&mut common, name.into(), VOCAB, hidden)?;
+    }
+    vector(&mut common, format!("{PREFIX}norm.weight"), hidden);
     let mut kv_owner = 0;
     let mut delta_owner = 0;
     let layers = std::array::from_fn(|i| {
@@ -66,16 +78,16 @@ pub(super) fn build() -> Result<Recipe, Error> {
     for (i, layer) in layers.iter().enumerate() {
         let base = format!("{PREFIX}layers.{i}.");
         for role in ["input_layernorm", "post_attention_layernorm"] {
-            vector(&mut common, format!("{base}{role}.weight"), HIDDEN);
+            vector(&mut common, format!("{base}{role}.weight"), hidden);
         }
         match layer {
             LayerRecipe::GatedDelta(plan) => {
                 for (role, rows, columns) in [
-                    ("in_proj_a", 32, HIDDEN),
-                    ("in_proj_b", 32, HIDDEN),
-                    ("in_proj_qkv", 8192, HIDDEN),
-                    ("in_proj_z", 4096, HIDDEN),
-                    ("out_proj", HIDDEN, 4096),
+                    ("in_proj_a", 32, hidden),
+                    ("in_proj_b", 32, hidden),
+                    ("in_proj_qkv", 8192, hidden),
+                    ("in_proj_z", 4096, hidden),
+                    ("out_proj", hidden, 4096),
                 ] {
                     matrix(
                         &mut common,
@@ -100,10 +112,10 @@ pub(super) fn build() -> Result<Recipe, Error> {
                 // Q and its output gate are one original projection, with twice
                 // the query-head width. No split/copy is performed by this plan.
                 for (role, rows, columns) in [
-                    ("q_proj", 8192, HIDDEN),
-                    ("k_proj", 1024, HIDDEN),
-                    ("v_proj", 1024, HIDDEN),
-                    ("o_proj", HIDDEN, 4096),
+                    ("q_proj", 8192, hidden),
+                    ("k_proj", 1024, hidden),
+                    ("v_proj", 1024, hidden),
+                    ("o_proj", hidden, 4096),
                 ] {
                     matrix(
                         &mut common,
@@ -118,9 +130,9 @@ pub(super) fn build() -> Result<Recipe, Error> {
             }
         }
         for (role, rows, columns) in [
-            ("gate_proj", INTERMEDIATE, HIDDEN),
-            ("up_proj", INTERMEDIATE, HIDDEN),
-            ("down_proj", HIDDEN, INTERMEDIATE),
+            ("gate_proj", intermediate, hidden),
+            ("up_proj", intermediate, hidden),
+            ("down_proj", hidden, intermediate),
         ] {
             matrix(
                 &mut common,
@@ -130,7 +142,11 @@ pub(super) fn build() -> Result<Recipe, Error> {
             )?;
         }
     }
-    if common.len() != 402 || convolutions.len() != 24 || kv_owner != 8 || delta_owner != 24 {
+    if common.len() != 402 + usize::from(output_head.is_some())
+        || convolutions.len() != 24
+        || kv_owner != 8
+        || delta_owner != 24
+    {
         return Err(invalid("Qwen3.5 cold recipe inventory differs"));
     }
     Ok((layers, common, convolutions))

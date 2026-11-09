@@ -330,3 +330,16 @@ The [9B source](../artifacts/qwen35-9b-payload-2026-11-09/verified.json) now pas
 independent5.038GB byte/header/config/index verification after guarded cache
 recovery. No9B parser, runtime/fit/quality or route claim follows; implementation
 order and6GiB stay fixed.
+
+Q2.A's [pinned9B cold recipe](qwen35-9b-cold.md) is retained with Astra approval. It represents
+the distinct embedding/output-head owners,250affine matrices,153BF16 vectors
+and24convolutions, with full metadata shape/dtype/span checks. Strict4B APIs
+remain separate; no tensor payload, numerical backend or model/device admission
+is added. Required652CPU/786Metal, fmt/both strictClippy, two actual4B loads/
+independent924component/747row checks and corruption rejection pass. Two9B
+metadata cohorts give2.488/2.554ms; all14cohorts include the noisy4B comparison
+and four confirmation pairs. No request gain/overhead or model-fit claim.
+Fresh native59 three slices/46exports each and Mac CPU/Metal Csmokes pass;
+Astra approves scoped retention with no findings.
+[Contract](../artifacts/qwen35-9b-cold-2026-11-09/acceptance-contract.json),
+[checks/review/commit](../artifacts/qwen35-9b-cold-2026-11-09/publication-checks.json).

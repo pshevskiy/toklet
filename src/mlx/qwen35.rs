@@ -11,6 +11,7 @@ use sha2::{Digest, Sha256};
 use std::collections::BTreeMap;
 
 mod configuration;
+pub mod nine_b;
 pub mod payload;
 mod recipe;
 #[cfg(test)]
@@ -186,8 +187,26 @@ fn layout(config: &[u8], header: &[u8], container_bytes: u64) -> Result<Plan, Er
         .and_then(|n| usize::try_from(n).ok())
         .ok_or_else(|| invalid("Qwen3.5 payload size overflow"))?;
     let (layers, common, convolutions) = recipe::build()?;
-    let mut expected = expected_physical(&common);
-    for c in &convolutions {
+    let (physical, bytes) = physical_metadata(header, payload, &common, &convolutions)?;
+    Ok(Plan {
+        layers,
+        common,
+        convolutions,
+        physical,
+        bytes,
+    })
+}
+
+// Both pinned sources use the same physical packing. Their public inspectors
+// keep separate identity/config/shape factories and execution eligibility.
+fn physical_metadata(
+    header: &[u8],
+    payload: usize,
+    common: &[TensorPlan],
+    convolutions: &[ConvolutionPlan],
+) -> Result<(BTreeMap<String, PhysicalTensor>, PayloadBytes), Error> {
+    let mut expected = expected_physical(common);
+    for c in convolutions {
         expected.insert(
             c.name.clone(),
             (
@@ -200,7 +219,7 @@ fn layout(config: &[u8], header: &[u8], container_bytes: u64) -> Result<Plan, Er
     let document = super::qwen::parse_json(header)?;
     let header = document
         .as_object()
-        .filter(|v| v.len() == 925)
+        .filter(|v| v.len() == expected.len() + 1)
         .ok_or_else(|| invalid("exact Qwen3.5 physical tensor inventory required"))?;
     if header.get("__metadata__") != Some(&json!({"format":"mlx"})) {
         return Err(invalid("Qwen3.5 container metadata differs"));
@@ -247,13 +266,7 @@ fn layout(config: &[u8], header: &[u8], container_bytes: u64) -> Result<Plan, Er
     if cursor != payload || bytes.total != payload {
         return Err(invalid("Qwen3.5 payload coverage differs"));
     }
-    Ok(Plan {
-        layers,
-        common,
-        convolutions,
-        physical,
-        bytes,
-    })
+    Ok((physical, bytes))
 }
 
 fn invalid(reason: &str) -> Error {

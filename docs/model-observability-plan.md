@@ -178,6 +178,15 @@ construction do not overlap. It preserves the512MiB codec allowance and estimate
 a6.08GB peak before application/changed-head metadata. This sequence is not yet
 implemented or physically qualified; allocator retention still needs measurement.
 
+Q2.A retains a separate [pinned9B cold metadata recipe](qwen35-9b-cold.md)
+with distinct head/embedding storage and complete source descriptor coverage.
+The4B source/API remains strict. Required652CPU/786Metal, fmt/both strictClippy
+pass with actual4B source/corruption controls and14release metadata cohorts;
+native59 three-slice/46export and Mac Csmoke checks pass. Astra approves scoped
+retention with no findings; [checks/review/commit](../artifacts/qwen35-9b-cold-2026-11-09/publication-checks.json).
+No9B payload reader,
+numerical head binding, memory admission or managed route follows from this work.
+
 ## Metric contract
 
 O1 must make each handled request observable before performance changes. Reuse

@@ -20,9 +20,30 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **Qwen3.5-9B cold source/head/fit qualification** after the
-reviewed Q1.J diagnostic commit. The4B managed route remains ineligible under its
-unchanged gate. The full selected goal stays active.
+Current/next task: **Q2.B pinned Qwen3.5-9B CPU payload qualification** after
+reviewed Q2.A. The4B managed route remains ineligible under its unchanged gate.
+The full selected goal stays active.
+
+- [ ] Q2.B separate9B payload ownership: authenticate the full stream before
+  publication, preserve original affine bytes and exact converted small values,
+  measure actual capacity/physical loading peak within6GiB. Keep4B APIs/source
+  strict; no numerical head binding, GPU/codec/request or managed route in this
+  bounded step. Freeze its contract before edits;
+  [next scope and inspected gaps](artifacts/qwen35-9b-cold-2026-11-09/next-scope-analysis.json).
+
+- [x] Q2.A pinned9B cold recipe: distinct head/embedding,250affine matrices/
+  153BF16 vectors/24convolutions; exact source/shape/dtype/span checks. Strict4B
+  APIs unchanged. Required fmt/both strictClippy,652CPU/786Metal(42/320ignored),
+  actual4B loads/independent924component/747row checks and corruption rejection
+  pass. Native59 three slices/46exports each and Mac CPU/Metal Csmokes pass.
+  All14release cohorts retained:9B metadata2.488/2.554ms; initial4B+13% does not
+  repeat in four confirming pairs, pooled60/version+2.31%. No1% bound, request
+  gain or model-fit claim. Astra approves scoped retention with no findings.
+  Finalizer recovery, cache target shortfall and corrected link/stash checkers
+  are retained; all3,946Rust/406package inputs and57protected outputs unchanged.
+  [Scope](docs/qwen35-9b-cold.md),
+  [checks/review/commit](artifacts/qwen35-9b-cold-2026-11-09/publication-checks.json),
+  [contract](artifacts/qwen35-9b-cold-2026-11-09/acceptance-contract.json).
 
 - [x] Q1.J full128/256-input evaluation: closed4,204-array/76.98M comparison
   rejects numerical qualification (13,505failures; maxratio34.066). The original
