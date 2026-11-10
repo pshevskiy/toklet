@@ -15,6 +15,14 @@ TODO/improvement bytes about 56%. Exact inverse-link reconstruction, local links
 anchors and whitespace pass; live PLAN and numerical inputs are unchanged.
 [Archive validation](../artifacts/qwen35-9b-context256-2026-11-09/working-history-checks.json).
 
+The third user-requested disk cleanup removed 23,292 inactive Cargo
+support/intermediate files and recovered 5.3 GiB net, leaving 65.8 GiB free.
+All 4,054 protected hashes and 502,723 retained-cache metadata checks
+pass; models, raw evidence, engine binaries/libraries, current caches and user
+work are preserved. Corrected process/schema preflight failures are retained.
+This cleanup adds no engine implementation or qualification claim.
+[Receipt](../artifacts/minicpm5-projection-isolation-2026-11-10/disk-cleanup-3/result.json).
+
 User-requested disk recovery removed 1,809,290 compiler intermediates from 190
 inactive Cargo caches, recovering about 51.1 GiB net and leaving 68.0 GiB free.
 All 4,054 protected hashes and retained-cache metadata checks pass; models,
@@ -38,6 +46,19 @@ list and the cleanup controller's verified interrupt/resume history.
 | Qwen2 prompt lookup | Repeated contract prompt gains about 53% decode, but the code prompt misses the 5% gate. Explicit nonstreaming API retained; default adoption rejected. | [Timing](../benchmarks/results/2026-11-06-m9-qwen2-lookup-timing-v1.json) |
 
 ## Existing correctness, memory and observability foundations
+
+MiniCPM5 numerical isolation rejects the cached rotary model experiment.
+All eight sampled projection coordinates match exact dots of their own inputs;
+local rotary fidelity improves to zero failures in 7,084,800 original primitive
+values, but the original short model suite fails six of 52,896,768 comparisons.
+The required original gates remain binding. Candidate required/native69 checks,
+two explicit GPU tests, 36 portable, six raw witnesses and 12 resealed negatives pass;
+the deeper run is deliberately stopped and remains unqualified. The rejected
+engine/CLI/reader patch is archived outside the proposed documentation-only
+commit. Astra approves documentation-only retention with no findings; no
+performance, quality or adoption claim.
+[Scope/next audit](minicpm5-rotary-rejection.md),
+[review/commit](../artifacts/minicpm5-projection-isolation-2026-11-10/publication-checks.json).
 
 MiniCPM5 deeper diagnostics complete with a numerical rejection: 82 failures in
 1.773B original-gate comparisons, reproduced by a fresh complete cold replay.

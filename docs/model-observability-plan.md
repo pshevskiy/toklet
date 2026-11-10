@@ -151,6 +151,14 @@ Required/native68 checks and Astra review pass for scoped diagnostic retention.
 Ordinary admission,
 original workloads/caps and all model/adoption gates remain unchanged.
 
+The [MiniCPM5 cached rotary experiment](minicpm5-rotary-rejection.md) improves
+same-input primitive fidelity but fails six original short model comparisons.
+Reject the model integration; preserve all existing numerical/quality gates and
+leave the ordinary loader unchanged. Its deeper run was intentionally stopped,
+so it supplies no completed1,025 comparison or performance/adoption evidence.
+Next audit native output representability within both original CPU intervals
+before selecting another numerical mechanism. No infeasibility claim is made.
+
 The [LFM3 metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)
 checks286BF16 tensors/3.458GB for the new candidate and594physical tensors/0.973GB
 for the official Q4 reference. Its conversion manifest links to an accessible,

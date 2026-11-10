@@ -11,12 +11,40 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **S1.B resolve MiniCPM5 projection failures before 1,025-position
-quality qualification, then both original 10k-target/100-task comparisons and
-adoption gates**. Complete inputs, bounded matrix reproduction, basic codec/CLI
-and the explicit RMS optimization are reviewed in their recorded scopes.
-The user deferred screen capture; engine/CLI metrics, performance and automated
-checks lead work. The full goal stays active; 4B/9B deeper rejections stay binding.
+Current/next task: **S1.B audit the native output precision against the two
+original CPU profile intervals before another numerical correction**. The
+rotary precision experiment fails an original short gate and is rejected; its
+implementation is archived outside the engine commit. Then resolve or explicitly
+reject the remaining MiniCPM5 numerical prerequisite before both original
+10k-target/100-task quality comparisons and adoption gates. The user deferred
+screen capture; engine/CLI measurements and automated checks lead work. The
+whole goal and 4B/9B deeper rejections stay active.
+
+- [x] Third user-requested disk recovery: removed 23,292 inactive Cargo
+  support/intermediate files, recovering 5.3 GiB net; 65.8 GiB free at completion.
+  All 4,054 protected hashes and 502,723 retained-cache metadata
+  checks pass. Models, evidence, engine binaries/libraries, current caches and
+  user work remain intact. Process-inspection/schema preflight failures were
+  corrected before deletion; receipts retain both. Engine work below stays
+  incomplete pending required checks and Astra review.
+  [Receipt](artifacts/minicpm5-projection-isolation-2026-11-10/disk-cleanup-3/result.json).
+
+- [x] S1.B numerical isolation and rejected rotary experiment: eight sampled
+  projection coordinates reproduce exact rational dots of their own inputs.
+  Five of seven traced token rows first diverge from FP64 at layer0 rotary;
+  two first differ at input norm. A model-owned coefficient table matches all
+  7,084,800 same-input primitive oracle values, but the complete original short
+  suite rejects six of 52,896,768 comparisons. Preserve that rejection; partial
+  deeper capture was deliberately stopped, with no complete 1,025 qualification.
+  Candidate fmt/both strict Clippy/683 CPU/831 Metal/9 example, two explicit GPU
+  tests, 36 portable, native69 three 46-export slices and both C smokes pass.
+  Six raw witnesses independently replay; 12 resealed owner/metadata copies reject.
+  Candidate engine/CLI/reader code is archived; only research/decision documents
+  are proposed for retention. Required clocks/resource receipts and preparation
+  failures remain linked; no performance/quality/adoption grant. Astra approves
+  documentation-only retention, with no findings; candidate code stays excluded.
+  [Scope/evidence](docs/minicpm5-rotary-rejection.md),
+  [review/commit](artifacts/minicpm5-projection-isolation-2026-11-10/publication-checks.json).
 
 - [x] S1.B deeper numerical diagnostic: frozen 128/512/1,025-token prefixes from
   the complete quality payload, both independent CPU profiles and native chunks

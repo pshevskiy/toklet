@@ -63,6 +63,12 @@ The [MiniCPM5 deeper diagnostic](docs/minicpm5-context1025.md) retains an explic
 1,025-position research path and a measured numerical rejection. Resolve the
 projection failures against the unchanged original bounds before complete
 quality scoring or expanded admission; ordinary model policy stays unchanged.
+The [cached rotary experiment](docs/minicpm5-rotary-rejection.md) is rejected:
+its local primitive passes, but six original short-suite model comparisons fail.
+Keep its implementation outside the engine. Before another correction, audit
+whether the unchanged CPU interval intersections contain a representable native
+Half/F32 output. Continuous interval overlap alone does not establish that; this
+is a pending audit, not a precision-policy change or an infeasibility finding.
 
 The initial settings below describe the foundation. Later selected models and
 routes use their own authenticated configuration and scoped acceptance evidence;
