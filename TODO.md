@@ -39,6 +39,14 @@ iPhone remain deferred. The whole roadmap and 4B/9B rejections stay active.
   [Scope/evidence](docs/minicpm5-precision-audit.md),
   [review/commit](artifacts/minicpm5-representability-2026-11-10/publication-checks.json).
 
+- [x] Fourth user-requested disk recovery: removed 7,919 inactive Cargo test
+  executables, recovering 22.5 GiB net and leaving 80.0 GiB free at completion.
+  All 22,464 protected hashes and 494,721 retained-cache metadata checks pass.
+  Benchmark runners, engine outputs, current caches, models, raw evidence and
+  user work are preserved. This cleanup changes no engine implementation;
+  LFM3 qualification remains the current task.
+  [Receipt](artifacts/lfm3-source-2026-11-10/disk-cleanup-4/result.json).
+
 - [x] Third user-requested disk recovery: removed 23,292 inactive Cargo
   support/intermediate files, recovering 5.3 GiB net; 65.8 GiB free at completion.
   All 4,054 protected hashes and 502,723 retained-cache metadata
