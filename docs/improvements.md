@@ -64,6 +64,16 @@ list and the cleanup controller's verified interrupt/resume history.
 
 ## Existing correctness, memory and observability foundations
 
+Source-profile LFM3 BF16 rotary passes exact frequency/trig/460,800 output
+fixtures, sparse rows and chunk schedules with zero steady-state allocations.
+Two shared admitted owners total 1,049,152 B. Fresh required/native72 checks
+pass; 18 release operator cohorts on M1 Pro measure eleven-layer Q/K medians
+of 0.0665–0.0703 / 2.112–2.226 / 8.437–8.695 ms for chunks 1/32/128. These
+are operator baselines; full model execution/fit/quality/adoption remain open.
+Astra approves scoped retention, with no findings.
+[Scope/evidence](lfm3-rotary-source.md),
+[review/commit](../artifacts/lfm3-rotary-2026-11-10/publication-checks.json).
+
 Seven-tap FP32 convolution/history passes independent exact/tensor fixtures,
 288 schedules and zero-allocation checks, preserving concrete three-tap APIs.
 The first generic public prepare boundary is rejected at its performance screen;

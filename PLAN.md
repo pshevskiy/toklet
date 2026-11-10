@@ -75,8 +75,11 @@ continue LFM3 source/payload/graph qualification. Its standalone
 repackaging; Astra approves scoped retention. Runtime/adoption remain
 unqualified. The [seven-tap FP32 history](docs/lfm3-seven-tap-history.md)
 now passes independent primitive/state checks and the revised compatibility
-performance screen; Astra approves scoped retention. Next qualify remaining source
-rounding, norm/gate/rotary/window semantics before composing the graph. Any MiniCPM5 reconsideration still needs corrected original numerics and
+performance screen; Astra approves scoped retention. The
+[source-profile BF16 rotary component](docs/lfm3-rotary-source.md) now passes its
+independent primitive checks and release operator baselines; Astra approves
+scoped retention. Qualify remaining source rounding, norm/gate/window semantics before
+composing the graph. Any MiniCPM5 reconsideration still needs corrected original numerics and
 both complete original quality comparisons.
 
 The initial settings below describe the foundation. Later selected models and

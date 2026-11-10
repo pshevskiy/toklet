@@ -173,8 +173,10 @@ budget; Astra approves scoped source-audit retention. This authenticates the sel
 repackaging, without model numerical or adoption qualification. The separate
 [seven-tap FP32 history](lfm3-seven-tap-history.md) now passes independent primitive/
 state checks and the revised three-tap compatibility timing screen; Astra
-approves scoped retention. Source BF16 rounding, rotating 256-token windows, sandwich/QK norms,
-per-head attention gates and layer-specific partial RoPE still need qualification.
+approves scoped retention. The [source-profile rotary component](lfm3-rotary-source.md)
+now passes independent BF16 frequency/trig/rotation checks and release operator
+baselines; Astra approves scoped retention. Rotating 256-token windows, sandwich/QK
+norms, per-head attention gates and remaining source rounding still need qualification.
 Existing LFM2 support and publisher parity results do not qualify these mechanisms.
 Stock-to-modified and modified-to-native full quality gates remain mandatory.
 The prior [metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)

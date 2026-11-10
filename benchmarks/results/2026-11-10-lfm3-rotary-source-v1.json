@@ -1,0 +1,30 @@
+{
+  "format": "toklet-lfm3-rotary-reference-receipt-v1",
+  "fixture_sha256": "3588b6de41c00c4536135bc687c27c06bed22a48eed909f6c6901c7e0b2faba4",
+  "contract_sha256": "a62409af216c61c7b5752b15570fa27716595a6703899b3962ea11a95ed7505e",
+  "source_code_sha256": {
+    "child-lfm3.py": "3efd8a7e337bdd90582738210effe685ae25a35e8706e31ce5b18706e17e23ce",
+    "parent-modeling_lfm3.py": "e8cd5254ea99ce6bd731b57b10908c2e8b5010ce8315341f895a38484885eeab",
+    "child-config.json": "097cebcaefcd43e50f570dfdbf2cfeeb6ad2db004a2f24b51a301bc5fda9e156"
+  },
+  "runtime_sha256": "fe30f7eb810f6ca3637a3c60020904a13b0b7fcd16bc0505483dd231c5a1b5c4",
+  "output_values": 460800,
+  "scalar_bit_failures": 0,
+  "fp32_mathematical_diagnostic": {
+    "abs": 1e-05,
+    "rel": 0.0001,
+    "failures": 0,
+    "maximum_absolute_error": 8.241518978380213e-07,
+    "angle": "contract FP32 position*frequency",
+    "reference": "independent FP64 trig/rotation, before BF16 coefficient/store rounding"
+  },
+  "coefficient_positions": [
+    2047,
+    4095,
+    65535,
+    131071,
+    262143
+  ],
+  "evidence": "artifacts/lfm3-rotary-2026-11-10/fixture-checks-2.json",
+  "whole_model_adoption_qualified": false
+}

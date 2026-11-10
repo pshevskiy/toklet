@@ -137,3 +137,7 @@ path = "tools/bench/short_conv3_history.rs"
 [[example]]
 name = "short_conv7_history"
 path = "tools/bench/short_conv7_history.rs"
+
+[[example]]
+name = "lfm3_rotary_probe"
+path = "tools/bench/lfm3_rotary_probe.rs"

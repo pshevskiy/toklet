@@ -11,10 +11,11 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **qualify LFM3 frequency/partial-rotary and source BF16
-rounding with independent fixtures before composing the graph**. The seven-tap
-FP32 history is reviewed; full LFM3 execution/adoption remain open. Reuse existing
-mathematical rotary/window ownership where correct. Keep the whole model
+Current/next task: **qualify LFM3 sandwich/QK norms, gates, BF16 activation
+rounding and 256-token windows with independent fixtures before composing the
+graph**. Seven-tap FP32 history and source-profile BF16 rotary are reviewed;
+full LFM3 execution/adoption remain open. Reuse existing window ownership where
+correct. Keep the whole model
 roadmap, original numerical/quality gates and 6 GiB ceiling. MiniCPM5 and 4B/9B
 managed-adoption rejections remain binding. Engine/CLI work leads; interactive
 screen capture and iPhone runtime remain deferred.
@@ -28,10 +29,18 @@ screen capture and iPhone runtime remain deferred.
   [Checks/review/commit](artifacts/lfm3-rotary-2026-11-10/disk-cleanup-5/publication-checks.json),
   [deletion receipt](artifacts/lfm3-rotary-2026-11-10/disk-cleanup-5/result.json).
 
-- [ ] S1.L rotary source profile: prospective contract and clean worktree are
-  prepared; cleanup interrupted this task before fixture or implementation
-  outcomes. Resume independent frequency/trig/BF16 rounding checks under the
-  frozen gates. [Contract](artifacts/lfm3-rotary-2026-11-10/prospective-contract-1.json).
+- [x] S1.L source-profile BF16 rotary: exact frequencies/525,312 trig words
+  and 460,800 source outputs pass; source-limit sparse rows and chunk schedules
+  agree. Both profiles have zero steady-state allocations; two shared owners
+  total 1,049,152 B. Fresh fmt/both strict Clippy/693 CPU/839 Metal/nine example,
+  five release source tests and native72 three 46-export slices/C smokes pass.
+  Eighteen frozen M1 Pro release cohorts pass: eleven-layer Q/K medians span
+  0.0665–0.0703 / 2.112–2.226 / 8.437–8.695 ms for chunks 1/32/128; operator
+  baselines only. Four portable tests in both modes, six source and ten console
+  controls pass. Source/runtime gates and 6 GiB remain fixed. Astra approves
+  scoped retention, no findings; whole LFM3 graph/quality/fit/adoption remain open.
+  [Scope/evidence](docs/lfm3-rotary-source.md),
+  [review/commit](artifacts/lfm3-rotary-2026-11-10/publication-checks.json).
 
 - [x] S1.L seven-tap FP32 history: shared static three/seven-tap state and
   concrete compatibility APIs reuse the unchanged scalar leaf. Five independent

@@ -15,6 +15,7 @@ pub mod gemma_assistant;
 pub mod gemma_packed;
 pub mod gemma_reference;
 pub mod lfm2;
+pub mod lfm3_rotary;
 pub(crate) mod packed_operations;
 mod position;
 pub mod qwen35;
