@@ -154,7 +154,7 @@ impl State {
         &self.caches
     }
 
-    fn admit(&self, tokens: usize) -> Result<usize, Error> {
+    pub(super) fn admit(&self, tokens: usize) -> Result<usize, Error> {
         nonzero(tokens, "LFM3 BF16 state tokens")?;
         let after = self
             .offset

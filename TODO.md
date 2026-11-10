@@ -11,13 +11,24 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **compose and qualify the LFM3 BF16 graph, then connect
-model loading, session and CLI**. Transactional BF16 state and the canonical
-CPU projection, rotary, norm/unary, convolution/binary and attention leaves are
-reviewed. Full LFM3 execution and adoption remain open. Preserve the original
-numerical and quality gates, the 6 GiB ceiling and existing managed-adoption
-rejections. Engine/CLI work leads. Interactive screen capture and iPhone
-runtime remain deferred.
+Current/next task: **connect the authenticated LFM3 BF16 graph to generation,
+codec and CLI**, then run deeper numerical and original full qualification.
+The raw-token graph, audited loading and transactional state are reviewed.
+Preserve the 6 GiB ceiling, original numerical and quality gates, and existing
+managed-adoption rejections. Engine and CLI work leads. Interactive screen
+capture and iPhone runtime remain deferred.
+
+- [x] S1.L real BF16 graph and audited loader: all 24 layers, tied head and
+  owner proposals match 366 source stages and 2,476,032 BF16 words on three
+  short schedules. Late abort/retry and zero-allocation prepared forward pass.
+  Real verification peaks at 3.27 GiB aggregate RSS. Fmt, both strict Clippy,
+  731 CPU/877 Metal/nine targeted example tests, three native79 slices and two
+  C smokes pass. Both release sweeps pass, with 1.252–1.260 s single-token
+  continuation and 32.04–32.20 s loading. Initial header inventory count
+  compile error corrected. Astra approves with no findings. Generation,
+  codec, CLI, deeper parity and full quality/adoption remain open.
+  [Scope](docs/lfm3-bf16-graph.md),
+  [review/commit](artifacts/lfm3-bf16-graph-2026-11-11/publication-checks.json).
 
 - [x] S1.L BF16 CPU causal/window attention: 25 pinned-source cases and
   17,742,592 exact BF16 stage words, 8,128 FP64 diagnostic samples per stage,

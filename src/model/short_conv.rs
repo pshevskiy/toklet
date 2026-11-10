@@ -42,6 +42,12 @@ pub struct Prepared<'a, T = f32> {
     tokens: usize,
 }
 
+impl Prepared<'_, bf16> {
+    pub(super) fn candidate(&self) -> &[bf16] {
+        self.candidate
+    }
+}
+
 impl<const KERNEL: usize, T: StateElement> History<KERNEL, T> {
     /// Committed typed bank and owner object only. Per-owner candidates, FP32
     /// work banks and all input/output/model/collection storage are separate.

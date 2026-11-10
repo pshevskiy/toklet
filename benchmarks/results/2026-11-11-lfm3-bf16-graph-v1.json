@@ -1,0 +1,907 @@
+{
+  "format": "toklet-lfm3-bf16-graph-release-v1",
+  "base": "f4342a808506a6447280035475aaa22cc4f55d1e",
+  "toolchain": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)\nbinary: rustc\ncommit-hash: 1159e78c4747b02ef996e55082b704c09b970588\ncommit-date: 2025-09-14\nhost: aarch64-apple-darwin\nrelease: 1.90.0\nLLVM version: 21.1.1",
+  "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.2\nBuildVersion:\t\t25G83",
+  "hardware": {
+    "hw.model": "MacBookPro18,3",
+    "hw.memsize": "17179869184",
+    "machdep.cpu.brand_string": "Apple M1 Pro"
+  },
+  "build": [
+    "cargo",
+    "build",
+    "--locked",
+    "--offline",
+    "--release",
+    "--example",
+    "lfm3_graph_bf16_probe"
+  ],
+  "source_pins": {
+    "Cargo.toml": "4902095ca3927616278e1629484b64b4eee4d5cb96f2ba62f93593071416398d",
+    "Cargo.lock": "405a9b18beaacf701966f1832bf6724c0a3d4b8567ca3c5005855778d8dedb26",
+    "src/model/lfm3.rs": "9b7639f88cbc5b994cb200c54265a531a46bed598be646395609b9aa6ff950cc",
+    "src/model/lfm3/forward.rs": "9b163b922be0ef54f96b77548bb2201cd44132046e56da277f2b854189f2c202",
+    "src/weights/lfm3.rs": "72feaf1a5c8af563911269a20bf7a221e4116a210338059e3505915c0417e160",
+    "tools/bench/lfm3_graph_bf16_probe.rs": "29154359b7cb4ee71a45a48b0e4cb9fcc6c5915b1a56497b7ff10127528663c8"
+  },
+  "checkpoint_sha256": "b6ff17ac993dddf0f6f51bd872b12ae1437f4453a54a0b4878cedc7864fbc07e",
+  "workload": {
+    "input_ids": [
+      124894,
+      42,
+      1234,
+      567
+    ],
+    "timed_tokens": "repeat/truncate input_ids to queries",
+    "seed_tokens": [
+      124894,
+      42
+    ],
+    "reset_and_seed_timed": false,
+    "boundary": "entire prepared BF16 graph chunk including last-token tied head and state publication",
+    "warmups": 3,
+    "repetitions": 10
+  },
+  "scope": "One raw-token BF16 CPU model on a fixed synthetic input sequence. No codec, sampling, application request, sustained or quality qualification.",
+  "runs": [
+    {
+      "mode": "forward",
+      "passed": true,
+      "exit_code": 0,
+      "failure": null,
+      "peak_rss_by_pid": [
+        21856256,
+        3491676160
+      ],
+      "conservative_final_peak_rss_sum_bytes": 3513532416,
+      "sample_consistent": true,
+      "max_sampled_physical_bytes": 3507227984,
+      "minimum_free_bytes": 82609790976,
+      "binary_sha256": "8eb6ff1e4d1f0e88dfc76b2b831d67934481d4a469f442a1ea576e8f7bc7631a",
+      "conditions": [
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        }
+      ],
+      "rows": [
+        {
+          "load_ns": 32203985792,
+          "weights_bytes": 3457603072,
+          "authenticated_ns": 20322283000,
+          "layout_ns": 1671708,
+          "delivery_ns": 11878099500,
+          "rotary_ns": 1748167,
+          "source_bytes": 3457635448,
+          "temporary_allowance_bytes": 2097152,
+          "source_sha256": "b6ff17ac993dddf0f6f51bd872b12ae1437f4453a54a0b4878cedc7864fbc07e",
+          "state_bytes": 28108984,
+          "positional_bytes": 1049152,
+          "scratch_bytes": 2305024,
+          "history_bytes": 8192,
+          "published_logits_bytes": 256000,
+          "owner_bytes": 6984,
+          "total_bytes": 3489337408,
+          "capacity": 2048,
+          "chunk": 16
+        },
+        {
+          "queries": 1,
+          "prefix": 0,
+          "prepare_ns": 2753667,
+          "first_ns": 1990520208,
+          "warmup_ns": [
+            1260185875,
+            1248816042,
+            1245594125
+          ],
+          "samples_ns": [
+            1239848791,
+            1242359750,
+            1241927041,
+            1240484209,
+            1242471375,
+            1249268709,
+            1252135042,
+            1254657792,
+            1237171042,
+            1241897458
+          ],
+          "logits_sha256": "849276771b00f52b060d7e9cb3cb49840000b4b3d71c1f3a1154de6452f90a7b",
+          "median_ns": 1242143395.5,
+          "mad_ns": 1976895.5
+        },
+        {
+          "queries": 1,
+          "prefix": 2,
+          "prepare_ns": 2753667,
+          "first_ns": 1250471125,
+          "warmup_ns": [
+            1259915375,
+            1264137375,
+            1245496042
+          ],
+          "samples_ns": [
+            1248842208,
+            1252960708,
+            1244864541,
+            1251091833,
+            1259413542,
+            1247408625,
+            1252025417,
+            1266669000,
+            1251766875,
+            1260632500
+          ],
+          "logits_sha256": "0b87da5b2cb93d8865b16a61ec13c6a822e198587529594992efb0cecddb1f58",
+          "median_ns": 1251896146.0,
+          "mad_ns": 3770729.5
+        },
+        {
+          "queries": 4,
+          "prefix": 0,
+          "prepare_ns": 2753667,
+          "first_ns": 3043446417,
+          "warmup_ns": [
+            3047207250,
+            3017950500,
+            3042386333
+          ],
+          "samples_ns": [
+            3065719167,
+            3047848417,
+            3043780875,
+            3065811042,
+            3045404375,
+            3049465417,
+            3060396208,
+            3038201250,
+            3062319500,
+            3045512042
+          ],
+          "logits_sha256": "c6e9cecdbb2464fc1da560113e16f07c32f2ccd947a3c0c04708b71efd6d325c",
+          "median_ns": 3048656917.0,
+          "mad_ns": 7665854.5
+        },
+        {
+          "queries": 16,
+          "prefix": 0,
+          "prepare_ns": 2753667,
+          "first_ns": 10180121500,
+          "warmup_ns": [
+            10239634083,
+            10241190083,
+            10229472583
+          ],
+          "samples_ns": [
+            10345637875,
+            10210081708,
+            10321624708,
+            10248223000,
+            10279145667,
+            10236752292,
+            10236252959,
+            10174405125,
+            10150702625,
+            10196066792
+          ],
+          "logits_sha256": "bc40ea5c7571fdcc6359ae1d7ddb7256ef95e1ab8c517e1da4b5e6642c7b597f",
+          "median_ns": 10236502625.5,
+          "mad_ns": 41539437.5
+        }
+      ],
+      "elapsed_seconds": 279.9863425830845
+    },
+    {
+      "mode": "reverse",
+      "passed": true,
+      "exit_code": 0,
+      "failure": null,
+      "peak_rss_by_pid": [
+        22183936,
+        3491692544
+      ],
+      "conservative_final_peak_rss_sum_bytes": 3513876480,
+      "sample_consistent": true,
+      "max_sampled_physical_bytes": 3507572192,
+      "minimum_free_bytes": 82612207616,
+      "binary_sha256": "8eb6ff1e4d1f0e88dfc76b2b831d67934481d4a469f442a1ea576e8f7bc7631a",
+      "conditions": [
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        },
+        {
+          "power": "Now drawing from 'AC Power'",
+          "thermalState": 0,
+          "lowPowerMode": false
+        }
+      ],
+      "rows": [
+        {
+          "load_ns": 32039664500,
+          "weights_bytes": 3457603072,
+          "authenticated_ns": 20208719667,
+          "layout_ns": 576167,
+          "delivery_ns": 11828392791,
+          "rotary_ns": 1856500,
+          "source_bytes": 3457635448,
+          "temporary_allowance_bytes": 2097152,
+          "source_sha256": "b6ff17ac993dddf0f6f51bd872b12ae1437f4453a54a0b4878cedc7864fbc07e",
+          "state_bytes": 28108984,
+          "positional_bytes": 1049152,
+          "scratch_bytes": 2305024,
+          "history_bytes": 8192,
+          "published_logits_bytes": 256000,
+          "owner_bytes": 6984,
+          "total_bytes": 3489337408,
+          "capacity": 2048,
+          "chunk": 16
+        },
+        {
+          "queries": 16,
+          "prefix": 0,
+          "prepare_ns": 2760625,
+          "first_ns": 10704824084,
+          "warmup_ns": [
+            10177486000,
+            10206945625,
+            10217068750
+          ],
+          "samples_ns": [
+            10175781416,
+            10175903000,
+            10184531250,
+            10265631667,
+            10242760875,
+            10290939792,
+            10236472334,
+            10223155000,
+            10263967667,
+            10271594791
+          ],
+          "logits_sha256": "bc40ea5c7571fdcc6359ae1d7ddb7256ef95e1ab8c517e1da4b5e6642c7b597f",
+          "median_ns": 10239616604.5,
+          "mad_ns": 28996624.5
+        },
+        {
+          "queries": 4,
+          "prefix": 0,
+          "prepare_ns": 2760625,
+          "first_ns": 3053510292,
+          "warmup_ns": [
+            3041456125,
+            3076387167,
+            3054755166
+          ],
+          "samples_ns": [
+            3031706416,
+            3021198917,
+            3033867084,
+            3048694625,
+            3028016209,
+            3040934125,
+            3012986333,
+            3040888417,
+            3045073000,
+            3042654458
+          ],
+          "logits_sha256": "c6e9cecdbb2464fc1da560113e16f07c32f2ccd947a3c0c04708b71efd6d325c",
+          "median_ns": 3037377750.5,
+          "mad_ns": 6683292.0
+        },
+        {
+          "queries": 1,
+          "prefix": 2,
+          "prepare_ns": 2760625,
+          "first_ns": 1245791125,
+          "warmup_ns": [
+            1262766459,
+            1260011375,
+            1255152750
+          ],
+          "samples_ns": [
+            1263796459,
+            1256127042,
+            1269068375,
+            1244579584,
+            1254386791,
+            1267511250,
+            1239914875,
+            1267412458,
+            1270045167,
+            1253876750
+          ],
+          "logits_sha256": "0b87da5b2cb93d8865b16a61ec13c6a822e198587529594992efb0cecddb1f58",
+          "median_ns": 1259961750.5,
+          "mad_ns": 7500103.5
+        },
+        {
+          "queries": 1,
+          "prefix": 0,
+          "prepare_ns": 2760625,
+          "first_ns": 1257143875,
+          "warmup_ns": [
+            1266092333,
+            1261544625,
+            1244832125
+          ],
+          "samples_ns": [
+            1244453959,
+            1244680333,
+            1256298958,
+            1252904750,
+            1251355416,
+            1246219208,
+            1244599417,
+            1245772125,
+            1251175917,
+            1251806667
+          ],
+          "logits_sha256": "849276771b00f52b060d7e9cb3cb49840000b4b3d71c1f3a1154de6452f90a7b",
+          "median_ns": 1248697562.5,
+          "mad_ns": 3563167.0
+        }
+      ],
+      "elapsed_seconds": 279.3788542500697
+    }
+  ]
+}

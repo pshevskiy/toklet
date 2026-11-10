@@ -93,9 +93,10 @@ zero-allocation checks and 42 release operator cohorts; Astra approves scoped
 retention, no findings.
 The [BF16 CPU attention component](docs/lfm3-attention-bf16.md) passes exact
 source stages, wrapped state and release baselines. Astra approves scoped
-retention. The child CPU and Metal
-component correspondence rejects for projections and attention. Compose the
-graph and connect model/session/CLI before full LFM3 qualification.
+retention. The child CPU and Metal component correspondence rejects for
+projections and attention. The [authenticated BF16 CPU graph](docs/lfm3-bf16-graph.md)
+matches the pinned eager source for three short schedules and passes Astra review.
+Connect the generation session, codec and CLI before full LFM3 qualification.
 Any MiniCPM5 reconsideration still needs corrected original numerics and
 both complete original quality comparisons.
 

@@ -165,3 +165,7 @@ path = "tools/bench/lfm3_projection_bf16_probe.rs"
 [[example]]
 name = "lfm3_attention_bf16_probe"
 path = "tools/bench/lfm3_attention_bf16_probe.rs"
+
+[[example]]
+name = "lfm3_graph_bf16_probe"
+path = "tools/bench/lfm3_graph_bf16_probe.rs"

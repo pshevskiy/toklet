@@ -4,6 +4,9 @@
 //! BF16 little-endian row-major data become one immutable FP32 model; no full
 //! source checkpoint or per-tensor conversion copy is retained.
 
+pub(crate) mod lfm3;
+pub use lfm3::{Lfm3LoadReport, LoadedLfm3, load_lfm3};
+
 use crate::{
     cpu,
     model::{self, Config, LayerWeights, Model, Projection, Weights},

@@ -10,6 +10,13 @@ Gains from different experiments cannot be added together. Current task and
 qualification scope live in [TODO](../TODO.md); acceptance policy is in
 [PLAN](../PLAN.md#validation-and-performance-policy).
 
+The authenticated LFM3 BF16 CPU graph matches 2,476,032 reference values
+across 366 stage comparisons on three short schedules. The single-session
+ledger covers 3.489 GB. Real-model late abort, retry and zero-allocation
+prepared execution pass. Astra approves scoped retention. Codec, generation
+and CLI integration and the full original quality campaign remain open.
+[Scope](lfm3-bf16-graph.md).
+
 LFM3 BF16 CPU attention matches 17,742,592 source words across 25 causal and
 window cases. One scratch row and borrowed KV spans support wrapped views
 with zero allocations. At prefix 1,023, the single-layer 128-query median is
