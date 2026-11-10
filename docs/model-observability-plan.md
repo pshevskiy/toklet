@@ -95,7 +95,7 @@ verifies973physical entries/381logical descriptors, the2.674GBdeclared object,
 exact index and unaligned110386-byte payload origin. Its nested and flat default
 RoPE declarations both say5e6; S1.A adds explicit source admission without
 rewriting publisher files or inventing defaults. The parent config declaresBF16,
-while the conversion card calls itFP16; parent headers/bytes still need proof.
+while the conversion card calls itFP16; exact conversion lineage still needs proof.
 Full source, model execution, codec, physical fit, quality/request/adoption and
 any quantization tradeoff remain unqualified. A separate ARA4bit alternative has
 mixed3/4/5/6/8-bit overrides and no declared parent in its short card; existing
@@ -105,14 +105,22 @@ affine layouts represent those widths, but no execution or lineage is qualified.
 The [first short console vertical](minicpm5-console.md) authenticates the 8-bit
 publisher object and passes 52.9M dual-profile native comparisons plus state and
 fresh package checks. Matched readback cohorts find no 5% request benefit;
-existing defaults stay unchanged. Whole-parent conversion lineage, original
+existing defaults stay unchanged. Quantized conversion lineage, original
 quality, codec/deeper numerical and adoption remain open; this is bounded Mac
 evaluation rather than blanket MiniCPM support.
 
-The [bounded MiniCPM5 CLI profile](minicpm5-profile.md) now supplies calibrated
+The [bounded MiniCPM5 CLI profile](minicpm5-profile.md) supplies calibrated
 per-layer/operator intervals with complete-logit parity and explicit diagnostic
-inflation. Repeated observations target prefill projections and serial Half RMS
-for the next measured experiment; this grants no broader model or adoption scope.
+inflation. Its [exact-reduction RMS store optimization](minicpm5-rms-store.md)
+passes the original numerical gates and reduces warm short CLI request time
+21.51%/21.50% in two runs. Astra approves the explicit Mac opt-in; defaults and
+broader model/adoption gates stay fixed.
+
+[Bounded parent authentication](minicpm5-parent-auth.md) now verifies both full
+BF16 parent object hashes (5,033,557,128bytes), all381logical tensors and85exact
+copied norms. It retains1,349tensor-block digests without storing the payload.
+This authenticates source identity; reproduction of296quantized matrices,
+codec/stop behavior, original quality, deeper numerical and adoption stay open.
 
 The [LFM3 metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)
 checks286BF16 tensors/3.458GB for the new candidate and594physical tensors/0.973GB

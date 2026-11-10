@@ -30,6 +30,12 @@ anchors and whitespace pass; live PLAN and numerical inputs are unchanged.
 
 ## Existing correctness, memory and observability foundations
 
+MiniCPM5 bounded source streaming verifies both complete BF16 parent hashes
+(5.033GB),381tensors and85exact copied norms, retaining1,349block digests and no
+payload. Fifteen portable tests and offline witness sealing pass; engine/native
+inputs are unchanged. Astra approves scoped source retention. Quantized conversion lineage,
+codec/task quality and adoption remain open. [Scope](minicpm5-parent-auth.md).
+
 - Readable scalar CPU implementations and independent numerical fixtures remain
   correctness references. Real-model, reduced-precision and quality results have
   separate frozen scopes; [model coverage](model-coverage.md).

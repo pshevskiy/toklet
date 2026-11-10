@@ -11,11 +11,23 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **remaining S1.B MiniCPM5 lineage, codec and quality gates,
+Current/next task: **remaining S1.B MiniCPM5 matrix lineage, codec and quality gates,
 then broader console workloads**, after reviewed CLI attribution and the retained
 explicit RMS store optimization.
 The user deferred screen capture; engine/CLI metrics, performance and automated
 checks lead work. The full goal stays active; 4B/9B deeper rejections stay binding.
+
+- [x] S1.B parent identity: bounded whole-object authentication of both pinned
+  BF16 shards, per-tensor/block hashes and exact unquantized norm parity. Stream
+  payloads without retaining a5GB parent file; preserve2GiB disk/6GiB engine limits.
+  Both full hashes/5,033,557,128bytes,381tensors and85copied norms pass;1,349block
+  digests retained, no payload. Fifteen portable tests,27structural negatives and
+  valid-block mutation/seal detection pass; fresh seal reproduces exactly. All4023
+  required/419native inputs are unchanged;670CPU/811Metal/native65 reused by hashes.
+  Source-audit resource guard passes; finalphysicalpeak unavailable. Astra approves.
+  Quantized conversion lineage, codec/task quality and adoption stay open.
+  [Scope](docs/minicpm5-parent-auth.md),
+  [review/commit](artifacts/minicpm5-parent-auth-2026-11-10/publication-checks.json).
 
 - [x] Half RMS parallel stores: explicit bounded MiniCPM5 Mac path, exact scalar
   reduction and 2,614 bitwise-equal original arrays; 52.9M dual-profile comparisons pass.
