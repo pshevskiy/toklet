@@ -16,6 +16,7 @@ pub mod gemma_packed;
 pub mod gemma_reference;
 pub mod lfm2;
 pub mod lfm3_rotary;
+pub mod lfm3_state;
 pub(crate) mod packed_operations;
 mod position;
 pub mod qwen35;
@@ -23,12 +24,17 @@ pub mod shared_kv;
 pub mod short_conv;
 pub mod short_conv3;
 pub mod short_conv7;
+pub mod short_conv7_bf16;
+mod state_element;
 mod trace;
 pub mod window_cache;
+pub mod window_cache_bf16;
 pub(crate) mod window_rows;
 pub(crate) use cache::KvCache;
 pub use dense_scales::DenseScales;
 pub use position::PositionPlan;
+#[doc(hidden)]
+pub use state_element::StateElement;
 pub use trace::{LayerTrace, Trace};
 
 #[derive(Clone, Debug, PartialEq)]

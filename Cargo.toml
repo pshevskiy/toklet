@@ -149,3 +149,11 @@ path = "tools/bench/lfm3_bf16_probe.rs"
 [[example]]
 name = "lfm3_conv_bf16_probe"
 path = "tools/bench/lfm3_conv_bf16_probe.rs"
+
+[[example]]
+name = "fp32_window_compat"
+path = "tools/bench/fp32_window_compat.rs"
+
+[[example]]
+name = "lfm3_bf16_state_probe"
+path = "tools/bench/lfm3_bf16_state_probe.rs"

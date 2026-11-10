@@ -142,10 +142,7 @@ impl Plan {
         .at_capacity(capacity)
         .map_err(|e| invalid(e.to_string()))?
         .total_bytes;
-        let element_bytes = match storage {
-            KvStorage::F16 => 2,
-            KvStorage::F32 => 4,
-        };
+        let element_bytes = storage.bytes();
         let convolution_committed = CONV_OWNERS
             .checked_mul(2)
             .and_then(|v| v.checked_mul(HIDDEN))

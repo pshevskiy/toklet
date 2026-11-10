@@ -1,19 +1,24 @@
 use super::{Error, finite, length, nonzero, product};
 
-/// One logical contiguous key interval, with separate borrowed FP32 K/V rows.
+/// One logical contiguous key interval, with separately borrowed typed K/V rows.
 /// For KV head h, data begins at `h * head_stride` elements, then `[keys,D]`.
 /// Nonempty backing slices have exactly `(kv_heads-1)*head_stride + keys*D`
 /// elements; initialized gaps between heads are not read. Logical intervals
 /// concatenate in array order. Empty segments require empty K/V; their origin
-/// and stride are ignored. No alignment beyond f32 is assumed.
+/// and stride are ignored. No alignment beyond T is assumed. This descriptor
+/// chooses no numerical arithmetic or conversion; the existing attention entry
+/// point still accepts only the concrete FP32 alias below.
 #[derive(Clone, Copy)]
-pub struct AttentionKvSegment<'a> {
-    pub k: &'a [f32],
-    pub v: &'a [f32],
+pub struct KvSegment<'a, T> {
+    pub k: &'a [T],
+    pub v: &'a [T],
     pub keys: usize,
     pub head_stride: usize,
     pub key_start: usize,
 }
+
+/// Existing FP32 numerical API; BF16 storage does not change its arithmetic.
+pub type AttentionKvSegment<'a> = KvSegment<'a, f32>;
 
 pub struct SpanAttentionShape {
     pub queries: usize,

@@ -9,12 +9,13 @@ use crate::cpu::{self, nonzero, product};
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum KvStorage {
     F16,
+    Bf16,
     F32,
 }
 impl KvStorage {
-    fn bytes(self) -> usize {
+    pub(crate) fn bytes(self) -> usize {
         match self {
-            Self::F16 => 2,
+            Self::F16 | Self::Bf16 => 2,
             Self::F32 => 4,
         }
     }

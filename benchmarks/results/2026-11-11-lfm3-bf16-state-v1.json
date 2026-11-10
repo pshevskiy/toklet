@@ -1,0 +1,54 @@
+{
+  "format": "toklet-lfm3-bf16-state-result-v1",
+  "date": "2026-11-11",
+  "baseline_engine_revision": "08bf8b6e6919c09f537f5c588309426ec4aef817",
+  "hardware": "Apple M1 Pro",
+  "profile": "ordinary release",
+  "source_contract_sha256": "ad7329ea7d02b63334b7229a78c414f16b5095076d96c62a528dfdd5e08e4953",
+  "performance_contract_sha256": "c55ef2655abf118a51ec8429e03a7e518f6bfbb71c0b1fa392309303aba830b5",
+  "performance_checks_sha256": "78745e252c1846750fc7d631e1966cd893bd4794605064275b38f64976b87a26",
+  "compatibility_pairs": 24,
+  "compatibility_all_original_5percent_gates_passed": true,
+  "compatibility_change_percent_range": [
+    -9.050238808471411,
+    3.7939651003811914
+  ],
+  "compatibility_pairs_evidence": "../../artifacts/lfm3-bf16-state-2026-11-11/performance-1/checks.json",
+  "bf16_cohorts": 18,
+  "bf16_median_ranges_ms": {
+    "1": [
+      0.33816596875000005,
+      0.36494339062500003
+    ],
+    "32": [
+      7.1193755,
+      7.254020499999999
+    ],
+    "128": [
+      27.705624999999998,
+      28.643729
+    ]
+  },
+  "offsets": [
+    0,
+    511,
+    1023
+  ],
+  "tokens": [
+    1,
+    32,
+    128
+  ],
+  "state_actual_bytes": 28108984,
+  "state_history_payload_bytes": 319488,
+  "state_kv_payload_bytes": 27787264,
+  "conservative_reference_audit_peak_rss_sum_bytes": 512573440,
+  "maximum_performance_final_rss_sum_bytes": 130613248,
+  "scope": "FP32 API compatibility and BF16 functional-state baselines only; reset and depth seed outside transition clocks; synthetic shared staging, no full graph or dtype speedup claim",
+  "full_model_execution_qualified": false,
+  "model_memory_fit_qualified": false,
+  "quality_adoption_qualified": false,
+  "summary_overhead_1percent_bound_qualified": false,
+  "interactive_capture_deferred": true,
+  "iphone_runtime_deferred": true
+}

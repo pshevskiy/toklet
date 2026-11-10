@@ -1,6 +1,6 @@
 # Toklet improvement index
 
-Updated **10 November 2026**. This is the compact index of retained capabilities,
+Updated **11 November 2026**. This is the compact index of retained capabilities,
 measured gains and material restrictions. The [full dated history](archive/2026-11-09/improvements.md)
 preserves every previous entry, source revision, failed check and evidence link.
 Read it only when the current task needs that detail.
@@ -63,6 +63,19 @@ list and the cleanup controller's verified interrupt/resume history.
 | Qwen2 prompt lookup | Repeated contract prompt gains about 53% decode, but the code prompt misses the 5% gate. Explicit nonstreaming API retained; default adoption rejected. | [Timing](../benchmarks/results/2026-11-06-m9-qwen2-lookup-timing-v1.json) |
 
 ## Existing correctness, memory and observability foundations
+
+LFM3 transactional BF16 state is implemented with 13 six-row histories, six full
+and five 256-token KV owners. Independent fixtures and actual declared-parent/
+MLX CPU/Metal logical-state comparisons pass. All-owner validation precedes any
+publication; stale/foreign proposals and failures retain the committed prefix.
+Fresh fmt/both strict Clippy/714 CPU/860 Metal/nine example checks, eight release
+state tests, native76 three 46-export slices and CPU/Metal C smokes pass. Debug
+and release transitions allocate nothing. All 24 original FP32 5% compatibility
+pairs pass; 18 BF16 state cohorts measure 0.338–0.365 / 7.119–7.254 / 27.706–28.644 ms at
+1/32/128 tokens. State owns 28,108,984 B at capacity 2,048. Astra approves scoped retention, no findings;
+complete LFM3 graph/CLI/fit/quality/adoption remain open. Existing
+arithmetic correspondence rejections and original gates remain unchanged.
+[Scope/evidence](lfm3-bf16-state.md).
 
 Canonical LFM3 CPU BF16 convolution/binary/head-gate leaves match 8,146,944
 convolution words, all 34 binary grids and broadcast source fixtures. Chunk

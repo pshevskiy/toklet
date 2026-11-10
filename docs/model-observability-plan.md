@@ -181,8 +181,13 @@ Astra approves scoped retention. Actual child CPU/Metal component correspondence
 this does not score model quality. The [canonical BF16 binary/convolution
 leaves](lfm3-binary-conv-source.md) pass exact source checks and release operator
 baselines; Astra approves scoped retention. Actual child CPU/Metal exact
-correspondence rejects. Transactional BF16 history, rotating 256-token windows and complete
-graph composition still need qualification.
+correspondence rejects. The [transactional BF16 state](lfm3-bf16-state.md)
+implementation passes independent fixtures and actual declared-parent/MLX CPU/Metal
+logical-state comparisons, with zero Rust allocations in debug/release transitions.
+Required checks/native76, all 24 original FP32 5% compatibility pairs and 18 BF16
+state baseline cohorts pass. Astra approves scoped retention, no findings. This state-only correspondence does not reverse those arithmetic
+rejections. BF16 projections/attention, complete graph composition, model/session/CLI
+integration and original full qualification remain open.
 Existing LFM2 support and publisher parity results do not qualify these mechanisms.
 Stock-to-modified and modified-to-native full quality gates remain mandatory.
 The prior [metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)

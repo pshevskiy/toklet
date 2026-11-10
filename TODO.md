@@ -11,14 +11,32 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **qualify transactional BF16 convolution history and
-256-token window state with independent fixtures before composing the graph**.
-LFM3's FP32 history and canonical CPU BF16 rotary, norm/unary and convolution/
-binary leaves are reviewed; full LFM3 execution/adoption remain open.
-Reuse existing window ownership where correct. Keep the whole model
+Current/next task: **qualify source BF16 projections and attention, then compose
+LFM3's graph and connect its model/session/CLI route**. Transactional BF16 state
+and canonical CPU BF16 rotary, norm/unary and convolution/binary leaves are
+reviewed; full LFM3 execution/adoption remain open. Keep the whole model
 roadmap, original numerical/quality gates and 6 GiB ceiling. MiniCPM5 and 4B/9B
 managed-adoption rejections remain binding. Engine/CLI work leads; interactive
 screen capture and iPhone runtime remain deferred.
+
+- [x] S1.L BF16 state ownership: qualify six-row convolution history and
+  256-token/full KV views, bit-preserving storage, abort/retry and all-owner
+  publication before graph composition. Implementation and independent fixtures
+  are present; actual declared-parent and MLX CPU/Metal logical-state comparisons
+  pass. The isolated authenticated Transformers 5.20.2 reference preserves the
+  installed environment; initial TLS/runtime preparation failures are retained.
+  Fresh fmt/both strict Clippy/714 CPU/860 Metal/nine example checks and native76
+  three 46-export slices/strict links and CPU/Metal C execution smokes pass.
+  Eight release state tests and debug/release zero-allocation checks pass.
+  Four portable tests in both modes and 34 compiled CLI negatives pass. All
+  24 original FP32 5% compatibility pairs and 18 BF16 release cohorts pass;
+  state medians 0.338–0.365 / 7.119–7.254 / 27.706–28.644 ms at 1/32/128 tokens.
+  State owns 28,108,984 B at capacity 2,048; no model throughput/fit claim.
+  Astra approves scoped retention, no findings; full graph/CLI/quality/model
+  fit/adoption and original gates remain open/unchanged.
+  [Scope/evidence](docs/lfm3-bf16-state.md),
+  [measurements](benchmarks/results/2026-11-11-lfm3-bf16-state-v1.json),
+  [review](artifacts/lfm3-bf16-state-2026-11-11/astra-review-result-1.json).
 
 - [x] S1.L BF16 binary/convolution boundaries: 13 learned banks/104 cases/
   8,146,944 convolution words, 34 binary grids and head broadcasting match

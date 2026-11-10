@@ -82,8 +82,13 @@ scoped retention. The [canonical CPU BF16 norm/unary component](docs/lfm3-bf16-s
 now passes exact source checks and release operator baselines; Astra approves
 scoped retention. The [canonical BF16 binary/convolution leaves](docs/lfm3-binary-conv-source.md)
 now pass exact source checks and release operator baselines; Astra approves
-scoped retention. Qualify transactional BF16 history and window state before composing
-the graph. Any MiniCPM5 reconsideration still needs corrected original numerics and
+scoped retention. The [transactional BF16 state](docs/lfm3-bf16-state.md)
+implementation passes independent history/window fixtures and actual declared-parent/
+MLX CPU/Metal logical-state comparisons. Required/debug/release checks and zero-
+allocation tests pass; all 24 original FP32 5% compatibility pairs and 18 BF16
+state baseline cohorts pass. Astra approves scoped retention, no findings.
+Qualify this owner before BF16 projections/attention, graph composition and model/CLI
+adoption. Any MiniCPM5 reconsideration still needs corrected original numerics and
 both complete original quality comparisons.
 
 The initial settings below describe the foundation. Later selected models and
