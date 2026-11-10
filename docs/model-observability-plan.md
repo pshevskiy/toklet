@@ -119,8 +119,13 @@ broader model/adoption gates stay fixed.
 [Bounded parent authentication](minicpm5-parent-auth.md) now verifies both full
 BF16 parent object hashes (5,033,557,128bytes), all381logical tensors and85exact
 copied norms. It retains1,349tensor-block digests without storing the payload.
-This authenticates source identity; reproduction of296quantized matrices,
-original quality, deeper numerical and adoption stay open. The separate
+This authenticates source identity. The separate
+[bounded matrix reproduction](minicpm5-matrix-lineage.md) now reconstructs all
+296 matrices/888 affine arrays with zero byte mismatches while freshly
+authenticating both parent objects, under a frozen GPU/BF16 recipe. Checks and
+Astra review pass; publisher's exact binary remains unknown. Original quality,
+deeper numerical and adoption
+stay open. The separate
 [bounded basic codec/text CLI](minicpm5-text-codec.md) now passes original-template/
 tokenizer/stream and persistent-cache gates, fresh required/native checks and
 two complete-logit native text parity workloads. Eight matched request cohorts

@@ -30,13 +30,24 @@ anchors and whitespace pass; live PLAN and numerical inputs are unchanged.
 
 ## Existing correctness, memory and observability foundations
 
+MiniCPM5 matrix reproduction is retained with Astra approval. The frozen
+MLX 0.32.3 GPU/BF16 affine8 recipe reproduces all 296 matrices/888 arrays
+exactly while authenticating both full parent objects. All 85 copied norms also
+match; 4,128 tiles retain no parent payload. The separate 512 MiB audit bound
+passes. This proves a reproducible conversion relation, without authenticating
+the publisher's exact binary or qualifying inference/quality/adoption. All 35
+portable tests, 34 actual-output negatives, exact seal replay and input-based
+Rust/native check reuse pass. Astra independently replays the seal, no findings.
+[Scope](minicpm5-matrix-lineage.md),
+[review/commit](../artifacts/minicpm5-matrix-lineage-2026-11-10/publication-checks.json).
+
 MiniCPM5 bounded basic text/CLI is retained with Astra approval. Exact98source fixtures/66streams,679CPU/821Metal, native67/C smokes,
 36portable and83actual-report negatives pass. The unchanged22k-word/660-phase
 cache stress stays below512MiB after a preserved/fixed ASCII decode-bound bug.
 Two14/38-token native histories compare4.18Mlogits bitwise; eight cohorts retain
 80measured/24warm requests, with RMS opt-in gains18.85%/18.32% and12.29%/11.79%.
 6GiB owners/observations pass in named scopes; final physical peak unavailable.
-Default allocator, original quality/deeper numerical, conversion lineage,
+Default allocator, original quality/deeper numerical,
 managed/default adoption and1%summary-overhead gates remain open. Astra's sole
 first-text enclosure finding is fixed; unchanged raw cohorts revalidate.
 [Scope/evidence](minicpm5-text-codec.md),
@@ -45,8 +56,9 @@ first-text enclosure finding is fixed; unchanged raw cohorts revalidate.
 MiniCPM5 bounded source streaming verifies both complete BF16 parent hashes
 (5.033GB),381tensors and85exact copied norms, retaining1,349block digests and no
 payload. Fifteen portable tests and offline witness sealing pass; engine/native
-inputs are unchanged. Astra approves scoped source retention. Quantized conversion lineage,
-codec/task quality and adoption remain open. [Scope](minicpm5-parent-auth.md).
+inputs are unchanged. Astra approves scoped source retention. Matrix reproduction
+is covered above; original task quality and adoption remain open.
+[Scope](minicpm5-parent-auth.md).
 
 - Readable scalar CPU implementations and independent numerical fixtures remain
   correctness references. Real-model, reduced-precision and quality results have

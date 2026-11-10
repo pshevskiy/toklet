@@ -11,11 +11,26 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **remaining S1.B MiniCPM5 reproduction of296quantized matrices,
-original10k-target/100-task quality and deeper adoption gates**, after the reviewed
-bounded basic codec/text CLI and retained explicit RMS optimization.
+Current/next task: **remaining S1.B MiniCPM5 original 10k-target/100-task quality
+and deeper adoption gates**, after the reviewed bounded matrix reproduction,
+basic codec/text CLI and retained explicit RMS optimization.
 The user deferred screen capture; engine/CLI metrics, performance and automated
 checks lead work. The full goal stays active; 4B/9B deeper rejections stay binding.
+
+- [x] S1.B MiniCPM5 matrix reproduction: all 296 matrices/888 affine arrays and
+  85 copied norms match exactly across 4,128 bounded tiles. Both complete BF16
+  objects authenticate (5,033,557,128 bytes); zero mismatches and no retained
+  parent payload. Frozen GPU/BF16 MLX 0.32.3 recipe, 12 literal controls and
+  three prior range controls pass; publisher's exact binary remains unknown.
+  Separate 512 MiB audit allowance passes: 322,764,800-byte conservative final
+  RSS sum, 4,035 observations; final physical peak unavailable. Engine/codec/
+  disk limits unchanged. Byte-exact fresh witness seals, 35 portable tests,
+  34 actual-output rejections and two explicit structural acceptances pass.
+  Fresh fmt and unchanged 4,031 Cargo/421 native inputs/10 package outputs pass.
+  Astra independently replays the seal and approves scoped retention, with no
+  findings. Quality, deeper numerical, default/adoption and overhead gates stay
+  open. [Scope/evidence](docs/minicpm5-matrix-lineage.md),
+  [review/commit](artifacts/minicpm5-matrix-lineage-2026-11-10/publication-checks.json).
 
 - [x] S1.B MiniCPM5 bounded text codec and diagnostic CLI: exact original BOS,
   assistant LF/empty-think/padding semantics and stop union;98independent source
