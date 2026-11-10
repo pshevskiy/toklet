@@ -178,8 +178,11 @@ now passes independent BF16 frequency/trig/rotation checks and release operator
 baselines; Astra approves scoped retention. The [canonical CPU BF16 norm/unary
 component](lfm3-bf16-source.md) passes exact source fixtures and release baselines;
 Astra approves scoped retention. Actual child CPU/Metal component correspondence rejects;
-this does not score model quality. Remaining BF16 binary/convolution boundaries,
-rotating 256-token windows and complete graph composition still need qualification.
+this does not score model quality. The [canonical BF16 binary/convolution
+leaves](lfm3-binary-conv-source.md) pass exact source checks and release operator
+baselines; Astra approves scoped retention. Actual child CPU/Metal exact
+correspondence rejects. Transactional BF16 history, rotating 256-token windows and complete
+graph composition still need qualification.
 Existing LFM2 support and publisher parity results do not qualify these mechanisms.
 Stock-to-modified and modified-to-native full quality gates remain mandatory.
 The prior [metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)

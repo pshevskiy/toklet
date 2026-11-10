@@ -1,0 +1,20 @@
+{
+  "format": "toklet-lfm3-bf16-binary-conv-component-baseline-v1",
+  "base_revision": "acad708582eaa7ff46c62fc5707c8de42d974d71",
+  "source_contract_sha256": "7c73e15f3974ea5aa78db212142441fd6a4aaa84d7875d275602e012dfb3bc94",
+  "canonical_fixture_sha256": "c90abf0c6fed114ba8f3e1459d3a5e82a4fd94c0347249bde41cac0c1794493a",
+  "coefficient_bytes": 372736,
+  "source_cases": 104,
+  "convolution_output_words": 8146944,
+  "binary_grids": 34,
+  "binary_output_words": 2219520,
+  "head_gate_output_words": 51200,
+  "required_checks": "artifacts/lfm3-conv-bf16-2026-11-11/required-checks-1/checks.json",
+  "native_checks": "artifacts/lfm3-conv-bf16-2026-11-11/native75-publication.json",
+  "performance_checks": "artifacts/lfm3-conv-bf16-2026-11-11/performance-1/checks.json",
+  "review_commit": "artifacts/lfm3-conv-bf16-2026-11-11/publication-checks.json",
+  "performance_binary_sha256": "3e28ed5dec8fca3472f8ef394e7764e669a4c144dd74ba145a8d59b33713cdee",
+  "component_baseline_only": true,
+  "model_execution_qualified": false,
+  "quality_adoption_qualified": false
+}

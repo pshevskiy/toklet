@@ -11,14 +11,29 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **qualify LFM3 BF16 binary/convolution boundaries and
+Current/next task: **qualify transactional BF16 convolution history and
 256-token window state with independent fixtures before composing the graph**.
-Seven-tap FP32 history, source-profile BF16 rotary and canonical CPU BF16
-norm/unary components are reviewed; full LFM3 execution/adoption remain open.
+LFM3's FP32 history and canonical CPU BF16 rotary, norm/unary and convolution/
+binary leaves are reviewed; full LFM3 execution/adoption remain open.
 Reuse existing window ownership where correct. Keep the whole model
 roadmap, original numerical/quality gates and 6 GiB ceiling. MiniCPM5 and 4B/9B
 managed-adoption rejections remain binding. Engine/CLI work leads; interactive
 screen capture and iPhone runtime remain deferred.
+
+- [x] S1.L BF16 binary/convolution boundaries: 13 learned banks/104 cases/
+  8,146,944 convolution words, 34 binary grids and head broadcasting match
+  the canonical source exactly; original FP32 diagnostic and chunk splits pass.
+  Fresh fmt/both strict Clippy/705 CPU/851 Metal/nine example, five release
+  source tests and native75 three 46-export slices/C smokes pass. All four
+  operators have zero Rust allocations. Six release component cohorts pass:
+  1.150–1.168 / 33.547–33.923 / 135.099–135.660 ms at 1/32/128 tokens;
+  operator baselines only. Initial collector/cache-path failures are retained
+  and corrected; portable/admission controls pass. Actual child CPU/Metal exact
+  correspondence rejects. Astra approves scoped retention, no findings. BF16
+  history/window/graph, model fit/quality/adoption and all original gates remain
+  open/unchanged.
+  [Scope/evidence](docs/lfm3-binary-conv-source.md),
+  [review/commit](artifacts/lfm3-conv-bf16-2026-11-11/publication-checks.json).
 
 - [x] S1.L CPU BF16 norms/unary gates: all 119 authenticated gains,
   238 cases/4,082,688 outputs, 5,706 FP32 statistic rows, 16 epsilon/zero

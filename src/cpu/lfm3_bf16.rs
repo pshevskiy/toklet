@@ -1,4 +1,4 @@
-//! Canonical LFM3 parent BF16 normalization and unary activation boundaries.
+//! Canonical LFM3 parent BF16 normalization, activation and binary boundaries.
 //!
 //! The source profile fixes epsilon 1e-5 and widths 128/2,048. Norm means follow
 //! the pinned Torch 2.9.1 M1 CPU reduction order; this is a numerical order,
@@ -10,7 +10,7 @@ use half::bf16;
 
 const EPSILON: f32 = 1e-5;
 
-fn finite(tensor: &'static str, values: &[bf16]) -> Result<(), Error> {
+pub(super) fn finite(tensor: &'static str, values: &[bf16]) -> Result<(), Error> {
     if let Some(index) = values.iter().position(|value| !value.is_finite()) {
         Err(Error::NonFinite { tensor, index })
     } else {
@@ -130,6 +130,80 @@ pub fn lfm3_silu_bf16(input: &[bf16], output: &mut [bf16]) -> Result<(), Error> 
     for (value, out) in input.iter().zip(output) {
         let value = value.to_f32();
         *out = bf16::from_f32(value * sigmoid(value));
+    }
+    Ok(())
+}
+
+fn binary_inputs(input: &[bf16], right: &[bf16], output_len: usize) -> Result<(), Error> {
+    nonzero(input.len(), "LFM3 BF16 binary length")?;
+    length("LFM3 BF16 binary right", right.len(), input.len())?;
+    length("LFM3 BF16 binary output", output_len, input.len())?;
+    finite("LFM3 BF16 binary input", input)?;
+    finite("LFM3 BF16 binary right", right)
+}
+
+fn stored(value: f32, tensor: &'static str, index: usize) -> Result<bf16, Error> {
+    let value = bf16::from_f32(value);
+    if !value.is_finite() {
+        return Err(Error::NonFinite { tensor, index });
+    }
+    Ok(value)
+}
+
+/// Elementwise BF16 residual addition: FP32 addition, then one BF16 store.
+/// All shapes/nonfinite inputs validate before writes. Arithmetic overflow
+/// rejects with discardable partial output; no allocation or session mutation.
+pub fn lfm3_add_bf16(input: &[bf16], right: &[bf16], output: &mut [bf16]) -> Result<(), Error> {
+    binary_inputs(input, right, output.len())?;
+    for (index, ((a, b), out)) in input.iter().zip(right).zip(output).enumerate() {
+        *out = stored(a.to_f32() + b.to_f32(), "LFM3 BF16 add output", index)?;
+    }
+    Ok(())
+}
+
+/// Elementwise BF16 product: FP32 multiplication, then one BF16 store.
+/// This boundary separates B*x, convolution/C gating and SiLU/up products.
+/// Admission and discard-on-arithmetic-overflow semantics match BF16 addition.
+pub fn lfm3_mul_bf16(input: &[bf16], right: &[bf16], output: &mut [bf16]) -> Result<(), Error> {
+    binary_inputs(input, right, output.len())?;
+    for (index, ((a, b), out)) in input.iter().zip(right).zip(output).enumerate() {
+        *out = stored(a.to_f32() * b.to_f32(), "LFM3 BF16 product output", index)?;
+    }
+    Ok(())
+}
+
+/// Source attention product [rows,16,128] * sigmoid gates [rows,16,1].
+/// Gates broadcast directly over contiguous head lanes without expansion.
+/// Caller-owned slices need no special alignment. Empty/shape/nonfinite errors
+/// precede writes; numerical overflow leaves discardable output and no state.
+pub fn lfm3_head_gate_bf16(
+    input: &[bf16],
+    gates: &[bf16],
+    output: &mut [bf16],
+    rows: usize,
+) -> Result<(), Error> {
+    nonzero(rows, "LFM3 BF16 head gate rows")?;
+    let heads = product(rows, 16)?;
+    let elements = product(heads, 128)?;
+    length("LFM3 BF16 head gate input", input.len(), elements)?;
+    length("LFM3 BF16 head gates", gates.len(), heads)?;
+    length("LFM3 BF16 head gate output", output.len(), elements)?;
+    finite("LFM3 BF16 head gate input", input)?;
+    finite("LFM3 BF16 head gates", gates)?;
+    for (head, ((source, gate), target)) in input
+        .chunks_exact(128)
+        .zip(gates)
+        .zip(output.chunks_exact_mut(128))
+        .enumerate()
+    {
+        let gate = gate.to_f32();
+        for (lane, (value, out)) in source.iter().zip(target).enumerate() {
+            *out = stored(
+                value.to_f32() * gate,
+                "LFM3 BF16 head gate output",
+                head * 128 + lane,
+            )?;
+        }
     }
     Ok(())
 }

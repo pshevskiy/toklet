@@ -80,8 +80,10 @@ performance screen; Astra approves scoped retention. The
 independent primitive checks and release operator baselines; Astra approves
 scoped retention. The [canonical CPU BF16 norm/unary component](docs/lfm3-bf16-source.md)
 now passes exact source checks and release operator baselines; Astra approves
-scoped retention. Qualify remaining BF16 binary/convolution boundaries and window state
-before composing the graph. Any MiniCPM5 reconsideration still needs corrected original numerics and
+scoped retention. The [canonical BF16 binary/convolution leaves](docs/lfm3-binary-conv-source.md)
+now pass exact source checks and release operator baselines; Astra approves
+scoped retention. Qualify transactional BF16 history and window state before composing
+the graph. Any MiniCPM5 reconsideration still needs corrected original numerics and
 both complete original quality comparisons.
 
 The initial settings below describe the foundation. Later selected models and

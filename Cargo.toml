@@ -145,3 +145,7 @@ path = "tools/bench/lfm3_rotary_probe.rs"
 [[example]]
 name = "lfm3_bf16_probe"
 path = "tools/bench/lfm3_bf16_probe.rs"
+
+[[example]]
+name = "lfm3_conv_bf16_probe"
+path = "tools/bench/lfm3_conv_bf16_probe.rs"

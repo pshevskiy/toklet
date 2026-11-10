@@ -64,6 +64,17 @@ list and the cleanup controller's verified interrupt/resume history.
 
 ## Existing correctness, memory and observability foundations
 
+Canonical LFM3 CPU BF16 convolution/binary/head-gate leaves match 8,146,944
+convolution words, all 34 binary grids and broadcast source fixtures. Chunk
+splits and the original FP32 diagnostic pass; all four operators allocate
+nothing. Fresh required/native75 checks and six release component cohorts
+pass: medians 1.150–1.168 / 33.547–33.923 / 135.099–135.660 ms at 1/32/128
+tokens. Operator baselines only; actual child CPU/Metal exact correspondence
+rejects. Astra approves scoped retention, no findings; transactional BF16
+history/window/graph and full model fit/quality/adoption remain open.
+[Scope/evidence](lfm3-binary-conv-source.md),
+[review/commit](../artifacts/lfm3-conv-bf16-2026-11-11/publication-checks.json).
+
 Canonical LFM3 CPU BF16 norms/unary gates match 4,082,688 norm outputs,
 5,706 FP32 statistic rows, 16 corner cases and both full finite unary grids.
 Both widths have zero Rust allocations; fresh required/native73 checks pass.
