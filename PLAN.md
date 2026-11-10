@@ -87,8 +87,13 @@ implementation passes independent history/window fixtures and actual declared-pa
 MLX CPU/Metal logical-state comparisons. Required/debug/release checks and zero-
 allocation tests pass; all 24 original FP32 5% compatibility pairs and 18 BF16
 state baseline cohorts pass. Astra approves scoped retention, no findings.
-Qualify this owner before BF16 projections/attention, graph composition and model/CLI
-adoption. Any MiniCPM5 reconsideration still needs corrected original numerics and
+The [canonical BF16 CPU projection](docs/lfm3-projection-bf16.md) now passes
+independent sampled-row source/FP64 checks across all 154 rank-two tensors,
+zero-allocation checks and 42 release operator cohorts; Astra approves scoped
+retention, no findings.
+Actual child CPU/Metal exact component correspondence rejects. Qualify BF16
+attention before graph composition and model/session/CLI/full qualification.
+Any MiniCPM5 reconsideration still needs corrected original numerics and
 both complete original quality comparisons.
 
 The initial settings below describe the foundation. Later selected models and

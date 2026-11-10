@@ -11,13 +11,30 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **qualify source BF16 projections and attention, then compose
+Current/next task: **qualify source BF16 causal/window attention, then compose
 LFM3's graph and connect its model/session/CLI route**. Transactional BF16 state
-and canonical CPU BF16 rotary, norm/unary and convolution/binary leaves are
-reviewed; full LFM3 execution/adoption remain open. Keep the whole model
+and canonical CPU BF16 projection, rotary, norm/unary and convolution/binary
+leaves are reviewed; full LFM3 execution/adoption remain open. Keep the whole model
 roadmap, original numerical/quality gates and 6 GiB ceiling. MiniCPM5 and 4B/9B
 managed-adoption rejections remain binding. Engine/CLI work leads; interactive
 screen capture and iPhone runtime remain deferred.
+
+- [x] S1.L BF16 CPU projections: exact source matches for 94,248 learned
+  outputs across four selected rows of all 154 rank-two tensors, 65,280 finite
+  controls and 739 finite corner words/three rejection markers. Original
+  pre-store FP32 diagnostic passes (maximum 8.19e-6). Fresh fmt/both strict
+  Clippy/723 CPU/869 Metal/nine example, eight release source tests, native77
+  three 46-export slices/strict links/C smokes pass. Debug/release projections
+  allocate nothing; four portable tests in both modes, six source and ten
+  compiled admission controls pass. All 42 release component cohorts pass;
+  representative 128-token MLP calls take 802–810 ms. No model speedup claim.
+  Actual MLX CPU/Metal exact component correspondence rejects. Preparation
+  misses/capability-query failure are retained; original gates remain fixed.
+  Astra approves scoped retention, no findings; attention/graph/model/session/
+  CLI, full quality/fit/adoption remain open.
+  [Scope/evidence](docs/lfm3-projection-bf16.md),
+  [measurements](benchmarks/results/2026-11-11-lfm3-projection-bf16-v1.json),
+  [review](artifacts/lfm3-projection-bf16-2026-11-11/astra-review-result-1.json).
 
 - [x] S1.L BF16 state ownership: qualify six-row convolution history and
   256-token/full KV views, bit-preserving storage, abort/retry and all-owner

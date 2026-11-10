@@ -186,8 +186,14 @@ implementation passes independent fixtures and actual declared-parent/MLX CPU/Me
 logical-state comparisons, with zero Rust allocations in debug/release transitions.
 Required checks/native76, all 24 original FP32 5% compatibility pairs and 18 BF16
 state baseline cohorts pass. Astra approves scoped retention, no findings. This state-only correspondence does not reverse those arithmetic
-rejections. BF16 projections/attention, complete graph composition, model/session/CLI
-integration and original full qualification remain open.
+rejections. The [canonical BF16 CPU projection](lfm3-projection-bf16.md) now passes
+94,248 sampled learned outputs, the full finite grid, corner and independent
+FP64 diagnostic checks, zero-allocation tests and 42 release operator cohorts.
+Required/native77 checks pass; Astra approves scoped retention, no findings.
+Actual child CPU/Metal
+exact projection-component correspondence rejects; this does not score model
+quality. BF16 attention, complete graph composition, model/session/CLI integration
+and original full qualification remain open.
 Existing LFM2 support and publisher parity results do not qualify these mechanisms.
 Stock-to-modified and modified-to-native full quality gates remain mandatory.
 The prior [metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)

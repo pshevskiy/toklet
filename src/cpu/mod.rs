@@ -17,6 +17,7 @@ mod gated_delta;
 mod gelu;
 mod lfm3_bf16;
 mod lfm3_conv;
+mod lfm3_projection;
 mod llama3_rotary;
 mod moe_experts;
 mod moe_router;
@@ -47,6 +48,7 @@ pub use lfm3_bf16::{
     lfm3_silu_bf16,
 };
 pub use lfm3_conv::lfm3_conv7_bf16;
+pub use lfm3_projection::lfm3_linear_bf16;
 pub use llama3_rotary::{Llama3RotaryShape, Llama3Scaling, llama3_rotary};
 pub use moe_experts::{
     ExpertWeights, SelectedExpertShape, reduce_selected_experts, selected_expert_glu,

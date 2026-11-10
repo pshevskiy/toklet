@@ -64,6 +64,19 @@ list and the cleanup controller's verified interrupt/resume history.
 
 ## Existing correctness, memory and observability foundations
 
+LFM3 bias-free BF16 CPU projections match 94,248 source outputs across four
+selected rows of all 154 rank-two tensors, 65,280 finite controls and finite
+corner/rejection-marker cases. The original FP32 diagnostic passes; no expanded
+FP32 weights or numerical allocations. Fresh fmt/both strict Clippy/723 CPU/
+869 Metal/nine example, eight optimized source tests and native77/C smokes pass.
+All 42 release operator cohorts pass; 128-token representative MLP calls cost
+802–810 ms. Component baselines only; actual child CPU/Metal exact correspondence
+rejects. Astra approves scoped retention, no findings; attention/full graph/CLI/
+quality/fit/adoption remain
+open, with original gates unchanged.
+[Scope/evidence](lfm3-projection-bf16.md),
+[measurements](../benchmarks/results/2026-11-11-lfm3-projection-bf16-v1.json).
+
 LFM3 transactional BF16 state is implemented with 13 six-row histories, six full
 and five 256-token KV owners. Independent fixtures and actual declared-parent/
 MLX CPU/Metal logical-state comparisons pass. All-owner validation precedes any

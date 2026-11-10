@@ -1,0 +1,181 @@
+{
+  "format": "toklet-lfm3-projection-bf16-result-v1",
+  "date": "2026-11-11",
+  "engine_base_revision": "12558aaa1cab8f3bb3ee3dc3461a10cdc6fb4029",
+  "hardware": "Apple M1 Pro",
+  "profile": "ordinary release",
+  "binary_sha256": "6f4947d4b8e2421c97794d25e2908a74a2588d44d2d42567177539191e04503d",
+  "source_fixture_sha256": "0f5f8a970d116b32073aa6090bd64b91825f39db2adfc9311eb5995b6367cd74",
+  "source_contract_sha256": "ad76bdd309690fb7c7063930f714d26f09a49618565cce4a3aed52e305eccc6c",
+  "performance_contract_sha256": "892f730e5b0936e2b133aa89eaf15150878389b7b5ef582cfaf7200fba90d524",
+  "learned_source_words": 94248,
+  "finite_grid_words": 65280,
+  "corner_words": 742,
+  "source_rejection_markers": 3,
+  "original_fp32_diagnostic_maximum_absolute_error": 8.188740430626e-06,
+  "original_fp32_diagnostic_failures": 0,
+  "rust_allocations": 0,
+  "required_cpu_tests": 723,
+  "required_metal_tests": 869,
+  "required_depth_example_tests": 9,
+  "optimized_source_tests": 8,
+  "native_slices": 3,
+  "exports_per_slice": 46,
+  "cohorts": 42,
+  "profiles": [
+    {
+      "profile": "conv-in",
+      "rows": 6144,
+      "columns": 2048,
+      "full_matrix": true,
+      "median_ranges_ms": {
+        "1": [
+          9.150082999999999,
+          9.219708
+        ],
+        "32": [
+          165.026521,
+          165.5672705
+        ],
+        "128": [
+          643.5306875,
+          649.766292
+        ]
+      }
+    },
+    {
+      "profile": "conv-out",
+      "rows": 2048,
+      "columns": 2048,
+      "full_matrix": true,
+      "median_ranges_ms": {
+        "1": [
+          2.932625,
+          2.9836665
+        ],
+        "32": [
+          54.2833745,
+          55.4625415
+        ],
+        "128": [
+          213.75872950000002,
+          217.5376465
+        ]
+      }
+    },
+    {
+      "profile": "mlp-up",
+      "rows": 7680,
+      "columns": 2048,
+      "full_matrix": true,
+      "median_ranges_ms": {
+        "1": [
+          11.1518125,
+          11.513
+        ],
+        "32": [
+          205.4750835,
+          205.531771
+        ],
+        "128": [
+          808.084458,
+          809.99
+        ]
+      }
+    },
+    {
+      "profile": "mlp-down",
+      "rows": 2048,
+      "columns": 7680,
+      "full_matrix": true,
+      "median_ranges_ms": {
+        "1": [
+          11.3112705,
+          11.3992705
+        ],
+        "32": [
+          204.0821045,
+          204.405937
+        ],
+        "128": [
+          802.2739795,
+          807.044
+        ]
+      }
+    },
+    {
+      "profile": "attention-gate",
+      "rows": 16,
+      "columns": 2048,
+      "full_matrix": true,
+      "median_ranges_ms": {
+        "1": [
+          0.0236875,
+          0.024021
+        ],
+        "32": [
+          0.4382915,
+          0.463917
+        ],
+        "128": [
+          1.7285835,
+          1.7699165
+        ]
+      }
+    },
+    {
+      "profile": "attention-kv",
+      "rows": 512,
+      "columns": 2048,
+      "full_matrix": true,
+      "median_ranges_ms": {
+        "1": [
+          0.7339789999999999,
+          0.7637495000000001
+        ],
+        "32": [
+          13.4883545,
+          13.909375
+        ],
+        "128": [
+          53.5937085,
+          54.13525
+        ]
+      }
+    },
+    {
+      "profile": "tied-head-tile",
+      "rows": 1024,
+      "columns": 2048,
+      "full_matrix": false,
+      "median_ranges_ms": {
+        "1": [
+          1.481313,
+          1.531917
+        ],
+        "32": [
+          27.133333999999998,
+          27.3098545
+        ],
+        "128": [
+          107.3061665,
+          107.92833350000001
+        ]
+      }
+    }
+  ],
+  "raw_evidence": "../../artifacts/lfm3-projection-bf16-2026-11-11/performance-1/checks.json",
+  "child_cpu_word_differences": 24823,
+  "child_metal_word_differences": 280,
+  "child_component_exact_correspondence_qualified": false,
+  "maximum_performance_final_rss_sum_bytes": 153747456,
+  "maximum_sampled_aggregate_physical_bytes": 64570472,
+  "final_physical_peak_available": false,
+  "operator_baseline_only": true,
+  "full_model_execution_qualified": false,
+  "model_memory_fit_qualified": false,
+  "quality_adoption_qualified": false,
+  "summary_overhead_1percent_bound_qualified": false,
+  "iphone_runtime_deferred": true,
+  "interactive_capture_deferred": true
+}
