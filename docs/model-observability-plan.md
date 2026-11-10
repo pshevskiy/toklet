@@ -190,10 +190,12 @@ rejections. The [canonical BF16 CPU projection](lfm3-projection-bf16.md) now pas
 94,248 sampled learned outputs, the full finite grid, corner and independent
 FP64 diagnostic checks, zero-allocation tests and 42 release operator cohorts.
 Required/native77 checks pass; Astra approves scoped retention, no findings.
-Actual child CPU/Metal
-exact projection-component correspondence rejects; this does not score model
-quality. BF16 attention, complete graph composition, model/session/CLI integration
-and original full qualification remain open.
+The [BF16 CPU attention component](lfm3-attention-bf16.md) passes all five
+stored stages across 25 source fixtures and 24 release cohorts. Astra approves
+scoped retention after runtime replay. Both projection
+and attention strict component correspondence reject on child CPU and Metal.
+Complete graph composition, model/session/CLI integration, and the original
+full qualification remain open.
 Existing LFM2 support and publisher parity results do not qualify these mechanisms.
 Stock-to-modified and modified-to-native full quality gates remain mandatory.
 The prior [metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)

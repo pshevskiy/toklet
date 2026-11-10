@@ -15,6 +15,7 @@ mod dense_decoder;
 mod dense_scaling;
 mod gated_delta;
 mod gelu;
+mod lfm3_attention;
 mod lfm3_bf16;
 mod lfm3_conv;
 mod lfm3_projection;
@@ -43,6 +44,7 @@ pub use gated_delta::{
     GatedDeltaShape, gated_delta_gates, gated_delta_normalize, gated_delta_step,
 };
 pub use gelu::{gated_gelu_tanh, gelu_tanh};
+pub use lfm3_attention::{LFM3_ATTENTION_SCALE, lfm3_attention_bf16};
 pub use lfm3_bf16::{
     lfm3_add_bf16, lfm3_head_gate_bf16, lfm3_mul_bf16, lfm3_rmsnorm_bf16, lfm3_sigmoid_bf16,
     lfm3_silu_bf16,

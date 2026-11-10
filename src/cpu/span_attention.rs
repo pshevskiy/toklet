@@ -6,8 +6,7 @@ use super::{Error, finite, length, nonzero, product};
 /// elements; initialized gaps between heads are not read. Logical intervals
 /// concatenate in array order. Empty segments require empty K/V; their origin
 /// and stride are ignored. No alignment beyond T is assumed. This descriptor
-/// chooses no numerical arithmetic or conversion; the existing attention entry
-/// point still accepts only the concrete FP32 alias below.
+/// chooses no numerical arithmetic or conversion.
 #[derive(Clone, Copy)]
 pub struct KvSegment<'a, T> {
     pub k: &'a [T],
@@ -92,28 +91,7 @@ pub fn span_attention(
     ] {
         length(name, actual, expected)?;
     }
-    let mut keys = 0_usize;
-    for segment in segments {
-        let rows = product(segment.keys, s.head_dim)?;
-        let expected = if segment.keys == 0 {
-            0
-        } else {
-            if segment.head_stride < rows {
-                return Err(Error::InvalidParameter("attention segment heads overlap"));
-            }
-            let start = s.key_start.checked_add(keys).ok_or(Error::SizeOverflow)?;
-            if segment.key_start != start {
-                return Err(Error::InvalidParameter("attention segment logical origin"));
-            }
-            product(s.kv_heads - 1, segment.head_stride)?
-                .checked_add(rows)
-                .ok_or(Error::SizeOverflow)?
-        };
-        length("attention segment key", segment.k.len(), expected)?;
-        length("attention segment value", segment.v.len(), expected)?;
-        keys = keys.checked_add(segment.keys).ok_or(Error::SizeOverflow)?;
-    }
-    length("attention segment keys", keys, s.keys)?;
+    validate_segments(segments, s)?;
     finite("attention query", q)?;
     for segment in segments {
         if segment.keys == 0 {
@@ -221,6 +199,35 @@ pub fn span_attention(
             }
         }
     }
+    Ok(())
+}
+
+pub(super) fn validate_segments<T>(
+    segments: &[KvSegment<'_, T>; 3],
+    s: &SpanAttentionShape,
+) -> Result<(), Error> {
+    let mut keys = 0_usize;
+    for segment in segments {
+        let rows = product(segment.keys, s.head_dim)?;
+        let expected = if segment.keys == 0 {
+            0
+        } else {
+            if segment.head_stride < rows {
+                return Err(Error::InvalidParameter("attention segment heads overlap"));
+            }
+            let start = s.key_start.checked_add(keys).ok_or(Error::SizeOverflow)?;
+            if segment.key_start != start {
+                return Err(Error::InvalidParameter("attention segment logical origin"));
+            }
+            product(s.kv_heads - 1, segment.head_stride)?
+                .checked_add(rows)
+                .ok_or(Error::SizeOverflow)?
+        };
+        length("attention segment key", segment.k.len(), expected)?;
+        length("attention segment value", segment.v.len(), expected)?;
+        keys = keys.checked_add(segment.keys).ok_or(Error::SizeOverflow)?;
+    }
+    length("attention segment keys", keys, s.keys)?;
     Ok(())
 }
 

@@ -1,0 +1,1534 @@
+{
+  "torch_revision": "5811a8d7da873dd699ff6687092c225caffcf1bb",
+  "parent_source_sha256": "e8cd5254ea99ce6bd731b57b10908c2e8b5010ce8315341f895a38484885eeab",
+  "producer_sha256": "d847a32cb907d31b182209f27aed88950a0cccf50039c0ee22b2342c4e685f0f",
+  "contract_sha256": "1e5ee68c6953e08990a51e49f2a33e29791c55521bf411b4defe32e4bfebb6c0",
+  "fixture_completed": true,
+  "cases": [
+    {
+      "prefix": 0,
+      "tokens": 1,
+      "key_start": 0,
+      "keys": 1,
+      "window": null,
+      "profile": "edges",
+      "seed": 3859,
+      "inputs": {
+        "q": "e40caad8cc7aee5e80631808d369c420d8512e6dbef1653823e4d16734acf6e6",
+        "k": "3f27f9584a68abe5022f0b9944413c5f7c5679652a5bb7ecd03b4d5ebf1a730b",
+        "v": "109a4ee906da89e168e9eb114355bce8b9de7ed784f9b2e445bfb112cc5a8687"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          2048,
+          128,
+          1,
+          128
+        ],
+        "value": [
+          2048,
+          128,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 16,
+          "sha256": "877774f36cd2f1b5e60281167d2bdb349f24b9a44ed5a8949980261057cada90"
+        },
+        "scaled": {
+          "words": 16,
+          "sha256": "6b778a47bfef998e4ab7b59b5647dbf6a434f39202289f7e9f5e8087b36b990d"
+        },
+        "scores": {
+          "words": 16,
+          "sha256": "6b778a47bfef998e4ab7b59b5647dbf6a434f39202289f7e9f5e8087b36b990d"
+        },
+        "probabilities": {
+          "words": 16,
+          "sha256": "a214ae5c03e0c56b5540a2f2e924a30f3a059d4d38c2b8c62b9182a78e8afb24"
+        },
+        "context": {
+          "words": 2048,
+          "sha256": "adfcc67dd25a82791de234d8cb11d14f31685709c29b49cf5808f55a15b563af"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 16,
+        "maximum_absolute": 0.0,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 1,
+      "tokens": 1,
+      "key_start": 0,
+      "keys": 2,
+      "window": null,
+      "profile": "mixed",
+      "seed": 7718,
+      "inputs": {
+        "q": "804fa19268686c4b66965dca0851d230960d36e85bbc1cd3e8b1fffff072f0bf",
+        "k": "fc9f20353bd375f07aa881c71fb5797e4c9d1b0896f2d53353b3a4c0ed733c85",
+        "v": "4ae01dcfeb94a691be788f3506eaba546d6d5ebb0cb9567a247048df19b9308d"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          4096,
+          256,
+          1,
+          128
+        ],
+        "value": [
+          4096,
+          256,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 32,
+          "sha256": "5060c0b657e4b4a552b6a8028006c4b67ebbc4ba15450eeb19a3d09a0e035a97"
+        },
+        "scaled": {
+          "words": 32,
+          "sha256": "f3001804e05f704c3fb2bbea1c1dbed5eee92d1d97a6652c354c07d4116984f0"
+        },
+        "scores": {
+          "words": 32,
+          "sha256": "f3001804e05f704c3fb2bbea1c1dbed5eee92d1d97a6652c354c07d4116984f0"
+        },
+        "probabilities": {
+          "words": 32,
+          "sha256": "f428e561447ba1ccf3c3430f1658d5ef5b766b740b8dd4a078c91d46d1f5947a"
+        },
+        "context": {
+          "words": 2048,
+          "sha256": "5851dda5df3bda669a5520fd4677d80e8fe49294f6ff3fa17f76a3a189ff893b"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 32,
+        "maximum_absolute": 7.509357635715475e-08,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 2,
+      "tokens": 1,
+      "key_start": 0,
+      "keys": 3,
+      "window": null,
+      "profile": "mixed",
+      "seed": 11577,
+      "inputs": {
+        "q": "38527110e3b0e0149ae45a5e55170982a84dad1915beb9267a548d564f34e648",
+        "k": "a3185c089b0c8f697bc1a7fc63af641e6e0900afee558550c1debb4cac1d62dd",
+        "v": "1ad61fa6882469a8b32f044a8f988054160ca7e829bb5ebde5fc8006d7018b76"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          6144,
+          384,
+          1,
+          128
+        ],
+        "value": [
+          6144,
+          384,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 48,
+          "sha256": "cf6459716d33443c210029af0171f970abc2e5694107c9073f99c8c8cc1f4183"
+        },
+        "scaled": {
+          "words": 48,
+          "sha256": "4ce7167c5cc609e71e9d3c68e0bdbd975cf1a80bf137c666ce6b1486ce838ab5"
+        },
+        "scores": {
+          "words": 48,
+          "sha256": "4ce7167c5cc609e71e9d3c68e0bdbd975cf1a80bf137c666ce6b1486ce838ab5"
+        },
+        "probabilities": {
+          "words": 48,
+          "sha256": "d997232579eed1672371093a6e011e4de2424ce4dbce1409bd71b262aa587a98"
+        },
+        "context": {
+          "words": 2048,
+          "sha256": "ebfe8d501d447f7dd82bd3b7da74f996cb003294ca2785dc3f1c93b8de03f4bc"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 48,
+        "maximum_absolute": 7.78443536297857e-08,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 3,
+      "tokens": 1,
+      "key_start": 0,
+      "keys": 4,
+      "window": null,
+      "profile": "mixed",
+      "seed": 15436,
+      "inputs": {
+        "q": "490851abe7dfce53b3c58cc0299d0ada4abdc514d958cd0b7605e1b83087f6f7",
+        "k": "4029d87932cf9fc12f8cd1a422a7081eff9ab621236e4dc592527700da261b73",
+        "v": "88850ab74168711f0d8e1aedee88c27dc2fdf22241292efa9ef5c09694c5787d"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          8192,
+          512,
+          1,
+          128
+        ],
+        "value": [
+          8192,
+          512,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 64,
+          "sha256": "1c7bd50b450e069a9a3868d93b5a74154f0f23e1ee1b15e542689b647f8fe804"
+        },
+        "scaled": {
+          "words": 64,
+          "sha256": "d8a30725367240f740ac6aa343edbd70d22feed14e215f063d3e13858f2c9acf"
+        },
+        "scores": {
+          "words": 64,
+          "sha256": "d8a30725367240f740ac6aa343edbd70d22feed14e215f063d3e13858f2c9acf"
+        },
+        "probabilities": {
+          "words": 64,
+          "sha256": "636d70fb66a2945505a7ec0bbf8d9de0359158c1f09d95016c533731bf7756da"
+        },
+        "context": {
+          "words": 2048,
+          "sha256": "7b207a1e0df0a9e0d7123c33492c41eaf4152428716ca574fbb39c1d06182076"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 64,
+        "maximum_absolute": 9.289061198014537e-08,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 0,
+      "tokens": 2,
+      "key_start": 0,
+      "keys": 2,
+      "window": null,
+      "profile": "edges",
+      "seed": 19295,
+      "inputs": {
+        "q": "f6180b44250a025a92827adaddd13696e63dab05e4fb81246207bc9f76e46c51",
+        "k": "f62ac0d89c2c09fcf93a5b605bcbee07009b7fa5ff14b15ca89a84dc41f31c3b",
+        "v": "4ea8dff15b8e914657913e4918bcb39327a4cfe157cde9983ad1cbf0d4c96598"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          4096,
+          256,
+          1,
+          128
+        ],
+        "value": [
+          4096,
+          256,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 64,
+          "sha256": "21570c62fcedca29a074f1c2929b51f474feb4a4ed2554e014f7df1a3c553fe6"
+        },
+        "scaled": {
+          "words": 64,
+          "sha256": "b7c81057d5840d11aea1881a4cec597ff3c07c1d60ce90f558b13f996593a56a"
+        },
+        "scores": {
+          "words": 64,
+          "sha256": "726d409d886e28959cd37cf051608aeea9b345b90cc8559c3809a828dd79ab88"
+        },
+        "probabilities": {
+          "words": 64,
+          "sha256": "c5abfcc816f14dea099cac66b1087736da806a3bd9e1dc61bab31599395564c0"
+        },
+        "context": {
+          "words": 4096,
+          "sha256": "627960bf9ca8faf674c352bca23ba87daf67cbaf349dd189989118a68543f758"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 64,
+        "maximum_absolute": 6.29650207528698e-08,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 0,
+      "tokens": 3,
+      "key_start": 0,
+      "keys": 3,
+      "window": null,
+      "profile": "mixed",
+      "seed": 23154,
+      "inputs": {
+        "q": "14104a788babf1eef57330a4502691380b4a1959c640b5fe3a43f989ad9e14a5",
+        "k": "4fe168dc1c074b8761ebf3c38b55af42dcf1bbb6a4f085bf333bb1e8f53ebcf6",
+        "v": "c6d188d4064aad1f7d5b729e29b972e1c05ccf4c0912fe3a6d06e12341bbbe5e"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          6144,
+          384,
+          1,
+          128
+        ],
+        "value": [
+          6144,
+          384,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 144,
+          "sha256": "e47a0831e8be1e2c89385ff1afb169706ff2f1a155df2236175a54d1c0348cea"
+        },
+        "scaled": {
+          "words": 144,
+          "sha256": "17e30e66c850ccaf42570b1b4240e7453deca7ac9db8eacc829308d4e77adb8a"
+        },
+        "scores": {
+          "words": 144,
+          "sha256": "5cfcf85c75ebb2ca97f4aa61b3aa5e93f99652829228bc9af55609de9a31dda5"
+        },
+        "probabilities": {
+          "words": 144,
+          "sha256": "430be34cba57d90d1d9058d305c4a26c0d0fbdb934bee9df7b6e00cc87b57f6a"
+        },
+        "context": {
+          "words": 6144,
+          "sha256": "98515af547f5bb8b1e29993e5a3822decb8b1a473a9f5ab0bc05980406e98b67"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 144,
+        "maximum_absolute": 6.998920631939853e-08,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 0,
+      "tokens": 4,
+      "key_start": 0,
+      "keys": 4,
+      "window": null,
+      "profile": "mixed",
+      "seed": 27013,
+      "inputs": {
+        "q": "bbcdfdede4f3f1775c406a347ffbc955f9ecac9632b25652a275fd60c2a0678e",
+        "k": "b7cc34a80cbf48fff1fea8353822edcd83a2fd43441949ece694031ab52bf6e8",
+        "v": "53bf39b725678246368f7757851ba7ea99174e7f79997cfeae9d7d4cdd3055dd"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          8192,
+          512,
+          1,
+          128
+        ],
+        "value": [
+          8192,
+          512,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 256,
+          "sha256": "10242c0ab34614334129dbc1e92f153cfdb7b8a66081ea0e547737324f1f4b37"
+        },
+        "scaled": {
+          "words": 256,
+          "sha256": "c5036ae86399290de9e0c8ccfea59b9ad19277340b2a0f001b86a87565cb1db6"
+        },
+        "scores": {
+          "words": 256,
+          "sha256": "3d299cfaae793771568c46d5c981a9bdae5c52b30d527fde82fc983b8a2a1e2c"
+        },
+        "probabilities": {
+          "words": 256,
+          "sha256": "1ee72bdee095d6708482d4166ce67cfe5d075ab96b60cfd3fd5cc0869aec30ec"
+        },
+        "context": {
+          "words": 8192,
+          "sha256": "fd10e0167183eb51b90e343a7b10c7f7a5faa36595497ca94b593ce6a3a9726f"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 256,
+        "maximum_absolute": 1.193933465426511e-07,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 4,
+      "tokens": 1,
+      "key_start": 0,
+      "keys": 5,
+      "window": null,
+      "profile": "mixed",
+      "seed": 30872,
+      "inputs": {
+        "q": "066d4b276173899be14bcd2757cb7aca3ac1a20345fc22e86a02046055490e52",
+        "k": "dbe7292fe33627c2e4e9c38e3456ef99056b41830b0ecaa88f98b0dee5889956",
+        "v": "4b9a163a86723352e4007001b80cfaad011266093afcfaed29a0c80de2a0eb6e"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          10240,
+          640,
+          1,
+          128
+        ],
+        "value": [
+          10240,
+          640,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 80,
+          "sha256": "0865cab2a16d7cb374bd05a012b3f23f24ef5eaf035fc1ca10ce4484c311c92c"
+        },
+        "scaled": {
+          "words": 80,
+          "sha256": "a9f45797e7a58acea1c9b40857a34547e62010d7020a306083ca5784662b43bf"
+        },
+        "scores": {
+          "words": 80,
+          "sha256": "a9f45797e7a58acea1c9b40857a34547e62010d7020a306083ca5784662b43bf"
+        },
+        "probabilities": {
+          "words": 80,
+          "sha256": "1aaa34b43eb1dc66a9442acdcc1b9e081511d00f52e6163bd47d7a6b065aad91"
+        },
+        "context": {
+          "words": 2048,
+          "sha256": "558a61e2e8a9608346ee9c564e3432bfd9b35c93b903dc76c92f42ca7ed6ec19"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 80,
+        "maximum_absolute": 9.145798474108346e-08,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 6,
+      "tokens": 1,
+      "key_start": 0,
+      "keys": 7,
+      "window": null,
+      "profile": "mixed",
+      "seed": 34731,
+      "inputs": {
+        "q": "d4bc609a5f0aebc559d625a14740e3250acea13acdd2171e9b5b4fc028e8f195",
+        "k": "57db95a7828304433e18842396d4b5eeabd26812f68823b9b1e90bb9da3d8613",
+        "v": "ab847e16c921cb1cef15054bcd0163c535ca348f50887d2c97498a0f19957e2c"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          14336,
+          896,
+          1,
+          128
+        ],
+        "value": [
+          14336,
+          896,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 112,
+          "sha256": "439204aa8a3ddd81c2233843c7476e54e929052916ef31d9215465a8dab6ddef"
+        },
+        "scaled": {
+          "words": 112,
+          "sha256": "6270930e0482cbb4ae40e50ca68bb2dd503715aee3d77e041569285d999eac6a"
+        },
+        "scores": {
+          "words": 112,
+          "sha256": "6270930e0482cbb4ae40e50ca68bb2dd503715aee3d77e041569285d999eac6a"
+        },
+        "probabilities": {
+          "words": 112,
+          "sha256": "3fab912706bc6cbac959bb84f9386f9a9a36df9b5f906af274ac1d63524b0f44"
+        },
+        "context": {
+          "words": 2048,
+          "sha256": "b0975f490440f5d63bfa3e2336a0dae966b0b95005f3dbbe9b61d2935b242313"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 112,
+        "maximum_absolute": 8.20892019914865e-08,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 7,
+      "tokens": 1,
+      "key_start": 0,
+      "keys": 8,
+      "window": null,
+      "profile": "mixed",
+      "seed": 38590,
+      "inputs": {
+        "q": "500a1bac1781225c6d93d34c42e1d0073ce6fee1f18e8fb1c387fd3a135e88ac",
+        "k": "2c196799c653402c0d613936ce50a88a3686b8cc3d65abeb99dc5f1f7ebd4803",
+        "v": "9098d3c2d6149f783944163d851c5ac6164a3d25a01d95d30ff1375899f7ad78"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          16384,
+          1024,
+          1,
+          128
+        ],
+        "value": [
+          16384,
+          1024,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 128,
+          "sha256": "11e7b81451e19a1bdba10ffaa45c4510669c78f719deaecedf487fcc1d57b722"
+        },
+        "scaled": {
+          "words": 128,
+          "sha256": "bbc8622b7d75185825bbaae4465013e35ea204aa3815db7e18897b319ae3eae8"
+        },
+        "scores": {
+          "words": 128,
+          "sha256": "bbc8622b7d75185825bbaae4465013e35ea204aa3815db7e18897b319ae3eae8"
+        },
+        "probabilities": {
+          "words": 128,
+          "sha256": "0c70c63748c9e3dd6e869f239913330ea94535e12587c7d42d41b55e359a56b3"
+        },
+        "context": {
+          "words": 2048,
+          "sha256": "b6bb0c7a7848d0b195d6d71056608b4a6499264d48665d522231ac21ca688f98"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 128,
+        "maximum_absolute": 1.6040923001003904e-07,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 8,
+      "tokens": 1,
+      "key_start": 0,
+      "keys": 9,
+      "window": null,
+      "profile": "mixed",
+      "seed": 42449,
+      "inputs": {
+        "q": "4f6816dec03a4a7b36c47e7c32163c9e17c89d8520ca4a016f9fe3aaf7ba6caf",
+        "k": "ecf9a1d2103dfb12916efb423ca8fa320964ffe7d39b65d24f0bb32d0eabd8e5",
+        "v": "0999b5f58ec0fc105279d503d4dddd3f0f79caffb0209a22c52e4dcfeb59857c"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          18432,
+          1152,
+          1,
+          128
+        ],
+        "value": [
+          18432,
+          1152,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 144,
+          "sha256": "12042c975a726a7de546174957306a27f2335f5eb20b32a2a2906c7c6995f044"
+        },
+        "scaled": {
+          "words": 144,
+          "sha256": "e75dc71274cc46efa3a6c5078efdfcd3a1bc4572ee44abcab6a360beb8defc47"
+        },
+        "scores": {
+          "words": 144,
+          "sha256": "e75dc71274cc46efa3a6c5078efdfcd3a1bc4572ee44abcab6a360beb8defc47"
+        },
+        "probabilities": {
+          "words": 144,
+          "sha256": "d51dbd5d771cd48a00c669329df06df19142402e38a6282fce26caa7df327658"
+        },
+        "context": {
+          "words": 2048,
+          "sha256": "1e06e33bf367f2c6b1c7467c8f1462a27074e3dae8598461fe4e7241e0fffe91"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 144,
+        "maximum_absolute": 1.1043298997481799e-07,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 30,
+      "tokens": 1,
+      "key_start": 0,
+      "keys": 31,
+      "window": null,
+      "profile": "cancellation",
+      "seed": 46308,
+      "inputs": {
+        "q": "124df670dd0f2ad0066829d8f44c5c6a3823af471813ff062fc2c1baff3a763f",
+        "k": "f9ba7ac555a0644f0ab969dfe213ee5db99b119c5b8af9d2245d2fe7870d2360",
+        "v": "683d199ab080ea00d35ab3c70b20bf9ce9c13616bcd2635d6a881c635e5edff9"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          63488,
+          3968,
+          1,
+          128
+        ],
+        "value": [
+          63488,
+          3968,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 496,
+          "sha256": "23d8816da2bf679aec5bc6069e426527fde6bb947964f6eafd3d3fbd9c4c7af1"
+        },
+        "scaled": {
+          "words": 496,
+          "sha256": "61a9c2f10f3b006fb89a6000e4ade3b904cb5e4a6eb28932fd4f86972d12b610"
+        },
+        "scores": {
+          "words": 496,
+          "sha256": "61a9c2f10f3b006fb89a6000e4ade3b904cb5e4a6eb28932fd4f86972d12b610"
+        },
+        "probabilities": {
+          "words": 496,
+          "sha256": "fc9b9e81e567cc925cdfd76decf94b6ff30b38d2acebeaa26d3c1ee84ef949f6"
+        },
+        "context": {
+          "words": 2048,
+          "sha256": "f51c7aec5d9eed0ea6f9fa5b51cc1bbe7cb91d2b8a2614e6f61b1b69ff284ce5"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 496,
+        "maximum_absolute": 4.871552501672927e-09,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 31,
+      "tokens": 1,
+      "key_start": 0,
+      "keys": 32,
+      "window": null,
+      "profile": "mixed",
+      "seed": 50167,
+      "inputs": {
+        "q": "bdfc232c658cff712ced0b78739af1fdf91751d121e75348f0456be6e61e7ec6",
+        "k": "84063a83bba819acdaad7d0912d80fc0c5ad5b6e5a029f884b0ccb2b9b8cafe6",
+        "v": "d97be73357662dc2e83d6a307c9b34c73559abf30968e84a8ada6cb053a9c235"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          65536,
+          4096,
+          1,
+          128
+        ],
+        "value": [
+          65536,
+          4096,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 512,
+          "sha256": "f441b86569f546b2424841fa5005ebdc0b677e92c2089c2d395e22cddd2d4887"
+        },
+        "scaled": {
+          "words": 512,
+          "sha256": "d401f0fb58b289d4a11ee40e2565b75a4fa38c6be3e58815b182596f24eec21b"
+        },
+        "scores": {
+          "words": 512,
+          "sha256": "d401f0fb58b289d4a11ee40e2565b75a4fa38c6be3e58815b182596f24eec21b"
+        },
+        "probabilities": {
+          "words": 512,
+          "sha256": "27edbe56cfa3047835f49df0d77d0f923f09bb5a46b2dd18b239bdce367ab140"
+        },
+        "context": {
+          "words": 2048,
+          "sha256": "6f195ac77d97a38fbf39dd9cf06b4ed5f40a3bd35f64923cb121fcdebf776958"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 512,
+        "maximum_absolute": 1.2154200412783922e-07,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 32,
+      "tokens": 1,
+      "key_start": 0,
+      "keys": 33,
+      "window": null,
+      "profile": "mixed",
+      "seed": 54026,
+      "inputs": {
+        "q": "3c0f778a8840da460aae865502cc9a7b74142c179253a9260d099d6deae551e7",
+        "k": "e5e489dd24efa7a40dd1186f83974b42921835ee15502cb5b03f7676e17ccd93",
+        "v": "2d6837ed03de006c23477ba78066d44666cf32b171a0bd9aff2fe6b839bff94a"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          67584,
+          4224,
+          1,
+          128
+        ],
+        "value": [
+          67584,
+          4224,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 528,
+          "sha256": "99db238fe4583fc144c4dfda8d282f42cbae6261e7a3bedf5f09886f96442e4e"
+        },
+        "scaled": {
+          "words": 528,
+          "sha256": "2a662cb39776c8f781c0ec8f274e8375fb320ab22906a7a71cc96d08db76f772"
+        },
+        "scores": {
+          "words": 528,
+          "sha256": "2a662cb39776c8f781c0ec8f274e8375fb320ab22906a7a71cc96d08db76f772"
+        },
+        "probabilities": {
+          "words": 528,
+          "sha256": "2743ff657a7b7c9d9aeec7efebcdd05b659b0a55e1eda4abe47e20e3bb426df0"
+        },
+        "context": {
+          "words": 2048,
+          "sha256": "2d63e647efd65a343c305fa1d358c9a3187a7a5554a69542e680984fe86cd54a"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 528,
+        "maximum_absolute": 1.4335577736002136e-07,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 0,
+      "tokens": 32,
+      "key_start": 0,
+      "keys": 32,
+      "window": null,
+      "profile": "mixed",
+      "seed": 57885,
+      "inputs": {
+        "q": "1206c80d9bc8ce352aa2531cd0d82e27c979a12cc31b92d5a89ae60fa00f756d",
+        "k": "f1eb420199d32f45884be403e1651f9979c733ed72960d808550466dbb30bc3d",
+        "v": "86e82491b7ce43309820246429066ab7c0789d349aa5cef3f3a6797d06c8ec11"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          65536,
+          4096,
+          1,
+          128
+        ],
+        "value": [
+          65536,
+          4096,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 16384,
+          "sha256": "396092559156908eee1341bf1ac990789688f9f6f45f989077049cc56e830efa"
+        },
+        "scaled": {
+          "words": 16384,
+          "sha256": "362b6c1d4868924795b01822fba29387b1a05b89009d0407f7d3788e6a64ecdb"
+        },
+        "scores": {
+          "words": 16384,
+          "sha256": "24cd676e5a9271839d1a730b8930503f520f8dbd0b364577856a92c5b46b2b8b"
+        },
+        "probabilities": {
+          "words": 16384,
+          "sha256": "a1a38b639fbe21691c84605b0eba3c1da00c4b6331c7598aac52269bb61fb95a"
+        },
+        "context": {
+          "words": 65536,
+          "sha256": "2e94d99a8ece60e9795d282ea81aded74ca33ea51d99339258618dce914c6f34"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 16384,
+        "maximum_absolute": 2.504090431676431e-07,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 0,
+      "tokens": 128,
+      "key_start": 0,
+      "keys": 128,
+      "window": null,
+      "profile": "mixed",
+      "seed": 61744,
+      "inputs": {
+        "q": "ab636a31c8248f4dd10973b454ef73248cb30513c0ae5c48937af116a73eeeee",
+        "k": "51bd3931509053ce1399bf90d5b5c3ef1ab5ec0d72b312c10c451832a913ef08",
+        "v": "888da076e231a0b2de0fa89f9e16f973404710e45c1d15a269f303b51c49503b"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          262144,
+          16384,
+          1,
+          128
+        ],
+        "value": [
+          262144,
+          16384,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 262144,
+          "sha256": "c5e9d0748e80f2d8895ba76bb1300387abad69e8fd7db64d9662b41d471f16b4"
+        },
+        "scaled": {
+          "words": 262144,
+          "sha256": "4d34406c6795bf4fad33992999720f0f6ca04e01995d5509a3bf02e2fe2c72de"
+        },
+        "scores": {
+          "words": 262144,
+          "sha256": "49f2b3f73f9988aea07a22d7f0a4b8cb202ddc9c2e1dbcc21de5e8a3a61f1895"
+        },
+        "probabilities": {
+          "words": 262144,
+          "sha256": "b80dc4305e80c56f31c9e199a3774a3c7ba3d4381151c22780cce637361e5f93"
+        },
+        "context": {
+          "words": 262144,
+          "sha256": "efdf7744d38832a0aaf244796dba69f2d807a690a402ef88c7f2bf4459632c06"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 262144,
+        "maximum_absolute": 3.2993274701187403e-07,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 254,
+      "tokens": 4,
+      "key_start": 0,
+      "keys": 258,
+      "window": 256,
+      "profile": "mixed",
+      "seed": 65603,
+      "inputs": {
+        "q": "af551e96e9434f00165fa37af45c4be23fc852f0084b020cd2d2a05040de4be4",
+        "k": "8b949b549adc1c284b4bd0c35aebbf14da622be6fd5b558c8321045e6dbe107c",
+        "v": "64e353a9982094395ab9c658fbf1539bd21fd4136899dc079706285c3bd416c7"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          528384,
+          33024,
+          1,
+          128
+        ],
+        "value": [
+          528384,
+          33024,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 16512,
+          "sha256": "c395ca7f103b72312f6f062852f20548a1b6f9e1014ed4c82eda07be87c0d05e"
+        },
+        "scaled": {
+          "words": 16512,
+          "sha256": "3a35ce0a1630ea35b7d25d771a82469fd97381276ec6432023df227c6d143f9b"
+        },
+        "scores": {
+          "words": 16512,
+          "sha256": "15f06d8228345fa9b441476fc5793b852c3549361ab5487783773ec020d07855"
+        },
+        "probabilities": {
+          "words": 16512,
+          "sha256": "a741a74a17ca22b2f776120d3ae6ffb4f0cedb6f4f03c86d171711244abeb1e4"
+        },
+        "context": {
+          "words": 8192,
+          "sha256": "726093c6ce9f0c1c6aed01f2b4e43db0ee741311d38caa946cfe4dc12418fc9c"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 16512,
+        "maximum_absolute": 5.24307815719105e-07,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 255,
+      "tokens": 1,
+      "key_start": 0,
+      "keys": 256,
+      "window": 256,
+      "profile": "mixed",
+      "seed": 69462,
+      "inputs": {
+        "q": "88819847f4b95d08f6fe9e3af2052bb5ac6ac1ca7a34ea8aa07ab98c4047f9ae",
+        "k": "5eecd6afa1e7ab388ec2b900aed6a4826cb72d2337c84a336d389f3d6e07afe2",
+        "v": "7b9024f1561ff50a695a483917313a40dd9a165dafe67641f443b8eed61a6493"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          524288,
+          32768,
+          1,
+          128
+        ],
+        "value": [
+          524288,
+          32768,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 4096,
+          "sha256": "1a66ab4f9c2012454df34576654767834f82abc0050dacc9bd2872a77b0cef6f"
+        },
+        "scaled": {
+          "words": 4096,
+          "sha256": "3484f6077bcdd69924135a3ed2737f4bd53b4ac2139d90a07780b0b37621c3f3"
+        },
+        "scores": {
+          "words": 4096,
+          "sha256": "3484f6077bcdd69924135a3ed2737f4bd53b4ac2139d90a07780b0b37621c3f3"
+        },
+        "probabilities": {
+          "words": 4096,
+          "sha256": "6c7d602aff8d0804059136352980909f60d9fa8e3cfbac99915fe8fb0b5c9db4"
+        },
+        "context": {
+          "words": 2048,
+          "sha256": "48438d3f025084cc977ec3a17afee3d638e728dd86eb5ff4c9225ea3cfbd50f4"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 4096,
+        "maximum_absolute": 2.5990446828050295e-07,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 256,
+      "tokens": 1,
+      "key_start": 1,
+      "keys": 256,
+      "window": 256,
+      "profile": "mixed",
+      "seed": 73321,
+      "inputs": {
+        "q": "96f58d02c46f00657083cce529ff29585a89731db21eb5eee4ef0710526a418e",
+        "k": "cda0864250b9c36564435734dd00b3a2cfcae4b9b638f9b7995047ba165d02dc",
+        "v": "bb8ebc6f79384219eda3a3c23f72eb88806805aa38e988f4397077ea07d4a498"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          524288,
+          32768,
+          1,
+          128
+        ],
+        "value": [
+          524288,
+          32768,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 4096,
+          "sha256": "3bd227a1422ff101a49bd0d66937e7973122612256adc55c07426e3b1739a741"
+        },
+        "scaled": {
+          "words": 4096,
+          "sha256": "4aa01d2fa1ef06e732d08e5c2d3a23d11d849aeee58d5e79e7c35ceeaff30798"
+        },
+        "scores": {
+          "words": 4096,
+          "sha256": "4aa01d2fa1ef06e732d08e5c2d3a23d11d849aeee58d5e79e7c35ceeaff30798"
+        },
+        "probabilities": {
+          "words": 4096,
+          "sha256": "599b753a971cd606fcfc517cf7ed04544a1e7a67b61f5d1162bf1b853502835f"
+        },
+        "context": {
+          "words": 2048,
+          "sha256": "5f58da44446432f5025a31597497e3d47e3a93a5640dd207e1ecbdbb13a45347"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 4096,
+        "maximum_absolute": 2.812719006595188e-07,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 511,
+      "tokens": 32,
+      "key_start": 256,
+      "keys": 287,
+      "window": 256,
+      "profile": "mixed",
+      "seed": 77180,
+      "inputs": {
+        "q": "827ea8940a9e9f13eda210022fa7a3e166893d9174af4dd3d3b3907e42aa8df7",
+        "k": "7fe5b87e76b1eef83f04aeaccdbd49498544d0d00d5214a5e26168eb0f2897d2",
+        "v": "088b9c7249b25717bbd44d3f3372f2aa90d98d25faf4e43e2def39f8a4ff54d3"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          587776,
+          36736,
+          1,
+          128
+        ],
+        "value": [
+          587776,
+          36736,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 146944,
+          "sha256": "02735d48f79ab2402e39c12caac135380f7aff9de2245f27027373fc7e916d15"
+        },
+        "scaled": {
+          "words": 146944,
+          "sha256": "812c1e2f8dd711e1d6c6c12d7d2698167dc43e2f267480cf87943f6cfb020a24"
+        },
+        "scores": {
+          "words": 146944,
+          "sha256": "300684af5ff60f303abdd789a0280af422231c3337208c161947412dff04a7ec"
+        },
+        "probabilities": {
+          "words": 146944,
+          "sha256": "3260744365874429148716281c2fb941a6b0f09abbf67ccbc5ba3258fd49ffef"
+        },
+        "context": {
+          "words": 65536,
+          "sha256": "ad5c040ccf7fd6c82bba42f9d8ff280a40d00983556a45f2d0791c9a79bffac0"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 146944,
+        "maximum_absolute": 3.7643694250633075e-07,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 1023,
+      "tokens": 128,
+      "key_start": 768,
+      "keys": 383,
+      "window": 256,
+      "profile": "mixed",
+      "seed": 81039,
+      "inputs": {
+        "q": "f61ebaeb88b6ce0252ad5f0b9a61c12dae5f67f97aaa6c839bc99896101aa7c4",
+        "k": "ff5b846e2207dcd75f724839f36c59b835b29bd0610a68bff8d5dd9387c96d1e",
+        "v": "6c3906fafd04b3b432cd7070977ecb860428df7de2fdb464d79699bbee075a9b"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          784384,
+          49024,
+          1,
+          128
+        ],
+        "value": [
+          784384,
+          49024,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 784384,
+          "sha256": "9499fc51f512958e6a6f071113fa5d2b0a492b8033cdcffc962507febc18f25a"
+        },
+        "scaled": {
+          "words": 784384,
+          "sha256": "16529978d6e499d4c04cae8a0cb3e25968f3b0f2e4b7b993fcdf42b7088ec01e"
+        },
+        "scores": {
+          "words": 784384,
+          "sha256": "15cfd6bb4af4df0f945cbee9f23d1d08a7e886493c645762cbfaa454a4f178a4"
+        },
+        "probabilities": {
+          "words": 784384,
+          "sha256": "b350e3a87c0ca5a32ede963ab506d6977369ff919f860d909e03af2724b0c60e"
+        },
+        "context": {
+          "words": 262144,
+          "sha256": "59dc5b6eb00ee6ecac0bd1d01ad3bacfd4e65bb1b2e35e2cd6ee2b0fad1fade9"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 784384,
+        "maximum_absolute": 5.45803508944509e-07,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 511,
+      "tokens": 1,
+      "key_start": 0,
+      "keys": 512,
+      "window": null,
+      "profile": "mixed",
+      "seed": 84898,
+      "inputs": {
+        "q": "6ec580692c7a907f456278bbd0a35f1e28a1ce242930d26b06ae40950e52b4a0",
+        "k": "75cfeb0260e56edb3b251776ab237a24b68911692869126020a67b968f916b90",
+        "v": "47d7c791bb91fad62008479f8637d9bfe20d26ffe1d71473c2f0837ee9ad6399"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          1048576,
+          65536,
+          1,
+          128
+        ],
+        "value": [
+          1048576,
+          65536,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 8192,
+          "sha256": "f5b362a7c306e86e17b0e0686ab593659b2249aa132bf143197739ecdcf7ed9d"
+        },
+        "scaled": {
+          "words": 8192,
+          "sha256": "5560a421f92c55c65c88a153f188b8e0d233d1a718d281854413a818d179be93"
+        },
+        "scores": {
+          "words": 8192,
+          "sha256": "5560a421f92c55c65c88a153f188b8e0d233d1a718d281854413a818d179be93"
+        },
+        "probabilities": {
+          "words": 8192,
+          "sha256": "5f1946d2455b7189bc68bfe749bc90726efa11e1bc21c39d71e3d659e0409e15"
+        },
+        "context": {
+          "words": 2048,
+          "sha256": "2a6de426dd1d93d3a095cd74dda6d6dae23e9b61743f4ae3ac44ee6badf1ba93"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 8192,
+        "maximum_absolute": 4.433292265515476e-07,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 1023,
+      "tokens": 32,
+      "key_start": 0,
+      "keys": 1055,
+      "window": null,
+      "profile": "mixed",
+      "seed": 88757,
+      "inputs": {
+        "q": "4749d3602d7d5c0babf57747c28be3c54a5bf06ba8dee32d7d92148acd3a22d3",
+        "k": "fe3d34ecdcbc17764ff8b5863585773cf6b69fde75657b6b235ae741096b89de",
+        "v": "c23af396264e67ce716ccd775b8829b8cfd67f9b97c35e97cb88f1b406ea69ec"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          2160640,
+          135040,
+          1,
+          128
+        ],
+        "value": [
+          2160640,
+          135040,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 540160,
+          "sha256": "2ad2511b39a8f25e4e15e5a48e6208ba12163d93fcb1a9d0e67250c65e2bbb3f"
+        },
+        "scaled": {
+          "words": 540160,
+          "sha256": "b2f6c98374f859c351b80b9d9af5d091b2eba6f3aa0da332ef86952c002963c6"
+        },
+        "scores": {
+          "words": 540160,
+          "sha256": "a797d63c2cee94631762b7429ea4271835420c20eb0a172a96781b58e4184f84"
+        },
+        "probabilities": {
+          "words": 540160,
+          "sha256": "7e29718307649508d9fb5a07e02699d2a04e19ae0a9cd73cffe5a01f963c5944"
+        },
+        "context": {
+          "words": 65536,
+          "sha256": "d77b27e2bcd38435044abeab73d5bef53a3b91f7a86f36b70c0358389cc8226a"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 540160,
+        "maximum_absolute": 1.0567347804579796e-06,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 1023,
+      "tokens": 128,
+      "key_start": 0,
+      "keys": 1151,
+      "window": null,
+      "profile": "mixed",
+      "seed": 92616,
+      "inputs": {
+        "q": "f6949756d2c1f31540bb8d23e8d453ce43b525a34c26c0ad3fd82f07ac0f65f6",
+        "k": "e5a1d48debb76c62c8438f3e613c95b5c160d41ba3c9c4d365611e0fbc031374",
+        "v": "4c4643f19e9ed0ee87dae39990f4afc7b7e87fa1eccdff32dec0d9ad7e64733f"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          2357248,
+          147328,
+          1,
+          128
+        ],
+        "value": [
+          2357248,
+          147328,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 2357248,
+          "sha256": "81f00bf678d0c709cd94cc377c8f83f2ab3f09854c38d696313db6dce52e0a19"
+        },
+        "scaled": {
+          "words": 2357248,
+          "sha256": "78be7a059df416e83143385ca23caca3a8c9ea34c2ed7daeb7c6d7acc6f04602"
+        },
+        "scores": {
+          "words": 2357248,
+          "sha256": "72427beaf066b5925185022c506cffbfcee14bab7afc3e78f6321973c5cbcf7d"
+        },
+        "probabilities": {
+          "words": 2357248,
+          "sha256": "843b84dfe3c299d8394a31f1b8d65c3eb3a02cb27989c933598cf335014eee5d"
+        },
+        "context": {
+          "words": 262144,
+          "sha256": "c4266d82a655a382b7ae8b831c9a4255c6b879fa1023a13beb71a7f13e90e225"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 2357248,
+        "maximum_absolute": 1.530741916222489e-06,
+        "failures": 0
+      }
+    },
+    {
+      "prefix": 2047,
+      "tokens": 1,
+      "key_start": 0,
+      "keys": 2048,
+      "window": null,
+      "profile": "mixed",
+      "seed": 96475,
+      "inputs": {
+        "q": "d790e66ad564139cc0c15991baacb69e846204e78d3dc8f38900f0bb5f311613",
+        "k": "967764ae26498c46e45513d1c1f94744eadc74181c42c2c59cfd65c8bc65d3e4",
+        "v": "d689d3acd5c9b452c99e22d44a93ad9c183d1c885fb27896f9c716c646f71841"
+      },
+      "source_strides": {
+        "query": [
+          2048,
+          128,
+          2048,
+          1
+        ],
+        "transposed_key": [
+          4194304,
+          262144,
+          1,
+          128
+        ],
+        "value": [
+          4194304,
+          262144,
+          128,
+          1
+        ]
+      },
+      "stages": {
+        "qk": {
+          "words": 32768,
+          "sha256": "8f0556f49b977d2189a86ea676db52281b60f0b2c96d80641efe42db6c58db45"
+        },
+        "scaled": {
+          "words": 32768,
+          "sha256": "607572ce852e893ec3d5fb7678900f183fb4c1ca2b716306f7636ceb59b92f88"
+        },
+        "scores": {
+          "words": 32768,
+          "sha256": "607572ce852e893ec3d5fb7678900f183fb4c1ca2b716306f7636ceb59b92f88"
+        },
+        "probabilities": {
+          "words": 32768,
+          "sha256": "94c4ad5d691d695575a46feceece4c7f87b5833edfea454acc8b0c160840ed04"
+        },
+        "context": {
+          "words": 2048,
+          "sha256": "a82c4db9a34af60f55aaac06c3c17f6e194caa7aad88390cdab199525987510e"
+        }
+      },
+      "source_softmax_fp64_diagnostic": {
+        "words": 32768,
+        "maximum_absolute": 6.604764363205007e-07,
+        "failures": 0
+      }
+    }
+  ]
+}

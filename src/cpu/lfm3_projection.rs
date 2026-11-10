@@ -58,7 +58,7 @@ pub fn lfm3_linear_bf16(
     Ok(())
 }
 
-fn dot(x: &[bf16], w: &[bf16]) -> f32 {
+pub(super) fn dot(x: &[bf16], w: &[bf16]) -> f32 {
     let mut partial = [0_f32; 32];
     let aligned = x.len() / 32 * 32;
     for base in (0..aligned).step_by(32) {

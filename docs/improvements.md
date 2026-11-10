@@ -10,6 +10,16 @@ Gains from different experiments cannot be added together. Current task and
 qualification scope live in [TODO](../TODO.md); acceptance policy is in
 [PLAN](../PLAN.md#validation-and-performance-policy).
 
+LFM3 BF16 CPU attention matches 17,742,592 source words across 25 causal and
+window cases. One scratch row and borrowed KV spans support wrapped views
+with zero allocations. At prefix 1,023, the single-layer 128-query median is
+70–72 ms for the 256-token window and 210–213 ms for full attention on M1 Pro.
+Astra approves after the pinned runtime replay. MLX CPU and Metal strict
+correspondence rejects. Model composition and CLI,
+full performance, memory, and quality qualification remain open.
+[Scope and checks](lfm3-attention-bf16.md),
+[release samples](../benchmarks/results/2026-11-11-lfm3-attention-bf16-v1.json).
+
 The 9 November refresh preserves reviewed `88950b11` snapshots and cuts routine
 TODO/improvement bytes about 56%. Exact inverse-link reconstruction, local links,
 anchors and whitespace pass; live PLAN and numerical inputs are unchanged.

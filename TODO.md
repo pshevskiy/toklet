@@ -11,13 +11,28 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **qualify source BF16 causal/window attention, then compose
-LFM3's graph and connect its model/session/CLI route**. Transactional BF16 state
-and canonical CPU BF16 projection, rotary, norm/unary and convolution/binary
-leaves are reviewed; full LFM3 execution/adoption remain open. Keep the whole model
-roadmap, original numerical/quality gates and 6 GiB ceiling. MiniCPM5 and 4B/9B
-managed-adoption rejections remain binding. Engine/CLI work leads; interactive
-screen capture and iPhone runtime remain deferred.
+Current/next task: **compose and qualify the LFM3 BF16 graph, then connect
+model loading, session and CLI**. Transactional BF16 state and the canonical
+CPU projection, rotary, norm/unary, convolution/binary and attention leaves are
+reviewed. Full LFM3 execution and adoption remain open. Preserve the original
+numerical and quality gates, the 6 GiB ceiling and existing managed-adoption
+rejections. Engine/CLI work leads. Interactive screen capture and iPhone
+runtime remain deferred.
+
+- [x] S1.L BF16 CPU causal/window attention: 25 pinned-source cases and
+  17,742,592 exact BF16 stage words, 8,128 FP64 diagnostic samples per stage,
+  wrapped views, and zero-allocation debug/release checks pass. Fmt, both
+  strict Clippy configurations, 728 CPU/874 Metal/nine targeted example checks,
+  five optimized source tests, and native78 three 46-export slices and CPU/Metal
+  C smokes pass. All 24 release component cohorts are retained. Initial test
+  borrow and six softmax rounding differences were corrected. The extra
+  all-examples build reproduces a parent Gemma fixture error. Initial runtime
+  provenance was incomplete. Guarded replays verify 28,982 runtime files at
+  both boundaries and reproduce the Torch and MLX outputs exactly. Strict MLX
+  component correspondence still rejects. Astra approves with no unresolved
+  findings. Full graph, CLI and original qualification remain open.
+  [Scope](docs/lfm3-attention-bf16.md),
+  [review/commit](artifacts/lfm3-attention-bf16-2026-11-11/publication-checks.json).
 
 - [x] S1.L BF16 CPU projections: exact source matches for 94,248 learned
   outputs across four selected rows of all 154 rank-two tensors, 65,280 finite

@@ -1,0 +1,1623 @@
+{
+  "format": "toklet-lfm3-attention-bf16-release-v1",
+  "scope": "One source-profile BF16 CPU attention layer with a prepared cache, synthetic typed operands, validation included. No projection, loading, tokenizer, generation, model quality or speedup claim.",
+  "base": "4a0debd705dacaecae4a8f1f66662301f7826025",
+  "build": [
+    "cargo",
+    "build",
+    "--locked",
+    "--offline",
+    "--release",
+    "--example",
+    "lfm3_attention_bf16_probe"
+  ],
+  "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)\nbinary: rustc\ncommit-hash: 1159e78c4747b02ef996e55082b704c09b970588\ncommit-date: 2025-09-14\nhost: aarch64-apple-darwin\nrelease: 1.90.0\nLLVM version: 21.1.1",
+  "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.2\nBuildVersion:\t\t25G83",
+  "hardware": {
+    "hw.model": "MacBookPro18,3",
+    "hw.memsize": "17179869184",
+    "machdep.cpu.brand_string": "Apple M1 Pro"
+  },
+  "source_contract_sha256": "1e5ee68c6953e08990a51e49f2a33e29791c55521bf411b4defe32e4bfebb6c0",
+  "executable_sha256": "80345658bf2fd20513808b7b49ee92f9f090ede9c88908f627dcdbf3e4349850",
+  "source_pins": {
+    "Cargo.toml": "46fc401068c243003cfaf7dbd6a319b5d685f7c27ef8e885777f9c616887ef28",
+    "Cargo.lock": "405a9b18beaacf701966f1832bf6724c0a3d4b8567ca3c5005855778d8dedb26",
+    "src/cpu/mod.rs": "d5a43044aae67c1ebbe9d191d6b8c9d0b958c4be69c8d8b3b1a09bea5f5e1739",
+    "src/cpu/lfm3_attention.rs": "2bf4371f415537aad4e92d178c266bf43eaaea4cab2f575de4722ad8a5a713c7",
+    "src/cpu/lfm3_projection.rs": "678b012c3a1ac19cdab5a13cfdf23a15c7d7df9e6276c024325e6db0974a43bc",
+    "src/cpu/span_attention.rs": "76db69f2337d4290ad08f7aa01f204f0f0eb8366bc6853eb1e4b6941d0852070",
+    "src/model/window_cache.rs": "e451fd1bb82f24bc24144e431dc55d06e50064c5e6c2a6315989f1c3d0794d2d",
+    "tools/bench/lfm3_attention_bf16_probe.rs": "c5f819c25e7a616c297bfa586a745a638929059425895ab39708e748037c8bec"
+  },
+  "warmups": 3,
+  "measured": 10,
+  "runs": 2,
+  "report_count": 24,
+  "reports": [
+    {
+      "run": 1,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84812058624,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811988992,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 5947392,
+      "median_ns": 7250.0,
+      "mad_ns": 208.5,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 1,
+      "prefix": 0,
+      "window": null,
+      "logical_keys": 1,
+      "segment_rows": [
+        0,
+        0,
+        1
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 327375,
+      "first_ns": 7542,
+      "warmup_ns": [
+        7584,
+        7458,
+        7208
+      ],
+      "samples_ns": [
+        7042,
+        7584,
+        7291,
+        7250,
+        7500,
+        7375,
+        7041,
+        7250,
+        6958,
+        6917
+      ],
+      "cache_owned_bytes": 4194424,
+      "query_bytes": 4096,
+      "context_bytes": 4096,
+      "prefix_staging_bytes": 0,
+      "proposal_bytes": 2048,
+      "softmax_scratch_bytes": 4,
+      "hashes": {
+        "old_k": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "old_v": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "q": "7bb0698bc82c418735630d3c61b7485f477627f1e3a21c92ba4f8185b206257e",
+        "new_k": "f34ab5fd2ffb44cf8348767ee3edfecc3d39ad62d0c595fd80962d4930dd405c",
+        "new_v": "08a8e99d2040685cb9044a441d94a3e8266b19bc2a626e4aee6a2070aabeb324",
+        "output": "bbb450c4ab646b25e27af19022ce924b0618509885df658cfeea7c0b0bf77966"
+      }
+    },
+    {
+      "run": 1,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811984896,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811980800,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 3358720,
+      "median_ns": 639937.5,
+      "mad_ns": 1042.0,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 1,
+      "prefix": 513,
+      "window": 256,
+      "logical_keys": 256,
+      "segment_rows": [
+        254,
+        1,
+        1
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 699208,
+      "first_ns": 717666,
+      "warmup_ns": [
+        672750,
+        639708,
+        639541
+      ],
+      "samples_ns": [
+        639750,
+        643875,
+        641167,
+        638000,
+        640334,
+        639083,
+        642541,
+        636958,
+        640125,
+        639500
+      ],
+      "cache_owned_bytes": 524408,
+      "query_bytes": 4096,
+      "context_bytes": 4096,
+      "prefix_staging_bytes": 1050624,
+      "proposal_bytes": 2048,
+      "softmax_scratch_bytes": 1024,
+      "hashes": {
+        "old_k": "932ea98fe93aa536c7a8c274c199c483bcecb7607460f453b110f60ef454ac4e",
+        "old_v": "3630fb44819bcb1b6f0b60b45b4f95bb2fe8f35fd47467a654706f25fbb3aad1",
+        "q": "7bb0698bc82c418735630d3c61b7485f477627f1e3a21c92ba4f8185b206257e",
+        "new_k": "f34ab5fd2ffb44cf8348767ee3edfecc3d39ad62d0c595fd80962d4930dd405c",
+        "new_v": "08a8e99d2040685cb9044a441d94a3e8266b19bc2a626e4aee6a2070aabeb324",
+        "output": "b95721b7da9c73f3fd2177cecf7c23e9a74fe88aeb68452030c00031f6a507e0"
+      }
+    },
+    {
+      "run": 1,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811980800,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811972608,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 4374528,
+      "median_ns": 462979.0,
+      "mad_ns": 146.0,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 1,
+      "prefix": 1023,
+      "window": 256,
+      "logical_keys": 256,
+      "segment_rows": [
+        255,
+        0,
+        1
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 888584,
+      "first_ns": 485916,
+      "warmup_ns": [
+        483792,
+        464375,
+        462917
+      ],
+      "samples_ns": [
+        463292,
+        462958,
+        462958,
+        462833,
+        463000,
+        465125,
+        462000,
+        462875,
+        463125,
+        463250
+      ],
+      "cache_owned_bytes": 524408,
+      "query_bytes": 4096,
+      "context_bytes": 4096,
+      "prefix_staging_bytes": 2095104,
+      "proposal_bytes": 2048,
+      "softmax_scratch_bytes": 1024,
+      "hashes": {
+        "old_k": "e646dfc1930ec9151be651b1d81213bf887fcf173f011c1b6280bbde5121a72f",
+        "old_v": "93a0581602c9e3433076303aeb17e88e8fe4b38fa83b966facb5a23849250c06",
+        "q": "7bb0698bc82c418735630d3c61b7485f477627f1e3a21c92ba4f8185b206257e",
+        "new_k": "f34ab5fd2ffb44cf8348767ee3edfecc3d39ad62d0c595fd80962d4930dd405c",
+        "new_v": "08a8e99d2040685cb9044a441d94a3e8266b19bc2a626e4aee6a2070aabeb324",
+        "output": "d1340942559e148514aeffb3cc92eecbb04fd9261fe7a789f28759dcfbea0ef1"
+      }
+    },
+    {
+      "run": 1,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811972608,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811968512,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 8077312,
+      "median_ns": 1785083.0,
+      "mad_ns": 26833.0,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 1,
+      "prefix": 1023,
+      "window": null,
+      "logical_keys": 1024,
+      "segment_rows": [
+        1023,
+        0,
+        1
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 1110250,
+      "first_ns": 1812917,
+      "warmup_ns": [
+        1830417,
+        1799292,
+        1786000
+      ],
+      "samples_ns": [
+        1801625,
+        1785458,
+        1823875,
+        1758125,
+        1757750,
+        1758375,
+        1784708,
+        1863250,
+        1791375,
+        1756209
+      ],
+      "cache_owned_bytes": 4194424,
+      "query_bytes": 4096,
+      "context_bytes": 4096,
+      "prefix_staging_bytes": 2095104,
+      "proposal_bytes": 2048,
+      "softmax_scratch_bytes": 4096,
+      "hashes": {
+        "old_k": "e646dfc1930ec9151be651b1d81213bf887fcf173f011c1b6280bbde5121a72f",
+        "old_v": "93a0581602c9e3433076303aeb17e88e8fe4b38fa83b966facb5a23849250c06",
+        "q": "7bb0698bc82c418735630d3c61b7485f477627f1e3a21c92ba4f8185b206257e",
+        "new_k": "f34ab5fd2ffb44cf8348767ee3edfecc3d39ad62d0c595fd80962d4930dd405c",
+        "new_v": "08a8e99d2040685cb9044a441d94a3e8266b19bc2a626e4aee6a2070aabeb324",
+        "output": "f8c13692389930d2cc557bbbbfb9ba4b2cf75f5aa45be4099bdf7b0ac4d7eeaf"
+      }
+    },
+    {
+      "run": 1,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811964416,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811960320,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 6291456,
+      "median_ns": 1593438.0,
+      "mad_ns": 23354.5,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 32,
+      "prefix": 0,
+      "window": null,
+      "logical_keys": 32,
+      "segment_rows": [
+        0,
+        0,
+        32
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 412667,
+      "first_ns": 1605833,
+      "warmup_ns": [
+        1618208,
+        1615292,
+        1645709
+      ],
+      "samples_ns": [
+        1630833,
+        1617875,
+        1581584,
+        1550834,
+        1571166,
+        1605292,
+        1579084,
+        1573959,
+        1631834,
+        1636584
+      ],
+      "cache_owned_bytes": 4194424,
+      "query_bytes": 131072,
+      "context_bytes": 131072,
+      "prefix_staging_bytes": 0,
+      "proposal_bytes": 65536,
+      "softmax_scratch_bytes": 128,
+      "hashes": {
+        "old_k": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "old_v": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "q": "e6ade45ad4473f02bcb73e6a19a26001f602c3749a6ce9c45b3036607d061977",
+        "new_k": "dd56432cf975a7bcefa4ccb48cc2d9ec530f395045836b7062e940af5488d8db",
+        "new_v": "a341df8abc7f84f318f36e94b65508279b6484ecbdfc37e22a21e86b5baede8c",
+        "output": "66c61a129b5b7ba8bb6aba7df04bb0addeb9f7482a8cd3664890687322233e13"
+      }
+    },
+    {
+      "run": 1,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811960320,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811956224,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 3686400,
+      "median_ns": 13309625.0,
+      "mad_ns": 58604.5,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 32,
+      "prefix": 513,
+      "window": 256,
+      "logical_keys": 287,
+      "segment_rows": [
+        254,
+        1,
+        32
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 500375,
+      "first_ns": 13592417,
+      "warmup_ns": [
+        13148458,
+        13202542,
+        13613500
+      ],
+      "samples_ns": [
+        13507250,
+        13484875,
+        13370917,
+        13365542,
+        13260833,
+        13301000,
+        13182291,
+        13130667,
+        13318250,
+        13298542
+      ],
+      "cache_owned_bytes": 524408,
+      "query_bytes": 131072,
+      "context_bytes": 131072,
+      "prefix_staging_bytes": 1050624,
+      "proposal_bytes": 65536,
+      "softmax_scratch_bytes": 1148,
+      "hashes": {
+        "old_k": "932ea98fe93aa536c7a8c274c199c483bcecb7607460f453b110f60ef454ac4e",
+        "old_v": "3630fb44819bcb1b6f0b60b45b4f95bb2fe8f35fd47467a654706f25fbb3aad1",
+        "q": "e6ade45ad4473f02bcb73e6a19a26001f602c3749a6ce9c45b3036607d061977",
+        "new_k": "dd56432cf975a7bcefa4ccb48cc2d9ec530f395045836b7062e940af5488d8db",
+        "new_v": "a341df8abc7f84f318f36e94b65508279b6484ecbdfc37e22a21e86b5baede8c",
+        "output": "99efc9dd0b5894aae1d9d5755bc9316a582c785ce2b8e015e2fa3d31f2f20e07"
+      }
+    },
+    {
+      "run": 1,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811956224,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811952128,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 4702208,
+      "median_ns": 13265375.0,
+      "mad_ns": 92125.5,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 32,
+      "prefix": 1023,
+      "window": 256,
+      "logical_keys": 287,
+      "segment_rows": [
+        255,
+        0,
+        32
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 884125,
+      "first_ns": 13554208,
+      "warmup_ns": [
+        13526792,
+        13206208,
+        13484542
+      ],
+      "samples_ns": [
+        13353042,
+        13485750,
+        13390458,
+        13302208,
+        13243417,
+        13168791,
+        13287333,
+        13204542,
+        13160583,
+        13149291
+      ],
+      "cache_owned_bytes": 524408,
+      "query_bytes": 131072,
+      "context_bytes": 131072,
+      "prefix_staging_bytes": 2095104,
+      "proposal_bytes": 65536,
+      "softmax_scratch_bytes": 1148,
+      "hashes": {
+        "old_k": "e646dfc1930ec9151be651b1d81213bf887fcf173f011c1b6280bbde5121a72f",
+        "old_v": "93a0581602c9e3433076303aeb17e88e8fe4b38fa83b966facb5a23849250c06",
+        "q": "e6ade45ad4473f02bcb73e6a19a26001f602c3749a6ce9c45b3036607d061977",
+        "new_k": "dd56432cf975a7bcefa4ccb48cc2d9ec530f395045836b7062e940af5488d8db",
+        "new_v": "a341df8abc7f84f318f36e94b65508279b6484ecbdfc37e22a21e86b5baede8c",
+        "output": "dae5603dd91bd170ca9929907108e3155a16913a58fe3bb20306bc098a7c102f"
+      }
+    },
+    {
+      "run": 1,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811948032,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84812091392,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 8388608,
+      "median_ns": 48089333.5,
+      "mad_ns": 53583.5,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 32,
+      "prefix": 1023,
+      "window": null,
+      "logical_keys": 1055,
+      "segment_rows": [
+        1023,
+        0,
+        32
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 1151041,
+      "first_ns": 48293958,
+      "warmup_ns": [
+        48020833,
+        48031958,
+        48278541
+      ],
+      "samples_ns": [
+        48026250,
+        48178917,
+        48250541,
+        48033583,
+        48037917,
+        48099375,
+        48092542,
+        48086125,
+        48065083,
+        48196125
+      ],
+      "cache_owned_bytes": 4194424,
+      "query_bytes": 131072,
+      "context_bytes": 131072,
+      "prefix_staging_bytes": 2095104,
+      "proposal_bytes": 65536,
+      "softmax_scratch_bytes": 4220,
+      "hashes": {
+        "old_k": "e646dfc1930ec9151be651b1d81213bf887fcf173f011c1b6280bbde5121a72f",
+        "old_v": "93a0581602c9e3433076303aeb17e88e8fe4b38fa83b966facb5a23849250c06",
+        "q": "e6ade45ad4473f02bcb73e6a19a26001f602c3749a6ce9c45b3036607d061977",
+        "new_k": "dd56432cf975a7bcefa4ccb48cc2d9ec530f395045836b7062e940af5488d8db",
+        "new_v": "a341df8abc7f84f318f36e94b65508279b6484ecbdfc37e22a21e86b5baede8c",
+        "output": "3ca27087bf408482bb09d912bf437fefac9ac83c6fbfeee00a567ad680724819"
+      }
+    },
+    {
+      "run": 1,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84812083200,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84812062720,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 7274496,
+      "median_ns": 23605395.5,
+      "mad_ns": 72937.5,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 128,
+      "prefix": 0,
+      "window": null,
+      "logical_keys": 128,
+      "segment_rows": [
+        0,
+        0,
+        128
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 552167,
+      "first_ns": 24060333,
+      "warmup_ns": [
+        23502834,
+        23644667,
+        23631334
+      ],
+      "samples_ns": [
+        23514042,
+        23665791,
+        23685833,
+        23670833,
+        23456542,
+        23597625,
+        23551958,
+        23708167,
+        23613166,
+        23520208
+      ],
+      "cache_owned_bytes": 4194424,
+      "query_bytes": 524288,
+      "context_bytes": 524288,
+      "prefix_staging_bytes": 0,
+      "proposal_bytes": 262144,
+      "softmax_scratch_bytes": 512,
+      "hashes": {
+        "old_k": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "old_v": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "q": "4777aa56388c536f608404b18cbd754ac337bb759e0159c17a90d4ed1ebad956",
+        "new_k": "696d98f96affca565d7a2b617dfd94271a1707830db2ea898870643897eaa05b",
+        "new_v": "2cc3d9174d9310f62b5a4736ff788d5a35538a84d2a41725f36f131bfb058ecb",
+        "output": "ff398ca0adc18692f357de9b9d12c9e29368d7ad212858072fc25cdf6681eac6"
+      }
+    },
+    {
+      "run": 1,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84812058624,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84812046336,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 4669440,
+      "median_ns": 70029833.0,
+      "mad_ns": 99063.0,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 128,
+      "prefix": 513,
+      "window": 256,
+      "logical_keys": 383,
+      "segment_rows": [
+        254,
+        1,
+        128
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 682125,
+      "first_ns": 70110625,
+      "warmup_ns": [
+        69813208,
+        69935708,
+        69872333
+      ],
+      "samples_ns": [
+        70035500,
+        69950542,
+        70024166,
+        69938958,
+        69878834,
+        70595625,
+        70133792,
+        70124000,
+        70294625,
+        69854917
+      ],
+      "cache_owned_bytes": 524408,
+      "query_bytes": 524288,
+      "context_bytes": 524288,
+      "prefix_staging_bytes": 1050624,
+      "proposal_bytes": 262144,
+      "softmax_scratch_bytes": 1532,
+      "hashes": {
+        "old_k": "932ea98fe93aa536c7a8c274c199c483bcecb7607460f453b110f60ef454ac4e",
+        "old_v": "3630fb44819bcb1b6f0b60b45b4f95bb2fe8f35fd47467a654706f25fbb3aad1",
+        "q": "4777aa56388c536f608404b18cbd754ac337bb759e0159c17a90d4ed1ebad956",
+        "new_k": "696d98f96affca565d7a2b617dfd94271a1707830db2ea898870643897eaa05b",
+        "new_v": "2cc3d9174d9310f62b5a4736ff788d5a35538a84d2a41725f36f131bfb058ecb",
+        "output": "aa90709883bce6c113e7980b2dfdebd6b21455640cdef104b2bd98c80765c36c"
+      }
+    },
+    {
+      "run": 1,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84812046336,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84812034048,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 5685248,
+      "median_ns": 70019021.0,
+      "mad_ns": 183896.0,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 128,
+      "prefix": 1023,
+      "window": 256,
+      "logical_keys": 383,
+      "segment_rows": [
+        255,
+        0,
+        128
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 1053875,
+      "first_ns": 70029833,
+      "warmup_ns": [
+        69936625,
+        69847209,
+        70104916
+      ],
+      "samples_ns": [
+        69709917,
+        70046834,
+        69790292,
+        69974708,
+        70053791,
+        70254334,
+        69879958,
+        70320583,
+        69991208,
+        71334958
+      ],
+      "cache_owned_bytes": 524408,
+      "query_bytes": 524288,
+      "context_bytes": 524288,
+      "prefix_staging_bytes": 2095104,
+      "proposal_bytes": 262144,
+      "softmax_scratch_bytes": 1532,
+      "hashes": {
+        "old_k": "e646dfc1930ec9151be651b1d81213bf887fcf173f011c1b6280bbde5121a72f",
+        "old_v": "93a0581602c9e3433076303aeb17e88e8fe4b38fa83b966facb5a23849250c06",
+        "q": "4777aa56388c536f608404b18cbd754ac337bb759e0159c17a90d4ed1ebad956",
+        "new_k": "696d98f96affca565d7a2b617dfd94271a1707830db2ea898870643897eaa05b",
+        "new_v": "2cc3d9174d9310f62b5a4736ff788d5a35538a84d2a41725f36f131bfb058ecb",
+        "output": "7269de1eb92390b15b5edf9cd3f5869ffc9f88f574a39eea216e9794501c2745"
+      }
+    },
+    {
+      "run": 1,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84812034048,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84812009472,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 9371648,
+      "median_ns": 210402271.0,
+      "mad_ns": 1431229.5,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 128,
+      "prefix": 1023,
+      "window": null,
+      "logical_keys": 1151,
+      "segment_rows": [
+        1023,
+        0,
+        128
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 1435250,
+      "first_ns": 210042625,
+      "warmup_ns": [
+        209028583,
+        208760041,
+        208580708
+      ],
+      "samples_ns": [
+        209420583,
+        209153291,
+        209249125,
+        210573042,
+        214371916,
+        214093000,
+        214109375,
+        214182292,
+        210231500,
+        208788792
+      ],
+      "cache_owned_bytes": 4194424,
+      "query_bytes": 524288,
+      "context_bytes": 524288,
+      "prefix_staging_bytes": 2095104,
+      "proposal_bytes": 262144,
+      "softmax_scratch_bytes": 4604,
+      "hashes": {
+        "old_k": "e646dfc1930ec9151be651b1d81213bf887fcf173f011c1b6280bbde5121a72f",
+        "old_v": "93a0581602c9e3433076303aeb17e88e8fe4b38fa83b966facb5a23849250c06",
+        "q": "4777aa56388c536f608404b18cbd754ac337bb759e0159c17a90d4ed1ebad956",
+        "new_k": "696d98f96affca565d7a2b617dfd94271a1707830db2ea898870643897eaa05b",
+        "new_v": "2cc3d9174d9310f62b5a4736ff788d5a35538a84d2a41725f36f131bfb058ecb",
+        "output": "80d71e3727c222319304aedc2369182d95d664ab895069a67690ad8e0e147142"
+      }
+    },
+    {
+      "run": 2,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84812005376,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811972608,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 9371648,
+      "median_ns": 212747833.0,
+      "mad_ns": 617625.5,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 128,
+      "prefix": 1023,
+      "window": null,
+      "logical_keys": 1151,
+      "segment_rows": [
+        1023,
+        0,
+        128
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 1361916,
+      "first_ns": 210094750,
+      "warmup_ns": [
+        210089166,
+        208681542,
+        208634375
+      ],
+      "samples_ns": [
+        210120250,
+        212369250,
+        212006167,
+        212442375,
+        213507625,
+        213308250,
+        213422667,
+        211855000,
+        213256375,
+        213053291
+      ],
+      "cache_owned_bytes": 4194424,
+      "query_bytes": 524288,
+      "context_bytes": 524288,
+      "prefix_staging_bytes": 2095104,
+      "proposal_bytes": 262144,
+      "softmax_scratch_bytes": 4604,
+      "hashes": {
+        "old_k": "e646dfc1930ec9151be651b1d81213bf887fcf173f011c1b6280bbde5121a72f",
+        "old_v": "93a0581602c9e3433076303aeb17e88e8fe4b38fa83b966facb5a23849250c06",
+        "q": "4777aa56388c536f608404b18cbd754ac337bb759e0159c17a90d4ed1ebad956",
+        "new_k": "696d98f96affca565d7a2b617dfd94271a1707830db2ea898870643897eaa05b",
+        "new_v": "2cc3d9174d9310f62b5a4736ff788d5a35538a84d2a41725f36f131bfb058ecb",
+        "output": "80d71e3727c222319304aedc2369182d95d664ab895069a67690ad8e0e147142"
+      }
+    },
+    {
+      "run": 2,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811972608,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811948032,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 5685248,
+      "median_ns": 71569291.5,
+      "mad_ns": 576146.0,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 128,
+      "prefix": 1023,
+      "window": 256,
+      "logical_keys": 383,
+      "segment_rows": [
+        255,
+        0,
+        128
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 1095333,
+      "first_ns": 71464083,
+      "warmup_ns": [
+        70199334,
+        70718542,
+        72820083
+      ],
+      "samples_ns": [
+        72262625,
+        72507000,
+        71420583,
+        70836042,
+        70093666,
+        70235458,
+        71503125,
+        71918209,
+        72028250,
+        71635458
+      ],
+      "cache_owned_bytes": 524408,
+      "query_bytes": 524288,
+      "context_bytes": 524288,
+      "prefix_staging_bytes": 2095104,
+      "proposal_bytes": 262144,
+      "softmax_scratch_bytes": 1532,
+      "hashes": {
+        "old_k": "e646dfc1930ec9151be651b1d81213bf887fcf173f011c1b6280bbde5121a72f",
+        "old_v": "93a0581602c9e3433076303aeb17e88e8fe4b38fa83b966facb5a23849250c06",
+        "q": "4777aa56388c536f608404b18cbd754ac337bb759e0159c17a90d4ed1ebad956",
+        "new_k": "696d98f96affca565d7a2b617dfd94271a1707830db2ea898870643897eaa05b",
+        "new_v": "2cc3d9174d9310f62b5a4736ff788d5a35538a84d2a41725f36f131bfb058ecb",
+        "output": "7269de1eb92390b15b5edf9cd3f5869ffc9f88f574a39eea216e9794501c2745"
+      }
+    },
+    {
+      "run": 2,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811948032,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811939840,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 4669440,
+      "median_ns": 71705874.5,
+      "mad_ns": 157834.0,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 128,
+      "prefix": 513,
+      "window": 256,
+      "logical_keys": 383,
+      "segment_rows": [
+        254,
+        1,
+        128
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 689792,
+      "first_ns": 71443584,
+      "warmup_ns": [
+        70514292,
+        70252959,
+        70110750
+      ],
+      "samples_ns": [
+        70004125,
+        71477959,
+        71652208,
+        71961833,
+        71625583,
+        71613666,
+        71817750,
+        72031959,
+        71909667,
+        71759541
+      ],
+      "cache_owned_bytes": 524408,
+      "query_bytes": 524288,
+      "context_bytes": 524288,
+      "prefix_staging_bytes": 1050624,
+      "proposal_bytes": 262144,
+      "softmax_scratch_bytes": 1532,
+      "hashes": {
+        "old_k": "932ea98fe93aa536c7a8c274c199c483bcecb7607460f453b110f60ef454ac4e",
+        "old_v": "3630fb44819bcb1b6f0b60b45b4f95bb2fe8f35fd47467a654706f25fbb3aad1",
+        "q": "4777aa56388c536f608404b18cbd754ac337bb759e0159c17a90d4ed1ebad956",
+        "new_k": "696d98f96affca565d7a2b617dfd94271a1707830db2ea898870643897eaa05b",
+        "new_v": "2cc3d9174d9310f62b5a4736ff788d5a35538a84d2a41725f36f131bfb058ecb",
+        "output": "aa90709883bce6c113e7980b2dfdebd6b21455640cdef104b2bd98c80765c36c"
+      }
+    },
+    {
+      "run": 2,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811935744,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811931648,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 7274496,
+      "median_ns": 24175708.5,
+      "mad_ns": 23521.0,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 128,
+      "prefix": 0,
+      "window": null,
+      "logical_keys": 128,
+      "segment_rows": [
+        0,
+        0,
+        128
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 509042,
+      "first_ns": 24191916,
+      "warmup_ns": [
+        23960333,
+        24113292,
+        24232459
+      ],
+      "samples_ns": [
+        24182000,
+        24197459,
+        24431417,
+        24016916,
+        24169417,
+        24150417,
+        24399583,
+        24227416,
+        24158708,
+        24156083
+      ],
+      "cache_owned_bytes": 4194424,
+      "query_bytes": 524288,
+      "context_bytes": 524288,
+      "prefix_staging_bytes": 0,
+      "proposal_bytes": 262144,
+      "softmax_scratch_bytes": 512,
+      "hashes": {
+        "old_k": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "old_v": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "q": "4777aa56388c536f608404b18cbd754ac337bb759e0159c17a90d4ed1ebad956",
+        "new_k": "696d98f96affca565d7a2b617dfd94271a1707830db2ea898870643897eaa05b",
+        "new_v": "2cc3d9174d9310f62b5a4736ff788d5a35538a84d2a41725f36f131bfb058ecb",
+        "output": "ff398ca0adc18692f357de9b9d12c9e29368d7ad212858072fc25cdf6681eac6"
+      }
+    },
+    {
+      "run": 2,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811931648,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811927552,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 8388608,
+      "median_ns": 49024979.0,
+      "mad_ns": 108938.0,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 32,
+      "prefix": 1023,
+      "window": null,
+      "logical_keys": 1055,
+      "segment_rows": [
+        1023,
+        0,
+        32
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 1094375,
+      "first_ns": 48767542,
+      "warmup_ns": [
+        48853959,
+        48695375,
+        49102667
+      ],
+      "samples_ns": [
+        49162625,
+        49126375,
+        48961708,
+        48947916,
+        48944250,
+        49141459,
+        48717000,
+        49145667,
+        49088250,
+        48867125
+      ],
+      "cache_owned_bytes": 4194424,
+      "query_bytes": 131072,
+      "context_bytes": 131072,
+      "prefix_staging_bytes": 2095104,
+      "proposal_bytes": 65536,
+      "softmax_scratch_bytes": 4220,
+      "hashes": {
+        "old_k": "e646dfc1930ec9151be651b1d81213bf887fcf173f011c1b6280bbde5121a72f",
+        "old_v": "93a0581602c9e3433076303aeb17e88e8fe4b38fa83b966facb5a23849250c06",
+        "q": "e6ade45ad4473f02bcb73e6a19a26001f602c3749a6ce9c45b3036607d061977",
+        "new_k": "dd56432cf975a7bcefa4ccb48cc2d9ec530f395045836b7062e940af5488d8db",
+        "new_v": "a341df8abc7f84f318f36e94b65508279b6484ecbdfc37e22a21e86b5baede8c",
+        "output": "3ca27087bf408482bb09d912bf437fefac9ac83c6fbfeee00a567ad680724819"
+      }
+    },
+    {
+      "run": 2,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811927552,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811919360,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 4702208,
+      "median_ns": 13491542.0,
+      "mad_ns": 35291.5,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 32,
+      "prefix": 1023,
+      "window": 256,
+      "logical_keys": 287,
+      "segment_rows": [
+        255,
+        0,
+        32
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 932917,
+      "first_ns": 13461625,
+      "warmup_ns": [
+        13410000,
+        13428750,
+        13453625
+      ],
+      "samples_ns": [
+        13490500,
+        13528583,
+        13522250,
+        13492584,
+        13523375,
+        13440583,
+        13458000,
+        13386666,
+        13373875,
+        13561875
+      ],
+      "cache_owned_bytes": 524408,
+      "query_bytes": 131072,
+      "context_bytes": 131072,
+      "prefix_staging_bytes": 2095104,
+      "proposal_bytes": 65536,
+      "softmax_scratch_bytes": 1148,
+      "hashes": {
+        "old_k": "e646dfc1930ec9151be651b1d81213bf887fcf173f011c1b6280bbde5121a72f",
+        "old_v": "93a0581602c9e3433076303aeb17e88e8fe4b38fa83b966facb5a23849250c06",
+        "q": "e6ade45ad4473f02bcb73e6a19a26001f602c3749a6ce9c45b3036607d061977",
+        "new_k": "dd56432cf975a7bcefa4ccb48cc2d9ec530f395045836b7062e940af5488d8db",
+        "new_v": "a341df8abc7f84f318f36e94b65508279b6484ecbdfc37e22a21e86b5baede8c",
+        "output": "dae5603dd91bd170ca9929907108e3155a16913a58fe3bb20306bc098a7c102f"
+      }
+    },
+    {
+      "run": 2,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811915264,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811911168,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 3686400,
+      "median_ns": 13476459.0,
+      "mad_ns": 29792.0,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 32,
+      "prefix": 513,
+      "window": 256,
+      "logical_keys": 287,
+      "segment_rows": [
+        254,
+        1,
+        32
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 492000,
+      "first_ns": 13599667,
+      "warmup_ns": [
+        13460709,
+        13495916,
+        13527875
+      ],
+      "samples_ns": [
+        13488583,
+        13447417,
+        13538917,
+        13476209,
+        13476709,
+        13445917,
+        13224291,
+        13534792,
+        13550584,
+        13472334
+      ],
+      "cache_owned_bytes": 524408,
+      "query_bytes": 131072,
+      "context_bytes": 131072,
+      "prefix_staging_bytes": 1050624,
+      "proposal_bytes": 65536,
+      "softmax_scratch_bytes": 1148,
+      "hashes": {
+        "old_k": "932ea98fe93aa536c7a8c274c199c483bcecb7607460f453b110f60ef454ac4e",
+        "old_v": "3630fb44819bcb1b6f0b60b45b4f95bb2fe8f35fd47467a654706f25fbb3aad1",
+        "q": "e6ade45ad4473f02bcb73e6a19a26001f602c3749a6ce9c45b3036607d061977",
+        "new_k": "dd56432cf975a7bcefa4ccb48cc2d9ec530f395045836b7062e940af5488d8db",
+        "new_v": "a341df8abc7f84f318f36e94b65508279b6484ecbdfc37e22a21e86b5baede8c",
+        "output": "99efc9dd0b5894aae1d9d5755bc9316a582c785ce2b8e015e2fa3d31f2f20e07"
+      }
+    },
+    {
+      "run": 2,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811911168,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811907072,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 6291456,
+      "median_ns": 1637500.0,
+      "mad_ns": 6854.0,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 32,
+      "prefix": 0,
+      "window": null,
+      "logical_keys": 32,
+      "segment_rows": [
+        0,
+        0,
+        32
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 346791,
+      "first_ns": 1640583,
+      "warmup_ns": [
+        1645458,
+        1644417,
+        1644958
+      ],
+      "samples_ns": [
+        1646541,
+        1644583,
+        1638208,
+        1636792,
+        1645709,
+        1630875,
+        1624333,
+        1640792,
+        1611209,
+        1635417
+      ],
+      "cache_owned_bytes": 4194424,
+      "query_bytes": 131072,
+      "context_bytes": 131072,
+      "prefix_staging_bytes": 0,
+      "proposal_bytes": 65536,
+      "softmax_scratch_bytes": 128,
+      "hashes": {
+        "old_k": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "old_v": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "q": "e6ade45ad4473f02bcb73e6a19a26001f602c3749a6ce9c45b3036607d061977",
+        "new_k": "dd56432cf975a7bcefa4ccb48cc2d9ec530f395045836b7062e940af5488d8db",
+        "new_v": "a341df8abc7f84f318f36e94b65508279b6484ecbdfc37e22a21e86b5baede8c",
+        "output": "66c61a129b5b7ba8bb6aba7df04bb0addeb9f7482a8cd3664890687322233e13"
+      }
+    },
+    {
+      "run": 2,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811907072,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811902976,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 8077312,
+      "median_ns": 1808812.5,
+      "mad_ns": 8625.0,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 1,
+      "prefix": 1023,
+      "window": null,
+      "logical_keys": 1024,
+      "segment_rows": [
+        1023,
+        0,
+        1
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 1101125,
+      "first_ns": 1863291,
+      "warmup_ns": [
+        1826333,
+        1835500,
+        1831166
+      ],
+      "samples_ns": [
+        1827292,
+        1793375,
+        1752833,
+        1810292,
+        1798000,
+        1815250,
+        1820333,
+        1808208,
+        1809417,
+        1802958
+      ],
+      "cache_owned_bytes": 4194424,
+      "query_bytes": 4096,
+      "context_bytes": 4096,
+      "prefix_staging_bytes": 2095104,
+      "proposal_bytes": 2048,
+      "softmax_scratch_bytes": 4096,
+      "hashes": {
+        "old_k": "e646dfc1930ec9151be651b1d81213bf887fcf173f011c1b6280bbde5121a72f",
+        "old_v": "93a0581602c9e3433076303aeb17e88e8fe4b38fa83b966facb5a23849250c06",
+        "q": "7bb0698bc82c418735630d3c61b7485f477627f1e3a21c92ba4f8185b206257e",
+        "new_k": "f34ab5fd2ffb44cf8348767ee3edfecc3d39ad62d0c595fd80962d4930dd405c",
+        "new_v": "08a8e99d2040685cb9044a441d94a3e8266b19bc2a626e4aee6a2070aabeb324",
+        "output": "f8c13692389930d2cc557bbbbfb9ba4b2cf75f5aa45be4099bdf7b0ac4d7eeaf"
+      }
+    },
+    {
+      "run": 2,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811898880,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811894784,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 4374528,
+      "median_ns": 455770.5,
+      "mad_ns": 2105.0,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 1,
+      "prefix": 1023,
+      "window": 256,
+      "logical_keys": 256,
+      "segment_rows": [
+        255,
+        0,
+        1
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 818542,
+      "first_ns": 465292,
+      "warmup_ns": [
+        457250,
+        457500,
+        459333
+      ],
+      "samples_ns": [
+        463208,
+        458292,
+        457334,
+        450709,
+        456041,
+        457459,
+        455459,
+        455500,
+        449625,
+        449542
+      ],
+      "cache_owned_bytes": 524408,
+      "query_bytes": 4096,
+      "context_bytes": 4096,
+      "prefix_staging_bytes": 2095104,
+      "proposal_bytes": 2048,
+      "softmax_scratch_bytes": 1024,
+      "hashes": {
+        "old_k": "e646dfc1930ec9151be651b1d81213bf887fcf173f011c1b6280bbde5121a72f",
+        "old_v": "93a0581602c9e3433076303aeb17e88e8fe4b38fa83b966facb5a23849250c06",
+        "q": "7bb0698bc82c418735630d3c61b7485f477627f1e3a21c92ba4f8185b206257e",
+        "new_k": "f34ab5fd2ffb44cf8348767ee3edfecc3d39ad62d0c595fd80962d4930dd405c",
+        "new_v": "08a8e99d2040685cb9044a441d94a3e8266b19bc2a626e4aee6a2070aabeb324",
+        "output": "d1340942559e148514aeffb3cc92eecbb04fd9261fe7a789f28759dcfbea0ef1"
+      }
+    },
+    {
+      "run": 2,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811894784,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811890688,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 3358720,
+      "median_ns": 457541.5,
+      "mad_ns": 4646.0,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 1,
+      "prefix": 513,
+      "window": 256,
+      "logical_keys": 256,
+      "segment_rows": [
+        254,
+        1,
+        1
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 436209,
+      "first_ns": 463833,
+      "warmup_ns": [
+        504791,
+        457458,
+        465666
+      ],
+      "samples_ns": [
+        464041,
+        452250,
+        458333,
+        456750,
+        453541,
+        452084,
+        458750,
+        460167,
+        463000,
+        451334
+      ],
+      "cache_owned_bytes": 524408,
+      "query_bytes": 4096,
+      "context_bytes": 4096,
+      "prefix_staging_bytes": 1050624,
+      "proposal_bytes": 2048,
+      "softmax_scratch_bytes": 1024,
+      "hashes": {
+        "old_k": "932ea98fe93aa536c7a8c274c199c483bcecb7607460f453b110f60ef454ac4e",
+        "old_v": "3630fb44819bcb1b6f0b60b45b4f95bb2fe8f35fd47467a654706f25fbb3aad1",
+        "q": "7bb0698bc82c418735630d3c61b7485f477627f1e3a21c92ba4f8185b206257e",
+        "new_k": "f34ab5fd2ffb44cf8348767ee3edfecc3d39ad62d0c595fd80962d4930dd405c",
+        "new_v": "08a8e99d2040685cb9044a441d94a3e8266b19bc2a626e4aee6a2070aabeb324",
+        "output": "b95721b7da9c73f3fd2177cecf7c23e9a74fe88aeb68452030c00031f6a507e0"
+      }
+    },
+    {
+      "run": 2,
+      "before": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811890688,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "after": {
+        "power": "Now drawing from 'AC Power'",
+        "free_bytes": 84811886592,
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      "final_rss_bytes": 5947392,
+      "median_ns": 7250.0,
+      "mad_ns": 146.0,
+      "format": "toklet-lfm3-bf16-attention-v1",
+      "queries": 1,
+      "prefix": 0,
+      "window": null,
+      "logical_keys": 1,
+      "segment_rows": [
+        0,
+        0,
+        1
+      ],
+      "query_heads": 16,
+      "kv_heads": 4,
+      "head_dim": 128,
+      "dtype": "BF16",
+      "capacity": 2048,
+      "prepared_ns": 294083,
+      "first_ns": 8083,
+      "warmup_ns": [
+        7333,
+        7375,
+        7375
+      ],
+      "samples_ns": [
+        7666,
+        7292,
+        7250,
+        7250,
+        7250,
+        7375,
+        7417,
+        7041,
+        7000,
+        7041
+      ],
+      "cache_owned_bytes": 4194424,
+      "query_bytes": 4096,
+      "context_bytes": 4096,
+      "prefix_staging_bytes": 0,
+      "proposal_bytes": 2048,
+      "softmax_scratch_bytes": 4,
+      "hashes": {
+        "old_k": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "old_v": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "q": "7bb0698bc82c418735630d3c61b7485f477627f1e3a21c92ba4f8185b206257e",
+        "new_k": "f34ab5fd2ffb44cf8348767ee3edfecc3d39ad62d0c595fd80962d4930dd405c",
+        "new_v": "08a8e99d2040685cb9044a441d94a3e8266b19bc2a626e4aee6a2070aabeb324",
+        "output": "bbb450c4ab646b25e27af19022ce924b0618509885df658cfeea7c0b0bf77966"
+      }
+    }
+  ]
+}
