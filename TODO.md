@@ -11,12 +11,29 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **qualify LFM3 seven-tap scalar convolution and independent
-six-row history/chunk fixtures before composing the graph**. The whole model roadmap stays active. Current managed MiniCPM5 adoption
-remains rejected at its unchanged numerical gate; its research route stays
-available. Reconsideration needs corrected original numerics and both original
-10k-target/100-task quality comparisons/caps. Engine/CLI work leads; interactive
-screen capture and iPhone remain deferred. Preserve the 4B/9B rejections.
+Current/next task: **qualify LFM3 frequency/partial-rotary and source BF16
+rounding with independent fixtures before composing the graph**. The seven-tap
+FP32 history is reviewed; full LFM3 execution/adoption remain open. Reuse existing
+mathematical rotary/window ownership where correct. Keep the whole model
+roadmap, original numerical/quality gates and 6 GiB ceiling. MiniCPM5 and 4B/9B
+managed-adoption rejections remain binding. Engine/CLI work leads; interactive
+screen capture and iPhone runtime remain deferred.
+
+- [x] S1.L seven-tap FP32 history: shared static three/seven-tap state and
+  concrete compatibility APIs reuse the unchanged scalar leaf. Five independent
+  fixtures/132 tensor outputs match bitwise; 288 Rust schedules and both zero-
+  allocation profiles pass. Fresh fmt/both strict Clippy/688 CPU/834 Metal/nine
+  example checks, two explicit Conv3 GPU regressions and native71 three 46-export
+  slices/CPU+Metal C smokes pass. The first generic prepare boundary fails its
+  three-tap timing screen and is archived/rejected. Concrete engine-crate
+  entrypoints pass all six original 5% comparisons (−2.33% to +1.26%); new seven-
+  tap medians are 0.357/9.2–9.4/36.7–38.1 ms for 13 owners at width 2,048 and
+  chunks 1/32/128. Source math, original gates/caps and 6 GiB remain unchanged.
+  Initial compile/harness/lock/sandbox failures and their corrections are retained.
+  Astra approves scoped retention with no findings; full LFM3/BF16 activation/
+  quality/fit/adoption remain open.
+  [Scope/evidence](docs/lfm3-seven-tap-history.md),
+  [review/commit](artifacts/lfm3-seven-tap-2026-11-10/publication-checks.json).
 
 - [x] S1.L LFM3 BF16 source audit: complete child/parent hashes and all 286
   tensors/1,728,801,536 parameters match under 13 singleton convolution-axis

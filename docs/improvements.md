@@ -54,6 +54,17 @@ list and the cleanup controller's verified interrupt/resume history.
 
 ## Existing correctness, memory and observability foundations
 
+Seven-tap FP32 convolution/history passes independent exact/tensor fixtures,
+288 schedules and zero-allocation checks, preserving concrete three-tap APIs.
+The first generic public prepare boundary is rejected at its performance screen;
+revised concrete entrypoints pass all six original 5% comparisons (−2.33% to
++1.26%). New seven-tap operator baselines are about 0.357/9.3/37 ms for chunks
+1/32/128 across 13 width-2,048 owners. Fresh required/native71 checks pass;
+Astra approves scoped retention, with no findings. Full LFM3/BF16 activation/
+fit/quality/adoption remain open.
+[Scope/evidence](lfm3-seven-tap-history.md),
+[review/commit](../artifacts/lfm3-seven-tap-2026-11-10/publication-checks.json).
+
 LFM3's complete BF16 child and modified parent authenticate, with exact equality
 of all 286 tensors/1.729B parameters, 13 singleton-axis convolution transforms
 and 119 norms. Independent child replay covers 1,014 blocks; no parent payload

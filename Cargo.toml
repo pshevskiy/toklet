@@ -129,3 +129,11 @@ name = "minicpm5_probe"
 path = "tools/bench/minicpm5_probe.rs"
 required-features = ["metal"]
 test = true
+
+[[example]]
+name = "short_conv3_history"
+path = "tools/bench/short_conv3_history.rs"
+
+[[example]]
+name = "short_conv7_history"
+path = "tools/bench/short_conv7_history.rs"

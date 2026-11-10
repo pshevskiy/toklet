@@ -73,9 +73,10 @@ adoption at its existing numerical gate; retain the scoped research route and
 continue LFM3 source/payload/graph qualification. Its standalone
 [source audit](docs/lfm3-source-qualification.md) now authenticates exact BF16
 repackaging; Astra approves scoped retention. Runtime/adoption remain
-unqualified. Next
-qualify the seven-tap scalar operator/history fixtures before composing the
-graph. Any MiniCPM5 reconsideration still needs corrected original numerics and
+unqualified. The [seven-tap FP32 history](docs/lfm3-seven-tap-history.md)
+now passes independent primitive/state checks and the revised compatibility
+performance screen; Astra approves scoped retention. Next qualify remaining source
+rounding, norm/gate/rotary/window semantics before composing the graph. Any MiniCPM5 reconsideration still needs corrected original numerics and
 both complete original quality comparisons.
 
 The initial settings below describe the foundation. Later selected models and

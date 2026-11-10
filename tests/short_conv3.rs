@@ -2,7 +2,6 @@ use std::{
     alloc::{GlobalAlloc, Layout, System},
     cell::Cell,
 };
-use toklet::model::short_conv3::{History, commit_batch, reset_batch};
 
 struct Counting;
 thread_local! {
@@ -57,16 +56,23 @@ impl Drop for Measurement {
     }
 }
 
-#[test]
-fn fixed_state_and_shared_work_prepare_commit_reset_allocate_nothing() {
+macro_rules! no_allocation {
+    ($module:ident, $kernel:literal, $channels:literal) => {{
+        use toklet::model::$module::{History, commit_batch, reset_batch};
+        const KERNEL: usize = $kernel;
+        const CHANNELS: usize = $channels;
+
     let mut states = [
-        History::new(1024, 64).unwrap(),
-        History::new(1024, 64).unwrap(),
+        History::new(CHANNELS, 64).unwrap(),
+        History::new(CHANNELS, 64).unwrap(),
     ];
-    let mut candidates = [vec![0.; 2048], vec![0.; 2048]];
-    let mut work = vec![0.; 2048];
-    let input = vec![0.25; 7 * 1024];
-    let weight = vec![0.5; 3 * 1024];
+    let mut candidates = [
+        vec![0.; (KERNEL - 1) * CHANNELS],
+        vec![0.; (KERNEL - 1) * CHANNELS],
+    ];
+    let mut work = vec![0.; (KERNEL - 1) * CHANNELS];
+    let input = vec![0.25; 7 * CHANNELS];
+    let weight = vec![0.5; KERNEL * CHANNELS];
     let mut output = vec![0.; input.len()];
     let pointers = [
         states[0].committed().as_ptr(),
@@ -92,21 +98,21 @@ fn fixed_state_and_shared_work_prepare_commit_reset_allocate_nothing() {
             let [a, b] = &mut candidates;
             let f0 = states[0]
                 .prepare_chunk(
-                    &input[..n * 1024],
+                    &input[..n * CHANNELS],
                     &weight,
                     a,
                     &mut work,
-                    &mut output[..n * 1024],
+                    &mut output[..n * CHANNELS],
                     n,
                 )
                 .unwrap();
             let f1 = states[1]
                 .prepare_chunk(
-                    &input[..n * 1024],
+                    &input[..n * CHANNELS],
                     &weight,
                     b,
                     &mut work,
-                    &mut output[..n * 1024],
+                    &mut output[..n * CHANNELS],
                     n,
                 )
                 .unwrap();
@@ -135,6 +141,16 @@ fn fixed_state_and_shared_work_prepare_commit_reset_allocate_nothing() {
         assert!(states[i].committed().iter().all(|x| x.to_bits() == 0));
     }
     println!(
-        "SHORT_CONV3_ALLOC prepare=64 commit_batches=32 reset_batches=8 rejected_zero=8 Rust_allocations={allocations}"
+        "SHORT_CONV{}_ALLOC prepare=64 commit_batches=32 reset_batches=8 rejected_zero=8 Rust_allocations={}", KERNEL, allocations
     );
+    }};
+}
+
+#[test]
+fn fixed_state_and_shared_work_prepare_commit_reset_allocate_nothing() {
+    no_allocation!(short_conv3, 3, 1024);
+}
+#[test]
+fn seven_tap_model_width_prepare_commit_reset_allocate_nothing() {
+    no_allocation!(short_conv7, 7, 2048);
 }

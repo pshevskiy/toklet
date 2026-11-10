@@ -1,0 +1,31 @@
+{
+  "format": "toklet-short-conv7-reference-retention-v1",
+  "fixture_sha256": "e1dd5d86bc81b25303d6c8de93f1553897e191948c215e291c996ba5aac9c7be",
+  "exact_rational_producer_sha256": "7de3acb38026fc6a8dc53ea7d85093aa746309b67e054cf683532c2f3daf5727",
+  "tensor_producer_sha256": "9ae959b0a0ea791eeb7859b0ea0cdaf99bebc2e03d877398d281e01370ad87b2",
+  "tensor_report_sha256": "5ec3e42e45ece41285f86d7d476e04c2d56bccdbe9bd0d0f9ff29de16910eeef",
+  "tensor_runtime_sha256": "fe30f7eb810f6ca3637a3c60020904a13b0b7fcd16bc0505483dd231c5a1b5c4",
+  "source_object_sha256": "b6ff17ac993dddf0f6f51bd872b12ae1437f4453a54a0b4878cedc7864fbc07e",
+  "source_channels": [
+    0,
+    1,
+    1023,
+    2047
+  ],
+  "torch_version": "2.9.1",
+  "numpy_version": "2.3.2",
+  "values": 132,
+  "failures": 0,
+  "fp32_bit_differences": 0,
+  "raw_history_matches": true,
+  "numerical_gate": {
+    "abs": 1e-05,
+    "rel": 0.0001
+  },
+  "scope": "Independent exact-rational and CPU tensor correspondence for seven-tap FP32 raw-input convolution/history only.",
+  "raw_evidence": "artifacts/lfm3-seven-tap-2026-11-10/tensor-report-1.json",
+  "owned_resources": "artifacts/lfm3-seven-tap-2026-11-10/tensor-checks-1.json",
+  "bf16_activation_profile_qualified": false,
+  "full_model_execution_qualified": false,
+  "model_adoption_qualified": false
+}

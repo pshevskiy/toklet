@@ -170,9 +170,11 @@ complete 3.458 GB BF16 objects and exact equality of all 286 tensors, including
 child replay covers 1,014 blocks; parent bytes are discarded. Nineteen portable
 and 28 actual offline negative controls pass within the separate 512 MiB audit
 budget; Astra approves scoped source-audit retention. This authenticates the selected modified-parent
-repackaging, without numerical or adoption qualification. Next qualify seven-tap
-scalar convolution/history fixtures, then rotating 256-token windows,
-sandwich/QK norms, per-head attention gates and layer-specific partial RoPE.
+repackaging, without model numerical or adoption qualification. The separate
+[seven-tap FP32 history](lfm3-seven-tap-history.md) now passes independent primitive/
+state checks and the revised three-tap compatibility timing screen; Astra
+approves scoped retention. Source BF16 rounding, rotating 256-token windows, sandwich/QK norms,
+per-head attention gates and layer-specific partial RoPE still need qualification.
 Existing LFM2 support and publisher parity results do not qualify these mechanisms.
 Stock-to-modified and modified-to-native full quality gates remain mandatory.
 The prior [metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)
