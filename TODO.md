@@ -11,12 +11,42 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **S1.B MiniCPM5 numerical checks needed for 1,025-position
-quality execution, then both original 10k-target/100-task comparisons and
+Current/next task: **S1.B resolve MiniCPM5 projection failures before 1,025-position
+quality qualification, then both original 10k-target/100-task comparisons and
 adoption gates**. Complete inputs, bounded matrix reproduction, basic codec/CLI
 and the explicit RMS optimization are reviewed in their recorded scopes.
 The user deferred screen capture; engine/CLI metrics, performance and automated
 checks lead work. The full goal stays active; 4B/9B deeper rejections stay binding.
+
+- [x] S1.B deeper numerical diagnostic: frozen 128/512/1,025-token prefixes from
+  the complete quality payload, both independent CPU profiles and native chunks
+  1/32. All 51 original six-case error gates stay unchanged; no recalibration
+  from deeper outcomes. Keep the original CPU implementation and ordinary
+  512/chunk32 route intact. Separate diagnostic domain only; preserve 6 GiB,
+  full quality workload/caps, 2 GiB disk floor and deferred UI/device scope.
+  CPU capture passes: 306 arrays/2.641 GB, 2.029 GB final RSS, six portable tests;
+  only the original bound changes, proven by AST identity. Fresh fmt/both strict
+  Clippy/681 CPU/827 Metal tests and nine example tests pass. Release CLI and
+  native68 three 46-export slices plus CPU/Metal C smokes pass.
+  First native attempt rejects at the existing ordinary512 geometry guard before
+  GPU loading. Its erroneous constant capture-completed flag is retained and
+  explicitly corrected by interpretation; passed=false is authoritative. The
+  separate fixed-geometry affine8/BF16 diagnostic loader admits through1,025,
+  without changing ordinary admission or gates. Full capture/state controls pass:
+  87,624 arrays/1,718 chunks, 2.291 GB final RSS and 2.827 GB sampled lifetime
+  physical peak. Both complete cold comparisons reproduce 82 failures in 1.773B
+  checks; 442.9M CPU profile coordinates have no disjoint bounds. Preserve this
+  numerical rejection; isolate a projection mismatch next. Seventeen portable,
+  15 CLI and 51 saved-metadata/sample negatives pass; 48 raw witnesses replay
+  independently. Astra's two clock/ledger findings are fixed in the reader; 13
+  resealed datasets and all 1,718 zero-ledger/1,717 repeated-window controls reject.
+  Both corrected full replays preserve the numerical result. Runner errors and disk cleanup are retained
+  in the scope report. Astra approves scoped retention, both findings resolved;
+  quality/adoption remain open.
+  [Failed attempt](artifacts/minicpm5-context1025-2026-11-10/native-attempt-1-interpretation.json).
+  [Frozen contract](artifacts/minicpm5-context1025-2026-11-10/prospective-contract-1.json).
+  [Results and next work](docs/minicpm5-context1025.md).
+  [Review/commit](artifacts/minicpm5-context1025-2026-11-10/publication-checks.json).
 
 - [x] S1.B full quality inputs: freeze all original 10,000 loss targets and
   40 code/30 prose/30 continuation cases with unchanged output caps and gates.
@@ -71,7 +101,19 @@ checks lead work. The full goal stays active; 4B/9B deeper rejections stay bindi
   [Scope/current evidence](docs/minicpm5-text-codec.md),
   [contract](artifacts/minicpm5-text-codec-2026-11-10/prospective-contract.json).
 
-- [x] User-requested disk recovery: removed323,538nonexecutable intermediate/
+- [x] Second user-requested disk recovery: removed 1,809,290 nonexecutable
+  compiler/intermediate files from 190 inactive Cargo caches; recovered about
+  51.1 GiB net, leaving 68.0 GiB available after compacting the cleanup manifests.
+  All 4,054 protected hashes, 521,828 preserved-cache metadata records, root work,
+  refs, stashes and app link pass. Models, raw evidence, binaries/libraries,
+  current caches and the running numerical capture are preserved. A slow cleanup
+  controller was interrupted, then its exact remaining manifest resumed; receipts
+  retain that interruption. Documentation-only checks apply; code review remains
+  recorded for the numerical task above.
+  [Receipt](artifacts/minicpm5-context1025-2026-11-10/disk-cleanup-2/result.json),
+  [compressed manifests](artifacts/minicpm5-context1025-2026-11-10/disk-cleanup-2/manifest-storage.json).
+
+- [x] Earlier user-requested disk recovery: removed323,538nonexecutable intermediate/
   incremental files from7completed-build caches; free space2.0→29.1GiB.
   Kept current build caches, executables, native libraries, models and evidence.
   All4,031task inputs/28protected hashes pass; root user work/app link preserved.

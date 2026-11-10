@@ -59,6 +59,11 @@ WIP and failed evidence. Continue automated console metrics, numerical/state
 checks and measured performance, with Astra review before each code commit.
 This priority leaves all numerical, memory, quality and telemetry gates intact.
 
+The [MiniCPM5 deeper diagnostic](docs/minicpm5-context1025.md) retains an explicit
+1,025-position research path and a measured numerical rejection. Resolve the
+projection failures against the unchanged original bounds before complete
+quality scoring or expanded admission; ordinary model policy stays unchanged.
+
 The initial settings below describe the foundation. Later selected models and
 routes use their own authenticated configuration and scoped acceptance evidence;
 initial settings do not expand or replace those contracts.

@@ -142,6 +142,15 @@ match pinned stock metadata, whose weights remain undownloaded. Loss requires
 1,025 positions and the largest task 559; the current 512 diagnostic limit stays
 fixed until separately qualified. No quality score or adoption follows.
 
+The [separate 1,025-position diagnostic](minicpm5-context1025.md) now captures
+all three quality prefixes with chunks 1/32 and unchanged original gates. It
+rejects 82 of 1.773B comparisons in three projection stages; a fresh full replay
+agrees. CPU permitted intervals overlap everywhere. Investigate a numerical
+correction before complete quality scoring or wider-context qualification.
+Required/native68 checks and Astra review pass for scoped diagnostic retention.
+Ordinary admission,
+original workloads/caps and all model/adoption gates remain unchanged.
+
 The [LFM3 metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)
 checks286BF16 tensors/3.458GB for the new candidate and594physical tensors/0.973GB
 for the official Q4 reference. Its conversion manifest links to an accessible,

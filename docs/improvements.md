@@ -15,6 +15,15 @@ TODO/improvement bytes about 56%. Exact inverse-link reconstruction, local links
 anchors and whitespace pass; live PLAN and numerical inputs are unchanged.
 [Archive validation](../artifacts/qwen35-9b-context256-2026-11-09/working-history-checks.json).
 
+User-requested disk recovery removed 1,809,290 compiler intermediates from 190
+inactive Cargo caches, recovering about 51.1 GiB net and leaving 68.0 GiB free.
+All 4,054 protected hashes and retained-cache metadata checks pass; models,
+evidence, executables/libraries, current caches, user work and the running
+numerical capture are preserved. Compressed manifests retain the exact deletion
+list and the cleanup controller's verified interrupt/resume history.
+[Receipt](../artifacts/minicpm5-context1025-2026-11-10/disk-cleanup-2/result.json),
+[manifest storage](../artifacts/minicpm5-context1025-2026-11-10/disk-cleanup-2/manifest-storage.json).
+
 ## Retained performance decisions
 
 | Change | Measured result and scope | Evidence |
@@ -29,6 +38,20 @@ anchors and whitespace pass; live PLAN and numerical inputs are unchanged.
 | Qwen2 prompt lookup | Repeated contract prompt gains about 53% decode, but the code prompt misses the 5% gate. Explicit nonstreaming API retained; default adoption rejected. | [Timing](../benchmarks/results/2026-11-06-m9-qwen2-lookup-timing-v1.json) |
 
 ## Existing correctness, memory and observability foundations
+
+MiniCPM5 deeper diagnostics complete with a numerical rejection: 82 failures in
+1.773B original-gate comparisons, reproduced by a fresh complete cold replay.
+All 87,624 arrays/1,718 chunks and recovery controls complete within the 6 GiB
+guard. No disjoint CPU bounds occur across 442.9M coordinates; isolate one
+projection mismatch next. Fresh required/native68 checks, 17 portable tests,
+15 CLI/51 metadata-sample negatives and 48 independent raw witness replays pass.
+Astra's clock/ledger findings are fixed; 13 resealed datasets and all former
+zero-ledger/repeated-window counterexamples reject. Both full replays preserve
+the numerical result; Astra approves scoped retention, no remaining findings.
+The ordinary route stays at 512/chunk32; full
+quality, context/adoption and overhead gates remain open.
+[Scope/results](minicpm5-context1025.md),
+[review/commit](../artifacts/minicpm5-context1025-2026-11-10/publication-checks.json).
 
 MiniCPM5 complete quality inputs now preserve all original 10,000 targets/100
 tasks and their caps. Cold recipe replay, seven portable tests and 28 altered-

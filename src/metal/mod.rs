@@ -113,9 +113,42 @@ enum MlxImport {
     MistralAudited,
     Llama3Audited,
     Llama3QualityDiagnostic,
+    MiniCpm5ContextDiagnostic,
     Qwen3Audited,
     Qwen3QualityDiagnostic,
     Qwen3ContextDiagnostic,
+}
+
+#[cfg(test)]
+#[test]
+fn minicpm5_context_loader_rejects_invalid_bounds_before_source_or_gpu() {
+    let path = Path::new("/nonexistent-toklet-minicpm5-context");
+    for context_limit in [0, 1026, usize::MAX] {
+        assert!(matches!(
+            Model::load_mlx_minicpm5_context_diagnostic(
+                path,
+                weights::LoadOptions {
+                    context_limit,
+                    memory_limit_bytes: 6 * 1024 * 1024 * 1024,
+                }
+            ),
+            Err(Error::Options(
+                "MiniCPM5 context diagnostic requires1..=1025 positions"
+            ))
+        ));
+    }
+    assert!(matches!(
+        Model::load_mlx_minicpm5_context_diagnostic(
+            path,
+            weights::LoadOptions {
+                context_limit: 1025,
+                memory_limit_bytes: 7 * 1024 * 1024 * 1024,
+            }
+        ),
+        Err(Error::Options(
+            "MiniCPM5 context diagnostic budget exceeds6GiB"
+        ))
+    ));
 }
 /// The planning source contributes shapes only. Reopen payload descriptors after
 /// artifact identity is established, then check metadata and endpoint identities.
@@ -229,6 +262,7 @@ pub struct Model {
     mlx_architecture: Option<crate::mlx::dense::Architecture>,
     // Set only by the explicit validated0.6B long-context diagnostic loader.
     qwen3_context_diagnostic: bool,
+    minicpm5_context_diagnostic: bool,
     mlx_declared_positions: Option<usize>,
     mlx_source_identity: Option<crate::mlx::qwen::SourceContentIdentity>,
     mlx_dense_source_identity: Option<crate::mlx::qwen::DenseSourceContentIdentity>,
@@ -260,6 +294,14 @@ impl Model {
         if self.qwen3_context_diagnostic && normalization_mode != NormalizationMode::Compensated {
             return Err(Error::Options(
                 "Qwen3 context diagnostic requires Compensated normalization",
+            ));
+        }
+        if self.minicpm5_context_diagnostic
+            && (normalization_mode != NormalizationMode::Compensated
+                || attention_mode != AttentionMode::Reference)
+        {
+            return Err(Error::Options(
+                "MiniCPM5 context diagnostic requires Compensated/Reference modes",
             ));
         }
         planning::validate_attention(self.mlx_architecture, attention_mode)?;
@@ -485,6 +527,25 @@ impl Model {
     ) -> Result<Self> {
         Self::load_mlx_impl(directory, options, MlxImport::Llama3QualityDiagnostic)
     }
+    /// Explicit MiniCPM5-geometry affine8/BF16 diagnostic through1025 positions.
+    /// Callers authenticate artifact bytes separately. Grants no content/app,
+    /// numerical, quality or device qualification; ordinary admission stays512.
+    pub fn load_mlx_minicpm5_context_diagnostic(
+        directory: &Path,
+        options: weights::LoadOptions,
+    ) -> Result<Self> {
+        if options.context_limit == 0 || options.context_limit > 1025 {
+            return Err(Error::Options(
+                "MiniCPM5 context diagnostic requires1..=1025 positions",
+            ));
+        }
+        if options.memory_limit_bytes > 6 * 1024 * 1024 * 1024 {
+            return Err(Error::Options(
+                "MiniCPM5 context diagnostic budget exceeds6GiB",
+            ));
+        }
+        Self::load_mlx_impl(directory, options, MlxImport::MiniCpm5ContextDiagnostic)
+    }
     /// Experimental Qwen3 0.6B quality execution up to1025 positions. Uses the
     /// unchanged Half graph, packed weights and session planners. This does not
     /// qualify numerics/quality, increase app limits, or waive known C512 failures.
@@ -535,6 +596,9 @@ impl Model {
             let untied_output = !source.tied_output();
             if matches!(import, MlxImport::Llama3QualityDiagnostic) {
                 crate::mlx::execution::llama3_quality_geometry(&source)
+                    .map_err(|error| Error::Unsupported(error.message()))?;
+            } else if matches!(import, MlxImport::MiniCpm5ContextDiagnostic) {
+                crate::mlx::execution::minicpm5_context_geometry(&source)
                     .map_err(|error| Error::Unsupported(error.message()))?;
             } else if matches!(import, MlxImport::Qwen3QualityDiagnostic) {
                 use crate::mlx::execution::GeometryError;
@@ -646,6 +710,8 @@ impl Model {
             }
             model.positional = positional;
             model.qwen3_context_diagnostic = matches!(import, MlxImport::Qwen3ContextDiagnostic);
+            model.minicpm5_context_diagnostic =
+                matches!(import, MlxImport::MiniCpm5ContextDiagnostic);
             model.mlx_declared_positions = Some(source.declared_positions());
             if matches!(import, MlxImport::Llama3QualityDiagnostic) {
                 // Prove complete authenticated delivery, but never grant the
@@ -915,6 +981,7 @@ impl Model {
             positional: None,
             mlx_architecture: None,
             qwen3_context_diagnostic: false,
+            minicpm5_context_diagnostic: false,
             mlx_declared_positions: None,
             mlx_source_identity: None,
             mlx_dense_source_identity: None,

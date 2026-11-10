@@ -62,6 +62,98 @@ pub(crate) fn llama3_quality_geometry(
     source_position_limits(source, Some(1025)).map(|_| ())
 }
 
+/// Explicit geometry/packing diagnostic; never changes ordinary512 admission.
+#[cfg(any(
+    test,
+    all(
+        feature = "metal",
+        any(target_os = "macos", target_os = "ios"),
+        target_arch = "aarch64"
+    )
+))]
+pub(crate) fn minicpm5_context_geometry(
+    source: &crate::mlx::qwen::Source,
+) -> Result<(), GeometryError> {
+    use crate::mlx::{affine::MetadataDtype, qwen::Storage};
+    minicpm5_context_config(source.config(), source.architecture())?;
+    let scales = source.dense_scales();
+    if source.tied_output()
+        || source.position_plan() != model::PositionPlan::Ordinary
+        || source.declared_positions() != 131072
+        || scales.embedding != 1.
+        || scales.residual != 1.
+        || source
+            .rotary_layers()
+            .is_some_and(|layers| layers.iter().any(|enabled| !enabled))
+    {
+        return Err(GeometryError::Unsupported(
+            "MiniCPM5 diagnostic source semantics differ",
+        ));
+    }
+    let mut matrices = 0;
+    let mut norms = 0;
+    for logical in source.logical_tensors().values() {
+        let spec = logical.tensor();
+        match spec.storage() {
+            Storage::Affine(layout)
+                if spec.shape().len() == 2
+                    && layout.bits() == 8
+                    && layout.group_size() == 64
+                    && layout.metadata_dtype() == MetadataDtype::BF16 =>
+            {
+                matrices += 1
+            }
+            Storage::Float(MetadataDtype::BF16) if spec.shape() == [2048] => norms += 1,
+            _ => {
+                return Err(GeometryError::Unsupported(
+                    "MiniCPM5 diagnostic requires affine8/group64/BF16 matrices and BF16 norms",
+                ));
+            }
+        }
+    }
+    if matrices != 296 || norms != 85 {
+        return Err(GeometryError::Unsupported(
+            "MiniCPM5 diagnostic tensor inventory differs",
+        ));
+    }
+    source_position_limits(source, Some(1025)).map(|_| ())
+}
+
+#[cfg(any(
+    test,
+    all(
+        feature = "metal",
+        any(target_os = "macos", target_os = "ios"),
+        target_arch = "aarch64"
+    )
+))]
+fn minicpm5_context_config(
+    c: &model::Config,
+    architecture: crate::mlx::dense::Architecture,
+) -> Result<(), GeometryError> {
+    c.validate()
+        .map_err(|_| GeometryError::Invalid("invalid MiniCPM5 diagnostic configuration"))?;
+    if architecture != crate::mlx::dense::Architecture::Llama
+        || (
+            c.hidden_size,
+            c.intermediate_size,
+            c.query_heads,
+            c.kv_heads,
+            c.head_dim,
+            c.num_layers,
+            c.vocab_size,
+        ) != (2048, 6144, 16, 2, 128, 42, 130560)
+        || c.rms_norm_eps != 1e-6
+        || c.rope_theta != 5e6
+        || c.max_positions > 1025
+    {
+        return Err(GeometryError::Unsupported(
+            "MiniCPM5 diagnostic requires its fixed geometry and at most1025 positions",
+        ));
+    }
+    Ok(())
+}
+
 fn source_position_limits(
     source: &crate::mlx::qwen::Source,
     diagnostic_cap: Option<usize>,
@@ -415,6 +507,138 @@ fn metal_geometry_context_cap(
 mod tests {
     use super::*;
     use crate::mlx::dense::Architecture;
+    #[test]
+    fn minicpm5_diagnostic_is_separate_from_ordinary_context_policy() {
+        let c = model::Config {
+            hidden_size: 2048,
+            intermediate_size: 6144,
+            query_heads: 16,
+            kv_heads: 2,
+            head_dim: 128,
+            num_layers: 42,
+            vocab_size: 130560,
+            max_positions: 1025,
+            rope_theta: 5e6,
+            rms_norm_eps: 1e-6,
+        };
+        assert!(minicpm5_context_config(&c, Architecture::Llama).is_ok());
+        assert!(metal_geometry(&c, Architecture::Llama).is_err());
+        assert!(
+            metal_geometry(
+                &model::Config {
+                    max_positions: 512,
+                    ..c.clone()
+                },
+                Architecture::Llama
+            )
+            .is_ok()
+        );
+        for positions in [0, 1026, usize::MAX] {
+            assert!(
+                minicpm5_context_config(
+                    &model::Config {
+                        max_positions: positions,
+                        ..c.clone()
+                    },
+                    Architecture::Llama
+                )
+                .is_err()
+            );
+        }
+        assert!(minicpm5_context_config(&c, Architecture::Qwen2).is_err());
+        for wrong in [
+            model::Config {
+                num_layers: 41,
+                ..c.clone()
+            },
+            model::Config {
+                kv_heads: 4,
+                ..c.clone()
+            },
+            model::Config {
+                rope_theta: 10000.,
+                ..c.clone()
+            },
+            model::Config {
+                rms_norm_eps: 1e-5,
+                ..c.clone()
+            },
+        ] {
+            assert!(minicpm5_context_config(&wrong, Architecture::Llama).is_err());
+        }
+    }
+    #[test]
+    fn minicpm5_diagnostic_checks_real_metadata_packing_without_payload_or_gpu() {
+        use std::{
+            fs::{self, File},
+            io::Write,
+            sync::atomic::{AtomicUsize, Ordering},
+        };
+        static NEXT: AtomicUsize = AtomicUsize::new(0);
+        let path = std::env::temp_dir().join(format!(
+            "toklet-mini-context-metadata-{}-{}",
+            std::process::id(),
+            NEXT.fetch_add(1, Ordering::Relaxed)
+        ));
+        fs::create_dir(&path).unwrap();
+        struct Cleanup(std::path::PathBuf);
+        impl Drop for Cleanup {
+            fn drop(&mut self) {
+                fs::remove_dir_all(&self.0).unwrap();
+            }
+        }
+        let _cleanup = Cleanup(path.clone());
+        fs::write(
+            path.join("config.json"),
+            include_bytes!("../../tests/fixtures/minicpm5-heretic8-metadata-v1/config.json"),
+        )
+        .unwrap();
+        fs::write(
+            path.join("model.safetensors.index.json"),
+            include_bytes!(
+                "../../tests/fixtures/minicpm5-heretic8-metadata-v1/model.safetensors.index.json"
+            ),
+        )
+        .unwrap();
+        let original: serde_json::Value = serde_json::from_slice(include_bytes!(
+            "../../tests/fixtures/minicpm5-heretic8-metadata-v1/header.bin"
+        ))
+        .unwrap();
+        for kind in ["original", "float-norm", "float-metadata"] {
+            let mut header = original.clone();
+            if kind == "float-norm" {
+                header["model.norm.weight"]["dtype"] = serde_json::json!("F16");
+            }
+            if kind == "float-metadata" {
+                for suffix in ["scales", "biases"] {
+                    header[format!("model.layers.0.self_attn.q_proj.{suffix}")]["dtype"] =
+                        serde_json::json!("F16");
+                }
+            }
+            let mut raw = serde_json::to_vec(&header).unwrap();
+            assert!(raw.len() <= 110378);
+            raw.resize(110378, b' ');
+            {
+                let mut file = File::create(path.join("model.safetensors")).unwrap();
+                file.set_len(2674327346).unwrap();
+                file.write_all(&110378u64.to_le_bytes()).unwrap();
+                file.write_all(&raw).unwrap();
+            }
+            let source = crate::mlx::qwen::Source::open_dense(
+                &path,
+                crate::weights::LoadOptions {
+                    context_limit: 1025,
+                    memory_limit_bytes: 6 * 1024 * 1024 * 1024,
+                },
+            )
+            .unwrap();
+            assert_eq!(
+                minicpm5_context_geometry(&source).is_ok(),
+                kind == "original"
+            );
+            assert!(metal_source_geometry(&source).is_err());
+        }
+    }
     #[test]
     fn llama_contract_accepts_implemented_blocks_without_a_checkpoint_tuple() {
         let c = model::Config {
