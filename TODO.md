@@ -29,7 +29,8 @@ checks lead work. The full goal stays active; 4B/9B deeper rejections stay bindi
   Fresh fmt and unchanged 4,031 Cargo/421 native inputs/10 package outputs pass.
   Astra independently replays the seal and approves scoped retention, with no
   findings. Quality, deeper numerical, default/adoption and overhead gates stay
-  open. [Scope/evidence](docs/minicpm5-matrix-lineage.md),
+  open. Post-integration patch-simulation check corrected; all protected user
+  work is verified unchanged. [Scope/evidence](docs/minicpm5-matrix-lineage.md),
   [review/commit](artifacts/minicpm5-matrix-lineage-2026-11-10/publication-checks.json).
 
 - [x] S1.B MiniCPM5 bounded text codec and diagnostic CLI: exact original BOS,

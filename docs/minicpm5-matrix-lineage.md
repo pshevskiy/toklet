@@ -135,6 +135,15 @@ follows; reviewed code, contracts and raw evidence remain frozen.
 [Review](../artifacts/minicpm5-matrix-lineage-2026-11-10/astra-review-result-1.json),
 [commit/integration](../artifacts/minicpm5-matrix-lineage-2026-11-10/publication-checks.json).
 
+The initial post-integration checker simulated the user patch inside a repository
+subdirectory, where Git skipped paths outside that prefix. This produced a false
+expected-hash mismatch after successful integration and patch restoration. A
+fresh simulation outside every repository verifies both the patch's effect and
+its inverse; all 12 protected files, both stashes, main and the app link pass.
+No user data or reviewed source changed.
+[Initial check](../artifacts/minicpm5-matrix-lineage-2026-11-10/integration-attempt-1.json),
+[corrected check](../artifacts/minicpm5-matrix-lineage-2026-11-10/integration-checks-2.json).
+
 The original 10k-target/100-task quality, deeper numerical/context, default
 allocator/adoption and 1% summary-overhead gates remain open. Screen capture and
 physical iPhone work remain deferred. The full improvement goal continues.
