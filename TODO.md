@@ -11,22 +11,41 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **S1.B audit the native output precision against the two
-original CPU profile intervals before another numerical correction**. The
-rotary precision experiment fails an original short gate and is rejected; its
-implementation is archived outside the engine commit. Then resolve or explicitly
-reject the remaining MiniCPM5 numerical prerequisite before both original
-10k-target/100-task quality comparisons and adoption gates. The user deferred
-screen capture; engine/CLI measurements and automated checks lead work. The
-whole goal and 4B/9B deeper rejections stay active.
+Current/next task: **qualify the pinned LFM3 BF16 source/payload and exact graph
+before new kernels**. The MiniCPM5 precision audit is reviewed and its current
+managed native adoption remains rejected. Every captured original CPU bound admits a
+native Half/F32 value, but the existing native graph still fails its numerical
+gate. Keep the research route; do not adopt it or score reduced quality tasks.
+Reconsideration requires corrected original numerics and both full original
+10k-target/100-task comparisons/caps. Engine/CLI work leads; screen capture and
+iPhone remain deferred. The whole roadmap and 4B/9B rejections stay active.
+
+- [x] S1.B native precision audit: all 442,863,360 paired CPU coordinates admit a
+  finite original-domain output; zero discrete/continuous exclusions. A fresh
+  complete replay agrees, and a different midpoint/neighbor/source algorithm
+  verifies concrete native witnesses for every coordinate. No graph qualifies
+  from this feasibility result; the prior 82 native failures remain binding.
+  Preserve the current managed-adoption rejection and advance to LFM3 source
+  qualification. Eight new/25 total portable tests, all 63,488 finite Half inputs
+  with adjacent peers/271 scalar controls, 11 CLI negatives and one actual source-
+  byte rejection pass. Early output-path rejection adds no numerical change,
+  proven by AST; historical source snapshots and a corrected negative-runner
+  error-text expectation are retained. Integration preflight caught an unrelated
+  history-formatting overlap; original user-patch context was restored before
+  changing root work. Three closed CPU-only campaigns stay
+  below 512 MiB (maximum 172,408,832 B final RSS); 6 GiB engine/codec/quality policies
+  stay fixed. Required Rust/native inputs are unchanged; Astra approves scoped
+  diagnostic retention, no findings.
+  [Scope/evidence](docs/minicpm5-precision-audit.md),
+  [review/commit](artifacts/minicpm5-representability-2026-11-10/publication-checks.json).
 
 - [x] Third user-requested disk recovery: removed 23,292 inactive Cargo
   support/intermediate files, recovering 5.3 GiB net; 65.8 GiB free at completion.
   All 4,054 protected hashes and 502,723 retained-cache metadata
   checks pass. Models, evidence, engine binaries/libraries, current caches and
   user work remain intact. Process-inspection/schema preflight failures were
-  corrected before deletion; receipts retain both. Engine work below stays
-  incomplete pending required checks and Astra review.
+  corrected before deletion; receipts retain both. Subsequent research decisions are
+  recorded below; the failed candidate implementation stays excluded.
   [Receipt](artifacts/minicpm5-projection-isolation-2026-11-10/disk-cleanup-3/result.json).
 
 - [x] S1.B numerical isolation and rejected rotary experiment: eight sampled
@@ -40,7 +59,7 @@ whole goal and 4B/9B deeper rejections stay active.
   tests, 36 portable, native69 three 46-export slices and both C smokes pass.
   Six raw witnesses independently replay; 12 resealed owner/metadata copies reject.
   Candidate engine/CLI/reader code is archived; only research/decision documents
-  are proposed for retention. Required clocks/resource receipts and preparation
+  were retained. Required clocks/resource receipts and preparation
   failures remain linked; no performance/quality/adoption grant. Astra approves
   documentation-only retention, with no findings; candidate code stays excluded.
   [Scope/evidence](docs/minicpm5-rotary-rejection.md),

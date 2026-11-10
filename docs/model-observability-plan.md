@@ -156,8 +156,13 @@ same-input primitive fidelity but fails six original short model comparisons.
 Reject the model integration; preserve all existing numerical/quality gates and
 leave the ordinary loader unchanged. Its deeper run was intentionally stopped,
 so it supplies no completed1,025 comparison or performance/adoption evidence.
-Next audit native output representability within both original CPU intervals
-before selecting another numerical mechanism. No infeasibility claim is made.
+The [native precision audit](minicpm5-precision-audit.md) now verifies a feasible
+Half/F32 value at every original captured coordinate with two different methods;
+there is no output-grid infeasibility in that domain. The existing82native
+failures remain uncorrected. Reject current managed native adoption of this
+MiniCPM5 route and keep its qualified research scopes. Both original full quality
+comparisons remain mandatory for reconsideration, with no score claimed. Advance
+to LFM3 source/payload/graph qualification; no new model is admitted by this audit.
 
 The [LFM3 metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)
 checks286BF16 tensors/3.458GB for the new candidate and594physical tensors/0.973GB

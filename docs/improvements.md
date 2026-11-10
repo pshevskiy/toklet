@@ -42,10 +42,23 @@ list and the cleanup controller's verified interrupt/resume history.
 | Selected Half/Q4 and Online attention | M5/M6 retained only their documented configurations and quality/memory/context scopes. FP16 KV retained after the I8 evaluation. | [M5 release](experiments/2026-10-15-m5-release.md), [M6 release](experiments/2026-10-19-m6-release.md) |
 | Four-row native affine8 prefill | Pinned Qwen2.5-0.5B MLX8 on M1 Pro: 1,024-token prefill improves 13.69%, complete fixed-token request 6.22%. Mac opt-in; managed adoption remains separate. | [M9 decision](m9-mac-affine-decision.md) |
 | Gemma BF16 G2 last-row prefill | Official BF16 Mac route: both primary runs improve prefill about 61% and request time about 28%; retained in native45. | [Retention](../benchmarks/results/2026-11-06-gemma-bf16-g2-retention-v1.json) |
-| Exact guard validation reduction | Same complete guard coverage with automatic integer vectorization. Two Mac BF16/G2 primary runs reduce request time25.0–26.6%;626 sustained requests confirm26.3%,512 deeper decode pairs bit-identical. Required checks/Astra pass;6GiB preserved. No UI, memory-saving or broader-model claim. | [Scope](gemma-guard-validation.md), [checks/review/commit](../artifacts/gemma-guard-validation-2026-11-08/publication-checks.json) |
+| Exact guard validation reduction | Same complete guard coverage with automatic integer vectorization. Two Mac BF16/G2 primary runs reduce request time25.0–26.6%;626 sustained requests confirm26.3%,512 deeper decode pairs bit-identical. Required checks/Astra pass ; 6 GiB preserved. No UI, memory-saving or broader-model claim. | [Scope](gemma-guard-validation.md), [checks/review/commit](../artifacts/gemma-guard-validation-2026-11-08/publication-checks.json) |
 | Qwen2 prompt lookup | Repeated contract prompt gains about 53% decode, but the code prompt misses the 5% gate. Explicit nonstreaming API retained; default adoption rejected. | [Timing](../benchmarks/results/2026-11-06-m9-qwen2-lookup-timing-v1.json) |
 
 ## Existing correctness, memory and observability foundations
+
+The MiniCPM5 native precision audit finds no output-grid obstruction across all
+442,863,360paired original CPU coordinates. A complete replay agrees; a separate
+constructive method verifies native witnesses everywhere. Both methods preserve
+all original bounds and native 50 Half/1 FP32 domains, with 172.4 MB maximum final RSS
+under a separate 512 MiB audit guard. Eight new/25 total portable, 11 CLI and one
+actual source-byte negative pass. This does not fix the native 82 failures:
+current managed adoption remains rejected, with the research route retained.
+Next qualify LFM3's pinned BF16 source/payload and exact graph. Astra approves
+scoped diagnostic retention, with no findings;
+quality, precision, memory and performance gates stay unchanged.
+[Scope](minicpm5-precision-audit.md),
+[review/commit](../artifacts/minicpm5-representability-2026-11-10/publication-checks.json).
 
 MiniCPM5 numerical isolation rejects the cached rotary model experiment.
 All eight sampled projection coordinates match exact dots of their own inputs;
@@ -97,7 +110,7 @@ Rust/native check reuse pass. Astra independently replays the seal, no findings.
 
 MiniCPM5 bounded basic text/CLI is retained with Astra approval. Exact98source fixtures/66streams,679CPU/821Metal, native67/C smokes,
 36portable and83actual-report negatives pass. The unchanged22k-word/660-phase
-cache stress stays below512MiB after a preserved/fixed ASCII decode-bound bug.
+cache stress stays below 512 MiB after a preserved/fixed ASCII decode-bound bug.
 Two14/38-token native histories compare4.18Mlogits bitwise; eight cohorts retain
 80measured/24warm requests, with RMS opt-in gains18.85%/18.32% and12.29%/11.79%.
 6GiB owners/observations pass in named scopes; final physical peak unavailable.

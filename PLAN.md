@@ -65,10 +65,13 @@ projection failures against the unchanged original bounds before complete
 quality scoring or expanded admission; ordinary model policy stays unchanged.
 The [cached rotary experiment](docs/minicpm5-rotary-rejection.md) is rejected:
 its local primitive passes, but six original short-suite model comparisons fail.
-Keep its implementation outside the engine. Before another correction, audit
-whether the unchanged CPU interval intersections contain a representable native
-Half/F32 output. Continuous interval overlap alone does not establish that; this
-is a pending audit, not a precision-policy change or an infeasibility finding.
+Keep its implementation outside the engine. The [native precision audit](docs/minicpm5-precision-audit.md)
+now finds a representable Half/F32 value at every original captured coordinate,
+independently confirmed by constructive witnesses. This does not correct the
+native graph or qualify quality/adoption. Reject current managed MiniCPM5
+adoption at its existing numerical gate; retain the scoped research route and
+continue LFM3 source/payload/graph qualification. Any reconsideration still needs
+corrected original numerics and both complete original quality comparisons.
 
 The initial settings below describe the foundation. Later selected models and
 routes use their own authenticated configuration and scoped acceptance evidence;
