@@ -1,0 +1,47 @@
+{
+  "format": "toklet-minicpm5-text-codec-fixture-v1",
+  "repository": "bumblebuttpow/MiniCPM5-2B-heretic-abliterated-MLX-8bit",
+  "revision": "50ab1b226834c290cdf68e460eb899e5cff7c61d",
+  "asset_pins": {
+    "config.json": {
+      "bytes": 1056,
+      "sha256": "ba1fda219aca07e7809d454db02512fe3fb29ff49e1eb2364c8e9487e35a6fe3"
+    },
+    "tokenizer.json": {
+      "bytes": 9894424,
+      "sha256": "ad92aaa8d3032c98a9158b8c5e8682bed10027ed6463e4fb1320fe5384210873"
+    },
+    "tokenizer_config.json": {
+      "bytes": 539,
+      "sha256": "4d3748f79d8f82b68edf38b2a082b2df1f598e8e5a318dcb1f5c507d2f08b31b"
+    },
+    "generation_config.json": {
+      "bytes": 227,
+      "sha256": "90a38054c1abd33cb068dd17286e29eb3827f8619eab86bfea50e1fdb1eb1beb"
+    },
+    "chat_template.jinja": {
+      "bytes": 9060,
+      "sha256": "cc945752db555d60949b16989df4ccfeb52a313d6b4b5c5229dd786e2e9fcf1c"
+    }
+  },
+  "records": 98,
+  "counts": {
+    "structure": 1,
+    "chat": 46,
+    "text": 12,
+    "decode": 10,
+    "rejection": 28,
+    "padding": 1
+  },
+  "witness_bytes": 189759,
+  "witness_sha256": "57dd38b7360a9bb713d2dadcd81e6f42ab1a64aef0e0aad96f9c8f2f028eca67",
+  "independent_runs_equal": true,
+  "native_implementation_existed_at_collection": true,
+  "reference_files": {
+    "reference-5/observation.json": "34313f88bb3ee1425cbef9be705c66dfc9e24ee64b4660132ee3017b456cb08f",
+    "reference-6/observation.json": "3c89a594a9444f721d518182830fa77c6dbe37fd9196d5322f1f446a12158477"
+  },
+  "scope": "Same original Jinja/Tokenizers outputs, all97records unchanged; append exact source BatchLongest leftpadding and single-item batch witness after native loader rejected unsupported generic no-padding assumption. No original expected result or numerical/quality gate changes.",
+  "all_original91_records_retained_exactly": true,
+  "all_original97_records_retained_byte_identically": true
+}

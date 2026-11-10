@@ -120,7 +120,14 @@ broader model/adoption gates stay fixed.
 BF16 parent object hashes (5,033,557,128bytes), all381logical tensors and85exact
 copied norms. It retains1,349tensor-block digests without storing the payload.
 This authenticates source identity; reproduction of296quantized matrices,
-codec/stop behavior, original quality, deeper numerical and adoption stay open.
+original quality, deeper numerical and adoption stay open. The separate
+[bounded basic codec/text CLI](minicpm5-text-codec.md) now passes original-template/
+tokenizer/stream and persistent-cache gates, fresh required/native checks and
+two complete-logit native text parity workloads. Eight matched request cohorts
+clear the scoped5%screen with18.3–18.9% and11.8–12.3%request gains for the prior
+RMS opt-in. Astra approves scoped retention;
+[review/commit](../artifacts/minicpm5-text-codec-2026-11-10/publication-checks.json).
+No model adoption is implied.
 
 The [LFM3 metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)
 checks286BF16 tensors/3.458GB for the new candidate and594physical tensors/0.973GB

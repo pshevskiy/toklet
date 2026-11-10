@@ -1030,8 +1030,13 @@ mod apple {
     }
 }
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+#[path = "minicpm5_text.rs"]
+mod text;
+#[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 fn main() -> contract::Result<()> {
-    if std::env::args_os()
+    if std::env::args_os().nth(1).is_some_and(|v| v == "text") {
+        text::run()
+    } else if std::env::args_os()
         .nth(1)
         .is_some_and(|v| v == "bench" || v == "bench-rms-baseline" || v == "bench-rms-parallel")
     {

@@ -20,6 +20,9 @@ pub struct ResponseLimits {
     text_bytes: usize,
 }
 impl ResponseLimits {
+    pub(super) fn fits(self, tokens: usize, text_bytes: usize) -> bool {
+        self.tokens <= tokens && self.text_bytes <= text_bytes
+    }
     pub fn new(tokens: usize, text_bytes: usize) -> io::Result<Self> {
         if !(1..=MAX_STREAM_TOKENS).contains(&tokens)
             || !(1..=MAX_STREAM_TEXT_BYTES).contains(&text_bytes)

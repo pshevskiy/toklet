@@ -11,11 +11,38 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **remaining S1.B MiniCPM5 matrix lineage, codec and quality gates,
-then broader console workloads**, after reviewed CLI attribution and the retained
-explicit RMS store optimization.
+Current/next task: **remaining S1.B MiniCPM5 reproduction of296quantized matrices,
+original10k-target/100-task quality and deeper adoption gates**, after the reviewed
+bounded basic codec/text CLI and retained explicit RMS optimization.
 The user deferred screen capture; engine/CLI metrics, performance and automated
 checks lead work. The full goal stays active; 4B/9B deeper rejections stay binding.
+
+- [x] S1.B MiniCPM5 bounded text codec and diagnostic CLI: exact original BOS,
+  assistant LF/empty-think/padding semantics and stop union;98independent source
+  records/66stream schedules pass. Preserve512MiBcodec/4MiBstream/6GiBengine and
+  512/32 bounds; no screen capture or adoption claim. Source assumptions and
+  ASCII decode-bound cache-stress failure are archived/fixed without reducing
+  original witnesses,660-phase stress or text limits. Corrected-source fresh
+  fmt/both strict Clippy/679CPU/821Metal and native67three46-export slices/C
+  smokes pass;36portable tests pass after the Astra causal-window fix. Final98-record fidelity,
+  both13-construction campaigns and unchanged660-phase/22k-word cache stress pass
+  (maximum215MB RSS). Both14/38-token text histories pass4,177,920complete-logit
+  native comparisons with exact tokens/text/state. Eight cohorts/80measured+
+  24warm requests clear the5%screen:18.85%/18.32% and12.29%/11.79%request gains;
+  83actual-report negatives and offline replay pass. Astra's sole first-text
+  enclosure finding is fixed in the reader;6old-accepted causal copies now reject.
+  Producer/native/raw evidence is unchanged. Root protection passes after a
+  retained stash-format inspection typo. Astra approves scoped retention;
+  quality/default/adoption/1%gates stay open.
+  [Review/commit](artifacts/minicpm5-text-codec-2026-11-10/publication-checks.json).
+  [Scope/current evidence](docs/minicpm5-text-codec.md),
+  [contract](artifacts/minicpm5-text-codec-2026-11-10/prospective-contract.json).
+
+- [x] User-requested disk recovery: removed323,538nonexecutable intermediate/
+  incremental files from7completed-build caches; free space2.0→29.1GiB.
+  Kept current build caches, executables, native libraries, models and evidence.
+  All4,031task inputs/28protected hashes pass; root user work/app link preserved.
+  [Receipt](artifacts/minicpm5-text-codec-2026-11-10/disk-cleanup-2026-11-10/result.json).
 
 - [x] S1.B parent identity: bounded whole-object authentication of both pinned
   BF16 shards, per-tensor/block hashes and exact unquantized norm parity. Stream
