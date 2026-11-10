@@ -11,14 +11,33 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **qualify the pinned LFM3 BF16 source/payload and exact graph
-before new kernels**. The MiniCPM5 precision audit is reviewed and its current
-managed native adoption remains rejected. Every captured original CPU bound admits a
-native Half/F32 value, but the existing native graph still fails its numerical
-gate. Keep the research route; do not adopt it or score reduced quality tasks.
-Reconsideration requires corrected original numerics and both full original
-10k-target/100-task comparisons/caps. Engine/CLI work leads; screen capture and
-iPhone remain deferred. The whole roadmap and 4B/9B rejections stay active.
+Current/next task: **qualify LFM3 seven-tap scalar convolution and independent
+six-row history/chunk fixtures before composing the graph**. The whole model roadmap stays active. Current managed MiniCPM5 adoption
+remains rejected at its unchanged numerical gate; its research route stays
+available. Reconsideration needs corrected original numerics and both original
+10k-target/100-task quality comparisons/caps. Engine/CLI work leads; interactive
+screen capture and iPhone remain deferred. Preserve the 4B/9B rejections.
+
+- [x] S1.L LFM3 BF16 source audit: complete child/parent hashes and all 286
+  tensors/1,728,801,536 parameters match under 13 singleton convolution-axis
+  transforms, including 119 learned norms. Exact declared config/tokenizer links
+  pass. Parent bytes are discarded; the child is independently rehashed across
+  1,014 blocks. Nineteen portable tests and 28 actual offline CLI rejections pass,
+  including a changed byte in a temporary APFS clone, then removed with its
+  reconstruction recipe retained. Both owned campaigns close within a separate
+  512 MiB aggregate guard (247.6 MB maximum conservative final RSS sum); the
+  engine remains at 6 GiB. Fresh fmt and identical 4,034 Cargo/421 native/ten
+  package input/output hashes support required-check reuse. Astra approves
+  scoped retention after its RSS-consistency finding was fixed: final per-PID peaks now
+  cover that PID's sampled RSS, with a complete replay and coherent negatives.
+  The initial closure schema preflight failed before writes and was corrected.
+  This authenticates repackaging only; no graph, codec, numerical,
+  memory-fit, quality, performance or adoption qualification follows.
+  [Scope/next work](docs/lfm3-source-qualification.md),
+  [review/commit](artifacts/lfm3-source-2026-11-10/publication-checks.json),
+  [parent audit](artifacts/lfm3-source-2026-11-10/parent-checks-1.json),
+  [offline replay](artifacts/lfm3-source-2026-11-10/offline-checks-2.json),
+  [negative controls](artifacts/lfm3-source-2026-11-10/negative-checks-2.json).
 
 - [x] S1.B native precision audit: all 442,863,360 paired CPU coordinates admit a
   finite original-domain output; zero discrete/continuous exclusions. A fresh
@@ -42,7 +61,7 @@ iPhone remain deferred. The whole roadmap and 4B/9B rejections stay active.
 - [x] Fourth user-requested disk recovery: removed 7,919 inactive Cargo test
   executables, recovering 22.5 GiB net and leaving 80.0 GiB free at completion.
   All 22,464 protected hashes and 494,721 retained-cache metadata checks pass.
-  Benchmark runners, engine outputs, current caches, models, raw evidence and
+  Benchmark examples, engine outputs, current caches, models, raw evidence and
   user work are preserved. This cleanup changes no engine implementation;
   LFM3 qualification remains the current task.
   [Receipt](artifacts/lfm3-source-2026-11-10/disk-cleanup-4/result.json).

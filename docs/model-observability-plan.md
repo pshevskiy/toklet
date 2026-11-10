@@ -164,13 +164,19 @@ MiniCPM5 route and keep its qualified research scopes. Both original full qualit
 comparisons remain mandatory for reconsideration, with no score claimed. Advance
 to LFM3 source/payload/graph qualification; no new model is admitted by this audit.
 
-The [LFM3 metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)
-checks286BF16 tensors/3.458GB for the new candidate and594physical tensors/0.973GB
-for the official Q4 reference. Its conversion manifest links to an accessible,
-pinned modified BF16 parent's expected hash; complete payload bytes are still
-unauthenticated. This graph needs7-tap convolution, rotating256-token windows,
+The [LFM3 source audit](lfm3-source-qualification.md) now authenticates both
+complete 3.458 GB BF16 objects and exact equality of all 286 tensors, including
+13 singleton-axis convolution transforms and 119 norms. Independent retained
+child replay covers 1,014 blocks; parent bytes are discarded. Nineteen portable
+and 28 actual offline negative controls pass within the separate 512 MiB audit
+budget; Astra approves scoped source-audit retention. This authenticates the selected modified-parent
+repackaging, without numerical or adoption qualification. Next qualify seven-tap
+scalar convolution/history fixtures, then rotating 256-token windows,
 sandwich/QK norms, per-head attention gates and layer-specific partial RoPE.
-Existing LFM2 support and publisher parity results do not qualify those mechanisms.
+Existing LFM2 support and publisher parity results do not qualify these mechanisms.
+Stock-to-modified and modified-to-native full quality gates remain mandatory.
+The prior [metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)
+and oversized FP32 variant rejection remain historical evidence.
 
 The [remaining small-model audit](../artifacts/small-model-metadata-2026-11-09/preflight-summary.json)
 checks53metadata files and12canonical/diagnostic headers across8pinned sources.

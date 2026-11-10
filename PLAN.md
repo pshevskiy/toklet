@@ -70,8 +70,13 @@ now finds a representable Half/F32 value at every original captured coordinate,
 independently confirmed by constructive witnesses. This does not correct the
 native graph or qualify quality/adoption. Reject current managed MiniCPM5
 adoption at its existing numerical gate; retain the scoped research route and
-continue LFM3 source/payload/graph qualification. Any reconsideration still needs
-corrected original numerics and both complete original quality comparisons.
+continue LFM3 source/payload/graph qualification. Its standalone
+[source audit](docs/lfm3-source-qualification.md) now authenticates exact BF16
+repackaging; Astra approves scoped retention. Runtime/adoption remain
+unqualified. Next
+qualify the seven-tap scalar operator/history fixtures before composing the
+graph. Any MiniCPM5 reconsideration still needs corrected original numerics and
+both complete original quality comparisons.
 
 The initial settings below describe the foundation. Later selected models and
 routes use their own authenticated configuration and scoped acceptance evidence;

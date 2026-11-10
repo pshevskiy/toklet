@@ -18,7 +18,7 @@ anchors and whitespace pass; live PLAN and numerical inputs are unchanged.
 The fourth user-requested disk cleanup removed 7,919 inactive Cargo test
 executables, recovering 22.5 GiB net and leaving 80.0 GiB free at completion.
 All 22,464 protected hashes and 494,721 retained-cache metadata checks pass.
-Benchmark runners, engine outputs, current caches, models, raw evidence and
+Benchmark examples, engine outputs, current caches, models, raw evidence and
 user work are preserved; engine implementation and qualification are unchanged.
 [Receipt](../artifacts/lfm3-source-2026-11-10/disk-cleanup-4/result.json).
 
@@ -53,6 +53,22 @@ list and the cleanup controller's verified interrupt/resume history.
 | Qwen2 prompt lookup | Repeated contract prompt gains about 53% decode, but the code prompt misses the 5% gate. Explicit nonstreaming API retained; default adoption rejected. | [Timing](../benchmarks/results/2026-11-06-m9-qwen2-lookup-timing-v1.json) |
 
 ## Existing correctness, memory and observability foundations
+
+LFM3's complete BF16 child and modified parent authenticate, with exact equality
+of all 286 tensors/1.729B parameters, 13 singleton-axis convolution transforms
+and 119 norms. Independent child replay covers 1,014 blocks; no parent payload
+is retained. Nineteen portable tests and 28 actual offline CLI rejections pass.
+Closed stream/replay audits stay below a separate 512 MiB aggregate guard;
+maximum conservative final RSS sum is 247.6 MB. Required engine inputs/outputs
+are unchanged and fresh fmt passes. Astra's RSS finding is fixed: each final
+peak must cover the same PID's sampled RSS, with fresh replay/negative controls;
+Astra approves scoped retention. Next qualify
+seven-tap scalar convolution/history fixtures and then the remaining graph;
+quality, runtime, fit, performance and adoption stay open.
+[Scope](lfm3-source-qualification.md),
+[review/commit](../artifacts/lfm3-source-2026-11-10/publication-checks.json),
+[parent audit](../artifacts/lfm3-source-2026-11-10/parent-checks-1.json),
+[offline replay](../artifacts/lfm3-source-2026-11-10/offline-checks-2.json).
 
 The MiniCPM5 native precision audit finds no output-grid obstruction across all
 442,863,360paired original CPU coordinates. A complete replay agrees; a separate
