@@ -134,6 +134,14 @@ RMS opt-in. Astra approves scoped retention;
 [review/commit](../artifacts/minicpm5-text-codec-2026-11-10/publication-checks.json).
 No model adoption is implied.
 
+The [complete MiniCPM5 quality inputs](minicpm5-quality-inputs.md) now freeze all
+10,000 targets and original 100 tasks/caps for separate stock-to-modified and
+modified-to-native comparisons. Full cold source replay and altered-input
+controls and Astra review pass. All corpus IDs and 100 task renders/IDs
+match pinned stock metadata, whose weights remain undownloaded. Loss requires
+1,025 positions and the largest task 559; the current 512 diagnostic limit stays
+fixed until separately qualified. No quality score or adoption follows.
+
 The [LFM3 metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)
 checks286BF16 tensors/3.458GB for the new candidate and594physical tensors/0.973GB
 for the official Q4 reference. Its conversion manifest links to an accessible,

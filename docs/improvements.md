@@ -30,6 +30,16 @@ anchors and whitespace pass; live PLAN and numerical inputs are unchanged.
 
 ## Existing correctness, memory and observability foundations
 
+MiniCPM5 complete quality inputs now preserve all original 10,000 targets/100
+tasks and their caps. Cold recipe replay, seven portable tests and 28 altered-
+input rejections pass. Astra independently replays all payload hashes and
+approves scoped retention, no findings. Original stock metadata is pinned,
+without its weight download; all corpus/task IDs and task renders match the
+selected child. Full scoring requires 1,025 positions (largest task 559), beyond
+the unchanged 512 diagnostic limit. Numerical/quality/adoption gates remain
+open. [Scope/evidence](minicpm5-quality-inputs.md),
+[review/commit](../artifacts/minicpm5-quality-inputs-2026-11-10/publication-checks.json).
+
 MiniCPM5 matrix reproduction is retained with Astra approval. The frozen
 MLX 0.32.3 GPU/BF16 affine8 recipe reproduces all 296 matrices/888 arrays
 exactly while authenticating both full parent objects. All 85 copied norms also

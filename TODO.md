@@ -11,11 +11,28 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **remaining S1.B MiniCPM5 original 10k-target/100-task quality
-and deeper adoption gates**, after the reviewed bounded matrix reproduction,
-basic codec/text CLI and retained explicit RMS optimization.
+Current/next task: **S1.B MiniCPM5 numerical checks needed for 1,025-position
+quality execution, then both original 10k-target/100-task comparisons and
+adoption gates**. Complete inputs, bounded matrix reproduction, basic codec/CLI
+and the explicit RMS optimization are reviewed in their recorded scopes.
 The user deferred screen capture; engine/CLI metrics, performance and automated
 checks lead work. The full goal stays active; 4B/9B deeper rejections stay binding.
+
+- [x] S1.B full quality inputs: freeze all original 10,000 loss targets and
+  40 code/30 prose/30 continuation cases with unchanged output caps and gates.
+  Official stock metadata is pinned at `42433e90`; no stock weights downloaded.
+  Wrapper/padding and template tool branches differ, but complete corpus IDs and
+  all 100 task renders/IDs match exactly. All 10,000 targets/100 tasks prepare
+  under a 3,643-file admitted parser runtime; 546 MB final RSS, no model execution.
+  Full tasks need up to 559 positions and loss blocks 1,025; current capacity
+  stays 512. Seven portable tests, complete cold source replay and 28 altered-
+  input rejections pass, including eight coherent source/self-hash mutations.
+  Manifest/token bytes are versioned; raw tasks/prefix remain in artifacts.
+  Fresh fmt and exact 4,031 Cargo/421 native input/10 package hash reuse pass.
+  Astra independently replays all payload hashes and approves scoped retention,
+  no findings; full numerical/quality/adoption remain open.
+  [Scope/evidence](docs/minicpm5-quality-inputs.md),
+  [review/commit](artifacts/minicpm5-quality-inputs-2026-11-10/publication-checks.json).
 
 - [x] S1.B MiniCPM5 matrix reproduction: all 296 matrices/888 affine arrays and
   85 copied norms match exactly across 4,128 bounded tiles. Both complete BF16
