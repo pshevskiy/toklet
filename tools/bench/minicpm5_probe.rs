@@ -55,6 +55,39 @@ mod contract {
     use serde_json::{Value, json};
     use sha2::{Digest, Sha256};
     use std::{fs::File, io::Read, path::Path};
+    pub fn profile_stage(index: usize) -> Result<(Option<usize>, &'static str, &'static str)> {
+        const ROLES: [(&str, &str); 17] = [
+            ("input_norm", "rms"),
+            ("q", "mlx_product"),
+            ("k", "mlx_product"),
+            ("v", "mlx_product"),
+            ("q_rotary", "rotary"),
+            ("k_rotary", "rotary"),
+            ("cache", "cache"),
+            ("attention", "attention"),
+            ("attention_projection", "mlx_product"),
+            ("attention_residual", "residual"),
+            ("post_attention_norm", "rms"),
+            ("gate", "mlx_product"),
+            ("silu", "silu"),
+            ("up", "mlx_product"),
+            ("gated", "gating"),
+            ("down", "mlx_product"),
+            ("output_residual", "residual"),
+        ];
+        match index {
+            0 => Ok((None, "embedding", "mlx_gather")),
+            1..=714 => {
+                let i = index - 1;
+                let (role, kernel) = ROLES[i % 17];
+                Ok((Some(i / 17), role, kernel))
+            }
+            715 => Ok((None, "final_norm", "rms")),
+            716 => Ok((None, "head", "mlx_product")),
+            717 => Ok((None, "validate", "validate_float")),
+            _ => Err("profile stage index outside fixed graph".into()),
+        }
+    }
     pub fn cases() -> Value {
         json!({"single":{"tokens":[0],"position_offset":0},"short":{"tokens":[0,7,13,3],"position_offset":0},"future_changed":{"tokens":[0,7,13,17],"position_offset":0},"offset5":{"tokens":[7,13,3],"position_offset":5},"tile17":{"tokens":[0,7,13,3,0,7,13,3,0,7,13,3,0,7,13,3,0],"position_offset":0},"offset509":{"tokens":[7,13,3],"position_offset":509}})
     }
@@ -277,6 +310,203 @@ mod apple {
         selected: u32,
         full_logits_available: bool,
         timing: metal::Timing,
+    }
+
+    /// Counter collection is diagnostic. Pair only completed phase clocks;
+    /// resolves, full-logit comparison, selection and publication are outside.
+    pub fn profile() -> Result<()> {
+        let args: Vec<_> = std::env::args_os().skip(2).collect();
+        if args.len() != 5 {
+            return Err("usage: minicpm5_probe profile MODEL REFERENCE SHA NEW-OUTPUT baseline-first|profile-first".into());
+        }
+        let first = match args[4].to_str() {
+            Some("baseline-first") => false,
+            Some("profile-first") => true,
+            _ => return Err("profile order must be baseline-first or profile-first".into()),
+        };
+        let model_path = PathBuf::from(&args[0]);
+        let source = PathBuf::from(&args[1]);
+        let source_sha = args[2].to_str().ok_or("manifest SHA must be UTF-8")?;
+        let reference = reference(&source, source_sha)?;
+        let teacher = teacher(&reference)?;
+        let prompt = tokens(&cases()["short"]["tokens"])?;
+        for &(name, size, pin) in FILES {
+            hash_file(&model_path.join(name), size, pin)?;
+        }
+        let out = PathBuf::from(&args[3]);
+        fs::create_dir(&out)?;
+        let file = OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(out.join("profiles.jsonl"))?;
+        let mut output = BufWriter::new(file);
+        let model = metal::Model::load_mlx(
+            &model_path,
+            LoadOptions {
+                context_limit: 512,
+                memory_limit_bytes: TOTAL - APP,
+            },
+        )?;
+        if model.weights_bytes() != 2674218150 || model.positional_resident_bytes() != 0 {
+            return Err("profile resident identity differs".into());
+        }
+        let mut baseline = make_session(&model, 32, 0, ReadbackMode::FullLogits)?;
+        let weights = model.model_resident_bytes()?;
+        let remaining = (TOTAL - APP)
+            .checked_sub(
+                baseline
+                    .memory()
+                    .admitted_bytes
+                    .checked_sub(weights)
+                    .ok_or("shared owner underflow")?,
+            )
+            .ok_or("combined profile admission underflow")?;
+        let mut profiled = metal::Session::with_attention_mode(
+            &model,
+            session::Options {
+                capacity: 512,
+                prefill_chunk_size: 32,
+                position_offset: 0,
+                memory_limit_bytes: remaining,
+            },
+            ProjectionMode::MlxAffine,
+            NormalizationMode::Compensated,
+            ReadbackMode::FullLogits,
+            AttentionMode::Reference,
+        )?;
+        profiled.enable_profile()?;
+        let combined = baseline
+            .memory()
+            .admitted_bytes
+            .checked_add(profiled.memory().admitted_bytes)
+            .and_then(|n| n.checked_sub(weights))
+            .and_then(|n| n.checked_add(APP))
+            .ok_or("combined profile owner overflow")?;
+        if combined > TOTAL {
+            return Err("combined profile owner exceeds6GiB".into());
+        }
+        let ready = json!({"event":"ready","format":"toklet-minicpm5-profile-v1",
+            "repository":REPOSITORY,"revision":REVISION,"source_manifest_sha256":source_sha,
+            "device":model.device_name(),"profile":"MlxAffine/Compensated/Reference/Half/FullLogits",
+            "capacity":512,"prefill_chunk":32,"prompt":prompt,"teacher_tokens":teacher,
+            "first_order":args[4].to_str(),"warmups":3,"measured_samples":10,"events_per_phase":718,
+            "baseline_memory":baseline.memory(),"profile_memory":profiled.memory(),
+            "shared_weights_bytes":weights,"application_allowance_bytes":APP,"combined_admitted_bytes":combined,
+            "load_timing":{"load_seconds":model.load_timing.load_seconds,"conversion_seconds":model.load_timing.conversion_seconds,"compilation_seconds":model.load_timing.compilation_seconds},"ordinary_request_clock_available":false,
+            "clock_scope":"completed evaluate_next_chunk only; excludes comparison, selection accessor, counter resolve and JSON"});
+        serde_json::to_writer(&mut output, &ready)?;
+        output.write_all(b"\n")?;
+        output.flush()?;
+        for sample in 0..13 {
+            baseline.reset();
+            profiled.reset();
+            baseline.set_tokens(&prompt)?;
+            profiled.set_tokens(&prompt)?;
+            for (step, &token) in teacher.iter().enumerate() {
+                let profile_first = first ^ ((sample + step) % 2 == 1);
+                let measure = |session: &mut metal::Session<'_>| -> Result<u64> {
+                    let clock = std::time::Instant::now();
+                    let rows = session.evaluate_next_chunk()?;
+                    let wall = u64::try_from(clock.elapsed().as_nanos())?;
+                    if rows != if step == 0 { 4 } else { 1 } {
+                        return Err("profile completed work differs".into());
+                    }
+                    Ok(wall)
+                };
+                let (base_wall, profile_wall) = if profile_first {
+                    let p = measure(&mut profiled)?;
+                    (measure(&mut baseline)?, p)
+                } else {
+                    let b = measure(&mut baseline)?;
+                    (b, measure(&mut profiled)?)
+                };
+                let left = baseline
+                    .logits()
+                    .ok_or("ordinary profile-control logits absent")?;
+                let right = profiled.logits().ok_or("instrumented logits absent")?;
+                if left.len() != VOCAB
+                    || right.len() != VOCAB
+                    || left.iter().zip(right).any(|(a, b)| {
+                        !a.is_finite() || !b.is_finite() || a.to_bits() != b.to_bits()
+                    })
+                    || baseline.history() != profiled.history()
+                    || baseline.evaluated_len() != 4 + step
+                    || profiled.evaluated_len() != 4 + step
+                    || baseline.pending_len() != 0
+                    || profiled.pending_len() != 0
+                {
+                    return Err("profile changed complete logits or state".into());
+                }
+                let selected = baseline
+                    .greedy_token()
+                    .ok_or("ordinary selection absent")??;
+                if selected != token
+                    || profiled
+                        .greedy_token()
+                        .ok_or("profile selection absent")??
+                        != selected
+                {
+                    return Err("profile selection differs from frozen teacher prefix".into());
+                }
+                let mut digest = Sha256::new();
+                for value in left {
+                    digest.update(value.to_le_bytes());
+                }
+                let counters = profiled.profile()?;
+                if counters.events.len() != 718 {
+                    return Err("profile stage coverage differs".into());
+                }
+                let mut stages = Vec::with_capacity(718);
+                for (index, event) in counters.events.iter().enumerate() {
+                    let (layer, role, kernel) = profile_stage(index)?;
+                    if event.name != kernel {
+                        return Err(
+                            format!("profile stage{index}: {} != {kernel}", event.name).into()
+                        );
+                    }
+                    stages.push(json!({"index":index,"layer":layer,"role":role,"sample":event}));
+                }
+                let record = json!({"event":"phase","sample":sample,"warmup":sample<3,"step":step,
+                    "rows":if step==0 {4}else{1},"profile_first":profile_first,
+                    "baseline":{"wall_nanoseconds":base_wall,"completed_timing":baseline.timing()},
+                    "instrumented":{"wall_nanoseconds":profile_wall,"completed_timing":profiled.timing()},
+                    "committed_after":4+step,"pending_after":0,"history_after":4+step,"selected":selected,
+                    "all_logits_exact":true,"logits_sha256":format!("{:x}",digest.finalize()),
+                    "clock_start":counters.start,"clock_end":counters.end,
+                    "host_clock_sample_bracket_seconds":counters.host_clock_sample_bracket_seconds,"stages":stages});
+                serde_json::to_writer(&mut output, &record)?;
+                output.write_all(b"\n")?;
+                output.flush()?;
+                baseline.append(&[token])?;
+                profiled.append(&[token])?;
+            }
+            if baseline.evaluated_len() != 7
+                || profiled.evaluated_len() != 7
+                || baseline.pending_len() != 1
+                || profiled.pending_len() != 1
+                || baseline.history().len() != 8
+                || baseline.history() != profiled.history()
+            {
+                return Err("profile request final history differs".into());
+            }
+        }
+        for &(name, size, pin) in FILES {
+            hash_file(&model_path.join(name), size, pin)?;
+        }
+        super::contract::reference(&source, source_sha)?;
+        serde_json::to_writer(
+            &mut output,
+            &json!({"event":"complete","phase_pairs":52,
+            "compared_logits_values":52*VOCAB,"ordinary_telemetry_overhead_qualified":false,
+            "model_quality_adoption_qualified":false,"engine_optimization_adopted":false}),
+        )?;
+        output.write_all(b"\n")?;
+        output.flush()?;
+        println!(
+            "{}",
+            json!({"profile_completed":true,"phase_pairs":52,"events_per_phase":718,"adoption_qualified":false})
+        );
+        Ok(())
     }
 
     /// Loaded-model, empty-cache raw requests. JSON and reset are outside each
@@ -696,6 +926,8 @@ mod apple {
 fn main() -> contract::Result<()> {
     if std::env::args_os().nth(1).is_some_and(|v| v == "bench") {
         apple::bench()
+    } else if std::env::args_os().nth(1).is_some_and(|v| v == "profile") {
+        apple::profile()
     } else {
         apple::run()
     }
@@ -710,6 +942,32 @@ fn main() {
 mod tests {
     use super::contract::*;
     use serde_json::json;
+    #[test]
+    fn fixed_profile_inventory_has_all_layers_and_untied_head() {
+        let stages = (0..718)
+            .map(|i| profile_stage(i).unwrap())
+            .collect::<Vec<_>>();
+        assert_eq!(
+            stages
+                .iter()
+                .filter(|(_, _, name)| *name == "mlx_product")
+                .count(),
+            295
+        );
+        assert_eq!(
+            stages.iter().filter(|(_, _, name)| *name == "rms").count(),
+            85
+        );
+        for layer in 0..42 {
+            assert_eq!(
+                stages.iter().filter(|(l, _, _)| *l == Some(layer)).count(),
+                17
+            );
+        }
+        assert_eq!(stages[716], (None, "head", "mlx_product"));
+        assert!(profile_stage(718).is_err());
+        assert!(profile_stage(usize::MAX).is_err());
+    }
     #[test]
     fn token_boundaries_reject_without_model_or_gpu() {
         for ids in [

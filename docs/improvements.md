@@ -124,6 +124,14 @@ owner-ledger findings are fixed with exact offline revalidation; scoped retentio
 is approved. [Review/commit](../artifacts/minicpm5-heretic8-payload-2026-11-10/publication-checks.json).
 [Scope, measurements and limitations](minicpm5-console.md).
 
+The [MiniCPM5 CLI profiler](minicpm5-profile.md) passes 104 matched phase pairs,
+74,672 calibrated intervals and 13.58M exact logit comparisons across two runs.
+Prefill projections and decode normalization are measured targets; diagnostic
+phase inflation is 11.5–19.7%, so no ordinary operator-cost, 1% overhead or speedup
+claim follows. Fresh lint/example tests, portable/damaged-output controls and
+input-bound core/native reuse pass. Astra approves the counter-enclosure fix and
+scoped retention; [review/commit](../artifacts/minicpm5-profile-2026-11-10/publication-checks.json).
+
 ## Selected model decisions
 
 Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the five under-4B

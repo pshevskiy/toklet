@@ -11,10 +11,25 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **engine/CLI GPU profiling and remaining S1.B MiniCPM5 gates**,
-after the reviewed short console evaluation and S1.A source-admission change.
+Current/next task: **a bounded Half RMS parallel-store experiment and remaining
+S1.B MiniCPM5 gates**, after reviewed short console evaluation and CLI attribution.
 The user deferred screen capture; engine/CLI metrics, performance and automated
 checks lead work. The full goal stays active; 4B/9B deeper rejections stay binding.
+
+- [x] MiniCPM5 CLI GPU attribution: expose existing bounded counters with exact
+  ordinary/profiled logit and state parity, two controlled release cohorts and
+  strict offline clock/coverage/memory reporting. Preserve the ordinary baseline
+  and all model/adoption gates; no screen sharing. New checkout briefly crossed
+  the disk floor; byte-identical APFS clones and verified inactive compiler-cache
+  recovery restored headroom. Fresh fmt/both strict Clippy, five example tests,
+  eleven portable tests and 58 resealed negatives pass; unchanged core/native
+  checks are reused by input hashes. Two cohorts pass 104 pairs/74,672 intervals/
+  13.58M logit comparisons. Profiler inflates phase clocks 11.5–19.7%; no ordinary
+  overhead or optimization claim. Prefill projections and decode normalization
+  guide the next exact-reduction/parallel-store RMS hypothesis. Astra counter
+  enclosure finding is fixed; saved results revalidate. Astra approves scoped
+  retention. [Review/commit](artifacts/minicpm5-profile-2026-11-10/publication-checks.json).
+  [Scope/results](docs/minicpm5-profile.md).
 
 - [x] S1.B short console vertical: authenticated 2.674 GB Heretic MLX8 object;
   parent headers match 381 BF16 tensors, whole-parent/lineage still open. The

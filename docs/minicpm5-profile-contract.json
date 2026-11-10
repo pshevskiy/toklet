@@ -1,0 +1,71 @@
+{
+  "format": "toklet-minicpm5-profile-contract-v1",
+  "engine_base": "d7ed9038aec127661b5998579712dad1d5e7908f",
+  "repository": "bumblebuttpow/MiniCPM5-2B-heretic-abliterated-MLX-8bit",
+  "revision": "50ab1b226834c290cdf68e460eb899e5cff7c61d",
+  "source_manifest_sha256": "360cf36c6f743fb4af37c07dbd0e0c78d22e0c9922653629f0707131c88657b3",
+  "prompt": [
+    0,
+    7,
+    13,
+    3
+  ],
+  "teacher_tokens": [
+    6,
+    978,
+    44004,
+    130073
+  ],
+  "capacity": 512,
+  "prefill_chunk": 32,
+  "profile": "MlxAffine/Compensated/Reference/Half/FullLogits",
+  "cohorts": [
+    "baseline-first",
+    "profile-first"
+  ],
+  "warmups": 3,
+  "measured_samples": 10,
+  "steps": 4,
+  "events_per_phase": 718,
+  "exact_logits_values_per_cohort": 6789120,
+  "clock_scope": "completed evaluate_next_chunk per ordinary/instrumented phase only; excludes comparison, selection accessor, counter resolve and JSON; no request/TTFT claim",
+  "controls": [
+    "full-logit bit parity and exact sampled/committed state at all52phase pairs",
+    "source/model/build/contract hash freeze before cohorts",
+    "two independent release cohorts; record raw power/thermal boundaries",
+    "strict clock-pair/tick calibration, exact role coverage, disjoint host and owned clocks",
+    "owners count weights once plus two independent sessions and64MiB profile allowance;32MiB app reserve;6GiB total",
+    "resealed damaged actual outputs reject; CPU tests require no model or GPU"
+  ],
+  "quality_gates": "original model gates remain binding; no changes to source numerical policy, quality, adoption or defaults",
+  "performance_claim": "instrumented phase attribution and measured diagnostic inflation only; ordinary baseline remains separate; no1% overhead or optimization qualification",
+  "hypothesis": "Use calibrated operator intervals to locate dominant costs before selecting one engine experiment",
+  "written_before_first_native_profile": true,
+  "expected_logits_sha256": [
+    "8c8c44a8c576167beb1cf4ce9447f189f4d909cd2eb9dae0cb52554091a6d743",
+    "994af6fa873767c7d1e3d2e1a007fa884931482e3c339260116d5ed8802f73b4",
+    "c0388973c0cc4238ac82598bbded0e2951bf75b84a1b47aa12fe03ff30bbea03",
+    "95610ef2b7019274192db14e0ef1f7bd29a8c7cb25a471fdd4d0585f24b9affe"
+  ],
+  "expected_baseline_memory": {
+    "weights_bytes": 2674218150,
+    "kv_bytes": 22021272,
+    "scratch_bytes": 21478868,
+    "history_bytes": 2048,
+    "logits_bytes": 1044480,
+    "metadata_bytes": 5184,
+    "metadata_allowance_bytes": 67108864,
+    "admitted_bytes": 2785878866
+  },
+  "expected_profile_memory": {
+    "weights_bytes": 2674218150,
+    "kv_bytes": 22021272,
+    "scratch_bytes": 21478868,
+    "history_bytes": 2048,
+    "logits_bytes": 1044480,
+    "metadata_bytes": 5184,
+    "metadata_allowance_bytes": 134217728,
+    "admitted_bytes": 2852987730
+  },
+  "combined_admitted_bytes": 2998202878
+}

@@ -109,6 +109,11 @@ existing defaults stay unchanged. Whole-parent conversion lineage, original
 quality, codec/deeper numerical and adoption remain open; this is bounded Mac
 evaluation rather than blanket MiniCPM support.
 
+The [bounded MiniCPM5 CLI profile](minicpm5-profile.md) now supplies calibrated
+per-layer/operator intervals with complete-logit parity and explicit diagnostic
+inflation. Repeated observations target prefill projections and serial Half RMS
+for the next measured experiment; this grants no broader model or adoption scope.
+
 The [LFM3 metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)
 checks286BF16 tensors/3.458GB for the new candidate and594physical tensors/0.973GB
 for the official Q4 reference. Its conversion manifest links to an accessible,
