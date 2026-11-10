@@ -44,6 +44,7 @@ mod moe_router_half;
 pub mod planning;
 mod profile;
 mod reference_schedule;
+mod rms_store;
 mod transition;
 use crate::{model, q4, session, weights};
 pub use diagnostic::Diagnostic;
@@ -1056,6 +1057,7 @@ pub struct Session<'m> {
     attention_mode: AttentionMode,
     parallel_reference: Option<&'m reference_schedule::Pipelines>,
     affine_tile4: Option<&'m mlx::Pipeline>,
+    rms_parallel_store: Option<&'m rms_store::Pipeline>,
     #[cfg(all(feature = "llama-staged-mac-probe", target_os = "macos"))]
     llama_staged: Option<&'m llama_staged::Pipeline>,
     memory: session::Memory,
@@ -1360,6 +1362,7 @@ impl<'m> Session<'m> {
                 attention_mode,
                 parallel_reference: None,
                 affine_tile4: None,
+                rms_parallel_store: None,
                 #[cfg(all(feature = "llama-staged-mac-probe", target_os = "macos"))]
                 llama_staged: None,
                 memory,
@@ -1633,7 +1636,7 @@ impl<'m> Session<'m> {
         }
         self.snapshot(&command, None, "embedding", &s.x.raw)?;
         for (layer_index, (layer, cache)) in self.model.layers.iter().zip(&self.cache).enumerate() {
-            rms(
+            rms_with_store(
                 g,
                 &command,
                 &s.x,
@@ -1644,6 +1647,7 @@ impl<'m> Session<'m> {
                 c.rms_norm_eps,
                 self.normalization_mode,
                 &s.status,
+                self.rms_parallel_store,
             )?;
             self.snapshot(&command, Some(layer_index), "input_norm", &s.norm.raw)?;
             project(
@@ -1705,7 +1709,7 @@ impl<'m> Session<'m> {
             // inside the same command; no host wait or transient buffer.
             let (q_input, q_rotary, k_input, k_rotary) =
                 if let Some((q_norm, k_norm)) = &layer.qk_norms {
-                    rms(
+                    rms_with_store(
                         g,
                         &command,
                         &s.q,
@@ -1716,8 +1720,9 @@ impl<'m> Session<'m> {
                         c.rms_norm_eps,
                         self.normalization_mode,
                         &s.status,
+                        self.rms_parallel_store,
                     )?;
-                    rms(
+                    rms_with_store(
                         g,
                         &command,
                         &s.k,
@@ -1728,6 +1733,7 @@ impl<'m> Session<'m> {
                         c.rms_norm_eps,
                         self.normalization_mode,
                         &s.status,
+                        self.rms_parallel_store,
                     )?;
                     self.snapshot(&command, Some(layer_index), "q_norm", &s.qr.raw)?;
                     self.snapshot(&command, Some(layer_index), "k_norm", &s.kr.raw)?;
@@ -1950,7 +1956,7 @@ impl<'m> Session<'m> {
                 &s.status,
             )?;
             self.snapshot(&command, Some(layer_index), "attention_residual", &s.x.raw)?;
-            rms(
+            rms_with_store(
                 g,
                 &command,
                 &s.x,
@@ -1961,6 +1967,7 @@ impl<'m> Session<'m> {
                 c.rms_norm_eps,
                 self.normalization_mode,
                 &s.status,
+                self.rms_parallel_store,
             )?;
             self.snapshot(
                 &command,
@@ -2086,7 +2093,7 @@ impl<'m> Session<'m> {
             )?;
             self.snapshot(&command, Some(layer_index), "output", &s.x.raw)?;
         }
-        rms(
+        rms_with_store(
             g,
             &command,
             &s.x,
@@ -2097,6 +2104,7 @@ impl<'m> Session<'m> {
             c.rms_norm_eps,
             self.normalization_mode,
             &s.status,
+            self.rms_parallel_store,
         )?;
         self.snapshot(&command, None, "final_norm", &s.norm.raw)?;
         // Ordinary prefill needs only the last causal distribution. Diagnostics
@@ -2297,6 +2305,38 @@ fn scaled_residual(
             rows * width,
             Some(status),
         )
+    }
+}
+#[allow(clippy::too_many_arguments)]
+fn rms_with_store(
+    g: &Gpu,
+    c: &Command<'_>,
+    x: &Buffer<u16>,
+    w: &Buffer<u16>,
+    out: &Buffer<u16>,
+    n: usize,
+    h: usize,
+    eps: f32,
+    mode: NormalizationMode,
+    status: &Buffer<u32>,
+    parallel_store: Option<&rms_store::Pipeline>,
+) -> Result<()> {
+    if let Some(pipeline) = parallel_store {
+        pipeline.encode(
+            c,
+            x,
+            w,
+            out,
+            [
+                n as u32,
+                h as u32,
+                eps.to_bits(),
+                u32::from(mode == NormalizationMode::Compensated),
+            ],
+            status,
+        )
+    } else {
+        rms(g, c, x, w, out, n, h, eps, mode, status)
     }
 }
 #[allow(clippy::too_many_arguments)]

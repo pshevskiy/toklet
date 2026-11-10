@@ -283,10 +283,20 @@ pub(super) struct Gpu {
     pub width: usize,
     parallel_reference: OnceLock<std::result::Result<super::reference_schedule::Pipelines, String>>,
     affine_tile4: OnceLock<std::result::Result<super::mlx::Pipeline, String>>,
+    rms_parallel_store: OnceLock<std::result::Result<super::rms_store::Pipeline, String>>,
     #[cfg(all(feature = "llama-staged-mac-probe", target_os = "macos"))]
     llama_staged: OnceLock<std::result::Result<super::llama_staged::Pipeline, String>>,
 }
 impl Gpu {
+    pub(super) fn rms_parallel_store(&self) -> Result<&super::rms_store::Pipeline> {
+        self.rms_parallel_store
+            .get_or_init(|| {
+                super::rms_store::Pipeline::new(self).map_err(|error| error.to_string())
+            })
+            .as_ref()
+            .map_err(|error| Error::Native(error.clone()))
+    }
+
     #[cfg(all(feature = "llama-staged-mac-probe", target_os = "macos"))]
     pub(super) fn llama_staged(&self) -> Result<&super::llama_staged::Pipeline> {
         self.llama_staged
@@ -409,6 +419,7 @@ impl Gpu {
             width,
             parallel_reference: OnceLock::new(),
             affine_tile4: OnceLock::new(),
+            rms_parallel_store: OnceLock::new(),
             #[cfg(all(feature = "llama-staged-mac-probe", target_os = "macos"))]
             llama_staged: OnceLock::new(),
         })

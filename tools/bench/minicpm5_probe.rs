@@ -265,13 +265,26 @@ mod apple {
             Ok(())
         }
     }
+    fn rms_implementation() -> Option<&'static str> {
+        match std::env::args_os()
+            .nth(1)
+            .as_deref()
+            .and_then(|s| s.to_str())
+        {
+            Some("bench-rms-baseline") => Some("serial"),
+            Some("bench-rms-parallel" | "capture-rms-parallel") => {
+                Some("serial-reduction-parallel-store")
+            }
+            _ => None,
+        }
+    }
     fn make_session(
         model: &metal::Model,
         chunk: usize,
         offset: usize,
         readback: ReadbackMode,
     ) -> Result<metal::Session<'_>> {
-        Ok(metal::Session::with_attention_mode(
+        let mut session = metal::Session::with_attention_mode(
             model,
             session::Options {
                 capacity: 512 - offset,
@@ -283,7 +296,79 @@ mod apple {
             NormalizationMode::Compensated,
             readback,
             AttentionMode::Reference,
-        )?)
+        )?;
+        if rms_implementation() == Some("serial-reduction-parallel-store") {
+            session.enable_rms_parallel_store()?;
+            if !session.rms_parallel_store_enabled() {
+                return Err("RMS selection was not enabled".into());
+            }
+            let before = serde_json::to_value(session.memory())?;
+            if session.enable_rms_parallel_store().is_ok()
+                || serde_json::to_value(session.memory())? != before
+            {
+                return Err("duplicate RMS selection changed owners".into());
+            }
+        }
+        Ok(session)
+    }
+    fn rms_admission_controls(model: &metal::Model, out: &std::path::Path) -> Result<usize> {
+        let options = session::Options {
+            capacity: 512,
+            prefill_chunk_size: 32,
+            position_offset: 0,
+            memory_limit_bytes: TOTAL - APP,
+        };
+        let open = |options| {
+            metal::Session::with_attention_mode(
+                model,
+                options,
+                ProjectionMode::MlxAffine,
+                NormalizationMode::Compensated,
+                ReadbackMode::FullLogits,
+                AttentionMode::Reference,
+            )
+        };
+        let baseline = open(options)?;
+        let before = baseline.memory();
+        let limit = before
+            .admitted_bytes
+            .checked_add(64 * 1024 * 1024)
+            .and_then(|v| v.checked_sub(1))
+            .ok_or("RMS budget control overflow")?;
+        let mut denied = open(session::Options {
+            memory_limit_bytes: limit,
+            ..options
+        })?;
+        let denied_before = serde_json::to_value(denied.memory())?;
+        if !matches!(
+            denied.enable_rms_parallel_store(),
+            Err(metal::Error::Budget { .. })
+        ) || denied.rms_parallel_store_enabled()
+            || serde_json::to_value(denied.memory())? != denied_before
+            || !denied.history().is_empty()
+        {
+            return Err("RMS budget rejection changed state or owners".into());
+        }
+        let shared = model.model_resident_bytes()?;
+        let combined = baseline
+            .memory()
+            .admitted_bytes
+            .checked_add(denied.memory().admitted_bytes)
+            .and_then(|v| v.checked_sub(shared))
+            .and_then(|v| v.checked_add(APP))
+            .ok_or("RMS control combined owner overflow")?;
+        if combined > TOTAL {
+            return Err("RMS control combined owner exceeds6GiB".into());
+        }
+        serde_json::to_writer_pretty(
+            OpenOptions::new()
+                .write(true)
+                .create_new(true)
+                .open(out.join("rms-admission-controls.json"))?,
+            &json!({"format":"toklet-rms-admission-controls-v1","budget_rejected":true,"state_and_owners_unchanged":true,
+            "default_unselected":!baseline.rms_parallel_store_enabled(),"limit_bytes":limit,"required_bytes":limit+1,"combined_admitted_bytes":combined}),
+        )?;
+        Ok(combined)
     }
     fn stage(d: &metal::Diagnostic) -> String {
         let name = match d.stage {
@@ -540,7 +625,9 @@ mod apple {
         if model.weights_bytes() != 2674218150 || model.positional_resident_bytes() != 0 {
             return Err("benchmark resident identity differs".into());
         }
+        let setup_clock = std::time::Instant::now();
         let mut session = make_session(&model, 32, 0, readback)?;
+        let session_setup_seconds = setup_clock.elapsed().as_secs_f64();
         if session.memory().admitted_bytes + APP > TOTAL {
             return Err("benchmark admission exceeds6GiB".into());
         }
@@ -613,7 +700,7 @@ mod apple {
         for &(name, size, pin) in FILES {
             hash_file(&model_path.join(name), size, pin)?;
         }
-        let report = json!({"format":"toklet-minicpm5-raw-request-bench-v1",
+        let mut report = json!({"format":"toklet-minicpm5-raw-request-bench-v1",
             "repository":REPOSITORY,"revision":REVISION,"source_manifest_sha256":source_sha,
             "device":model.device_name(),"profile":"MlxAffine/Compensated/Reference/Half",
             "readback":mode_name,"context_capacity":512,"prefill_chunk":32,"position_offset":0,
@@ -630,6 +717,11 @@ mod apple {
             "allocation_count":null,"user_visible_ttft_nanoseconds":null,
             "samples":samples,"model_quality_qualified":false,"managed_adoption_qualified":false,
             "ordinary_telemetry_overhead_qualified":false});
+        if let Some(implementation) = rms_implementation() {
+            report["format"] = json!("toklet-minicpm5-rms-request-bench-v1");
+            report["normalization_implementation"] = json!(implementation);
+            report["session_setup_seconds"] = json!(session_setup_seconds);
+        }
         let mut output = OpenOptions::new()
             .write(true)
             .create_new(true)
@@ -644,7 +736,15 @@ mod apple {
     }
 
     pub fn run() -> Result<()> {
-        let args: Vec<_> = std::env::args_os().skip(1).collect();
+        let skip = if std::env::args_os()
+            .nth(1)
+            .is_some_and(|a| a == "capture-rms-parallel")
+        {
+            2
+        } else {
+            1
+        };
+        let args: Vec<_> = std::env::args_os().skip(skip).collect();
         if args.len() != 4 {
             return Err(
                 "usage: minicpm5_probe MODEL REFERENCE-MANIFEST MANIFEST-SHA NEW-OUTPUT".into(),
@@ -672,6 +772,9 @@ mod apple {
             return Err("loaded positional identity differs".into());
         }
         let mut admitted = 0;
+        if rms_implementation() == Some("serial-reduction-parallel-store") {
+            admitted = admitted.max(rms_admission_controls(&model, &out)?);
+        }
         let mut chunk_metrics = Vec::new();
         for (name, case) in cases().as_object().unwrap() {
             let ids = tokens(&case["tokens"])?;
@@ -865,7 +968,7 @@ mod apple {
         capture.output.flush()?;
         // Capture is observational. A separate source-bound checker must qualify
         // every value; successful execution alone is not a numerical pass.
-        let report = json!({"format":"toklet-minicpm5-checkpoint-capture-v1","repository":REPOSITORY,"revision":REVISION,
+        let mut report = json!({"format":"toklet-minicpm5-checkpoint-capture-v1","repository":REPOSITORY,"revision":REVISION,
             "source_manifest_sha256":source_sha,"device":model.device_name(),"declared_positions":model.mlx_declared_positions(),
             "implemented_positions":512,"profile":"MlxAffine/Compensated/Reference/Half","requested_chunks":[1,3,32],"effective_chunk":"min(requested,512-position_offset)",
             "weights_bytes":model.weights_bytes(),"positional_bytes":model.positional_resident_bytes(),
@@ -874,6 +977,10 @@ mod apple {
             "native_generated_ids":generated,"native_generation_scope":"four raw IDs; no text/stop/quality qualification",
             "chunk_metrics":chunk_metrics,"chunk_metric_scope":"completed evaluate_next_chunk only; excludes diagnostic array copy/serialization; instrumented numerical diagnostic, not ordinary request/telemetry overhead",
             "held_out_quality_qualified":false,"app_qualified":false,"iphone_qualified":false,"numerical_comparison_pending":true});
+        if rms_implementation() == Some("serial-reduction-parallel-store") {
+            report["format"] = json!("toklet-minicpm5-rms-checkpoint-capture-v1");
+            report["normalization_implementation"] = json!("serial-reduction-parallel-store");
+        }
         let mut manifest = OpenOptions::new()
             .write(true)
             .create_new(true)
@@ -924,7 +1031,10 @@ mod apple {
 }
 #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
 fn main() -> contract::Result<()> {
-    if std::env::args_os().nth(1).is_some_and(|v| v == "bench") {
+    if std::env::args_os()
+        .nth(1)
+        .is_some_and(|v| v == "bench" || v == "bench-rms-baseline" || v == "bench-rms-parallel")
+    {
         apple::bench()
     } else if std::env::args_os().nth(1).is_some_and(|v| v == "profile") {
         apple::profile()

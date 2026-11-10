@@ -36,7 +36,8 @@ def validate_load_timing(timing, elapsed_ns, work_ns):
     need(load + work_ns <= elapsed_ns, 'Disjoint load and completed work clocks exceed owned lifetime')
 
 
-def expected_memory(requested_chunk, position_offset):
+def expected_memory(requested_chunk, position_offset, parallel_store=False):
+    need(type(parallel_store) is bool, 'RMS implementation control must be bool')
     # Independent fixed-graph ledger: H=2048, Q=16*128, KV=2*128,
     # I=6144, V=130560, L=42; seven scalar guards per GPU array.
     # Pinned 64-bit Apple metadata layouts: Views=120, Cache=32, Snapshot=72 B.
@@ -55,6 +56,8 @@ def expected_memory(requested_chunk, position_offset):
     result = dict(weights_bytes=2674218150, kv_bytes=42 * 2 * (2 * capacity * 128 + 7) * 2,
                   scratch_bytes=scratch, history_bytes=capacity * 4, logits_bytes=v * 8,
                   metadata_bytes=chunk * 120 + 42 * 32, metadata_allowance_bytes=64 * 1024 ** 2)
+    if parallel_store:
+        result['metadata_allowance_bytes'] += 64 * 1024 ** 2
     result['admitted_bytes'] = sum(result.values())
     return result
 
@@ -90,7 +93,8 @@ def bounded_json(path, maximum):
     return json.loads(raw, object_pairs_hook=reference.unique)
 
 
-def validate_chunk_metrics(rows, owned):
+def validate_chunk_metrics(rows, owned, parallel_store=False):
+    need(type(parallel_store) is bool, 'RMS implementation control must be bool')
     need(type(owned) is dict and type(owned.get('started_ns')) is int
          and type(owned.get('completed_ns')) is int
          and 0 < owned['started_ns'] < owned['completed_ns'], 'Owned clock interval invalid')
@@ -130,7 +134,7 @@ def validate_chunk_metrics(rows, owned):
         need(end >= begin and (end - begin) * 10 ** 9 <= wall, 'GPU interval exceeds completed chunk wall time')
         gpu_known += end > begin > 0
         memory = row['session_memory']
-        need(reference.same(memory, expected_memory(row['requested_chunk'], row['position_offset']))
+        need(reference.same(memory, expected_memory(row['requested_chunk'], row['position_offset'], parallel_store))
              and memory['admitted_bytes'] + 32 * 1024 ** 2 <= 6 * 1024 ** 3,
              'Session admission/owner ledger differs from fixed graph and capture shape')
         total += wall
@@ -143,7 +147,8 @@ def validate_chunk_metrics(rows, owned):
                 gpu_timestamp_intervals_available=gpu_known, ordinary_request_overhead_qualified=False)
 
 
-def check(source, external_sha, folder, owned):
+def check(source, external_sha, folder, owned, parallel_store=False):
+    need(type(parallel_store) is bool, 'RMS implementation control must be bool')
     import numpy as np
     source, folder = Path(source), Path(folder)
     oracle = reference.verify(source, external_sha)
@@ -154,18 +159,25 @@ def check(source, external_sha, folder, owned):
          and hashlib.sha256(capture_bytes).hexdigest() == owned['capture_manifest_sha256'],
          'Capture manifest does not match completed owned receipt')
     capture = json.loads(capture_bytes, object_pairs_hook=reference.unique)
-    need(type(capture) is dict and set(capture) == {'format', 'repository', 'revision',
+    fields = {'format', 'repository', 'revision',
          'source_manifest_sha256', 'device', 'declared_positions', 'implemented_positions',
          'profile', 'requested_chunks', 'effective_chunk', 'weights_bytes', 'positional_bytes',
          'load_timing', 'maximum_admitted_bytes', 'application_allowance_bytes',
          'native_selected_on_teacher_forced_prefixes', 'array_bytes', 'arrays',
          'native_generated_ids', 'native_generation_scope', 'chunk_metrics', 'chunk_metric_scope',
          'held_out_quality_qualified', 'app_qualified', 'iphone_qualified',
-         'numerical_comparison_pending'}, 'Native report fields differ')
+         'numerical_comparison_pending'}
+    if parallel_store:
+        fields.add('normalization_implementation')
+    need(type(capture) is dict and set(capture) == fields, 'Native report fields differ')
+    if parallel_store:
+        need(capture['normalization_implementation'] == 'serial-reduction-parallel-store',
+             'RMS capture implementation differs')
     need(type(owned.get('exit_code')) is int and owned['exit_code'] == 0
          and owned.get('passed') is True and owned.get('owned_group_absent') is True
          and owned.get('failure') is None, 'Native owned job was not successful and closed')
-    need(capture['format'] == 'toklet-minicpm5-checkpoint-capture-v1'
+    need(capture['format'] == ('toklet-minicpm5-rms-checkpoint-capture-v1' if parallel_store
+                                  else 'toklet-minicpm5-checkpoint-capture-v1')
          and capture['repository'] == reference.REPO and capture['revision'] == reference.REVISION
          and capture['source_manifest_sha256'] == external_sha
          and capture['profile'] == 'MlxAffine/Compensated/Reference/Half'
@@ -184,7 +196,7 @@ def check(source, external_sha, folder, owned):
          and type(capture['weights_bytes']) is int and capture['weights_bytes'] == 2674218150
          and type(capture['positional_bytes']) is int and capture['positional_bytes'] == 0,
          'Native admission/ordinary positional owner differs')
-    chunk_metrics = validate_chunk_metrics(capture['chunk_metrics'], owned)
+    chunk_metrics = validate_chunk_metrics(capture['chunk_metrics'], owned, parallel_store)
     need(capture['maximum_admitted_bytes'] >= max(row['session_memory']['admitted_bytes']
          + 32 * 1024 ** 2 for row in capture['chunk_metrics']), 'Maximum admission undercounts chunk owners')
     validate_load_timing(capture['load_timing'], chunk_metrics['owned_elapsed_ns'],
@@ -292,8 +304,9 @@ if __name__ == '__main__':
     parser.add_argument('capture', type=Path)
     parser.add_argument('owned', type=Path)
     parser.add_argument('output', type=Path)
+    parser.add_argument('--rms-parallel-store', action='store_true')
     args = parser.parse_args()
-    result = check(args.source, args.source_sha, args.capture, bounded_json(args.owned, 1024 ** 2))
+    result = check(args.source, args.source_sha, args.capture, bounded_json(args.owned, 1024 ** 2), args.rms_parallel_store)
     with args.output.open('x') as stream:
         stream.write(json.dumps(result, indent=2, allow_nan=False) + '\n')
     print(json.dumps({key: result[key] for key in ['passed', 'compared_values', 'failed_values', 'max_gate_fraction']}))

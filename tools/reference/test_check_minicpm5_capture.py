@@ -120,6 +120,21 @@ class CompletedMetrics(unittest.TestCase):
         bad=dict(current);bad['extra']='a'*64
         self.assertFalse(reference.producer_pins_match(recorded,bad,source))
 
+    def test_parallel_store_is_explicit_and_adds_only_the_bounded_allowance(self):
+        for requested,offset in [(1,0),(3,5),(32,509)]:
+            ordinary=checker.expected_memory(requested,offset)
+            parallel=checker.expected_memory(requested,offset,True)
+            expected=dict(ordinary,metadata_allowance_bytes=ordinary['metadata_allowance_bytes']+67108864,
+                          admitted_bytes=ordinary['admitted_bytes']+67108864)
+            self.assertEqual(parallel,expected)
+        raw=metrics()
+        for row in raw:row['session_memory']=checker.expected_memory(row['requested_chunk'],row['position_offset'],True)
+        self.assertEqual(checker.validate_chunk_metrics(raw,self.owned(),True)['completed_chunks'],51)
+        with self.assertRaises(ValueError):checker.validate_chunk_metrics(raw,self.owned())
+        for value in [1,None,'parallel']:
+            with self.assertRaises(ValueError):checker.expected_memory(1,0,value)
+            with self.assertRaises(ValueError):checker.validate_chunk_metrics(raw,self.owned(),value)
+
     def test_typed_json_identity_and_finite_numbers(self):
         self.assertTrue(reference.same({'x':[0,1,1.]},{'x':[0,1,1.]}))
         for changed in [{'x':[False,1,1.]},{'x':[0,True,1.]},{'x':[0,1,1]}, {'x':[0,1,1.],'extra':0}]:

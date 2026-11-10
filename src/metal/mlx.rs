@@ -40,6 +40,7 @@ impl super::Session<'_> {
             || !self.history.is_empty()
             || self.evaluated != 0
             || self.affine_tile4.is_some()
+            || self.rms_parallel_store.is_some()
         {
             return Err(Error::Options(
                 "tile4 requires a fresh ordinary Mac MLX session with a chunk of at least four",

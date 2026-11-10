@@ -11,10 +11,24 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **a bounded Half RMS parallel-store experiment and remaining
-S1.B MiniCPM5 gates**, after reviewed short console evaluation and CLI attribution.
+Current/next task: **remaining S1.B MiniCPM5 lineage, codec and quality gates,
+then broader console workloads**, after reviewed CLI attribution and the retained
+explicit RMS store optimization.
 The user deferred screen capture; engine/CLI metrics, performance and automated
 checks lead work. The full goal stays active; 4B/9B deeper rejections stay binding.
+
+- [x] Half RMS parallel stores: explicit bounded MiniCPM5 Mac path, exact scalar
+  reduction and 2,614 bitwise-equal original arrays; 52.9M dual-profile comparisons pass.
+  Fresh fmt/both strict Clippy, 670 CPU/811 Metal tests, two explicit GPU parity/
+  state/dispatch tests, native65 three46-export slices/C smokes, 34 portable tests
+  and 49 altered-report negatives pass. Six eligible cohorts/60 measured requests
+  reduce warm request time21.51%/21.50%, TTFT14% and raise decode35%; fallback
+  within0.14%. Extra64MiB allowance explicit; observed memory stays below6GiB
+  in named scopes, final physical peak unavailable. Disk stops/cache recovery,
+  closure compile error and portable-controller typo are retained/fixed.
+  Astra approves explicit retention; defaults/adoption gates stay fixed.
+  [Scope](docs/minicpm5-rms-store.md),
+  [review/commit](artifacts/minicpm5-rms-store-2026-11-10/publication-checks.json).
 
 - [x] MiniCPM5 CLI GPU attribution: expose existing bounded counters with exact
   ordinary/profiled logit and state parity, two controlled release cohorts and
