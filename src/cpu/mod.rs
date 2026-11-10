@@ -1,4 +1,5 @@
-//! Readable scalar kernels with FP32 storage and checked operation boundaries.
+//! Readable scalar kernels with checked operation boundaries, FP32 references
+//! and explicitly qualified source-specific BF16 operations.
 //! The original FP32 projections remain available alongside qualified FP64
 //! accumulation operations for the decoder.
 //!
@@ -14,6 +15,7 @@ mod dense_decoder;
 mod dense_scaling;
 mod gated_delta;
 mod gelu;
+mod lfm3_bf16;
 mod llama3_rotary;
 mod moe_experts;
 mod moe_router;
@@ -39,6 +41,7 @@ pub use gated_delta::{
     GatedDeltaShape, gated_delta_gates, gated_delta_normalize, gated_delta_step,
 };
 pub use gelu::{gated_gelu_tanh, gelu_tanh};
+pub use lfm3_bf16::{lfm3_rmsnorm_bf16, lfm3_sigmoid_bf16, lfm3_silu_bf16};
 pub use llama3_rotary::{Llama3RotaryShape, Llama3Scaling, llama3_rotary};
 pub use moe_experts::{
     ExpertWeights, SelectedExpertShape, reduce_selected_experts, selected_expert_glu,

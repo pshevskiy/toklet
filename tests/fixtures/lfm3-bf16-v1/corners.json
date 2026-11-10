@@ -1,0 +1,349 @@
+{
+  "format": "toklet-lfm3-bf16-norm-corners-v1",
+  "fixture_completed": true,
+  "contract_sha256": "1024f1494d60e7db8abe3e47148fc73396515df801b861156740552e44f7bf37",
+  "runtime_sha256": "038b083eb320ce9e24ab93750775e2d441ce139b244a1a58ea34e378853e3e45",
+  "producer_sha256": "1c203df2d7a49f147089d4a2a1fd7252f509a83db1cef715bc7888a7f1947d65",
+  "source_helper_sha256": "633db0a1a21422e46f6e625a0d8e857ea43a1e768570210c220497e058813bdc",
+  "cases": [
+    {
+      "width": 128,
+      "input_word": 0,
+      "impulse_word": 16768,
+      "background_word": 32768,
+      "even_gain_word": 16320,
+      "odd_gain_word": 48896,
+      "variance_fp32_bits": 0,
+      "inverse_fp32_bits": 1134435624,
+      "output_sha256": "6273fe196aca241bc908d6ff4310951657ecda3919a384d9e87d8681226e3c82",
+      "first_output_bits": [
+        0,
+        32768,
+        0,
+        32768,
+        0,
+        32768,
+        0,
+        32768
+      ]
+    },
+    {
+      "width": 128,
+      "input_word": 32768,
+      "impulse_word": 16768,
+      "background_word": 32768,
+      "even_gain_word": 16320,
+      "odd_gain_word": 48896,
+      "variance_fp32_bits": 0,
+      "inverse_fp32_bits": 1134435624,
+      "output_sha256": "34a8b8b41b70730c698e5ed79efa8af014c892e0dd5f63ba3c34530f3e7a69dc",
+      "first_output_bits": [
+        32768,
+        0,
+        32768,
+        0,
+        32768,
+        0,
+        32768,
+        0
+      ]
+    },
+    {
+      "width": 128,
+      "input_word": 1,
+      "impulse_word": 16768,
+      "background_word": 32768,
+      "even_gain_word": 16320,
+      "odd_gain_word": 48896,
+      "variance_fp32_bits": 0,
+      "inverse_fp32_bits": 1134435624,
+      "output_sha256": "83e2700c7da58021794c66faccc8ad674095bb8d52f23a1f3829b251582423c6",
+      "first_output_bits": [
+        365,
+        32926,
+        365,
+        32926,
+        365,
+        32926,
+        365,
+        32926
+      ]
+    },
+    {
+      "width": 128,
+      "input_word": 32769,
+      "impulse_word": 16768,
+      "background_word": 32768,
+      "even_gain_word": 16320,
+      "odd_gain_word": 48896,
+      "variance_fp32_bits": 0,
+      "inverse_fp32_bits": 1134435624,
+      "output_sha256": "eb172194039071a1d3bf616b586604503c56570c96a05d22655a2c5d3ad9ca64",
+      "first_output_bits": [
+        33133,
+        158,
+        33133,
+        158,
+        33133,
+        158,
+        33133,
+        158
+      ]
+    },
+    {
+      "width": 128,
+      "input_word": 14976,
+      "impulse_word": 16768,
+      "background_word": 32768,
+      "even_gain_word": 16320,
+      "odd_gain_word": 48896,
+      "variance_fp32_bits": 897581056,
+      "inverse_fp32_bits": 1133974266,
+      "output_sha256": "db9d6312534365984c5c035f1fb14e38f88aa74f4dbe7b8f032f393859ff3701",
+      "first_output_bits": [
+        16098,
+        48663,
+        16098,
+        48663,
+        16098,
+        48663,
+        16098,
+        48663
+      ]
+    },
+    {
+      "width": 128,
+      "input_word": 15360,
+      "impulse_word": 16768,
+      "background_word": 32768,
+      "even_gain_word": 16320,
+      "odd_gain_word": 48896,
+      "variance_fp32_bits": 947912704,
+      "inverse_fp32_bits": 1122847791,
+      "output_sha256": "7f891aaf61e1b43d0676f94ed9f17b58e13e10599269ef5cdd11ea50553fc693",
+      "first_output_bits": [
+        16306,
+        48877,
+        16306,
+        48877,
+        16306,
+        48877,
+        16306,
+        48877
+      ]
+    },
+    {
+      "width": 128,
+      "input_word": 16256,
+      "impulse_word": 16768,
+      "background_word": 32768,
+      "even_gain_word": 16320,
+      "odd_gain_word": 48896,
+      "variance_fp32_bits": 1065353216,
+      "inverse_fp32_bits": 1065353132,
+      "output_sha256": "cbbf58fcccadf0509d42fd3c0688c005b24f575d5f64df21c02937e29bdf4533",
+      "first_output_bits": [
+        16320,
+        48896,
+        16320,
+        48896,
+        16320,
+        48896,
+        16320,
+        48896
+      ]
+    },
+    {
+      "width": 128,
+      "input_word": null,
+      "impulse_word": 16768,
+      "background_word": 32768,
+      "even_gain_word": 16320,
+      "odd_gain_word": 48896,
+      "variance_fp32_bits": 1073741824,
+      "inverse_fp32_bits": 1060439253,
+      "output_sha256": "180f790d116c1e56829b5981850f396439629790275dde7261c7a652f72b5398",
+      "first_output_bits": [
+        16776,
+        0,
+        32768,
+        0,
+        32768,
+        0,
+        32768,
+        0
+      ]
+    },
+    {
+      "width": 2048,
+      "input_word": 0,
+      "impulse_word": 16768,
+      "background_word": 32768,
+      "even_gain_word": 16320,
+      "odd_gain_word": 48896,
+      "variance_fp32_bits": 0,
+      "inverse_fp32_bits": 1134435624,
+      "output_sha256": "c413b987ce5953e4b495afa3937a62bc85ba5b5e5c02dffca2835b4a9afb5c8c",
+      "first_output_bits": [
+        0,
+        32768,
+        0,
+        32768,
+        0,
+        32768,
+        0,
+        32768
+      ]
+    },
+    {
+      "width": 2048,
+      "input_word": 32768,
+      "impulse_word": 16768,
+      "background_word": 32768,
+      "even_gain_word": 16320,
+      "odd_gain_word": 48896,
+      "variance_fp32_bits": 0,
+      "inverse_fp32_bits": 1134435624,
+      "output_sha256": "08f7ac481a11a3587a15cd1d0f12fa136d50773dd0bc5aed67ece9f72db3af85",
+      "first_output_bits": [
+        32768,
+        0,
+        32768,
+        0,
+        32768,
+        0,
+        32768,
+        0
+      ]
+    },
+    {
+      "width": 2048,
+      "input_word": 1,
+      "impulse_word": 16768,
+      "background_word": 32768,
+      "even_gain_word": 16320,
+      "odd_gain_word": 48896,
+      "variance_fp32_bits": 0,
+      "inverse_fp32_bits": 1134435624,
+      "output_sha256": "f5451480203dea7c052c9be53c61542dbb2d3ff9dfd92ddac5b8eddf3e6e61bc",
+      "first_output_bits": [
+        365,
+        32926,
+        365,
+        32926,
+        365,
+        32926,
+        365,
+        32926
+      ]
+    },
+    {
+      "width": 2048,
+      "input_word": 32769,
+      "impulse_word": 16768,
+      "background_word": 32768,
+      "even_gain_word": 16320,
+      "odd_gain_word": 48896,
+      "variance_fp32_bits": 0,
+      "inverse_fp32_bits": 1134435624,
+      "output_sha256": "a49b8b993b8eeac737f9ace479e9fcd974b1a0813cf53c305e49bdbf8b9fac2f",
+      "first_output_bits": [
+        33133,
+        158,
+        33133,
+        158,
+        33133,
+        158,
+        33133,
+        158
+      ]
+    },
+    {
+      "width": 2048,
+      "input_word": 14976,
+      "impulse_word": 16768,
+      "background_word": 32768,
+      "even_gain_word": 16320,
+      "odd_gain_word": 48896,
+      "variance_fp32_bits": 897581056,
+      "inverse_fp32_bits": 1133974266,
+      "output_sha256": "e00d2cc1895e23b24a05494e20073de94e4b85cfaa008acf698ce6c49e2cb8d0",
+      "first_output_bits": [
+        16098,
+        48663,
+        16098,
+        48663,
+        16098,
+        48663,
+        16098,
+        48663
+      ]
+    },
+    {
+      "width": 2048,
+      "input_word": 15360,
+      "impulse_word": 16768,
+      "background_word": 32768,
+      "even_gain_word": 16320,
+      "odd_gain_word": 48896,
+      "variance_fp32_bits": 947912704,
+      "inverse_fp32_bits": 1122847791,
+      "output_sha256": "10c53327a1c9fa6eb9dd7d65f9093d0843e8be9f92988f518f75d2322538ab87",
+      "first_output_bits": [
+        16306,
+        48877,
+        16306,
+        48877,
+        16306,
+        48877,
+        16306,
+        48877
+      ]
+    },
+    {
+      "width": 2048,
+      "input_word": 16256,
+      "impulse_word": 16768,
+      "background_word": 32768,
+      "even_gain_word": 16320,
+      "odd_gain_word": 48896,
+      "variance_fp32_bits": 1065353216,
+      "inverse_fp32_bits": 1065353132,
+      "output_sha256": "3a3dac5773a696651982f3963499c20798e7971d8bc2fef0903279ac69a12165",
+      "first_output_bits": [
+        16320,
+        48896,
+        16320,
+        48896,
+        16320,
+        48896,
+        16320,
+        48896
+      ]
+    },
+    {
+      "width": 2048,
+      "input_word": null,
+      "impulse_word": 16768,
+      "background_word": 32768,
+      "even_gain_word": 16320,
+      "odd_gain_word": 48896,
+      "variance_fp32_bits": 1040187392,
+      "inverse_fp32_bits": 1077216024,
+      "output_sha256": "2651778ba2c172c1bf29d0c93ac7a65ef977bac13c4d3daa11dce7bbf6dc2ead",
+      "first_output_bits": [
+        17032,
+        0,
+        32768,
+        0,
+        32768,
+        0,
+        32768,
+        0
+      ]
+    }
+  ],
+  "device": "cpu",
+  "torch_version": "2.9.1",
+  "model_execution_qualified": false
+}

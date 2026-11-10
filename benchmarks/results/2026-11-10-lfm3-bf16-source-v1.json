@@ -1,0 +1,22 @@
+{
+  "format": "toklet-lfm3-bf16-reference-receipt-v1",
+  "contract_sha256": "1024f1494d60e7db8abe3e47148fc73396515df801b861156740552e44f7bf37",
+  "fixture_sha256": "9f1494cd22e636e4e1787bcd73d7e1d11a5d89be72336792e8331357eb2fca91",
+  "corners_sha256": "5435676ae03cdb32bc3e6a76bed6f525149818adfb6fc7a442f30e30abc2cdc7",
+  "norm_vectors": 119,
+  "norm_cases": 238,
+  "norm_words": 4082688,
+  "norm_statistic_rows": 5706,
+  "pointwise_words_per_function": 65280,
+  "fp32_mathematical_diagnostic": {
+    "abs": 1e-05,
+    "rel": 0.0001,
+    "failures": 0,
+    "maximum_absolute_error": 8.35161968915088e-07
+  },
+  "source_model_sha256": "b6ff17ac993dddf0f6f51bd872b12ae1437f4453a54a0b4878cedc7864fbc07e",
+  "canonical_profile": "modified-parent BF16 CPU; declared child-runtime correspondence remains rejected at exact gate",
+  "runtime_sha256": "038b083eb320ce9e24ab93750775e2d441ce139b244a1a58ea34e378853e3e45",
+  "source_evidence": "artifacts/lfm3-bf16-2026-11-10/fixture-checks-1.json",
+  "whole_model_adoption_qualified": false
+}

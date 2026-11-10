@@ -64,6 +64,17 @@ list and the cleanup controller's verified interrupt/resume history.
 
 ## Existing correctness, memory and observability foundations
 
+Canonical LFM3 CPU BF16 norms/unary gates match 4,082,688 norm outputs,
+5,706 FP32 statistic rows, 16 corner cases and both full finite unary grids.
+Both widths have zero Rust allocations; fresh required/native73 checks pass.
+Six frozen release component cohorts measure medians 1.285–1.315 / 39.048–39.207 /
+152.448–154.071 ms at 1/32/128 tokens. These are operator baselines; actual child
+CPU/Metal exact component correspondence rejects. Astra approves scoped
+retention, no findings; full LFM3 graph/fit/quality/adoption and remaining
+BF16/window composition stay open.
+[Scope/evidence](lfm3-bf16-source.md),
+[review/commit](../artifacts/lfm3-bf16-2026-11-10/publication-checks.json).
+
 Source-profile LFM3 BF16 rotary passes exact frequency/trig/460,800 output
 fixtures, sparse rows and chunk schedules with zero steady-state allocations.
 Two shared admitted owners total 1,049,152 B. Fresh required/native72 checks

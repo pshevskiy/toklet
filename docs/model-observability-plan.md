@@ -69,7 +69,7 @@ and every derivative's actual shapes at admission.
 | Rank | Official reference | Total parameters | Reason to evaluate | Uncensored / MLX path |
 | --- | --- | ---: | --- | --- |
 | 1 | [MiniCPM5-2B](https://huggingface.co/openbmb/MiniCPM5-2B) | 2,516,756,480 | Strong small reasoning, coding and tool-use candidate; ordinary Llama-style model type | Prefer accessible [Heretic MLX 8-bit](https://huggingface.co/bumblebuttpow/MiniCPM5-2B-heretic-abliterated-MLX-8bit), `50ab1b22`, with declared insraq parent `8d83eaf4`; independently qualify. Original mondk `8ebe35e0` 4-bit now returns401; retain its historical preflight |
-| 2 | [LFM3-1.7B](https://huggingface.co/LiquidAI/LFM3-1.7B) | 1,728,801,536 | Recent compact agent/instruction-following model; useful performance experiment with a new architecture | Prefer the separate [mchen04 Heretic BF16 MLX](https://huggingface.co/mchen04/LFM3-1.7B-Heretic-Abliterated-MLX-bf16), `88636d45`, then independently qualify bounded Q4 conversion. Its declared Vortecks BF16 parent is pinned; payload/quality/admission are open. The previous `095df4e8` GGUF-to-F32 artifact still exceeds6GiB in weights alone and remains rejected |
+| 2 | [LFM3-1.7B](https://huggingface.co/LiquidAI/LFM3-1.7B) | 1,728,801,536 | Recent compact agent/instruction-following model; useful performance experiment with a new architecture | Prefer the separate [mchen04 Heretic BF16 MLX](https://huggingface.co/mchen04/LFM3-1.7B-Heretic-Abliterated-MLX-bf16), `88636d45`, then independently qualify bounded Q4 conversion. Its child/parent payload equality is authenticated; full graph/quality/admission remain open. The previous `095df4e8` GGUF-to-F32 artifact still exceeds6GiB in weights alone and remains rejected |
 | 3 | [Granite 4.2 3B](https://huggingface.co/ibm-granite/granite-4.2-3b) | 3,659,737,600 | Dense reasoning/tool-use baseline with adjustable thinking effort | [Heretic source](https://huggingface.co/saidutta69/granite-4.2-3b-heretic), `db83ced6`; uncensored MLX conversion pending. [Official MLX Q4](https://huggingface.co/ibm-granite/granite-4.2-3b-q4-mlx), `0c6f39b1`, is a reference fallback; strict config translation and qualification remain open |
 | 4 | [Ministral 3 3B Reasoning](https://huggingface.co/mistralai/Ministral-3-3B-Reasoning-2512) | 3,849,090,048 | Compact STEM and vision reasoning; count includes vision encoder | [Heretic source](https://huggingface.co/xtools-at/Ministral-3-3B-Reasoning-UNCENSORED-heretic), `46fb9a42`; uncensored MLX conversion pending. [MLX 4-bit reference](https://huggingface.co/mlx-community/Ministral-3-3B-Reasoning-2512-4bit), `2cd2087a`, has a stale index; its single-file header is diagnostic only |
 | 5 | [Qwen3.5-2B](https://huggingface.co/Qwen/Qwen3.5-2B) | 2,274,069,824 | Small vision/reasoning candidate that can reuse mechanisms qualified for Qwen3.5-4B/9B | [TheCluster uncensored MLX BF16](https://huggingface.co/TheCluster/Qwen3.5-2B-Uncensored-HauhauCS-Aggressive-MLX-bf16), `78efacde`; header differences include15omitted MTP tensors and18norm vectors narrowed to BF16. Authenticate/qualify these changes before affine Q4 conversion |
@@ -175,8 +175,11 @@ repackaging, without model numerical or adoption qualification. The separate
 state checks and the revised three-tap compatibility timing screen; Astra
 approves scoped retention. The [source-profile rotary component](lfm3-rotary-source.md)
 now passes independent BF16 frequency/trig/rotation checks and release operator
-baselines; Astra approves scoped retention. Rotating 256-token windows, sandwich/QK
-norms, per-head attention gates and remaining source rounding still need qualification.
+baselines; Astra approves scoped retention. The [canonical CPU BF16 norm/unary
+component](lfm3-bf16-source.md) passes exact source fixtures and release baselines;
+Astra approves scoped retention. Actual child CPU/Metal component correspondence rejects;
+this does not score model quality. Remaining BF16 binary/convolution boundaries,
+rotating 256-token windows and complete graph composition still need qualification.
 Existing LFM2 support and publisher parity results do not qualify these mechanisms.
 Stock-to-modified and modified-to-native full quality gates remain mandatory.
 The prior [metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)

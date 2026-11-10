@@ -1,6 +1,6 @@
 # Toklet progress checklist
 
-Updated **10 November 2026**. **Improvement goal active; earlier Mac milestones
+Updated **11 November 2026**. **Improvement goal active; earlier Mac milestones
 complete only in their recorded scopes.** iPhone runtime work remains deferred.
 Read the current task, relevant plan criteria and targeted source. Completed
 history is in the [dated archive](docs/archive/2026-11-09/README.md).
@@ -11,14 +11,32 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **qualify LFM3 sandwich/QK norms, gates, BF16 activation
-rounding and 256-token windows with independent fixtures before composing the
-graph**. Seven-tap FP32 history and source-profile BF16 rotary are reviewed;
-full LFM3 execution/adoption remain open. Reuse existing window ownership where
-correct. Keep the whole model
+Current/next task: **qualify LFM3 BF16 binary/convolution boundaries and
+256-token window state with independent fixtures before composing the graph**.
+Seven-tap FP32 history, source-profile BF16 rotary and canonical CPU BF16
+norm/unary components are reviewed; full LFM3 execution/adoption remain open.
+Reuse existing window ownership where correct. Keep the whole model
 roadmap, original numerical/quality gates and 6 GiB ceiling. MiniCPM5 and 4B/9B
 managed-adoption rejections remain binding. Engine/CLI work leads; interactive
 screen capture and iPhone runtime remain deferred.
+
+- [x] S1.L CPU BF16 norms/unary gates: all 119 authenticated gains,
+  238 cases/4,082,688 outputs, 5,706 FP32 statistic rows, 16 epsilon/zero
+  controls and both 65,280-word finite unary grids match exactly. Original
+  mathematical gate passes; source reduction/cast order stays explicit.
+  Actual child CPU/Metal component correspondence rejects and remains separate
+  from the canonical target. Fresh fmt/both strict Clippy/699 CPU/845 Metal/
+  nine example, five release source tests and native73 three 46-export slices/
+  CPU+Metal C smokes pass. Both widths have zero Rust allocations. Six release
+  component cohorts pass: combined medians 1.285–1.315 / 39.048–39.207 /
+  152.448–154.071 ms for 1/32/128 tokens; operator baselines only. Four portable
+  tests in both modes, six source and ten console admission controls pass.
+  Astra approves scoped retention, no findings; 6 GiB and all quality/caps/
+  default gates remain fixed.
+  Full LFM3 execution/fit/quality/adoption and remaining BF16 products/conv/
+  window composition stay open.
+  [Scope/evidence](docs/lfm3-bf16-source.md),
+  [review/commit](artifacts/lfm3-bf16-2026-11-10/publication-checks.json).
 
 - [x] Fifth user-requested disk recovery: removed 520 inactive Cargo test
   executables, confirmed by Cargo test fingerprints and Rust harness symbols.

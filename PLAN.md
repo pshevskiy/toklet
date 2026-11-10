@@ -78,8 +78,10 @@ now passes independent primitive/state checks and the revised compatibility
 performance screen; Astra approves scoped retention. The
 [source-profile BF16 rotary component](docs/lfm3-rotary-source.md) now passes its
 independent primitive checks and release operator baselines; Astra approves
-scoped retention. Qualify remaining source rounding, norm/gate/window semantics before
-composing the graph. Any MiniCPM5 reconsideration still needs corrected original numerics and
+scoped retention. The [canonical CPU BF16 norm/unary component](docs/lfm3-bf16-source.md)
+now passes exact source checks and release operator baselines; Astra approves
+scoped retention. Qualify remaining BF16 binary/convolution boundaries and window state
+before composing the graph. Any MiniCPM5 reconsideration still needs corrected original numerics and
 both complete original quality comparisons.
 
 The initial settings below describe the foundation. Later selected models and
