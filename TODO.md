@@ -19,6 +19,20 @@ roadmap, original numerical/quality gates and 6 GiB ceiling. MiniCPM5 and 4B/9B
 managed-adoption rejections remain binding. Engine/CLI work leads; interactive
 screen capture and iPhone runtime remain deferred.
 
+- [x] Fifth user-requested disk recovery: removed 520 inactive Cargo test
+  executables, confirmed by Cargo test fingerprints and Rust harness symbols.
+  Recovered 14.4 GiB net; 87.2 GiB free at completion. All 44,970 protected
+  hashes and 494,201 retained-cache metadata checks pass. Models, raw evidence,
+  production binaries, benchmark examples, current caches and user work remain
+  intact. Engine implementation and qualification are unchanged.
+  [Checks/review/commit](artifacts/lfm3-rotary-2026-11-10/disk-cleanup-5/publication-checks.json),
+  [deletion receipt](artifacts/lfm3-rotary-2026-11-10/disk-cleanup-5/result.json).
+
+- [ ] S1.L rotary source profile: prospective contract and clean worktree are
+  prepared; cleanup interrupted this task before fixture or implementation
+  outcomes. Resume independent frequency/trig/BF16 rounding checks under the
+  frozen gates. [Contract](artifacts/lfm3-rotary-2026-11-10/prospective-contract-1.json).
+
 - [x] S1.L seven-tap FP32 history: shared static three/seven-tap state and
   concrete compatibility APIs reuse the unchanged scalar leaf. Five independent
   fixtures/132 tensor outputs match bitwise; 288 Rust schedules and both zero-

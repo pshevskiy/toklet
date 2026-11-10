@@ -15,6 +15,16 @@ TODO/improvement bytes about 56%. Exact inverse-link reconstruction, local links
 anchors and whitespace pass; live PLAN and numerical inputs are unchanged.
 [Archive validation](../artifacts/qwen35-9b-context256-2026-11-09/working-history-checks.json).
 
+The fifth user-requested disk cleanup removed 520 inactive Cargo test
+executables, each confirmed by a Cargo test fingerprint and Rust harness symbols.
+It recovered 14.4 GiB net, leaving 87.2 GiB free. All 44,970 protected hashes
+and 494,201 retained-cache metadata checks pass; models, raw evidence, production
+binaries, benchmark examples, current caches and user work are preserved.
+Engine implementation and qualification are unchanged; rotary fixtures and
+implementation remain pending after contract preparation.
+[Checks/review/commit](../artifacts/lfm3-rotary-2026-11-10/disk-cleanup-5/publication-checks.json),
+[deletion receipt](../artifacts/lfm3-rotary-2026-11-10/disk-cleanup-5/result.json).
+
 The fourth user-requested disk cleanup removed 7,919 inactive Cargo test
 executables, recovering 22.5 GiB net and leaving 80.0 GiB free at completion.
 All 22,464 protected hashes and 494,721 retained-cache metadata checks pass.
