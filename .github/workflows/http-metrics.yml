@@ -1,0 +1,26 @@
+name: HTTP metric checks
+
+"on":
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  metrics:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        optimize: ["0", "1"]
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
+      - name: Validate capture and request timeline reports
+        env:
+          PYTHONPATH: tools/bench
+          PYTHONOPTIMIZE: ${{ matrix.optimize }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: python3 -m unittest test_lfm3_http_metrics test_lfm3_vllm_timeline

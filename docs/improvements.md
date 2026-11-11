@@ -10,6 +10,16 @@ Gains from different experiments cannot be added together. Current task and
 qualification scope live in [TODO](../TODO.md); acceptance policy is in
 [PLAN](../PLAN.md#validation-and-performance-policy).
 
+The [optional vLLM request timeline](lfm3-vllm-timeline.md) replays sealed captures
+and separates server queue, scheduled-to-first, first-to-last and overall-rate
+boundaries. Missing fields remain unavailable; inconsistent arithmetic withholds
+derived decode rate. Twenty-four portable controls in both modes, five pinned-source
+cases and nine guarded offline CLI cases pass under 512 MiB after correcting
+audit/helper errors. Required checks bind 5,177 unchanged inputs and both 52-test
+CI commands pass. Astra's empty-entry and stop-metadata findings are fixed;
+follow-up approves scoped retention with no remaining findings; actual engine, quality
+and performance qualification remain separate.
+
 The [external HTTP benchmark observer](lfm3-http-metrics.md) validates bounded
 Ollama/vLLM streams and separates client clocks, API counters and unavailable
 state. Twenty-eight portable controls in both modes and twelve synthetic HTTP/CLI

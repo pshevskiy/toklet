@@ -7,6 +7,17 @@ history is in the [dated archive](docs/archive/2026-11-09/README.md).
 
 ## Current and next task
 
+- [x] S1.L optional vLLM request timing: offline report binds and replays sealed
+  captures, distinguishes queue/TTFT/decode/overall-rate boundaries and preserves
+  missing or inconsistent fields. Twenty-four portable controls in both modes,
+  five pinned-source cases and nine guarded offline CLI cases pass; helper
+  namespace/call failures are retained and corrected. Required checks reuse
+  5,177 unchanged inputs; both 52-test CI commands pass. Astra's empty-entry
+  and stop-metadata findings are fixed and covered by regressions; follow-up
+  approves scoped retention with no findings. Actual runtime/model/performance qualification
+  remains separate. [Scope](docs/lfm3-vllm-timeline.md).
+  [Review/commit](artifacts/lfm3-engine-comparison-2026-11-11/vllm-timeline-publication-checks.json).
+
 - [x] S1.L HTTP benchmark observations: bounded Ollama/vLLM stream client,
   exact prompt/cache gates and explicit missing/partial metrics. Twenty-eight
   portable controls in both modes and twelve guarded synthetic HTTP/CLI cases
