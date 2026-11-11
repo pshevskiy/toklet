@@ -51,3 +51,10 @@ import must independently authenticate every imported tensor before inference.
 Its versioned [create/blob API](https://github.com/ollama/ollama/blob/v0.40.15/docs/api.md#create-a-model)
 allows uploading source files directly to an owned server without using the CLI's
 default model cache. No import or performance result is claimed here.
+
+The subsequent [request observation report](lfm3-engine-comparison.md) now
+records complete private-import authentication, four fresh external cohorts,
+their guards and retained failures. That separate scope preserves missing
+Ollama prompt/output IDs, observed cross-engine output differences and distinct
+CPU/API/server clocks. It does not qualify numerical equivalence, quality,
+speedup ratios or managed adoption.

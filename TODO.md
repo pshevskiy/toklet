@@ -7,6 +7,16 @@ history is in the [dated archive](docs/archive/2026-11-09/README.md).
 
 ## Current and next task
 
+- [x] S1.L external request observations: scoped publication of all
+  four fresh Ollama/vLLM 3+10 cohorts and both frozen CPU baseline cohorts.
+  Exact vLLM inputs pass, but only 3/13 output-ID/text rows match CPU per cohort;
+  Ollama IDs are unavailable. Source/authentication, ownership/runtime, bounded
+  lifecycle and shape-only import controls pass; all 26 genuine vLLM timing
+  captures replay consistently. No cross-engine speedup, quality or adoption
+  qualification. Content/raw-binding checks pass; Astra approves with no findings.
+  [Report](docs/lfm3-engine-comparison.md),
+  [checks/review/commit](artifacts/lfm3-engine-comparison-2026-11-11/comparison-publication-checks.json).
+
 - [x] S1.L optional vLLM request timing: offline report binds and replays sealed
   captures, distinguishes queue/TTFT/decode/overall-rate boundaries and preserves
   missing or inconsistent fields. Twenty-four portable controls in both modes,

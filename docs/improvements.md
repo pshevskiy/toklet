@@ -10,6 +10,15 @@ Gains from different experiments cannot be added together. Current task and
 qualification scope live in [TODO](../TODO.md); acceptance policy is in
 [PLAN](../PLAN.md#validation-and-performance-policy).
 
+The [LFM3 external request observations](lfm3-engine-comparison.md) record
+78 requests across two 3+10 cohorts per engine, with preserved raw observations,
+model/executable identities and clock/memory scope. Ollama lacks authoritative
+IDs; vLLM matches exact prompt/cache input but only 3/13 output-ID/text rows
+match CPU per cohort. No speedup ratio, quality or adoption is qualified.
+All 26 genuine vLLM timing captures replay consistently. Source/guard/import
+controls and scoped content checks pass; Astra approves scoped publication with
+no findings. [Checks/review/commit](../artifacts/lfm3-engine-comparison-2026-11-11/comparison-publication-checks.json).
+
 The [optional vLLM request timeline](lfm3-vllm-timeline.md) replays sealed captures
 and separates server queue, scheduled-to-first, first-to-last and overall-rate
 boundaries. Missing fields remain unavailable; inconsistent arithmetic withholds
