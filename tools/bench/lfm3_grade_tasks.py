@@ -1,5 +1,6 @@
 """Score one complete LFM3 task pair with the qualified isolated grader."""
 import argparse
+from contextlib import nullcontext
 import hashlib
 import json
 from pathlib import Path
@@ -89,8 +90,18 @@ def run(args):
     def decision(outcomes):
         return gemma_task_results.decision(canonical, outcomes)
 
-    return paired_task_grading.grade_paired_cases(canonical, {"baseline": baseline, "native": candidate},
-                                                guard, output, record, bindings, decision)
+    context = nullcontext()
+    if args.qualified_cpu_witness:
+        from linux_process_cpu_retry import Runtime
+
+        runtime = Runtime()
+        runtime.bind(bindings)
+        record["cpu_budget_policy"] = runtime.policy
+        context = runtime.install()
+    with context:
+        return paired_task_grading.grade_paired_cases(
+            canonical, {"baseline": baseline, "native": candidate}, guard, output, record, bindings, decision
+        )
 
 
 if __name__ == "__main__":
@@ -100,6 +111,7 @@ if __name__ == "__main__":
     for name in ["baseline-sha256", "candidate-sha256"]:
         parser.add_argument("--" + name, required=True)
     parser.add_argument("--roles", nargs=2, required=True)
+    parser.add_argument("--qualified-cpu-witness", action="store_true")
     result = run(parser.parse_args())
     print(json.dumps({k: result.get(k) for k in ["completed", "pair", "decision", "failure"]}))
     raise SystemExit(0 if result["completed"] else 1)

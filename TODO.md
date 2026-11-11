@@ -21,12 +21,19 @@ and iPhone runtime remain deferred.
 - [ ] S1.L original quality: score all 10,000 loss targets and 100 tasks for
   both stock-to-modified and modified-to-native comparisons. Original loss
   inputs match, with a trailing newline difference in 40 stock code prompts.
-  Modified-reference loss covers all 10,000 targets. The stock loss and
-  both task collection routes are active. The first 1,024 native targets
-  match the modified greedy IDs with 3.55e-15 maximum absolute NLL delta.
+  The full 10,000-target stock-to-modified loss comparison passes with
+  a mean NLL increase of 0.00781 nats per token. Task collection is active.
+  The first 1,024 native targets match the modified greedy IDs with
+  3.55e-15 maximum absolute NLL delta.
   The remaining nine native blocks are queued after the CLI exits.
   Paired isolated grading and the final quality decision remain open.
   [Campaign](docs/lfm3-quality.md).
+
+- [x] S1.L isolated grading window: qualified Podman timezone, independent
+  guest shutdown check and the original CPU budget with its qualified
+  ambiguous-137 witness. Five portable controls and the real stopped-guest
+  supervisor smoke pass. Astra approves with no findings.
+  [Checks and review](artifacts/lfm3-context1025-2026-11-11/quality-inputs/grading-window-publication-checks.json).
 
 - [x] S1.L original quality tooling: guarded native/source collection,
   trajectory and console replay, literal grading, and complete-only paired

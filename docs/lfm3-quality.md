@@ -42,6 +42,13 @@ expected word.
 [Trajectory](../artifacts/lfm3-context1025-2026-11-11/quality-inputs/source-task-70-trajectory-replay/result.json),
 [decoder audit](../artifacts/lfm3-context1025-2026-11-11/quality-inputs/source-task-70-decoded-v2/result.json).
 
+Both references finish all 10,000 matched loss targets. The stock mean
+NLL is 3.27640 and the modified mean is 3.28421 nats per token. The increase
+of 0.00781 passes the original 0.05 allowance. Both reference runs stay
+within 512 MiB.
+[Complete reference loss](../artifacts/lfm3-context1025-2026-11-11/quality-inputs/loss-reference-complete.json),
+[reference guard summary](../artifacts/lfm3-context1025-2026-11-11/quality-inputs/loss-reference-guard-summary.json).
+
 The first 1,024 Toklet loss targets match all modified-reference greedy
 IDs. The largest absolute NLL delta is 3.55e-15. The release pilot takes
 793.7 seconds with a conservative aggregate peak of 3,769,417,728 RSS
@@ -51,8 +58,16 @@ arithmetic. The standard example uses the shared FP64 reduction.
 [memory receipt](../artifacts/lfm3-context1025-2026-11-11/quality-inputs/native-loss-pilot/guard.json).
 
 The original literal grader receives complete independently decoded
-collections and runs HumanEval in the qualified isolated guest. The
-final decision checks both 10,000-target pairs and both 100-task pairs
+collections and runs HumanEval in the qualified isolated guest.
+`run_lfm3_quality_grading.py` owns the grading process group through exit
+and independently verifies the guest returns to its stopped state. It
+preserves the qualified timezone and offers the existing ordinary-first
+CPU witness for ambiguous exit 137 under the original four-second limit.
+[Stopped-guest check](../artifacts/lfm3-context1025-2026-11-11/quality-inputs/grading-window-live-smoke/result.json).
+Astra approves the grading-window integration with no findings.
+[Window review and commit](../artifacts/lfm3-context1025-2026-11-11/quality-inputs/grading-window-publication-checks.json).
+
+The final decision checks both 10,000-target pairs and both 100-task pairs
 before publishing a quality outcome. Both comparisons use the same
 authenticated modified-reference task collection and decoded outputs.
 Full results and managed adoption remain open.
