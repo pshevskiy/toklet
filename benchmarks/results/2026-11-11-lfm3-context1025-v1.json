@@ -1,0 +1,298 @@
+{
+  "format": "toklet-lfm3-context1025-v1",
+  "base": "ea348ef744458e19fa5a9a04a3bf43586ef974a7",
+  "hardware": {
+    "hw.model": "MacBookPro18,3",
+    "hw.memsize": "17179869184",
+    "machdep.cpu.brand_string": "Apple M1 Pro"
+  },
+  "system": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.2\nBuildVersion:\t\t25G83",
+  "compiler": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)\nbinary: rustc\ncommit-hash: 1159e78c4747b02ef996e55082b704c09b970588\ncommit-date: 2025-09-14\nhost: aarch64-apple-darwin\nrelease: 1.90.0\nLLVM version: 21.1.1",
+  "model": {
+    "checkpoint_sha256": "b6ff17ac993dddf0f6f51bd872b12ae1437f4453a54a0b4878cedc7864fbc07e",
+    "storage": "BF16",
+    "backend": "CPU",
+    "capacity": 2048,
+    "chunk_capacity": 128
+  },
+  "contract_sha256": "60719d4a767fa2a29d9e734dc6cba689c78a9e10498f2769c4719ad97647df5b",
+  "native_binary_sha256": "53708544af98a06d113d708c2602b8d9bf4117cf29c334888fee3db679803146",
+  "exact": {
+    "observation_count": 854,
+    "words": 68054016,
+    "differing_words": 0,
+    "differing_observations": 0,
+    "two_old_segments": 30,
+    "late_abort_and_retry": 2,
+    "exact_pass": true
+  },
+  "prefix_observations": 549,
+  "verification_rows": [
+    {
+      "schedule": 0,
+      "start": 0,
+      "end": 128,
+      "queries": 128,
+      "elapsed_ns": 78464511791,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 0,
+      "start": 128,
+      "end": 255,
+      "queries": 127,
+      "elapsed_ns": 77085173916,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 0,
+      "start": 255,
+      "end": 256,
+      "queries": 1,
+      "elapsed_ns": 1266295958,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 0,
+      "start": 256,
+      "end": 257,
+      "queries": 1,
+      "elapsed_ns": 1268262709,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 0,
+      "start": 257,
+      "end": 258,
+      "queries": 1,
+      "elapsed_ns": 1261988292,
+      "word_differences": 0,
+      "wrapped_views": 5
+    },
+    {
+      "schedule": 0,
+      "start": 258,
+      "end": 386,
+      "queries": 128,
+      "elapsed_ns": 77921709791,
+      "word_differences": 0,
+      "wrapped_views": 5
+    },
+    {
+      "schedule": 0,
+      "start": 386,
+      "end": 511,
+      "queries": 125,
+      "elapsed_ns": 76667030875,
+      "word_differences": 0,
+      "wrapped_views": 5
+    },
+    {
+      "schedule": 0,
+      "start": 511,
+      "end": 512,
+      "queries": 1,
+      "elapsed_ns": 1908381583,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 0,
+      "start": 512,
+      "end": 513,
+      "queries": 1,
+      "elapsed_ns": 1294051875,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 0,
+      "start": 513,
+      "end": 640,
+      "queries": 127,
+      "elapsed_ns": 77986142958,
+      "word_differences": 0,
+      "wrapped_views": 5
+    },
+    {
+      "schedule": 0,
+      "start": 640,
+      "end": 768,
+      "queries": 128,
+      "elapsed_ns": 78679630084,
+      "word_differences": 0,
+      "wrapped_views": 5
+    },
+    {
+      "schedule": 0,
+      "start": 768,
+      "end": 896,
+      "queries": 128,
+      "elapsed_ns": 79759555542,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 0,
+      "start": 896,
+      "end": 1024,
+      "queries": 128,
+      "elapsed_ns": 79714950417,
+      "word_differences": 0,
+      "wrapped_views": 5
+    },
+    {
+      "schedule": 0,
+      "start": 1024,
+      "end": 1025,
+      "queries": 1,
+      "elapsed_ns": 1299508292,
+      "word_differences": 0,
+      "wrapped_views": 0
+    }
+  ],
+  "ordinary_decode": {
+    "raw": {
+      "first": {
+        "offset": 1025,
+        "token": 110366,
+        "elapsed_ns": 1298158708,
+        "logits_sha256": "93a76398499b0ab5a6f3252e0a7e3bab9628ed8931ca305d42fa6b176d087cb1"
+      },
+      "warmups": [
+        {
+          "offset": 1026,
+          "token": 113619,
+          "elapsed_ns": 1269857125,
+          "logits_sha256": "73870042c52133c9ae77a10ef417ded6c8b63bc81ed207c27520e3ed4b5efb3e"
+        },
+        {
+          "offset": 1027,
+          "token": 116872,
+          "elapsed_ns": 1286271000,
+          "logits_sha256": "73c122dd537e270bccd78dcf09e28ee88a90caa6066a3b121f5fb6b173031e2d"
+        },
+        {
+          "offset": 1028,
+          "token": 120125,
+          "elapsed_ns": 1288242250,
+          "logits_sha256": "4fa09d91670846a06a99d8472e8934f5f7d9825597a12a3a4d864f25668372c0"
+        }
+      ],
+      "samples": [
+        {
+          "offset": 1029,
+          "token": 123378,
+          "elapsed_ns": 1272525875,
+          "logits_sha256": "f1fa545da5edf8082dce8fb4fbf6d827602757f979611626a7668c5d46469c9a"
+        },
+        {
+          "offset": 1030,
+          "token": 2631,
+          "elapsed_ns": 1277918625,
+          "logits_sha256": "4e0f4cf8a3dda9d58f09a194f782df50417d26198e6a0cb9ef31055919e507e6"
+        },
+        {
+          "offset": 1031,
+          "token": 5884,
+          "elapsed_ns": 1289373500,
+          "logits_sha256": "ec4168fa1b3ea56f3b5dbafe486ef9ce7d4726648d6a26884556ce1c0fc541fe"
+        },
+        {
+          "offset": 1032,
+          "token": 9137,
+          "elapsed_ns": 1291921750,
+          "logits_sha256": "aa91f6e05bc1f6bae784b79faa1583c03eb3a4c045503327b840e501fbf9eaf1"
+        },
+        {
+          "offset": 1033,
+          "token": 12390,
+          "elapsed_ns": 1271885000,
+          "logits_sha256": "9f04969ca3b5eea984c599e325053c01fb64371004d50bf8b505eeb71ed19f1f"
+        },
+        {
+          "offset": 1034,
+          "token": 15643,
+          "elapsed_ns": 1277004334,
+          "logits_sha256": "3383f52de79e37960c174459d75d566e7ba42bd0f6f468e3520d5228daa1ee50"
+        },
+        {
+          "offset": 1035,
+          "token": 18896,
+          "elapsed_ns": 1288359875,
+          "logits_sha256": "562eff4dba4d22a5fe63524b26f98b6b345a504382ccd5ab215cef1dcf4970df"
+        },
+        {
+          "offset": 1036,
+          "token": 22149,
+          "elapsed_ns": 1296598125,
+          "logits_sha256": "2b8f4d4152a94aa0bff7a815fcb1c25e3ea518224338a2ec20de78c2543bc45a"
+        },
+        {
+          "offset": 1037,
+          "token": 25402,
+          "elapsed_ns": 1281856375,
+          "logits_sha256": "8f9d8bf75fbd621a6d37f0e834084da30b2c7ae17579e3fef168e6ac9c16edf9"
+        },
+        {
+          "offset": 1038,
+          "token": 28655,
+          "elapsed_ns": 1295922375,
+          "logits_sha256": "bd1e0d5a482cdc47ffd70ce7deafd77edb3f40cd86600da7d000ec649229687d"
+        }
+      ]
+    },
+    "median_ns": 1285108125.0,
+    "mad_ns": 7646645.5,
+    "conditions": [
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      }
+    ],
+    "conditions_passed": true,
+    "scope": "Ordinary one-token commits after the verified prefix, offsets 1025 through 1038."
+  },
+  "memory": {
+    "native_final_rss": 3528048640,
+    "source_final_rss": 485376000,
+    "native_sampled_physical": 3525086688,
+    "source_sampled_physical": 317474280
+  },
+  "load_ns": 34532266833,
+  "admitted_bytes": 3501386816,
+  "evidence_sha256": {
+    "report.json": "8fc2cc97ddedcc228dfb6ffc0a88fcead11cb5872132b0a4af1a928474bc05e0",
+    "verify-checks.json": "26ba1b164500e0db9ea5478f0387ae122236e6627ba81615c94f9d3796fc792a",
+    "source-reconciliation.json": "78ef74e5e051bbfbf18d7276390c17472a591af422c823345f6d50d2d5c8a644",
+    "native-reuse.json": "429dca1dc0cbaeebcbb5beafbc6a643be0c64e12768857979a59f13a89be4e8d"
+  },
+  "observer_overhead_qualified": false,
+  "quality_qualified": false,
+  "managed_adoption_qualified": false
+}

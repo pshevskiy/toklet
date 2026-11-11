@@ -22,6 +22,35 @@ use toklet::{
 const CONTRACT: &[u8] = include_bytes!("../../tests/fixtures/lfm3-context513-v1/contract.json");
 const PRODUCER: &[u8] = include_bytes!("../reference/lfm3_context513_fixture.py");
 
+const LOSS_CONTRACT: &[u8] =
+    include_bytes!("../../tests/fixtures/lfm3-context1025-v1/contract.json");
+const LOSS_PRODUCER: &[u8] = include_bytes!("../reference/lfm3_context1025_fixture.py");
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Campaign {
+    Rollover,
+    LossContext,
+}
+
+impl Campaign {
+    fn fixture_inputs(self) -> (&'static [u8], &'static [u8], &'static str, &'static [usize]) {
+        match self {
+            Self::Rollover => (
+                CONTRACT,
+                PRODUCER,
+                "toklet-lfm3-context513-source-v1",
+                &[257],
+            ),
+            Self::LossContext => (
+                LOSS_CONTRACT,
+                LOSS_PRODUCER,
+                "toklet-lfm3-context1025-source-v1",
+                &[257, 1024],
+            ),
+        }
+    }
+}
+
 #[derive(Deserialize)]
 struct Fixture {
     format: String,
@@ -148,13 +177,16 @@ fn verify(
     model: &mut Model,
     input: &Path,
     output: &Path,
+    campaign: Campaign,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let fixture: Fixture = serde_json::from_reader(File::open(input.join("fixture.json"))?)?;
-    let contract: Value = serde_json::from_slice(CONTRACT)?;
+    let (contract_bytes, producer, format, abort_offsets) = campaign.fixture_inputs();
+    let contract: Value = serde_json::from_slice(contract_bytes)?;
+    let length: u32 = contract["tokens"]["length"].as_u64().unwrap().try_into()?;
     assert!(fixture.fixture_completed);
-    assert_eq!(fixture.format, "toklet-lfm3-context513-source-v1");
-    assert_eq!(fixture.contract_sha256, sha(CONTRACT));
-    assert_eq!(fixture.producer_sha256, sha(PRODUCER));
+    assert_eq!(fixture.format, format);
+    assert_eq!(fixture.contract_sha256, sha(contract_bytes));
+    assert_eq!(fixture.producer_sha256, sha(producer));
     assert_eq!(
         fixture.source_sha256,
         contract["checkpoint_sha256"].as_str().unwrap()
@@ -162,7 +194,7 @@ fn verify(
     assert_eq!(
         fixture.tokens,
         std::iter::once(124894)
-            .chain((1..513).map(|i| (i * 3253 + 41) % 124000))
+            .chain((1..length).map(|i| (i * 3253 + 41) % 124000))
             .collect::<Vec<_>>()
     );
     assert_eq!(
@@ -197,7 +229,7 @@ fn verify(
         for (chunk_id, &count) in schedule.chunks.iter().enumerate() {
             let end = offset + count;
             let tokens = &fixture.tokens[offset..end];
-            let aborted = if offset == 257 {
+            let aborted = if abort_offsets.contains(&offset) {
                 let before = exact_logit_hash(session.logits().unwrap());
                 let generation = session.generation();
                 let mut candidate = None;
@@ -297,6 +329,26 @@ fn verify(
         output.join("result.json"),
         serde_json::to_vec_pretty(&result)?,
     )?;
+    if campaign == Campaign::LossContext && differing_words == 0 {
+        std::fs::write(output.join("timing-start"), b"ordinary\n")?;
+        let mut samples = Vec::with_capacity(14);
+        for offset in length..length + 14 {
+            let token = (offset * 3253 + 41) % 124000;
+            let started = Instant::now();
+            let logits = session.forward(black_box(std::slice::from_ref(&token)))?;
+            let elapsed_ns = started.elapsed().as_nanos();
+            samples.push(
+                json!({"offset":offset,"token":token,"elapsed_ns":elapsed_ns,
+                "logits_sha256":exact_logit_hash(logits)}),
+            );
+        }
+        assert_eq!(session.history().len(), length as usize + 14);
+        let timing = json!({"first":samples[0],"warmups":&samples[1..4],"samples":&samples[4..]});
+        std::fs::write(
+            output.join("timing.json"),
+            serde_json::to_vec_pretty(&timing)?,
+        )?;
+    }
     Ok(())
 }
 
@@ -374,7 +426,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
     let args = std::env::args().skip(1).collect::<Vec<_>>();
     let [model, mode, extra @ ..] = args.as_slice() else {
-        return Err("usage: lfm3_context513_probe MODEL verify SOURCE OUTPUT | MODEL forward | MODEL reverse".into());
+        return Err("usage: lfm3_context513_probe MODEL verify|verify-1025 SOURCE OUTPUT | MODEL forward | MODEL reverse".into());
     };
     let started = Instant::now();
     let loaded = load_lfm3(Path::new(model), 2048, 128, INITIAL_MEMORY_LIMIT_BYTES)?;
@@ -385,7 +437,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         "checkpoint_sha256":loaded.report.source_sha256, "admitted_bytes":model.memory().total_bytes})
     );
     match (mode.as_str(), extra) {
-        ("verify", [input, output]) => verify(&mut model, Path::new(input), Path::new(output)),
+        ("verify" | "verify-1025", [input, output]) => {
+            let campaign = if mode == "verify" {
+                Campaign::Rollover
+            } else {
+                Campaign::LossContext
+            };
+            verify(&mut model, Path::new(input), Path::new(output), campaign)
+        }
         ("forward", []) => benchmark(&mut model, false),
         ("reverse", []) => benchmark(&mut model, true),
         _ => Err("invalid probe mode or argument count".into()),

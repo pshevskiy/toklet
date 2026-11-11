@@ -203,7 +203,10 @@ session, pinned plain-text codec and real console state and phase metrics.
 Astra approves scoped retention. The [513-position rollout](lfm3-context513.md)
 matches 70,418,432 BF16 words over two schedules and verifies actual wrapped
 attention spans and late abort/retry. Astra approves scoped retention.
-The 1,025-position, quality and managed-adoption gates remain open.
+The [1,025-position comparison](lfm3-context1025.md) passes exact source
+parity. Original loss inputs match across tokenizers and the stock and
+modified code prompt rendering difference is recorded. Astra approves
+scoped retention. Both full quality comparisons and managed adoption remain open.
 Existing LFM2 support and publisher parity results do not qualify these mechanisms.
 Stock-to-modified and modified-to-native full quality gates remain mandatory.
 The prior [metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)

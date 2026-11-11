@@ -10,6 +10,13 @@ Gains from different experiments cannot be added together. Current task and
 qualification scope live in [TODO](../TODO.md); acceptance policy is in
 [PLAN](../PLAN.md#validation-and-performance-policy).
 
+The real LFM3 BF16 comparison reaches 1,025 positions with 68,054,016
+exact source words and two late-abort retries. The source and native runs
+stay within their respective memory caps. Ordinary one-token continuation
+at the verified depth has a 1.285-second median on M1 Pro.
+Astra approves scoped retention. Full original quality remains open.
+[Scope and measurements](lfm3-context1025.md).
+
 Two real LFM3 BF16 schedules reach position 513 with 70,418,432 exact
 source words, 40 split old-cache views and both late-abort retries.
 Ordinary one-token forwards near the wrapped prefix have a 1.272-second

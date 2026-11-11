@@ -1,0 +1,15 @@
+{
+  "format": "toklet-lfm3-context1025-contract-v1",
+  "checkpoint_sha256": "b6ff17ac993dddf0f6f51bd872b12ae1437f4453a54a0b4878cedc7864fbc07e",
+  "capacity": 2048,
+  "chunk_capacity": 128,
+  "tokens": {"length": 1025, "bos": 124894, "subsequent": "(index * 3253 + 41) % 124000, index starts at 1"},
+  "schedules": [[128, 127, 1, 1, 1, 128, 125, 1, 1, 127, 128, 128, 128, 1]],
+  "shared_prefix": {"context": 513, "prior_schedule_index": 1, "observations": 549},
+  "checkpoints": [513, 640, 768, 896, 1024, 1025],
+  "comparison": "Exact BF16 equality at every source/native observation. The first nine chunks must reproduce the independently captured 513-position schedule.",
+  "state": "Check actual attention view origin and segment lengths at all layers. Abort before publication at offsets 257 and 1024 and verify state and retry logits.",
+  "abort_offsets": [257, 1024],
+  "memory": {"native": 6442450944, "reference": 536870912, "disk_floor": 2147483648},
+  "timing": "After parity, run the next 14 ordinary one-token commits on the same prepared session. Report each depth, one first call, three warmups and ten measured samples. These timings describe continuation, without qualifying observer overhead."
+}

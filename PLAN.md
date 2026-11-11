@@ -99,8 +99,10 @@ matches the pinned eager source for three short schedules and passes Astra revie
 The [explicit LFM3 BF16 CLI route](docs/lfm3-cli.md) adds generation, a pinned
 plain-text codec and console metrics. Astra approves scoped retention.
 The [513-position rollout](docs/lfm3-context513.md) matches two source schedules
-through sliding-window rollover and passes Astra review. The 1,025-position
-and full quality gates remain open.
+through sliding-window rollover and passes Astra review. The
+[1,025-position comparison](docs/lfm3-context1025.md) matches the pinned
+source and records ordinary continuation. Astra approves scoped retention.
+Both original full quality comparisons remain open.
 Any MiniCPM5 reconsideration still needs corrected original numerics and
 both complete original quality comparisons.
 

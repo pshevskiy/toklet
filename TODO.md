@@ -11,12 +11,28 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **extend real LFM3 BF16 parity through 1,025 positions
-and prepare original full loss and task scoring**. The authenticated CPU
-graph, explicit CLI route and real 513-position rollover are reviewed.
+Current/next task: **score the complete original LFM3 loss and task suite
+against the stock and modified references**. The authenticated CPU graph,
+explicit CLI route and 1,025-position numerical comparison are reviewed.
 Preserve the 6 GiB ceiling, original numerical and quality gates, and prior
 adoption decisions. Engine and CLI work leads. Interactive screen capture
 and iPhone runtime remain deferred.
+
+- [ ] S1.L original quality: score all 10,000 loss targets and 100 tasks for
+  both stock-to-modified and modified-to-native comparisons. Original loss
+  inputs match, with a trailing newline difference in 40 stock code prompts.
+  Full-vocabulary head pilot and the first guarded modified-parent loss block
+  pass. Remaining reference blocks, native scoring and literal task grading
+  are open. [Inputs](artifacts/lfm3-context1025-2026-11-11/quality-inputs/reconciliation.json).
+
+- [x] S1.L 1,025-position comparison: all 854 stages and 68,054,016 BF16
+  words match. Both late retries and 30 wrapped views pass. The phased
+  reference corrects two 512 MiB guard failures and matches the prior
+  prefix and full-head capture. Ordinary one-token median is 1.285 s.
+  Fmt, both strict Clippy, 733 CPU, 879 Metal and nine examples pass.
+  Native81 inputs and both C smokes match. Astra approves with no
+  findings. [Scope](docs/lfm3-context1025.md),
+  [review/commit](artifacts/lfm3-context1025-2026-11-11/publication-checks.json).
 
 - [x] S1.L real 513-position rollout: both frozen schedules match 1,342
   observations and 70,418,432 BF16 words, including all nine shared tied-logit
