@@ -51,12 +51,23 @@ pub struct Model {
     memory: Memory,
 }
 
+/// Physical segments presented to the eager attention operator, in logical order.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct AttentionView {
+    pub key_start: usize,
+    pub logical_keys: usize,
+    pub window: Option<usize>,
+    pub segment_rows: [usize; 3],
+}
+
 /// Observations are borrowed from the uncommitted step. A callback error
 /// discards that step and leaves all published outputs and state intact.
 pub struct Observation<'a> {
     pub layer: Option<usize>,
     pub stage: &'static str,
     pub values: &'a [bf16],
+    /// Present on the key proposal observation.
+    pub attention_view: Option<AttentionView>,
 }
 
 pub struct Session<'a> {

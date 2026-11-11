@@ -1,0 +1,14 @@
+{
+  "format": "toklet-lfm3-context513-contract-v1",
+  "checkpoint_sha256": "b6ff17ac993dddf0f6f51bd872b12ae1437f4453a54a0b4878cedc7864fbc07e",
+  "capacity": 2048,
+  "chunk_capacity": 128,
+  "tokens": {"length": 513, "bos": 124894, "subsequent": "(index * 3253 + 41) % 124000, index starts at 1"},
+  "schedules": [[64, 64, 64, 63, 1, 1, 1, 64, 64, 64, 61, 1, 1], [128, 127, 1, 1, 1, 128, 125, 1, 1]],
+  "checkpoints": [255, 256, 257, 258, 386, 511, 512, 513],
+  "comparison": "Compare every source and native BF16 observation exactly for its own schedule. Separately report cross-schedule source and native drift at shared endpoints without changing original numerical gates.",
+  "source": "Layer-streamed pinned eager parent formulas over authenticated BF16 weights, with full or 256-token source cache view and the original pre/post runtime attestation.",
+  "state": "Check actual attention view origin and ordered physical segment lengths, all 24 layer traces and tied logits. At offset 257 abort once at the final logits callback and verify prior publication before retry.",
+  "memory": {"native": 6442450944, "reference": 536870912, "disk_floor": 2147483648},
+  "timing": "Retain actual step durations as diagnostic capture timing, including the trace. Measure separate prepared normal/observed continuation on a fixed wrapped prefix when numerics permit. Preserve all original performance and quality gates."
+}

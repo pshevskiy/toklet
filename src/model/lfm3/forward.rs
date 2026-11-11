@@ -2,8 +2,8 @@ use half::bf16;
 use smallvec::SmallVec;
 
 use super::{
-    CONV_OWNERS, Error, HEAD_DIM, HIDDEN, INTERMEDIATE, KV_HEADS, KV_OWNERS, KV_WIDTH, Observation,
-    QUERY_HEADS, Session, VOCAB,
+    AttentionView, CONV_OWNERS, Error, HEAD_DIM, HIDDEN, INTERMEDIATE, KV_HEADS, KV_OWNERS,
+    KV_WIDTH, Observation, QUERY_HEADS, Session, VOCAB,
 };
 use crate::{
     cpu::{
@@ -57,12 +57,13 @@ impl Session<'_> {
                 .into());
             }
         }
-        let mut report = |layer, stage, values: &[bf16]| {
+        let mut report = |layer, stage, values: &[bf16], attention_view| {
             if TRACE {
                 observer(Observation {
                     layer,
                     stage,
                     values,
+                    attention_view,
                 })?;
             }
             Ok::<_, Error>(())
@@ -131,7 +132,7 @@ impl Session<'_> {
                         output,
                         count,
                     )?;
-                    report(layer_index, "history", frame.candidate())?;
+                    report(layer_index, "history", frame.candidate(), None)?;
                     conv_frames.push(frame);
                     for ((row, conv), gated) in bcx
                         .chunks_exact(3 * HIDDEN)
@@ -182,15 +183,28 @@ impl Session<'_> {
                     linear(normalized, weights.get(v), kv, count, HIDDEN, KV_WIDTH)?;
                     let new_v = &mut values.next().unwrap()[..kv_words];
                     head_major(kv, new_v, count);
-                    report(layer_index, "key_proposal", new_k)?;
-                    report(layer_index, "value_proposal", new_v)?;
                     let cache = &self.state.caches()[slot];
                     let frame = cache.prepare(new_k, new_v, count)?;
                     let view = cache.view(&frame)?;
                     let shape = view.attention_shape(QUERY_HEADS, LFM3_ATTENTION_SCALE);
+                    let segments = view.segments();
+                    if TRACE {
+                        report(
+                            layer_index,
+                            "key_proposal",
+                            new_k,
+                            Some(AttentionView {
+                                key_start: shape.key_start,
+                                logical_keys: shape.keys,
+                                window: shape.window,
+                                segment_rows: segments.map(|segment| segment.keys),
+                            }),
+                        )?;
+                        report(layer_index, "value_proposal", new_v, None)?;
+                    }
                     attention(
                         query,
-                        &view.segments(),
+                        &segments,
                         post,
                         &mut self.scratch.scores[..shape.keys],
                         &shape,
@@ -266,7 +280,7 @@ impl Session<'_> {
                 HIDDEN,
             )?;
             add(residual, post, current)?;
-            report(layer_index, "layer_output", current)?;
+            report(layer_index, "layer_output", current, None)?;
         }
         norm(
             current,
@@ -275,7 +289,7 @@ impl Session<'_> {
             count,
             HIDDEN,
         )?;
-        report(None, "final_norm", normalized)?;
+        report(None, "final_norm", normalized, None)?;
         linear(
             &normalized[width - HIDDEN..],
             embedding,
@@ -284,7 +298,7 @@ impl Session<'_> {
             HIDDEN,
             VOCAB,
         )?;
-        report(None, "logits", &self.scratch.logits)?;
+        report(None, "logits", &self.scratch.logits, None)?;
 
         // No fallible operations after the joint validation and state copy.
         self.state.commit(&conv_frames, &kv_frames, count)?;

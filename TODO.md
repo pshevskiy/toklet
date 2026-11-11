@@ -11,12 +11,23 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **qualify the real LFM3 BF16 route at deeper contexts
-including sliding-window rollover, then run the original full numerical
-and quality gates**. The authenticated CPU graph, generation, pinned codec
-and explicit CLI route are reviewed. Preserve the 6 GiB ceiling and prior
+Current/next task: **extend real LFM3 BF16 parity through 1,025 positions
+and prepare original full loss and task scoring**. The authenticated CPU
+graph, explicit CLI route and real 513-position rollover are reviewed.
+Preserve the 6 GiB ceiling, original numerical and quality gates, and prior
 adoption decisions. Engine and CLI work leads. Interactive screen capture
 and iPhone runtime remain deferred.
+
+- [x] S1.L real 513-position rollout: both frozen schedules match 1,342
+  observations and 70,418,432 BF16 words, including all nine shared tied-logit
+  endpoints. Forty split old-cache views and both late-abort retries pass.
+  Guarded source/native combined RSS stays under 512 MiB/6 GiB respectively.
+  Isolated ordinary one-token median is 1.272 s near the wrapped prefix.
+  Observer overhead remains unqualified. Fmt, both strict Clippy, 733 CPU/
+  879 Metal/nine targeted example checks, native81 three slices and two C
+  smokes pass. Astra approves with no findings. Full quality and adoption remain
+  open. [Scope](docs/lfm3-context513.md),
+  [review/commit](artifacts/lfm3-context513-2026-11-11/publication-checks.json).
 
 - [x] S1.L generation, codec and CLI: explicit `lfm3-bf16` profile with
   audited assets, pending/committed history, exact prefix reuse, replay,

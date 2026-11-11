@@ -1,0 +1,877 @@
+{
+  "format": "toklet-lfm3-context513-v1",
+  "base": "69d1711696e7856adf35fb4b23784420ac8929d3",
+  "checkpoint_sha256": "b6ff17ac993dddf0f6f51bd872b12ae1437f4453a54a0b4878cedc7864fbc07e",
+  "contract_sha256": "ba82201b78ac4285ae51ee583b57036da819d286a39ea3f0f7105503f65a2e17",
+  "reference_fixture_sha256": "5735fdcd81d32adbdaed86f7c3374f14a73f702176cf4848a4455e6a093436a8",
+  "source_raw_sha256": "aab34041aec28c871b57abd5efb762543b6fffc4921a3c6500d4164ccead4fdd",
+  "source_raw_bytes": 140836864,
+  "compiler": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)\nbinary: rustc\ncommit-hash: 1159e78c4747b02ef996e55082b704c09b970588\ncommit-date: 2025-09-14\nhost: aarch64-apple-darwin\nrelease: 1.90.0\nLLVM version: 21.1.1",
+  "system": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.2\nBuildVersion:\t\t25G83",
+  "hardware": {
+    "hw.model": "MacBookPro18,3",
+    "hw.memsize": "17179869184",
+    "machdep.cpu.brand_string": "Apple M1 Pro"
+  },
+  "native_binary_sha256": "9970e89c146c7c7527b4e5fa4aba9206331fc51902c49b5f5a5465745d9c37fe",
+  "source_word_counts_by_stage": {
+    "history": 3514368,
+    "layer_output": 50429952,
+    "key_proposal": 5778432,
+    "value_proposal": 5778432,
+    "final_norm": 2101248,
+    "logits": 2816000
+  },
+  "result": {
+    "observation_count": 1342,
+    "words": 70418432,
+    "differing_words": 0,
+    "differing_observations": 0,
+    "two_old_segments": 40,
+    "late_abort_and_retry": 2,
+    "exact_pass": true
+  },
+  "earliest_difference": null,
+  "shared_endpoints": [
+    {
+      "end": 128,
+      "source_word_differences": 0,
+      "native_word_differences": 0
+    },
+    {
+      "end": 255,
+      "source_word_differences": 0,
+      "native_word_differences": 0
+    },
+    {
+      "end": 256,
+      "source_word_differences": 0,
+      "native_word_differences": 0
+    },
+    {
+      "end": 257,
+      "source_word_differences": 0,
+      "native_word_differences": 0
+    },
+    {
+      "end": 258,
+      "source_word_differences": 0,
+      "native_word_differences": 0
+    },
+    {
+      "end": 386,
+      "source_word_differences": 0,
+      "native_word_differences": 0
+    },
+    {
+      "end": 511,
+      "source_word_differences": 0,
+      "native_word_differences": 0
+    },
+    {
+      "end": 512,
+      "source_word_differences": 0,
+      "native_word_differences": 0
+    },
+    {
+      "end": 513,
+      "source_word_differences": 0,
+      "native_word_differences": 0
+    }
+  ],
+  "diagnostic_steps": [
+    {
+      "schedule": 0,
+      "start": 0,
+      "end": 64,
+      "queries": 64,
+      "elapsed_ns": 51785587708,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 0,
+      "start": 64,
+      "end": 128,
+      "queries": 64,
+      "elapsed_ns": 45605025500,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 0,
+      "start": 128,
+      "end": 192,
+      "queries": 64,
+      "elapsed_ns": 39637339333,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 0,
+      "start": 192,
+      "end": 255,
+      "queries": 63,
+      "elapsed_ns": 39142915292,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 0,
+      "start": 255,
+      "end": 256,
+      "queries": 1,
+      "elapsed_ns": 1292852417,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 0,
+      "start": 256,
+      "end": 257,
+      "queries": 1,
+      "elapsed_ns": 1286385500,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 0,
+      "start": 257,
+      "end": 258,
+      "queries": 1,
+      "elapsed_ns": 1281426666,
+      "word_differences": 0,
+      "wrapped_views": 5
+    },
+    {
+      "schedule": 0,
+      "start": 258,
+      "end": 322,
+      "queries": 64,
+      "elapsed_ns": 39515230541,
+      "word_differences": 0,
+      "wrapped_views": 5
+    },
+    {
+      "schedule": 0,
+      "start": 322,
+      "end": 386,
+      "queries": 64,
+      "elapsed_ns": 39428112250,
+      "word_differences": 0,
+      "wrapped_views": 5
+    },
+    {
+      "schedule": 0,
+      "start": 386,
+      "end": 450,
+      "queries": 64,
+      "elapsed_ns": 41186251542,
+      "word_differences": 0,
+      "wrapped_views": 5
+    },
+    {
+      "schedule": 0,
+      "start": 450,
+      "end": 511,
+      "queries": 61,
+      "elapsed_ns": 54609104125,
+      "word_differences": 0,
+      "wrapped_views": 5
+    },
+    {
+      "schedule": 0,
+      "start": 511,
+      "end": 512,
+      "queries": 1,
+      "elapsed_ns": 2152173084,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 0,
+      "start": 512,
+      "end": 513,
+      "queries": 1,
+      "elapsed_ns": 1967811917,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 1,
+      "start": 0,
+      "end": 128,
+      "queries": 128,
+      "elapsed_ns": 79512992959,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 1,
+      "start": 128,
+      "end": 255,
+      "queries": 127,
+      "elapsed_ns": 77494331542,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 1,
+      "start": 255,
+      "end": 256,
+      "queries": 1,
+      "elapsed_ns": 1263318709,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 1,
+      "start": 256,
+      "end": 257,
+      "queries": 1,
+      "elapsed_ns": 1258986959,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 1,
+      "start": 257,
+      "end": 258,
+      "queries": 1,
+      "elapsed_ns": 1274602458,
+      "word_differences": 0,
+      "wrapped_views": 5
+    },
+    {
+      "schedule": 1,
+      "start": 258,
+      "end": 386,
+      "queries": 128,
+      "elapsed_ns": 78051100875,
+      "word_differences": 0,
+      "wrapped_views": 5
+    },
+    {
+      "schedule": 1,
+      "start": 386,
+      "end": 511,
+      "queries": 125,
+      "elapsed_ns": 76320444666,
+      "word_differences": 0,
+      "wrapped_views": 5
+    },
+    {
+      "schedule": 1,
+      "start": 511,
+      "end": 512,
+      "queries": 1,
+      "elapsed_ns": 1269626333,
+      "word_differences": 0,
+      "wrapped_views": 0
+    },
+    {
+      "schedule": 1,
+      "start": 512,
+      "end": 513,
+      "queries": 1,
+      "elapsed_ns": 1261441375,
+      "word_differences": 0,
+      "wrapped_views": 0
+    }
+  ],
+  "logit_digests_by_end": [
+    {
+      "64": {
+        "source": "80f880836fabc89c59ac0f91c0eb6b4593687ded7a7d33ee5a98e5b71607fe5c",
+        "native": "80f880836fabc89c59ac0f91c0eb6b4593687ded7a7d33ee5a98e5b71607fe5c",
+        "source_argmax": 1397,
+        "native_argmax": 1397
+      },
+      "128": {
+        "source": "1e9e62856911bed1ddf2ce5c36b6a0d9c03e77e07d76a0023f39b7e0f443b88b",
+        "native": "1e9e62856911bed1ddf2ce5c36b6a0d9c03e77e07d76a0023f39b7e0f443b88b",
+        "source_argmax": 25860,
+        "native_argmax": 25860
+      },
+      "192": {
+        "source": "70fb0c499f540752551ec2ac681852dc0087d74dfcfdd4ccc8c352e4a6680eac",
+        "native": "70fb0c499f540752551ec2ac681852dc0087d74dfcfdd4ccc8c352e4a6680eac",
+        "source_argmax": 54642,
+        "native_argmax": 54642
+      },
+      "255": {
+        "source": "d1f99cf0a1ca103bad35771ec63d590617811da854e52f4e31e167547d73610c",
+        "native": "d1f99cf0a1ca103bad35771ec63d590617811da854e52f4e31e167547d73610c",
+        "source_argmax": 23633,
+        "native_argmax": 23633
+      },
+      "256": {
+        "source": "9ebe479e360c457619fbc24aac221d2bd85b22bb44450fa97f84e560df2b0047",
+        "native": "9ebe479e360c457619fbc24aac221d2bd85b22bb44450fa97f84e560df2b0047",
+        "source_argmax": 23633,
+        "native_argmax": 23633
+      },
+      "257": {
+        "source": "db11cc71b56d6228434a8b17af6a400c70c2ef79e6a58259582fee318054fdcd",
+        "native": "db11cc71b56d6228434a8b17af6a400c70c2ef79e6a58259582fee318054fdcd",
+        "source_argmax": 813,
+        "native_argmax": 813
+      },
+      "258": {
+        "source": "9ee5342a01aeb3a4d1e448e2e12732bfd08cd7a51292e79380d781bf8b96f158",
+        "native": "9ee5342a01aeb3a4d1e448e2e12732bfd08cd7a51292e79380d781bf8b96f158",
+        "source_argmax": 613,
+        "native_argmax": 613
+      },
+      "322": {
+        "source": "c209bee01e95c368ac8e748fe44427afd84216b3e73219ec8fb3c66c7beac303",
+        "native": "c209bee01e95c368ac8e748fe44427afd84216b3e73219ec8fb3c66c7beac303",
+        "source_argmax": 229,
+        "native_argmax": 229
+      },
+      "386": {
+        "source": "e30018bfb4f61548770fa0f327549dab2bcd623388fb08c563a04c13be6076ac",
+        "native": "e30018bfb4f61548770fa0f327549dab2bcd623388fb08c563a04c13be6076ac",
+        "source_argmax": 229,
+        "native_argmax": 229
+      },
+      "450": {
+        "source": "fcff35933335afb2b3abbcef0546ca8b58a1c27d89c5eae529618ba0f4b1ed2b",
+        "native": "fcff35933335afb2b3abbcef0546ca8b58a1c27d89c5eae529618ba0f4b1ed2b",
+        "source_argmax": 816,
+        "native_argmax": 816
+      },
+      "511": {
+        "source": "a0b6baac9bf745164f04c8a86c0d2eb467e2a20ecb5f685cd21b9fdc6c192209",
+        "native": "a0b6baac9bf745164f04c8a86c0d2eb467e2a20ecb5f685cd21b9fdc6c192209",
+        "source_argmax": 34,
+        "native_argmax": 34
+      },
+      "512": {
+        "source": "951c83fb7e3f159fef2d1e6dc913751db38849c8e0f685a611bfdeb91ac3933c",
+        "native": "951c83fb7e3f159fef2d1e6dc913751db38849c8e0f685a611bfdeb91ac3933c",
+        "source_argmax": 34,
+        "native_argmax": 34
+      },
+      "513": {
+        "source": "7e07931eefe74830065ec943b5b01680bcef0cf96687a52e8e14e71f024f9431",
+        "native": "7e07931eefe74830065ec943b5b01680bcef0cf96687a52e8e14e71f024f9431",
+        "source_argmax": 229,
+        "native_argmax": 229
+      }
+    },
+    {
+      "128": {
+        "source": "1e9e62856911bed1ddf2ce5c36b6a0d9c03e77e07d76a0023f39b7e0f443b88b",
+        "native": "1e9e62856911bed1ddf2ce5c36b6a0d9c03e77e07d76a0023f39b7e0f443b88b",
+        "source_argmax": 25860,
+        "native_argmax": 25860
+      },
+      "255": {
+        "source": "d1f99cf0a1ca103bad35771ec63d590617811da854e52f4e31e167547d73610c",
+        "native": "d1f99cf0a1ca103bad35771ec63d590617811da854e52f4e31e167547d73610c",
+        "source_argmax": 23633,
+        "native_argmax": 23633
+      },
+      "256": {
+        "source": "9ebe479e360c457619fbc24aac221d2bd85b22bb44450fa97f84e560df2b0047",
+        "native": "9ebe479e360c457619fbc24aac221d2bd85b22bb44450fa97f84e560df2b0047",
+        "source_argmax": 23633,
+        "native_argmax": 23633
+      },
+      "257": {
+        "source": "db11cc71b56d6228434a8b17af6a400c70c2ef79e6a58259582fee318054fdcd",
+        "native": "db11cc71b56d6228434a8b17af6a400c70c2ef79e6a58259582fee318054fdcd",
+        "source_argmax": 813,
+        "native_argmax": 813
+      },
+      "258": {
+        "source": "9ee5342a01aeb3a4d1e448e2e12732bfd08cd7a51292e79380d781bf8b96f158",
+        "native": "9ee5342a01aeb3a4d1e448e2e12732bfd08cd7a51292e79380d781bf8b96f158",
+        "source_argmax": 613,
+        "native_argmax": 613
+      },
+      "386": {
+        "source": "e30018bfb4f61548770fa0f327549dab2bcd623388fb08c563a04c13be6076ac",
+        "native": "e30018bfb4f61548770fa0f327549dab2bcd623388fb08c563a04c13be6076ac",
+        "source_argmax": 229,
+        "native_argmax": 229
+      },
+      "511": {
+        "source": "a0b6baac9bf745164f04c8a86c0d2eb467e2a20ecb5f685cd21b9fdc6c192209",
+        "native": "a0b6baac9bf745164f04c8a86c0d2eb467e2a20ecb5f685cd21b9fdc6c192209",
+        "source_argmax": 34,
+        "native_argmax": 34
+      },
+      "512": {
+        "source": "951c83fb7e3f159fef2d1e6dc913751db38849c8e0f685a611bfdeb91ac3933c",
+        "native": "951c83fb7e3f159fef2d1e6dc913751db38849c8e0f685a611bfdeb91ac3933c",
+        "source_argmax": 34,
+        "native_argmax": 34
+      },
+      "513": {
+        "source": "7e07931eefe74830065ec943b5b01680bcef0cf96687a52e8e14e71f024f9431",
+        "native": "7e07931eefe74830065ec943b5b01680bcef0cf96687a52e8e14e71f024f9431",
+        "source_argmax": 229,
+        "native_argmax": 229
+      }
+    }
+  ],
+  "memory": {
+    "native_final_rss": 3508617216,
+    "source_final_rss": 533643264,
+    "native_sampled_physical": 3524873576,
+    "source_sampled_physical": 318719704
+  },
+  "timing_scope": "Actual release graph step including diagnostic callback, hashes and reference reads on differences. Concurrent checks may affect time. Descriptive only.",
+  "full_quality_and_adoption_pending": true,
+  "timing": {
+    "source_sha256": "00b2ac83853a27f6135e0649ca9e701b5a818e2161a7db216a7602ee1c261f2e",
+    "binary_sha256": "f36a2fbc1cf84f8273abd300248429929965e7d3c00d40803b6a1d512663ca0c",
+    "observed_rss_bytes": 3525951488,
+    "sampled_physical_bytes": 3519385056,
+    "conditions": [
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      },
+      {
+        "power": "Now drawing from 'AC Power'",
+        "thermalState": 0,
+        "lowPowerMode": false
+      }
+    ],
+    "load": {
+      "load_ns": 32290600542,
+      "checkpoint_sha256": [
+        182,
+        255,
+        23,
+        172,
+        153,
+        61,
+        221,
+        240,
+        246,
+        245,
+        27,
+        216,
+        114,
+        177,
+        42,
+        225,
+        67,
+        127,
+        68,
+        83,
+        165,
+        74,
+        11,
+        72,
+        120,
+        206,
+        220,
+        120,
+        100,
+        251,
+        192,
+        126
+      ],
+      "admitted_bytes": 3501386816
+    },
+    "minimal_observer": {
+      "offset": 257,
+      "prefix_ns": 157414134208,
+      "detailed": false,
+      "first_ns": 1268806750,
+      "warmup_ns": [
+        1270913083,
+        1266609750,
+        1256661958
+      ],
+      "samples_ns": [
+        1268989166,
+        1277384500,
+        1275923708,
+        1268070833,
+        1269213666,
+        1274423042,
+        1271234459,
+        1258239833,
+        1270610334,
+        1269877792
+      ],
+      "median_ns": 1270244063.0,
+      "mad_ns": 1714063.5
+    },
+    "detailed_observer": {
+      "offset": 257,
+      "prefix_ns": 157414134208,
+      "detailed": true,
+      "first_ns": 1276654291,
+      "warmup_ns": [
+        1266635375,
+        1277893666,
+        1281940500
+      ],
+      "samples_ns": [
+        1276120166,
+        1268575250,
+        1279250500,
+        1278783333,
+        1277326792,
+        1265161625,
+        1277874958,
+        1279761125,
+        1273485583,
+        1265176750
+      ],
+      "median_ns": 1276723479.0,
+      "mad_ns": 2782333.5
+    },
+    "ordinary_progression": {
+      "ordinary_progression": true,
+      "prefix_ns": 157414134208,
+      "first": {
+        "offset": 257,
+        "token": 92062,
+        "elapsed_ns": 1281224500,
+        "logits_sha256": "9ee5342a01aeb3a4d1e448e2e12732bfd08cd7a51292e79380d781bf8b96f158"
+      },
+      "warmups": [
+        {
+          "offset": 258,
+          "token": 95315,
+          "elapsed_ns": 1283724833,
+          "logits_sha256": "427d589fef51d7de58136e04183e630aff16c8eccd78a1a00e05a9c8d4fd8c36"
+        },
+        {
+          "offset": 259,
+          "token": 98568,
+          "elapsed_ns": 1275005916,
+          "logits_sha256": "9bc174ac3376c3f484ae9c2ae2704bf264e03a939f365297d6022a2bc879660f"
+        },
+        {
+          "offset": 260,
+          "token": 101821,
+          "elapsed_ns": 1268461458,
+          "logits_sha256": "5ac996d3d2c6162b1971abb00f64095aaafb2f15f1de1e4d6bfe8e8c768a33f6"
+        }
+      ],
+      "samples": [
+        {
+          "offset": 261,
+          "token": 105074,
+          "elapsed_ns": 1271711875,
+          "logits_sha256": "6d5418491a322d64685de52d9ed4bd9dafcdd82cc524f686181b88a61f59fe8c"
+        },
+        {
+          "offset": 262,
+          "token": 108327,
+          "elapsed_ns": 1269508791,
+          "logits_sha256": "3bc56624df989da2b64c890427b40b4210fc6b6f6ead36212f2694dde736ce59"
+        },
+        {
+          "offset": 263,
+          "token": 111580,
+          "elapsed_ns": 1271323375,
+          "logits_sha256": "2b82754ac4b90e0a2b1af52a8119a1f2e5e45ed621298aa718baf38e0cca4b13"
+        },
+        {
+          "offset": 264,
+          "token": 114833,
+          "elapsed_ns": 1263027750,
+          "logits_sha256": "94c91bac58af404dadf4c2feb3a9dd5b3d8a5a3d7b5852e649bdbba892710340"
+        },
+        {
+          "offset": 265,
+          "token": 118086,
+          "elapsed_ns": 1269399250,
+          "logits_sha256": "4648217ba49f651e9adf9012b220db5cad7f79ebf4c6cc1ee5c1bfefb26219d6"
+        },
+        {
+          "offset": 266,
+          "token": 121339,
+          "elapsed_ns": 1275102417,
+          "logits_sha256": "5d14540c4cc1dae6fe409b02720c8e1a148fadedcc93bb46c089d92ae17240f4"
+        },
+        {
+          "offset": 267,
+          "token": 592,
+          "elapsed_ns": 1275345333,
+          "logits_sha256": "e7693d8a3b53b050c6853b924987132b071ad98c761de527a6a0e8919d31e8e9"
+        },
+        {
+          "offset": 268,
+          "token": 3845,
+          "elapsed_ns": 1269659958,
+          "logits_sha256": "ee0cf99cac564e37968e6ee5c2ab474549d118601598745c22d56082bb6e7580"
+        },
+        {
+          "offset": 269,
+          "token": 7098,
+          "elapsed_ns": 1279597167,
+          "logits_sha256": "48f3c1e17406d809c0c5e12d72e7af713ecc33951decc0259c05c32128986d56"
+        },
+        {
+          "offset": 270,
+          "token": 10351,
+          "elapsed_ns": 1274584375,
+          "logits_sha256": "c90de031924749e2ec12668499b5fca5a59d88edcecb1f539a69e9723c76bbdb"
+        }
+      ],
+      "median_ns": 1271517625.0,
+      "mad_ns": 2592562.5
+    },
+    "scope": "Observed calls abort after complete graph/logits at fixed offset 257. Ordinary one-token calls commit and advance offsets 257 through 270. First pass, three warmups and ten measured durations each. Separate scopes and no overhead or speedup threshold claim."
+  },
+  "source_pins": {
+    "Cargo.toml": "36bae49784fbb2fc70fcb0b9ef709b1db8ff72c48255456682de9fe38f84fd16",
+    "Cargo.lock": "405a9b18beaacf701966f1832bf6724c0a3d4b8567ca3c5005855778d8dedb26",
+    "src/model/lfm3.rs": "4e443c27805edb9b2a28b8d1287a3939dfbecfa24db736a14116bf1b5da0fa03",
+    "src/model/lfm3/forward.rs": "eaf9e164f28eafbd94afbfb97fb96b9f15452051bce58a097006f0201856a6d9",
+    "tools/bench/lfm3_context513_probe.rs": "00b2ac83853a27f6135e0649ca9e701b5a818e2161a7db216a7602ee1c261f2e",
+    "tools/reference/lfm3_context513_fixture.py": "58ed8016b2e650d78aec7246fa4a29cb8ca12fee17abf85b283556b98f453f18"
+  }
+}
