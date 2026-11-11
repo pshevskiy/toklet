@@ -10,6 +10,17 @@ Gains from different experiments cannot be added together. Current task and
 qualification scope live in [TODO](../TODO.md); acceptance policy is in
 [PLAN](../PLAN.md#validation-and-performance-policy).
 
+The [external HTTP benchmark observer](lfm3-http-metrics.md) validates bounded
+Ollama/vLLM streams and separates client clocks, API counters and unavailable
+state. Twenty-eight portable controls in both modes and twelve synthetic HTTP/CLI
+cases pass within 512 MiB. All 26 genuine saved Ollama replies preserve counters,
+text and original event clocks. Input mismatch and truncated streams cannot
+qualify a comparison. Required checks bind to 5,177 unchanged inputs. Astra's
+rejected-byte, counter-overflow and stop-ID findings are fixed, and scoped
+retention is approved. [Review/commit](../artifacts/lfm3-engine-comparison-2026-11-11/http-observer-publication-checks.json).
+No model startup,
+engine overhead, quality, display or performance qualification follows.
+
 The real LFM3 BF16 comparison reaches 1,025 positions with 68,054,016
 exact source words and two late-abort retries. The source and native runs
 stay within their respective memory caps. Ordinary one-token continuation

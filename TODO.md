@@ -7,6 +7,17 @@ history is in the [dated archive](docs/archive/2026-11-09/README.md).
 
 ## Current and next task
 
+- [x] S1.L HTTP benchmark observations: bounded Ollama/vLLM stream client,
+  exact prompt/cache gates and explicit missing/partial metrics. Twenty-eight
+  portable controls in both modes and twelve guarded synthetic HTTP/CLI cases
+  pass after correcting a malformed negative fixture. All 26 saved genuine
+  Ollama replies replay with unchanged counters/text and original event clocks.
+  Required checks reuse 5,177 unchanged input files. Astra's rejected-byte,
+  counter-overflow and stop-ID findings are fixed; scoped retention is approved.
+  [Review/commit](artifacts/lfm3-engine-comparison-2026-11-11/http-observer-publication-checks.json).
+  Actual engine
+  startup, quality and performance are separate. [Scope](docs/lfm3-http-metrics.md).
+
 Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
