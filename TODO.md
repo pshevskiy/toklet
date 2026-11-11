@@ -21,9 +21,20 @@ and iPhone runtime remain deferred.
 - [ ] S1.L original quality: score all 10,000 loss targets and 100 tasks for
   both stock-to-modified and modified-to-native comparisons. Original loss
   inputs match, with a trailing newline difference in 40 stock code prompts.
-  Full-vocabulary head pilot and the first guarded modified-parent loss block
-  pass. Remaining reference blocks, native scoring and literal task grading
-  are open. [Inputs](artifacts/lfm3-context1025-2026-11-11/quality-inputs/reconciliation.json).
+  Modified-reference loss covers all 10,000 targets. The stock loss and
+  both task collection routes are active. The first 1,024 native targets
+  match the modified greedy IDs with 3.55e-15 maximum absolute NLL delta.
+  The remaining nine native blocks are queued after the CLI exits.
+  Paired isolated grading and the final quality decision remain open.
+  [Campaign](docs/lfm3-quality.md).
+
+- [x] S1.L original quality tooling: guarded native/source collection,
+  trajectory and console replay, literal grading, and complete-only paired
+  decisions. Independent replay matches all 16 source pilot decisions.
+  Fmt, both strict Clippy, 733 CPU, 879 Metal, 11 examples and six
+  portable tests pass. Astra approves after binding identical modified
+  reference inputs across pairs.
+  [Checks and review](artifacts/lfm3-context1025-2026-11-11/quality-inputs/quality-publication-checks.json).
 
 - [x] S1.L 1,025-position comparison: all 854 stages and 68,054,016 BF16
   words match. Both late retries and 30 wrapped views pass. The phased
