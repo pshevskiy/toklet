@@ -1,0 +1,229 @@
+{
+  "chats": [
+    {
+      "messages": [
+        {
+          "role": "user",
+          "content": "Hi"
+        }
+      ],
+      "text": "<|startoftext|><|im_start|>user\nHi<|im_end|>\n<|im_start|>assistant\n<think>",
+      "ids": [
+        124894,
+        124899,
+        5922,
+        207,
+        41619,
+        124900,
+        207,
+        124899,
+        63514,
+        207,
+        124901
+      ]
+    },
+    {
+      "messages": [
+        {
+          "role": "system",
+          "content": "Be concise."
+        },
+        {
+          "role": "user",
+          "content": "Café ☕"
+        }
+      ],
+      "text": "<|startoftext|><|im_start|>system\nBe concise.<|im_end|>\n<|im_start|>user\nCafé ☕<|im_end|>\n<|im_start|>assistant\n<think>",
+      "ids": [
+        124894,
+        124899,
+        23630,
+        207,
+        4184,
+        55911,
+        22,
+        124900,
+        207,
+        124899,
+        5922,
+        207,
+        43,
+        1804,
+        359,
+        40460,
+        252,
+        124900,
+        207,
+        124899,
+        63514,
+        207,
+        124901
+      ]
+    },
+    {
+      "messages": [
+        {
+          "role": "user",
+          "content": "A"
+        },
+        {
+          "role": "assistant",
+          "content": "<think>hidden</think> Yes  "
+        },
+        {
+          "role": "user",
+          "content": "B"
+        }
+      ],
+      "text": "<|startoftext|><|im_start|>user\nA<|im_end|>\n<|im_start|>assistant\n<think></think>Yes<|im_end|>\n<|im_start|>user\nB<|im_end|>\n<|im_start|>assistant\n<think>",
+      "ids": [
+        124894,
+        124899,
+        5922,
+        207,
+        41,
+        124900,
+        207,
+        124899,
+        63514,
+        207,
+        124901,
+        124902,
+        12447,
+        124900,
+        207,
+        124899,
+        5922,
+        207,
+        42,
+        124900,
+        207,
+        124899,
+        63514,
+        207,
+        124901
+      ]
+    },
+    {
+      "messages": [
+        {
+          "role": "system",
+          "content": ""
+        },
+        {
+          "role": "user",
+          "content": "Hello"
+        },
+        {
+          "role": "assistant",
+          "reasoning": "one step",
+          "content": "Answer"
+        }
+      ],
+      "text": "<|startoftext|><|im_start|>user\nHello<|im_end|>\n<|im_start|>assistant\n<think>one step</think>Answer<|im_end|>\n<|im_start|>assistant\n<think>",
+      "ids": [
+        124894,
+        124899,
+        5922,
+        207,
+        35808,
+        124900,
+        207,
+        124899,
+        63514,
+        207,
+        124901,
+        673,
+        3300,
+        124902,
+        39630,
+        124900,
+        207,
+        124899,
+        63514,
+        207,
+        124901
+      ]
+    },
+    {
+      "messages": [
+        {
+          "role": "user",
+          "content": ""
+        },
+        {
+          "role": "assistant",
+          "thinking": null,
+          "content": "<think>x</think>y"
+        }
+      ],
+      "text": "<|startoftext|><|im_start|>user\n<|im_end|>\n<|im_start|>assistant\n<think></think><think>x</think>y<|im_end|>\n<|im_start|>assistant\n<think>",
+      "ids": [
+        124894,
+        124899,
+        5922,
+        207,
+        124900,
+        207,
+        124899,
+        63514,
+        207,
+        124901,
+        124902,
+        124901,
+        96,
+        124902,
+        97,
+        124900,
+        207,
+        124899,
+        63514,
+        207,
+        124901
+      ]
+    }
+  ],
+  "raw": [
+    {
+      "text": "  leading space\nCafé ☕\n",
+      "ids": [
+        229,
+        5344,
+        2993,
+        207,
+        43,
+        1804,
+        359,
+        40460,
+        252,
+        207
+      ],
+      "decoded": "  leading space\nCafé ☕\n"
+    },
+    {
+      "text": "🙂  你好\n",
+      "ids": [
+        12920,
+        256,
+        233,
+        229,
+        229,
+        11253,
+        5899,
+        207
+      ],
+      "decoded": "🙂  你好\n"
+    },
+    {
+      "text": "<|startoftext|>A<|im_end|>",
+      "ids": [
+        124894,
+        41,
+        124900
+      ],
+      "decoded": "A"
+    }
+  ],
+  "template_sha256": "f45005c50cd2a97329722bf3a2dee9f16c04cdf825a589b280fb7e99e6827818",
+  "tokenizer_sha256": "8f7ed4182b60c4ade9645e2f98b8f2141961bfd71c783e15daaa89e95ae66338"
+}

@@ -198,7 +198,10 @@ The [authenticated BF16 CPU graph](lfm3-bf16-graph.md) matches the pinned
 eager source across all 24 layers and tied logits on three short schedules.
 The raw-token graph includes an exclusive session and admitted scratch. Astra
 approves scoped retention.
-The generation adapter, codec, CLI and original full qualification remain open.
+The [explicit LFM3 BF16 CLI route](lfm3-cli.md) adds a bounded generation
+session, pinned plain-text codec and real console state and phase metrics.
+Astra approves scoped retention. Deeper numerical, quality and managed-adoption
+gates remain open.
 Existing LFM2 support and publisher parity results do not qualify these mechanisms.
 Stock-to-modified and modified-to-native full quality gates remain mandatory.
 The prior [metadata preflight](../artifacts/lfm3-preflight-2026-11-09/preflight-summary.json)

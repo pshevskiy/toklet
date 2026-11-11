@@ -14,6 +14,8 @@ use crate::{
 };
 
 mod forward;
+mod generation;
+pub use generation::GenerationSession;
 
 pub const HIDDEN: usize = 2048;
 pub const INTERMEDIATE: usize = 7680;

@@ -36,7 +36,8 @@ Usage: toklet [OPTIONS]
        toklet inspect --help
        toklet plan --help
 
-  --model PATH              Local Qwen model directory
+  --model PATH              Local model directory
+  --model-profile qwen|lfm3-bf16   Explicit model profile (qwen default)
   --prompt TEXT             Chat-formatted user prompt
   --messages PATH           JSON array of chat messages
   --tools PATH              JSON tool schemas
@@ -62,8 +63,14 @@ Usage: toklet [OPTIONS]
 Generation is greedy without penalties. Text requires local tokenizer assets.
 Interactive actions: generate, append (raw text or IDs), continue, reset.
 Ctrl-C cancels between backend chunks/steps; idle interactive Ctrl-C exits.";
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum ModelProfile {
+    Qwen,
+    Lfm3Bf16,
+}
 struct Args {
     model: PathBuf,
+    model_profile: ModelProfile,
     prompt: Option<String>,
     messages: Option<PathBuf>,
     tools: Option<PathBuf>,
@@ -96,6 +103,7 @@ fn number<T: std::str::FromStr>(v: OsString) -> io::Result<T> {
 fn parse(values: Vec<OsString>) -> io::Result<Args> {
     let mut a = Args {
         model: PathBuf::new(),
+        model_profile: ModelProfile::Qwen,
         prompt: None,
         messages: None,
         tools: None,
@@ -154,6 +162,13 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
             }
             "--q4-weights" => a.q4_weights = Some(value()?.into()),
             "--model" => a.model = value()?.into(),
+            "--model-profile" => {
+                a.model_profile = match utf8(value()?)?.as_str() {
+                    "qwen" => ModelProfile::Qwen,
+                    "lfm3-bf16" => ModelProfile::Lfm3Bf16,
+                    _ => return Err(invalid("model profile must be qwen or lfm3-bf16")),
+                };
+            }
             "--prompt" => a.prompt = Some(utf8(value()?)?),
             "--messages" => a.messages = Some(value()?.into()),
             "--tools" => a.tools = Some(value()?.into()),
@@ -189,6 +204,16 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
             "--interactive" => a.interactive = true,
             "--no-eos" => a.no_eos = true,
             _ => return Err(invalid(format!("unexpected argument {flag}"))),
+        }
+    }
+    if a.model_profile == ModelProfile::Lfm3Bf16 {
+        if a.backend != "cpu" || seen.contains("--cpu-projection") || a.tools.is_some() {
+            return Err(invalid(
+                "LFM3 uses the fixed BF16 CPU graph and plain-text chat",
+            ));
+        }
+        if !seen.contains("--prefill-chunk") {
+            a.chunk = 16;
         }
     }
     if a.backend == "metal" && seen.contains("--cpu-projection") {
@@ -294,6 +319,8 @@ struct ExecutionMetadata {
 }
 struct Frontend {
     assets: Option<Assets>,
+    model_profile: ModelProfile,
+    lfm3_load: Option<weights::Lfm3LoadReport>,
     decoder: OutputDecoder,
     interactive: bool,
     stops: Vec<u32>,
@@ -317,6 +344,18 @@ struct OutputTiming {
     publication_seconds: f64,
 }
 impl Frontend {
+    fn render(&self, messages: &[Value], tools: Option<&[Value]>) -> io::Result<String> {
+        match self.model_profile {
+            ModelProfile::Qwen => chat::render(messages, tools.unwrap_or(&[]), true),
+            ModelProfile::Lfm3Bf16 => {
+                if tools.is_some() {
+                    return Err(invalid("LFM3 text chat does not accept tools"));
+                }
+                toklet::app_chat::lfm3::render(messages)
+            }
+        }
+    }
+
     fn finish_output(&mut self, out: &mut impl Write) -> io::Result<OutputTiming> {
         let mut timing = OutputTiming::default();
         if let Some(assets) = &self.assets {
@@ -356,7 +395,7 @@ impl Frontend {
                 return Err(invalid("reset accepts no other fields").into());
             }
             self.finish_output(&mut out)?;
-            session.reset();
+            session.try_reset()?;
             publish_terminal(&CANCELLED, |_| -> io::Result<()> {
                 writeln!(out, "{}", json!({"event":"reset"}))?;
                 out.flush()
@@ -392,21 +431,16 @@ impl Frontend {
                     }
                     prompt
                 } else {
-                    chat::render(
+                    self.render(
                         &[json!({"role":"user","content":prompt})],
-                        r.tools.as_deref().unwrap_or(&[]),
-                        true,
+                        r.tools.as_deref(),
                     )?
                 }
             } else {
                 if raw {
                     return Err(invalid("append/raw cannot use formatted messages").into());
                 }
-                chat::render(
-                    r.messages.as_deref().unwrap(),
-                    r.tools.as_deref().unwrap_or(&[]),
-                    true,
-                )?
+                self.render(r.messages.as_deref().unwrap(), r.tools.as_deref())?
             };
             input_formatting_seconds = formatting_clock.elapsed().as_secs_f64();
             let encoding_clock = Instant::now();
@@ -483,10 +517,17 @@ impl Frontend {
                 report.reason = StopReason::Cancelled;
             }
             let cancelled = report.reason == StopReason::Cancelled;
-            let stats = json!({"generation":report,"backend":self.backend,"cpu_projection":self.cpu_projection,"execution":self.execution,"logical_memory":logical_memory(session.memory(),self.external_bytes),"input_preparation_seconds":input_seconds,
+            let mut stats = json!({"generation":report,"backend":self.backend,"cpu_projection":self.cpu_projection,"execution":self.execution,"logical_memory":logical_memory(session.memory(),self.external_bytes),"input_preparation_seconds":input_seconds,
                 "input_formatting_seconds":input_formatting_seconds,"tokenization_seconds":tokenization_seconds,
                 "detokenization_seconds":output_timing.detokenization_seconds,"publication_seconds":output_timing.publication_seconds,
                 "load_seconds":if self.requests==0{self.load_seconds}else{0.0},"conversion_seconds":if self.requests==0{self.conversion_seconds}else{0.0},"tokenizer_load_seconds":if self.requests==0{self.tokenizer_load_seconds}else{0.0},"memory_admitted_bytes":self.memory_admitted_bytes});
+            if let Some(load) = self.lfm3_load {
+                stats["model_profile"] = json!("lfm3-bf16");
+                stats["decode_evaluations"] = json!(report.decode_evaluations);
+                if self.requests == 0 {
+                    stats["checkpoint_load"] = lfm3_load_json(load);
+                }
+            }
             self.requests += 1;
             if self.json {
                 writeln!(out, "{}", json!({"event":"done","statistics":stats}))?;
@@ -522,15 +563,28 @@ fn array_file(path: &std::path::Path) -> io::Result<Vec<Value>> {
 }
 fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
     ctrlc::try_set_handler(|| CANCELLED.store(true, Ordering::Relaxed))?;
-    let config = chat::json_file(&a.model.join("config.json"), chat::MAX_INPUT_BYTES)?;
-    let vocab = config["vocab_size"]
-        .as_u64()
-        .and_then(|n| usize::try_from(n).ok())
-        .ok_or_else(|| invalid("invalid model vocabulary"))?;
+    let lfm3 = a.model_profile == ModelProfile::Lfm3Bf16;
+    let vocab = if lfm3 {
+        toklet::model::lfm3::VOCAB
+    } else {
+        let config = chat::json_file(&a.model.join("config.json"), chat::MAX_INPUT_BYTES)?;
+        config["vocab_size"]
+            .as_u64()
+            .and_then(|n| usize::try_from(n).ok())
+            .ok_or_else(|| invalid("invalid model vocabulary"))?
+    };
     let clock = Instant::now();
     let needs_text = a.prompt.is_some() || a.messages.is_some() || !a.json && !a.interactive;
     let assets = if needs_text || a.interactive && a.model.join("tokenizer.json").exists() {
-        Some(Assets::load(&a.model, vocab)?)
+        Some(if lfm3 {
+            let admitted_bytes = toklet::app_chat::lfm3::ALLOWANCE_BYTES;
+            Assets {
+                tokenizer: toklet::app_chat::lfm3::load_tokenizer(&a.model, admitted_bytes)?,
+                admitted_bytes,
+            }
+        } else {
+            Assets::load(&a.model, vocab)?
+        })
     } else {
         None
     };
@@ -538,7 +592,11 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
     let external_bytes = assets
         .as_ref()
         .map_or(0, |a| a.admitted_bytes)
-        .checked_add(APPLICATION_ALLOWANCE)
+        .checked_add(if lfm3 {
+            32 * 1024 * 1024
+        } else {
+            APPLICATION_ALLOWANCE
+        })
         .ok_or_else(|| invalid("application admission overflow"))?;
     let budget = weights::INITIAL_MEMORY_LIMIT_BYTES
         .checked_sub(external_bytes)
@@ -546,6 +604,8 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
         .ok_or_else(|| invalid("tokenizer/application exceed memory budget"))?;
     let mut stops = if a.no_eos {
         Vec::new()
+    } else if lfm3 {
+        vec![toklet::app_chat::lfm3::EOS]
     } else {
         chat::stop_ids(&a.model, vocab)?
     };
@@ -580,6 +640,8 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
     };
     let mut frontend = Frontend {
         assets,
+        model_profile: a.model_profile,
+        lfm3_load: None,
         decoder: OutputDecoder::default(),
         interactive: a.interactive,
         stops,
@@ -608,6 +670,31 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
         },
         external_bytes,
     };
+
+    if lfm3 {
+        use toklet::model::lfm3::GenerationSession;
+        let extra = GenerationSession::planned_extra_bytes(a.capacity)?;
+        let load_budget = budget
+            .checked_sub(extra)
+            .ok_or_else(|| invalid("LFM3 generation owners exceed memory budget"))?;
+        let started = Instant::now();
+        let loaded = weights::load_lfm3(&a.model, a.capacity, a.chunk, load_budget)?;
+        frontend.load_seconds = started.elapsed().as_secs_f64();
+        frontend.lfm3_load = Some(loaded.report);
+        let mut model = loaded.model;
+        let mut session = GenerationSession::new(model.session()?, budget)?;
+        frontend.cpu_projection = "Lfm3Bf16Source";
+        frontend.execution = ExecutionMetadata {
+            weight_dtype: "BF16",
+            kv_dtype: "BF16",
+            projection_mode: "Lfm3Bf16Source",
+            normalization_mode: "Lfm3Bf16Source",
+            readback_mode: "WidenedBf16Logits",
+            attention_mode: Some("Lfm3EagerCausalOrWindow256"),
+            ..frontend.execution
+        };
+        return run_session(frontend, &mut session, initial, a.capacity, external_bytes);
+    }
 
     let options = Options {
         capacity: a.capacity,
@@ -700,6 +787,23 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
     frontend.conversion_seconds = loaded.report.conversion_seconds;
     run_session(frontend, &mut session, initial, a.capacity, external_bytes)
 }
+fn lfm3_load_json(report: weights::Lfm3LoadReport) -> Value {
+    let hash: String = report
+        .source_sha256
+        .iter()
+        .map(|byte| format!("{byte:02x}"))
+        .collect();
+    json!({
+        "sha256": hash,
+        "source_bytes": report.source_bytes,
+        "temporary_allowance_bytes": report.temporary_allowance_bytes,
+        "authentication_ns": report.authenticated_ns,
+        "layout_ns": report.layout_ns,
+        "verified_delivery_ns": report.delivery_ns,
+        "rotary_ns": report.rotary_ns,
+    })
+}
+
 fn logical_memory(memory: toklet::session::Memory, external_bytes: usize) -> Value {
     let mut value = json!({"weights_bytes":memory.weights_bytes,"kv_bytes":memory.kv_bytes,"scratch_bytes":memory.scratch_bytes,
         "history_bytes":memory.history_bytes,"logits_bytes":memory.logits_bytes,"metadata_bytes":memory.metadata_bytes,
@@ -729,15 +833,14 @@ fn run_session(
         });
     }
     let memory = session.memory();
-    writeln!(
-        io::stdout().lock(),
-        "{}",
-        json!({"event":"ready", "backend":frontend.backend, "context_capacity":capacity,
-        "cpu_projection":frontend.cpu_projection,
-        "memory_admitted_bytes":frontend.memory_admitted_bytes,
-        "execution":frontend.execution,
-        "logical_memory":logical_memory(memory,external_bytes)})
-    )?;
+    let mut ready = json!({"event":"ready", "backend":frontend.backend, "context_capacity":capacity,
+        "cpu_projection":frontend.cpu_projection, "memory_admitted_bytes":frontend.memory_admitted_bytes,
+        "execution":frontend.execution,"logical_memory":logical_memory(memory,external_bytes)});
+    if let Some(load) = frontend.lfm3_load {
+        ready["model_profile"] = json!("lfm3-bf16");
+        ready["checkpoint_load"] = lfm3_load_json(load);
+    }
+    writeln!(io::stdout().lock(), "{ready}")?;
     io::stdout().flush()?;
     let (sender, receiver) = mpsc::sync_channel(1);
     std::thread::spawn(move || {
@@ -846,6 +949,65 @@ mod tests {
     fn args(values: &[&str]) -> Vec<OsString> {
         values.iter().map(OsString::from).collect()
     }
+    #[test]
+    fn lfm3_profile_rejects_other_graphs_and_unqualified_tools_before_io() {
+        let base = &[
+            "--model",
+            "missing",
+            "--model-profile",
+            "lfm3-bf16",
+            "--tokens",
+            "1",
+        ];
+        let request = parse(args(base)).unwrap();
+        assert!(request.model_profile == ModelProfile::Lfm3Bf16);
+        assert_eq!(request.chunk, 16);
+        for options in [
+            ["--cpu-projection", "scalar"],
+            ["--backend", "metal"],
+            ["--tools", "missing"],
+            ["--prefill-chunk", "2049"],
+        ] {
+            let mut values = args(base);
+            values.extend(args(&options));
+            assert!(parse(values).is_err());
+        }
+    }
+
+    #[test]
+    #[ignore = "explicit pinned LFM3 tokenizer assets; no checkpoint execution"]
+    fn lfm3_source_render_tokenization_and_streaming() {
+        use sha2::{Digest, Sha256};
+        let directory = PathBuf::from(env::var_os("TOKLET_LFM3_MODEL").unwrap());
+        let bytes = include_bytes!("../../../tests/fixtures/lfm3-cli-text-v1/fixture.json");
+        assert_eq!(
+            format!("{:x}", Sha256::digest(bytes)),
+            "2f35654790add9749a7a165ee04a535f8e7c437351d6b788b1765a642376858e"
+        );
+        let source: Value = serde_json::from_slice(bytes).unwrap();
+        let limit = toklet::app_chat::lfm3::ALLOWANCE_BYTES;
+        let assets = Assets {
+            tokenizer: toklet::app_chat::lfm3::load_tokenizer(&directory, limit).unwrap(),
+            admitted_bytes: limit,
+        };
+        for row in source["chats"].as_array().unwrap() {
+            let text = toklet::app_chat::lfm3::render(row["messages"].as_array().unwrap()).unwrap();
+            assert_eq!(text, row["text"].as_str().unwrap());
+            assert_eq!(json!(assets.encode(&text).unwrap()), row["ids"]);
+        }
+        for row in source["raw"].as_array().unwrap() {
+            let ids = assets.encode(row["text"].as_str().unwrap()).unwrap();
+            assert_eq!(json!(ids), row["ids"]);
+            let mut stream = OutputDecoder::default();
+            let mut decoded = String::new();
+            for id in ids {
+                decoded.push_str(&stream.step(&assets, id).unwrap());
+            }
+            decoded.push_str(&stream.finish(&assets).unwrap());
+            assert_eq!(decoded, row["decoded"].as_str().unwrap());
+        }
+    }
+
     #[test]
     fn attention_selection_and_context_bounds_reject_before_model_access() {
         for tail in [

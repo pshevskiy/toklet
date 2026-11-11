@@ -73,6 +73,8 @@ pub struct Report {
     pub first_token_seconds: Option<f64>,
     pub prefill_seconds: f64,
     pub decode_seconds: f64,
+    #[serde(skip)]
+    pub decode_evaluations: usize,
     /// Host selection or cached-ID fetch. A GPU session that selects the ID
     /// during evaluation charges that work to prefill/decode instead.
     pub sampling_seconds: f64,
@@ -189,6 +191,7 @@ pub fn generate(
         first_token_seconds: None,
         prefill_seconds: 0.0,
         decode_seconds: 0.0,
+        decode_evaluations: 0,
         sampling_seconds: 0.0,
         total_seconds: 0.0,
     };
@@ -201,7 +204,7 @@ pub fn generate(
         Input::Append(tokens) => session.append(tokens)?,
         Input::Continue => {}
         Input::Reset(tokens) => {
-            session.reset();
+            session.try_reset()?;
             session.append(tokens)?;
         }
     }
@@ -223,7 +226,7 @@ pub fn generate(
         }
         if index > 0 {
             let clock = Instant::now();
-            session.evaluate_next_chunk()?;
+            report.decode_evaluations += session.evaluate_next_chunk()?;
             report.decode_seconds += clock.elapsed().as_secs_f64();
             if cancelled.load(Ordering::Relaxed) {
                 report.reason = StopReason::Cancelled;

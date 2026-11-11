@@ -96,7 +96,9 @@ source stages, wrapped state and release baselines. Astra approves scoped
 retention. The child CPU and Metal component correspondence rejects for
 projections and attention. The [authenticated BF16 CPU graph](docs/lfm3-bf16-graph.md)
 matches the pinned eager source for three short schedules and passes Astra review.
-Connect the generation session, codec and CLI before full LFM3 qualification.
+The [explicit LFM3 BF16 CLI route](docs/lfm3-cli.md) adds generation, a pinned
+plain-text codec and console metrics. Astra approves scoped retention.
+Deeper numerical and full quality qualification remain open.
 Any MiniCPM5 reconsideration still needs corrected original numerics and
 both complete original quality comparisons.
 

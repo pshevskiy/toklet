@@ -545,6 +545,10 @@ pub trait InferenceSession {
     fn evaluate_next_chunk(&mut self) -> Result<usize, Error>;
     fn discard_pending(&mut self);
     fn reset(&mut self);
+    fn try_reset(&mut self) -> Result<(), Error> {
+        self.reset();
+        Ok(())
+    }
 }
 impl InferenceSession for Session<'_> {
     fn history(&self) -> &[u32] {

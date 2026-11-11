@@ -1,0 +1,590 @@
+{
+  "format": "toklet-lfm3-cli-release-v1",
+  "base": "1b9863dc82de4303656ee786c2d7a8e293d132c3",
+  "binary_sha256": "90a6895c24a02743dbb4f24199d3e97075a70eb985207530ef2e5c16b3fe6c31",
+  "profile": "lfm3-bf16",
+  "checkpoint_load": {
+    "sha256": "b6ff17ac993dddf0f6f51bd872b12ae1437f4453a54a0b4878cedc7864fbc07e",
+    "source_bytes": 3457635448,
+    "temporary_allowance_bytes": 2097152,
+    "authentication_ns": 20343794500,
+    "layout_ns": 650917,
+    "verified_delivery_ns": 11629441459,
+    "rotary_ns": 1831959
+  },
+  "toolchain": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)\nbinary: rustc\ncommit-hash: 1159e78c4747b02ef996e55082b704c09b970588\ncommit-date: 2025-09-14\nhost: aarch64-apple-darwin\nrelease: 1.90.0\nLLVM version: 21.1.1",
+  "os": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.2\nBuildVersion:\t\t25G83",
+  "hardware": {
+    "hw.model": "MacBookPro18,3",
+    "hw.memsize": "17179869184",
+    "machdep.cpu.brand_string": "Apple M1 Pro"
+  },
+  "power_samples": [
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    {
+      "power": "Now drawing from 'AC Power'",
+      "thermalState": 0,
+      "lowPowerMode": false
+    }
+  ],
+  "source_pins": {
+    "src/bin/cli/mod.rs": "ba084d675c6fa0ab03524f7561ddbaa07ae11406f41919a4587c4d33ee6a6ec9",
+    "src/app_chat/lfm3.rs": "da60a5aeb7e94a65a9e26d1e1cce5f1607e833eb11b6232652f983d92c7fe799",
+    "src/generation.rs": "98a27a0cab7d3e20712dc364e12f79f2345f66787736dbf3552c228c22510655",
+    "src/session.rs": "c353feb863d3465ad10e220d2df7c9f7526f4d9e43f04126cde976d59499dc7c",
+    "src/model/lfm3/generation.rs": "67d8c6bed50c0fb988691c554ccff594019605925db19b39908cb52bbf46753f",
+    "Cargo.lock": "405a9b18beaacf701966f1832bf6724c0a3d4b8567ca3c5005855778d8dedb26"
+  },
+  "first_and_warm_workload": {
+    "prompt_ids": [
+      124894,
+      42,
+      1234,
+      567
+    ],
+    "max_new_tokens": 0,
+    "repetitions": 10,
+    "warmups": 3,
+    "reset_and_seed_outside_wall": true
+  },
+  "observed_peak_rss_sum_bytes": 3603202048,
+  "max_sampled_physical_bytes": 3694186120,
+  "measurement_scope": "Write request through receipt of complete terminal JSON line, excluding parent event parsing and logging",
+  "scope": "Prepared empty-prefix and fully cached requests over the real persistent console pipe. Host/transport gap includes admission, console output and transport. No telemetry-only overhead or app TTFT qualification.",
+  "cohorts": [
+    {
+      "sweep": 1,
+      "kind": "empty",
+      "first": {
+        "wall_ns": 3034141125,
+        "generation_ns": 3034010667.0,
+        "prefill_ns": 3034010000.0,
+        "reused": 0,
+        "prefill": 4
+      },
+      "warmups": [
+        {
+          "wall_ns": 3024984167,
+          "generation_ns": 3024856042.0,
+          "prefill_ns": 3024855541.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3039679291,
+          "generation_ns": 3039573584.0,
+          "prefill_ns": 3039572875.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3044750083,
+          "generation_ns": 3044619625.0,
+          "prefill_ns": 3044619208.0,
+          "reused": 0,
+          "prefill": 4
+        }
+      ],
+      "samples": [
+        {
+          "wall_ns": 3018403250,
+          "generation_ns": 3018270625.0,
+          "prefill_ns": 3018270208.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3061149166,
+          "generation_ns": 3061035459.0,
+          "prefill_ns": 3061034750.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3026905459,
+          "generation_ns": 3026764917.0,
+          "prefill_ns": 3026764292.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3025950667,
+          "generation_ns": 3025812833.0,
+          "prefill_ns": 3025812416.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3043573875,
+          "generation_ns": 3043428375.0,
+          "prefill_ns": 3043427791.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3020093792,
+          "generation_ns": 3019975250.0,
+          "prefill_ns": 3019974792.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3025374416,
+          "generation_ns": 3025236125.0,
+          "prefill_ns": 3025235667.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3039081416,
+          "generation_ns": 3038943584.0,
+          "prefill_ns": 3038943042.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3018286917,
+          "generation_ns": 3018170167.0,
+          "prefill_ns": 3018169375.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3016756750,
+          "generation_ns": 3016622625.0,
+          "prefill_ns": 3016622166.0,
+          "reused": 0,
+          "prefill": 4
+        }
+      ],
+      "median_wall_ns": 3025662541.5,
+      "mad_wall_ns": 7317458.0,
+      "median_generation_ns": 3025524479.0,
+      "median_host_and_transport_gap_ns": 135978.5
+    },
+    {
+      "sweep": 1,
+      "kind": "cached",
+      "first": {
+        "wall_ns": 77959,
+        "generation_ns": 292.0,
+        "prefill_ns": 0.0,
+        "reused": 4,
+        "prefill": 0
+      },
+      "warmups": [
+        {
+          "wall_ns": 81416,
+          "generation_ns": 167.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 50000,
+          "generation_ns": 83.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 58250,
+          "generation_ns": 167.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        }
+      ],
+      "samples": [
+        {
+          "wall_ns": 46250,
+          "generation_ns": 83.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 44875,
+          "generation_ns": 83.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 37833,
+          "generation_ns": 42.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 36375,
+          "generation_ns": 41.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 35209,
+          "generation_ns": 83.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 34667,
+          "generation_ns": 41.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 33833,
+          "generation_ns": 42.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 33667,
+          "generation_ns": 42.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 33500,
+          "generation_ns": 0.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 32958,
+          "generation_ns": 41.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        }
+      ],
+      "median_wall_ns": 34938.0,
+      "mad_wall_ns": 1437.5,
+      "median_generation_ns": 42.0,
+      "median_host_and_transport_gap_ns": 34876.0
+    },
+    {
+      "sweep": 2,
+      "kind": "cached",
+      "first": {
+        "wall_ns": 68667,
+        "generation_ns": 250.0,
+        "prefill_ns": 0.0,
+        "reused": 4,
+        "prefill": 0
+      },
+      "warmups": [
+        {
+          "wall_ns": 54916,
+          "generation_ns": 125.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 54000,
+          "generation_ns": 166.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 40958,
+          "generation_ns": 125.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        }
+      ],
+      "samples": [
+        {
+          "wall_ns": 40625,
+          "generation_ns": 41.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 39958,
+          "generation_ns": 83.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 39750,
+          "generation_ns": 42.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 39541,
+          "generation_ns": 84.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 36250,
+          "generation_ns": 42.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 34708,
+          "generation_ns": 41.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 34584,
+          "generation_ns": 42.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 34208,
+          "generation_ns": 0.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 34167,
+          "generation_ns": 42.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        },
+        {
+          "wall_ns": 32958,
+          "generation_ns": 41.0,
+          "prefill_ns": 0.0,
+          "reused": 4,
+          "prefill": 0
+        }
+      ],
+      "median_wall_ns": 35479.0,
+      "mad_wall_ns": 1916.5,
+      "median_generation_ns": 42.0,
+      "median_host_and_transport_gap_ns": 35437.5
+    },
+    {
+      "sweep": 2,
+      "kind": "empty",
+      "first": {
+        "wall_ns": 3026046542,
+        "generation_ns": 3025902500.0,
+        "prefill_ns": 3025902000.0,
+        "reused": 0,
+        "prefill": 4
+      },
+      "warmups": [
+        {
+          "wall_ns": 3037384667,
+          "generation_ns": 3037254833.0,
+          "prefill_ns": 3037254666.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3048258250,
+          "generation_ns": 3048129417.0,
+          "prefill_ns": 3048129125.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3042979084,
+          "generation_ns": 3042860083.0,
+          "prefill_ns": 3042859958.0,
+          "reused": 0,
+          "prefill": 4
+        }
+      ],
+      "samples": [
+        {
+          "wall_ns": 3048880042,
+          "generation_ns": 3048740125.0,
+          "prefill_ns": 3048739750.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3056775041,
+          "generation_ns": 3056605708.0,
+          "prefill_ns": 3056605375.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3042633583,
+          "generation_ns": 3042503291.0,
+          "prefill_ns": 3042502583.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3071914792,
+          "generation_ns": 3071779875.0,
+          "prefill_ns": 3071779375.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3026041250,
+          "generation_ns": 3025915959.0,
+          "prefill_ns": 3025915542.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3047539208,
+          "generation_ns": 3047424208.0,
+          "prefill_ns": 3047423708.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3117263417,
+          "generation_ns": 3117135084.0,
+          "prefill_ns": 3117134708.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3041388791,
+          "generation_ns": 3041256500.0,
+          "prefill_ns": 3041256291.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3025356375,
+          "generation_ns": 3025229375.0,
+          "prefill_ns": 3025228875.0,
+          "reused": 0,
+          "prefill": 4
+        },
+        {
+          "wall_ns": 3041854375,
+          "generation_ns": 3041722167.0,
+          "prefill_ns": 3041721708.0,
+          "reused": 0,
+          "prefill": 4
+        }
+      ],
+      "median_wall_ns": 3045086395.5,
+      "mad_wall_ns": 7741146.0,
+      "median_generation_ns": 3044963749.5,
+      "median_host_and_transport_gap_ns": 131250.0
+    }
+  ]
+}

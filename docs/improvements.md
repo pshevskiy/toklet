@@ -10,6 +10,13 @@ Gains from different experiments cannot be added together. Current task and
 qualification scope live in [TODO](../TODO.md); acceptance policy is in
 [PLAN](../PLAN.md#validation-and-performance-policy).
 
+The explicit LFM3 BF16 CPU console route verifies pinned text assets and
+exposes load, execution, memory and request phase metrics. Real interactive
+checks cover exact prefix reuse, replay, pending stop tokens, cancellation
+and resume. The pinned reference matches rendered text and token IDs. Astra
+approves scoped retention. Deeper numerical and full quality qualification remain open.
+[Console route](lfm3-cli.md).
+
 The authenticated LFM3 BF16 CPU graph matches 2,476,032 reference values
 across 366 stage comparisons on three short schedules. The single-session
 ledger covers 3.489 GB. Real-model late abort, retry and zero-allocation

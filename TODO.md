@@ -11,12 +11,25 @@ Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
 
-Current/next task: **connect the authenticated LFM3 BF16 graph to generation,
-codec and CLI**, then run deeper numerical and original full qualification.
-The raw-token graph, audited loading and transactional state are reviewed.
-Preserve the 6 GiB ceiling, original numerical and quality gates, and existing
-managed-adoption rejections. Engine and CLI work leads. Interactive screen
-capture and iPhone runtime remain deferred.
+Current/next task: **qualify the real LFM3 BF16 route at deeper contexts
+including sliding-window rollover, then run the original full numerical
+and quality gates**. The authenticated CPU graph, generation, pinned codec
+and explicit CLI route are reviewed. Preserve the 6 GiB ceiling and prior
+adoption decisions. Engine and CLI work leads. Interactive screen capture
+and iPhone runtime remain deferred.
+
+- [x] S1.L generation, codec and CLI: explicit `lfm3-bf16` profile with
+  audited assets, pending/committed history, exact prefix reuse, replay,
+  cancellation and request metrics. Five chat and three raw source cases
+  pass, with 284 MiB standalone codec peak RSS. Real CLI checks cover
+  14 state/output cases, four rejections and a hidden pending stop ID.
+  Both release sweeps pass, at 3.026–3.045 s after reset and 34.9–35.5 µs
+  fully cached for four tokens and zero output. Fmt, strict CPU/Metal Clippy,
+  733 CPU/879 Metal/nine example tests, explicit codec, native80 and both C
+  smokes pass. Initial padding compile and RSS query errors corrected. Astra
+  approves with no findings. Full quality and managed adoption remain open.
+  [Scope](docs/lfm3-cli.md),
+  [review/commit](artifacts/lfm3-cli-2026-11-11/publication-checks.json).
 
 - [x] S1.L real BF16 graph and audited loader: all 24 layers, tied head and
   owner proposals match 366 source stages and 2,476,032 BF16 words on three
