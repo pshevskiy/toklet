@@ -304,6 +304,13 @@ is covered above; original task quality and adoption remain open.
 
 ## Console reference comparison
 
+The [LFM3 external configuration preflight](lfm3-external-config.md) authenticates
+metadata-only views for the exact BF16 candidate. Installed AutoConfig admission
+and the built-in MLX-VLM config path pass; the publisher's custom MLX-LM module
+fails MLX-VLM's distinct interface. Eight portable controls and the guarded probe
+pass. Astra approves with no findings. No weights are loaded; full external startup,
+numerical correspondence and matched performance remain open.
+
 All78 requests pass across two3warm+10 cohorts for each of3engines on M1Pro16GiB.
 Official BF16/G2 Toklet request medians2.184/2.202s; verified uncensoredMLX4bit
 Ollama121/119ms and vLLM-Metal147/149ms. Precision, weights, cache hits and timing

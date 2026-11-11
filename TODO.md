@@ -29,6 +29,15 @@ and iPhone runtime remain deferred.
   Paired isolated grading and the final quality decision remain open.
   [Campaign](docs/lfm3-quality.md).
 
+- [x] S1.L external comparison preflight: authenticated metadata-only views
+  preserve numerical configuration and source bytes. Installed AutoConfig and
+  MLX-VLM built-in config admission pass; the publisher module's incompatible
+  interface is recorded. Eight portable controls and the 512 MiB guarded probe
+  pass after correcting a synthetic fixture byte count and bounding actual reads
+  against concurrent growth. Astra approves with no findings.
+  Model startup, matched inference and performance remain queued after quality.
+  [Scope](docs/lfm3-external-config.md).
+
 - [x] S1.L isolated grading window: qualified Podman timezone, independent
   guest shutdown check and the original CPU budget with its qualified
   ambiguous-137 witness. Five portable controls and the real stopped-guest
