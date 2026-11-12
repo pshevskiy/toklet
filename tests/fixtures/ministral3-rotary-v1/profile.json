@@ -1,0 +1,269 @@
+{
+  "format": "toklet-ministral3-yarn-primitive-prospective-v1",
+  "scope": "Standalone cached CPU Half YaRN rotation and post-rotary query scaling only; no source admission, model, Metal, quality or performance qualification",
+  "base_revision": "8a90db869ac5a94a500245edbf7dc795193dc4f2",
+  "geometry": {
+    "head_dim": 128,
+    "theta": 1000000.0,
+    "factor": 16.0,
+    "beta_fast": 32.0,
+    "beta_slow": 1.0,
+    "mscale": 1.0,
+    "mscale_all_dim": 1.0,
+    "original_max_positions": 16384,
+    "source_max_positions": 262144,
+    "query_scaling_beta": 0.1,
+    "traditional": false,
+    "truncate": true
+  },
+  "model_sources": {
+    "original": {
+      "repository": "mistralai/Ministral-3-3B-Reasoning-2512",
+      "revision": "4a36357c811bf511a7b625d132e12f22408aac91",
+      "config_sha256": "c89d1a0b4f237d2892ce911d1fe03e9e5a4834579f7149ebc715a4c3fa564214"
+    },
+    "modified": {
+      "repository": "xtools-at/Ministral-3-3B-Reasoning-UNCENSORED-heretic",
+      "revision": "46fb9a42c0b66b0e762d08c1ea13a26d7ef915f4",
+      "config_sha256": "457b89531a7a992698b81025bf0071c89a91ad3b20423915627e55c59fb81b50"
+    }
+  },
+  "external_source_pins": {
+    "artifacts/engine-comparison-2026-11-07/vllm-venv/lib/python3.12/site-packages/mlx_lm/models/ministral3.py": "7363ba2147ce5a09eee8e39087b743ec9fe24eb12955499d44c1635044e7c809",
+    "artifacts/engine-comparison-2026-11-07/vllm-venv/lib/python3.12/site-packages/mlx_lm/models/rope_utils.py": "ccba2f0c7b246c008a1188dc3760c162bdd906b15a1c490461dee4be64bc62df",
+    "artifacts/engine-comparison-2026-11-07/vllm-venv/lib/python3.12/site-packages/mlx_lm/models/mistral3.py": "6f653077107f066e4b8be3370c7d2fc0517c5e33395ccf8f8a16bd4f15bb70fd",
+    "artifacts/small-model-metadata-2026-11-09/preflight-summary.json": "c1c7703d75c263a9ae0a5101b5bed72f25810568818c4655bce97a6c6f214668"
+  },
+  "source_config": {
+    "attention_dropout": 0.0,
+    "bos_token_id": 1,
+    "dtype": "bfloat16",
+    "eos_token_id": 2,
+    "head_dim": 128,
+    "hidden_act": "silu",
+    "hidden_size": 3072,
+    "initializer_range": 0.02,
+    "intermediate_size": 9216,
+    "max_position_embeddings": 262144,
+    "model_type": "ministral3",
+    "num_attention_heads": 32,
+    "num_hidden_layers": 26,
+    "num_key_value_heads": 8,
+    "pad_token_id": 11,
+    "rms_norm_eps": 1e-05,
+    "rope_parameters": {
+      "beta_fast": 32.0,
+      "beta_slow": 1.0,
+      "factor": 16.0,
+      "llama_4_scaling_beta": 0.1,
+      "mscale": 1.0,
+      "mscale_all_dim": 1.0,
+      "original_max_position_embeddings": 16384,
+      "rope_theta": 1000000.0,
+      "rope_type": "yarn",
+      "type": "yarn"
+    },
+    "sliding_window": null,
+    "tie_word_embeddings": true,
+    "use_cache": true,
+    "vocab_size": 131072
+  },
+  "arithmetic": {
+    "periods": "FP64 correction-range logs/floor/ceil; FP32 exponent, power rounded to FP32, source-form FP32 numerator/denominator period blend",
+    "coefficients": "FP32 absolute-position / stored-period; sin/cos rounded FP32",
+    "rotation": "Split-half128; widened Half inputs; separate FP32 products/add/subtract; one Half RNE store",
+    "query_scale": "FP32 1 + beta*log(1+integer_epoch); cast gain to Half before multiplying already-rotated Half queries; second Half RNE store",
+    "keys": "Rotation only, no extra query scale",
+    "source_mscale_ratio": 1.0,
+    "queries_apply_after_rotary": true,
+    "profiles": [
+      "main_simulated_FP32_with_std_math",
+      "wide_Decimal80"
+    ],
+    "native_input_substitution_forbidden": true,
+    "wide_store_boundaries": "Decimal80 calculations between explicit stores; round periods and cached coefficients to FP32, gain to Half, rotated result to Half before query gain. Widen stored values for wider products/sums."
+  },
+  "cases": [
+    {
+      "name": "single0",
+      "offset": 0,
+      "tokens": 1,
+      "query_heads": 3,
+      "kv_heads": 1,
+      "pattern": "normal",
+      "q_seed": 17,
+      "k_seed": 43
+    },
+    {
+      "name": "tail3",
+      "offset": 0,
+      "tokens": 3,
+      "query_heads": 3,
+      "kv_heads": 1,
+      "pattern": "normal",
+      "q_seed": 17,
+      "k_seed": 43
+    },
+    {
+      "name": "first_boundary",
+      "offset": 16383,
+      "tokens": 2,
+      "query_heads": 3,
+      "kv_heads": 1,
+      "pattern": "normal",
+      "q_seed": 17,
+      "k_seed": 43
+    },
+    {
+      "name": "first_epoch",
+      "offset": 16384,
+      "tokens": 1,
+      "query_heads": 3,
+      "kv_heads": 1,
+      "pattern": "normal",
+      "q_seed": 17,
+      "k_seed": 43
+    },
+    {
+      "name": "second_boundary",
+      "offset": 32767,
+      "tokens": 2,
+      "query_heads": 3,
+      "kv_heads": 1,
+      "pattern": "normal",
+      "q_seed": 17,
+      "k_seed": 43
+    },
+    {
+      "name": "second_epoch",
+      "offset": 32768,
+      "tokens": 1,
+      "query_heads": 3,
+      "kv_heads": 1,
+      "pattern": "normal",
+      "q_seed": 17,
+      "k_seed": 43
+    },
+    {
+      "name": "source_last",
+      "offset": 262143,
+      "tokens": 1,
+      "query_heads": 3,
+      "kv_heads": 1,
+      "pattern": "normal",
+      "q_seed": 17,
+      "k_seed": 43
+    },
+    {
+      "name": "source_tail8",
+      "offset": 262136,
+      "tokens": 8,
+      "query_heads": 3,
+      "kv_heads": 1,
+      "pattern": "normal",
+      "q_seed": 17,
+      "k_seed": 43
+    },
+    {
+      "name": "actual_heads0",
+      "offset": 0,
+      "tokens": 8,
+      "query_heads": 32,
+      "kv_heads": 8,
+      "pattern": "normal",
+      "q_seed": 17,
+      "k_seed": 43
+    },
+    {
+      "name": "actual_heads_boundary",
+      "offset": 16383,
+      "tokens": 2,
+      "query_heads": 32,
+      "kv_heads": 8,
+      "pattern": "normal",
+      "q_seed": 17,
+      "k_seed": 43
+    },
+    {
+      "name": "signed_subnormal_boundary",
+      "offset": 16383,
+      "tokens": 3,
+      "query_heads": 3,
+      "kv_heads": 1,
+      "pattern": "edges",
+      "q_seed": 17,
+      "k_seed": 43
+    }
+  ],
+  "input_recipe": {
+    "normal": "(((index*37+seed)%257)-128)/128, then Half RNE",
+    "edges": "edge_words[(index+seed+7*(index//64))%16]",
+    "edge_words": [
+      0,
+      32768,
+      1,
+      32769,
+      1023,
+      33791,
+      1024,
+      33792,
+      15360,
+      48128,
+      13653,
+      46421,
+      15359,
+      48127,
+      16384,
+      49152
+    ]
+  },
+  "gates": {
+    "atol": "max(1e-4,2*max_abs(main-wide)) per exact case/array",
+    "rtol": 0.001,
+    "against_both_profiles": true,
+    "pooling_forbidden": true,
+    "native_derived_enlargement_forbidden": true,
+    "chunk_and_replay_Half_bytes_exact": true,
+    "period_words_exact_main": true,
+    "query_gain_words_exact_main": true
+  },
+  "bounds": {
+    "fixture_bytes": 2097152,
+    "reference_command_bytes": 536870912,
+    "compiler_command_bytes": 3221225472,
+    "engine_bytes_unchanged": 6442450944,
+    "helper_reserve_bytes": 33554432,
+    "disk_floor_bytes": 2147483648,
+    "ordinary_Metal_cap_unchanged": 512
+  },
+  "ownership": {
+    "root": [
+      "tests/fixtures/ministral3-rotary-v1/profile.json",
+      "TODO.md",
+      "docs/improvements.md",
+      "docs/ministral3-rotary.md",
+      "private runners/evidence"
+    ],
+    "CPU_agent": [
+      "src/model/ministral3_rotary.rs",
+      "src/model/mod.rs (one module export only)",
+      "tests/ministral3_rotary_alloc.rs"
+    ],
+    "fixture_agent": [
+      "tools/reference/ministral3_rotary_fixture.py",
+      "tools/reference/test_ministral3_rotary_fixture.py"
+    ],
+    "fixture_output": "Root generates tests/fixtures/ministral3-rotary-v1/fixture.json after source freeze; agents do not import numerical runtimes or compile"
+  },
+  "whole_goal_complete": false,
+  "fixture_schema": {
+    "format": "toklet-ministral3-yarn-fixture-v1",
+    "profile": "tracked {file,bytes,sha256} binding to this profile.json",
+    "producers": "map of two tracked Python producer/test relative paths to {bytes,sha256}",
+    "external_source_pins": "informational original source hashes; ordinary Rust tests need no external modules/downloads",
+    "periods": "mapping main/wide ->64 FP32 u32 bit words",
+    "cases": "list in profile order; same case metadata plus query_input/key_input Half u16 words; references.main/wide each has coefficients FP32 u32 words interleaved [token,64,{cos,sin}],query_scale Half u16 words[tokens],keys/queries Half u16 words in [tokens,heads,128] row-major order",
+    "gates": "copy frozen gates; compare native against BOTH using independent spread only",
+    "scope": "no model/Metal/adoption/performance qualification"
+  }
+}

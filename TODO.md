@@ -50,8 +50,8 @@ LFM3 CPU code and portable measurements are published as `612771d7` on
 `codex/console-engine-comparison`.
 [Publication / CI](artifacts/lfm3-finite-guard-2026-11-11/finite-publication-checks.json).
 
-Current/next task: **continue Ministral qualification after Granite's reviewed
-numerical rejection**. LFM3 CPU qualification and finite-widening retention
+Current/next task: **qualify Ministral's source, bounded conversion and YaRN
+semantics**. Granite's current affine4/8 route remains numerically rejected. LFM3 CPU qualification and finite-widening retention
 pass; managed application adoption remains open. Preserve the 6 GiB ceiling,
 original numerical/quality gates and prior model decisions. Engine/CLI work
 leads; interactive screen capture and iPhone runtime remain deferred.
@@ -159,7 +159,8 @@ does not qualify full-model numerical/quality, all-workload fit or performance.
   findings are fixed: 34 checker tests per mode and fresh numeric controls pass;
   genuine replay verifies 304 checks/10 resets/40 receipts with byte-identical
   numerical records. Astra follow-up approves scoped tooling/rejection retention,
-  no remaining findings. Failed checks remain retained; publication is in progress.
+  no remaining findings. Published as `8a90db86`; both exact-head CI workflows
+  pass. Failed checks remain retained.
   [Scope](docs/granite-graph.md),
   [scalar decision](benchmarks/results/2026-11-13-granite-graph-v1.json),
   [required checks](artifacts/granite-graph-2026-11-12/required-checks-closure-2.json),
@@ -168,18 +169,46 @@ does not qualify full-model numerical/quality, all-workload fit or performance.
   [localization](artifacts/granite-graph-2026-11-12/attention-localization-result-1.json),
   [review/commit](artifacts/granite-graph-2026-11-12/publication-checks.json).
 
-Next: finish publication and continue the selected Ministral qualification.
+Next: qualify the standalone cached CPU YaRN mechanism and independent fixtures,
+then compose Metal/source admission and bounded conversion with fresh disk admission.
 Granite's current affine4/8 Metal route does not advance to adoption or quality/
 performance qualification. Any future candidate must pass the original graph,
 10,000-target/100-task quality, codec, fit and request/overhead gates. The 6 GiB
 ceiling and 512-position Metal cap remain unchanged. Continue the selected
 Ministral track after publication.
 
-Subsequent Ministral source inspection records 4,096 query width, YaRN and
-absolute-position query scaling at the 16,384-token boundary. Its pinned Q4 index
-remains rejected; payload, conversion, numerical/quality and runtime gates remain
-open. No model or compiler was launched.
-[Source inspection](artifacts/ministral3-source-planning-2026-11-12/static-source-inspection-1.json).
+- [x] S1.M cache headroom: removed 12,277 retired Cargo compilation intermediates;
+  observed free space increased by 1.66 GB. Both measured executable hashes and
+  369 retained cache leaves are unchanged; current caches/models/raw evidence
+  remain available. Recheck exact recipe/disk admission before payload work.
+  [Cleanup](artifacts/ministral3-source-planning-2026-11-13/cache-cleanup-result-1.json).
+
+- [x] S1.M cached CPU YaRN: selected source profile and 11 boundary/shape cases
+  precede outputs. Independent fixture generation passes within 512 MiB;
+  24 portable controls per Python mode, six targeted Rust tests, fmt and strict
+  CPU/Metal Clippy pass. The immutable Half-table primitive and producer are
+  implemented; all 744 CPU/894 Metal-feature tests and six release primitive
+  tests pass. Warmed release key/query and rejected calls allocate zero Rust
+  objects on the measured thread. Optimized Python regenerates identical bytes.
+  Astra approves scoped retention with no findings. Model/source/Metal admission, graph,
+  quality, fit and performance gates remain open.
+  [Frozen profile](artifacts/ministral3-yarn-2026-11-13/prospective-primitive-protocol-2.json),
+  [scope](docs/ministral3-rotary.md),
+  [scalar checks](benchmarks/results/2026-11-13-ministral3-rotary-v1.json),
+  [full checks](artifacts/ministral3-yarn-2026-11-13/rust-checks-1.json),
+  [review/commit](artifacts/ministral3-yarn-2026-11-13/publication-checks.json).
+
+- [ ] S1.M source preparation: current metadata/source pins are revalidated.
+  The original Rust pin is stale after Granite's reviewed configuration change;
+  that failed reuse is retained and the exact change is explained. Ministral3
+  remains unadmitted. Two complete BF16 source bodies plus even a theoretical
+  all4 text child and the 2 GiB disk floor need at least 19.26 GB; 18.11 GB was
+  free at inspection, before metadata/high-precision overhead. Reclaim compiler
+  caches before payload work. The stale Q4 index remains rejected; independent
+  hidden/query widths, YaRN and absolute-position scaling fixtures remain open.
+  No payload/model/compiler launch or new qualification.
+  [Current preflight](artifacts/ministral3-source-planning-2026-11-13/input-revalidation-2.json),
+  [retained stale-pin check](artifacts/ministral3-source-planning-2026-11-13/stale-input-failure-1.json).
 
 Qwen3.5-2B source inspection records a distinct 24-layer/16-value-head profile
 and joint normalization/layout requirements. The earlier preflight's stale Rust

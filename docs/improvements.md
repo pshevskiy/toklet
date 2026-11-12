@@ -193,14 +193,14 @@ fmt/strict CPU+Metal Clippy, 737 CPU/887 Metal tests, 58 portable controls per m
 1,120 fixture comparisons, the GPU fixture and admitted numeric controls pass.
 Failed reference/launcher attempts are retained. Tooling retention and the
 explicit non-adoption decision have Astra follow-up approval, with no remaining
-findings. Its two required-
+findings. Published as `8a90db86`; both exact-head CI workflows pass. Its two required-
 evidence findings are fixed: deletion controls and fresh genuine replay verify
 all 304 checks/10 resets/40 receipts with byte-identical numerical records. The
 genuine capture remains numerically rejected. Quality, performance, overhead
 and managed adoption remain unqualified.
 [Scope](granite-graph.md),
 [decision](../benchmarks/results/2026-11-13-granite-graph-v1.json),
-[complete comparison](../artifacts/granite-graph-2026-11-12/offline-comparison-1/manifest.json).
+[strict comparison](../artifacts/granite-graph-2026-11-12/offline-comparison-2/manifest.json).
 
 Ministral source preparation records the existing configuration's independent
 3,072 hidden/4,096 query widths and the selected adapter's unsupported text tag.
@@ -208,7 +208,26 @@ Its source combines YaRN with absolute-position query scaling cast before SDPA;
 independent fixtures must cover the 16,384-token boundary and cache offsets.
 The pinned Q4 index rejection is retained; payload, conversion and runtime
 qualification remain open. This inspection launches no model or compiler.
-[Source inspection and remaining gates](../artifacts/ministral3-source-planning-2026-11-12/static-source-inspection-1.json).
+[Source inspection and remaining gates](../artifacts/ministral3-source-planning-2026-11-12/static-source-inspection-1.json). Current source pins are
+revalidated after retaining/explaining Granite's changed Rust hash. At least
+1.15 GB more than observed free space is needed even for complete parents plus a
+theoretical all4 text child and disk floor, before format/exclusion overhead;
+rebuildable compiler-cache cleanup precedes payload work. No model is launched.
+[Current preflight](../artifacts/ministral3-source-planning-2026-11-13/input-revalidation-2.json).
+
+Ministral preparation reclaims 1.66 GB observed disk space from 12,277 retired
+Cargo intermediates; measured binaries, current caches and raw evidence remain
+available. A frozen 11-case profile now precedes independent Rust/fixture work
+on cached CPU Half YaRN and post-rotation query gain. The 1.21 MB independent
+fixture, 24 portable controls per mode, six targeted Rust tests, fmt and strict
+CPU/Metal Clippy and all 744 CPU/894 Metal-feature tests pass. Six release
+primitive tests and zero-allocation key/query/rejection controls pass; optimized
+Python regenerates identical bytes. Astra approves scoped retention with no
+findings. This mechanism admits no model or Metal route; original downstream
+gates remain.
+[Review/commit](../artifacts/ministral3-yarn-2026-11-13/publication-checks.json).
+[Cache receipt](../artifacts/ministral3-source-planning-2026-11-13/cache-cleanup-result-1.json),
+[prospective profile](../artifacts/ministral3-yarn-2026-11-13/prospective-primitive-protocol-2.json).
 
 Qwen3.5-2B needs a distinct 24-layer/16-value-head source profile. Its MLX
 headers change eighteen gated-norm vectors and convolution layouts; normalization

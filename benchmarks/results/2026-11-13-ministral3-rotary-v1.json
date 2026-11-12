@@ -1,0 +1,346 @@
+{
+  "format": "toklet-ministral3-cached-CPU-yarn-v1",
+  "date": "2026-11-13",
+  "review_status": "Astra_approved_no_findings",
+  "decision": "retain_standalone_CPU_primitive",
+  "base_revision": "8a90db869ac5a94a500245edbf7dc795193dc4f2",
+  "scope": "Selected Half child positional arithmetic only; no source/model/Metal/default/adoption qualification",
+  "hardware": {
+    "CPU": "Apple M1 Pro",
+    "memory_bytes": 17179869184,
+    "evidence": "artifacts/ministral3-yarn-2026-11-13/hardware-check-1.json"
+  },
+  "model_sources": {
+    "original": {
+      "repository": "mistralai/Ministral-3-3B-Reasoning-2512",
+      "revision": "4a36357c811bf511a7b625d132e12f22408aac91",
+      "config_sha256": "c89d1a0b4f237d2892ce911d1fe03e9e5a4834579f7149ebc715a4c3fa564214"
+    },
+    "modified": {
+      "repository": "xtools-at/Ministral-3-3B-Reasoning-UNCENSORED-heretic",
+      "revision": "46fb9a42c0b66b0e762d08c1ea13a26d7ef915f4",
+      "config_sha256": "457b89531a7a992698b81025bf0071c89a91ad3b20423915627e55c59fb81b50"
+    }
+  },
+  "profile": {
+    "path": "tests/fixtures/ministral3-rotary-v1/profile.json",
+    "bytes": 8522,
+    "sha256": "0f8d25bec77f2f6901e86830b7da22b75808fccb7800ce939f17f386206f4c9f"
+  },
+  "geometry": {
+    "head_dim": 128,
+    "theta": 1000000.0,
+    "factor": 16.0,
+    "beta_fast": 32.0,
+    "beta_slow": 1.0,
+    "mscale": 1.0,
+    "mscale_all_dim": 1.0,
+    "original_max_positions": 16384,
+    "source_max_positions": 262144,
+    "query_scaling_beta": 0.1,
+    "traditional": false,
+    "truncate": true
+  },
+  "source_dtype": "bfloat16",
+  "primitive_dtype": "Half",
+  "source_inputs": {
+    "Cargo.toml": {
+      "bytes": 4516,
+      "sha256": "d5a978eb0f514099e1d04dee5c8fa375a6ecbac303a2588d4e04a32814302162"
+    },
+    "Cargo.lock": {
+      "bytes": 24283,
+      "sha256": "405a9b18beaacf701966f1832bf6724c0a3d4b8567ca3c5005855778d8dedb26"
+    },
+    "src/model/mod.rs": {
+      "bytes": 32256,
+      "sha256": "d579f2fcc073c61d92240a7cb321b214ecba44cc759ca1b3d0fbbdb797ca68ed"
+    },
+    "src/model/ministral3_rotary.rs": {
+      "bytes": 31906,
+      "sha256": "fcc76b2ff94e0613e38731d2f76d71f5bf81d8caafcc083442166390a4613c8a"
+    },
+    "tests/ministral3_rotary_alloc.rs": {
+      "bytes": 4570,
+      "sha256": "b760d94849faee94bfb76a448d1651573f0b1b1890bd6bd33e219db17c59484e"
+    },
+    "tests/fixtures/ministral3-rotary-v1/profile.json": {
+      "bytes": 8522,
+      "sha256": "0f8d25bec77f2f6901e86830b7da22b75808fccb7800ce939f17f386206f4c9f"
+    },
+    "tests/fixtures/ministral3-rotary-v1/fixture.json": {
+      "bytes": 1212502,
+      "sha256": "0e1eb4f6a9056bf1725d8265e905ec7fe8ddc3c690e8a802f58121d96f36c427"
+    },
+    "tools/reference/ministral3_rotary_fixture.py": {
+      "bytes": 24170,
+      "sha256": "66560e71c69d166445ef1fa993ebfdbb22f195bceb37d599c1d91e8d01499dfe"
+    },
+    "tools/reference/test_ministral3_rotary_fixture.py": {
+      "bytes": 18361,
+      "sha256": "b1d90379eb65cb4400fe01d884343c53893d1cecbcccae544ef360e9f42087dd"
+    }
+  },
+  "fixture": {
+    "path": "tests/fixtures/ministral3-rotary-v1/fixture.json",
+    "bytes": 1212502,
+    "sha256": "0e1eb4f6a9056bf1725d8265e905ec7fe8ddc3c690e8a802f58121d96f36c427",
+    "reference_profiles": 2,
+    "cases": 11,
+    "numeric_words": 195776,
+    "input_words_independently_checked": 62464,
+    "per_native_test_profile_coordinate_comparisons": 134592,
+    "exact_main_period_words_per_native_test": 704,
+    "exact_main_gain_words_per_native_test": 32,
+    "native_modes": [
+      "debug",
+      "release"
+    ],
+    "optimized_Python_byte_identical": true
+  },
+  "gates": {
+    "atol": "max(1e-4,2*max_abs(main-wide)) per exact case/array",
+    "rtol": 0.001,
+    "against_both_profiles": true,
+    "pooling_forbidden": true,
+    "native_derived_enlargement_forbidden": true,
+    "chunk_and_replay_Half_bytes_exact": true,
+    "period_words_exact_main": true,
+    "query_gain_words_exact_main": true
+  },
+  "checks": {
+    "fmt": true,
+    "strict_CPU_Metal_Clippy": true,
+    "portable_tests_per_mode": 24,
+    "Rust": {
+      "rust-tests-cpu-1": {
+        "passed": 744,
+        "failed": 0,
+        "ignored": 52
+      },
+      "rust-tests-metal-1": {
+        "passed": 894,
+        "failed": 0,
+        "ignored": 340
+      },
+      "rust-primitive-tests-1": {
+        "passed": 6,
+        "failed": 0,
+        "ignored": 0
+      },
+      "rust-release-primitive-1": {
+        "passed": 6,
+        "failed": 0,
+        "ignored": 0
+      },
+      "rust-release-allocation-1": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0
+      }
+    },
+    "source_unchanged": true
+  },
+  "allocation": {
+    "mode": "release",
+    "keys": 24,
+    "queries": 24,
+    "rejected": 40,
+    "Rust_thread_local_allocations": 0,
+    "scope": "Warmed test-thread allocations only; no process/GPU/model allocation claim"
+  },
+  "resource_policy": {
+    "fixture_bytes": 2097152,
+    "reference_command_bytes": 536870912,
+    "compiler_command_bytes": 3221225472,
+    "engine_bytes_unchanged": 6442450944,
+    "helper_reserve_bytes": 33554432,
+    "disk_floor_bytes": 2147483648,
+    "ordinary_Metal_cap_unchanged": 512
+  },
+  "guard_observations": {
+    "generation_peak_bytes": 88539136,
+    "largest_compiler_or_test_peak_bytes": 2812444672,
+    "all_owned_cleanup_empty": true,
+    "memory_scope": "Sampled owned cohorts and terminal RSS with 32 MiB reserve; not a continuous allocator cap"
+  },
+  "limitations": [
+    "Existing scalar references/PositionPlan/source adapter/Metal/default model execution unchanged",
+    "Boundary arithmetic up to 262143 is not model/context admission; ordinary Metal cap 512 unchanged",
+    "No full model or quantization quality, completed-request latency, summary overhead or speedup claim",
+    "Original 10000-target/100-task quality and 6 GiB engine gates still required before adoption",
+    "Initial synthetic test expected-word/temp-path corrections retained; first raw output only in tool transcript",
+    "iPhone and interactive capture remain deferred"
+  ],
+  "source_admission_qualified": false,
+  "model_execution_qualified": false,
+  "Metal_qualified": false,
+  "quality_qualified": false,
+  "performance_qualified": false,
+  "observer_overhead_qualified": false,
+  "managed_adoption_qualified": false,
+  "whole_goal_complete": false,
+  "evidence": {
+    "protocol-receipt-2.json": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/protocol-receipt-2.json",
+      "bytes": 464,
+      "sha256": "e01c74733a60050ab83a784df221f4c5d6d67fc848cb4c42814727364b2d2605"
+    },
+    "fixture-generation-1.json": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/fixture-generation-1.json",
+      "bytes": 3066,
+      "sha256": "4ea89e4da21abc4f4bb2499ead80697d4fd294399e12115e37af1daca172effc"
+    },
+    "fixture-reproduction-result-1.json": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/fixture-reproduction-result-1.json",
+      "bytes": 1441,
+      "sha256": "69fe3376d72ea08965738f0c1e2fd2f41a4491643d3af66f4f2c69a39c676d61"
+    },
+    "rust-checks-1.json": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-checks-1.json",
+      "bytes": 11915,
+      "sha256": "856e1630b76b6d19c01189cdc775dcf27cb39a2bd1712a53c4b3c7f7089a9b0c"
+    },
+    "fixture-portable-initial-failure-1.json": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/fixture-portable-initial-failure-1.json",
+      "bytes": 745,
+      "sha256": "36caa4b9282d013211d06fdd0842239bb3cb982ae2f8f88ed8af3438da32e3c2"
+    },
+    "agent-fixture-portable-normal-1.log": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/agent-fixture-portable-normal-1.log",
+      "bytes": 3850,
+      "sha256": "956a70f2ed842f7df078e6cc14c0cd4e07a69899b2c20cdf5046987d9a3d2083"
+    },
+    "agent-fixture-portable-optimized-1.log": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/agent-fixture-portable-optimized-1.log",
+      "bytes": 3850,
+      "sha256": "956a70f2ed842f7df078e6cc14c0cd4e07a69899b2c20cdf5046987d9a3d2083"
+    },
+    "rust-fmt-1/result.json": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-fmt-1/result.json",
+      "bytes": 987,
+      "sha256": "ff9d472ddacbb9265433190d60028d84a280bb9b8bf9ab5a82cf205b5b00a87d"
+    },
+    "rust-fmt-1/stdout.log": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-fmt-1/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "rust-fmt-1/stderr.log": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-fmt-1/stderr.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "rust-primitive-tests-1/result.json": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-primitive-tests-1/result.json",
+      "bytes": 989,
+      "sha256": "4eed30d31a33e3270d1c756313232502137f4aa797d22b058cdbccc1393fdb06"
+    },
+    "rust-primitive-tests-1/stdout.log": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-primitive-tests-1/stdout.log",
+      "bytes": 805,
+      "sha256": "5669b420c2c049390e2422d15de22dbd557a2f7dc9317f2dbffa830a32ffc117"
+    },
+    "rust-primitive-tests-1/stderr.log": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-primitive-tests-1/stderr.log",
+      "bytes": 3227,
+      "sha256": "e2459356df56957909bb7bcf55b207e423f43ff4b02bdd1e50b614a8ab0d9bb4"
+    },
+    "rust-clippy-cpu-1/result.json": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-clippy-cpu-1/result.json",
+      "bytes": 989,
+      "sha256": "960e0c8279fc9f3c2132bfd148b63d44a99e4c02c22d9a8f654f884d74b7af30"
+    },
+    "rust-clippy-cpu-1/stdout.log": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-clippy-cpu-1/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "rust-clippy-cpu-1/stderr.log": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-clippy-cpu-1/stderr.log",
+      "bytes": 2314,
+      "sha256": "6ba2cabbc7217721af41fd7bdf68a9189ca580776b94667291f5b62093d1f245"
+    },
+    "rust-clippy-metal-1/result.json": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-clippy-metal-1/result.json",
+      "bytes": 989,
+      "sha256": "99683f1c9a39fbfc2106e5389304cfeb6fa51e5ab3b74f14ee9a6dc7d4360c52"
+    },
+    "rust-clippy-metal-1/stdout.log": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-clippy-metal-1/stdout.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "rust-clippy-metal-1/stderr.log": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-clippy-metal-1/stderr.log",
+      "bytes": 409,
+      "sha256": "358d4139b6a6311e341debf09d0d8c42d07d9fbb3169738679941f8e9b1a4153"
+    },
+    "rust-tests-cpu-1/result.json": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-tests-cpu-1/result.json",
+      "bytes": 988,
+      "sha256": "a68f8ad2b0a25eeafb53133022574a33456362fe1e1cad1c5d25c17236b5d1c1"
+    },
+    "rust-tests-cpu-1/stdout.log": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-tests-cpu-1/stdout.log",
+      "bytes": 85211,
+      "sha256": "52f1590b45d35da7960c38930562bfdcb05ae16dcf27a74bb46ac2fa45e9e9ef"
+    },
+    "rust-tests-cpu-1/stderr.log": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-tests-cpu-1/stderr.log",
+      "bytes": 11325,
+      "sha256": "163a628da0375849e5cc3a4a5878df92a8b0b59e67c8c1302703c995772fdffa"
+    },
+    "rust-tests-metal-1/result.json": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-tests-metal-1/result.json",
+      "bytes": 990,
+      "sha256": "b4dd2c690490cee77efa43e23eb751135d47d393041f2b7ee96e9778df67dcb1"
+    },
+    "rust-tests-metal-1/stdout.log": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-tests-metal-1/stdout.log",
+      "bytes": 149759,
+      "sha256": "cd9983f6d5e8b0cb5f63a9152b2a704cfeee073154dd7e0528686601879a5e74"
+    },
+    "rust-tests-metal-1/stderr.log": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-tests-metal-1/stderr.log",
+      "bytes": 11968,
+      "sha256": "fa28e140e22fe285fac82ba60b71b3bca0b8d3f4cfa0b2cf180450fd450db9ff"
+    },
+    "rust-release-primitive-1/result.json": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-release-primitive-1/result.json",
+      "bytes": 991,
+      "sha256": "fdaf5a49d7e69fdc15d110a751a32fe30f4a134be713b5a37634f49633a67962"
+    },
+    "rust-release-primitive-1/stdout.log": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-release-primitive-1/stdout.log",
+      "bytes": 805,
+      "sha256": "7fdab97428e615d3afc7076d3974a88286323915ad9064f0dacce05c0e4b36fb"
+    },
+    "rust-release-primitive-1/stderr.log": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-release-primitive-1/stderr.log",
+      "bytes": 3230,
+      "sha256": "a0b97a6843cb35b4ab4754bd0c25964963311a72f2a17835d4bd1ed17b92a015"
+    },
+    "rust-release-allocation-1/result.json": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-release-allocation-1/result.json",
+      "bytes": 988,
+      "sha256": "202fd87044ec625696bf92a02f1a7ee46fc861ddc05ca78cc157d037c73a6851"
+    },
+    "rust-release-allocation-1/stdout.log": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-release-allocation-1/stdout.log",
+      "bytes": 254,
+      "sha256": "5da2fd6b11ae61c88dad4bbe7a2f68a1d9ea08942778a58146ac6d00536394ee"
+    },
+    "rust-release-allocation-1/stderr.log": {
+      "path": "artifacts/ministral3-yarn-2026-11-13/rust-release-allocation-1/stderr.log",
+      "bytes": 319,
+      "sha256": "df05d9b337c82a5d83d21c4316ee2639a3b0f286827b47e2fba568da62e3586d"
+    }
+  },
+  "review": {
+    "path": "artifacts/ministral3-yarn-2026-11-13/astra-review-1.json",
+    "sha256": "5ec2e71f6b4ea078e2131c9b4df1005d5e4873be32cee7cbc4b88adb873644b3",
+    "approved_diff_sha256": "6417787501669b23d048b240307a2b1b7fc8d5c4dbe819a22c82c5a923390dca"
+  },
+  "publication": "artifacts/ministral3-yarn-2026-11-13/publication-checks.json"
+}

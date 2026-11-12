@@ -18,6 +18,7 @@ pub mod lfm2;
 pub mod lfm3;
 pub mod lfm3_rotary;
 pub mod lfm3_state;
+pub mod ministral3_rotary;
 pub(crate) mod packed_operations;
 mod position;
 pub mod qwen35;
