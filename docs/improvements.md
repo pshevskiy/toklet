@@ -144,7 +144,24 @@ remain retained; compiler-only admission is 3 GiB within the 6 GiB Mac ceiling.
 Astra approves, no findings. [Scope](granite-config.md),
 [portable checks](../benchmarks/results/2026-11-12-granite-config-v1.json).
 
-The next mechanism is a separately qualified bounded mixed affine4/8 conversion.
+Both pinned Granite tensor packages authenticate without model loading or index
+repair. Full bounded affine4/8 conversion and saved-byte lineage audit pass:
+282 matrices/81 norms, with all 3,659,530,240 matrix values compared exactly to
+upstream FP32 during conversion. The offline audit replays hashes and exact
+norms; it does not repeat floating-point reconstruction. All 48 CPU/GPU controls,
+33 portable tests per Python mode and six actual-artifact CLI cases pass.
+Observed conversion charge is 455,131,136 bytes within the 512 MiB audit cap.
+Existing Metal metadata accepts 128/512 and rejects 1,024 positions; scalar FP32
+exceeds 6 GiB. Earlier memory, index-field and CLI-expectation failures remain
+retained. Evidence closure and Astra review pass, no findings. Legacy MiniCPM tools
+remain unchanged; full-model fit, inference, quality and performance are open.
+[Controls](../artifacts/granite-conversion-2026-11-12/controls-closure-2.json),
+[full conversion](../artifacts/granite-conversion-2026-11-12/full-conversion-1/manifest.json),
+[saved-byte audit](../artifacts/granite-conversion-2026-11-12/full-audit-1.json),
+[CLI cases](../artifacts/granite-conversion-2026-11-12/child-inspection-2.json),
+[review/commit](../artifacts/granite-conversion-2026-11-12/publication-checks.json).
+
+The bounded mixed affine4/8 mechanism passes checks and Astra review.
 The installed MLX default requests group-64 8-bit output/down projections and
 untied head. The existing MiniCPM5 converter remains affine8/6,144-column only;
 Granite requires 8,192 columns. No full payload, model inference, quality, physical

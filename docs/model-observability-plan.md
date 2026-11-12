@@ -70,7 +70,7 @@ and every derivative's actual shapes at admission.
 | --- | --- | ---: | --- | --- |
 | 1 | [MiniCPM5-2B](https://huggingface.co/openbmb/MiniCPM5-2B) | 2,516,756,480 | Strong small reasoning, coding and tool-use candidate; ordinary Llama-style model type | Prefer accessible [Heretic MLX 8-bit](https://huggingface.co/bumblebuttpow/MiniCPM5-2B-heretic-abliterated-MLX-8bit), `50ab1b22`, with declared insraq parent `8d83eaf4`; independently qualify. Original mondk `8ebe35e0` 4-bit now returns401; retain its historical preflight |
 | 2 | [LFM3-1.7B](https://huggingface.co/LiquidAI/LFM3-1.7B) | 1,728,801,536 | Recent compact agent/instruction-following model; useful performance experiment with a new architecture | Prefer the separate [mchen04 Heretic BF16 MLX](https://huggingface.co/mchen04/LFM3-1.7B-Heretic-Abliterated-MLX-bf16), `88636d45`, then independently qualify bounded Q4 conversion. Its child/parent payload equality, CPU graph/CLI, 1,025-position parity and full quality now pass. [Finite widening](lfm3-finite-widening.md) is retained after Astra; managed admission and Q4 conversion remain open. The previous `095df4e8` GGUF-to-F32 artifact still exceeds6GiB in weights alone and remains rejected |
-| 3 | [Granite 4.2 3B](https://huggingface.co/ibm-granite/granite-4.2-3b) | 3,659,737,600 | Dense reasoning/tool-use baseline with adjustable thinking effort | [Heretic source](https://huggingface.co/saidutta69/granite-4.2-3b-heretic), `db83ced6`; uncensored MLX conversion pending. [Official MLX Q4](https://huggingface.co/ibm-granite/granite-4.2-3b-q4-mlx), `0c6f39b1`, is a reference fallback; strict config translation and qualification remain open |
+| 3 | [Granite 4.2 3B](https://huggingface.co/ibm-granite/granite-4.2-3b) | 3,659,737,600 | Dense reasoning/tool-use baseline with adjustable thinking effort | [Heretic source](https://huggingface.co/saidutta69/granite-4.2-3b-heretic), `db83ced6`; bounded mixed affine4/8 conversion checks pass, [Astra-approved conversion](granite-conversion.md). [Official MLX Q4](https://huggingface.co/ibm-granite/granite-4.2-3b-q4-mlx), `0c6f39b1`, is a reference fallback; [strict configuration](granite-config.md) is reviewed, while full-model qualification remains open |
 | 4 | [Ministral 3 3B Reasoning](https://huggingface.co/mistralai/Ministral-3-3B-Reasoning-2512) | 3,849,090,048 | Compact STEM and vision reasoning; count includes vision encoder | [Heretic source](https://huggingface.co/xtools-at/Ministral-3-3B-Reasoning-UNCENSORED-heretic), `46fb9a42`; uncensored MLX conversion pending. [MLX 4-bit reference](https://huggingface.co/mlx-community/Ministral-3-3B-Reasoning-2512-4bit), `2cd2087a`, has a stale index; its single-file header is diagnostic only |
 | 5 | [Qwen3.5-2B](https://huggingface.co/Qwen/Qwen3.5-2B) | 2,274,069,824 | Small vision/reasoning candidate that can reuse mechanisms qualified for Qwen3.5-4B/9B | [TheCluster uncensored MLX BF16](https://huggingface.co/TheCluster/Qwen3.5-2B-Uncensored-HauhauCS-Aggressive-MLX-bf16), `78efacde`; header differences include15omitted MTP tensors and18norm vectors narrowed to BF16. Authenticate/qualify these changes before affine Q4 conversion |
 
@@ -228,8 +228,10 @@ its header diagnostic changes no source-admission policy.
 Qwen2B's removed15MTP tensors explain60,828,160fewer stored parameters. Its18norm
 precision changes and convolution/vision layouts are metadata observations,
 not tensor-byte parity. Separate24-layer/16-value-head binding, codec, numerical/
-quality, physical fit and request/overhead gates remain open. No payloads were
-downloaded and model order/context caps stay unchanged.
+quality, physical fit and request/overhead gates remain open. That metadata audit
+downloaded no payloads. Subsequent Granite source authentication and bounded
+conversion checks pass; [Astra-approved conversion](granite-conversion.md)
+does not close the full-model gates. Model order and existing context caps stay unchanged.
 
 The isolated [all-source FP32 Metal projection gate](qwen35-gpu-projections.md) passes.
 The [concrete executor](qwen35-metal-executor.md) passes its scoped coupled

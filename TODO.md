@@ -50,7 +50,7 @@ LFM3 CPU code and portable measurements are published as `612771d7` on
 `codex/console-engine-comparison`.
 [Publication / CI](artifacts/lfm3-finite-guard-2026-11-11/finite-publication-checks.json).
 
-Current/next task: **qualify Granite's bounded uncensored MLX conversion**. LFM3 CPU qualification and finite-widening retention
+Current/next task: **qualify Granite's full-model graph, codec and memory fit**. LFM3 CPU qualification and finite-widening retention
 pass; managed application adoption remains open. Preserve the 6 GiB ceiling,
 original numerical/quality gates and prior model decisions. Engine/CLI work
 leads; interactive screen capture and iPhone runtime remain deferred.
@@ -104,10 +104,32 @@ leads; interactive screen capture and iPhone runtime remain deferred.
   [full qualification](artifacts/granite-config-2026-11-12/qualification-1.json),
   [review/commit](artifacts/granite-config-2026-11-12/publication-checks.json).
 
-Next: independently qualify bounded mixed affine4/8 conversion, then payload,
-numerical/quality, physical-fit and request/overhead gates within 6 GiB. The
-header-derived proposal has 201 affine4/81 affine8 matrices plus 81 BF16 norms;
-2,737,853,440 planned body bytes do not prove physical fit or quality.
+All four Heretic/stock tensor containers authenticate (14,639,034,320 bytes)
+with pinned SHA256/header checks within the 512 MiB setup policy. No model is
+loaded and source indexes remain unchanged; stock's understated total still
+rejects. Codec, full graph/quality/fit/request gates remain open.
+[Source authentication](artifacts/granite-payload-2026-11-12/result-1.json).
+
+- [x] S1.G bounded affine4/8 conversion: full producer and saved-byte audit pass
+  for 282 matrices/81 norms. All 3,659,530,240 matrix values reconstruct exactly
+  against upstream FP32 during conversion; the offline audit replays actual
+  source/child hashes and exact norms without recomputing floating-point values.
+  All 48 CPU/GPU controls, 33 portable tests per Python mode and six actual-artifact
+  CLI cases pass. Observed conversion charge is 455,131,136 bytes within the
+  512 MiB audit cap. Metal metadata accepts contexts 128/512; 1,024 correctly
+  rejects at the existing 512-position limit. Scalar FP32 exceeds 6 GiB.
+  Earlier memory, index-field and CLI-expectation failures remain retained;
+  legacy MiniCPM tools are unchanged. Evidence closure and Astra review pass, no findings.
+  Full-model fit, inference, quality, performance and adoption are open.
+  [Controls](artifacts/granite-conversion-2026-11-12/controls-closure-2.json),
+  [full conversion](artifacts/granite-conversion-2026-11-12/full-conversion-1/manifest.json),
+  [saved-byte audit](artifacts/granite-conversion-2026-11-12/full-audit-1.json),
+  [CLI cases](artifacts/granite-conversion-2026-11-12/child-inspection-2.json),
+  [review/commit](artifacts/granite-conversion-2026-11-12/publication-checks.json).
+
+Next: qualify full-model numerics/quality, physical fit and request/overhead within
+6 GiB. The converted child has 201 affine4/81 affine8 matrices plus 81 BF16 norms;
+its 2,737,853,440 body bytes do not prove physical fit or quality.
 [Recipe proposal](artifacts/granite-config-2026-11-12/mixed-affine-recipe-proposal-1.json),
 [conversion constraints](artifacts/granite-source-planning-2026-11-12/conversion-reuse-inspection-1.json).
 

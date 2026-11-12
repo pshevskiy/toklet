@@ -1,0 +1,403 @@
+{
+  "format": "toklet.granite.mixed-affine-qualification.v1",
+  "scope": "Bounded candidate conversion, reconstruction and saved-byte lineage only; no model constructed",
+  "base_commit": "55d9611af289d99b70fd75719ef8619e568f6898",
+  "implementation_inputs": {
+    "tools/reference/granite_convert.py": "0dd97036312c5fc6b55a0be96f95de83a99bcb4f8972160a9a92ad3ddc007fa2",
+    "tools/reference/granite_convert_layout.py": "b2c19ea8138a135bdb3ce556b89e19e72e42f7e24b50f60bafd5bd95dadac7b1",
+    "tools/reference/granite_quant_probe.py": "719d43028fcc9d7c658f79afdd7f5417b2a2bb1ca3d0d5bd70c41481f4b6ce3a",
+    "tools/reference/granite_quant_runtime.py": "840efdd06ae772493bd715701d67bcd5390da036919cf2babf3f6cccc418a80a",
+    "tools/reference/granite_quantize.py": "caa8810e354bae460cc6c386322f6eaa5d8a3e6840213e89263663b5731d6ad0",
+    "tools/reference/minicpm5_parent.py": "7279a1bbbdedfbf4fdbd881033c332cb4dac8baba5fc03d60f61d8b9b6b832c0",
+    "tools/reference/minicpm5_quant_runtime.py": "5e26f33095e8365f00ef4ef6b736d00b56ae958c14edc7e3d50aa8b70c380e60",
+    "tools/reference/minicpm5_quantize.py": "f4dd3511a245191309ba23e9932e5a2247a25b10defe8968cc463862181274a4",
+    "tools/reference/reference_runtime.py": "8d14a58be0dfcf923c6c82064fa56976fa1f51150e60eb49f607a1d01efec6d5",
+    "tools/reference/test_granite_convert.py": "165c7a6994be54ff1179a689d7b48797b1de661c84179f92abd5f31833689f12",
+    "tools/reference/test_granite_convert_layout.py": "cf41a99f4fd831093cfe19f4a5dcf07c97273856cd940eea6beb4e7071e078ee",
+    "tools/reference/test_granite_quant_runtime.py": "2e8bad60b3406521512e418f7713f520b0360b41d227034ce87c403524ff6265",
+    "tools/reference/test_granite_quantize.py": "8d8004bfc526948fee9c4cd01f26cb022d4c20e54f6bdec7ced74276d6cff59e",
+    "tools/reference/text_reference_runtime.py": "da3c825b41af27e2455a86bcf0036b0d69e4daef79fd916a36a87da95850f777"
+  },
+  "source": {
+    "repository": "saidutta69/granite-4.2-3b-heretic",
+    "revision": "db83ced6c830ad52b32880d026a4f8e3f888c316",
+    "objects": [
+      {
+        "file": "model-00001-of-00002.safetensors",
+        "bytes": 4960052008,
+        "sha256": "6a52656d974d01ffd0efc3b630abf46baa014ce9f4178be489a0cac5211b37a1",
+        "tensors": 228,
+        "authenticated": true
+      },
+      {
+        "file": "model-00002-of-00002.safetensors",
+        "bytes": 2359465192,
+        "sha256": "01de7cba2c2d42a5796c8822b2a4e87e95d11dd6cb0087f9b19d5cd3fbd8182e",
+        "tensors": 135,
+        "authenticated": true
+      }
+    ],
+    "config_sha256": "58997398d70456e6ea011c7d4b08321d10720361aaf2df5df3390f5e82242db4",
+    "index_sha256": "f2869775fa860baea99e19fd2e1b83f60165f8427e83f8b6d11461ea4fe4b7ff",
+    "original_index_repaired": false
+  },
+  "runtime": {
+    "versions": {
+      "numpy": "2.3.2",
+      "mlx": "0.32.3"
+    },
+    "files": 3291,
+    "manifest_sha256": "be3c1d917ced9ae948ae3509708a1b980f38fcebd7c9f4068f150e43e28edffd",
+    "hash_chunk_limit_bytes": 1048576
+  },
+  "storage": {
+    "group_size": 64,
+    "affine4_matrices": 201,
+    "affine8_matrices": 81,
+    "exact_BF16_norms": 81,
+    "body_bytes": 2737853440,
+    "file_bytes": 2737958760,
+    "maximum_tile_rows": 256,
+    "maximum_columns": 8192,
+    "packed_codes": "U32 little-endian, low bits first",
+    "metadata": "separate BF16 scales and biases",
+    "child_sha256": "02f938b9f2a82d61c8609e19d2d65fcd7b32e52cc5b1cc7834b9843b9c4eec1e",
+    "child_header_sha256": "8bd7d72a29da37321edc8961e8aa7dc33217e75e2e4d093ae0066fa5167b10fb",
+    "child_config_sha256": "889ff79da95a5526811498cd47cee14c92a9d494fbd5dca70a3beb1c71b3df9b"
+  },
+  "checks": {
+    "literal_wide_CPU_GPU_executions": 48,
+    "portable_tests_per_python_mode": 33,
+    "modes": [
+      "normal",
+      "optimized"
+    ],
+    "matrix_tiles": 4704,
+    "matrices": 282,
+    "norms": 81,
+    "independent_upstream_FP32_values_equal": 3659530240,
+    "saved_byte_audit": {
+      "path": "artifacts/granite-conversion-2026-11-12/full-audit-1.json",
+      "sha256": "392a69a56439dca8fe3656f1749da04bd69fb7f9cbc3372b9daf75001f3b2e8f",
+      "scope": "Seals/reconciles captured independent/upstream FP32 comparisons; this stdlib consumer does not recompute floating-point reconstruction."
+    },
+    "CLI": {
+      "cases": 6,
+      "Metal_contexts_metadata_accepted": [
+        128,
+        512
+      ],
+      "Metal_context_1024": "unsupported_geometry; existing implemented maximum 512",
+      "scalar_contexts_128_512_1024": "FP32 expansion exceeds 6 GiB",
+      "binary_sha256": "af393c0f7ad2b424104b9e56df3b942b6ab219c4d2746b1651c8df9344012828"
+    },
+    "required_Rust_checks_reused": {
+      "path": "artifacts/granite-conversion-2026-11-12/rust-check-reuse-2.json",
+      "sha256": "bb6029f5f0da87062938f25d361a0102eda97aa0cc248837264b883134806bb2",
+      "unchanged_inputs": 4029,
+      "CPU_tests": 737,
+      "Metal_tests": 883,
+      "explicit_GPU_fixture": true
+    }
+  },
+  "commands": [
+    {
+      "label": "controls-command-2",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-s",
+        "-B",
+        "-X",
+        "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/granite-conversion-2026-11-12/cache-controls-2",
+        "/private/tmp/toklet-granite-conversion-2026-11-12/tools/reference/granite_quant_probe.py",
+        "--environment-root",
+        "/Users/coloner/work/rust/toklet",
+        "--runtime-manifest",
+        "/Users/coloner/work/rust/toklet/artifacts/granite-conversion-2026-11-12/runtime-manifest-2.json",
+        "--runtime-sha256",
+        "4807a2bd21630f08a24e502f0b7e9740763764aa2cdbc55d81f11a0dd031d44d",
+        "--controls-file",
+        "/Users/coloner/work/rust/toklet/artifacts/granite-conversion-2026-11-12/prospective-literals-1.json",
+        "--controls-sha256",
+        "4780499e535d060814a95f8ed04e43fc6b3d19703e82daaeffd4b62a56f7f361",
+        "--fresh-output",
+        "/Users/coloner/work/rust/toklet/artifacts/granite-conversion-2026-11-12/controls-2"
+      ],
+      "cwd": "/private/tmp/toklet-granite-conversion-2026-11-12",
+      "result_path": "artifacts/granite-conversion-2026-11-12/controls-command-2/result.json",
+      "result_sha256": "4e195a20106fa6798601649976d412713bf59a53a9f8bffb75ad9e9201388053",
+      "plan_sha256": "88d898ea2593f7e204ff52c6f703a6e4c0e9a6b0ebddfcde84f701e737d745c7",
+      "memory_log_sha256": "3120632c17a2b6d747f9e4709542b73645ecc3df61296ca17bdf553082021eb7",
+      "stdout_sha256": "61dffed164c8155ad488bb83c5f102eede40a35a9265518e9500052ba45ff0fe",
+      "stderr_sha256": "64531e3bb6c92346715ddeb6e4fa21056dbdd7f09fa4c521c998a6d35fa41af1",
+      "elapsed_seconds": 3.147615624940954,
+      "maximum_observed_charge_with_reserve": 424329216,
+      "terminal_direct_pair_rss_charge_with_reserve": 432685056,
+      "minimum_free_bytes": 26689179648,
+      "budget_bytes": 536870912,
+      "passed": true
+    },
+    {
+      "label": "portable-producer-1",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
+        "-m",
+        "unittest",
+        "test_granite_quantize",
+        "test_granite_quant_runtime",
+        "test_granite_convert_layout",
+        "test_granite_convert",
+        "test_minicpm5_quantize"
+      ],
+      "cwd": "/private/tmp/toklet-granite-conversion-2026-11-12/tools/reference",
+      "result_path": "artifacts/granite-conversion-2026-11-12/portable-producer-1/result.json",
+      "result_sha256": "89213384aca239308959c851b7e7aa59fe6a8f56c476b84e7a59569154b16594",
+      "plan_sha256": "a2cdf386a81c88f225084e79a10ce91f96be6ac285d2a95c60493a3c07707873",
+      "memory_log_sha256": "092793dd9fd8509a0e84dc8f8922761b3a2a11cbb69af659fdffd17e5c0f3ca6",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "7f1d0c11f80bb4a1fa3fce0bf496c8ba9d6795ae4a9d404ffe4ac4e153566e44",
+      "elapsed_seconds": 1.041906917002052,
+      "maximum_observed_charge_with_reserve": 101154816,
+      "terminal_direct_pair_rss_charge_with_reserve": 101253120,
+      "minimum_free_bytes": 25755070464,
+      "budget_bytes": 536870912,
+      "passed": true
+    },
+    {
+      "label": "portable-producer-optimized-1",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
+        "-O",
+        "-m",
+        "unittest",
+        "test_granite_quantize",
+        "test_granite_quant_runtime",
+        "test_granite_convert_layout",
+        "test_granite_convert",
+        "test_minicpm5_quantize"
+      ],
+      "cwd": "/private/tmp/toklet-granite-conversion-2026-11-12/tools/reference",
+      "result_path": "artifacts/granite-conversion-2026-11-12/portable-producer-optimized-1/result.json",
+      "result_sha256": "c7990fdb6cf40199d705d4169601ae4d2305cdab8960be36e7b4189f72921486",
+      "plan_sha256": "f2d4df0023f199f6976dba31e4fbefecc6e3056d8e9522550d4d7a13cf7c23fc",
+      "memory_log_sha256": "ea6ed985265203a7bf7bf6407ccf60d2c2ad915824257b0905ca6fd3f425c009",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "6ee4b2fcfd7778b22bfb2e8e54854b55abf5a4829e7287ec51b1133e2d7f4cfb",
+      "elapsed_seconds": 0.2865999999921769,
+      "maximum_observed_charge_with_reserve": 99205120,
+      "terminal_direct_pair_rss_charge_with_reserve": 99287040,
+      "minimum_free_bytes": 25755004928,
+      "budget_bytes": 536870912,
+      "passed": true
+    },
+    {
+      "label": "runtime-build-3",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-s",
+        "-B",
+        "-X",
+        "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/granite-conversion-2026-11-12/cache-full-1",
+        "/Users/coloner/work/rust/toklet/artifacts/granite-conversion-2026-11-12/build-runtime-3.py"
+      ],
+      "cwd": "/private/tmp/toklet-granite-conversion-2026-11-12",
+      "result_path": "artifacts/granite-conversion-2026-11-12/runtime-build-3/result.json",
+      "result_sha256": "4e098c8d4016e14d7928f56d33e827bd1ffffdd05b80119c6f988adbdf486851",
+      "plan_sha256": "1503e0334712c2ae1f2312e680e0ffed18da7d94c93fd9cf25f802795a650365",
+      "memory_log_sha256": "a004f0ba80dda8fe66f2ecf8643702472daf73d4d2001daaebd931d72f146479",
+      "stdout_sha256": "fbe1849137df689235c70d7003fa74e81bab008634a05f88e88ec1ada5a260d3",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "elapsed_seconds": 1.5491914589656517,
+      "maximum_observed_charge_with_reserve": 109297664,
+      "terminal_direct_pair_rss_charge_with_reserve": 109379584,
+      "minimum_free_bytes": 25754230784,
+      "budget_bytes": 536870912,
+      "passed": true
+    },
+    {
+      "label": "full-command-1",
+      "command": [
+        "/Users/coloner/work/rust/toklet/.venv/bin/python",
+        "-s",
+        "-B",
+        "-X",
+        "pycache_prefix=/Users/coloner/work/rust/toklet/artifacts/granite-conversion-2026-11-12/cache-full-1",
+        "/private/tmp/toklet-granite-conversion-2026-11-12/tools/reference/granite_convert.py",
+        "--environment-root",
+        "/Users/coloner/work/rust/toklet",
+        "--runtime-manifest",
+        "/Users/coloner/work/rust/toklet/artifacts/granite-conversion-2026-11-12/runtime-manifest-3.json",
+        "--runtime-sha256",
+        "be3c1d917ced9ae948ae3509708a1b980f38fcebd7c9f4068f150e43e28edffd",
+        "--contract",
+        "/Users/coloner/work/rust/toklet/artifacts/granite-conversion-2026-11-12/prospective-conversion-contract-1.json",
+        "--contract-sha256",
+        "dda2bdc27d62b79e29d706d4e0e7eae6209aaca0fe9e0a64fa1316f01979c72b",
+        "--source-authentication",
+        "/Users/coloner/work/rust/toklet/artifacts/granite-payload-2026-11-12/result-1.json",
+        "--fresh-output",
+        "/Users/coloner/work/rust/toklet/models/MLX-Granite-4.2-3B-Heretic-affine4_8-g64-bf16-v1",
+        "--fresh-evidence",
+        "/Users/coloner/work/rust/toklet/artifacts/granite-conversion-2026-11-12/full-conversion-1"
+      ],
+      "cwd": "/private/tmp/toklet-granite-conversion-2026-11-12",
+      "result_path": "artifacts/granite-conversion-2026-11-12/full-command-1/result.json",
+      "result_sha256": "1025656492454ba40f434f71089580bf07cba07edc04e43a1daf6372e220d426",
+      "plan_sha256": "a1ee1077d6da6c1a9dc1abf7e9094bbec3216b7a8bd62da926e19453c4c711c4",
+      "memory_log_sha256": "ea3ddc2138f3b4a3d92d77ced50bc5f613b21512e0d929bd8886a13d5d3461a5",
+      "stdout_sha256": "25b5a34c95a6a183f11851c190fcd34c5ec14cc522ad2a893e5775cae273a0e9",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "elapsed_seconds": 81.75100804201793,
+      "maximum_observed_charge_with_reserve": 450936832,
+      "terminal_direct_pair_rss_charge_with_reserve": 455131136,
+      "minimum_free_bytes": 22985560064,
+      "budget_bytes": 536870912,
+      "passed": true
+    },
+    {
+      "label": "full-audit-command-1",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
+        "/Users/coloner/work/rust/toklet/artifacts/granite-conversion-2026-11-12/audit-full-1.py"
+      ],
+      "cwd": "/private/tmp/toklet-granite-conversion-2026-11-12",
+      "result_path": "artifacts/granite-conversion-2026-11-12/full-audit-command-1/result.json",
+      "result_sha256": "a8ef39d8b786fa0065b7db103ef527b12417e5fdb69875ce5f07e01c2a0fa85b",
+      "plan_sha256": "4a3b08f4ecefcbc6e555b8c1d4d1149f010ae905acf1b37f48c9d847a67bd25d",
+      "memory_log_sha256": "6d4000b846518d4b00a685bce9b5ce74f8761a765f66b65844180c0b83f87fde",
+      "stdout_sha256": "c645b31664c5c8a50597739b157c90e9463a79b1302d3e957d092a79c8346fb0",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "elapsed_seconds": 19.16108524997253,
+      "maximum_observed_charge_with_reserve": 229031936,
+      "terminal_direct_pair_rss_charge_with_reserve": 229031936,
+      "minimum_free_bytes": 22991257600,
+      "budget_bytes": 536870912,
+      "passed": true
+    },
+    {
+      "label": "child-inspection-command-2",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
+        "/Users/coloner/work/rust/toklet/artifacts/granite-conversion-2026-11-12/inspect-child-2.py"
+      ],
+      "cwd": "/private/tmp/toklet-granite-conversion-2026-11-12",
+      "result_path": "artifacts/granite-conversion-2026-11-12/child-inspection-command-2/result.json",
+      "result_sha256": "f4696fb3c7ad2902c4013dcb29f422a50a55e7c7077fa5d2eea506c90f1d3e40",
+      "plan_sha256": "062356215636008cc712230a4f05f389ef068e6e6f09b8d726043c0170c718dd",
+      "memory_log_sha256": "5485c276912df092ffa46a024b6990b9fb145fe45a553d584058c66c7df2e278",
+      "stdout_sha256": "2db5d1faf0b87f73ee111085305d5028ff9a612e1a175f8300cff81b748fc87c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "elapsed_seconds": 0.2806455420795828,
+      "maximum_observed_charge_with_reserve": 73465856,
+      "terminal_direct_pair_rss_charge_with_reserve": 73990144,
+      "minimum_free_bytes": 22967148544,
+      "budget_bytes": 536870912,
+      "passed": true
+    }
+  ],
+  "evidence": {
+    "contract_sha256": "dda2bdc27d62b79e29d706d4e0e7eae6209aaca0fe9e0a64fa1316f01979c72b",
+    "conversion_manifest_sha256": "ac0530f0f9689afdd2a48af156a03a3fb9e701ff55bbc4d006b315d86b119f32",
+    "journal_sha256": "16e1b4b109c04ed253c15e207300c19b0ddf04aef8908c344f0faf18bf914d75"
+  },
+  "retained_failures": [
+    {
+      "path": "artifacts/granite-conversion-2026-11-12/controls-command-1/result.json",
+      "sha256": "3d71f43e84487a132e778e3cae4a3bcf1f8c2ea3d0ea544bb7fbaff1a6557bc3",
+      "receipt": {
+        "passed": false,
+        "failure": null,
+        "exit_code": 0,
+        "elapsed_seconds": 3.5147910410305485,
+        "maximum_observed_charge_with_reserve": 465190912,
+        "terminal_direct_pair_rss_charge_with_reserve": 652034048,
+        "minimum_free_bytes": 29807886336,
+        "sample_count": 30,
+        "owned_live_after_cleanup": [],
+        "cleanup_errors": [],
+        "last_runtime_gate": null,
+        "stdout_sha256": "61dffed164c8155ad488bb83c5f102eede40a35a9265518e9500052ba45ff0fe",
+        "stderr_sha256": "64531e3bb6c92346715ddeb6e4fa21056dbdd7f09fa4c521c998a6d35fa41af1",
+        "helper_reserve_bytes": 33554432,
+        "configured_guest_reserve_bytes": 0,
+        "memory_scope": "Observed simultaneous owned identity cohorts with monotone lifetime/RSS maxima, direct-pair terminal RSS, 32 MiB helper reserve and the configured guest reservation when nonzero. Guest reservation is conservative even when guest allocations overlap discovered processes. May miss undiscovered short-lived/final descendant peaks; no continuous allocator cap."
+      }
+    },
+    {
+      "path": "artifacts/granite-conversion-2026-11-12/layout-preparation-attempt-1-failure.json",
+      "sha256": "3293197144eee6bbecdfddb6ee69d8a0feac109ec92fc331310a41437f4265fc",
+      "receipt": {
+        "passed": false,
+        "failure": "Preflight rejected the authenticated modified index because its metadata also declares total_parameters=3659737600. No payload conversion, numerical import, source/index repair or output occurred.",
+        "correction": "Accept only the observed optional total_parameters field and require its strict integer BF16 element count to match derived physical bytes. Unknown fields, bool counts, stale totals and bad maps still reject.",
+        "source_or_index_changed": false,
+        "ordinary_source_admission_qualified": false
+      }
+    },
+    {
+      "path": "artifacts/granite-conversion-2026-11-12/child-inspection-command-1/result.json",
+      "sha256": "7803653fde7cc537e763d15b6102a94872bb4e58ceafa1b98365aaa8de018b90",
+      "receipt": {
+        "passed": false,
+        "failure": "ValueError('Command exited unsuccessfully')",
+        "exit_code": 1,
+        "elapsed_seconds": 0.28855125000700355,
+        "maximum_observed_charge_with_reserve": 74268672,
+        "terminal_direct_pair_rss_charge_with_reserve": 74334208,
+        "minimum_free_bytes": 22992228352,
+        "sample_count": 4,
+        "owned_live_after_cleanup": [],
+        "cleanup_errors": [],
+        "last_runtime_gate": null,
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_sha256": "d4e05c0df0e11eccdd4a1ad7f95705e69832d7b3647d8d6a76e8ded58d8cfc91",
+        "helper_reserve_bytes": 33554432,
+        "configured_guest_reserve_bytes": 0,
+        "memory_scope": "Observed simultaneous owned identity cohorts with monotone lifetime/RSS maxima, direct-pair terminal RSS, 32 MiB helper reserve and the configured guest reservation when nonzero. Guest reservation is conservative even when guest allocations overlap discovered processes. May miss undiscovered short-lived/final descendant peaks; no continuous allocator cap."
+      }
+    },
+    {
+      "path": "artifacts/granite-conversion-2026-11-12/inspection-assumption-failure-1.json",
+      "sha256": "3a91bb427f280f46fb93794a6e7c80e1c7e51108f03325e097364a07655d26ba",
+      "receipt": {
+        "passed": false,
+        "failure": "First checker expected Metal context1024 admission; actual unchanged engine guard rejects context above512 before runtime/device planning. Source/data conversion succeeded; no engine limit will be widened for this check.",
+        "old_receipt": "child-inspection-command-1/result.json",
+        "corrected_expected_results": "Metal128/512 metadata accepted; Metal1024 unsupported_geometry; scalar all contexts exceed6GiB expanded-load estimate",
+        "model_or_runtime_qualification": false
+      }
+    },
+    {
+      "path": "artifacts/granite-conversion-2026-11-12/review-preparation-attempt-1-failure.json",
+      "sha256": "b28a729cfc10f2be467b94f20dad9e171107c4748a205054dae09605a494f7b3",
+      "receipt": {
+        "passed": false,
+        "failure": "Private report builder incorrectly expected only the 12 direct producer sources; the admitted runtime includes transitive helper sources as well. Rust reuse proof was written before this assertion. No producer/runtime or raw conversion evidence changed."
+      }
+    }
+  ],
+  "limits": {
+    "engine_bytes": 6442450944,
+    "audit_setup_bytes": 536870912,
+    "helper_reserve_bytes": 33554432,
+    "disk_floor_bytes": 2147483648,
+    "memory_scope": "Observed simultaneous owned identity cohorts with monotone lifetime/RSS maxima, direct-pair terminal RSS, 32 MiB helper reserve and the configured guest reservation when nonzero. Guest reservation is conservative even when guest allocations overlap discovered processes. May miss undiscovered short-lived/final descendant peaks; no continuous allocator cap."
+  },
+  "claims": {
+    "conversion_clock_scope": "Diagnostic completed conversion/readback/reconstruction phases; no engine performance or speedup claim",
+    "codec_qualified": false,
+    "model_inference_qualified": false,
+    "quality_qualified": false,
+    "physical_fit_qualified": false,
+    "request_performance_qualified": false,
+    "observer_overhead_qualified": false,
+    "managed_adoption_qualified": false,
+    "whole_goal_complete": false
+  },
+  "review": {
+    "Astra_approved": true,
+    "status": "approved_no_actionable_findings",
+    "receipt_path": "artifacts/granite-conversion-2026-11-12/astra-review-1.json",
+    "receipt_sha256": "440e9064fdb5fea923e905504fc334d3563caec9a7c6afa6816ee3006ed9b5bf"
+  }
+}
