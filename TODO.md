@@ -1,6 +1,6 @@
 # Toklet progress checklist
 
-Updated **12 November 2026**. **Improvement goal active; earlier Mac milestones
+Updated **13 November 2026**. **Improvement goal active; earlier Mac milestones
 complete only in their recorded scopes.** iPhone runtime work remains deferred.
 Read the current task, relevant plan criteria and targeted source. Completed
 history is in the [dated archive](docs/archive/2026-11-12/README.md).
@@ -50,7 +50,8 @@ LFM3 CPU code and portable measurements are published as `612771d7` on
 `codex/console-engine-comparison`.
 [Publication / CI](artifacts/lfm3-finite-guard-2026-11-11/finite-publication-checks.json).
 
-Current/next task: **qualify Granite's full-model graph, codec and memory fit**. LFM3 CPU qualification and finite-widening retention
+Current/next task: **continue Ministral qualification after Granite's reviewed
+numerical rejection**. LFM3 CPU qualification and finite-widening retention
 pass; managed application adoption remains open. Preserve the 6 GiB ceiling,
 original numerical/quality gates and prior model decisions. Engine/CLI work
 leads; interactive screen capture and iPhone runtime remain deferred.
@@ -127,11 +128,52 @@ rejects. Codec, full graph/quality/fit/request gates remain open.
   [CLI cases](artifacts/granite-conversion-2026-11-12/child-inspection-2.json),
   [review/commit](artifacts/granite-conversion-2026-11-12/publication-checks.json).
 
-Next: qualify full-model numerics/quality, physical fit and request/overhead within
-6 GiB. The converted child has 201 affine4/81 affine8 matrices plus 81 BF16 norms;
-its 2,737,853,440 body bytes do not prove physical fit or quality.
-[Recipe proposal](artifacts/granite-config-2026-11-12/mixed-affine-recipe-proposal-1.json),
-[conversion constraints](artifacts/granite-source-planning-2026-11-12/conversion-reuse-inspection-1.json).
+The conversion is published as `eb14db30`; both exact-head CI workflows pass.
+Granite text preparation authenticates both complete tokenizer files. Their BPE,
+added-token, normalization and decoder definitions match; only the modified
+source's BatchLongest left-padding policy differs. All 100,352 IDs are covered,
+including 96 added tokens also present in BPE vocabulary. An initial counting
+assumption failed and is retained; the corrected bounded source check passes.
+No encoding/template or managed-codec qualification follows.
+[Codec inspection](artifacts/granite-codec-2026-11-12/codec-inspection-2.json).
+
+Five cold device/session planning cases pass on Apple M1 Pro. The 128-input/
+128-output request plans within 6 GiB; 512/1,024-input and capacity-boundary
+requests remain unsupported at the existing 512-position Metal limit. No
+numerical buffers are allocated by planning. The actual raw 128/128 CLI smoke
+passes: 128 outputs, 255 committed positions and one pending token; observed
+charge 2,899,741,912 bytes within 6 GiB. Source/binary/input hashes close unchanged
+and owned cleanup is empty. Debug clocks remain diagnostic; this one request
+does not qualify full-model numerical/quality, all-workload fit or performance.
+[Cold planning](artifacts/granite-runtime-plan-2026-11-12/runtime-plan-1.json),
+[native smoke](artifacts/granite-native-smoke-2026-11-12/native-smoke-1.json).
+
+- [x] S1.G full-model graph diagnostic: required fmt/strict CPU+Metal Clippy,
+  737 CPU/887 Metal tests, 58 portable tests per mode, 1,120 frozen-fixture
+  comparisons, the explicit GPU fixture and admitted checker controls pass.
+  All 30 native runs/304 observed state checks pass at a 5.03 GB observed peak;
+  schedule/reset/causal-prefix bytes match exactly. The complete comparison
+  rejects 212/20,268,711,936 profile coordinates under unchanged gates. The first
+  failure localizes to propagated native-input differences; other failures remain
+  unlocalized. Current route stays unqualified. Astra's completeness/receipt
+  findings are fixed: 34 checker tests per mode and fresh numeric controls pass;
+  genuine replay verifies 304 checks/10 resets/40 receipts with byte-identical
+  numerical records. Astra follow-up approves scoped tooling/rejection retention,
+  no remaining findings. Failed checks remain retained; publication is in progress.
+  [Scope](docs/granite-graph.md),
+  [scalar decision](benchmarks/results/2026-11-13-granite-graph-v1.json),
+  [required checks](artifacts/granite-graph-2026-11-12/required-checks-closure-2.json),
+  [native capture](artifacts/granite-graph-2026-11-12/native-capture-1.json),
+  [strict replay](artifacts/granite-graph-2026-11-12/strict-replay-closure-2.json),
+  [localization](artifacts/granite-graph-2026-11-12/attention-localization-result-1.json),
+  [review/commit](artifacts/granite-graph-2026-11-12/publication-checks.json).
+
+Next: finish publication and continue the selected Ministral qualification.
+Granite's current affine4/8 Metal route does not advance to adoption or quality/
+performance qualification. Any future candidate must pass the original graph,
+10,000-target/100-task quality, codec, fit and request/overhead gates. The 6 GiB
+ceiling and 512-position Metal cap remain unchanged. Continue the selected
+Ministral track after publication.
 
 Subsequent Ministral source inspection records 4,096 query width, YaRN and
 absolute-position query scaling at the 16,384-token boundary. Its pinned Q4 index

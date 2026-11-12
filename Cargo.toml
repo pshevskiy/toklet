@@ -113,6 +113,11 @@ name = "granite33_probe"
 required-features = ["metal"]
 
 [[example]]
+name = "granite_graph_capture"
+required-features = ["metal"]
+test = true
+
+[[example]]
 name = "mlx_mac_baseline"
 required-features = ["metal"]
 

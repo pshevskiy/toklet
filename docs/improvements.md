@@ -168,6 +168,40 @@ Granite requires 8,192 columns. No full payload, model inference, quality, physi
 fit, request performance or managed adoption is qualified by config admission.
 [Conversion constraints](../artifacts/granite-source-planning-2026-11-12/conversion-reuse-inspection-1.json).
 
+Granite conversion `eb14db30` is pushed and both exact-head CI workflows pass.
+Both complete tokenizer files authenticate; only the modified source's explicit
+BatchLongest left-padding declaration differs from stock. All other tokenizer
+fields match, with 100,352 IDs and 96 added-token IDs also in BPE vocabulary.
+The first counting assumption fails and remains retained; corrected bounded
+inspection passes. Five cold planning cases preserve the existing 512-position
+Metal cap and admit the 128/128 request on Apple M1 Pro. The actual raw CLI smoke
+passes with all 128 outputs, 255 committed positions and one pending token at
+2,899,741,912 bytes observed charge within 6 GiB. Source/binary/input hashes close
+unchanged and owned cleanup is empty. Debug clocks do not qualify performance;
+full numerical, quality, codec, all-workload fit and adoption gates remain open.
+[Codec preparation](../artifacts/granite-codec-2026-11-12/codec-inspection-2.json),
+[cold planning](../artifacts/granite-runtime-plan-2026-11-12/runtime-plan-1.json),
+[raw native smoke](../artifacts/granite-native-smoke-2026-11-12/native-smoke-1.json).
+
+Granite's complete graph diagnostic rejects the current affine4/8 Metal route:
+212/20,268,711,936 profile-coordinate comparisons fail unchanged per-array gates.
+All 30 native runs/304 observed state checks pass, with exact schedule, reset and
+causal-prefix bytes; the observed peak is 5.03 GB under 6 GiB. Independent
+reference capture passes within 512 MiB. The first failure is reproduced from
+native Q/K/V, pointing upstream; other failures remain unlocalized. Required
+fmt/strict CPU+Metal Clippy, 737 CPU/887 Metal tests, 58 portable controls per mode,
+1,120 fixture comparisons, the GPU fixture and admitted numeric controls pass.
+Failed reference/launcher attempts are retained. Tooling retention and the
+explicit non-adoption decision have Astra follow-up approval, with no remaining
+findings. Its two required-
+evidence findings are fixed: deletion controls and fresh genuine replay verify
+all 304 checks/10 resets/40 receipts with byte-identical numerical records. The
+genuine capture remains numerically rejected. Quality, performance, overhead
+and managed adoption remain unqualified.
+[Scope](granite-graph.md),
+[decision](../benchmarks/results/2026-11-13-granite-graph-v1.json),
+[complete comparison](../artifacts/granite-graph-2026-11-12/offline-comparison-1/manifest.json).
+
 Ministral source preparation records the existing configuration's independent
 3,072 hidden/4,096 query widths and the selected adapter's unsupported text tag.
 Its source combines YaRN with absolute-position query scaling cast before SDPA;

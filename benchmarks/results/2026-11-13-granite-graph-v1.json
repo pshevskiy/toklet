@@ -1,0 +1,350 @@
+{
+  "format": "toklet-granite-full-graph-decision-v1",
+  "date": "2026-11-13",
+  "review_status": "approved",
+  "decision": "do_not_adopt_current_mixed_affine4_8_Metal_route",
+  "tooling_retention": "retained",
+  "model": {
+    "repository": "saidutta69/granite-4.2-3b-heretic",
+    "revision": "db83ced6c830ad52b32880d026a4f8e3f888c316",
+    "converted_data_sha256": "02f938b9f2a82d61c8609e19d2d65fcd7b32e52cc5b1cc7834b9843b9c4eec1e",
+    "converted_config_sha256": "889ff79da95a5526811498cd47cee14c92a9d494fbd5dca70a3beb1c71b3df9b",
+    "conversion_commit": "eb14db3026a5574131bb9ba32ac5058518a5622e"
+  },
+  "protocol_sha256": "e4dec7ec0ca7e08e87bfbf538a71fca703d5553484e5a0e2eddc250418572c1d",
+  "hardware": "Apple M1 Pro",
+  "base_revision": "eb14db3026a5574131bb9ba32ac5058518a5622e",
+  "native_binary": {
+    "path": "/Users/coloner/work/rust/toklet/artifacts/granite-graph-2026-11-12/target-1/release/examples/granite_graph_capture",
+    "bytes": 2364000,
+    "sha256": "2bf88b7e862f489ebb8d0724d32c547c21e4b715b9b449ce400c18f3289ba293"
+  },
+  "source_inputs": {
+    "Cargo.toml": {
+      "bytes": 4516,
+      "sha256": "d5a978eb0f514099e1d04dee5c8fa375a6ecbac303a2588d4e04a32814302162"
+    },
+    "examples/granite_graph_capture.rs": {
+      "bytes": 37768,
+      "sha256": "ae9e1c466accccc1988aebe1a0b64c51a59ba3dbd346954475c386c8966087a8"
+    },
+    "examples/support/granite_graph_io.rs": {
+      "bytes": 17765,
+      "sha256": "b8939ed65d4c2fa88477d2dedef46eedc745846b2d57e79ad372bcccc8efe36a"
+    },
+    "tools/reference/granite_reference_weights.py": {
+      "bytes": 8143,
+      "sha256": "ab3a3d6b328e3bb5af3252ac9c0aa875432bd215fc0879c6901c4edb98575008"
+    },
+    "tools/reference/test_granite_reference_weights.py": {
+      "bytes": 9513,
+      "sha256": "62698f3a9aaac2160504a72df9eb19a399b8bd504b48d4a06edebd8987fd04ec"
+    },
+    "tools/reference/granite_reference_graph.py": {
+      "bytes": 12079,
+      "sha256": "7a910f158e1879f2072c806ffb93609025f00b642aa0d39dcdb5c9598e3a792e"
+    },
+    "tools/reference/test_granite_reference_graph.py": {
+      "bytes": 4889,
+      "sha256": "db4cd1abbf58b7a1f1ead7eedf9ba2b58ef06da8c59bad12d55e7b7dcf744975"
+    },
+    "tools/reference/granite_reference_probe.py": {
+      "bytes": 16759,
+      "sha256": "b6196d7e47c46c0e36beaf4902faf542f23c66750c80657912f060bf9bf7bb3c"
+    },
+    "tools/reference/check_granite_reference.py": {
+      "bytes": 46505,
+      "sha256": "f595f10f9a5fff9eb7b8ccd25eb2a8377d6ce7a40543e046d71f81e5d117ed92"
+    },
+    "tools/reference/test_check_granite_reference.py": {
+      "bytes": 39517,
+      "sha256": "519d28e8b040deb063a4d0a3ab4da3eaaf57aa1d89672e03aa2ad0df9f793025"
+    }
+  },
+  "checks": {
+    "fmt": true,
+    "strict_CPU_Metal_Clippy": true,
+    "CPU": {
+      "passed": 737,
+      "failed": 0,
+      "ignored": 52
+    },
+    "Metal": {
+      "passed": 887,
+      "failed": 0,
+      "ignored": 340
+    },
+    "portable_per_mode": 58,
+    "updated_checker_portable_per_mode": 34,
+    "admitted_checker_numeric_arrays_per_mode": 8,
+    "frozen_fixture_profile_comparisons": 1120,
+    "explicit_Granite_GPU_fixture": true,
+    "native_helper_tests": 4,
+    "numerical_core_and_fixture_diff_empty": true
+  },
+  "reference_capture": {
+    "passed": true,
+    "profiles": 2,
+    "cases": 20,
+    "arrays": 12860,
+    "saved_array_bytes": 10558242816,
+    "guard_peak_bytes": 409568672,
+    "elapsed_seconds": 593.9014383329777,
+    "allocator_policy": {
+      "MallocLargeCache": "0",
+      "MallocMediumZone": "0"
+    },
+    "engine_allocator_changed": false
+  },
+  "native_capture": {
+    "passed": true,
+    "cases": 30,
+    "primary_arrays": 19290,
+    "reset_arrays": 6430,
+    "observed_required_state_checks": 304,
+    "failed_state_checks": 0,
+    "source_unchanged": true,
+    "guard_peak_bytes": 5031203544,
+    "elapsed_seconds": 1515.7970747080399,
+    "engine_limit_bytes": 6442450944,
+    "ordinary_context_limit": 512,
+    "fully_occupied_contexts_are_prefill_diagnostics_not_128_output_requests": true
+  },
+  "numerical_comparison": {
+    "completed": true,
+    "passed": false,
+    "profile_coordinate_comparisons": 20268711936,
+    "failed_profile_coordinates": 212,
+    "primary_failed_profile_coordinates": 159,
+    "reset_failed_profile_coordinates": 53,
+    "distinct_case_stage_profile_coordinates": 53,
+    "distinct_case_stage_coordinates": 40,
+    "nonfinite_native_values": 0,
+    "exact_schedule_mismatching_bytes": 0,
+    "reset_mismatching_bytes": 0,
+    "causal_prefix_mismatching_bytes": 0,
+    "causal_prefix_arrays": 643,
+    "unavailable_required_native_state_checks": 0,
+    "native_receipt_failures": [],
+    "per_exact_array_gate": {
+      "atol": "max(1e-4, 2*max_abs(main-wide))",
+      "rtol": 0.001,
+      "against_both_profiles": true,
+      "unchanged": true
+    },
+    "guard_peak_bytes": 170442752,
+    "required_native_state_checks": 304,
+    "final_logit_receipts_checked": 40,
+    "final_logit_receipts_verified": 40,
+    "strict_replay_completed": true,
+    "per_array_records_unchanged_after_Astra_fixes": true
+  },
+  "first_failure": {
+    "case": "short",
+    "stage": "layers.4.attention_context",
+    "coordinate": [
+      1,
+      1704
+    ],
+    "native": 5.31640625,
+    "main": 5.296875,
+    "wide": 5.296875,
+    "absolute_error": 0.01953125,
+    "limit": 0.017015625,
+    "diagnostic_inference": "Both profiles reproduce this coordinate from saved native Q/K/V; upstream activation differences explain this first failure. Other failures are not localized by this diagnostic.",
+    "diagnostic_native_inputs_cannot_qualify_primary_graph": true
+  },
+  "limitations": [
+    "Current numerical gate rejects; no model adoption or full-model graph qualification",
+    "Cancellation/device-failure injection unavailable in this worker; existing tiny fixtures have their separate scope",
+    "Native/ref command clocks include diagnostic export/state replay and are not performance comparisons",
+    "Original 10000-target/100-task stock-to-modified and modified-to-native quality gates remain mandatory for any future adoption",
+    "No summary-overhead, all-workload fit, managed application or iPhone qualification",
+    "Sampled owned memory observations include 32 MiB reserve; not a continuous allocation cap"
+  ],
+  "graph_qualified": false,
+  "quality_qualified": false,
+  "performance_qualified": false,
+  "observer_overhead_qualified": false,
+  "managed_adoption_qualified": false,
+  "whole_goal_complete": false,
+  "evidence": {
+    "prospective-graph-protocol-1.json": {
+      "path": "artifacts/granite-graph-2026-11-12/prospective-graph-protocol-1.json",
+      "bytes": 21482,
+      "sha256": "e4dec7ec0ca7e08e87bfbf538a71fca703d5553484e5a0e2eddc250418572c1d"
+    },
+    "required-checks-closure-1.json": {
+      "path": "artifacts/granite-graph-2026-11-12/required-checks-closure-1.json",
+      "bytes": 3093,
+      "sha256": "8cd4a29351dbb97b826d7adac4cefa33e7d2fef3b8e5fb9e6757e7380b56f504"
+    },
+    "reference-capture-4/manifest.json": {
+      "path": "artifacts/granite-graph-2026-11-12/reference-capture-4/manifest.json",
+      "bytes": 3788376,
+      "sha256": "0e7689ea27e68aa448272cd1d926b721e1e50c7ba6371f56b8962e5bf7e4e0d5"
+    },
+    "reference-capture-command-4/result.json": {
+      "path": "artifacts/granite-graph-2026-11-12/reference-capture-command-4/result.json",
+      "bytes": 988,
+      "sha256": "08c2b9e88fa21977e47f8fe03173c12a8a3ea9273dbdb5bfc14f1a9f1d8768fa"
+    },
+    "native-capture-1/manifest.json": {
+      "path": "artifacts/granite-graph-2026-11-12/native-capture-1/manifest.json",
+      "bytes": 9577178,
+      "sha256": "f78bcf9628cf8c5aca010d275a05d09a62403e20d4b383228805efa10a1dde4a"
+    },
+    "native-capture-1.json": {
+      "path": "artifacts/granite-graph-2026-11-12/native-capture-1.json",
+      "bytes": 1491624,
+      "sha256": "201fe1d061c8d658d1780df9d7155812924402927a1428e38a88f6734b9b23f9"
+    },
+    "native-capture-command-1/result.json": {
+      "path": "artifacts/granite-graph-2026-11-12/native-capture-command-1/result.json",
+      "bytes": 992,
+      "sha256": "3fb84ff54264e5810618ce01600e9c3a4ba8711f7638a2f31782bd339a31c058"
+    },
+    "offline-comparison-1/manifest.json": {
+      "path": "artifacts/granite-graph-2026-11-12/offline-comparison-1/manifest.json",
+      "bytes": 186151,
+      "sha256": "6e3a03dd70321108d0ac703616c64c5e71644f49de07072b0d65672800f59d7f"
+    },
+    "offline-comparison-1/arrays.jsonl": {
+      "path": "artifacts/granite-graph-2026-11-12/offline-comparison-1/arrays.jsonl",
+      "bytes": 15187058,
+      "sha256": "f8f24d91f7b6974ebcaf0e7e30f235a471ac698c2eec57bbdaa15421f5a67ccd"
+    },
+    "offline-comparison-1.json": {
+      "path": "artifacts/granite-graph-2026-11-12/offline-comparison-1.json",
+      "bytes": 1589,
+      "sha256": "b2810c9aaaaa3c3bb431fea54844059d63f4b8bc207c39a473f08e0784f2f177"
+    },
+    "offline-comparison-command-1/result.json": {
+      "path": "artifacts/granite-graph-2026-11-12/offline-comparison-command-1/result.json",
+      "bytes": 1031,
+      "sha256": "ef01bb5c288e13c8fb7116560db3f8444caae8acc4de9bc80d58dce6528f781a"
+    },
+    "numerical-rejection-details-1.json": {
+      "path": "artifacts/granite-graph-2026-11-12/numerical-rejection-details-1.json",
+      "bytes": 130283,
+      "sha256": "37fc5103b44cbbd53df6b599aef239e77f580211252536394b8a86cf256c79b4"
+    },
+    "attention-localization-result-1.json": {
+      "path": "artifacts/granite-graph-2026-11-12/attention-localization-result-1.json",
+      "bytes": 131465,
+      "sha256": "3d9084c4fef1654fc975645cef2bced9bbb5ecfdcfa1bc24c4c91177006765b2"
+    },
+    "attention-localization-checks-1.json": {
+      "path": "artifacts/granite-graph-2026-11-12/attention-localization-checks-1.json",
+      "bytes": 2460,
+      "sha256": "f7b65b5ce57af747a272b87a813be0c2f8c63513ee030ebb2194e042ea1fa4c3"
+    },
+    "allocator-diagnostic-closure-1.json": {
+      "path": "artifacts/granite-graph-2026-11-12/allocator-diagnostic-closure-1.json",
+      "bytes": 5630,
+      "sha256": "064791b3ce93d94dbfcf4fbba92dba236f7e012e055d7b70ee13aa495940acba"
+    },
+    "allocator-policy-controls-2.json": {
+      "path": "artifacts/granite-graph-2026-11-12/allocator-policy-controls-2.json",
+      "bytes": 315,
+      "sha256": "3b440d1a86a16c4fafe40d580c6f5bb5850e644bac9a902e65d653cc03793940"
+    },
+    "original-profile-byte-comparison-1.json": {
+      "path": "artifacts/granite-graph-2026-11-12/original-profile-byte-comparison-1.json",
+      "bytes": 60692,
+      "sha256": "8d4fdfcc23e4313d7bd0480b4546f83420be38d735d7dbf44a41de21c4bb230f"
+    },
+    "rust-launcher-failure-1.json": {
+      "path": "artifacts/granite-graph-2026-11-12/rust-launcher-failure-1.json",
+      "bytes": 560,
+      "sha256": "8ac40e3e220d51c251eaf52d8e0dd7fabee65044de4024f9d08f25c116477240"
+    },
+    "rust-launcher-cleanup-1.json": {
+      "path": "artifacts/granite-graph-2026-11-12/rust-launcher-cleanup-1.json",
+      "bytes": 541,
+      "sha256": "cbe5a53cc26999b264f11a34e40977bd9e39423473f6d87961d20960158db657"
+    },
+    "required-checks-closure-2.json": {
+      "path": "artifacts/granite-graph-2026-11-12/required-checks-closure-2.json",
+      "bytes": 2815,
+      "sha256": "ff87dd1a527e3b515cfab54ccb4b1b057ba8cacd566ec3d1c687a671a389560e"
+    },
+    "checker-numeric-checks-2.json": {
+      "path": "artifacts/granite-graph-2026-11-12/checker-numeric-checks-2.json",
+      "bytes": 3641,
+      "sha256": "9608f07f499fcfc8d961a5b73244baaa782dc31315960aee50e4fc83430c5bc5"
+    },
+    "offline-comparison-2/manifest.json": {
+      "path": "artifacts/granite-graph-2026-11-12/offline-comparison-2/manifest.json",
+      "bytes": 186312,
+      "sha256": "2162e46c098740a3513234285d76a0b7c308d80d7d49d524306c7d4f12dd0924"
+    },
+    "offline-comparison-2/arrays.jsonl": {
+      "path": "artifacts/granite-graph-2026-11-12/offline-comparison-2/arrays.jsonl",
+      "bytes": 15187058,
+      "sha256": "f8f24d91f7b6974ebcaf0e7e30f235a471ac698c2eec57bbdaa15421f5a67ccd"
+    },
+    "offline-comparison-2.json": {
+      "path": "artifacts/granite-graph-2026-11-12/offline-comparison-2.json",
+      "bytes": 1589,
+      "sha256": "732f2caadc63170b7876976c994597f508aeef7aaa23397f612cc20b98c77bd6"
+    },
+    "offline-comparison-command-2/result.json": {
+      "path": "artifacts/granite-graph-2026-11-12/offline-comparison-command-2/result.json",
+      "bytes": 1031,
+      "sha256": "4ee0033827b7dc3e9c2cb1883db407c9b3afbd7946137519e35ce50aacd8492a"
+    },
+    "strict-replay-closure-2.json": {
+      "path": "artifacts/granite-graph-2026-11-12/strict-replay-closure-2.json",
+      "bytes": 937,
+      "sha256": "bee777405fe77af5c55ee99d900aba9a6fad660095ce0e4ff15424fb824be2df"
+    },
+    "astra-review-1.json": {
+      "path": "artifacts/granite-graph-2026-11-12/astra-review-1.json",
+      "bytes": 1434,
+      "sha256": "18d0b1e6f3f2f96fe1e2080bc629608d2b52a5026738381b039606cd75309a76"
+    },
+    "astra-review-2.json": {
+      "path": "artifacts/granite-graph-2026-11-12/astra-review-2.json",
+      "bytes": 937,
+      "sha256": "e10ae17ebdb890e75fe169dd857d2367982e06d69bc9420d95a54c385c46de7b"
+    }
+  },
+  "Astra_findings": {
+    "initial_review": "artifacts/granite-graph-2026-11-12/astra-review-1.json",
+    "required_evidence_findings": 2,
+    "fixes": "Require304 applicable state checks,10complete resets and40typed/raw-verified final-row receipts; fail closed for missing evidence",
+    "portable_deletions": {
+      "state_checks": 304,
+      "receipt_fields": 120,
+      "missing_resets": 10,
+      "forbidden_repeat_resets": 20
+    },
+    "fresh_replay": "artifacts/granite-graph-2026-11-12/strict-replay-closure-2.json",
+    "followup_pending": false
+  },
+  "Astra_approval": {
+    "status": "approved",
+    "reviewer": "gpt-6-astra",
+    "agent": "/root/astra_granite_graph_review",
+    "diff_sha256": "1ccf2ab238d590bfbba791eeddc12995c33845a911fc55c3a99c5c5cb5d8fa36",
+    "published_inputs": 15,
+    "private_inputs": 21,
+    "metadata_inputs": 41,
+    "findings_resolved": 2,
+    "remaining_actionable_findings": [],
+    "scope": "Scoped tooling and numerical-rejection retention and commit; no graph, quality, performance, overhead, mobile or adoption qualification",
+    "independent_portable_checker_tests_per_mode": 34,
+    "strict_replay_verified": {
+      "required_checks": 304,
+      "reset_arrays": 6430,
+      "final_row_receipts": 40,
+      "records_byte_identical": true,
+      "failed_profile_coordinates": 212,
+      "profile_coordinate_comparisons": 20268711936
+    },
+    "allowed_after_approval": "Administrative review/status/commit/CI changes only; code, samples or gates require renewed review",
+    "whole_goal_complete": false
+  },
+  "publication": "artifacts/granite-graph-2026-11-12/publication-checks.json"
+}
