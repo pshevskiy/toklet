@@ -50,8 +50,7 @@ LFM3 CPU code and portable measurements are published as `612771d7` on
 `codex/console-engine-comparison`.
 [Publication / CI](artifacts/lfm3-finite-guard-2026-11-11/finite-publication-checks.json).
 
-Current/next task: **qualify Granite's source/config dialect and bounded
-uncensored MLX conversion**. LFM3 CPU qualification and finite-widening retention
+Current/next task: **qualify Granite's bounded uncensored MLX conversion**. LFM3 CPU qualification and finite-widening retention
 pass; managed application adoption remains open. Preserve the 6 GiB ceiling,
 original numerical/quality gates and prior model decisions. Engine/CLI work
 leads; interactive screen capture and iPhone runtime remain deferred.
@@ -92,14 +91,25 @@ leads; interactive screen capture and iPhone runtime remain deferred.
   [complete qualification](artifacts/lfm3-finite-guard-2026-11-11/finite-qualification-closure-1.json),
   [review/commit](artifacts/lfm3-finite-guard-2026-11-11/finite-publication-checks.json).
 
-Next source work: qualify Granite's config dialect and bounded uncensored MLX
-conversion. Read-only inspection confirms existing scalar support and installed
-MLX per-matrix 8-bit defaults; payload, numerical, quality, physical-fit and
-request gates remain open. Shared affine overrides exist, but the bounded
-converter needs separately qualified wider rows and explicit 4/8-bit recipes.
-No additional model or compiler was launched.
-[Source inspection](artifacts/granite-source-planning-2026-11-12/static-source-inspection-1.json).
-[Conversion reuse](artifacts/granite-source-planning-2026-11-12/conversion-reuse-inspection-1.json).
+- [x] S1.G strict Granite configuration: canonical default RoPE and identical
+  supported dtype aliases preserve existing scales, shapes and context limits.
+  Required fmt/strict CPU+Metal Clippy, 737 CPU/883 Metal tests, the explicit GPU
+  fixture and 44 CLI cases pass. Three pinned configs and 936 independent CPU
+  arrays are checked; six failed attempts stay retained. The exec-aware private
+  monitor passes eight controls in both Python modes and an owned live test;
+  historical charges remain conservative. Compiler-only cap is 3 GiB, engine
+  ceiling 6 GiB and audit/setup cap 512 MiB. Astra approves, no findings.
+  [Scope](docs/granite-config.md),
+  [portable checks](benchmarks/results/2026-11-12-granite-config-v1.json),
+  [full qualification](artifacts/granite-config-2026-11-12/qualification-1.json),
+  [review/commit](artifacts/granite-config-2026-11-12/publication-checks.json).
+
+Next: independently qualify bounded mixed affine4/8 conversion, then payload,
+numerical/quality, physical-fit and request/overhead gates within 6 GiB. The
+header-derived proposal has 201 affine4/81 affine8 matrices plus 81 BF16 norms;
+2,737,853,440 planned body bytes do not prove physical fit or quality.
+[Recipe proposal](artifacts/granite-config-2026-11-12/mixed-affine-recipe-proposal-1.json),
+[conversion constraints](artifacts/granite-source-planning-2026-11-12/conversion-reuse-inspection-1.json).
 
 Subsequent Ministral source inspection records 4,096 query width, YaRN and
 absolute-position query scaling at the 16,384-token boundary. Its pinned Q4 index
@@ -162,10 +172,11 @@ model, context, device or adoption qualification.
   diff, invariants and results before commit. Keep [improvements](docs/improvements.md)
   current. Documentation-only work needs link/content and whitespace checks.
 - Push reviewed milestone commits to `origin/codex/console-engine-comparison`,
-  as authorized on 11 November. Reviewed tip `7524640e` publishes the external
-  request observations; push and remote-tip verification pass. Working changes and the pending
-  engine experiment remain uncommitted.
-  [Latest recorded push verification](artifacts/lfm3-engine-comparison-2026-11-11/comparison-publication-push-1.json).
+  as authorized on 11 November. Reviewed tip `af100419` publishes the finite
+  LFM3 retention metadata; exact-head push and both CI jobs pass. Granite config
+  checks and Astra review pass; publication is recorded in its own receipt.
+  Original UI/workflow work is preserved.
+  [Latest recorded push verification](artifacts/lfm3-finite-guard-2026-11-11/finite-publication-checks.json).
 - Read [PLAN.md](PLAN.md) for binding criteria, the
   [design rationale](apple_llm_performance_plan.md) when relevant, and targeted
   source before assuming a feature exists. Read archives only on demand.

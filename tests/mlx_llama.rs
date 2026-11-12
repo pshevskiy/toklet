@@ -1135,80 +1135,96 @@ fn granite_scalar_graph_and_cache_match_independent_source() {
     );
     let f: Value = serde_json::from_slice(raw).unwrap();
     for variant in ["tied", "untied"] {
-        let a = CopyArtifact::new(variant);
-        let mut config = f["config_templates"][variant].clone();
-        config["max_position_embeddings"] = json!(512);
-        fs::write(
-            a.0.join("config.json"),
-            serde_json::to_vec(&config).unwrap(),
-        )
-        .unwrap();
-        let source = Source::open_dense(
-            &a.0,
-            LoadOptions {
-                context_limit: 512,
-                ..options()
-            },
-        )
-        .unwrap();
-        assert_eq!(source.architecture(), Architecture::Granite);
-        assert_eq!(source.dense_scales().attention, Some(0.015625));
-        assert_eq!(source.dense_scales().embedding, 12.);
-        let loaded = reference::load_dense(
-            &a.0,
-            LoadOptions {
-                context_limit: 512,
-                ..options()
-            },
-        )
-        .unwrap();
-        for case in f["cases"]
-            .as_array()
-            .unwrap()
-            .iter()
-            .filter(|c| c["variant"] == variant)
-        {
-            let ids = tokens(&case["tokens"]);
-            let offset = case["position_offset"].as_u64().unwrap() as usize;
-            let expected = |name: &str| {
-                case["arrays"][name]["cpu_bits"]
-                    .as_array()
-                    .unwrap()
-                    .iter()
-                    .map(|v| f32::from_bits(v.as_u64().unwrap() as u32))
-                    .collect::<Vec<_>>()
-            };
-            let mut scratch = loaded.model.scratch(ids.len()).unwrap();
-            let trace = loaded
-                .model
-                .forward_diagnostic(&ids, offset, &mut scratch)
-                .unwrap();
-            assert_eq!(values(&trace).len(), 39);
-            for (name, actual) in values(&trace) {
-                close(actual, &expected(&name));
+        for dialect in ["legacy", "canonical", "paired"] {
+            let a = CopyArtifact::new(variant);
+            let mut config = f["config_templates"][variant].clone();
+            config["max_position_embeddings"] = json!(512);
+            if dialect != "legacy" {
+                config["rope_parameters"] =
+                    json!({"rope_type":"default", "rope_theta":config["rope_theta"]});
+                config["dtype"] = config["torch_dtype"].clone();
+                if dialect == "canonical" {
+                    config.as_object_mut().unwrap().remove("rope_theta");
+                    config.as_object_mut().unwrap().remove("torch_dtype");
+                }
             }
-            let logits = expected("logits");
-            for chunk in [1, 3] {
-                let mut s = Session::new(
-                    &loaded.model,
-                    session::Options {
-                        capacity: 512 - offset,
-                        prefill_chunk_size: chunk,
-                        position_offset: offset,
-                        memory_limit_bytes: 128 * 1024 * 1024,
-                    },
-                )
-                .unwrap();
-                s.append(&ids[..2]).unwrap();
-                s.evaluate().unwrap();
-                s.append(&ids[2..]).unwrap();
-                s.evaluate().unwrap();
-                close(s.logits().unwrap(), &logits[logits.len() - 64..]);
-                s.reset();
-                s.set_tokens(&ids).unwrap();
-                s.evaluate().unwrap();
-                close(s.logits().unwrap(), &logits[logits.len() - 64..]);
+            if dialect == "paired" {
+                config["quantization_config"] = config["quantization"].clone();
             }
+            fs::write(
+                a.0.join("config.json"),
+                serde_json::to_vec(&config).unwrap(),
+            )
+            .unwrap();
+            let before = fs::read(a.0.join("config.json")).unwrap();
+            let source = Source::open_dense(
+                &a.0,
+                LoadOptions {
+                    context_limit: 512,
+                    ..options()
+                },
+            )
+            .unwrap();
+            assert_eq!(source.architecture(), Architecture::Granite);
+            assert_eq!(source.dense_scales().attention, Some(0.015625));
+            assert_eq!(source.dense_scales().embedding, 12.);
+            let loaded = reference::load_dense(
+                &a.0,
+                LoadOptions {
+                    context_limit: 512,
+                    ..options()
+                },
+            )
+            .unwrap();
+            for case in f["cases"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .filter(|c| c["variant"] == variant)
+            {
+                let ids = tokens(&case["tokens"]);
+                let offset = case["position_offset"].as_u64().unwrap() as usize;
+                let expected = |name: &str| {
+                    case["arrays"][name]["cpu_bits"]
+                        .as_array()
+                        .unwrap()
+                        .iter()
+                        .map(|v| f32::from_bits(v.as_u64().unwrap() as u32))
+                        .collect::<Vec<_>>()
+                };
+                let mut scratch = loaded.model.scratch(ids.len()).unwrap();
+                let trace = loaded
+                    .model
+                    .forward_diagnostic(&ids, offset, &mut scratch)
+                    .unwrap();
+                assert_eq!(values(&trace).len(), 39);
+                for (name, actual) in values(&trace) {
+                    close(actual, &expected(&name));
+                }
+                let logits = expected("logits");
+                for chunk in [1, 3] {
+                    let mut s = Session::new(
+                        &loaded.model,
+                        session::Options {
+                            capacity: 512 - offset,
+                            prefill_chunk_size: chunk,
+                            position_offset: offset,
+                            memory_limit_bytes: 128 * 1024 * 1024,
+                        },
+                    )
+                    .unwrap();
+                    s.append(&ids[..2]).unwrap();
+                    s.evaluate().unwrap();
+                    s.append(&ids[2..]).unwrap();
+                    s.evaluate().unwrap();
+                    close(s.logits().unwrap(), &logits[logits.len() - 64..]);
+                    s.reset();
+                    s.set_tokens(&ids).unwrap();
+                    s.evaluate().unwrap();
+                    close(s.logits().unwrap(), &logits[logits.len() - 64..]);
+                }
+            }
+            assert_eq!(fs::read(a.0.join("config.json")).unwrap(), before);
         }
     }
 }
@@ -1262,4 +1278,131 @@ fn granite_requires_valid_explicit_scales() {
         f["coefficient_witness"]["expected"],
         f["coefficient_witness"]["wrong_fp32_coefficient"]
     );
+}
+
+#[test]
+fn granite_export_rejects_ambiguous_rotary_and_dtype_declarations() {
+    let fixture: Value = serde_json::from_slice(include_bytes!(
+        "fixtures/granite-half-graph-v1/fixture.json"
+    ))
+    .unwrap();
+    let base = fixture["config_templates"]["tied"].clone();
+    let check = |config: &Value, message: Option<&str>| {
+        let a = CopyArtifact::new("tied");
+        let raw = serde_json::to_vec(config).unwrap();
+        fs::write(a.0.join("config.json"), &raw).unwrap();
+        let error = Source::open_dense(
+            &a.0,
+            LoadOptions {
+                context_limit: 512,
+                ..options()
+            },
+        )
+        .err()
+        .expect("ambiguous declaration must fail before tensor loading");
+        if let Some(message) = message {
+            assert!(error.to_string().contains(message), "{error}");
+        }
+        assert_eq!(fs::read(a.0.join("config.json")).unwrap(), raw);
+    };
+    let theta = base["rope_theta"].clone();
+    for parameters in [
+        Value::Null,
+        json!(true),
+        json!([]),
+        json!({}),
+        json!({"rope_type":"default"}),
+        json!({"rope_theta":theta}),
+        json!({"rope_type":"llama3", "rope_theta":theta}),
+        json!({"rope_type":"yarn", "rope_theta":theta}),
+        json!({"rope_type":"default", "rope_theta":"10000"}),
+        json!({"rope_type":"default", "rope_theta":true}),
+        json!({"rope_type":"default", "rope_theta":null}),
+        json!({"rope_type":"default", "rope_theta":theta, "factor":1}),
+        json!({"rope_type":"default", "rope_theta":theta, "partial_rotary_factor":1}),
+        json!({"rope_type":"default", "rope_theta":10001}),
+    ] {
+        let mut c = base.clone();
+        c["rope_parameters"] = parameters;
+        check(&c, None);
+    }
+    for declaration in ["10000.0000000000000000000001", "1e4", "10000"] {
+        let mut c = base.clone();
+        c["rope_parameters"] = json!({"rope_type":"default", "rope_theta":serde_json::from_str::<Value>(declaration).unwrap()});
+        check(&c, Some("must match exactly"));
+    }
+    for declaration in ["0", "-1", "1e9999", "1e-9999"] {
+        let mut c = base.clone();
+        c.as_object_mut().unwrap().remove("rope_theta");
+        c["rope_parameters"] = json!({"rope_type":"default", "rope_theta":serde_json::from_str::<Value>(declaration).unwrap()});
+        check(&c, None);
+    }
+    let mut c = base.clone();
+    c["rope_parameters"] = json!({"rope_type":"default", "rope_theta":theta});
+    c["rope_scaling"] = llama3_scaling();
+    check(&c, Some("cannot accompany"));
+    c.as_object_mut().unwrap().remove("rope_parameters");
+    check(&c, Some("scaled RoPE is implemented only"));
+    for (dtype, torch_dtype) in [
+        (json!("float16"), json!("float32")),
+        (Value::Null, Value::Null),
+        (json!(true), json!(true)),
+        (json!(16), json!(16)),
+        (json!({}), json!({})),
+        (json!([]), json!([])),
+        (json!("fp16"), json!("fp16")),
+        (json!("bfloat16"), Value::Null),
+        (Value::Null, json!("bfloat16")),
+    ] {
+        let mut c = base.clone();
+        c["dtype"] = dtype;
+        c["torch_dtype"] = torch_dtype;
+        check(&c, Some("identical supported strings"));
+    }
+    let mut c = base;
+    c["dtype"] = c["torch_dtype"].clone();
+    c["model_type"] = json!("llama");
+    c["architectures"] = json!(["LlamaForCausalLM"]);
+    check(&c, Some("duplicate field"));
+}
+
+#[test]
+fn granite_export_duplicate_json_keys_fail_at_the_public_source_boundary() {
+    let fixture: Value = serde_json::from_slice(include_bytes!(
+        "fixtures/granite-half-graph-v1/fixture.json"
+    ))
+    .unwrap();
+    let mut config = fixture["config_templates"]["tied"].clone();
+    config["rope_parameters"] = json!({"rope_type":"default", "rope_theta":config["rope_theta"]});
+    config["dtype"] = config["torch_dtype"].clone();
+    let raw = serde_json::to_string(&config).unwrap();
+    for (needle, replacement) in [
+        (
+            "\"rope_type\":\"default\"",
+            "\"rope_type\":\"default\",\"rope_type\":\"default\"",
+        ),
+        (
+            "\"rope_theta\":10000.0",
+            "\"rope_theta\":10000.0,\"rope_theta\":10000.0",
+        ),
+        (
+            "\"dtype\":\"float32\"",
+            "\"dtype\":\"float32\",\"dtype\":\"float32\"",
+        ),
+    ] {
+        assert!(raw.contains(needle));
+        let a = CopyArtifact::new("tied");
+        let duplicate = raw.replacen(needle, replacement, 1);
+        fs::write(a.0.join("config.json"), duplicate.as_bytes()).unwrap();
+        let error = Source::open_dense(
+            &a.0,
+            LoadOptions {
+                context_limit: 512,
+                ..options()
+            },
+        )
+        .err()
+        .unwrap();
+        assert!(error.to_string().contains("duplicate"), "{error}");
+    }
 }

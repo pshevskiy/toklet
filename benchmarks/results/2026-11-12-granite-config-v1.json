@@ -1,0 +1,495 @@
+{
+  "format": "toklet.granite.config-qualification.v1",
+  "observed_at_utc": "2026-11-12T15:47:40.484180+00:00",
+  "scope": "Strict Granite source configuration and tiny frozen CPU/Metal graph/CLI admission only",
+  "base_commit": "af100419d98e8749fd8d9b99c1ed1e5168a413f6",
+  "implementation_inputs": {
+    "src/mlx/dense.rs": "a35b63aa8806b527dc7019b1b7f9f66387661efd454d33490142582a0cbf8bcf",
+    "src/mlx/dense/granite.rs": "7c5c6efc70d425e88fb956e69f34026408e127ba9f96ca11fda8f889e2bfece2",
+    "tests/mlx_llama.rs": "39132b5bcb92e1be61e2e6b6242851b88448da35dbd7deeaacef1a2c5825fa1c",
+    "tests/mlx_llama_metal.rs": "7d51c6b78da14e547f6ea2c2fcefc3121f2a94200733c4f7c3ad7d8626b7c9ae",
+    "tests/fixtures/granite-config-v1/manifest.json": "d49bf68a614a1d4b66bbd03c4221da26ba7fe73e1ad6b885edf70c67f25ee1b5",
+    "tests/fixtures/granite-config-v1/granite_original.json": "e4f44b9c6924a283f1d1d36057a89f1a04404bf1561fc2c0b64cf98180e72915",
+    "tests/fixtures/granite-config-v1/granite_modified.json": "58997398d70456e6ea011c7d4b08321d10720361aaf2df5df3390f5e82242db4",
+    "tests/fixtures/granite-config-v1/granite_q4.json": "bfcb1a01587dae223af89f07b960f0b456ef9fe9576167a126aa807941b213d7"
+  },
+  "cargo_lock_sha256": "405a9b18beaacf701966f1832bf6724c0a3d4b8567ca3c5005855778d8dedb26",
+  "host": {
+    "system": "Darwin",
+    "machine": "arm64",
+    "release": "25.6.0"
+  },
+  "initial_check_build_environment": {
+    "CARGO_BUILD_JOBS": "1",
+    "CARGO_PROFILE_DEV_DEBUG": "0",
+    "CARGO_PROFILE_TEST_DEBUG": "0",
+    "debug_assertions_unchanged": true,
+    "overflow_checks_unchanged": true,
+    "optimization_level_unchanged": true
+  },
+  "checks": [
+    {
+      "build_settings": "initial targeted build or nonnumerical setup; see command receipt",
+      "label": "fmt",
+      "command": [
+        "/opt/homebrew/bin/cargo",
+        "fmt",
+        "--check"
+      ],
+      "result_path": "artifacts/granite-config-2026-11-12/checks-1-fmt/result.json",
+      "result_sha256": "4ddadbe77dcf690b84fe4ff2474ccaf6dd4e692eb6b2ebe61f103ea48d321355",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "elapsed_seconds": 1.5213292080443352,
+      "budget_bytes": 536870912,
+      "maximum_observed_charge_with_reserve": 205488128,
+      "terminal_direct_pair_rss_charge_with_reserve": 205750272,
+      "counts": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "groups": 0
+      },
+      "passed": true
+    },
+    {
+      "build_settings": "initial targeted build or nonnumerical setup; see command receipt",
+      "label": "targeted-granite-cpu",
+      "command": [
+        "/opt/homebrew/bin/cargo",
+        "test",
+        "--offline",
+        "--no-default-features",
+        "granite",
+        "--",
+        "--test-threads=1"
+      ],
+      "result_path": "artifacts/granite-config-2026-11-12/checks-1-granite-cpu/result.json",
+      "result_sha256": "21def0a4766fdd9df0b237100ec5ea76a7dcd3799323da39e91069d83a1189b0",
+      "stdout_sha256": "1c5efac4d16fc8cc75c6f831959728014da2687b641dfaa088723a51e4cce92e",
+      "stderr_sha256": "ff421133dfb9e0c029d9012ed7795627cb56f273629cb65a1205bf7b533113ad",
+      "elapsed_seconds": 162.0640231659636,
+      "budget_bytes": 2147483648,
+      "maximum_observed_charge_with_reserve": 1815625728,
+      "terminal_direct_pair_rss_charge_with_reserve": 1297186816,
+      "counts": {
+        "passed": 5,
+        "failed": 0,
+        "ignored": 0,
+        "groups": 69
+      },
+      "passed": true
+    },
+    {
+      "build_settings": "debug0",
+      "label": "clippy-cpu",
+      "command": [
+        "/opt/homebrew/bin/cargo-clippy",
+        "clippy",
+        "--offline",
+        "--all-targets",
+        "--no-default-features",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "result_path": "artifacts/granite-config-2026-11-12/checks-4-clippy-cpu/result.json",
+      "result_sha256": "6256bab44023c7ab2eabd481ae47a12af27a3b96dfa74fe8fb43f05dfbc174fa",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "99d39900d4583cca43edc094d31d53a5d7345509b223d9c54fd32631f444be47",
+      "elapsed_seconds": 77.69535120797809,
+      "budget_bytes": 2147483648,
+      "maximum_observed_charge_with_reserve": 1088929792,
+      "terminal_direct_pair_rss_charge_with_reserve": 1019707392,
+      "counts": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "groups": 0
+      },
+      "passed": true
+    },
+    {
+      "build_settings": "debug0",
+      "label": "clippy-metal",
+      "command": [
+        "/opt/homebrew/bin/cargo-clippy",
+        "clippy",
+        "--offline",
+        "--all-targets",
+        "--features",
+        "metal",
+        "--",
+        "-D",
+        "warnings"
+      ],
+      "result_path": "artifacts/granite-config-2026-11-12/checks-4-clippy-metal/result.json",
+      "result_sha256": "2be9f84932deaed47d93d89d249514da37f82e272de0df5be3de0244ebaf576d",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "090a772506afb5de1f3564b8a54801e4552dec6336e0f80ea725b74788e94eff",
+      "elapsed_seconds": 46.525949832983315,
+      "budget_bytes": 2147483648,
+      "maximum_observed_charge_with_reserve": 1808957440,
+      "terminal_direct_pair_rss_charge_with_reserve": 1730445312,
+      "counts": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "groups": 0
+      },
+      "passed": true
+    },
+    {
+      "build_settings": "debug0",
+      "label": "test-cpu",
+      "command": [
+        "/opt/homebrew/bin/cargo",
+        "test",
+        "--offline",
+        "--no-default-features",
+        "--",
+        "--test-threads=1"
+      ],
+      "result_path": "artifacts/granite-config-2026-11-12/checks-4-test-cpu/result.json",
+      "result_sha256": "9a53a61496dae3470cce974a42ed7eac12cb40bf9a340559a3b413f971a71fb1",
+      "stdout_sha256": "81364c243bf228afc30e8737cf24e39a681cb0ce6ae8df264fb29b64a7126bbf",
+      "stderr_sha256": "8f5193760a26ad092ff0d5c1123e79f456e051da9d5c5b2728bd97ddd75eb302",
+      "elapsed_seconds": 339.6660465410678,
+      "budget_bytes": 2147483648,
+      "maximum_observed_charge_with_reserve": 1719877632,
+      "terminal_direct_pair_rss_charge_with_reserve": 1237893120,
+      "counts": {
+        "passed": 737,
+        "failed": 0,
+        "ignored": 52,
+        "groups": 70
+      },
+      "passed": true
+    },
+    {
+      "build_settings": "nonincremental/debug0/codegen256",
+      "label": "test-metal",
+      "command": [
+        "/opt/homebrew/bin/cargo",
+        "test",
+        "--verbose",
+        "--offline",
+        "--features",
+        "metal",
+        "--",
+        "--test-threads=1"
+      ],
+      "result_path": "artifacts/granite-config-2026-11-12/checks-7-test-metal/result.json",
+      "result_sha256": "4caa507e2680fdecacf762fc5c37c2cebc121b5aaaaf197b189691f83186b346",
+      "stdout_sha256": "12e00ceac56f64c6e8f37cfada937c0f41f2ae42da1df12f21347b716ec4c09d",
+      "stderr_sha256": "82968e9bc5ff041e0cdded4e179c1a6d6addca0f001d9b2c340b9b57dcb81742",
+      "elapsed_seconds": 295.93921554193366,
+      "budget_bytes": 3221225472,
+      "maximum_observed_charge_with_reserve": 2759737344,
+      "terminal_direct_pair_rss_charge_with_reserve": 2051080192,
+      "counts": {
+        "passed": 883,
+        "failed": 0,
+        "ignored": 340,
+        "groups": 71
+      },
+      "passed": true
+    },
+    {
+      "build_settings": "nonincremental/debug0/codegen256",
+      "label": "granite-gpu",
+      "command": [
+        "/opt/homebrew/bin/cargo",
+        "test",
+        "--offline",
+        "--features",
+        "metal",
+        "--test",
+        "mlx_llama_metal",
+        "granite_half_graph_and_session_match_frozen_independent_oracle",
+        "--",
+        "--ignored",
+        "--exact",
+        "--nocapture",
+        "--test-threads=1"
+      ],
+      "result_path": "artifacts/granite-config-2026-11-12/checks-7-granite-gpu/result.json",
+      "result_sha256": "03bf5b6a5b6a106485b5bd1ee7e2604bc6226bb3556c89762d79e6c68479519c",
+      "stdout_sha256": "d48d55d9933fc1ad6787d1ff24b33135e6482547e6dc1a8a621bef48faa71e9a",
+      "stderr_sha256": "274b90d5ed43d6df5188a10d1e39ac38fc35d5fdcfc3057ffb43393a8b994fe3",
+      "elapsed_seconds": 1.982155750039965,
+      "budget_bytes": 3221225472,
+      "maximum_observed_charge_with_reserve": 156205056,
+      "terminal_direct_pair_rss_charge_with_reserve": 112033792,
+      "counts": {
+        "passed": 1,
+        "failed": 0,
+        "ignored": 0,
+        "groups": 1
+      },
+      "passed": true
+    },
+    {
+      "build_settings": "initial targeted build or nonnumerical setup; see command receipt",
+      "label": "cli-inspection",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
+        "/Users/coloner/work/rust/toklet/artifacts/granite-config-2026-11-12/cli-probe-1.py"
+      ],
+      "result_path": "artifacts/granite-config-2026-11-12/checks-7-cli-inspection/result.json",
+      "result_sha256": "f3f2c9feb40a2129b04f191702286f3ad40dd70849e4a6f0d71133a3a4e239f7",
+      "stdout_sha256": "9a2c41401b50eb1cdf22eb88881bb5ace0cbb48d43aa030983be09682fec0260",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "elapsed_seconds": 1.2085472920443863,
+      "budget_bytes": 536870912,
+      "maximum_observed_charge_with_reserve": 86392832,
+      "terminal_direct_pair_rss_charge_with_reserve": 86966272,
+      "counts": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "groups": 0
+      },
+      "passed": true
+    },
+    {
+      "build_settings": "initial targeted build or nonnumerical setup; see command receipt",
+      "label": "guard-unit",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
+        "/Users/coloner/work/rust/toklet/artifacts/granite-config-2026-11-12/test-exec-aware-process-guard-1.py"
+      ],
+      "result_path": "artifacts/granite-config-2026-11-12/checks-5-guard-unit/result.json",
+      "result_sha256": "29ac13564c51f2624b30b81dd50f376884cbbd626a8f500afdb563f0bc59d47f",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "698d16d7b93c4bd9707d3cfacda6fb1e0fea99ed0cda6e69bedc42772940540a",
+      "elapsed_seconds": 0.15785133303143084,
+      "budget_bytes": 536870912,
+      "maximum_observed_charge_with_reserve": 68157440,
+      "terminal_direct_pair_rss_charge_with_reserve": 77381632,
+      "counts": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "groups": 0
+      },
+      "passed": true
+    },
+    {
+      "build_settings": "initial targeted build or nonnumerical setup; see command receipt",
+      "label": "guard-unit-optimized",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
+        "-O",
+        "/Users/coloner/work/rust/toklet/artifacts/granite-config-2026-11-12/test-exec-aware-process-guard-1.py"
+      ],
+      "result_path": "artifacts/granite-config-2026-11-12/checks-5-guard-unit-optimized/result.json",
+      "result_sha256": "c9fb42c9ccbdd747dcac688742af6eabf831e5e4a2f5b0966dfdd453e0977990",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "698d16d7b93c4bd9707d3cfacda6fb1e0fea99ed0cda6e69bedc42772940540a",
+      "elapsed_seconds": 0.1621251249453053,
+      "budget_bytes": 536870912,
+      "maximum_observed_charge_with_reserve": 67780608,
+      "terminal_direct_pair_rss_charge_with_reserve": 77791232,
+      "counts": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "groups": 0
+      },
+      "passed": true
+    },
+    {
+      "build_settings": "initial targeted build or nonnumerical setup; see command receipt",
+      "label": "guard-live-exec",
+      "command": [
+        "/Library/Frameworks/Python.framework/Versions/3.12/bin/python3",
+        "/Users/coloner/work/rust/toklet/artifacts/granite-config-2026-11-12/exec-counter-probe-2.py"
+      ],
+      "result_path": "artifacts/granite-config-2026-11-12/checks-5-guard-live-exec/result.json",
+      "result_sha256": "a51a73fb5f7ec2a863e4914f3f59a9dc61ecc739294363e5af47efd03ee94a6d",
+      "stdout_sha256": "327e3bfcf0066e598caea8c377ccd5cfb0ed519e2c584fe9155bba124b8ea767",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "elapsed_seconds": 2.256787542020902,
+      "budget_bytes": 536870912,
+      "maximum_observed_charge_with_reserve": 76562432,
+      "terminal_direct_pair_rss_charge_with_reserve": 75448320,
+      "counts": {
+        "passed": 0,
+        "failed": 0,
+        "ignored": 0,
+        "groups": 0
+      },
+      "passed": true
+    }
+  ],
+  "source_configs": {
+    "scope": "Pinned configuration bytes only; no tensor payload authentication, numerical, quality, memory or managed-adoption qualification",
+    "sources": {
+      "granite_original": {
+        "repository": "ibm-granite/granite-4.2-3b",
+        "revision": "4e9c275e232f10211ec88644d106a1f6a1b60e06",
+        "url": "https://huggingface.co/ibm-granite/granite-4.2-3b/resolve/4e9c275e232f10211ec88644d106a1f6a1b60e06/config.json",
+        "bytes": 905,
+        "sha256": "e4f44b9c6924a283f1d1d36057a89f1a04404bf1561fc2c0b64cf98180e72915"
+      },
+      "granite_modified": {
+        "repository": "saidutta69/granite-4.2-3b-heretic",
+        "revision": "db83ced6c830ad52b32880d026a4f8e3f888c316",
+        "url": "https://huggingface.co/saidutta69/granite-4.2-3b-heretic/resolve/db83ced6c830ad52b32880d026a4f8e3f888c316/config.json",
+        "bytes": 826,
+        "sha256": "58997398d70456e6ea011c7d4b08321d10720361aaf2df5df3390f5e82242db4"
+      },
+      "granite_q4": {
+        "repository": "ibm-granite/granite-4.2-3b-q4-mlx",
+        "revision": "0c6f39b1827afd5eb2c1c3b13751929857434953",
+        "url": "https://huggingface.co/ibm-granite/granite-4.2-3b-q4-mlx/resolve/0c6f39b1827afd5eb2c1c3b13751929857434953/config.json",
+        "bytes": 1185,
+        "sha256": "bfcb1a01587dae223af89f07b960f0b456ef9fe9576167a126aa807941b213d7"
+      }
+    }
+  },
+  "frozen_numerical_fixture": {
+    "sha256": "852711a8bfffd68f389f5db8a987ff6e4f56dd5e5d747bcbe89cccb089b58dd9",
+    "source_cases": 8,
+    "dialects": [
+      "legacy",
+      "canonical-only",
+      "paired"
+    ],
+    "CPU_independent_array_comparisons": 936,
+    "Metal_GPU_fixture_executed": true,
+    "real_checkpoint_numerical_qualification": false
+  },
+  "CLI": {
+    "cases": 44,
+    "same_admission_reports_across_dialects": true,
+    "qualification_flags_remain_false": true,
+    "evidence_path": "artifacts/granite-config-2026-11-12/cli-inspection-1.json",
+    "evidence_sha256": "24276d3bbaa0714f606f626140ec3ba8495680cef9a0291f098408ec6b10b6f0",
+    "binary_sha256": "af393c0f7ad2b424104b9e56df3b942b6ab219c4d2746b1651c8df9344012828"
+  },
+  "retained_failures": {
+    "failed_attempts": [
+      {
+        "label": "checks-1-clippy-cpu",
+        "failure": "ValueError('Lifetime footprint decreased for the same process identity')",
+        "elapsed_seconds": 0.19461791694629937,
+        "result_sha256": "e49a425d61d20affd8de3271f0245a7674c7f302cf01f631cbaff1f50f323996",
+        "path": "/Users/coloner/work/rust/toklet/artifacts/granite-config-2026-11-12/checks-1-clippy-cpu/result.json",
+        "source_check_outcome": "Not qualified; monitor stopped startup and owned cleanup completed"
+      },
+      {
+        "label": "checks-2-clippy-metal",
+        "failure": "ValueError('Lifetime footprint decreased for the same process identity')",
+        "elapsed_seconds": 0.18564658297691494,
+        "result_sha256": "41852a5f5d9b0a228864f131549cb79dd28302df28827dd8b1fa2a027a94dd47",
+        "path": "/Users/coloner/work/rust/toklet/artifacts/granite-config-2026-11-12/checks-2-clippy-metal/result.json",
+        "source_check_outcome": "Not qualified; monitor stopped startup and owned cleanup completed"
+      },
+      {
+        "label": "checks-3-test-metal",
+        "failure": "ValueError('Owned command memory limit exceeded')",
+        "elapsed_seconds": 105.7167575409403,
+        "maximum_observed_charge_with_reserve": 2180661248,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/granite-config-2026-11-12/checks-3-test-metal/result.json",
+        "source_check_outcome": "Not qualified; no test assertions ran; compiler budget guard stopped and cleaned the command"
+      },
+      {
+        "label": "checks-4-test-metal",
+        "failure": "ValueError('Lifetime footprint decreased for the same process identity')",
+        "elapsed_seconds": 14.31121183396317,
+        "maximum_observed_charge_with_reserve": 850100224,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/granite-config-2026-11-12/checks-4-test-metal/result.json",
+        "source_check_outcome": "Unqualified; stopped/cleaned before assertions"
+      },
+      {
+        "label": "checks-5-test-metal",
+        "failure": "ValueError('Owned command memory limit exceeded')",
+        "elapsed_seconds": 98.67043866694439,
+        "maximum_observed_charge_with_reserve": 2836299776,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/granite-config-2026-11-12/checks-5-test-metal/result.json",
+        "source_check_outcome": "Unqualified; conservative compiler/linker cohort charge exceeded 2 GiB; stopped and cleanup completed before assertions"
+      },
+      {
+        "label": "checks-6-test-metal",
+        "failure": "ValueError('Owned command memory limit exceeded')",
+        "elapsed_seconds": 124.08437825005967,
+        "maximum_observed_charge_with_reserve": 2776743936,
+        "path": "/Users/coloner/work/rust/toklet/artifacts/granite-config-2026-11-12/checks-6-test-metal/result.json",
+        "source_check_outcome": "Unqualified under prior local 2 GiB harness cap; stopped and cleanup completed before assertions"
+      }
+    ],
+    "CPU_Clippy_retry_trace": {
+      "samples": 1178,
+      "counter_decreases": 0,
+      "diagnostic_images": [
+        "",
+        "(clippy-driver)",
+        "(rustc)",
+        "/Library/Frameworks/Python.framework/Versions/3.12/Resources/Python.app/Contents/MacOS/Python",
+        "/opt/homebrew/bin/cargo",
+        "/opt/homebrew/bin/cargo-clippy",
+        "/opt/homebrew/bin/clippy-driver",
+        "<defunct>",
+        "rustc"
+      ],
+      "sha256": "db919648aaf46d98e5ae65eae9c1557f279a18a69536ec981cf5b211f9204c00"
+    },
+    "cause_of_startup_counter_decrease": "Unresolved; no raw decreasing pair was retained from first attempts. No assertion of an engine/compiler error or proven exec cause.",
+    "failed_runs_qualified": false,
+    "new_guard": "exec-aware-process-guard-1.py: requires a different nonzero SDK image UUID for reported counter decrease, preserves historical larger charges; same-image/unwitnessed decreases fail closed.",
+    "related_monitor_assumption_evidence": "SDK counter reset on witnessed different executable exec; source proof and two owned controls retained. Original failed runs remain failed.",
+    "original_guard_files_preserved_unchanged": true,
+    "initial_retry_policy": "All memory accounting, birth identity, ceiling and failure rules unchanged. Metal check uses the installed direct cargo-clippy entry point with the original subcommand/flags to avoid one external command-dispatch boundary.",
+    "compiler_cap_policy_revision": "compiler-admission-plan-3.json; 3 GiB compiler-only, engine ceiling and audit budgets unchanged"
+  },
+  "private_monitor": {
+    "source_sha256": {
+      "exec-aware-process-guard-1.py": "0aeabb1245db12c5e3a8d9bf1ecc5cb771769b5b0444aa3ce1dbc41af5099428",
+      "host-test-command-4.py": "5c60b74f17df15803bbadd31225fb821d4db68dd88a69eedfb60a1d43656a8cc",
+      "test-exec-aware-process-guard-1.py": "44a3baa6b6544c871fc991c8e10719fa8e824267ad984fb70bca36fcfd1842d5"
+    },
+    "portable_controls_per_mode": 8,
+    "live_exec_passed": true,
+    "source_proof_path": "artifacts/granite-config-2026-11-12/exec-counter-source-proof-1.json",
+    "source_proof_sha256": "60bd7bb61d1125d197195e2fb80f8eeccb01cd88554c450d14ee1f14fe0e7751",
+    "same_image_decreases_fail_closed": true,
+    "historical_charge_preserved": true,
+    "sampling_limitation": "No continuous allocator cap; may miss short-lived/final peaks",
+    "dependency_sha256": {
+      "artifacts/lfm3-finite-guard-2026-11-11/grading-process-guard-1.py": "fb2d8c80b27db1e738579ed65fb4cfcd7d2a0c2cd4567be5d771979a8dd56c77",
+      "artifacts/lfm3-engine-comparison-2026-11-11/external-process-guard-2.py": "59e4428f3fc5c251862906fb582768224934c4fd12d7a773928d2180f2fc429d",
+      "tools/experiments/native_usage.py": "1948b099df279074b923e7c4233afcdbc40cc85de196a2dd487eb9f3f89907fc",
+      "tools/bench/process_groups.py": "e0a6d97c7f3c9d980a95b9b1597018190943163206f5e8eee1e858a43bed10a9"
+    }
+  },
+  "review": {
+    "status": "approved",
+    "reviewer": "gpt-6-astra",
+    "receipt_path": "artifacts/granite-config-2026-11-12/astra-review-1.json",
+    "receipt_sha256": "cd7c959a09f9086db211124f14afb40dc8ced3130491e46f6746cb176f3ac1b9",
+    "actionable_findings": 0,
+    "scope": "Strict configuration and tiny-fixture qualification only"
+  },
+  "qualification": {
+    "strict_config": true,
+    "tiny_frozen_graph": true,
+    "source_tensor_payload_authenticated": false,
+    "mixed_conversion": false,
+    "actual_checkpoint_numerics": false,
+    "quality": false,
+    "physical_fit": false,
+    "request_performance": false,
+    "summary_overhead": false,
+    "managed_adoption": false,
+    "whole_goal": false
+  },
+  "compiler_admission_plan": {
+    "path": "artifacts/granite-config-2026-11-12/compiler-admission-plan-3.json",
+    "sha256": "e8b35b437cb8f34398a76250e7fe7d00b934f35a8a41bcaa200791d1b8392ae6",
+    "compiler_only_cap_bytes": 3221225472,
+    "engine_ceiling_unchanged_bytes": 6442450944,
+    "audit_setup_cap_unchanged_bytes": 536870912
+  }
+}

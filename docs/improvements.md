@@ -133,17 +133,23 @@ initial report power-label/trial-identity assumptions are corrected with failure
 [portable measurements](../benchmarks/results/2026-11-12-lfm3-finite-widening-v1.json),
 [current experiment](../artifacts/lfm3-finite-guard-2026-11-11/active-experiment-state-1.json).
 
-Granite source preparation remains read-only. The existing Rust adapter preserves
-its explicit scalar settings; the installed MLX default requests group-64 8-bit
-overrides for output/down projections and the untied head. Strict config dialect
-handling and an explicit per-matrix conversion recipe precede payload, numerical,
-quality, physical-fit and request qualification. Shared affine overrides already
-exist; the bounded MiniCPM5 converter is specific to affine8 and 6,144 columns,
-below Granite's 8,192 and Ministral's 9,216-column down projections. Wider-row
-and explicit 4/8-bit conversion need independent qualification. No model module
-was imported, payload downloaded or conversion/inference run.
-[Source inspection and remaining gates](../artifacts/granite-source-planning-2026-11-12/static-source-inspection-1.json).
-[Conversion reuse](../artifacts/granite-source-planning-2026-11-12/conversion-reuse-inspection-1.json).
+Granite configuration admission is implemented and under qualification:
+canonical default RoPE shares the strict Llama declaration parser; equal supported
+dtype aliases are normalized only for Granite. Existing scale, shape, context,
+quantization and index checks remain binding. Three pinned raw configs and frozen
+CPU/Metal graphs cover the new dialects. Required fmt/both strict Clippy,
+737 CPU/883 Metal tests, explicit GPU and 44 CLI cases pass; eight monitor
+controls in both modes and an owned live control pass. Six failed attempts
+remain retained; compiler-only admission is 3 GiB within the 6 GiB Mac ceiling.
+Astra approves, no findings. [Scope](granite-config.md),
+[portable checks](../benchmarks/results/2026-11-12-granite-config-v1.json).
+
+The next mechanism is a separately qualified bounded mixed affine4/8 conversion.
+The installed MLX default requests group-64 8-bit output/down projections and
+untied head. The existing MiniCPM5 converter remains affine8/6,144-column only;
+Granite requires 8,192 columns. No full payload, model inference, quality, physical
+fit, request performance or managed adoption is qualified by config admission.
+[Conversion constraints](../artifacts/granite-source-planning-2026-11-12/conversion-reuse-inspection-1.json).
 
 Ministral source preparation records the existing configuration's independent
 3,072 hidden/4,096 query widths and the selected adapter's unsupported text tag.

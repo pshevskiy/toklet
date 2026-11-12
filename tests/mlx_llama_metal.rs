@@ -816,4 +816,18 @@ fn granite_half_graph_and_session_match_frozen_independent_oracle() {
         }
     }
     check_half_graph(&fixture, false);
+    for keep_flat in [false, true] {
+        let mut canonical = fixture.clone();
+        for variant in ["tied", "untied"] {
+            let config = &mut canonical["config_templates"][variant];
+            config["rope_parameters"] =
+                serde_json::json!({"rope_type":"default", "rope_theta":config["rope_theta"]});
+            config["dtype"] = config["torch_dtype"].clone();
+            if !keep_flat {
+                config.as_object_mut().unwrap().remove("rope_theta");
+                config.as_object_mut().unwrap().remove("torch_dtype");
+            }
+        }
+        check_half_graph(&canonical, false);
+    }
 }

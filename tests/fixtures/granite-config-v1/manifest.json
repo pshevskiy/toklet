@@ -1,0 +1,26 @@
+{
+  "scope": "Pinned configuration bytes only; no tensor payload authentication, numerical, quality, memory or managed-adoption qualification",
+  "sources": {
+    "granite_original": {
+      "repository": "ibm-granite/granite-4.2-3b",
+      "revision": "4e9c275e232f10211ec88644d106a1f6a1b60e06",
+      "url": "https://huggingface.co/ibm-granite/granite-4.2-3b/resolve/4e9c275e232f10211ec88644d106a1f6a1b60e06/config.json",
+      "bytes": 905,
+      "sha256": "e4f44b9c6924a283f1d1d36057a89f1a04404bf1561fc2c0b64cf98180e72915"
+    },
+    "granite_modified": {
+      "repository": "saidutta69/granite-4.2-3b-heretic",
+      "revision": "db83ced6c830ad52b32880d026a4f8e3f888c316",
+      "url": "https://huggingface.co/saidutta69/granite-4.2-3b-heretic/resolve/db83ced6c830ad52b32880d026a4f8e3f888c316/config.json",
+      "bytes": 826,
+      "sha256": "58997398d70456e6ea011c7d4b08321d10720361aaf2df5df3390f5e82242db4"
+    },
+    "granite_q4": {
+      "repository": "ibm-granite/granite-4.2-3b-q4-mlx",
+      "revision": "0c6f39b1827afd5eb2c1c3b13751929857434953",
+      "url": "https://huggingface.co/ibm-granite/granite-4.2-3b-q4-mlx/resolve/0c6f39b1827afd5eb2c1c3b13751929857434953/config.json",
+      "bytes": 1185,
+      "sha256": "bfcb1a01587dae223af89f07b960f0b456ef9fe9576167a126aa807941b213d7"
+    }
+  }
+}

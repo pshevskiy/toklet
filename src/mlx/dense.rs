@@ -98,7 +98,7 @@ struct Llama3Parameters {
 
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
-struct DefaultLlamaParameters {
+struct DefaultRopeParameters {
     rope_type: String,
     rope_theta: serde_json::Number,
 }
@@ -106,28 +106,30 @@ struct DefaultLlamaParameters {
 // Interpret an explicit export declaration once, before ordinary validation.
 // Source bytes remain untouched. Compare arbitrary-precision JSON declarations
 // before f32 conversion; differently encoded duplicate numbers are not coerced.
-fn default_llama_rope(value: &mut Value) -> Result<(), Error> {
+fn default_rope(value: &mut Value, architecture: &str) -> Result<(), Error> {
     let Some(parameters) = value.get("rope_parameters") else {
         return Ok(());
     };
-    let parameters: DefaultLlamaParameters = serde_json::from_value(parameters.clone())?;
+    let parameters: DefaultRopeParameters = serde_json::from_value(parameters.clone())?;
     if parameters.rope_type != "default" {
-        return Err(invalid(
-            "only explicit default Llama rope_parameters are supported",
-        ));
+        return Err(invalid(format!(
+            "only explicit default {architecture} rope_parameters are supported"
+        )));
     }
     if value.get("rope_scaling").is_some_and(|v| !v.is_null()) {
-        return Err(invalid(
-            "default Llama rope_parameters cannot accompany rope_scaling",
-        ));
+        return Err(invalid(format!(
+            "default {architecture} rope_parameters cannot accompany rope_scaling"
+        )));
     }
     let theta = Value::Number(parameters.rope_theta);
     if value.get("rope_theta").is_some_and(|flat| flat != &theta) {
-        return Err(invalid("Llama RoPE theta declarations must match exactly"));
+        return Err(invalid(format!(
+            "{architecture} RoPE theta declarations must match exactly"
+        )));
     }
     let object = value
         .as_object_mut()
-        .ok_or_else(|| invalid("Llama configuration must be an object"))?;
+        .ok_or_else(|| invalid(format!("{architecture} configuration must be an object")))?;
     object.insert("rope_theta".into(), theta);
     object.remove("rope_parameters");
     Ok(())
@@ -198,7 +200,9 @@ pub(crate) fn config(mut value: Value, options: LoadOptions) -> Result<ParsedCon
         Some("phi3") => super::phi3::config(value, options),
         Some("llama" | "mistral" | "smollm3" | "granite") => {
             if value["model_type"] == "llama" {
-                default_llama_rope(&mut value)?;
+                default_rope(&mut value, "Llama")?;
+            } else if value["model_type"] == "granite" {
+                default_rope(&mut value, "Granite")?;
             }
             let scales = if value["model_type"] == "granite" {
                 granite::prepare(&mut value)?
