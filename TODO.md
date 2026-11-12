@@ -46,9 +46,9 @@ history is in the [dated archive](docs/archive/2026-11-12/README.md).
 Active goal: implement the whole selected observability/performance/model
 roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
 under-4B track; [model/metric plan](docs/model-observability-plan.md).
-Reviewed commits are pushed through `7524640e` on
-`codex/console-engine-comparison`; the Astra-approved LFM3 retention commit/push
-is being finalized. [Publication](artifacts/lfm3-finite-guard-2026-11-11/finite-publication-checks.json).
+LFM3 CPU code and portable measurements are published as `612771d7` on
+`codex/console-engine-comparison`.
+[Publication / CI](artifacts/lfm3-finite-guard-2026-11-11/finite-publication-checks.json).
 
 Current/next task: **qualify Granite's source/config dialect and bounded
 uncensored MLX conversion**. LFM3 CPU qualification and finite-widening retention
