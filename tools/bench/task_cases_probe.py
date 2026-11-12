@@ -13,6 +13,7 @@ import threading
 import cpu_cli
 import mlx_baseline as common
 import prepare
+import process_groups
 import quality
 import task_cases as tasks
 
@@ -91,9 +92,7 @@ def signal_owned_group(worker, errors):
         # Do not suppress it for a live leader or any surviving descendant.
         if worker.poll() is not None:
             try:
-                snapshot = subprocess.check_output(["ps", "-axo", "pgid=,stat="], text=True)
-                members = [row.split() for row in snapshot.splitlines()]
-                if not any(len(row) == 2 and int(row[0]) == worker.pid and not row[1].startswith("Z") for row in members):
+                if not process_groups.live_group_members(worker.pid):
                     return False
             except BaseException as probe_error:
                 errors.append({"type": type(probe_error).__name__, "message": str(probe_error)})

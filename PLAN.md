@@ -1,6 +1,6 @@
 # Toklet implementation plan
 
-Updated 10 November 2026. Read [TODO.md](TODO.md) first for the current task.
+Updated 12 November 2026. Read [TODO.md](TODO.md) first for the current task.
 This live plan retains architecture, session invariants, milestone task criteria
 and the complete validation/performance policy. Detailed chronology and original
 execution orders are in the [dated archive](docs/archive/2026-11-07/PLAN.md).
@@ -102,7 +102,10 @@ The [513-position rollout](docs/lfm3-context513.md) matches two source schedules
 through sliding-window rollover and passes Astra review. The
 [1,025-position comparison](docs/lfm3-context1025.md) matches the pinned
 source and records ordinary continuation. Astra approves scoped retention.
-Both original full quality comparisons remain open.
+Both original full quality comparisons and the fresh candidate comparison pass.
+The [finite BF16 widening](docs/lfm3-finite-widening.md) is retained for the CPU
+route after matched primary/compatibility/sustained measurements, all 62 state
+checks and Astra approval. Managed adoption remains unqualified.
 Any MiniCPM5 reconsideration still needs corrected original numerics and
 both complete original quality comparisons.
 

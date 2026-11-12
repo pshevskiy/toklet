@@ -92,11 +92,17 @@ if variant=='trailing': print('{"event":"reset"}',flush=True)
         class Worker:
             pid = 123
             def poll(self): return 0
-        for snapshot, expected_errors in (("123 Z\n", 0), ("124 S\n", 0), ("123 S\n", 1)):
+        for members, expected_errors in (([], 0), ([456], 1)):
             errors = []
-            with patch.object(probe.os, "killpg", side_effect=PermissionError(1, "Operation not permitted")), patch.object(probe.subprocess, "check_output", return_value=snapshot):
+            with patch.object(probe.os, "killpg", side_effect=PermissionError(1, "Operation not permitted")), \
+                    patch.object(probe.process_groups, "live_group_members", return_value=members):
                 self.assertFalse(probe.signal_owned_group(Worker(), errors))
             self.assertEqual(len(errors), expected_errors)
+        errors = []
+        with patch.object(probe.os, "killpg", side_effect=PermissionError(1, "Operation not permitted")), \
+                patch.object(probe.process_groups, "live_group_members", side_effect=OSError("unreadable")):
+            self.assertFalse(probe.signal_owned_group(Worker(), errors))
+        self.assertEqual(len(errors), 2)
 
     def test_probe_inventory_uses_only_independent_saved_numerical_ids(self):
         cases=probe.probe_cases()

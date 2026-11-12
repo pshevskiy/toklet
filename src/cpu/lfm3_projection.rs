@@ -58,14 +58,21 @@ pub fn lfm3_linear_bf16(
     Ok(())
 }
 
+// The public entry validates both complete operands before calling this
+// reduction. Finite BF16 widens exactly by placing its bits in the high half
+// of an FP32 word; no rounding or NaN quieting is needed in this admitted domain.
+// Keep the public finite checks: half::bf16::to_f32 has additional NaN behavior
+// which this private finite-only conversion deliberately does not implement.
+fn widen_finite(value: bf16) -> f32 {
+    f32::from_bits(u32::from(value.to_bits()) << 16)
+}
+
 pub(super) fn dot(x: &[bf16], w: &[bf16]) -> f32 {
     let mut partial = [0_f32; 32];
     let aligned = x.len() / 32 * 32;
     for base in (0..aligned).step_by(32) {
         for (lane, sum) in partial.iter_mut().enumerate() {
-            *sum = x[base + lane]
-                .to_f32()
-                .mul_add(w[base + lane].to_f32(), *sum);
+            *sum = widen_finite(x[base + lane]).mul_add(widen_finite(w[base + lane]), *sum);
         }
     }
     for offset in [4, 2, 1] {
@@ -80,17 +87,13 @@ pub(super) fn dot(x: &[bf16], w: &[bf16]) -> f32 {
     let mut tail = [0_f32; 4];
     for base in (aligned..vector_end).step_by(8) {
         for (lane, acc) in tail.iter_mut().enumerate() {
-            *acc = x[base + lane]
-                .to_f32()
-                .mul_add(w[base + lane].to_f32(), *acc);
-            *acc = x[base + lane + 4]
-                .to_f32()
-                .mul_add(w[base + lane + 4].to_f32(), *acc);
+            *acc = widen_finite(x[base + lane]).mul_add(widen_finite(w[base + lane]), *acc);
+            *acc = widen_finite(x[base + lane + 4]).mul_add(widen_finite(w[base + lane + 4]), *acc);
         }
     }
     sum += (tail[0] + tail[1]) + (tail[2] + tail[3]);
     for index in vector_end..x.len() {
-        sum = x[index].to_f32().mul_add(w[index].to_f32(), sum);
+        sum = widen_finite(x[index]).mul_add(widen_finite(w[index]), sum);
     }
     sum
 }

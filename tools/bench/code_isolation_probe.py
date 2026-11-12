@@ -15,6 +15,7 @@ import sys
 import tempfile
 import time
 
+import process_groups
 import code_isolation_child as child
 import mlx_baseline as common
 import prepare
@@ -41,9 +42,7 @@ def idle(proof):
 
 
 def live_group_members(pid):
-    snapshot = subprocess.check_output(["ps", "-axo", "pid=,pgid=,stat="], text=True)
-    return [int(row[0]) for line in snapshot.splitlines() if len(row := line.split()) == 3
-            and int(row[1]) == pid and not row[2].startswith("Z")]
+    return process_groups.live_group_members(pid)
 
 
 def execute(mode, read_path, write_path, directory):

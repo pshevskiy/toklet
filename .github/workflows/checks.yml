@@ -16,6 +16,8 @@ jobs:
           persist-credentials: false
       - name: Validate offline observability reports
         run: PYTHONPATH=tools/bench python3 -O -m unittest test_request_cost_report test_gemma_regression
+      - name: Validate evaluator process ownership
+        run: PYTHONPATH=tools/bench python3 -O -m unittest test_process_groups test_requalify_grading_host test_task_cases_probe test_paired_task_grading
       - name: Validate paired measurement contracts
         run: PYTHONPATH=tools/experiments python3 -O -m unittest test_o1_gemma_summary test_o2_gemma_workloads test_o2_ui_publication
   cpu:

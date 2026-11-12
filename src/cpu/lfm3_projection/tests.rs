@@ -3,6 +3,23 @@ use serde_json::Value;
 use sha2::{Digest, Sha256};
 use std::sync::OnceLock;
 
+#[test]
+fn finite_only_widening_matches_independent_half_conversion_for_every_finite_word() {
+    let mut count = 0;
+    for bits in 0..=u16::MAX {
+        let value = bf16::from_bits(bits);
+        if value.is_finite() {
+            assert_eq!(
+                widen_finite(value).to_bits(),
+                value.to_f32().to_bits(),
+                "finite BF16 word {bits:04x}"
+            );
+            count += 1;
+        }
+    }
+    assert_eq!(count, 65_280);
+}
+
 fn sha(bytes: &[u8]) -> String {
     format!("{:x}", Sha256::digest(bytes))
 }

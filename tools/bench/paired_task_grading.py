@@ -19,10 +19,10 @@ from grading_support import require,selected,write_json,finish_decision,verify_f
 ROOT=Path(__file__).resolve().parents[2]
 PODMAN='/opt/podman/bin/podman'
 IMAGE='eb7d16fec874f15b584063275012ac719885a2b87574d124c0da9c156d504629'
-PRIOR=ROOT/'benchmarks/results/2026-10-11-linux-code-isolation-probe-v8.json'
-PRIOR_SHA='0736ec7d8cf7481c5327c01c5f0c8555b6e3c8669c6c63e7a267f0044873d3f1'
-LITERAL=ROOT/'benchmarks/results/2026-10-11-literal-native-v3-probe.json'
-LITERAL_SHA='77cdda26d80a079bc56da9a80d52f7fa09d7b2942ce768d464128f07798a9453'
+PRIOR=ROOT/'benchmarks/results/2026-11-12-linux-code-isolation-probe-v9.json'
+PRIOR_SHA='7a16c8a33ae2c87638e18d0301b5e3cccdf3b7e4e393128775162f9b4785e161'
+LITERAL=ROOT/'benchmarks/results/2026-11-12-literal-native-v4-probe.json'
+LITERAL_SHA='a17e1c5d90e55067b3f8e4236d29badd40805f35f054ace52d1e956ba77baa2b'
 
 
 def checked_json(path,expected,limit):

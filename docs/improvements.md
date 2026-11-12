@@ -44,83 +44,136 @@ The real LFM3 BF16 comparison reaches 1,025 positions with 68,054,016
 exact source words and two late-abort retries. The source and native runs
 stay within their respective memory caps. Ordinary one-token continuation
 at the verified depth has a 1.285-second median on M1 Pro.
-Astra approves scoped retention. Full original quality remains open.
+Astra approves scoped numerical retention. The complete original quality
+results below pass; result review and managed adoption remain open.
 [Scope and measurements](lfm3-context1025.md).
 
-Two real LFM3 BF16 schedules reach position 513 with 70,418,432 exact
-source words, 40 split old-cache views and both late-abort retries.
-Ordinary one-token forwards near the wrapped prefix have a 1.272-second
-median on M1 Pro. Astra approves scoped retention. Deeper parity and full
-quality remain open.
-[Scope and measurements](lfm3-context513.md).
+The original LFM3 quality campaign completes both 10,000-target loss pairs and
+both 100-task comparisons under unchanged gates. Stock-to-modified NLL increases
+0.00781 nats per token; task passes rise from 35 to 37. Native retains all
+37 passes, all 10,000 greedy loss IDs and all 5,094 sampled task decisions, with
+3.66e-15 maximum absolute NLL delta. Both isolated grading windows confirm the
+guest stopped. The guarded loss retry stays within 6 GiB; interrupted output
+remains unqualified. Astra approves scoped CPU qualification and retention;
+managed adoption remains open.
+[Complete decision and evidence](lfm3-quality.md).
 
-The explicit LFM3 BF16 CPU console route verifies pinned text assets and
-exposes load, execution, memory and request phase metrics. Real interactive
-checks cover exact prefix reuse, replay, pending stop tokens, cancellation
-and resume. The pinned reference matches rendered text and token IDs. Astra
-approves scoped retention. Deeper numerical and full quality qualification remain open.
-[Console route](lfm3-cli.md).
+The isolated LFM3 finite-widening experiment removes redundant BF16 conversion
+work after complete public validation, preserving FMA/reduction/store order.
+Fmt, strict CPU/Metal Clippy, 734 CPU/880 Metal tests, targeted release/allocation
+checks, three native package slices and both C smokes pass. Full parity matches
+854 observations/68,054,016 words, thirty wrapped views and two late retries.
+Earlier failed checks, interrupted output and runner corrections remain in the
+linked evidence. Full primary ABBA matches all 52 requests, including 40 measured;
+medians 349.54→248.15 s and 349.58→246.60 s improve 29.0%/29.5%, above 0.63%
+maximum median variation. The primary gate passes; final CPU retention is approved.
 
-The authenticated LFM3 BF16 CPU graph matches 2,476,032 reference values
-across 366 stage comparisons on three short schedules. The single-session
-ledger covers 3.489 GB. Real-model late abort, retry and zero-allocation
-prepared execution pass. Astra approves scoped retention. Codec, generation
-and CLI integration and the full original quality campaign remain open.
-[Scope](lfm3-bf16-graph.md).
+The full 156-request 128/512/1,024-input × 128-output matrix matches all work,
+output/state and 4,992 sampled decisions per cohort, including 120 measured
+requests. Paired median reductions are 21.3%/20.6%, 25.8%/25.9% and
+27.8%/27.9%. All twelve sustained windows pass; no candidate median regresses.
+Maximum separate RSS/physical guard charges including reserve are
+3.82/3.74/3.74/3.74 GB; differences do not establish allocation savings.
+Request-performance gates pass; full CPU retention is approved after quality/state checks.
+CPU phase observations show 29.9–30.7% lower prefill medians and 16.2–17.2%
+lower decode medians; operator-level attribution remains unqualified. Supplemental
+observer metadata/unit errors are corrected with failures retained. The corrected
+serial retry passes 55 portable controls per mode. Fresh compiler identity/new
+loss build pass; native loss collection completes all 10,000 frozen targets and
+ten blocks. Both guards pass; maximum observed outer guard charge is 4.15 GB
+including reserve, within 6 GiB. Both loss gates pass; native matches all greedy
+loss IDs with maximum NLL delta 3.66e-15 against the modified reference. All 100
+tasks and decoding complete, matching all 5,094 sampled decisions and stops.
+Isolated grading first stopped on an owned setuid `ps` inspection error. The native
+process-group replacement and concurrent-working-set monitor pass 156 shared
+tests and nine accounting controls in both Python modes, SDK/live checks and a
+260-command inert stress check. All 14 isolation and 28 authored evaluator
+controls then pass. The fresh retry completes all 80 isolated program runs,
+retains 37/100 task passes for modified reference and native, verifies guest
+shutdown and passes both complete quality comparisons. Maximum retry guard
+charge is 2.48 GB including the 2 GiB guest reservation; CPU policy remains four
+seconds. All 62 state checks and exact event/memory replay pass, including
+cancellation/resume to the same 16 IDs/text and all six hidden-stop cases.
+Maximum outer guard charge is 3.90 GB, with no survivors; these are functional
+checks. Nineteen recovery-pipeline controls pass in both modes.
+Astra approves CPU retention and supporting host changes with no actionable
+findings. Commit/push references are recorded with publication. Build/assembly
+limits and failures remain.
+All 441 portable tests across 60 local modules pass in both modes under 512 MiB
+after correcting interpreter/module-isolation invocations. A clean publication
+worktree preserves root UI/workflow/history edits and adds ownership controls
+to CI. Astra approves scoped retention; managed adoption remains open.
+Fresh publication formatting and all 59 tests in the changed workflow pass;
+all 444 numerical inputs match the 12 required Rust check receipts/logs.
+The measured baseline is byte-exactly reproduced by a fresh build from clean
+`2da16a9e` after state exit, within the 2 GiB build budget. The original cache
+and binary are preserved; the original build's historical commit remains unproven.
+The portable record preserves all 208 scalar samples and exact source replay;
+initial report power-label/trial-identity assumptions are corrected with failures retained.
+[Experiment scope / request measurements](lfm3-finite-widening.md),
+[consolidated checks / retained failures](../artifacts/lfm3-finite-guard-2026-11-11/widen-checks-consolidated-1.json),
+[primary analysis](../artifacts/lfm3-finite-guard-2026-11-11/native-primary-analysis-2.json),
+[matrix execution](../artifacts/lfm3-finite-guard-2026-11-11/compatibility-execution-plan-3.json),
+[full matrix analysis](../artifacts/lfm3-finite-guard-2026-11-11/compatibility-analysis-3.json),
+[CPU phase observations](../artifacts/lfm3-finite-guard-2026-11-11/compatibility-phase-observations-1.json),
+[closed receipts / fresh loss-build binding](../artifacts/lfm3-finite-guard-2026-11-11/compatibility-closure-checks-1.json),
+[fresh quality execution](../artifacts/lfm3-finite-guard-2026-11-11/fresh-quality-execution-plan-3.json),
+[closed 10,000-target collection](../artifacts/lfm3-finite-guard-2026-11-11/fresh-loss-collection-closure-checks-1.json),
+[retained grading failure](../artifacts/lfm3-finite-guard-2026-11-11/fresh-quality-grading-failure-audit-1.json),
+[guard stress qualification](../artifacts/lfm3-finite-guard-2026-11-11/grading-inert-guard-1/checks.json),
+[fresh complete quality](../artifacts/lfm3-finite-guard-2026-11-11/fresh-quality-recovery-4/original-quality-decision.json),
+[host requalification](../artifacts/lfm3-finite-guard-2026-11-11/host-requalification-1/result.json),
+[recovery and regression checks](../artifacts/lfm3-finite-guard-2026-11-11/grading-recovery-checks-1.json),
+[baseline byte-reproduction preparation](../artifacts/lfm3-finite-guard-2026-11-11/baseline-byte-reproduction-preparation-1.json),
+[exact baseline reproduction](../artifacts/lfm3-finite-guard-2026-11-11/baseline-byte-reproduction-result-1.json),
+[state execution](../artifacts/lfm3-finite-guard-2026-11-11/state-execution-plan-4.json),
+[complete 62-check replay](../artifacts/lfm3-finite-guard-2026-11-11/state-analysis-4.json),
+[complete pre-review qualification](../artifacts/lfm3-finite-guard-2026-11-11/finite-qualification-closure-1.json),
+[review/commit](../artifacts/lfm3-finite-guard-2026-11-11/finite-publication-checks.json),
+[portable measurements](../benchmarks/results/2026-11-12-lfm3-finite-widening-v1.json),
+[current experiment](../artifacts/lfm3-finite-guard-2026-11-11/active-experiment-state-1.json).
 
-LFM3 BF16 CPU attention matches 17,742,592 source words across 25 causal and
-window cases. One scratch row and borrowed KV spans support wrapped views
-with zero allocations. At prefix 1,023, the single-layer 128-query median is
-70–72 ms for the 256-token window and 210–213 ms for full attention on M1 Pro.
-Astra approves after the pinned runtime replay. MLX CPU and Metal strict
-correspondence rejects. Model composition and CLI,
-full performance, memory, and quality qualification remain open.
-[Scope and checks](lfm3-attention-bf16.md),
-[release samples](../benchmarks/results/2026-11-11-lfm3-attention-bf16-v1.json).
+Granite source preparation remains read-only. The existing Rust adapter preserves
+its explicit scalar settings; the installed MLX default requests group-64 8-bit
+overrides for output/down projections and the untied head. Strict config dialect
+handling and an explicit per-matrix conversion recipe precede payload, numerical,
+quality, physical-fit and request qualification. Shared affine overrides already
+exist; the bounded MiniCPM5 converter is specific to affine8 and 6,144 columns,
+below Granite's 8,192 and Ministral's 9,216-column down projections. Wider-row
+and explicit 4/8-bit conversion need independent qualification. No model module
+was imported, payload downloaded or conversion/inference run.
+[Source inspection and remaining gates](../artifacts/granite-source-planning-2026-11-12/static-source-inspection-1.json).
+[Conversion reuse](../artifacts/granite-source-planning-2026-11-12/conversion-reuse-inspection-1.json).
 
-The 9 November refresh preserves reviewed `88950b11` snapshots and cuts routine
-TODO/improvement bytes about 56%. Exact inverse-link reconstruction, local links,
-anchors and whitespace pass; live PLAN and numerical inputs are unchanged.
-[Archive validation](../artifacts/qwen35-9b-context256-2026-11-09/working-history-checks.json).
+Ministral source preparation records the existing configuration's independent
+3,072 hidden/4,096 query widths and the selected adapter's unsupported text tag.
+Its source combines YaRN with absolute-position query scaling cast before SDPA;
+independent fixtures must cover the 16,384-token boundary and cache offsets.
+The pinned Q4 index rejection is retained; payload, conversion and runtime
+qualification remain open. This inspection launches no model or compiler.
+[Source inspection and remaining gates](../artifacts/ministral3-source-planning-2026-11-12/static-source-inspection-1.json).
 
-The fifth user-requested disk cleanup removed 520 inactive Cargo test
-executables, each confirmed by a Cargo test fingerprint and Rust harness symbols.
-It recovered 14.4 GiB net, leaving 87.2 GiB free. All 44,970 protected hashes
-and 494,201 retained-cache metadata checks pass; models, raw evidence, production
-binaries, benchmark examples, current caches and user work are preserved.
-Engine implementation and qualification are unchanged; rotary fixtures and
-implementation remain pending after contract preparation.
-[Checks/review/commit](../artifacts/lfm3-rotary-2026-11-10/disk-cleanup-5/publication-checks.json),
-[deletion receipt](../artifacts/lfm3-rotary-2026-11-10/disk-cleanup-5/result.json).
+Qwen3.5-2B needs a distinct 24-layer/16-value-head source profile. Its MLX
+headers change eighteen gated-norm vectors and convolution layouts; normalization
+offsets also depend on layout and source key prefixes. A stale historical Rust
+hash fails the first static check; the corrected inspection pins current source
+without changing existing 4B/9B gates. Declared-parent/payload authentication,
+numerical/quality and runtime qualification remain open. No model or compiler
+was launched.
+[Source inspection and retained failure](../artifacts/qwen35-2b-source-planning-2026-11-12/static-source-inspection-2.json).
 
-The fourth user-requested disk cleanup removed 7,919 inactive Cargo test
-executables, recovering 22.5 GiB net and leaving 80.0 GiB free at completion.
-All 22,464 protected hashes and 494,721 retained-cache metadata checks pass.
-Benchmark examples, engine outputs, current caches, models, raw evidence and
-user work are preserved; engine implementation and qualification are unchanged.
-[Receipt](../artifacts/lfm3-source-2026-11-10/disk-cleanup-4/result.json).
-
-The third user-requested disk cleanup removed 23,292 inactive Cargo
-support/intermediate files and recovered 5.3 GiB net, leaving 65.8 GiB free.
-All 4,054 protected hashes and 502,723 retained-cache metadata checks
-pass; models, raw evidence, engine binaries/libraries, current caches and user
-work are preserved. Corrected process/schema preflight failures are retained.
-This cleanup adds no engine implementation or qualification claim.
-[Receipt](../artifacts/minicpm5-projection-isolation-2026-11-10/disk-cleanup-3/result.json).
-
-User-requested disk recovery removed 1,809,290 compiler intermediates from 190
-inactive Cargo caches, recovering about 51.1 GiB net and leaving 68.0 GiB free.
-All 4,054 protected hashes and retained-cache metadata checks pass; models,
-evidence, executables/libraries, current caches, user work and the running
-numerical capture are preserved. Compressed manifests retain the exact deletion
-list and the cleanup controller's verified interrupt/resume history.
-[Receipt](../artifacts/minicpm5-context1025-2026-11-10/disk-cleanup-2/result.json),
-[manifest storage](../artifacts/minicpm5-context1025-2026-11-10/disk-cleanup-2/manifest-storage.json).
+Completed LFM3/MiniCPM mechanism reports and prior disk-cleanup receipts
+are preserved in the [12 November reviewed snapshot](archive/2026-11-12/README.md).
+Exact inverse link reconstruction and local links pass; only 32 reviewed checked
+entries and 106 narrative lines move out of working documents, reducing their
+combined bytes 38.4%. Pending work, original user history and live PLAN stay intact.
+[Validation](../artifacts/lfm3-finite-guard-2026-11-11/working-history-archive-checks-1.json).
 
 ## Retained performance decisions
 
 | Change | Measured result and scope | Evidence |
 | --- | --- | --- |
+| LFM3 validated finite BF16 widening | Retained for CPU BF16: primary median requests fall 29.0%/29.5%, full matrix 20.6–27.9%; full original quality and 62 state checks pass within 6 GiB. Exact source/reduction order preserved; Astra approves with no findings. | [Scope](lfm3-finite-widening.md), [208 samples](../benchmarks/results/2026-11-12-lfm3-finite-widening-v1.json), [review/commit](../artifacts/lfm3-finite-guard-2026-11-11/finite-publication-checks.json) |
 | MiniCPM5 exact-reduction RMS stores | Explicit Mac opt-in; two loaded-model CLI comparisons reduce warm requests **21.51% / 21.50%** (500 to 393 ms), TTFT about14%, and raise decode about35%. All 2,614 native arrays remain bitwise equal; required checks, native65 and Astra pass. Extra64MiB allowance, 6GiB and all model/default gates remain explicit. | [Scope](minicpm5-rms-store.md), [review/commit](../artifacts/minicpm5-rms-store-2026-11-10/publication-checks.json) |
 | Ordered CPU projection tile | Warm 128/128 TTFT improves about 77.6% and request time about 52% in two pairs. Qualified opt-in; scalar reference preserved. | [Retention](experiments/2026-10-12-cpu-tiled-retention.md), `0abbe60` |
 | Exact committed-prefix reuse | On Q4 0.5B, editing position 128 of a 512-token prompt reduces first-token latency about 21.6%; editing only position 511 about 93%, in paired runs. No KV copying; not Q4 quality qualification. | [Continuation](experiments/2026-10-13-prefix-continuation.md), `340c965` |
@@ -334,13 +387,22 @@ is covered above; original task quality and adoption remain open.
 
 ## Console reference comparison
 
-The [LFM3 external configuration preflight](lfm3-external-config.md) authenticates
-metadata-only views for the exact BF16 candidate. Installed AutoConfig admission
-and the built-in MLX-VLM config path pass; the publisher's custom MLX-LM module
-fails MLX-VLM's distinct interface. Eight portable controls and the guarded probe
-pass. Astra approves with no findings. No weights are loaded; full external startup,
-numerical correspondence and matched performance remain open.
+The [LFM3 external configuration preflight](lfm3-external-config.md) is reviewed
+in its metadata-only scope. Follow-on setup authenticates all 286 BF16 payloads
+and four JSON files. A separate Ollama view changes thirteen singleton shape
+entries for its pinned loader, preserving payload bytes and the original import.
+All four fresh 3+10 external cohorts complete under 6 GiB with owned cleanup and
+source authentication. Ollama lacks authoritative prompt IDs; vLLM matches exact
+prompt/cache admission but matches native output IDs/text on only 3/13 prompts
+per cohort. Client medians and explicit limitations are in the
+[collection summary](../artifacts/lfm3-engine-comparison-2026-11-11/external-collection-summary-1.json).
+Twenty-six genuine vLLM captures replay through the reviewed optional-timing
+CLI with consistent arithmetic. No cross-engine speedup, quality or managed
+adoption is qualified; full comparison/Astra review remains open. Setup and
+failed/passing guards, source preservation and the removed redundant 3.46 GB
+upload copy are retained in the [configuration evidence](lfm3-external-config.md).
 
+The earlier Gemma comparison completes the following separate scope.
 All78 requests pass across two3warm+10 cohorts for each of3engines on M1Pro16GiB.
 Official BF16/G2 Toklet request medians2.184/2.202s; verified uncensoredMLX4bit
 Ollama121/119ms and vLLM-Metal147/149ms. Precision, weights, cache hits and timing
@@ -371,42 +433,6 @@ all raw evidence remain preserved, unreviewed and uncommitted. First-visible
 metrics remain unqualified; console metrics and automated checks lead active work.
 [Deferred status](../artifacts/o2-ui-frames-2026-11-07/status-audit-1/current-state.json).
 
-MiniCPM5 S1.A adds explicit default-RoPE declarations for the existing Llama
-graph. Required fmt/both strict Clippy, 670 CPU/806 Metal tests and five explicit
-GPU tests pass. Three equivalent CLI reports and four rejection controls pass;
-after metadata medians are 2.107–2.145 ms/open. No repeated ≥5% legacy regression
-appears, but unchanged-before-binary drift was 36.6%; no optimization claim.
-Three native slices/46 exports each and CPU/Metal C smokes pass. Astra approves
-after the timing-envelope fix:10portable tests and all six unchanged cohorts
-revalidate. Checks/review/commit are in the linked publication record. The original 4-bit source
-now returns401; the accessible labelled-uncensored 8-bit candidate has consistent
-metadata and a declared accessible parent. Whole payload/parent authentication,
-model execution, codec, quality, physical fit, requests and adoption stay open.
-[Scope](minicpm5-default-rope.md),
-[checks/review/commit](../artifacts/minicpm5-default-rope-2026-11-10/publication-checks.json),
-[measurements](../artifacts/minicpm5-default-rope-2026-11-10/metadata-comparison-v3.json),
-[access/recovery record](../artifacts/minicpm5-payload-2026-11-10/decision.json).
-
-S1.B short console checks pass: complete publisher identity, 698 CPU reference
-arrays, 52,896,768 dual-profile native comparisons (zero failures), exact state
-checks, fresh 670 CPU/810 Metal tests and native64 three-slice/C-smoke checks.
-Forty measured requests plus 12 warmups show token-only readback 0.64–0.70% slower
-on the fixed raw 4..7-context workload; keep defaults and both explicit options.
-No optimization, full quality, codec, deeper numerical, adoption or 1% overhead
-claim follows. Parent whole hashes/lineage remain open; disk/toolchain failures
-and protected cache recovery evidence are preserved. Astra timing-enclosure and
-owner-ledger findings are fixed with exact offline revalidation; scoped retention
-is approved. [Review/commit](../artifacts/minicpm5-heretic8-payload-2026-11-10/publication-checks.json).
-[Scope, measurements and limitations](minicpm5-console.md).
-
-The [MiniCPM5 CLI profiler](minicpm5-profile.md) passes 104 matched phase pairs,
-74,672 calibrated intervals and 13.58M exact logit comparisons across two runs.
-Prefill projections and decode normalization are measured targets; diagnostic
-phase inflation is 11.5–19.7%, so no ordinary operator-cost, 1% overhead or speedup
-claim follows. Fresh lint/example tests, portable/damaged-output controls and
-input-bound core/native reuse pass. Astra approves the counter-enclosure fix and
-scoped retention; [review/commit](../artifacts/minicpm5-profile-2026-11-10/publication-checks.json).
-
 ## Selected model decisions
 
 Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the five under-4B
@@ -423,7 +449,8 @@ Mac ceiling, 512/32 pilot and 512 MiB codec budget stay fixed; iPhone is deferre
 | 9B one-input oracle/Metal | Both complete dual-profile captures pass. Hybrid Metal has zero retained CPU matrix bytes and 5.667 GB peak; 64.72×/64.42× applies only to the raw one-input baseline. | [Oracle](qwen35-9b-oracle.md), [Metal](qwen35-9b-metal.md) |
 | 9B context17 | Both 33.85M-value gates, partitions, nonzero-prefix failure/repair/retry and zero-allocation checks pass. Release medians 4.093/4.121s are descriptive; no overhead, request, tail, sustained or adoption claim. | [Context17](qwen35-9b-context17.md), `41287c6c` |
 | Exact recurrence reference | All 67.17M short-context FP32/FP64 values match scalar references bitwise. Two cohorts lower helper step time 60.02/60.25% FP64 and 95.55/95.23% FP32. No engine/deeper-context gain follows. | [Reference helper](qwen35-reference-vector.md), `88950b11` |
-| Under-4B metadata | Five candidates have pinned shape/format/lineage evidence and explicit inaccessible-parent, stale-index and oversized-format restrictions. No authenticated payload, new numerical graph, quality or adoption qualification. | [Candidates and receipts](model-observability-plan.md#five-candidates-strictly-below-4b-total-parameters) |
+| LFM3 CPU BF16 | Authenticated graph/CLI, 1,025-position parity, both complete original quality comparisons and 62 state checks pass; finite widening retained after matched request measurements and Astra approval. Managed/GPU adoption stays open. | [Scope and decision](lfm3-finite-widening.md) |
+| Remaining under-4B qualification | Metadata is pinned; Granite, Ministral and Qwen3.5-2B still need payload/graph/quality/fit/request qualification. MiniCPM5's numerical rejection and LFM3's scoped CPU results remain explicit. | [Candidates and receipts](model-observability-plan.md#five-candidates-strictly-below-4b-total-parameters) |
 
 Original individual check counts, source revisions, measured cohorts, rejected
 experiments and Astra/commit receipts remain in the [reviewed history](archive/2026-11-09/improvements.md#latest-documentation-work)
