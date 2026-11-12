@@ -1,0 +1,503 @@
+{
+  "format": "toklet-ministral3-selected-metadata-Metal-v1",
+  "date": "2026-11-13",
+  "base_revision": "7ea011a6db7858e543334f667740bf5e6f63e98b",
+  "review_status": "Astra_approved_no_findings",
+  "decision": "retain_selected_metadata_and_test_integrated_Metal_component",
+  "scope": "Strict selected metadata validator plus test-integrated borrowed Half Metal component before ordinary graph admission",
+  "source_models": {
+    "original": {
+      "repository": "mistralai/Ministral-3-3B-Reasoning-2512",
+      "revision": "4a36357c811bf511a7b625d132e12f22408aac91",
+      "config_sha256": "c89d1a0b4f237d2892ce911d1fe03e9e5a4834579f7149ebc715a4c3fa564214"
+    },
+    "modified": {
+      "repository": "xtools-at/Ministral-3-3B-Reasoning-UNCENSORED-heretic",
+      "revision": "46fb9a42c0b66b0e762d08c1ea13a26d7ef915f4",
+      "config_sha256": "457b89531a7a992698b81025bf0071c89a91ad3b20423915627e55c59fb81b50"
+    }
+  },
+  "source_inputs": {
+    "Cargo.toml": "d5a978eb0f514099e1d04dee5c8fa375a6ecbac303a2588d4e04a32814302162",
+    "Cargo.lock": "405a9b18beaacf701966f1832bf6724c0a3d4b8567ca3c5005855778d8dedb26",
+    "src/metal/mod.rs": "4cc950a7dc1ad47e85b10427cdeb24342a7f5a6dbecc178c44412eb303773c06",
+    "src/mlx/mod.rs": "d6dc3d119bb2ed15af32d089e599ca22c76ce7a9314421888b2c60a017a75427",
+    "src/model/ministral3_rotary.rs": "fcc76b2ff94e0613e38731d2f76d71f5bf81d8caafcc083442166390a4613c8a",
+    "src/metal/ministral3_rotary.rs": "dd0acff9cce80816612d062ff55e45d3e23d9aeee9334ffb3d9a585bf5638830",
+    "src/metal/ministral3_rotary.metal": "64a6e1c480a049d7aa13c9b2fa89b2f79a8212c7f8b303618a1bc1840951265f",
+    "src/metal/ministral3_rotary/tests.rs": "aa2beb0f1349e8f38035a9125e5ec822e3b5854b60e61a3669fd468b3f376ecd",
+    "src/mlx/ministral3.rs": "4723f07e7ce3f7ac513db9bfe20c40d53749a8210c2748a4d869dd8ae710d4dc",
+    "src/mlx/ministral3/tests.rs": "f832078ca899e0bc39fb8b78668477a11b1d68d99eb001253c18cf2a567ee5f0",
+    "tests/fixtures/ministral3-config-v1/manifest.json": "06e13975393983c13a63ee3d012c9b33a81aab83aaee952738e37f066b7f8077",
+    "tests/fixtures/ministral3-config-v1/ministral_original.json": "c89d1a0b4f237d2892ce911d1fe03e9e5a4834579f7149ebc715a4c3fa564214",
+    "tests/fixtures/ministral3-config-v1/ministral_modified.json": "457b89531a7a992698b81025bf0071c89a91ad3b20423915627e55c59fb81b50",
+    "tests/fixtures/ministral3-rotary-v1/profile.json": "0f8d25bec77f2f6901e86830b7da22b75808fccb7800ce939f17f386206f4c9f",
+    "tests/fixtures/ministral3-rotary-v1/fixture.json": "0e1eb4f6a9056bf1725d8265e905ec7fe8ddc3c690e8a802f58121d96f36c427",
+    "tools/reference/ministral3_rotary_fixture.py": "66560e71c69d166445ef1fa993ebfdbb22f195bceb37d599c1d91e8d01499dfe"
+  },
+  "hardware": {
+    "CPU": "Apple M1 Pro",
+    "memory_bytes": 17179869184,
+    "OS": "ProductName:\t\tmacOS\nProductVersion:\t\t26.6.2\nBuildVersion:\t\t25G83",
+    "power": "Now drawing from 'AC Power'\n -InternalBattery-0 (id=67567715)\t80%; AC attached; not charging present: true",
+    "conditions": {
+      "thermalState": 0,
+      "lowPowerMode": false
+    },
+    "conditions_binary_sha256": "2dd1b3c9041b8984d733fa0553a8a4b94ce1fa06d4ff2ce8471c9ef76d7b02ab",
+    "conditions_source_sha256": "abba1dcee242ef7c9de877299794d570b92291114ae3549f6d260727ad2e3a2b",
+    "rustc": "rustc 1.90.0 (1159e78c4 2025-09-14) (Homebrew)\nbinary: rustc\ncommit-hash: 1159e78c4747b02ef996e55082b704c09b970588\ncommit-date: 2025-09-14\nhost: aarch64-apple-darwin\nrelease: 1.90.0\nLLVM version: 21.1.1"
+  },
+  "required_checks": {
+    "fmt": true,
+    "strict_CPU_Clippy": true,
+    "strict_Metal_Clippy": true,
+    "CPU_passed": 755,
+    "CPU_ignored": 52,
+    "Metal_feature_passed": 907,
+    "Metal_feature_ignored": 343,
+    "targeted_metadata_tests": 11,
+    "portable_Metal_tests": 2,
+    "explicit_release_GPU_tests": 3,
+    "compiler_limit_bytes": 3221225472,
+    "max_observed_compiler_charge_bytes": 3068362752,
+    "queue_seconds_including_builds": 923.1890430430649,
+    "receipt": "artifacts/ministral3-metal-2026-11-13/check-queue-result-1.json"
+  },
+  "numerical": {
+    "device": "Apple M1 Pro",
+    "fixture_cases": 11,
+    "case_arrays": 55,
+    "profile_coordinate_comparisons": 134592,
+    "GPU_output_profile_coordinates": 124928,
+    "uploaded_coefficient_gain_profile_coordinates": 8256,
+    "CPU_period_profile_coordinates": 1408,
+    "exact_replays": 22,
+    "single_row_chunk_calls": 64,
+    "single_row_rebased_calls": 64,
+    "preflight": {
+      "same_device_preflight_rejections": 11,
+      "foreign_device_rejections": 0,
+      "foreign_device_test_available": false,
+      "all_rejections_before_encoder_submission": true,
+      "immutable_outputs_status_tables": true
+    },
+    "all_completed": true,
+    "model_graph_qualified": false
+  },
+  "numeric_status": {
+    "checks": 8,
+    "numeric_failures": 7,
+    "good_reuse_checks": 8,
+    "monotone_status_preserved": true,
+    "device_tables_unchanged": true,
+    "session_KV_state_owned": false
+  },
+  "Rust_encode_allocation": {
+    "release_admitted_encode_calls": 48,
+    "rejected_encode_calls": 16,
+    "measured_thread_Rust_allocations": 0,
+    "driver_allocations_measured": false,
+    "diagnostic_cases": 2,
+    "runs_per_case": 2,
+    "warmups_per_run": 3,
+    "retained_samples_per_run": 10,
+    "total_operator_samples": 52,
+    "end_to_end_latency_qualified": false,
+    "O1_observer_overhead_qualified": false
+  },
+  "setup": {
+    "device": "Apple M1 Pro",
+    "device_pipeline_setup_seconds": 0.00149025,
+    "pipeline_allowance_bytes": 67108864,
+    "CPU_profile_sha256": "0f8d25bec77f2f6901e86830b7da22b75808fccb7800ce939f17f386206f4c9f",
+    "fixture_sha256": "0e1eb4f6a9056bf1725d8265e905ec7fe8ddc3c690e8a802f58121d96f36c427",
+    "release": true,
+    "trace_enabled": false,
+    "model_performance_qualified": false
+  },
+  "case_setup": [
+    {
+      "case": "actual_heads0",
+      "CPU_table_upload_operand_setup_seconds": 0.00054375,
+      "CPU_table_owner_bytes": 4424,
+      "GPU_table_owner_bytes": 4202,
+      "key_operand_bytes": 32828,
+      "query_operand_bytes": 131132
+    },
+    {
+      "case": "actual_heads_boundary",
+      "CPU_table_upload_operand_setup_seconds": 0.0002065,
+      "CPU_table_owner_bytes": 1340,
+      "GPU_table_owner_bytes": 1118,
+      "key_operand_bytes": 8252,
+      "query_operand_bytes": 32828
+    }
+  ],
+  "operator_diagnostic_cohorts": [
+    {
+      "case": "actual_heads0",
+      "run": 1,
+      "warmups": 3,
+      "measured": 10,
+      "metrics": {
+        "host_encode_seconds": {
+          "samples": [
+            9.291e-06,
+            9.708e-06,
+            7.25e-06,
+            1.2167e-05,
+            7.667e-06,
+            8.75e-06,
+            8.625e-06,
+            8.75e-06,
+            1.2e-05,
+            9.875e-06
+          ],
+          "median": 9.0205e-06,
+          "median_absolute_deviation": 7.709999999999999e-07,
+          "minimum": 7.25e-06,
+          "maximum": 1.2167e-05
+        },
+        "host_submit_wait_seconds": {
+          "samples": [
+            0.000310125,
+            0.000281916,
+            0.000347084,
+            0.000284333,
+            0.000254916,
+            0.000259791,
+            0.000341709,
+            0.000306125,
+            0.000331667,
+            0.00025475
+          ],
+          "median": 0.000295229,
+          "median_absolute_deviation": 3.593800000000001e-05,
+          "minimum": 0.00025475,
+          "maximum": 0.000347084
+        },
+        "host_encode_to_completion_seconds": {
+          "samples": [
+            0.0003195,
+            0.000291833,
+            0.000354458,
+            0.000296584,
+            0.000262667,
+            0.000268667,
+            0.000350416,
+            0.000315,
+            0.000343792,
+            0.00026475
+          ],
+          "median": 0.00030579200000000004,
+          "median_absolute_deviation": 3.75625e-05,
+          "minimum": 0.000262667,
+          "maximum": 0.000354458
+        },
+        "completed_command_GPU_seconds": {
+          "samples": [
+            2.862501423805952e-05,
+            2.9250048100948334e-05,
+            2.8708367608487606e-05,
+            2.862501423805952e-05,
+            2.862501423805952e-05,
+            2.875004429370165e-05,
+            2.875004429370165e-05,
+            2.862501423805952e-05,
+            2.8666690923273563e-05,
+            2.8999987989664078e-05
+          ],
+          "median": 2.8687529265880585e-05,
+          "median_absolute_deviation": 6.2515027821064e-08,
+          "minimum": 2.862501423805952e-05,
+          "maximum": 2.9250048100948334e-05
+        }
+      }
+    },
+    {
+      "case": "actual_heads0",
+      "run": 2,
+      "warmups": 3,
+      "measured": 10,
+      "metrics": {
+        "host_encode_seconds": {
+          "samples": [
+            8.625e-06,
+            8.334e-06,
+            1.3209e-05,
+            1.0459e-05,
+            9.25e-06,
+            1.0334e-05,
+            9.417e-06,
+            9.375e-06,
+            1.25e-05,
+            1.6e-05
+          ],
+          "median": 9.8755e-06,
+          "median_absolute_deviation": 9.38000000000001e-07,
+          "minimum": 8.334e-06,
+          "maximum": 1.6e-05
+        },
+        "host_submit_wait_seconds": {
+          "samples": [
+            0.000295041,
+            0.00032975,
+            0.000289875,
+            0.000285084,
+            0.000281333,
+            0.000274875,
+            0.000289042,
+            0.000299708,
+            0.000346208,
+            0.000294792
+          ],
+          "median": 0.0002923335,
+          "median_absolute_deviation": 7.311999999999987e-06,
+          "minimum": 0.000274875,
+          "maximum": 0.000346208
+        },
+        "host_encode_to_completion_seconds": {
+          "samples": [
+            0.00030375,
+            0.000338125,
+            0.000303208,
+            0.000295584,
+            0.000290708,
+            0.000285291,
+            0.000298542,
+            0.000309209,
+            0.000358875,
+            0.000310917
+          ],
+          "median": 0.000303479,
+          "median_absolute_deviation": 7.666500000000012e-06,
+          "minimum": 0.000285291,
+          "maximum": 0.000358875
+        },
+        "completed_command_GPU_seconds": {
+          "samples": [
+            3.2374984584748745e-05,
+            2.862501423805952e-05,
+            2.862501423805952e-05,
+            2.8624897822737694e-05,
+            2.875004429370165e-05,
+            2.862501423805952e-05,
+            2.870825119316578e-05,
+            2.8708367608487606e-05,
+            2.962502185255289e-05,
+            2.8666690923273563e-05
+          ],
+          "median": 2.868747105821967e-05,
+          "median_absolute_deviation": 6.245682016015053e-08,
+          "minimum": 2.8624897822737694e-05,
+          "maximum": 3.2374984584748745e-05
+        }
+      }
+    },
+    {
+      "case": "actual_heads_boundary",
+      "run": 1,
+      "warmups": 3,
+      "measured": 10,
+      "metrics": {
+        "host_encode_seconds": {
+          "samples": [
+            4.625e-06,
+            4e-06,
+            4.125e-06,
+            4.625e-06,
+            4.542e-06,
+            5.916e-06,
+            5.75e-06,
+            4.792e-06,
+            3.833e-06,
+            3.792e-06
+          ],
+          "median": 4.583499999999999e-06,
+          "median_absolute_deviation": 5.209999999999993e-07,
+          "minimum": 3.792e-06,
+          "maximum": 5.916e-06
+        },
+        "host_submit_wait_seconds": {
+          "samples": [
+            0.000241208,
+            0.000282791,
+            0.000238417,
+            0.000260833,
+            0.000270791,
+            0.000242125,
+            0.000235083,
+            0.000253375,
+            0.000227833,
+            0.000228292
+          ],
+          "median": 0.00024166649999999998,
+          "median_absolute_deviation": 1.2541500000000009e-05,
+          "minimum": 0.000227833,
+          "maximum": 0.000282791
+        },
+        "host_encode_to_completion_seconds": {
+          "samples": [
+            0.000245833,
+            0.000286917,
+            0.000242584,
+            0.000265542,
+            0.000275417,
+            0.000248125,
+            0.000240958,
+            0.000258292,
+            0.00023175,
+            0.000232084
+          ],
+          "median": 0.000246979,
+          "median_absolute_deviation": 1.3104000000000015e-05,
+          "minimum": 0.00023175,
+          "maximum": 0.000286917
+        },
+        "completed_command_GPU_seconds": {
+          "samples": [
+            2.7250032871961594e-05,
+            2.7249916456639767e-05,
+            2.7374946512281895e-05,
+            2.7250032871961594e-05,
+            2.716656308621168e-05,
+            2.745829988270998e-05,
+            2.7125002816319466e-05,
+            2.7250032871961594e-05,
+            2.7333269827067852e-05,
+            2.737506292760372e-05
+          ],
+          "median": 2.7250032871961594e-05,
+          "median_absolute_deviation": 8.335337042808533e-08,
+          "minimum": 2.7125002816319466e-05,
+          "maximum": 2.745829988270998e-05
+        }
+      }
+    },
+    {
+      "case": "actual_heads_boundary",
+      "run": 2,
+      "warmups": 3,
+      "measured": 10,
+      "metrics": {
+        "host_encode_seconds": {
+          "samples": [
+            4.667e-06,
+            4e-06,
+            4.375e-06,
+            3.875e-06,
+            3.916e-06,
+            3.834e-06,
+            3.875e-06,
+            4e-06,
+            4.292e-06,
+            5.875e-06
+          ],
+          "median": 4e-06,
+          "median_absolute_deviation": 1.454999999999997e-07,
+          "minimum": 3.834e-06,
+          "maximum": 5.875e-06
+        },
+        "host_submit_wait_seconds": {
+          "samples": [
+            0.000244167,
+            0.000243417,
+            0.00024575,
+            0.0002415,
+            0.000251584,
+            0.000238042,
+            0.000274292,
+            0.00023375,
+            0.000255291,
+            0.000285042
+          ],
+          "median": 0.0002449585,
+          "median_absolute_deviation": 6.771000000000007e-06,
+          "minimum": 0.00023375,
+          "maximum": 0.000285042
+        },
+        "host_encode_to_completion_seconds": {
+          "samples": [
+            0.000248917,
+            0.0002475,
+            0.000250208,
+            0.000245375,
+            0.000255541,
+            0.000241917,
+            0.000278292,
+            0.000237792,
+            0.000259625,
+            0.000291
+          ],
+          "median": 0.0002495625,
+          "median_absolute_deviation": 6.812000000000015e-06,
+          "minimum": 0.000237792,
+          "maximum": 0.000291
+        },
+        "completed_command_GPU_seconds": {
+          "samples": [
+            2.737506292760372e-05,
+            2.7374946512281895e-05,
+            2.762500662356615e-05,
+            2.7249916456639767e-05,
+            2.7250032871961594e-05,
+            3.0499999411404133e-05,
+            2.7666683308780193e-05,
+            2.7291709557175636e-05,
+            2.7166679501533508e-05,
+            2.737506292760372e-05
+          ],
+          "median": 2.7375004719942808e-05,
+          "median_absolute_deviation": 1.25030055642128e-07,
+          "minimum": 2.7166679501533508e-05,
+          "maximum": 3.0499999411404133e-05
+        }
+      }
+    }
+  ],
+  "observed_GPU_process_charge_bytes": 109035520,
+  "engine_limit_bytes": 6442450944,
+  "memory_instrument_limit": "Sampled owned identity cohorts and terminal RSS including32MiB reserve; not a continuous allocator cap",
+  "energy": null,
+  "system_pressure": null,
+  "shader_compilation_cache_state": "Not independently controlled; reported later operator setup may be warm",
+  "failed_check_retained": "artifacts/ministral3-metal-2026-11-13/queue-finalization-failure-1.json",
+  "ordinary_loader_or_graph_admitted": false,
+  "payload_authenticated": false,
+  "full_graph_quality_codec_fit_request_performance_qualified": false,
+  "O1_observer_overhead_qualified": false,
+  "whole_goal_complete": false,
+  "evidence": {
+    "prospective-protocol-1.json": {
+      "path": "artifacts/ministral3-metal-2026-11-13/prospective-protocol-1.json",
+      "sha256": "5acaf30389414ca3e66187cf586ccdc14e5fb512610fffe751fce0a0220374bc"
+    },
+    "integration-note-1.json": {
+      "path": "artifacts/ministral3-metal-2026-11-13/integration-note-1.json",
+      "sha256": "cc759d651faf1131ebbc84857a7c53c15c0752e003af2ec517587a2a45878a0c"
+    },
+    "check-queue-result-1.json": {
+      "path": "artifacts/ministral3-metal-2026-11-13/check-queue-result-1.json",
+      "sha256": "e09fd0a14fb3fc93b87b338a52abff3bf84c8a6e06154932fed606106aa1bb34"
+    },
+    "gpu-result-1.json": {
+      "path": "artifacts/ministral3-metal-2026-11-13/gpu-result-1.json",
+      "sha256": "952495a80aa1724e219a3f3f400df97c65abb876d2866575deb6bf12064b8ced"
+    },
+    "gpu-scalar-closure-1.json": {
+      "path": "artifacts/ministral3-metal-2026-11-13/gpu-scalar-closure-1.json",
+      "sha256": "59f34ede1fb3a6034494e861be35cf09b506404ac0ae22663a65d154057207a4"
+    },
+    "queue-finalization-failure-1.json": {
+      "path": "artifacts/ministral3-metal-2026-11-13/queue-finalization-failure-1.json",
+      "sha256": "55dbafef6cea31d180373ca1e8a2ec005595873f06c35e06751d602a74326c2c"
+    }
+  },
+  "review": {
+    "path": "artifacts/ministral3-metal-2026-11-13/astra-review-1.json",
+    "sha256": "c8e467868f3f0e3ed4ef77c82fb4c8bf90491100a86df78fba62daa890349eb0",
+    "approved_diff_sha256": "7ab531fb2fed788afe18f37e5850005f474ba6d5889bdd279b9e046917c24add"
+  },
+  "publication": "artifacts/ministral3-metal-2026-11-13/publication-checks.json"
+}

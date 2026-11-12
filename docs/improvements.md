@@ -223,11 +223,24 @@ fixture, 24 portable controls per mode, six targeted Rust tests, fmt and strict
 CPU/Metal Clippy and all 744 CPU/894 Metal-feature tests pass. Six release
 primitive tests and zero-allocation key/query/rejection controls pass; optimized
 Python regenerates identical bytes. Astra approves scoped retention with no
-findings. This mechanism admits no model or Metal route; original downstream
-gates remain.
+findings. Published as `7ea011a6`; both exact-head CI workflows pass. This mechanism
+admits no model or Metal route; original downstream gates remain. Next work splits
+Metal implementation and source/conversion planning, with exclusive file ownership
+and one root-owned heavy-check queue.
+[Execution plan](../artifacts/ministral3-yarn-2026-11-13/parallel-work-plan-1.json).
 [Review/commit](../artifacts/ministral3-yarn-2026-11-13/publication-checks.json).
 [Cache receipt](../artifacts/ministral3-source-planning-2026-11-13/cache-cleanup-result-1.json),
 [prospective profile](../artifacts/ministral3-yarn-2026-11-13/prospective-primitive-protocol-2.json).
+
+Ministral selected-config binding and test-integrated borrowed Metal YaRN
+pass 755 CPU/907 Metal-feature tests, fmt/strict Clippy and three release GPU
+diagnostics under unchanged gates. GPU output comparisons, exact replay/chunk/
+rebase, numeric status/reuse and zero measured Rust encode allocations pass.
+Four 3+10 operator cohorts are diagnostic only. A Cargo-kind receipt-finalization
+error is retained and corrected without repeated checks. Astra approves scoped
+retention with no findings;
+model/source/graph/quality/request and O1-overhead qualification remain open.
+[Checks/review](../artifacts/ministral3-metal-2026-11-13/publication-checks.json).
 
 Qwen3.5-2B needs a distinct 24-layer/16-value-head source profile. Its MLX
 headers change eighteen gated-norm vectors and convolution layouts; normalization

@@ -1,0 +1,17 @@
+{
+  "format": "toklet-ministral3-config-v1",
+  "sources": {
+    "ministral_original": {
+      "path": "tests/fixtures/ministral3-config-v1/ministral_original.json",
+      "bytes": 1579,
+      "sha256": "c89d1a0b4f237d2892ce911d1fe03e9e5a4834579f7149ebc715a4c3fa564214"
+    },
+    "ministral_modified": {
+      "path": "tests/fixtures/ministral3-config-v1/ministral_modified.json",
+      "bytes": 1788,
+      "sha256": "457b89531a7a992698b81025bf0071c89a91ad3b20423915627e55c59fb81b50"
+    }
+  },
+  "payload_authenticated": false,
+  "graph_admitted": false
+}

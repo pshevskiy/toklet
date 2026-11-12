@@ -37,6 +37,8 @@ mod llama_staged;
 #[cfg(target_os = "macos")]
 mod lookup_round;
 mod memory;
+#[cfg(test)]
+mod ministral3_rotary;
 pub mod mlx;
 mod moe_experts_half;
 mod moe_ffn;
