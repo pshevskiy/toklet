@@ -1,0 +1,208 @@
+{
+  "format": "toklet-ministral3-conversion-metadata-v1",
+  "files": {
+    "ministral_original-model-00001-of-00002.safetensors-prefix.bin": {
+      "bytes": 8,
+      "sha256": "006a15c50415bca681071ae7cc0627acab70290864121512ab42247370a88a14"
+    },
+    "ministral_original-model-00001-of-00002.safetensors-header.bin": {
+      "bytes": 47232,
+      "sha256": "cc87c4a0a14eb3532b4c8a03e7c3979898cfccb7b241a9952b15270f83531730"
+    },
+    "ministral_original-model-00002-of-00002.safetensors-prefix.bin": {
+      "bytes": 8,
+      "sha256": "1fa63bf316eea67504a15cfe7eb7db35bf4dee98bfed8e5661d32edf833f32c7"
+    },
+    "ministral_original-model-00002-of-00002.safetensors-header.bin": {
+      "bytes": 13712,
+      "sha256": "f92bb1c1fd03d67a575d254d40fe94e42fa8c958b9e7ccdce1bf9032c89c2dfe"
+    },
+    "ministral_original-config.json": {
+      "bytes": 1579,
+      "sha256": "c89d1a0b4f237d2892ce911d1fe03e9e5a4834579f7149ebc715a4c3fa564214"
+    },
+    "ministral_original-model.safetensors.index.json": {
+      "bytes": 45577,
+      "sha256": "7829dcf0040e34f1172b401563fcbb27cc3c5a0244ef01e6af18b7a64d63a81e"
+    },
+    "ministral_modified-model-00001-of-00002.safetensors-prefix.bin": {
+      "bytes": 8,
+      "sha256": "8c66e41783613ced0cb1fb66e8d2ffcce94e2379e27387afbfca9df18edf59fe"
+    },
+    "ministral_modified-model-00001-of-00002.safetensors-header.bin": {
+      "bytes": 21464,
+      "sha256": "579359f62b376b3449456b9dabee13220280ea2bb9dbfe9f2ff402fef7339f6a"
+    },
+    "ministral_modified-model-00002-of-00002.safetensors-prefix.bin": {
+      "bytes": 8,
+      "sha256": "7fcebac1aad02875f670ca59e9cf65c0771ba5c94d228c18c9816a4fb9ff80cb"
+    },
+    "ministral_modified-model-00002-of-00002.safetensors-header.bin": {
+      "bytes": 39488,
+      "sha256": "897dbee8cf0f5a8f4fc8acf58ed264233fd6c12aeca3779697ef83e791bea628"
+    },
+    "ministral_modified-config.json": {
+      "bytes": 1788,
+      "sha256": "457b89531a7a992698b81025bf0071c89a91ad3b20423915627e55c59fb81b50"
+    },
+    "ministral_modified-model.safetensors.index.json": {
+      "bytes": 45577,
+      "sha256": "55641440eb385d8bc83a319b0a92f60fe45e6aef4b6992245eee91142237786e"
+    },
+    "controls.json": {
+      "bytes": 9428,
+      "sha256": "b3f2f2d401de49a38a5f3cfb3bea1995dff4b1f140a461d253a24b2ca7a6643d"
+    }
+  },
+  "sources": [
+    {
+      "label": "ministral_original",
+      "repository": "mistralai/Ministral-3-3B-Reasoning-2512",
+      "revision": "4a36357c811bf511a7b625d132e12f22408aac91",
+      "directory": "/Users/coloner/work/rust/toklet/models/ministral3-3b-reasoning-bf16-4a36357c",
+      "config_sha256": "c89d1a0b4f237d2892ce911d1fe03e9e5a4834579f7149ebc715a4c3fa564214",
+      "index_sha256": "7829dcf0040e34f1172b401563fcbb27cc3c5a0244ef01e6af18b7a64d63a81e",
+      "containers": [
+        {
+          "label": "ministral_original",
+          "repository": "mistralai/Ministral-3-3B-Reasoning-2512",
+          "revision": "4a36357c811bf511a7b625d132e12f22408aac91",
+          "container": "model-00001-of-00002.safetensors",
+          "expected_bytes": 4967581832,
+          "expected_sha256": "2fe8ca14c36eb7f76f70d9f4a3196532e622683f6c2ea74a33e122f771e362e7",
+          "payload_origin": 47240,
+          "files": [
+            {
+              "file": "ministral_original-model-00001-of-00002.safetensors-prefix.bin",
+              "range": [
+                0,
+                7
+              ],
+              "bytes": 8,
+              "sha256": "006a15c50415bca681071ae7cc0627acab70290864121512ab42247370a88a14",
+              "content_range": "bytes 0-7/4967581832"
+            },
+            {
+              "file": "ministral_original-model-00001-of-00002.safetensors-header.bin",
+              "range": [
+                8,
+                47239
+              ],
+              "bytes": 47232,
+              "sha256": "cc87c4a0a14eb3532b4c8a03e7c3979898cfccb7b241a9952b15270f83531730",
+              "content_range": "bytes 8-47239/4967581832"
+            }
+          ],
+          "payload_authenticated": false
+        },
+        {
+          "label": "ministral_original",
+          "repository": "mistralai/Ministral-3-3B-Reasoning-2512",
+          "revision": "4a36357c811bf511a7b625d132e12f22408aac91",
+          "container": "model-00002-of-00002.safetensors",
+          "expected_bytes": 2730659224,
+          "expected_sha256": "68c1cb14d59a8013f7b6ba511dfddffcec7a9c971a8bb31af3889c1e4d5a3124",
+          "payload_origin": 13720,
+          "files": [
+            {
+              "file": "ministral_original-model-00002-of-00002.safetensors-prefix.bin",
+              "range": [
+                0,
+                7
+              ],
+              "bytes": 8,
+              "sha256": "1fa63bf316eea67504a15cfe7eb7db35bf4dee98bfed8e5661d32edf833f32c7",
+              "content_range": "bytes 0-7/2730659224"
+            },
+            {
+              "file": "ministral_original-model-00002-of-00002.safetensors-header.bin",
+              "range": [
+                8,
+                13719
+              ],
+              "bytes": 13712,
+              "sha256": "f92bb1c1fd03d67a575d254d40fe94e42fa8c958b9e7ccdce1bf9032c89c2dfe",
+              "content_range": "bytes 8-13719/2730659224"
+            }
+          ],
+          "payload_authenticated": false
+        }
+      ]
+    },
+    {
+      "label": "ministral_modified",
+      "repository": "xtools-at/Ministral-3-3B-Reasoning-UNCENSORED-heretic",
+      "revision": "46fb9a42c0b66b0e762d08c1ea13a26d7ef915f4",
+      "directory": "/Users/coloner/work/rust/toklet/models/ministral3-3b-reasoning-heretic-bf16-46fb9a42",
+      "config_sha256": "457b89531a7a992698b81025bf0071c89a91ad3b20423915627e55c59fb81b50",
+      "index_sha256": "55641440eb385d8bc83a319b0a92f60fe45e6aef4b6992245eee91142237786e",
+      "containers": [
+        {
+          "label": "ministral_modified",
+          "repository": "xtools-at/Ministral-3-3B-Reasoning-UNCENSORED-heretic",
+          "revision": "46fb9a42c0b66b0e762d08c1ea13a26d7ef915f4",
+          "container": "model-00001-of-00002.safetensors",
+          "expected_bytes": 4995664864,
+          "expected_sha256": "cc828c3d09d1fb1f37e37a65e78ebceb6f9a0baa80444e54ba137dcf295182bd",
+          "payload_origin": 21472,
+          "files": [
+            {
+              "file": "ministral_modified-model-00001-of-00002.safetensors-prefix.bin",
+              "range": [
+                0,
+                7
+              ],
+              "bytes": 8,
+              "sha256": "8c66e41783613ced0cb1fb66e8d2ffcce94e2379e27387afbfca9df18edf59fe",
+              "content_range": "bytes 0-7/4995664864"
+            },
+            {
+              "file": "ministral_modified-model-00001-of-00002.safetensors-header.bin",
+              "range": [
+                8,
+                21471
+              ],
+              "bytes": 21464,
+              "sha256": "579359f62b376b3449456b9dabee13220280ea2bb9dbfe9f2ff402fef7339f6a",
+              "content_range": "bytes 8-21471/4995664864"
+            }
+          ],
+          "payload_authenticated": false
+        },
+        {
+          "label": "ministral_modified",
+          "repository": "xtools-at/Ministral-3-3B-Reasoning-UNCENSORED-heretic",
+          "revision": "46fb9a42c0b66b0e762d08c1ea13a26d7ef915f4",
+          "container": "model-00002-of-00002.safetensors",
+          "expected_bytes": 2702576200,
+          "expected_sha256": "dcab46c24c19e87749729ee9042c28ba0b53bf83a63f98e1de30616476fe88b1",
+          "payload_origin": 39496,
+          "files": [
+            {
+              "file": "ministral_modified-model-00002-of-00002.safetensors-prefix.bin",
+              "range": [
+                0,
+                7
+              ],
+              "bytes": 8,
+              "sha256": "7fcebac1aad02875f670ca59e9cf65c0771ba5c94d228c18c9816a4fb9ff80cb",
+              "content_range": "bytes 0-7/2702576200"
+            },
+            {
+              "file": "ministral_modified-model-00002-of-00002.safetensors-header.bin",
+              "range": [
+                8,
+                39495
+              ],
+              "bytes": 39488,
+              "sha256": "897dbee8cf0f5a8f4fc8acf58ed264233fd6c12aeca3779697ef83e791bea628",
+              "content_range": "bytes 8-39495/2702576200"
+            }
+          ],
+          "payload_authenticated": false
+        }
+      ]
+    }
+  ],
+  "payloads_present": false
+}

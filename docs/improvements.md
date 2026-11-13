@@ -238,9 +238,20 @@ diagnostics under unchanged gates. GPU output comparisons, exact replay/chunk/
 rebase, numeric status/reuse and zero measured Rust encode allocations pass.
 Four 3+10 operator cohorts are diagnostic only. A Cargo-kind receipt-finalization
 error is retained and corrected without repeated checks. Astra approves scoped
-retention with no findings;
-model/source/graph/quality/request and O1-overhead qualification remain open.
+retention with no findings. Published as `5c0eee96`; both exact-head CI workflows
+pass. Model/source/graph/quality/request and O1-overhead qualification remain open.
 [Checks/review](../artifacts/ministral3-metal-2026-11-13/publication-checks.json).
+
+Ministral source acquisition authenticates four complete containers within the
+512MiB setup policy after6.55GB observed compiler-cache reclamation. Stock's
+optional index count remains rejected; modified-only mixed conversion passes
+all3,428,843,520 matrix reconstructions exactly. All144 genuine controls and86
+portable tests perPythonmode pass. The saved-byte auditor now validates rich
+metadata identities and all4,252 tiles; failed checks stayretained. ActualCLI
+preservesunknown_architecture. RequiredRust checks reuse4,641 unchangedinputs.
+Astra approves scoped retention with no findings; graph/codec/quality/fit/
+request/O1/adoption remain open.
+[Conversion/checks/review](../artifacts/ministral3-conversion-2026-11-13/publication-checks.json).
 
 Qwen3.5-2B needs a distinct 24-layer/16-value-head source profile. Its MLX
 headers change eighteen gated-norm vectors and convolution layouts; normalization

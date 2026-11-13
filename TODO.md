@@ -169,10 +169,10 @@ does not qualify full-model numerical/quality, all-workload fit or performance.
   [localization](artifacts/granite-graph-2026-11-12/attention-localization-result-1.json),
   [review/commit](artifacts/granite-graph-2026-11-12/publication-checks.json).
 
-Next: authenticate complete stock/modified source packages and qualify bounded
-conversion after fresh recipe/disk admission. Standalone metadata/CPU/Metal
-prerequisites pass; full graph/codec/quality/fit/request gates remain open. Root
-owns integration and the single heavy-check queue.
+Next: integrate and qualify the real Ministral graph and raw CLI route, then
+codec and original full-quality/fit/request/O1 gates. Source-byte authentication
+and modified conversion pass; stock index admission remains rejected. Root owns
+integration and the single heavy-check queue.
 [Parallel execution plan](artifacts/ministral3-yarn-2026-11-13/parallel-work-plan-1.json).
 Granite's current affine4/8 Metal route does not advance to adoption or quality/
 performance qualification. Any future candidate must pass the original graph,
@@ -208,11 +208,27 @@ Ministral track after publication.
   and status/reuse checks pass. Measured Rust encode allocations are zero; four
   3+10 operator cohorts retain raw clocks. A post-build Cargo-kind collector
   mismatch is corrected with unchanged-source check reuse; failed finalization
-  is retained. Astra approves scoped retention with no findings. Graph/model/quality/fit/request
+  is retained. Astra approves scoped retention with no findings. Published as
+  `5c0eee96`; both exact-head CI workflows pass. Graph/model/quality/fit/request
   and O1 overhead remain open; foreign-device negative is unavailable.
   [Required checks](artifacts/ministral3-metal-2026-11-13/check-queue-result-1.json),
   [GPU/scalar evidence](artifacts/ministral3-metal-2026-11-13/gpu-scalar-closure-1.json),
   [review/publication](artifacts/ministral3-metal-2026-11-13/publication-checks.json).
+
+- [x] S1.M bounded conversion: both complete sources authenticate; stock's
+  optional index count still rejects under the strict physical-count policy.
+  Modified-only conversion passes183matrices/53norms/222exclusions/4,252tiles,
+  with all3,428,843,520 independent/upstream FP32 values exact. All144 genuine
+  controls and86 portable tests perPythonmode pass within512MiB. The saved-byte
+  audit passes after validating rich metadata identities; its first failure is
+  retained. Wrong environment-root and CLI-status expectations are corrected
+  without changing policies or loader behavior. ActualCLI remainsunknown/
+  unknown_architecture;4,641 unchangedRust inputs reuse requiredchecks. Combined
+  Astra approves scoped retention with no findings; graph/codec/quality/fit/
+  request/O1/adoption stay open.
+  [Full conversion](artifacts/ministral3-conversion-2026-11-13/full-conversion-1/manifest.json),
+  [saved-byte audit](artifacts/ministral3-conversion-2026-11-13/full-audit-2/audit.json),
+  [checks/review](artifacts/ministral3-conversion-2026-11-13/publication-checks.json).
 
 - [ ] S1.M source preparation: current metadata/source pins are revalidated.
   The original Rust pin is stale after Granite's reviewed configuration change;
@@ -224,6 +240,9 @@ Ministral track after publication.
   hidden/query widths and positional full-graph composition remain open.
   Standalone CPU/Metal fixtures now pass separately; this metadata preflight
   authenticated no payload and launched no model.
+  Earlier disk planning lacked3.86GB minimum headroom; suffix-only retired
+  cache cleanup now passes the actual mixed-recipe acquisition reservation.
+  [Storage preflight](artifacts/ministral3-metal-2026-11-13/next-storage-preflight-1.json).
   [Current preflight](artifacts/ministral3-source-planning-2026-11-13/input-revalidation-2.json),
   [retained stale-pin check](artifacts/ministral3-source-planning-2026-11-13/stale-input-failure-1.json).
 
