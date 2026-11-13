@@ -256,12 +256,19 @@ codec and differing chat profiles remain unqualified.
 [Next codec preflight](../artifacts/ministral3-codec-2026-11-13/preflight-1.json).
 [Conversion/checks/review](../artifacts/ministral3-conversion-2026-11-13/publication-checks.json).
 
-The [parallel delivery plan](parallel-delivery.md) groups the next real graph/CLI
-milestone into source, Metal and independent-reference lanes, with one integrator
-and heavy-check queue. Existing local inputs, shared caches, early integration,
-one combined Astra review and dependency-aware delivery timings reduce avoidable
-waiting and repeated work. This is an execution plan; no workflow speedup is
-measured and the original qualification gates remain unchanged.
+The [parallel delivery plan](parallel-delivery.md) now assigns the active
+Qwen3.5-2B milestone to typed-source, hybrid-graph and independent-reference lanes.
+One integrator owns shared APIs, early integration, the single heavy-job queue,
+combined Astra review and publication. The
+[dispatch receipt](../artifacts/qwen35-2b-source-planning-2026-11-13/parallel-work-plan-1.json)
+records file ownership, resource bounds and remaining gates. Track integration,
+queue/review wait and repeated-check reasons in one ledger. The typed-source/tiny-graph slice passes formatting,
+strict CPU/Metal Clippy, 781 CPU/940 Metal-feature tests, twelve portable controls
+per Python mode and its explicit GPU storage check. Astra approves scoped
+diagnostic retention with no findings. No workflow speedup is measured;
+full-model qualification gates remain open.
+[Review/publication](../artifacts/qwen35-2b-source-planning-2026-11-13/publication-checks.json).
+[Diagnostic scope](qwen35-2b-typed-source.md).
 
 Ministral graph/CLI diagnostic code passes fmt, strict CPU/Metal Clippy,
 763 CPU/922 Metal-feature tests and all five release GPU controls, including

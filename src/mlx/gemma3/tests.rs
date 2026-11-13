@@ -73,6 +73,7 @@ fn frozen_inventory_and_separate_residual_attention_widths() {
         .logical_tensors()
         .iter()
         .map(|t| match t.storage {
+            Storage::F32Vector => panic!("legacy Gemma3 vectors remain BF16"),
             Storage::Bf16Vector => {
                 let Shape::Vector(n) = t.shape else {
                     panic!("vector shape")

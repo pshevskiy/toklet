@@ -4,6 +4,7 @@ mod context;
 mod metal;
 mod nine_b_real;
 mod reset;
+mod two_b;
 mod untied;
 use crate::mlx::affine::{Layout, MetadataDtype};
 use crate::model::gemma_reference::tests::Measurement;

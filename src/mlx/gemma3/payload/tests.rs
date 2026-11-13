@@ -359,6 +359,7 @@ fn tiny_names() -> PayloadStore {
     for (ordinal, tensor) in logical.iter_mut().enumerate() {
         let marker = bf16::from_f32(ordinal as f32).to_le_bytes();
         let components = match tensor.storage {
+            Storage::F32Vector => panic!("legacy Gemma3 vectors remain BF16"),
             Storage::Affine(_) => {
                 tensor.shape = Shape::Matrix {
                     rows: 2,

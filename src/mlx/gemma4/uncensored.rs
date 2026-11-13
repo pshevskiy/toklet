@@ -179,7 +179,7 @@ fn layout(config_bytes: &[u8], header_bytes: &[u8], container_bytes: u64) -> Res
                 },
                 name: t.name,
             }),
-            Storage::Bf16Vector => None,
+            Storage::Bf16Vector | Storage::F32Vector => None,
         })
         .collect();
     let mut plan = Plan {

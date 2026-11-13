@@ -1,0 +1,26 @@
+name: Qwen3.5 2B typed fixture controls
+
+"on":
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  portable:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        optimize: ["0", "1"]
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
+      - name: Validate independent typed fixture and rejection controls
+        env:
+          PYTHONPATH: tools/reference
+          PYTHONOPTIMIZE: ${{ matrix.optimize }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: python3 -s -B -m unittest -v test_qwen35_2b_fixture

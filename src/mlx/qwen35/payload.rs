@@ -78,7 +78,9 @@ pub(super) struct SourceRecipe<'a> {
     pub(super) common: &'a [TensorPlan],
     pub(super) convolutions: &'a [ConvolutionPlan],
     pub(super) physical: &'a BTreeMap<String, PhysicalTensor>,
-    pub(super) bytes: PayloadBytes,
+    pub(super) source_payload_bytes: usize,
+    /// Zero for the existing4B/9B factories; only the distinct2B recipe opts in.
+    pub(super) source_f32_vector_bytes: usize,
 }
 pub(super) struct Components {
     pub(super) matrices: BTreeMap<String, Packed>,
@@ -92,7 +94,8 @@ fn source_recipe(plan: &Plan) -> SourceRecipe<'_> {
         common: &plan.common,
         convolutions: &plan.convolutions,
         physical: &plan.physical,
-        bytes: plan.bytes,
+        source_payload_bytes: plan.bytes.total,
+        source_f32_vector_bytes: 0,
     }
 }
 
@@ -164,6 +167,7 @@ fn reservation(plan: &Plan) -> Result<Reservation, Error> {
 pub(super) fn reservation_for(plan: &SourceRecipe<'_>) -> Result<Reservation, Error> {
     let mut tensors = 0;
     let mut overlap = 0;
+    let mut f32_vectors = 0;
     for t in plan.common {
         let size = match (t.storage, t.shape) {
             (Storage::Affine(l), Shape::Matrix { .. }) => l.total_bytes(),
@@ -171,9 +175,36 @@ pub(super) fn reservation_for(plan: &SourceRecipe<'_>) -> Result<Reservation, Er
                 overlap = overlap.max(mul(n, 2)?);
                 mul(n, 4)?
             }
+            (Storage::F32Vector, Shape::Vector(n)) => {
+                let bytes = mul(n, 4)?;
+                let physical = plan
+                    .physical
+                    .get(&t.name)
+                    .ok_or_else(|| invalid("Qwen3.5 FP32 vector descriptor missing"))?;
+                if physical.dtype != Dtype::F32
+                    || physical.shape != [n]
+                    || physical.range.len() != bytes
+                {
+                    return Err(invalid("Qwen3.5 FP32 vector descriptor differs"));
+                }
+                f32_vectors = add(f32_vectors, bytes)?;
+                overlap = overlap.max(bytes);
+                bytes
+            }
             _ => return Err(invalid("Qwen3.5 logical storage differs")),
         };
         tensors = add(tensors, size)?;
+    }
+    if f32_vectors != plan.source_f32_vector_bytes {
+        return Err(invalid("Qwen3.5 source FP32 vector opt-in differs"));
+    }
+    let physical_f32 = plan
+        .physical
+        .values()
+        .filter(|t| t.dtype == Dtype::F32)
+        .try_fold(0, |bytes, t| add(bytes, t.range.len()))?;
+    if physical_f32 != f32_vectors {
+        return Err(invalid("Qwen3.5 physical FP32 vector opt-in differs"));
     }
     for c in plan.convolutions {
         let n = mul(c.channels, c.taps)?;
@@ -207,6 +238,24 @@ fn floats(raw: &[u8]) -> Result<Vec<f32>, Error> {
         let v = bf16::from_le_bytes(bytes.try_into().unwrap()).to_f32();
         if !v.is_finite() {
             return Err(invalid("nonfinite Qwen3.5 BF16 value"));
+        }
+        result.push(v);
+    }
+    Ok(result)
+}
+
+fn original_floats(raw: &[u8]) -> Result<Vec<f32>, Error> {
+    if !raw.len().is_multiple_of(4) {
+        return Err(invalid("Qwen3.5 FP32 byte count differs"));
+    }
+    let mut result = Vec::new();
+    result
+        .try_reserve_exact(raw.len() / 4)
+        .map_err(|_| Error::Allocation)?;
+    for bytes in raw.chunks_exact(4) {
+        let v = f32::from_le_bytes(bytes.try_into().unwrap());
+        if !v.is_finite() {
+            return Err(invalid("nonfinite Qwen3.5 original FP32 value"));
         }
         result.push(v);
     }
@@ -329,7 +378,7 @@ pub(super) fn read_components<R: Read>(
         physical.insert(name.clone(), raw);
         cursor = t.range.end;
     }
-    if cursor != plan.bytes.total || consumed != identity.bytes {
+    if cursor != plan.source_payload_bytes || consumed != identity.bytes {
         return Err(invalid("Qwen3.5 consumed extent differs"));
     }
     let mut tail = [0];
@@ -377,6 +426,11 @@ pub(super) fn read_components<R: Read>(
                 retained = add(retained, mul(v.capacity(), 4)?)?;
                 vectors.insert(t.name.clone(), v);
             }
+            Storage::F32Vector => {
+                let v = convert_original(&mut physical, &t.name, &mut live, &mut admitted, limit)?;
+                retained = add(retained, mul(v.capacity(), 4)?)?;
+                vectors.insert(t.name.clone(), v);
+            }
         }
     }
     for c in plan.convolutions {
@@ -396,7 +450,7 @@ pub(super) fn read_components<R: Read>(
         limit,
     )?;
     let report = LoadReport {
-        source_payload_bytes: plan.bytes.total,
+        source_payload_bytes: plan.source_payload_bytes,
         packed_matrices: matrices.len(),
         fp32_vectors: vectors.len(),
         fp32_convolutions: convolutions.len(),
@@ -419,13 +473,37 @@ fn convert(
     peak: &mut usize,
     limit: usize,
 ) -> Result<Vec<f32>, Error> {
+    convert_typed(physical, name, live, peak, limit, false)
+}
+fn convert_original(
+    physical: &mut BTreeMap<String, Vec<u8>>,
+    name: &str,
+    live: &mut usize,
+    peak: &mut usize,
+    limit: usize,
+) -> Result<Vec<f32>, Error> {
+    convert_typed(physical, name, live, peak, limit, true)
+}
+fn convert_typed(
+    physical: &mut BTreeMap<String, Vec<u8>>,
+    name: &str,
+    live: &mut usize,
+    peak: &mut usize,
+    limit: usize,
+    original_f32: bool,
+) -> Result<Vec<f32>, Error> {
     let raw = take(physical, name)?;
+    let elements = raw.len() / if original_f32 { 4 } else { 2 };
     admit(
         peak,
-        with_metadata(add(*live, mul(raw.len() / 2, 4)?)?, 0)?,
+        with_metadata(add(*live, mul(elements, 4)?)?, 0)?,
         limit,
     )?;
-    let result = floats(&raw)?;
+    let result = if original_f32 {
+        original_floats(&raw)?
+    } else {
+        floats(&raw)?
+    };
     let capacity = mul(result.capacity(), 4)?;
     admit(peak, with_metadata(add(*live, capacity)?, 0)?, limit)?;
     *live = add(

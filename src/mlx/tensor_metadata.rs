@@ -16,6 +16,8 @@ pub enum Shape {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Storage {
     Bf16Vector,
+    /// Original FP32 small parameters for an explicitly selected source only.
+    F32Vector,
     Affine(Layout),
 }
 
@@ -30,11 +32,12 @@ pub struct TensorPlan {
 pub enum Dtype {
     U32,
     Bf16,
+    F32,
 }
 impl Dtype {
     fn bytes(self) -> usize {
         match self {
-            Self::U32 => 4,
+            Self::U32 | Self::F32 => 4,
             Self::Bf16 => 2,
         }
     }
@@ -80,11 +83,29 @@ pub(super) fn same_semantics(actual: &Value, expected: &Value) -> bool {
 pub(super) fn expected_physical(
     logical: &[TensorPlan],
 ) -> BTreeMap<String, (Dtype, Vec<usize>, usize)> {
+    expected_physical_impl(logical, false)
+}
+
+/// Only the distinct2B factory admits original FP32 small vectors. Existing
+/// source factories retain their U32/BF16 mapper and descriptor whitelist.
+pub(super) fn expected_physical_with_f32(
+    logical: &[TensorPlan],
+) -> BTreeMap<String, (Dtype, Vec<usize>, usize)> {
+    expected_physical_impl(logical, true)
+}
+
+fn expected_physical_impl(
+    logical: &[TensorPlan],
+    f32_vectors: bool,
+) -> BTreeMap<String, (Dtype, Vec<usize>, usize)> {
     let mut result = BTreeMap::new();
     for tensor in logical {
         match (tensor.shape, tensor.storage) {
             (Shape::Vector(size), Storage::Bf16Vector) => {
                 result.insert(tensor.name.clone(), (Dtype::Bf16, vec![size], size * 2));
+            }
+            (Shape::Vector(size), Storage::F32Vector) if f32_vectors => {
+                result.insert(tensor.name.clone(), (Dtype::F32, vec![size], size * 4));
             }
             (Shape::Matrix { rows, columns }, Storage::Affine(layout)) => {
                 result.insert(
@@ -120,6 +141,20 @@ fn integer(value: &Value) -> Result<usize, Error> {
         .ok_or_else(|| invalid("bounded unsigned tensor metadata integer required"))
 }
 pub(super) fn descriptor(value: &Value, payload: usize) -> Result<PhysicalTensor, Error> {
+    descriptor_impl(value, payload, false)
+}
+
+/// Explicit small-FP32 opt-in, used only after the selected2B recipe fixes the
+/// exact names/shapes. This does not widen any existing source descriptor.
+pub(super) fn descriptor_with_f32(value: &Value, payload: usize) -> Result<PhysicalTensor, Error> {
+    descriptor_impl(value, payload, true)
+}
+
+fn descriptor_impl(
+    value: &Value,
+    payload: usize,
+    f32_vectors: bool,
+) -> Result<PhysicalTensor, Error> {
     let object = value
         .as_object()
         .ok_or_else(|| invalid("tensor descriptor object required"))?;
@@ -133,6 +168,7 @@ pub(super) fn descriptor(value: &Value, payload: usize) -> Result<PhysicalTensor
     let dtype = match value["dtype"].as_str() {
         Some("U32") => Dtype::U32,
         Some("BF16") => Dtype::Bf16,
+        Some("F32") if f32_vectors => Dtype::F32,
         _ => return Err(invalid("unsupported tensor metadata dtype")),
     };
     let shape = value["shape"]
@@ -142,6 +178,9 @@ pub(super) fn descriptor(value: &Value, payload: usize) -> Result<PhysicalTensor
         return Err(invalid("tensor rank exceeds bounded header"));
     }
     let shape: Vec<usize> = shape.iter().map(integer).collect::<Result<_, _>>()?;
+    if dtype == Dtype::F32 && shape.len() != 1 {
+        return Err(invalid("only explicit FP32 vectors are supported"));
+    }
     if shape.iter().any(|&n| n >= 1 << 31) {
         return Err(invalid("tensor dimension exceeds bounded header"));
     }

@@ -16,6 +16,7 @@ pub mod payload;
 mod recipe;
 #[cfg(test)]
 mod tests;
+pub mod two_b;
 
 pub const REPOSITORY: &str = "avan-ag/Qwen3.5-4B-Uncensored-MLX-4bit";
 pub const REVISION: &str = "fb98fbc59c71a567f3e23435386c9e93951261db";

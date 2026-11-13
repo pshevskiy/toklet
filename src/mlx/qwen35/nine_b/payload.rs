@@ -60,7 +60,8 @@ fn source_recipe(plan: &Plan) -> cold::SourceRecipe<'_> {
         common: plan.logical_tensors(),
         convolutions: plan.convolutions(),
         physical: plan.physical_tensors(),
-        bytes: plan.payload_bytes(),
+        source_payload_bytes: plan.payload_bytes().total,
+        source_f32_vector_bytes: 0,
     }
 }
 

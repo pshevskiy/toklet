@@ -50,8 +50,20 @@ LFM3 CPU code and portable measurements are published as `612771d7` on
 `codex/console-engine-comparison`.
 [Publication / CI](artifacts/lfm3-finite-guard-2026-11-11/finite-publication-checks.json).
 
-Current/next task: **publish the reviewed Ministral graph/CLI diagnostic and
-its unchanged numerical rejection, then qualify the selected Qwen3.5-2B route**.
+Current/next task: **qualify the selected Qwen3.5-2B source/graph route**.
+Three implementation lanes have handed off the typed source/F32 owners, hybrid
+graph binding and independent tiny fixture. Formatting, strict CPU/Metal Clippy,
+781 CPU/940 Metal-feature tests, twelve portable controls per Python mode and
+the explicit tiny GPU storage check pass. Astra approves scoped diagnostic
+retention with no findings; publication/CI is next. The
+initial legacy-example Clippy failure is retained. Parent metadata is pinned at
+`2bcf35c1` and exposes GGUF artifacts; source-value lineage and normalization
+semantics still need proof before real conversion. Full-model/CLI/quality/fit/
+performance qualification remain open; metadata and tiny tests do not advance them.
+[Dispatch and queue](artifacts/qwen35-2b-source-planning-2026-11-13/parallel-work-plan-1.json),
+[delivery plan](docs/parallel-delivery.md).
+[Review/publication](artifacts/qwen35-2b-source-planning-2026-11-13/publication-checks.json).
+Ministral diagnostic `8b6220e9` is pushed; all four exact-head CI workflows pass.
 Source authentication, bounded conversion and component YaRN checks pass. Granite's current affine4/8 route remains numerically rejected. LFM3 CPU qualification and finite-widening retention
 pass; managed application adoption remains open. Preserve the 6 GiB ceiling,
 original numerical/quality gates and prior model decisions. Engine/CLI work
@@ -170,8 +182,8 @@ does not qualify full-model numerical/quality, all-workload fit or performance.
   [localization](artifacts/granite-graph-2026-11-12/attention-localization-result-1.json),
   [review/commit](artifacts/granite-graph-2026-11-12/publication-checks.json).
 
-Next: publish the reviewed Ministral diagnostic and retain its numerical
-rejection, then qualify the selected Qwen3.5-2B source/graph route. Ministral
+Next: qualify the selected Qwen3.5-2B source/graph route; the reviewed
+Ministral diagnostic and its unchanged rejection are published as `8b6220e9`. Ministral
 codec and original full-quality/fit/request/O1 gates remain unqualified. Source
 authentication/conversion pass; stock index admission remains rejected. Root
 owns integration and the single heavy-check queue.
@@ -180,7 +192,7 @@ Granite's current affine4/8 Metal route does not advance to adoption or quality/
 performance qualification. Any future candidate must pass the original graph,
 10,000-target/100-task quality, codec, fit and request/overhead gates. The 6 GiB
 ceiling and 512-position Metal cap remain unchanged. Continue the selected
-Ministral track after publication.
+under-4B track after publication.
 
 - [x] S1.M cache headroom: removed 12,277 retired Cargo compilation intermediates;
   observed free space increased by 1.66 GB. Both measured executable hashes and
@@ -244,7 +256,8 @@ Ministral track after publication.
   locally without overriding that rejection. All 19 console functional requests
   pass after a retained pre-child reader failure/fix. Performance cohorts remain
   blocked. Astra approves explicit diagnostic tooling/retention with no blocking
-  code findings; the stale integration-status sentence is corrected.
+  code findings; the stale integration-status sentence is corrected. Published
+  as `8b6220e9`; all four exact-head CI workflows/eight jobs pass.
   [Review/publication](artifacts/ministral3-graph-2026-11-13/publication-checks.json).
   [Current checks/decision](artifacts/ministral3-graph-2026-11-13/current-phase-1.json).
   [Ownership/invariants](artifacts/ministral3-graph-2026-11-13/parallel-dispatch-1.json).

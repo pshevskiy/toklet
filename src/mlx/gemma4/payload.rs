@@ -155,6 +155,7 @@ fn reservation(plan: &E2bPlan) -> Result<Reservation, Error> {
     let mut overlap = 0;
     for t in &plan.logical {
         let n = match t.storage {
+            Storage::F32Vector => return Err(invalid("Gemma BF16-only vector recipe required")),
             Storage::Affine(l) => l.total_bytes(),
             Storage::Bf16Vector => {
                 let super::Shape::Vector(n) = t.shape else {
@@ -328,6 +329,7 @@ fn load_admitted<R: Read>(
                 .ok_or_else(|| invalid("Gemma payload physical tensor missing"))
         };
         match t.storage {
+            Storage::F32Vector => return Err(invalid("Gemma BF16-only vector recipe required")),
             Storage::Affine(layout) => {
                 let base = t
                     .name

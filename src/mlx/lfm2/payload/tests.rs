@@ -90,6 +90,7 @@ fn tiny_names() -> (Plan, Vec<u8>) {
     for (ordinal, t) in common.iter_mut().enumerate() {
         let marker = ordinal as f32;
         match t.storage {
+            Storage::F32Vector => panic!("legacy LFM2 vectors remain BF16"),
             Storage::Affine(_) => {
                 t.shape = Shape::Matrix {
                     rows: 2,

@@ -84,6 +84,7 @@ fn frozen_original_inventory_and_explicit_no_admission() {
     let mut norm_elements = 0;
     for t in p.logical_tensors() {
         match t.storage {
+            Storage::F32Vector => panic!("legacy LFM2 vectors remain BF16"),
             Storage::Affine(layout) => {
                 affine_count += 1;
                 matrix_elements += layout.rows() * layout.columns();

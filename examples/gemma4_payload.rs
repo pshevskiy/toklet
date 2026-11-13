@@ -52,6 +52,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     // before constructing the named adapter (without executing its graph).
     for tensor in store.plan().logical_tensors() {
         match tensor.storage {
+            toklet::mlx::gemma4::Storage::F32Vector => {
+                return Err("Gemma BF16-only vector recipe required".into());
+            }
             toklet::mlx::gemma4::Storage::Affine(layout) => {
                 if store.matrix(&tensor.name)?.layout() != layout {
                     return Err("packed view differs".into());

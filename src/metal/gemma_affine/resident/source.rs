@@ -143,6 +143,9 @@ impl Prepared {
         let mut vectors = reserve(262)?;
         for tensor in cold.logical_tensors() {
             match tensor.storage {
+                Storage::F32Vector => {
+                    return Err(Error::Options("Gemma BF16-only vector recipe required"));
+                }
                 Storage::Affine(layout) => {
                     let base = tensor
                         .name

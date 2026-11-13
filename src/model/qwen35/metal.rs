@@ -209,6 +209,23 @@ impl<'a> MetalModel<'a> {
             store.report().retained_policy_bytes,
         )
     }
+    /// Explicit tied-head2B hybrid diagnostic. GPU projection/gather borrows
+    /// resident packed matrices; recurrent/history/attention state and original
+    /// F32 A_log parameters remain on CPU. No route qualification is implied.
+    pub fn from_two_b_metal_store(
+        store: &'a crate::mlx::qwen35::two_b::payload::metal::MetalStore,
+    ) -> Result<Self> {
+        Self::bind_two_b_source(
+            store.plan(),
+            |name| {
+                let (slot, weights) = store.matrix(name)?;
+                Ok(MetalMatrix { weights, slot })
+            },
+            |name| Ok(store.vector(name)?),
+            |name| Ok(store.convolution(name)?),
+            store.report().retained_policy_bytes,
+        )
+    }
     pub fn planned_session_memory(&self, options: Options) -> Result<Memory> {
         MetalSession::planned_with_execution(self, options, MetalExecution::planned(self)?)
     }

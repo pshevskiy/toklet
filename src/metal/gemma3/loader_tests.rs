@@ -95,6 +95,7 @@ fn source_records(store: &PayloadStore) -> Vec<Value> {
     let mut records = Vec::new();
     for t in store.plan().logical_tensors() {
         let value = match t.storage {
+            Storage::F32Vector => panic!("legacy Gemma3 vectors remain BF16"),
             Storage::Affine(_) => {
                 let matrix = store.matrix(&t.name).unwrap();
                 let l = matrix.layout();
