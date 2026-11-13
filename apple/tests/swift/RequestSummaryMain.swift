@@ -28,15 +28,75 @@ private final class SummaryFaults: @unchecked Sendable {
 // Explicit real-model pilot, separate from ordinary no-download CPU checks.
 @main
 struct RequestSummaryMain {
+    static let warmupPairs = 3
     static func require(_ value: Bool, _ message: String) throws {
         if !value { throw NativeContextFailure(message) }
+    }
+    static func parseMeasuredPairs(_ text: String) throws -> Int {
+        try require(!text.isEmpty && text.utf8.allSatisfy { $0 >= 48 && $0 <= 57 },"Measured pairs require ASCII digits")
+        guard let count = Int(text), (10...100).contains(count) else {
+            throw NativeContextFailure("Measured pairs must be from 10 through 100")
+        }
+        return count
+    }
+    static func checkMeasuredPairs() throws {
+        try require(try parseMeasuredPairs("10") == 10,"Minimum pair count")
+        try require(try parseMeasuredPairs("100") == 100,"Maximum pair count")
+        for invalid in ["9", "101", "-1", "+10", "1.0", "１０", ""] {
+            var rejected = false
+            do { _ = try parseMeasuredPairs(invalid) }
+            catch is NativeContextFailure { rejected = true }
+            try require(rejected,"Invalid measured pair count accepted")
+        }
     }
     static func rows(_ worker: NativeWorker) throws -> [[String:Any]] {
         try worker.exportRequestSummaries().split(separator:10).map {
             try JSONSerialization.jsonObject(with:Data($0)) as! [String:Any]
         }
     }
+    static func benchmarkRawRow(_ data: Data, requestID: UUID) throws -> Data {
+        try require(data.count <= 1 << 20,"Native export byte bound")
+        let matches = try data.split(separator:10).dropFirst().filter { line in
+            guard let row = try JSONSerialization.jsonObject(with:Data(line)) as? [String:Any] else {
+                throw NativeContextFailure("Invalid native record")
+            }
+            return row["requestID"] as? String == requestID.uuidString
+        }
+        try require(matches.count == 1,"Benchmark raw record missing or duplicated")
+        let raw = Data(matches[0])
+        try require(raw.count <= 4096,"Benchmark native record bound")
+        return raw
+    }
+    static func checkBenchmarkRawRows() throws {
+        let id = UUID(uuidString:"00000000-0000-0000-0000-000000000001")!
+        let header = #"{"kind":"request_summary_manifest"}"# + "\n"
+        let selected = #"{"requestID":"00000000-0000-0000-0000-000000000001","spelling":1e0,"zero":-0,"large":9007199254740993}"#
+        let other = #"{"requestID":"00000000-0000-0000-0000-000000000002"}"#
+        let source = Data((header + selected + "\n" + other + "\n").utf8)
+        try require(try benchmarkRawRow(source,requestID:id) == Data(selected.utf8),"Raw summary bytes changed")
+        for invalid in [header + other + "\n", header + selected + "\n" + selected + "\n"] {
+            do { _ = try benchmarkRawRow(Data(invalid.utf8),requestID:id); throw NativeContextFailure("Invalid raw capture accepted") }
+            catch let error as NativeContextFailure {
+                try require(error.message == "Benchmark raw record missing or duplicated","Wrong raw capture failure")
+            }
+        }
+    }
     static func main() throws {
+        let arguments = CommandLine.arguments
+        guard arguments.count >= 2 else { throw NativeContextFailure("Expected official model folder") }
+        let measuring: Bool
+        let measuredPairs: Int
+        if arguments.count == 3 {
+            measuring = true; measuredPairs = 10
+        } else if arguments.count == 5 && arguments[3] == "--measured-pairs" {
+            measuring = true; measuredPairs = try parseMeasuredPairs(arguments[4])
+        } else {
+            try require(arguments.count == 2 || (arguments.count == 4 && arguments[2] == "--conformance-output"),"Invalid benchmark/conformance arguments")
+            measuring = false; measuredPairs = 10
+        }
+        if measuring { try require(!arguments[2].hasPrefix("--"),"Expected benchmark output path before options") }
+        try checkMeasuredPairs()
+        try checkBenchmarkRawRows()
         // Deterministic metric formulas, empty/single events and ring pressure.
         var nativeFixture = TokletGenerationMetrics()
         nativeFixture.abi_version = TOKLET_ABI_VERSION
@@ -70,9 +130,7 @@ struct RequestSummaryMain {
         try require(wire.count < 1 << 20 && MemoryLayout<NativeRequestSummary>.stride < 16 * 1024,"Wire/collector bounds")
         do { _ = try NativeRequestSummaryStore.export(records+[empty],dropped:0); throw NativeContextFailure("Oversized export accepted") }
         catch let error as NativeContextFailure { try require(error.message == "Summary export exceeds capacity","Wrong export failure") }
-        guard CommandLine.arguments.count >= 2 else { throw NativeContextFailure("Expected official model folder") }
         let faults = SummaryFaults()
-        let measuring = CommandLine.arguments.count == 3
         let dequeue: @Sendable (NativeCommand) -> Void = { command in faults.dequeue(command) }
         let decode: @Sendable () throws -> Void = { try faults.decode() }
         let allow: @Sendable () -> Bool = { faults.allowSummary() }
@@ -96,11 +154,15 @@ struct RequestSummaryMain {
         func chat(_ maximum: UInt32 = 12, cancel: Int = 0) -> NativeCommand {
             .chat(id:UUID(),conversation:conversation,maximum:maximum,autoCancelAfter:cancel)
         }
-        if CommandLine.arguments.count == 3 {
+        if measuring {
             // Paired order alternates; first three pairs are warmups. Raw timings
             // include the complete submit/idle acknowledgment in both modes.
             var samples = [[String:Any]]()
-            for trial in 0..<13 {
+            let captureByteLimit = 512 * 1024
+            var captured = Data(), capturedIDs = Set<UUID>()
+            var finalNativeManifest: [String:Any]?
+            for trial in 0..<(warmupPairs + measuredPairs) {
+                var summaryID: UUID?
                 for enabled in trial % 2 == 0 ? [false,true] : [true,false] {
                     try require(worker.setRequestSummariesEnabled(enabled),"Mode switch failed")
                     let command = chat()
@@ -111,14 +173,49 @@ struct RequestSummaryMain {
                     let end = DispatchTime.now().uptimeNanoseconds
                     try require(s.status == TOKLET_OK && s.ids == [818,5279,529,7001,563,5213,50429,84750],"Timing output changed")
                     guard case .chat(let requestID,_,_,_) = command else { throw NativeContextFailure("Expected Chat command") }
-                    samples.append(["request_id":requestID.uuidString,"trial":trial,"warmup":trial<3,"mode":enabled ? "summary":"disabled",
+                    if enabled { summaryID = requestID }
+                    samples.append(["request_id":requestID.uuidString,"trial":trial,"warmup":trial<warmupPairs,"mode":enabled ? "summary":"disabled",
                         "ttft_ms":Double(s.tokenTimings[0].callbackUptimeNanoseconds-start)/1e6,
                         "total_ms":Double(end-start)/1e6,"submitted_uptime_ns":start,"completed_uptime_ns":end,"tokens":s.ids,
                         "history":s.history,"committed":s.evaluated,"pending":s.pending])
                 }
+                if measuredPairs > 10 {
+                    // Housekeeping follows BOTH timed intervals, for either pair order.
+                    let endsEnabled = trial % 2 == 0
+                    if !endsEnabled { try require(worker.setRequestSummariesEnabled(true),"Capture enable failed") }
+                    let snapshot: Data
+                    do { snapshot = try worker.exportRequestSummaries() }
+                    catch {
+                        if !endsEnabled { _ = worker.setRequestSummariesEnabled(false) }
+                        throw error
+                    }
+                    if !endsEnabled { try require(worker.setRequestSummariesEnabled(false),"Capture restore failed") }
+                    guard let summaryID else { throw NativeContextFailure("Pair summary ID missing") }
+                    let raw = try benchmarkRawRow(snapshot,requestID:summaryID)
+                    try require(capturedIDs.insert(summaryID).inserted && capturedIDs.count <= 103,"Pair summary duplicated or capture count exceeded")
+                    guard let manifestLine = snapshot.split(separator:10).first,
+                          let manifest = try JSONSerialization.jsonObject(with:Data(manifestLine)) as? [String:Any] else {
+                        throw NativeContextFailure("Native capture manifest missing")
+                    }
+                    finalNativeManifest = manifest
+                    captured.append(raw); captured.append(10)
+                    try require(captured.count <= captureByteLimit,"Benchmark capture byte bound")
+                }
             }
             try JSONSerialization.data(withJSONObject:samples,options:[.prettyPrinted,.sortedKeys]).write(to:URL(fileURLWithPath:CommandLine.arguments[2]))
-            try worker.exportRequestSummaries().write(to:URL(fileURLWithPath:CommandLine.arguments[2]+".summaries.jsonl"))
+            let summaryOutput = URL(fileURLWithPath:CommandLine.arguments[2]+".summaries.jsonl")
+            if measuredPairs == 10 {
+                try worker.exportRequestSummaries().write(to:summaryOutput)
+            } else {
+                guard let finalNativeManifest else { throw NativeContextFailure("Final capture manifest missing") }
+                try require(capturedIDs.count == warmupPairs + measuredPairs,"Incomplete benchmark capture")
+                let header: [String:Any] = ["schemaVersion":1,"kind":"benchmark_request_summary_capture","nativeManifest":finalNativeManifest,
+                    "recordCount":capturedIDs.count,"ringCapacity":32,"captureByteLimit":captureByteLimit,"outsideTimedPairs":true]
+                var output = try JSONSerialization.data(withJSONObject:header,options:[.sortedKeys])
+                output.append(10); output.append(captured)
+                try require(output.count <= captureByteLimit,"Benchmark capture byte bound")
+                try output.write(to:summaryOutput)
+            }
         } else {
             let success = try run(chat())
             try require(success.status == TOKLET_OK && success.reason == 2 && success.emitted == 8,"Stock output differs")

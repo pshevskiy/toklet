@@ -4,6 +4,12 @@ The original O1 receipt is preserved here. The additive
 [O2.A phase API/report](o2-gemma-cost-report.md) now extends available native
 observations under summary schema 2.
 
+13 November update: the [bounded larger-cohort benchmark](gemma-summary-overhead.md)
+meets the original 1% headless callback-TTFT/request gates in both fixed
+100-pair cohorts; Astra approves scoped retention. The original receipt below
+and its unqualified ten-pair result remain preserved. Application/UI/render
+qualification remains separate; summary mode stays opt-in.
+
 7 November 2026. The pilot instruments accepted managed official Gemma 4 E2B
 BF16 Mac Chat requests, with disabled mode as the default. It preserves the
 native ABI, numerical source, weights, generation options and existing state

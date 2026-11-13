@@ -632,6 +632,30 @@ there is no measured workflow or kernel speedup.
 [Delivery plan](parallel-delivery.md),
 [checks/review/publication](../artifacts/qwen35-2b-attention-2026-11-13/velocity-publication-checks.json),
 [source preflight](../artifacts/qwen35-2b-attention-2026-11-13/lfm3-next-performance-preflight-1.json).
+Fresh preparation now completes the cached release-probe build and three full
+projection baseline cohorts, with 30 measured samples and six passing power/
+thermal endpoints. The sandbox-denied initial launch remains failed; the retry
+passes. Whole-request attribution and any candidate implementation/retention
+remain open. [Current baseline](../artifacts/qwen35-2b-attention-2026-11-13/lfm3-current-operator-baseline-1.json).
+Current request attribution completes with exact output/state and 22 matching
+input endpoints under 6 GiB. Projection dot accounts for 801/828 active-main
+samples in the initial prefill window; this warrants an exact projection
+experiment, with no speedup claim. A report-wrapper line-index correction
+requires no model rerun. [Profile closure](../artifacts/lfm3-tokens2-2026-11-13/request-profile-closure-1.json).
+Before a new kernel integration, the official Gemma observer-overhead gate is
+next: its current clean-source Mac archive build passes and binds 462 input
+hashes. Historical archives are not substituted for this artifact.
+[Archive binding](../artifacts/lfm3-tokens2-2026-11-13/gemma-current-staticlib-1.json).
+The original fresh ten-pair TTFT bounds remain unqualified and retained. Bounded
+10..100-pair support now preserves default behavior, the worker ring and timed
+boundaries. Forty dependent portable controls pass in both modes; default
+real-data statistics replay exactly. Strict Swift/conformance and both fixed
+100-pair cohorts pass all original headless gates; independent audit reconciles
+412 IDs, 206 raw summaries, state/status/clocks and 489 input endpoints. Combined
+Astra approves scoped retention with no findings. App/UI/render qualification
+stays separate and opt-in.
+[Scope, results and evidence](gemma-summary-overhead.md),
+[checks/review/publication](../artifacts/lfm3-tokens2-2026-11-13/gemma-stronger-publication-checks.json).
 
 Q2.G's [9B128/256 evaluation](qwen35-9b-context256.md) is in progress. The separate
 producer and strict reader preserve both original profiles/gates. Fresh required

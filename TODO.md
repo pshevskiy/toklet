@@ -64,8 +64,9 @@ LFM3 CPU code and portable measurements are published as `612771d7` on
   [Scope](docs/qwen35-2b-real-source.md),
   [checks/review/commit](artifacts/qwen35-2b-payload-2026-11-13/publication-checks.json).
 
-Current/next task: **close the bounded 2B investigation; profile the qualified
-LFM3 CPU route before another optimization**. All 34,119 native arrays replay
+Current/next task: **review and publish stronger Gemma headless overhead
+qualification, then continue the measured LFM3 projection experiment**.
+The bounded 2B investigation is closed. All 34,119 native arrays replay
 exactly; all 17,394 recovered staged arrays match their original hashes. None
 of the 24 precision policies or two declared FP32 reduction schemes passes both
 selected cases under both unchanged profiles. Stop this variant search; no
@@ -81,6 +82,37 @@ profiling, with no new implementation or performance claim.
 [Source preflight](artifacts/qwen35-2b-attention-2026-11-13/lfm3-next-performance-preflight-1.json),
 [delivery plan](docs/parallel-delivery.md),
 [checks/review/publication](artifacts/qwen35-2b-attention-2026-11-13/velocity-publication-checks.json).
+Current execution: the cached release-probe build and three complete 128-token
+projection baseline cohorts pass (30 measured samples; six AC/nominal-thermal/
+Low-Power-off endpoints). The sandbox-denied first launch stays failed; the
+guarded retry closes with no owned processes. The current request diagnostic
+passes exact output/state and all 22 before/after input pins under 6 GiB.
+Projection dot accounts for 801/828 active-main samples in its initial prefill
+window; this warrants an exact weight-reuse experiment, not a speedup claim.
+A closure-wrapper line-index assumption is corrected without rerunning inference.
+A current clean-source Mac native archive build also passes;
+462 input hashes and the archive are bound. Strict Swift, ten conformance
+records and both original Gemma cohorts pass collection within their caps;
+all 488 input pins match. Overhead remains unqualified: TTFT median overhead
+is 0.069/0.246%, but bootstrap upper bounds are 2.271/2.123%.
+No numerical source has changed.
+[Baseline and retained failure](artifacts/qwen35-2b-attention-2026-11-13/lfm3-current-operator-baseline-1.json).
+[Request-profile preparation](artifacts/lfm3-tokens2-2026-11-13/request-profile-preparation-1.json),
+[completed profile](artifacts/lfm3-tokens2-2026-11-13/request-profile-closure-1.json),
+[current native archive](artifacts/lfm3-tokens2-2026-11-13/gemma-current-staticlib-1.json).
+[Original overhead result](artifacts/lfm3-tokens2-2026-11-13/gemma-observer-original-closure-1.json).
+
+- [x] Stronger overhead evidence: bounded 10..100 pair configuration preserves
+  the ten-pair default, fixed ring and original clocks/1% gates. Forty dependent
+  portable checks pass in both modes; default real-data statistics replay exactly.
+  Strict Swift, pre-model controls, ten conformance records and both fixed
+  100-pair cohorts pass. All 412 IDs/400 measured requests, 206 raw records,
+  state/status/clocks, 489 input endpoints and original statistics reconcile.
+  Both headless gates pass; Astra approves scoped retention with no findings.
+  Application/UI/render qualification stays separate/opt-in.
+  [Scope](docs/gemma-summary-overhead.md),
+  [full audit](artifacts/lfm3-tokens2-2026-11-13/gemma-stronger-independent-audit-1.json),
+  [checks/review/publication](artifacts/lfm3-tokens2-2026-11-13/gemma-stronger-publication-checks.json).
 The authenticated official/selected tokenizer metadata correspondence is
 preparation only; runtime codec/caller/stops, >=1,025 quality capacity, both
 original full quality pairs, representative fit/performance/overhead and adoption
