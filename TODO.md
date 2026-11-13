@@ -78,11 +78,24 @@ LFM3 CPU code and portable measurements are published as `612771d7` on
   separate. [Scope](docs/gemma-workload-identity.md),
   [checks/review/commit/CI](artifacts/gemma-workload-identity-2026-11-13/publication-checks-3.json).
 
-Current/next task: **select the next native engine/CLI observability gap** from
-current metric ownership and missing phase attribution. Static preparation can
-overlap publication/CI; new implementation needs a concrete bounded contract.
-Keep the closed LFM3 arithmetic/dispatch and Qwen numerical searches closed.
-Capacity 512/chunk 32 remains separate from the numerical 512-input matrix.
+- [x] Completed native decode-row export: additive ABI1 metrics V2 preserves
+  legacy96B/symbols and copies only the existing completed counter. Native13,
+  65 portable controls per mode, fmt/strict CPU+Metal Clippy,794 CPU/954 Metal,
+  C CPU/Metal and strict Swift pass. Count metadata was corrected before models.
+  All54 fresh requests/27 native records reconcile exact384/128/state5125111/
+  count127 and526 source endpoints;516 old requests replay exactly. Both
+  TTFT95uppers1.230/1.313% fail the unchanged1% bound. Astra approves functional
+  retention only, no findings; summaries remain disabled/opt-in and overhead
+  unqualified. No more samples or gate change follows. [Scope](docs/gemma-decode-evaluations.md),
+  [checks/review/commit/CI](artifacts/gemma-decode-rows-2026-11-13/publication-checks-1.json).
+- [ ] The V2 1% TTFT bound and default adoption remain unqualified.
+
+Current/next task: **attribute dominant Gemma native cost through the console**.
+Inspect existing bounded diagnostics and exact route/resource compatibility
+before selecting implementation. Read-only preparation may overlap publication/CI;
+keep one heavy queue and pause all preparation for performance. Host/GPU fields
+remain explicitly unavailable until implemented/qualified. Keep closed LFM3 and
+Qwen searches closed; capacity512/chunk32 is separate from numerical512-input.
 The stronger short headless Gemma overhead milestone is published as
 `cf80a168`; all five exact-head CI workflows/ten jobs pass.
 [Publication](artifacts/lfm3-tokens2-2026-11-13/gemma-stronger-publication-checks.json).

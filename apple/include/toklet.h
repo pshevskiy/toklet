@@ -205,6 +205,19 @@ typedef struct {
     double prefill_seconds, decode_seconds, sampling_seconds, total_seconds, first_token_seconds;
 } TokletGenerationMetrics;
 
+/* Additive104-byte,8-byte-aligned completed-work observation. The embedded
+   legacy record remains96 bytes at offset0, including base.struct_size=96 and
+   ABI version1; decode_evaluations is at offset96. When REPORT_KNOWN is set,
+   this is the existing Report's successfully evaluated decode rows, excluding
+   initial prefill, not dispatches, emitted tokens or an inferred count.
+   Completed cancellation may evaluate a row without another sampled token.
+   When base.known_fields=0, the extension is zeroed and unavailable, not a
+   measured zero. No new counters, clocks, allocations, GPU commands or waits. */
+typedef struct {
+    TokletGenerationMetrics base;
+    uint64_t decode_evaluations;
+} TokletGenerationMetricsV2;
+
 /* Read-only scalar diagnostic; no full-logit copy. Native C alignment,48 bytes.
    FP32 target/greedy logits are exactly widened to double; loss uses stable
    compensated FP64 log-sum-exp. Tied greedy IDs choose the lowest token ID. */
@@ -355,6 +368,12 @@ uint32_t toklet_session_generate(const TokletSession *, uint32_t, const uint32_t
 uint32_t toklet_session_generate_observed(const TokletSession *, uint32_t, const uint32_t *, size_t,
                                          uint32_t, const uint32_t *, size_t, const TokletCancel *,
                                          TokletEmit, void *, TokletReport *, TokletGenerationMetrics *, TokletError *);
+/* Same rules as observed, with required disjoint storage for the complete V2
+   output. Initialized unknown before other request inputs are validated (except
+   invalid error/output pointers). Old observed/generate symbols are unchanged. */
+uint32_t toklet_session_generate_observed_v2(const TokletSession *, uint32_t, const uint32_t *, size_t,
+                                           uint32_t, const uint32_t *, size_t, const TokletCancel *,
+                                           TokletEmit, void *, TokletReport *, TokletGenerationMetricsV2 *, TokletError *);
 
 uint32_t toklet_cancel_create(TokletCancel **, TokletError *);
 uint32_t toklet_cancel_set(const TokletCancel *, uint32_t, TokletError *);

@@ -703,5 +703,98 @@ class WorkloadIdentityTests(unittest.TestCase):
         with self.assertRaises(ValueError): summary.validate_workload_capture(wire(header, records), rows, loaded)
 
 
+class DecodeEvaluationCaptureTests(unittest.TestCase):
+    def capture(self, count=1, *, sampled=1, emitted=1, status='completed'):
+        header = dict(kind='request_summary_manifest', nativeGenerationMetricsVersion=2)
+        native = dict(decodeEvaluations=count, sampledTokens=sampled, emittedTokens=emitted)
+        record = dict(nativeMetricStatus=status, nativeMetrics=native)
+        return header, [record]
+
+    def test_known_zero_and_completed_post_decode_cancel_are_actual_counts(self):
+        for count, sampled, emitted in [(0, 0, 0), (1, 1, 1), (32768, 32768, 32768)]:
+            header, records = self.capture(count, sampled=sampled, emitted=emitted)
+            self.assertEqual(summary.validate_native_work_capture(wire(header, records), records, required=True),
+                             dict(version=2, available=1, unavailable=0))
+
+    def test_legacy_remains_unavailable_and_cannot_qualify_current_build(self):
+        rows = cohort(); header, records = capture_parts(rows)
+        result = summary.validate_native_work_capture(wire(header, records), records)
+        self.assertEqual(result, dict(version=1, available=0, unavailable=13))
+        with self.assertRaises(ValueError): summary.validate_native_work_capture(wire(header, records), records, required=True)
+        records[0]['nativeMetrics'] = dict(decodeEvaluations=0)
+        with self.assertRaises(ValueError): summary.validate_native_work_capture(wire(header, records), records)
+
+    def test_native_version_is_exact_and_nested_capture_supported(self):
+        header, records = self.capture()
+        wrapped = dict(kind='benchmark_request_summary_capture', nativeManifest=header)
+        self.assertEqual(summary.validate_native_work_capture(wire(wrapped, records), records, required=True)['available'], 1)
+        for version in [None, True, False, 2., '2', 0, 3]:
+            changed = dict(header, nativeGenerationMetricsVersion=version)
+            with self.subTest(version=version), self.assertRaises(ValueError):
+                summary.validate_native_work_capture(wire(changed, records), records)
+
+    def test_missing_coerced_overflow_or_excess_decode_counts_reject(self):
+        header, records = self.capture()
+        for value in [None, True, False, -1, 1., '1', 2, 32769, 2**64]:
+            changed = copy.deepcopy(records); changed[0]['nativeMetrics']['decodeEvaluations'] = value
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                summary.validate_native_work_capture(wire(header, changed), changed)
+        changed = copy.deepcopy(records); changed[0]['nativeMetrics'].pop('decodeEvaluations')
+        with self.assertRaises(ValueError): summary.validate_native_work_capture(wire(header, changed), changed)
+        for field, value in [('sampledTokens', True), ('sampledTokens', 32769), ('emittedTokens', 2)]:
+            changed = copy.deepcopy(records); changed[0]['nativeMetrics'][field] = value
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                summary.validate_native_work_capture(wire(header, changed), changed)
+
+    def test_unavailable_outcomes_never_publish_known_zero_or_stale_count(self):
+        header, records = self.capture()
+        for status in ['notStarted', 'generationFailed', 'invalidRecord']:
+            changed = [dict(nativeMetricStatus=status)]
+            self.assertEqual(summary.validate_native_work_capture(wire(header, changed), changed)['unavailable'], 1)
+            for native in [dict(decodeEvaluations=0), records[0]['nativeMetrics']]:
+                changed[0]['nativeMetrics'] = native
+                with self.subTest(status=status), self.assertRaises(ValueError):
+                    summary.validate_native_work_capture(wire(header, changed), changed)
+        for status in [None, '', 0, 'unknown']:
+            changed = [dict(nativeMetricStatus=status)]
+            with self.assertRaises(ValueError): summary.validate_native_work_capture(wire(header, changed), changed)
+
+    def test_raw_identity_duplicates_nonfinite_and_byte_bound_reject(self):
+        header, records = self.capture(); raw = wire(header, records)
+        for changed in [raw.replace(b'"decodeEvaluations":1', b'"decodeEvaluations":1,"decodeEvaluations":1'),
+                        raw.replace(b'"decodeEvaluations":1', b'"decodeEvaluations":NaN'),
+                        b' ' * (summary.CAPTURE_BYTE_LIMIT + 1), b'{}', raw.decode()]:
+            with self.subTest(type=type(changed)), self.assertRaises(ValueError):
+                summary.validate_native_work_capture(changed, records)
+        changed = copy.deepcopy(records); changed[0]['nativeMetrics']['decodeEvaluations'] = 0
+        with self.assertRaises(ValueError): summary.validate_native_work_capture(raw, changed)
+
+    def test_wire_counter_types_cannot_be_hidden_by_python_value_equality(self):
+        for field in ['decodeEvaluations', 'sampledTokens', 'emittedTokens']:
+            header, records = self.capture(0, sampled=0, emitted=0)
+            captured = copy.deepcopy(records); captured[0]['nativeMetrics'][field] = False
+            self.assertEqual(captured, records)  # Python equality alone loses type.
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                summary.validate_native_work_capture(wire(header, captured), records, required=True)
+
+    def test_clean_reset_limit_and_hidden_stop_check_actual_evaluated_rows(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / 'workload.json'
+            for expected in [workload_descriptor()['expected_output'],
+                             dict(tokens=[31, 32, 33], history=388, committed=387, pending=1, reason=2, stop_token=106)]:
+                descriptor = workload_descriptor(); descriptor['expected_output'] = expected
+                path.write_text(json.dumps(descriptor)); loaded = summary.load_workload(path)
+                rows = workload_rows(loaded); header, records = workload_capture(rows, loaded)
+                header['nativeGenerationMetricsVersion'] = 2
+                count = expected['committed'] - 384
+                for record in records: record['nativeMetrics']['decodeEvaluations'] = count
+                self.assertEqual(summary.validate_workload_capture(wire(header, records), rows, loaded,
+                                 require_native_work=True), records)
+                for wrong in [count - 1, count + 1]:
+                    changed = copy.deepcopy(records); changed[0]['nativeMetrics']['decodeEvaluations'] = wrong
+                    with self.subTest(expected=count, wrong=wrong), self.assertRaises(ValueError):
+                        summary.validate_workload_capture(wire(header, changed), rows, loaded, require_native_work=True)
+
+
 if __name__ == '__main__':
     unittest.main()

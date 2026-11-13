@@ -18,11 +18,26 @@ enum NativeRequestSummaryMode: Sendable {
 // clock is independent of callback uptime. Unknown reports never become zeros.
 struct NativeGenerationMetrics: Codable, Sendable {
     let sessionInstance, reusedTokens, prefillTokens, sampledTokens, emittedTokens: UInt64
+    // Successful decode evaluation rows; nil for a legacy native report.
+    // Pending prefix rows evaluated at request start are prefill instead.
+    let decodeEvaluations: UInt64?
     let prefillSeconds, decodeSeconds, samplingSeconds, totalSeconds: Double
     let firstTokenSeconds: Double?
     let prefillTokensPerSecond: Double?
 
     init?(_ value: TokletGenerationMetrics, expectedSession: UInt64) {
+        self.init(value,expectedSession:expectedSession,decodeEvaluations:nil)
+    }
+
+    init?(_ value: TokletGenerationMetricsV2, expectedSession: UInt64) {
+        self.init(value.base,expectedSession:expectedSession,decodeEvaluations:value.decode_evaluations)
+    }
+
+    private init?(_ value: TokletGenerationMetrics, expectedSession: UInt64, decodeEvaluations: UInt64?) {
+        if let count = decodeEvaluations {
+            // Cancellation after evaluation but before sampling permits equality.
+            guard count <= 32768, count <= value.sampled_tokens else { return nil }
+        }
         let report = UInt32(TOKLET_GENERATION_REPORT_KNOWN), first = UInt32(TOKLET_GENERATION_FIRST_TOKEN_KNOWN)
         let times = [value.prefill_seconds,value.decode_seconds,value.sampling_seconds,value.total_seconds,value.first_token_seconds]
         guard value.abi_version == TOKLET_ABI_VERSION,
@@ -38,6 +53,7 @@ struct NativeGenerationMetrics: Codable, Sendable {
               value.known_fields & first != 0 || value.first_token_seconds == 0 else { return nil }
         sessionInstance = value.session_instance; reusedTokens = value.reused_tokens
         prefillTokens = value.prefill_tokens; sampledTokens = value.sampled_tokens; emittedTokens = value.emitted_tokens
+        self.decodeEvaluations = decodeEvaluations
         prefillSeconds = value.prefill_seconds; decodeSeconds = value.decode_seconds
         samplingSeconds = value.sampling_seconds; totalSeconds = value.total_seconds
         firstTokenSeconds = value.known_fields & first == 0 ? nil : value.first_token_seconds
@@ -284,6 +300,7 @@ final class NativeRequestSummaryStore {
         struct Manifest: Encodable {
             let schemaVersion = 2
             let kind = "request_summary_manifest"
+            let nativeGenerationMetricsVersion = 2
             let profile = "google/gemma-4-E2B-it BF16 managed Mac G2"
             let revision = NativeAcceptedIdentity.Profile.gemmaBF16.revision
             let modelAndCodecManifestSHA256 = NativeAcceptedIdentity.Profile.gemmaBF16.manifestSHA256
@@ -299,7 +316,6 @@ final class NativeRequestSummaryStore {
                 "ui publication/handling stamps describe controller state mutation, not rendering; selected conversation is not window visibility",
                 "load/conversion/compile phases and memory pressure: separate existing load receipt, not per-request measurements",
                 "token interval distribution: only first/last bounded aggregates in O1",
-                "decode evaluation count: not exposed by the native Report; before/after counts are session totals",
                 "replay-required: true when evaluation failed and state is unreadable; null otherwise (ABI has no poison/replay flag)",
                 "weights/scratch breakdown: Gemma ABI exposes aggregate admission, KV and codec allowance",
                 "missing state: native context unavailable or request had not started",
@@ -308,6 +324,7 @@ final class NativeRequestSummaryStore {
             let recordScope = "accepted Gemma Chat requests, plus idle/busy submit rejections while identity is visible; other models unsupported"
             let memoryAdmission = "1MiB headroom check for collection/export including fixed UI fields; fixed ring allocated at worker initialization; native admission unchanged"
             let metricScope = "request terminal is worker publication, not terminal UI; token rates use emitted callbacks, hidden stops excluded"
+            let decodeEvaluationScope = "completed native decode rows, not emitted tokens; pending prefix work at request start is prefill; legacy native reports have no decodeEvaluations field"
             let stateGenerationScope = "worker snapshot revision at submission; capacity/chunk are submission-time fields; owner IDs in before/after authoritative"
             let budgetSkippedRecords: UInt64
             let exportErrors: UInt64

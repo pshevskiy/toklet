@@ -1214,12 +1214,12 @@ private final class Engine {
         let sink = Sink(worker, autoCancel)
         report = TokletReport()
         observation?.enter(.evaluation)
-        var nativeMetrics = TokletGenerationMetrics()
+        var nativeMetrics = TokletGenerationMetricsV2()
         let code = withExtendedLifetime(sink) {
             tokens.withUnsafeBufferPointer { input in
                 stops.withUnsafeBufferPointer { stop in
                 if observation != nil {
-                    return toklet_session_generate_observed(session, operation, input.baseAddress, input.count,
+                    return toklet_session_generate_observed_v2(session, operation, input.baseAddress, input.count,
                         maximum, stop.baseAddress, stop.count, flag, nativeSink,
                         Unmanaged.passUnretained(sink).toOpaque(), &report, &nativeMetrics, &error)
                 }

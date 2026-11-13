@@ -260,6 +260,16 @@ struct RequestSummaryMain {
         let workload = try workloadPath.map { try loadWorkload($0,preflightOnly:preflightOnly) }
         try checkMeasuredPairs()
         try checkBenchmarkRawRows()
+        // Cold harness diagnostics, before any model or measured request.
+        let layouts: [String:Int] = [
+            "nativeMetricsV1Bytes":MemoryLayout<TokletGenerationMetrics>.size,
+            "nativeMetricsV2Bytes":MemoryLayout<TokletGenerationMetricsV2>.size,
+            "swiftMetricsStride":MemoryLayout<NativeGenerationMetrics>.stride,
+            "collectorStride":MemoryLayout<NativeRequestObservation>.stride,
+            "summaryStride":MemoryLayout<NativeRequestSummary>.stride,
+            "ringStorageBytes":MemoryLayout<NativeRequestSummary?>.stride * NativeRequestSummaryStore.capacity,
+            "reservedBytes":Int(NativeRequestSummaryStore.reservedBytes)]
+        print(String(decoding:try JSONSerialization.data(withJSONObject:layouts,options:.sortedKeys),as:UTF8.self))
         // Deterministic metric formulas, empty/single events and ring pressure.
         var nativeFixture = TokletGenerationMetrics()
         nativeFixture.abi_version = TOKLET_ABI_VERSION
@@ -267,6 +277,35 @@ struct RequestSummaryMain {
         nativeFixture.known_fields = UInt32(TOKLET_GENERATION_REPORT_KNOWN)
         nativeFixture.session_instance = 7
         try require(NativeGenerationMetrics(nativeFixture,expectedSession:7)?.prefillTokensPerSecond == nil,"Empty prefill rate")
+        try require(NativeGenerationMetrics(nativeFixture,expectedSession:7)?.decodeEvaluations == nil,"Legacy count became measured zero")
+        try require(MemoryLayout<TokletGenerationMetrics>.size == 96 &&
+                    MemoryLayout<TokletGenerationMetricsV2>.size == 104 &&
+                    MemoryLayout<TokletGenerationMetricsV2>.alignment == 8,"Native metric layouts changed")
+        var extendedFixture = TokletGenerationMetricsV2()
+        extendedFixture.base = nativeFixture
+        try require(NativeGenerationMetrics(extendedFixture,expectedSession:7)?.decodeEvaluations == 0,"Known zero count missing")
+        extendedFixture.decode_evaluations = 1
+        try require(NativeGenerationMetrics(extendedFixture,expectedSession:7) == nil,"Decode exceeds sampled rows")
+        extendedFixture.base.sampled_tokens = 1
+        extendedFixture.base.emitted_tokens = 1
+        extendedFixture.base.known_fields |= UInt32(TOKLET_GENERATION_FIRST_TOKEN_KNOWN)
+        let afterDecodeCancellation = NativeGenerationMetrics(extendedFixture,expectedSession:7)
+        try require(afterDecodeCancellation?.decodeEvaluations == 1,"Completed post-decode cancellation count rejected")
+        if let afterDecodeCancellation {
+            let encoded = try JSONEncoder().encode(afterDecodeCancellation)
+            let object = try JSONSerialization.jsonObject(with:encoded) as? [String:Any]
+            try require(object?["decodeEvaluations"] as? Int == 1,"Completed count not serialized")
+        }
+        for invalid in [UInt64(32769),UInt64.max] {
+            extendedFixture.decode_evaluations = invalid
+            try require(NativeGenerationMetrics(extendedFixture,expectedSession:7) == nil,"Unbounded decode count accepted")
+        }
+        extendedFixture.decode_evaluations = 1
+        extendedFixture.base.known_fields = 0
+        try require(NativeGenerationMetrics(extendedFixture,expectedSession:7) == nil,"Unknown count reused")
+        extendedFixture.base = nativeFixture
+        extendedFixture.base.struct_size = 104
+        try require(NativeGenerationMetrics(extendedFixture,expectedSession:7) == nil,"Legacy prefix layout changed")
         nativeFixture.known_fields = 0
         try require(NativeGenerationMetrics(nativeFixture,expectedSession:7) == nil,"Unknown native report accepted")
         nativeFixture.known_fields = UInt32(TOKLET_GENERATION_REPORT_KNOWN)
@@ -410,16 +449,23 @@ struct RequestSummaryMain {
             try require(preCancelled.reason == 3 && preCancelled.emitted == 0,"Pre-cancel control")
             let result = try rows(worker)
             try require(result.count == 6,"Expected five terminal summaries and manifest")
+            try require(result[0]["nativeGenerationMetricsVersion"] as? Int == 2,"Native work version missing")
             try require(result[1]["outcome"] as? String == "stopToken" && result[2]["outcome"] as? String == "rejected" && result[3]["outcome"] as? String == "outputLimit" && result[4]["outcome"] as? String == "cancelled","Terminal outcomes")
             try require(result[1]["promptTokens"] != nil && result[1]["after"] != nil && result[1]["kvOwnedBytes"] != nil && result[1]["callbackTTFTMilliseconds"] != nil,"Missing available metrics")
             guard let phases = result[1]["nativeMetrics"] as? [String:Any] else { throw NativeContextFailure("Native phase report missing") }
             try require(result[1]["nativeMetricStatus"] as? String == "completed" &&
                         phases["prefillTokens"] as? Int == 15 && phases["sampledTokens"] as? Int == 9 &&
-                        phases["emittedTokens"] as? Int == 8 && phases["prefillTokensPerSecond"] != nil,
+                        phases["emittedTokens"] as? Int == 8 && phases["decodeEvaluations"] as? Int == 8 &&
+                        phases["prefillTokensPerSecond"] != nil,
                         "Native phase/count report differs")
             try require(result[2]["nativeMetrics"] == nil && result[2]["nativeMetricStatus"] as? String == "notStarted",
                         "Rejected request inherited native phase data")
             try require(result[3]["nativeDecodeTokensPerSecond"] == nil && result[4]["cancelToTerminalMilliseconds"] != nil,"Single/cancel metrics")
+            guard let preCancelledPhases = result[5]["nativeMetrics"] as? [String:Any] else {
+                throw NativeContextFailure("Completed pre-cancel report missing")
+            }
+            try require(preCancelledPhases["decodeEvaluations"] as? Int == 0 &&
+                        preCancelledPhases["sampledTokens"] as? Int == 0,"Pre-cancel work became unknown or stale")
             faults.armDecode()
             let outputFailure = try run(chat())
             try require(outputFailure.status != 0 && outputFailure.emitted == 8 && outputFailure.history > 0,"Output failure lost committed state")

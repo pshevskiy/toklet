@@ -160,7 +160,49 @@ def validate_workload_rows(rows, workload, *, preflight_only=False):
     return expected
 
 
-def validate_workload_capture(raw, rows, workload, *, preflight_only=False, measured_pairs=10):
+def validate_native_work_capture(raw, records, *, required=False):
+    """Read legacy work as unavailable; require explicit V2 for new captures.
+
+    This checks exported counters, never derives a general decode count from
+    emitted tokens. Cancellation can complete evaluation before the next sample.
+    """
+    require(type(required) is bool and type(raw) is bytes and len(raw) <= CAPTURE_BYTE_LIMIT,
+            'Invalid native work capture bound/policy')
+    lines = raw.splitlines()
+    require(len(lines) >= 2 and all(lines), 'Incomplete native work capture')
+    header, *captured = [_strict_json(line) for line in lines]
+    require(type(header) is dict and type(records) is list and captured == records,
+            'Native work records differ from capture')
+    manifest = header.get('nativeManifest') if header.get('kind') == 'benchmark_request_summary_capture' else header
+    require(type(manifest) is dict and manifest.get('kind') == 'request_summary_manifest',
+            'Native work manifest missing')
+    version = manifest.get('nativeGenerationMetricsVersion', 1)
+    require(type(version) is int and version in (1, 2) and (not required or version == 2),
+            'Native work version unavailable or unsupported')
+    available = 0
+    # Validate wire types, even when Python value equality would equate a bool
+    # with an integer in a separately supplied decoded list.
+    for record in captured:
+        require(type(record) is dict, 'Invalid native work record')
+        native = record.get('nativeMetrics')
+        if version == 1:
+            require(native is None or type(native) is dict and 'decodeEvaluations' not in native,
+                    'Legacy capture claims an unversioned decode count')
+            continue
+        status = record.get('nativeMetricStatus')
+        if status != 'completed':
+            require(status in ('notStarted', 'generationFailed', 'invalidRecord') and native is None,
+                    'Unavailable native work retained stale counters')
+            continue
+        require(type(native) is dict and _uint(native.get('sampledTokens'), 32768)
+                and _uint(native.get('emittedTokens'), native['sampledTokens'])
+                and _uint(native.get('decodeEvaluations'), native['sampledTokens']),
+                'Invalid completed decode-evaluation count')
+        available += 1
+    return dict(version=version, available=available, unavailable=len(records) - available)
+
+
+def validate_workload_capture(raw, rows, workload, *, preflight_only=False, measured_pairs=10, require_native_work=False):
     validate_workload_rows(rows, workload, preflight_only=preflight_only)
     if preflight_only:
         require(type(raw) is bytes and len(raw) <= CAPTURE_BYTE_LIMIT, 'Preflight capture exceeds byte bound')
@@ -172,6 +214,7 @@ def validate_workload_capture(raw, rows, workload, *, preflight_only=False, meas
         records = [record]
     else:
         records = validate_summary_capture(raw, rows, measured_pairs)
+    validate_native_work_capture(raw, records, required=require_native_work)
     enabled = {row['request_id']: row for row in rows if row['mode'] == 'summary'}
     require(len(records) == len(enabled), 'Incomplete workload summaries')
     seen = set()
@@ -198,6 +241,11 @@ def validate_workload_capture(raw, rows, workload, *, preflight_only=False, meas
         require(type(native) is dict and all(type(native.get(k)) is int and native[k] == value for k, value in
                 [('sessionInstance', row['session_instance']), ('reusedTokens', 0), ('prefillTokens', workload['input_token_count']),
                  ('sampledTokens', row['history'] - workload['input_token_count']), ('emittedTokens', len(row['tokens']))]), 'Workload native work differs')
+        if 'decodeEvaluations' in native:
+            # These exact reset/output-limit-or-stop cases have one final pending
+            # sample. This expectation is specific to this validated workload.
+            require(native['decodeEvaluations'] == row['committed'] - workload['input_token_count'],
+                    'Workload completed decode rows differ')
         start, first, end = (record.get(k) for k in ('submittedUptimeNanoseconds', 'firstCallbackNanoseconds', 'completedUptimeNanoseconds'))
         require(all(_uint(x, 0xFFFFFFFFFFFFFFFF) for x in (start, first, end))
                 and row['submitted_uptime_ns'] <= start <= first <= end <= row['completed_uptime_ns'], 'Workload summary clocks escape host interval')
@@ -351,7 +399,7 @@ def main():
         expected = validate_workload_rows(rows, workload, preflight_only=True)
         with Path(str(sample)+'.summaries.jsonl').open('rb') as stream:
             raw = stream.read(CAPTURE_BYTE_LIMIT + 1)
-        validate_workload_capture(raw, rows, workload, preflight_only=True)
+        validate_workload_capture(raw, rows, workload, preflight_only=True, require_native_work=True)
         frozen_path = out / 'frozen-workload.json'
         freeze_workload(frozen_path, workload, expected)
         require(all(sha(ROOT/p) == pin for p, pin in pins.items()), 'Source/archive/workload changed')
@@ -360,6 +408,7 @@ def main():
             workload_sha256=workload['_sha256'], frozen_workload_sha256=sha(frozen_path),
             frozen_workload=str(frozen_path), expected_output=expected, requests=2,
             measured_requests=0, overhead_qualified=False, default_mode='disabled',
+            native_generation_metrics_version=2,
             scope='Untimed exact disabled/summary managed Chat pair; input identity/admission/output-state proof only; no overhead qualification')
         (out/'result.json').write_text(json.dumps(record, indent=2)+'\n')
         print(json.dumps(dict(passed=True, preflight_only=True, result=str(out/'result.json'))))
@@ -384,15 +433,17 @@ def main():
         with Path(str(sample)+'.summaries.jsonl').open('rb') as stream:
             raw = stream.read(CAPTURE_BYTE_LIMIT + 1)
         if workload is None:
-            validate_summary_capture(raw, rows, args.measured_pairs)
+            records = validate_summary_capture(raw, rows, args.measured_pairs)
+            validate_native_work_capture(raw, records, required=True)
         else:
-            validate_workload_capture(raw, rows, workload, measured_pairs=args.measured_pairs)
+            validate_workload_capture(raw, rows, workload, measured_pairs=args.measured_pairs, require_native_work=True)
     require(all(sha(ROOT/p) == pin for p, pin in pins.items()), 'Source/archive changed')
     qualified = all(r[m]['median_ratio_overhead_pct'] <= 1 and r[m]['paired_median_bootstrap_95_pct'][1] <= 1
                     for r in results for m in r)
     record = dict(format='toklet-o1-gemma-summary-v1', source_sha256=pins, build_id=build_id,
         native_archive_sha256=sha(args.archive), results=results, overhead_qualified=qualified,
         warmup_pairs=WARMUP_PAIRS, measured_pairs=args.measured_pairs, cohorts=2,
+        native_generation_metrics_version=2,
         summary_capture='native_ring' if args.measured_pairs == 10 else 'external_after_pairs',
         default_mode='disabled', scope='managed official Gemma BF16 Mac Chat; full caller submit-to-idle acknowledgment; callback TTFT, not render latency',
         hardware=subprocess.check_output(['sysctl', '-n', 'machdep.cpu.brand_string'], text=True).strip(),

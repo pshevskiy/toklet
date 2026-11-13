@@ -1058,10 +1058,17 @@ pub unsafe extern "C" fn toklet_session_generate(
             emit,
             context,
             out,
-            ptr::null_mut(),
+            GenerationObservation::None,
             error,
         )
     }
+}
+
+#[derive(Clone, Copy)]
+enum GenerationObservation {
+    None,
+    V1(*mut GenerationMetrics),
+    V2(*mut GenerationMetricsV2),
 }
 
 // The shared FFI implementation preserves the legacy path and ownership/error
@@ -1079,14 +1086,21 @@ unsafe fn generate_native(
     emit: Emit,
     context: *mut c_void,
     out: *mut Report,
-    metrics: *mut GenerationMetrics,
+    observation: GenerationObservation,
     error: *mut NativeError,
 ) -> u32 {
     unsafe {
         boundary(error, || {
-            if !metrics.is_null() {
-                pointer(metrics)?;
-                metrics.write(GenerationMetrics::empty());
+            match observation {
+                GenerationObservation::None => {}
+                GenerationObservation::V1(metrics) => {
+                    pointer(metrics)?;
+                    metrics.write(GenerationMetrics::empty());
+                }
+                GenerationObservation::V2(metrics) => {
+                    pointer(metrics)?;
+                    metrics.write(GenerationMetricsV2::empty());
+                }
             }
             pointer(session)?;
             pointer(cancel)?;
@@ -1124,8 +1138,14 @@ unsafe fn generate_native(
                 let mut summary = report(s);
                 summary.emitted_tokens = emitted;
                 if let Ok(ref r) = result {
-                    if !metrics.is_null() {
-                        metrics.write(GenerationMetrics::from_report((*session).instance, r));
+                    match observation {
+                        GenerationObservation::None => {}
+                        GenerationObservation::V1(metrics) => {
+                            metrics.write(GenerationMetrics::from_report((*session).instance, r));
+                        }
+                        GenerationObservation::V2(metrics) => {
+                            metrics.write(GenerationMetricsV2::from_report((*session).instance, r));
+                        }
                     }
                     summary.reason = match r.reason {
                         generation::StopReason::OutputLimit => 1,

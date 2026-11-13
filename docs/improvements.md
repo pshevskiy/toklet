@@ -688,3 +688,17 @@ UI/render, tail or default-adoption qualification is transferred.
 [checks](../artifacts/gemma-workload-identity-2026-11-13/checks-final-3.json),
 [audit](../artifacts/gemma-workload-identity-2026-11-13/independent-workload-audit-3.json),
 [review/commit/CI](../artifacts/gemma-workload-identity-2026-11-13/publication-checks-3.json).
+
+Completed native decode rows are implemented through additive ABI1 metrics V2;
+the old96B record/symbols remain unchanged. Required package/native/C/Swift and
+complete65 portable controls per mode pass. The fresh pair and two fixed cohorts
+reconcile54 requests/27 native records, exact384/128/state5125111/count127 and526
+endpoints; independent replay reproduces all statistics. TTFT95uppers1.230/1.313%
+leave the original1% bound unqualified; no samples/gates change. Functional
+retention is approved by Astra, no findings, under the unchanged disabled/opt-in
+policy. Later
+output failure can retain a completed native report; native failures stay unknown.
+[Scope](gemma-decode-evaluations.md),
+[final checks](../artifacts/gemma-decode-rows-2026-11-13/checks-final-1.json),
+[replay/rejection](../artifacts/gemma-decode-rows-2026-11-13/independent-decode-audit-1.json),
+[review/commit/CI](../artifacts/gemma-decode-rows-2026-11-13/publication-checks-1.json).

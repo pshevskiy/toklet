@@ -53,6 +53,29 @@ impl GenerationMetrics {
     }
 }
 
+/// Additive completed decode-row work, preserving the embedded legacy header.
+/// `base.struct_size` describes `GenerationMetrics`, not this extension.
+#[repr(C)]
+#[derive(Clone, Copy, Debug, Default)]
+pub struct GenerationMetricsV2 {
+    pub base: GenerationMetrics,
+    pub decode_evaluations: u64,
+}
+impl GenerationMetricsV2 {
+    pub(super) fn empty() -> Self {
+        Self {
+            base: GenerationMetrics::empty(),
+            decode_evaluations: 0,
+        }
+    }
+    pub(super) fn from_report(session_instance: u64, r: &generation::Report) -> Self {
+        Self {
+            base: GenerationMetrics::from_report(session_instance, r),
+            decode_evaluations: r.decode_evaluations as u64,
+        }
+    }
+}
+
 /// Same generation/state/callback contract as toklet_session_generate, with a
 /// separate completed-report observation. Failure clears known_fields; partial
 /// native timing is unavailable, never a stale report from an earlier call.
@@ -96,7 +119,57 @@ pub unsafe extern "C" fn toklet_session_generate_observed(
             emit,
             context,
             out,
-            metrics,
+            GenerationObservation::V1(metrics),
+            error,
+        )
+    }
+}
+
+/// Same generation/state/callback rules as the legacy observed function, with
+/// the existing completed Report's decode-row count. Availability is governed
+/// by base.known_fields; an unknown zero is not an observed zero. Completed
+/// cancellation may include a decode evaluation without another sampled token.
+/// # Safety
+/// Follow the foreign caller contract. metrics is required, aligned, live,
+/// writable initialized storage for the complete V2 record, disjoint from every
+/// input/output/error record. The embedded header remains the legacy96B layout.
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn toklet_session_generate_observed_v2(
+    session: *const SessionHandle,
+    operation: u32,
+    tokens: *const u32,
+    token_count: usize,
+    max_new_tokens: u32,
+    stops: *const u32,
+    stop_count: usize,
+    cancel: *const CancelHandle,
+    emit: Emit,
+    context: *mut c_void,
+    out: *mut Report,
+    metrics: *mut GenerationMetricsV2,
+    error: *mut NativeError,
+) -> u32 {
+    if metrics.is_null() {
+        return unsafe {
+            boundary(error, || {
+                Err(fail(INVALID, "generation metrics v2 output required"))
+            })
+        };
+    }
+    unsafe {
+        generate_native(
+            session,
+            operation,
+            tokens,
+            token_count,
+            max_new_tokens,
+            stops,
+            stop_count,
+            cancel,
+            emit,
+            context,
+            out,
+            GenerationObservation::V2(metrics),
             error,
         )
     }

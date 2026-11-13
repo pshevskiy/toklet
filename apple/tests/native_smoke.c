@@ -1,6 +1,7 @@
 #include "toklet.h"
 #include <assert.h>
 #include <math.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <string.h>
 _Static_assert(sizeof(TokletOptions)==24, "options ABI");
@@ -9,6 +10,11 @@ _Static_assert(sizeof(TokletReport)==40, "report ABI");
 _Static_assert(sizeof(TokletError)==260, "error ABI");
 _Static_assert(sizeof(TokletScore)==48, "score ABI");
 _Static_assert(sizeof(TokletGenerationMetrics)==96, "metrics ABI");
+_Static_assert(_Alignof(TokletGenerationMetrics)==8, "metrics alignment");
+_Static_assert(sizeof(TokletGenerationMetricsV2)==104, "metrics V2 ABI");
+_Static_assert(_Alignof(TokletGenerationMetricsV2)==8, "metrics V2 alignment");
+_Static_assert(offsetof(TokletGenerationMetricsV2,base)==0, "metrics V2 base");
+_Static_assert(offsetof(TokletGenerationMetricsV2,decode_evaluations)==96, "metrics V2 rows");
 struct Sink { TokletSession *session; uint32_t ids[4]; size_t count; };
 static uint32_t emit(void *opaque, TokletTokenEvent event) {
     struct Sink *sink=opaque;
@@ -60,6 +66,33 @@ int main(int argc, char **argv) {
     assert(toklet_cancel_set(c,1,&error)==TOKLET_OK);
     assert(toklet_session_generate(s,2,NULL,0,1,NULL,0,c,NULL,NULL,&report,&error)==TOKLET_OK);
     assert(report.reason==3 && report.history_tokens==8);
+    assert(toklet_cancel_set(c,0,&error)==TOKLET_OK);
+    /* Legacy callers still own exactly 96 writable bytes. */
+    struct { TokletGenerationMetrics value; uint64_t canary; } old_metrics={.canary=UINT64_MAX};
+    assert(toklet_session_generate_observed(s,3,prompt,4,0,NULL,0,c,NULL,NULL,&report,&old_metrics.value,&error)==TOKLET_OK);
+    assert(old_metrics.canary==UINT64_MAX && old_metrics.value.struct_size==96);
+    struct { TokletGenerationMetricsV2 value; uint64_t canary; } v2={.canary=UINT64_MAX};
+    struct Sink v2_sink={.session=s};
+    assert(toklet_session_generate_observed_v2(s,3,prompt,4,2,NULL,0,c,emit,&v2_sink,&report,&v2.value,&error)==TOKLET_OK);
+    assert(v2.canary==UINT64_MAX && v2.value.base.abi_version==1 && v2.value.base.struct_size==96);
+    assert(v2.value.base.known_fields==(TOKLET_GENERATION_REPORT_KNOWN|TOKLET_GENERATION_FIRST_TOKEN_KNOWN));
+    assert(v2.value.base.prefill_tokens==4 && v2.value.base.sampled_tokens==2 && v2.value.base.emitted_tokens==2 && v2.value.decode_evaluations==1);
+    assert(report.history_tokens==6 && report.evaluated_tokens==5 && report.pending_tokens==1);
+    assert(v2_sink.count==2 && v2_sink.ids[0]==47 && v2_sink.ids[1]==47);
+    assert(toklet_session_generate_observed_v2(s,2,NULL,0,1,NULL,0,c,emit,&v2_sink,&report,&v2.value,&error)==TOKLET_OK);
+    assert(v2.value.base.reused_tokens==5 && v2.value.base.prefill_tokens==1 && v2.value.decode_evaluations==0);
+    assert(report.history_tokens==7 && report.evaluated_tokens==6 && report.pending_tokens==1 && v2_sink.count==3);
+    uint32_t stop=47;
+    assert(toklet_session_generate_observed_v2(s,3,prompt,4,2,&stop,1,c,emit,&v2_sink,&report,&v2.value,&error)==TOKLET_OK);
+    assert(report.reason==2 && v2.value.base.sampled_tokens==1 && v2.value.base.emitted_tokens==0 && v2.value.decode_evaluations==0);
+    assert(v2.value.base.known_fields==TOKLET_GENERATION_REPORT_KNOWN && v2_sink.count==3);
+    assert(toklet_cancel_set(c,1,&error)==TOKLET_OK);
+    assert(toklet_session_generate_observed_v2(s,2,NULL,0,1,NULL,0,c,NULL,NULL,&report,&v2.value,&error)==TOKLET_OK);
+    assert(report.reason==3 && v2.value.base.known_fields==TOKLET_GENERATION_REPORT_KNOWN && v2.value.decode_evaluations==0);
+    v2.value.decode_evaluations=UINT64_MAX;
+    v2.value.base.known_fields=UINT32_MAX;
+    assert(toklet_session_generate_observed_v2(s,99,NULL,0,1,NULL,0,c,NULL,NULL,&report,&v2.value,&error)==TOKLET_INVALID);
+    assert(v2.value.base.known_fields==0 && v2.value.decode_evaluations==0 && v2.canary==UINT64_MAX);
     assert(toklet_session_reset(s,&error)==TOKLET_OK);
     assert(toklet_session_state(s,&report,&error)==TOKLET_OK && report.history_tokens==0);
     assert(toklet_session_release(s,&error)==TOKLET_OK);
