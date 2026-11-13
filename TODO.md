@@ -50,8 +50,9 @@ LFM3 CPU code and portable measurements are published as `612771d7` on
 `codex/console-engine-comparison`.
 [Publication / CI](artifacts/lfm3-finite-guard-2026-11-11/finite-publication-checks.json).
 
-Current/next task: **qualify Ministral's source, bounded conversion and YaRN
-semantics**. Granite's current affine4/8 route remains numerically rejected. LFM3 CPU qualification and finite-widening retention
+Current/next task: **integrate and qualify Ministral's real packed Metal graph
+and raw token-ID CLI route**. Source authentication, bounded conversion and
+component YaRN checks pass. Granite's current affine4/8 route remains numerically rejected. LFM3 CPU qualification and finite-widening retention
 pass; managed application adoption remains open. Preserve the 6 GiB ceiling,
 original numerical/quality gates and prior model decisions. Engine/CLI work
 leads; interactive screen capture and iPhone runtime remain deferred.
@@ -224,27 +225,22 @@ Ministral track after publication.
   retained. Wrong environment-root and CLI-status expectations are corrected
   without changing policies or loader behavior. ActualCLI remainsunknown/
   unknown_architecture;4,641 unchangedRust inputs reuse requiredchecks. Combined
-  Astra approves scoped retention with no findings; graph/codec/quality/fit/
-  request/O1/adoption stay open.
+  Astra approves scoped retention with no findings. Published as `83a8617a`;
+  all three exact-head CI workflows pass. Graph/codec/quality/fit/request/O1/
+  adoption stay open.
   [Full conversion](artifacts/ministral3-conversion-2026-11-13/full-conversion-1/manifest.json),
   [saved-byte audit](artifacts/ministral3-conversion-2026-11-13/full-audit-2/audit.json),
   [checks/review](artifacts/ministral3-conversion-2026-11-13/publication-checks.json).
 
-- [ ] S1.M source preparation: current metadata/source pins are revalidated.
-  The original Rust pin is stale after Granite's reviewed configuration change;
-  that failed reuse is retained and the exact change is explained. Ministral3
-  remains unadmitted. Two complete BF16 source bodies plus even a theoretical
-  all4 text child and the 2 GiB disk floor need at least 19.26 GB; 18.11 GB was
-  free at inspection, before metadata/high-precision overhead. Reclaim compiler
-  caches before payload work. The stale Q4 index remains rejected; independent
-  hidden/query widths and positional full-graph composition remain open.
-  Standalone CPU/Metal fixtures now pass separately; this metadata preflight
-  authenticated no payload and launched no model.
-  Earlier disk planning lacked3.86GB minimum headroom; suffix-only retired
-  cache cleanup now passes the actual mixed-recipe acquisition reservation.
-  [Storage preflight](artifacts/ministral3-metal-2026-11-13/next-storage-preflight-1.json).
-  [Current preflight](artifacts/ministral3-source-planning-2026-11-13/input-revalidation-2.json),
-  [retained stale-pin check](artifacts/ministral3-source-planning-2026-11-13/stale-input-failure-1.json).
+- [ ] S1.M native graph/codec: current ordinary CLI stays unknown_architecture.
+  Core independent widths already work; source names/nested config, positional
+  ownership and raw CLI assumptions need real integration. No graph/quality/
+  fit/request/O1/adoption qualification follows from the converted bytes.
+  [Next graph interfaces](artifacts/ministral3-graph-planning-2026-11-13/integration-plan-1.json).
+  The shared17,078,110-byte tokenizer JSON authenticates against both pinned
+  APIs; its bounded structural check passes. Stock/modified configurations and
+  templates differ, so rawcodec/chatprofiles require separate qualification.
+  [Codec preflight](artifacts/ministral3-codec-2026-11-13/preflight-1.json).
 
 Qwen3.5-2B source inspection records a distinct 24-layer/16-value-head profile
 and joint normalization/layout requirements. The earlier preflight's stale Rust
@@ -293,6 +289,11 @@ model, context, device or adoption qualification.
 - Update current/next work, checkboxes, blockers and check/review outcomes after
   every iteration, including research, failed checks and interrupted work.
 - Keep entries concise; link full logs in artifacts and evidence/commit records.
+- Use the [parallel delivery plan](docs/parallel-delivery.md): source, Metal and
+  independent-reference lanes with one CLI integrator, exact file ownership and
+  one heavy-check queue. Delivery timestamps separate queue/review/rework time;
+  the last milestone's 34.8-minute acquisition dominates its 95-second conversion.
+  This is workflow planning, with no measured speedup claim or gate changes.
 - Reviewed `7524640e` history is archived with byte-exact inverse link checks;
   routine TODO/improvement bytes fall 38.4%. Pending work, original user history,
   live PLAN and numerical inputs are preserved.

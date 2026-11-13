@@ -249,9 +249,19 @@ all3,428,843,520 matrix reconstructions exactly. All144 genuine controls and86
 portable tests perPythonmode pass. The saved-byte auditor now validates rich
 metadata identities and all4,252 tiles; failed checks stayretained. ActualCLI
 preservesunknown_architecture. RequiredRust checks reuse4,641 unchangedinputs.
-Astra approves scoped retention with no findings; graph/codec/quality/fit/
-request/O1/adoption remain open.
+Astra approves scoped retention with no findings. Published as `83a8617a`;
+all three exact-head CI workflows pass. Graph/codec/quality/fit/request/O1/
+adoption remain open. The shared tokenizer JSON authenticates separately; raw
+codec and differing chat profiles remain unqualified.
+[Next codec preflight](../artifacts/ministral3-codec-2026-11-13/preflight-1.json).
 [Conversion/checks/review](../artifacts/ministral3-conversion-2026-11-13/publication-checks.json).
+
+The [parallel delivery plan](parallel-delivery.md) groups the next real graph/CLI
+milestone into source, Metal and independent-reference lanes, with one integrator
+and heavy-check queue. Existing local inputs, shared caches, early integration,
+one combined Astra review and dependency-aware delivery timings reduce avoidable
+waiting and repeated work. This is an execution plan; no workflow speedup is
+measured and the original qualification gates remain unchanged.
 
 Qwen3.5-2B needs a distinct 24-layer/16-value-head source profile. Its MLX
 headers change eighteen gated-norm vectors and convolution layouts; normalization
