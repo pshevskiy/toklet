@@ -38,12 +38,14 @@ mod llama_staged;
 mod lookup_round;
 mod memory;
 #[cfg(test)]
+mod ministral3_graph_tests;
 mod ministral3_rotary;
 pub mod mlx;
 mod moe_experts_half;
 mod moe_ffn;
 mod moe_router_half;
 pub mod planning;
+mod positional;
 mod profile;
 mod reference_schedule;
 mod rms_store;
@@ -116,6 +118,7 @@ enum MlxImport {
     Llama3Audited,
     Llama3QualityDiagnostic,
     MiniCpm5ContextDiagnostic,
+    Ministral3Diagnostic,
     Qwen3Audited,
     Qwen3QualityDiagnostic,
     Qwen3ContextDiagnostic,
@@ -260,7 +263,7 @@ pub struct Model {
     scales: model::DenseScales,
     half_embedding: Option<u16>,
     half_residual: Option<u16>,
-    positional: Option<llama3_rotary::Operation>,
+    positional: Option<positional::Operation>,
     mlx_architecture: Option<crate::mlx::dense::Architecture>,
     // Set only by the explicit validated0.6B long-context diagnostic loader.
     qwen3_context_diagnostic: bool,
@@ -304,6 +307,15 @@ impl Model {
         {
             return Err(Error::Options(
                 "MiniCPM5 context diagnostic requires Compensated/Reference modes",
+            ));
+        }
+        if self.is_ministral3_diagnostic()
+            && (projection_mode != ProjectionMode::MlxAffine
+                || normalization_mode != NormalizationMode::Compensated
+                || attention_mode != AttentionMode::Reference)
+        {
+            return Err(Error::Options(
+                "Ministral 3 diagnostic requires MlxAffine/Compensated/Reference modes",
             ));
         }
         planning::validate_attention(self.mlx_architecture, attention_mode)?;
@@ -358,6 +370,16 @@ impl Model {
     }
     pub fn model_resident_bytes(&self) -> Result<usize> {
         add(self.weight_bytes, self.positional_resident_bytes())
+    }
+    fn positional_pipeline_allowance(&self) -> usize {
+        self.positional
+            .as_ref()
+            .map_or(0, positional::Operation::pipeline_allowance)
+    }
+    pub(crate) fn is_ministral3_diagnostic(&self) -> bool {
+        self.positional
+            .as_ref()
+            .is_some_and(positional::Operation::is_ministral3)
     }
     /// Queried SIMD widths `[one-row decode, eight-row prefill]`. Numerical
     /// qualification applies independently even when the widths differ.
@@ -567,6 +589,25 @@ impl Model {
     ) -> Result<Self> {
         Self::load_mlx_impl(directory, options, MlxImport::Qwen3ContextDiagnostic)
     }
+    /// Explicit selected packed text diagnostic. This preserves the ordinary
+    /// loader/compatibility rejection, requires explicit qualified numerical
+    /// modes and admits at most512 positions before opening source or Metal.
+    pub fn load_ministral3_diagnostic(
+        directory: &Path,
+        options: weights::LoadOptions,
+    ) -> Result<Self> {
+        if !(1..=512).contains(&options.context_limit) {
+            return Err(Error::Options(
+                "Ministral 3 diagnostic requires1..=512 positions",
+            ));
+        }
+        if options.memory_limit_bytes == 0
+            || options.memory_limit_bytes > weights::INITIAL_MEMORY_LIMIT_BYTES
+        {
+            return Err(Error::Options("Ministral 3 diagnostic budget must fit6GiB"));
+        }
+        Self::load_mlx_impl(directory, options, MlxImport::Ministral3Diagnostic)
+    }
     fn load_mlx_impl(
         directory: &Path,
         options: weights::LoadOptions,
@@ -574,7 +615,9 @@ impl Model {
     ) -> Result<Self> {
         autoreleasepool(|_| {
             let clock = Instant::now();
-            let mut source = if matches!(import, MlxImport::SmolAudited) {
+            let mut source = if matches!(import, MlxImport::Ministral3Diagnostic) {
+                crate::mlx::qwen::Source::open_ministral3_diagnostic(directory, options)?
+            } else if matches!(import, MlxImport::SmolAudited) {
                 crate::mlx::qwen::Source::open_smol_audited(directory, options)?
             } else if matches!(import, MlxImport::Llama3Audited) {
                 crate::mlx::qwen::Source::open_llama3_audited(directory, options)?
@@ -629,19 +672,14 @@ impl Model {
             let positional_pipeline = plan
                 .position
                 .as_ref()
-                .map(|_| llama3_rotary::compile(&gpu))
+                .map(|position| position.compile(&gpu))
                 .transpose()?;
             let compilation_seconds = compile_clock.elapsed().as_secs_f64();
             plan.validate_buffers(gpu.device.maxBufferLength())?;
             let weight_bytes = plan.weight_bytes;
             let conversion_clock = Instant::now();
             let positional = match (plan.position, positional_pipeline) {
-                (Some(p), Some(pipeline)) => Some(llama3_rotary::Operation::with_pipeline(
-                    &gpu,
-                    p,
-                    p.owned_bytes(),
-                    pipeline,
-                )?),
+                (Some(p), Some(pipeline)) => Some(p.upload(&gpu, pipeline)?),
                 (None, None) => None,
                 _ => return Err(Error::Options("positional pipeline/plan differs")),
             };
@@ -1294,6 +1332,7 @@ impl<'m> Session<'m> {
                 )?
             };
             let plan = plan.with_positional_bytes(model.positional_resident_bytes())?;
+            let plan = plan.with_positional_allowance(model.positional_pipeline_allowance())?;
             let moe_plan = model
                 .moe
                 .as_ref()
@@ -1815,7 +1854,8 @@ impl<'m> Session<'m> {
                 if let Some(operation) = &self.model.positional {
                     operation.encode(
                         &command,
-                        llama3_rotary::Invocation {
+                        ministral3_rotary::Kind::Queries,
+                        positional::Invocation {
                             input: q_input,
                             output: q_rotary,
                             status: &s.status,
@@ -1844,7 +1884,8 @@ impl<'m> Session<'m> {
                 if let Some(operation) = &self.model.positional {
                     operation.encode(
                         &command,
-                        llama3_rotary::Invocation {
+                        ministral3_rotary::Kind::Keys,
+                        positional::Invocation {
                             input: k_input,
                             output: k_rotary,
                             status: &s.status,

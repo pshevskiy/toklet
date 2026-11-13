@@ -118,6 +118,11 @@ required-features = ["metal"]
 test = true
 
 [[example]]
+name = "ministral3_graph_capture"
+required-features = ["metal"]
+test = true
+
+[[example]]
 name = "mlx_mac_baseline"
 required-features = ["metal"]
 

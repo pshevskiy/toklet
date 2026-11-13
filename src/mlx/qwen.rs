@@ -28,6 +28,7 @@ use std::{
 };
 
 mod logical;
+mod ministral3;
 mod phi3;
 pub(crate) use logical::LogicalTensorSpec;
 
@@ -152,6 +153,7 @@ pub struct Source {
     architecture: Architecture,
     tied_output: bool,
     position_plan: crate::model::PositionPlan,
+    ministral3_profile: Option<crate::mlx::ministral3::Profile>,
     rotary_layers: Option<Vec<bool>>,
     scales: crate::model::DenseScales,
     tensors: BTreeMap<String, TensorSpec>,
@@ -174,6 +176,17 @@ impl Source {
     /// existing consumers cannot accidentally opt into another graph.
     pub fn open_dense(directory: &Path, options: LoadOptions) -> Result<Self, Error> {
         Self::open_impl(directory, options, true)
+    }
+
+    /// Explicit selected mixed-affine Ministral text source for the Metal graph
+    /// diagnostic. Ordinary open/dense/inspection admission remains unchanged.
+    /// This validates representation and semantics, not checkpoint provenance,
+    /// payload finiteness, a session/device budget, codec or model quality.
+    pub fn open_ministral3_diagnostic(
+        directory: &Path,
+        options: LoadOptions,
+    ) -> Result<Self, Error> {
+        ministral3::open(directory, options)
     }
 
     /// Explicit Metal-only context diagnostic. Validate the ordinary source at
@@ -609,6 +622,7 @@ impl Source {
             architecture,
             tied_output,
             position_plan,
+            ministral3_profile: None,
             rotary_layers,
             scales,
             tensors,
@@ -645,6 +659,12 @@ impl Source {
     }
     pub fn position_plan(&self) -> crate::model::PositionPlan {
         self.position_plan
+    }
+    /// A separate selected Half graph mechanism, not the mathematical FP32
+    /// PositionPlan. When present, backend planning must select its query/key
+    /// operations and must not fall through to the legacy position_plan field.
+    pub fn ministral3_profile(&self) -> Option<crate::mlx::ministral3::Profile> {
+        self.ministral3_profile
     }
     pub fn rotary_layers(&self) -> Option<&[bool]> {
         self.rotary_layers.as_deref()

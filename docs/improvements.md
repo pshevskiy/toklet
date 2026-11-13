@@ -263,6 +263,21 @@ one combined Astra review and dependency-aware delivery timings reduce avoidable
 waiting and repeated work. This is an execution plan; no workflow speedup is
 measured and the original qualification gates remain unchanged.
 
+Ministral graph/CLI diagnostic code passes fmt, strict CPU/Metal Clippy,
+763 CPU/922 Metal-feature tests and all five release GPU controls, including
+eight zero-Rust-allocation tiny decode steps. The debug allocation failure is
+retained. Full capture completes 22 runs/9,218 arrays and exact state/causal
+checks, but 78/244,809,728 profile coordinates fail the unchanged numerical gate.
+Console mode/phase/memory, request/error/cancel and custom-stop controls pass;
+the private pre-child reader failure and corrected retry are retained. Current
+route remains unqualified and does not advance to performance cohorts. Targeted
+native-input replay traces the earliest projection failure to propagated inputs;
+sampled operators pass their local gates without changing the full rejection.
+Astra approves scoped diagnostic retention with no blocking code findings.
+[Review/publication](../artifacts/ministral3-graph-2026-11-13/publication-checks.json),
+[scope](ministral3-graph.md),
+[decision](../artifacts/ministral3-graph-2026-11-13/graph-comparison-1/manifest.json).
+
 Qwen3.5-2B needs a distinct 24-layer/16-value-head source profile. Its MLX
 headers change eighteen gated-norm vectors and convolution layouts; normalization
 offsets also depend on layout and source key prefixes. A stale historical Rust

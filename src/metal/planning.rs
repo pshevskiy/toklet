@@ -22,7 +22,7 @@ use std::{collections::BTreeMap, path::Path};
 pub(super) struct MlxWeights {
     pub tensors: BTreeMap<String, (Layout, Storage)>,
     pub weight_bytes: usize,
-    pub position: Option<super::llama3_rotary::Plan>,
+    pub position: Option<super::positional::Plan>,
     pub admitted: usize,
 }
 impl MlxWeights {
@@ -44,19 +44,15 @@ impl MlxWeights {
             weight_bytes = add(weight_bytes, bytes)?;
             plans.insert(name.clone(), (layout, spec.storage()));
         }
-        let position = match source.position_plan() {
-            model::PositionPlan::Ordinary => None,
-            model::PositionPlan::Llama3(scaling) => Some(super::llama3_rotary::Plan::new(
-                source.config().head_dim,
-                source.config().rope_theta,
-                scaling,
-            )?),
-        };
+        let position = super::positional::Plan::for_source(source)?;
         let positional_bytes = position.as_ref().map_or(0, |p| p.owned_bytes());
-        let admitted = add(
-            add(add(weight_bytes, positional_bytes)?, ALLOWANCE)?,
-            64 * 1024,
-        )?;
+        let pipeline_allowance = position.as_ref().map_or(0, |p| p.pipeline_allowance());
+        // Upload tables from a temporary CPU cache before learned weights.
+        // Admit the larger phase, counting both simultaneously live table
+        // owners during upload without retaining a duplicate CPU cache.
+        let setup = position.map(|p| p.setup_bytes()).transpose()?.unwrap_or(0);
+        let resident = add(add(weight_bytes, positional_bytes)?, pipeline_allowance)?;
+        let admitted = add(add(resident.max(setup), ALLOWANCE)?, 64 * 1024)?;
         Ok(Self {
             tensors: plans,
             weight_bytes,
@@ -70,8 +66,7 @@ impl MlxWeights {
     pub fn validate_buffers(&self, maximum: usize) -> Result<usize> {
         let mut largest = 0;
         if let Some(position) = &self.position {
-            memory::validate_buffer_bytes(position.buffer_bytes(), maximum)?;
-            largest = position.buffer_bytes();
+            largest = position.validate_buffers(maximum)?;
         }
         for (layout, storage) in self.tensors.values() {
             match storage {
@@ -209,6 +204,11 @@ impl SessionPlan {
             .ok_or(Error::Options("positional accounting underflow"))?;
         self.memory.admitted_bytes = add(base, bytes)?;
         self.memory.positional_bytes = bytes;
+        Ok(self)
+    }
+    pub(super) fn with_positional_allowance(mut self, bytes: usize) -> Result<Self> {
+        self.memory.metadata_allowance_bytes = add(self.memory.metadata_allowance_bytes, bytes)?;
+        self.memory.admitted_bytes = add(self.memory.admitted_bytes, bytes)?;
         Ok(self)
     }
     pub fn new(
@@ -782,13 +782,20 @@ fn inspect_with_policy(
             weights::MAX_CONTEXT_LIMIT,
         )?;
         resolved.positional_bytes = weights.position.as_ref().map_or(0, |p| p.owned_bytes());
-        let session = resolved.at_capacity(options.capacity)?;
+        let session = resolved
+            .at_capacity(options.capacity)?
+            .with_positional_allowance(
+                weights
+                    .position
+                    .as_ref()
+                    .map_or(0, |p| p.pipeline_allowance()),
+            )?;
         let gpu = Gpu::new()?;
         let _pipelines = mlx::compile(&gpu)?;
         let _positional_pipeline = weights
             .position
             .as_ref()
-            .map(|_| super::llama3_rotary::compile(&gpu))
+            .map(|position| position.compile(&gpu))
             .transpose()?;
         validate_attention_device(&gpu, attention)?;
         let maximum = gpu.device.maxBufferLength();

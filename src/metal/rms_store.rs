@@ -115,6 +115,7 @@ impl super::Session<'_> {
             || !self.model.is_mlx()
             || self.model.moe.is_some()
             || self.model.qwen3_context_diagnostic
+            || self.model.is_ministral3_diagnostic()
             || (
                 c.hidden_size,
                 c.intermediate_size,

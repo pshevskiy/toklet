@@ -36,6 +36,7 @@ impl super::Session<'_> {
         if !cfg!(target_os = "macos")
             || self.projection_mode != super::ProjectionMode::MlxAffine
             || self.model.qwen3_context_diagnostic
+            || self.model.is_ministral3_diagnostic()
             || self.options.prefill_chunk_size < 4
             || !self.history.is_empty()
             || self.evaluated != 0

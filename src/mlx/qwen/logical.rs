@@ -160,6 +160,35 @@ pub(super) fn plan(
     Ok(result)
 }
 
+/// Selected whole-tensor names for the packed Ministral text graph. The
+/// existing Whole reader keeps the complete original physical source name,
+/// including affine overrides and metadata companions. Only cold graph keys
+/// lose the language_model prefix; no payload or source declaration changes.
+pub(super) fn ministral3_aliases(
+    physical: &BTreeMap<String, TensorSpec>,
+) -> Result<BTreeMap<String, LogicalTensorSpec>, Error> {
+    if physical.is_empty() {
+        return Err(invalid("empty Ministral text inventory"));
+    }
+    let whole = plan(physical, &[])?;
+    let mut result = BTreeMap::new();
+    for (physical_name, spec) in whole {
+        let graph_name = physical_name
+            .strip_prefix("language_model.")
+            .filter(|name| name.starts_with("model."))
+            .ok_or_else(|| invalid("Ministral text physical name lacks selected prefix"))?;
+        if result.insert(graph_name.to_owned(), spec).is_some() {
+            return Err(invalid("duplicate Ministral graph alias"));
+        }
+    }
+    if result.len() != physical.len() {
+        return Err(invalid(
+            "Ministral aliases changed unique payload ownership",
+        ));
+    }
+    Ok(result)
+}
+
 impl Source {
     pub(crate) fn logical_tensors(&self) -> &BTreeMap<String, LogicalTensorSpec> {
         &self.logical

@@ -54,7 +54,8 @@ impl Model {
             ReadbackMode::FullLogits,
             attention,
         )?
-        .with_positional_bytes(self.positional_resident_bytes())?;
+        .with_positional_bytes(self.positional_resident_bytes())?
+        .with_positional_allowance(self.positional_pipeline_allowance())?;
         let maximum = self.gpu.device.maxBufferLength();
         plan.validate_buffers(maximum)?;
         Ok((plan.memory, plan.largest_buffer_bytes()?, maximum))

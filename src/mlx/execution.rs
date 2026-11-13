@@ -36,6 +36,50 @@ pub(crate) struct NativePositionLimits {
 pub(crate) fn metal_source_position_limits(
     source: &crate::mlx::qwen::Source,
 ) -> Result<NativePositionLimits, GeometryError> {
+    if let Some(profile) = source.ministral3_profile() {
+        let c = source.config();
+        let g = profile.geometry();
+        c.validate()
+            .map_err(|_| GeometryError::Invalid("invalid selected Ministral3 configuration"))?;
+        if source.architecture() != crate::mlx::dense::Architecture::Mistral
+            || (
+                c.hidden_size,
+                c.intermediate_size,
+                c.num_layers,
+                c.query_heads,
+                c.kv_heads,
+                c.head_dim,
+                c.vocab_size,
+            ) != (
+                g.hidden_size,
+                g.intermediate_size,
+                g.layers,
+                g.query_heads,
+                g.kv_heads,
+                g.head_dim,
+                g.vocab_size,
+            )
+            || c.rope_theta != 1e6
+            || c.rms_norm_eps != 1e-5
+            || c.max_positions > 512
+            || source.declared_positions() != g.source_max_positions
+            || source.declared_sliding_window().is_some()
+            || source.position_plan() != model::PositionPlan::Ordinary
+            || source.dense_scales() != model::DenseScales::default()
+            || !source.tied_output()
+        {
+            return Err(GeometryError::Unsupported(
+                "Ministral3 diagnostic source semantics differ",
+            ));
+        }
+        // Only the explicit source adapter can create this profile. Preserve
+        // ordinary Mistral geometry policy and never infer YaRN from shape.
+        return Ok(NativePositionLimits {
+            graph_cap: Some(512),
+            declared_window: None,
+            upper: 512.min(g.source_max_positions),
+        });
+    }
     source_position_limits(source, None)
 }
 

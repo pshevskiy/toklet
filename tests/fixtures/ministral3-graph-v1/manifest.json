@@ -1,0 +1,32 @@
+{
+  "format": "toklet-ministral3-half-graph-manifest-v1",
+  "fixture": {
+    "file": "fixture.json",
+    "bytes": 1814762,
+    "sha256": "8796bc0edddf83a954d16d938decd2e9732ec7e732b80ac886f299058cb1edd4"
+  },
+  "stages": 19,
+  "cases": 6,
+  "coordinates_per_profile": 38080,
+  "inputs": {
+    "tests/fixtures/ministral3-rotary-v1/profile.json": {
+      "bytes": 8522,
+      "sha256": "0f8d25bec77f2f6901e86830b7da22b75808fccb7800ce939f17f386206f4c9f"
+    }
+  },
+  "producers": {
+    "tools/reference/ministral3_graph_fixture.py": {
+      "bytes": 22051,
+      "sha256": "fe2fd7f4dbaf24a36ab6e94d264eee4ec690cf706e78a7e289727f0d11a66134"
+    },
+    "tools/reference/ministral3_graph_protocol.py": {
+      "bytes": 4899,
+      "sha256": "98203b59eea2627d42a2711096bd8f0302924446b007fa4ae6a32ca4e70b3a9e"
+    },
+    "tools/reference/ministral3_rotary_fixture.py": {
+      "bytes": 24170,
+      "sha256": "66560e71c69d166445ef1fa993ebfdbb22f195bceb37d599c1d91e8d01499dfe"
+    }
+  },
+  "scope": "Independent tiny graph/composition only; no model, quality, fit, performance or ordinary admission"
+}

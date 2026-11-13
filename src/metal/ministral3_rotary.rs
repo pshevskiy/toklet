@@ -125,6 +125,7 @@ impl Plan {
     /// Guarded caller input/output/status allocations. Immutable tables,
     /// pipeline/context allowance, temporary CPU upload and diagnostics are
     /// counted separately; each physical owner is counted once.
+    #[cfg(test)]
     pub(super) fn operand_bytes(self) -> Result<usize> {
         self.input_len()
             .checked_add(self.output_len())

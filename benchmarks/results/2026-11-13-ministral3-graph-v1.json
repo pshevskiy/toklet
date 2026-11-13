@@ -1,0 +1,75 @@
+{
+  "format": "toklet-ministral3-graph-diagnostic-v1",
+  "device": {
+    "chip": "Apple M1 Pro",
+    "model": "MacBookPro18,3",
+    "memory_bytes": 17179869184,
+    "OS": "macOS26.6.2/25G83"
+  },
+  "engine": {
+    "base_revision": "b774d58fe61dfb9d849769f509c5fe1755ca52e7",
+    "source_and_build_receipt": "../../artifacts/ministral3-graph-2026-11-13/required-queue-result-1.json",
+    "checked_source_files": 4113,
+    "review": "Astra approved explicit diagnostic tooling with numerical rejection preserved; no blocking code findings",
+    "review_receipt": "../../artifacts/ministral3-graph-2026-11-13/astra-review-1.json",
+    "publication_receipt": "../../artifacts/ministral3-graph-2026-11-13/publication-checks.json"
+  },
+  "hypothesis": "Selected source geometry, mixed affine primitives and cached Half YaRN compose within original full-graph gates and6GiB",
+  "implementation": "Explicit diagnostic source/Metal/CLI profile with cold aliases, immutable shared positional owner, independent H3072/Q4096/KV1024 and tied packed embedding head",
+  "checks": {
+    "fmt_and_strict_CPU_Metal_Clippy": "pass",
+    "CPU": 763,
+    "CLI_dependent_rerun": 28,
+    "Metal_feature": 922,
+    "portable_per_Python_mode": 34,
+    "release_GPU_controls": 5,
+    "tiny_profile_coordinates": 255360,
+    "warmed_tiny_decode_steps": 8,
+    "Rust_allocations": 0
+  },
+  "actual_graph": {
+    "reference_arrays": 4190,
+    "native_runs": 22,
+    "native_arrays": 9218,
+    "profile_coordinates": 244809728,
+    "failed_profile_coordinates": 78,
+    "passed": false,
+    "exact_schedule_reset_checks": 7123,
+    "causal_prefix_checks": 419,
+    "gate": "atol=max(1e-4,2*independent_main_wide_envelope),rtol=1e-3; bothprofilesrequired",
+    "decision": "Current route numerically rejected; ordinary admission, quality, performance/O1 and adoption do not advance"
+  },
+  "functional": {
+    "requests": 19,
+    "cold_bad_assets_missing_weights_control": true,
+    "passed": true,
+    "natural_EOS2_termination_qualified": false
+  },
+  "observed_guard_peaks_bytes": {
+    "compiler": 3171844096,
+    "independent_full_reference": 180274304,
+    "native_capture": 2914979176,
+    "console_functional": 2884435968,
+    "scope": "Observed owned command cohorts including32MiBhelperreserve; not a continuous allocator cap"
+  },
+  "localization": {
+    "earliest_projection_replay_wide_exact_words": 3072,
+    "sampled_RMS_and_rotary_local_gates": "pass",
+    "full_graph_rejection_overridden": false,
+    "other_failures_localized": false
+  },
+  "performance": {
+    "cohorts_3plus10_executed": false,
+    "reason": "Full-model numerical gate rejects; diagnostic clocks only",
+    "speedup_qualified": false,
+    "O1_overhead_qualified": false
+  },
+  "retained_failures": [
+    "debugTinyRustallocation119versus0; releasequalificationzero",
+    "consoleprivateprefixreaderJSONDecodebeforenativechild; correctedhelper2",
+    "fullcoupledgraph78profilecoordinates"
+  ],
+  "evidence": "../../artifacts/ministral3-graph-2026-11-13/current-phase-1.json",
+  "quality_codec_full_context_fit_adoption_qualified": false,
+  "whole_goal_complete": false
+}

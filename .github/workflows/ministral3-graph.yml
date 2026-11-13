@@ -1,0 +1,29 @@
+name: Ministral graph controls
+
+"on":
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  portable:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        optimize: ["0", "1"]
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
+      - name: Validate independent graph and saved-capture controls
+        env:
+          PYTHONPATH: tools/reference
+          PYTHONOPTIMIZE: ${{ matrix.optimize }}
+          PYTHONDONTWRITEBYTECODE: "1"
+        run: >-
+          python3 -s -B -m unittest -v
+          test_ministral3_graph_fixture
+          test_ministral3_graph_check

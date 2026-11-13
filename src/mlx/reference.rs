@@ -111,6 +111,11 @@ pub(crate) struct LoadPlan {
 }
 
 pub(crate) fn load_plan(source: &Source) -> Result<LoadPlan, Error> {
+    if source.ministral3_profile().is_some() {
+        return Err(invalid(
+            "Ministral3 diagnostic requires its packed Metal graph; FP32 reference expansion is unsupported",
+        ));
+    }
     let mut fp32_weights_bytes = 0;
     let mut temporary_packed_bytes = 0;
     for logical in source.logical_tensors().values() {

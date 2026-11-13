@@ -37,7 +37,7 @@ Usage: toklet [OPTIONS]
        toklet plan --help
 
   --model PATH              Local model directory
-  --model-profile qwen|lfm3-bf16   Explicit model profile (qwen default)
+  --model-profile PROFILE   qwen (default), lfm3-bf16, ministral3-diagnostic
   --prompt TEXT             Chat-formatted user prompt
   --messages PATH           JSON array of chat messages
   --tools PATH              JSON tool schemas
@@ -61,12 +61,15 @@ Usage: toklet [OPTIONS]
   -V, --version             Print version
 
 Generation is greedy without penalties. Text requires local tokenizer assets.
+Ministral3 diagnostic uses Metal mlx-affine/reference, token IDs and JSON only;
+its default capacity is 128 and its maximum capacity is 512.
 Interactive actions: generate, append (raw text or IDs), continue, reset.
 Ctrl-C cancels between backend chunks/steps; idle interactive Ctrl-C exits.";
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum ModelProfile {
     Qwen,
     Lfm3Bf16,
+    Ministral3Diagnostic,
 }
 struct Args {
     model: PathBuf,
@@ -166,7 +169,12 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
                 a.model_profile = match utf8(value()?)?.as_str() {
                     "qwen" => ModelProfile::Qwen,
                     "lfm3-bf16" => ModelProfile::Lfm3Bf16,
-                    _ => return Err(invalid("model profile must be qwen or lfm3-bf16")),
+                    "ministral3-diagnostic" => ModelProfile::Ministral3Diagnostic,
+                    _ => {
+                        return Err(invalid(
+                            "model profile must be qwen, lfm3-bf16 or ministral3-diagnostic",
+                        ));
+                    }
                 };
             }
             "--prompt" => a.prompt = Some(utf8(value()?)?),
@@ -214,6 +222,32 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
         }
         if !seen.contains("--prefill-chunk") {
             a.chunk = 16;
+        }
+    }
+    if a.model_profile == ModelProfile::Ministral3Diagnostic {
+        if a.backend != "metal"
+            || a.metal_projection != "mlx-affine"
+            || a.metal_attention != "reference"
+            || a.q4_weights.is_some()
+            || seen.contains("--cpu-projection")
+        {
+            return Err(invalid(
+                "Ministral3 diagnostic requires Metal mlx-affine/reference",
+            ));
+        }
+        if a.prompt.is_some() || a.messages.is_some() || a.tools.is_some() || a.raw {
+            return Err(invalid("Ministral3 diagnostic accepts only token IDs"));
+        }
+        if !a.json && !a.interactive {
+            return Err(invalid("Ministral3 diagnostic requires JSON output"));
+        }
+        if !seen.contains("--context-capacity") {
+            a.capacity = 128;
+        }
+        if a.capacity > 512 {
+            return Err(invalid(
+                "Ministral3 diagnostic supports at most 512 positions",
+            ));
         }
     }
     if a.backend == "metal" && seen.contains("--cpu-projection") {
@@ -330,6 +364,7 @@ struct Frontend {
     max: usize,
     load_seconds: f64,
     conversion_seconds: f64,
+    compilation_seconds: Option<f64>,
     tokenizer_load_seconds: f64,
     memory_admitted_bytes: usize,
     requests: usize,
@@ -352,6 +387,9 @@ impl Frontend {
                     return Err(invalid("LFM3 text chat does not accept tools"));
                 }
                 toklet::app_chat::lfm3::render(messages)
+            }
+            ModelProfile::Ministral3Diagnostic => {
+                Err(invalid("Ministral3 diagnostic accepts only token IDs"))
             }
         }
     }
@@ -385,6 +423,7 @@ impl Frontend {
         session: &mut impl InferenceSession,
         r: UserRequest,
     ) -> Result<bool, Box<dyn std::error::Error>> {
+        validate_profile_input(self.model_profile, &r)?;
         let count = [r.tokens.is_some(), r.prompt.is_some(), r.messages.is_some()]
             .into_iter()
             .filter(|&v| v)
@@ -521,6 +560,13 @@ impl Frontend {
                 "input_formatting_seconds":input_formatting_seconds,"tokenization_seconds":tokenization_seconds,
                 "detokenization_seconds":output_timing.detokenization_seconds,"publication_seconds":output_timing.publication_seconds,
                 "load_seconds":if self.requests==0{self.load_seconds}else{0.0},"conversion_seconds":if self.requests==0{self.conversion_seconds}else{0.0},"tokenizer_load_seconds":if self.requests==0{self.tokenizer_load_seconds}else{0.0},"memory_admitted_bytes":self.memory_admitted_bytes});
+            if self.model_profile == ModelProfile::Ministral3Diagnostic {
+                stats["model_profile"] = json!("ministral3-diagnostic");
+            }
+            if let Some(seconds) = self.compilation_seconds {
+                stats["compilation_seconds"] =
+                    json!(if self.requests == 0 { seconds } else { 0.0 });
+            }
             if let Some(load) = self.lfm3_load {
                 stats["model_profile"] = json!("lfm3-bf16");
                 stats["decode_evaluations"] = json!(report.decode_evaluations);
@@ -541,6 +587,17 @@ impl Frontend {
             Ok(cancelled)
         })
     }
+}
+fn validate_profile_input(profile: ModelProfile, request: &UserRequest) -> io::Result<()> {
+    if profile == ModelProfile::Ministral3Diagnostic
+        && (request.prompt.is_some()
+            || request.messages.is_some()
+            || request.tools.is_some()
+            || request.raw.is_some())
+    {
+        return Err(invalid("Ministral3 diagnostic accepts only token IDs"));
+    }
+    Ok(())
 }
 fn token_list(text: &str) -> io::Result<Vec<u32>> {
     if text.is_empty() {
@@ -564,8 +621,13 @@ fn array_file(path: &std::path::Path) -> io::Result<Vec<Value>> {
 fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
     ctrlc::try_set_handler(|| CANCELLED.store(true, Ordering::Relaxed))?;
     let lfm3 = a.model_profile == ModelProfile::Lfm3Bf16;
+    let ministral3 = a.model_profile == ModelProfile::Ministral3Diagnostic;
     let vocab = if lfm3 {
         toklet::model::lfm3::VOCAB
+    } else if ministral3 {
+        // The explicit source opener independently validates this selected
+        // geometry. No generic top-level config or tokenizer is inferred.
+        131_072
     } else {
         let config = chat::json_file(&a.model.join("config.json"), chat::MAX_INPUT_BYTES)?;
         config["vocab_size"]
@@ -575,7 +637,9 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
     };
     let clock = Instant::now();
     let needs_text = a.prompt.is_some() || a.messages.is_some() || !a.json && !a.interactive;
-    let assets = if needs_text || a.interactive && a.model.join("tokenizer.json").exists() {
+    let assets = if !ministral3
+        && (needs_text || a.interactive && a.model.join("tokenizer.json").exists())
+    {
         Some(if lfm3 {
             let admitted_bytes = toklet::app_chat::lfm3::ALLOWANCE_BYTES;
             Assets {
@@ -606,6 +670,8 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
         Vec::new()
     } else if lfm3 {
         vec![toklet::app_chat::lfm3::EOS]
+    } else if ministral3 {
+        vec![2]
     } else {
         chat::stop_ids(&a.model, vocab)?
     };
@@ -651,6 +717,7 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
         max: a.max,
         load_seconds: 0.,
         conversion_seconds: 0.,
+        compilation_seconds: None,
         tokenizer_load_seconds,
         memory_admitted_bytes: 0,
         requests: 0,
@@ -710,7 +777,9 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
     if a.backend == "metal" {
         let q4_v2 = a.q4_weights.is_some();
         let mlx = a.metal_projection == "mlx-affine";
-        let model = if mlx {
+        let model = if ministral3 {
+            toklet::metal::Model::load_ministral3_diagnostic(&a.model, load_options)?
+        } else if mlx {
             toklet::metal::Model::load_mlx(&a.model, load_options)?
         } else if let Some(packed) = &a.q4_weights {
             toklet::metal::Model::load_q4(&a.model, packed, load_options)?
@@ -745,7 +814,9 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
             attention,
         )?;
         frontend.execution = ExecutionMetadata {
-            weight_dtype: if mlx {
+            weight_dtype: if ministral3 {
+                "MLX affine4/8 + FP16 norms"
+            } else if mlx {
                 "MLX affine + FP16 exclusions"
             } else if q4_v2 {
                 "Q4 v2 + FP16 exclusions"
@@ -765,10 +836,20 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
                 "Original"
             },
             readback_mode: "FullLogits",
-            attention_mode: (a.metal_attention == "online").then_some("Online"),
+            attention_mode: if a.metal_attention == "online" {
+                Some("Online")
+            } else if ministral3 {
+                Some("Reference")
+            } else {
+                None
+            },
             prefill_chunk_size: a.chunk,
             packed_format_version: q4_v2.then_some(2),
-            quantization_group_size: model.q4_format().map(|f| f.group()),
+            quantization_group_size: if ministral3 {
+                Some(64)
+            } else {
+                model.q4_format().map(|f| f.group())
+            },
             quantizer: if mlx {
                 Some("MLX affine (per-tensor bits/groups)")
             } else {
@@ -777,6 +858,7 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
         };
         frontend.load_seconds = model.load_timing.load_seconds;
         frontend.conversion_seconds = model.load_timing.conversion_seconds;
+        frontend.compilation_seconds = Some(model.load_timing.compilation_seconds);
         frontend.cpu_projection = "none";
         return run_session(frontend, &mut session, initial, a.capacity, external_bytes);
     }
@@ -836,6 +918,9 @@ fn run_session(
     let mut ready = json!({"event":"ready", "backend":frontend.backend, "context_capacity":capacity,
         "cpu_projection":frontend.cpu_projection, "memory_admitted_bytes":frontend.memory_admitted_bytes,
         "execution":frontend.execution,"logical_memory":logical_memory(memory,external_bytes)});
+    if frontend.model_profile == ModelProfile::Ministral3Diagnostic {
+        ready["model_profile"] = json!("ministral3-diagnostic");
+    }
     if let Some(load) = frontend.lfm3_load {
         ready["model_profile"] = json!("lfm3-bf16");
         ready["checkpoint_load"] = lfm3_load_json(load);
@@ -948,6 +1033,75 @@ mod tests {
     use super::*;
     fn args(values: &[&str]) -> Vec<OsString> {
         values.iter().map(OsString::from).collect()
+    }
+    #[test]
+    fn ministral3_diagnostic_interactive_fields_reject_before_session_changes() {
+        for value in [
+            json!({"tokens":[1,2]}),
+            json!({"action":"append","tokens":[3]}),
+            json!({"action":"continue","max_new_tokens":2}),
+            json!({"action":"reset"}),
+        ] {
+            let request = serde_json::from_value(value).unwrap();
+            assert!(validate_profile_input(ModelProfile::Ministral3Diagnostic, &request).is_ok());
+        }
+        for value in [
+            json!({"prompt":"text"}),
+            json!({"messages":[]}),
+            json!({"tokens":[1],"tools":[]}),
+            json!({"tokens":[1],"raw":false}),
+            json!({"action":"continue","raw":true}),
+        ] {
+            let request = serde_json::from_value(value).unwrap();
+            assert!(validate_profile_input(ModelProfile::Ministral3Diagnostic, &request).is_err());
+        }
+    }
+
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    #[test]
+    fn ministral3_diagnostic_flags_reject_unqualified_routes_before_io() {
+        let base = [
+            "--model",
+            "missing",
+            "--model-profile",
+            "ministral3-diagnostic",
+            "--backend",
+            "metal",
+            "--metal-projection",
+            "mlx-affine",
+            "--tokens",
+            "1",
+            "--json",
+        ];
+        let parsed = parse(args(&base)).unwrap();
+        assert_eq!((parsed.capacity, parsed.chunk), (128, 128));
+        assert!(parsed.model_profile == ModelProfile::Ministral3Diagnostic);
+        for extra in [
+            vec!["--context-capacity", "0"],
+            vec!["--context-capacity", "513"],
+            vec!["--metal-attention", "online"],
+            vec!["--prompt", "text"],
+            vec!["--tools", "missing"],
+            vec!["--raw"],
+        ] {
+            let mut values = args(&base);
+            values.extend(args(&extra));
+            assert!(parse(values).is_err());
+        }
+        for capacity in [1, 128, 512] {
+            let mut values = args(&base);
+            values.extend(args(&["--context-capacity", &capacity.to_string()]));
+            assert_eq!(parse(values).unwrap().capacity, capacity);
+        }
+        for (from, to) in [("metal", "cpu"), ("mlx-affine", "original")] {
+            let mut values = base.to_vec();
+            *values.iter_mut().find(|value| **value == from).unwrap() = to;
+            assert!(parse(args(&values)).is_err());
+        }
+        assert!(parse(args(&base[..base.len() - 1])).is_err());
+        let mut interactive = base[..8].to_vec();
+        interactive.push("--interactive");
+        assert!(parse(args(&interactive)).unwrap().interactive);
     }
     #[test]
     fn lfm3_profile_rejects_other_graphs_and_unqualified_tools_before_io() {

@@ -32,6 +32,7 @@ pub(super) fn wrapper(source: weights::Source, storage: Storage, shape: Vec<usiz
         architecture: Architecture::Llama,
         tied_output: true,
         position_plan: crate::model::PositionPlan::Ordinary,
+        ministral3_profile: None,
         rotary_layers: None,
         scales: Default::default(),
         tensors: tensors.clone(),

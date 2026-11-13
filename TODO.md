@@ -50,9 +50,9 @@ LFM3 CPU code and portable measurements are published as `612771d7` on
 `codex/console-engine-comparison`.
 [Publication / CI](artifacts/lfm3-finite-guard-2026-11-11/finite-publication-checks.json).
 
-Current/next task: **integrate and qualify Ministral's real packed Metal graph
-and raw token-ID CLI route**. Source authentication, bounded conversion and
-component YaRN checks pass. Granite's current affine4/8 route remains numerically rejected. LFM3 CPU qualification and finite-widening retention
+Current/next task: **publish the reviewed Ministral graph/CLI diagnostic and
+its unchanged numerical rejection, then qualify the selected Qwen3.5-2B route**.
+Source authentication, bounded conversion and component YaRN checks pass. Granite's current affine4/8 route remains numerically rejected. LFM3 CPU qualification and finite-widening retention
 pass; managed application adoption remains open. Preserve the 6 GiB ceiling,
 original numerical/quality gates and prior model decisions. Engine/CLI work
 leads; interactive screen capture and iPhone runtime remain deferred.
@@ -170,10 +170,11 @@ does not qualify full-model numerical/quality, all-workload fit or performance.
   [localization](artifacts/granite-graph-2026-11-12/attention-localization-result-1.json),
   [review/commit](artifacts/granite-graph-2026-11-12/publication-checks.json).
 
-Next: integrate and qualify the real Ministral graph and raw CLI route, then
-codec and original full-quality/fit/request/O1 gates. Source-byte authentication
-and modified conversion pass; stock index admission remains rejected. Root owns
-integration and the single heavy-check queue.
+Next: publish the reviewed Ministral diagnostic and retain its numerical
+rejection, then qualify the selected Qwen3.5-2B source/graph route. Ministral
+codec and original full-quality/fit/request/O1 gates remain unqualified. Source
+authentication/conversion pass; stock index admission remains rejected. Root
+owns integration and the single heavy-check queue.
 [Parallel execution plan](artifacts/ministral3-yarn-2026-11-13/parallel-work-plan-1.json).
 Granite's current affine4/8 Metal route does not advance to adoption or quality/
 performance qualification. Any future candidate must pass the original graph,
@@ -232,10 +233,28 @@ Ministral track after publication.
   [saved-byte audit](artifacts/ministral3-conversion-2026-11-13/full-audit-2/audit.json),
   [checks/review](artifacts/ministral3-conversion-2026-11-13/publication-checks.json).
 
-- [ ] S1.M native graph/codec: current ordinary CLI stays unknown_architecture.
-  Core independent widths already work; source names/nested config, positional
-  ownership and raw CLI assumptions need real integration. No graph/quality/
-  fit/request/O1/adoption qualification follows from the converted bytes.
+- [x] S1.M real graph/CLI diagnostic: source, Metal and CLI integration is built.
+  Fmt, strict CPU/Metal Clippy, 763 CPU/922 Metal-feature tests, 28 affected
+  CLI reruns and 34 portable controls per Python mode pass. All five release
+  GPU tests pass, including eight zero-Rust-allocation decode steps; the debug
+  allocation failure stays retained. Full-model capture passes 22 runs/9,218
+  arrays and exact state/causal checks, but the numerical gate rejects
+  78/244,809,728 profile coordinates. Native-input replay localizes the first
+  projection failure to propagated inputs; sampled RMS/rotary checks pass
+  locally without overriding that rejection. All 19 console functional requests
+  pass after a retained pre-child reader failure/fix. Performance cohorts remain
+  blocked. Astra approves explicit diagnostic tooling/retention with no blocking
+  code findings; the stale integration-status sentence is corrected.
+  [Review/publication](artifacts/ministral3-graph-2026-11-13/publication-checks.json).
+  [Current checks/decision](artifacts/ministral3-graph-2026-11-13/current-phase-1.json).
+  [Ownership/invariants](artifacts/ministral3-graph-2026-11-13/parallel-dispatch-1.json).
+  Ordinary inspection stays unknown_architecture.
+  Source names/nested config, positional ownership and raw CLI are integrated
+  only through the explicit diagnostic profile.
+
+- [ ] S1.M full-model/codec qualification: the numerical route remains rejected;
+  no full-context, codec, quality, all-workload fit, request/O1 or adoption
+  qualification follows. A future candidate must pass the original gates.
   [Next graph interfaces](artifacts/ministral3-graph-planning-2026-11-13/integration-plan-1.json).
   The shared17,078,110-byte tokenizer JSON authenticates against both pinned
   APIs; its bounded structural check passes. Stock/modified configurations and
@@ -294,6 +313,10 @@ model, context, device or adoption qualification.
   one heavy-check queue. Delivery timestamps separate queue/review/rework time;
   the last milestone's 34.8-minute acquisition dominates its 95-second conversion.
   This is workflow planning, with no measured speedup claim or gate changes.
+  Documentation passes 279 local links, content and staged whitespace checks;
+  Astra approves with no findings. Published as `b774d58f`; all three exact-head CI
+  workflows pass. Original user work is preserved.
+  [Checks/review/publication](artifacts/ministral3-graph-planning-2026-11-13/parallel-delivery-publication-1.json).
 - Reviewed `7524640e` history is archived with byte-exact inverse link checks;
   routine TODO/improvement bytes fall 38.4%. Pending work, original user history,
   live PLAN and numerical inputs are preserved.
