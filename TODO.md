@@ -64,8 +64,13 @@ LFM3 CPU code and portable measurements are published as `612771d7` on
   [Scope](docs/qwen35-2b-real-source.md),
   [checks/review/commit](artifacts/qwen35-2b-payload-2026-11-13/publication-checks.json).
 
-Current/next task: **review and publish stronger Gemma headless overhead
-qualification, then continue the measured LFM3 projection experiment**.
+Current/next task: **publish the closed LFM3 two-token experiment and finish the
+next engine/CLI milestone selection**. Do not reopen the bounded arithmetic or
+dispatch search. Parallel delivery now uses exclusive ownership and an explicit
+pause barrier before performance work.
+The stronger short headless Gemma overhead milestone is published as
+`cf80a168`; all five exact-head CI workflows/ten jobs pass.
+[Publication](artifacts/lfm3-tokens2-2026-11-13/gemma-stronger-publication-checks.json).
 The bounded 2B investigation is closed. All 34,119 native arrays replay
 exactly; all 17,394 recovered staged arrays match their original hashes. None
 of the 24 precision policies or two declared FP32 reduction schemes passes both
@@ -74,33 +79,22 @@ engine change or deeper qualification follows. Astra approves the bounded
 evidence closure with no findings. [Final local decision](artifacts/qwen35-2b-attention-2026-11-13/two-f32-qk-check-1/result.json),
 [original full rejection](artifacts/qwen35-2b-payload-2026-11-13/context17-paired-decision-1.json).
 
-Three disjoint preparation handoffs are ready: reviewed 2B evidence closure,
-current LFM3 profiling command, and independent exactness controls. The integrator owns
-shared edits, one heavy queue and combined review/publication. LFM3 already
-batches prefill; two-token BF16 weight reuse is a hypothesis pending fresh
-profiling, with no new implementation or performance claim.
-[Source preflight](artifacts/qwen35-2b-attention-2026-11-13/lfm3-next-performance-preflight-1.json),
-[delivery plan](docs/parallel-delivery.md),
-[checks/review/publication](artifacts/qwen35-2b-attention-2026-11-13/velocity-publication-checks.json).
-Current execution: the cached release-probe build and three complete 128-token
-projection baseline cohorts pass (30 measured samples; six AC/nominal-thermal/
-Low-Power-off endpoints). The sandbox-denied first launch stays failed; the
-guarded retry closes with no owned processes. The current request diagnostic
-passes exact output/state and all 22 before/after input pins under 6 GiB.
-Projection dot accounts for 801/828 active-main samples in its initial prefill
-window; this warrants an exact weight-reuse experiment, not a speedup claim.
-A closure-wrapper line-index assumption is corrected without rerunning inference.
-A current clean-source Mac native archive build also passes;
-462 input hashes and the archive are bound. Strict Swift, ten conformance
-records and both original Gemma cohorts pass collection within their caps;
-all 488 input pins match. Overhead remains unqualified: TTFT median overhead
-is 0.069/0.246%, but bootstrap upper bounds are 2.271/2.123%.
-No numerical source has changed.
-[Baseline and retained failure](artifacts/qwen35-2b-attention-2026-11-13/lfm3-current-operator-baseline-1.json).
-[Request-profile preparation](artifacts/lfm3-tokens2-2026-11-13/request-profile-preparation-1.json),
-[completed profile](artifacts/lfm3-tokens2-2026-11-13/request-profile-closure-1.json),
-[current native archive](artifacts/lfm3-tokens2-2026-11-13/gemma-current-staticlib-1.json).
-[Original overhead result](artifacts/lfm3-tokens2-2026-11-13/gemma-observer-original-closure-1.json).
+- [x] Bounded two-token LFM3 operator experiment closed: 17 release controls,
+  120 success/retry plus 360 zero-allocation rejection controls, fmt, both strict
+  Clippy configurations and 794 CPU/954 Metal tests pass. Corrected fixed cohorts
+  preserve whole outputs and improve large-shape operator latency 48.99/49.53%.
+  Eight slower one-token pairs across six configurations leave compatibility
+  unresolved; Astra rejects code retention and approves evidence-only closure.
+  All five candidate files are restored exactly to `cf80a168`. No model/request
+  integration follows. Original negatives, excluded overlapped screen and complete
+  quiet-host rerun remain evidence; no gate or accepted scope changes.
+  [Scope](docs/lfm3-two-token-projection.md),
+  [review](artifacts/lfm3-tokens2-2026-11-13/tokens2-astra-review-2.json),
+  [exact revert](artifacts/lfm3-tokens2-2026-11-13/tokens2-code-revert-2.json),
+  [checks/review/publication](artifacts/lfm3-tokens2-2026-11-13/tokens2-publication-checks-2.json).
+Implementation, evidence and documentation have exclusive owners; the integrator
+runs one heavy queue and waits for explicit preparation-pause acknowledgements.
+[Delivery plan](docs/parallel-delivery.md).
 
 - [x] Stronger overhead evidence: bounded 10..100 pair configuration preserves
   the ten-pair default, fixed ring and original clocks/1% gates. Forty dependent

@@ -7,23 +7,29 @@ capture and iPhone runtime remain deferred. No delivery speedup is measured yet.
 
 ## Current assignments
 
-The Qwen3.5-2B diagnostic is published as `f53af39b`. Context17 rejects three of
-680,841,024 comparisons; none of 26 bounded local policies passes both selected
-cases under both unchanged profiles. Stop that variant search and close its
-evidence. The qualified LFM3 CPU route provides the next performance hypothesis;
-fresh current profiling must precede a kernel change.
+The Qwen3.5-2B bounded numerical search is closed. The LFM3 two-token experiment
+is also closed after one dispatch correction: large operator gains did not close
+the original one-token compatibility gate. Astra approved evidence-only closure;
+all candidate code was reverted. [Experiment decision](lfm3-two-token-projection.md).
 
-| Lane | Exclusive ownership now | Ready handoff |
+| Lane | Exclusive ownership | Ready handoff |
 | --- | --- | --- |
-| Evidence | `docs/qwen35-2b-attention-localization.md` | Concise pass/reject scope, exact receipts and limitations |
-| Performance | `artifacts/qwen35-2b-attention-2026-11-13/lfm3-current-profile-handoff-1.json` | One existing probe/guard command, source/build pins, outputs and advance/stop rule |
-| Correctness | `artifacts/qwen35-2b-attention-2026-11-13/lfm3-tokens2-test-handoff-1.json` | Independent arithmetic/error controls and smallest failing-case test sequence |
-| Integrator | Shared APIs, TODO/improvements, queue, checks, review and publication | One frozen diff with combined evidence; reviewed commit/push and exact-head CI |
+| Implementation | One mechanism's numerical source and shared signatures | Small frozen diff, layout/ownership/numerical invariants, targeted controls |
+| Independent validation | Oracle fixtures and artifact collection/replay | Exact input/output pins, smallest controls, reproducible commands and unresolved gates |
+| Evidence/documentation | One report or next-command preparation | Concise actual pass/reject scope, receipts and limitations |
+| Integrator | TODO/improvements, shared API, heavy queue and publication | Earliest integrated check, one combined Astra review, retained/reverted decision, commit/push and exact-head CI |
 
-The [source preflight](../artifacts/qwen35-2b-attention-2026-11-13/lfm3-next-performance-preflight-1.json)
-confirms prefill already batches tokens. A two-token BF16 projection tile could
-reuse weights while preserving each output's arithmetic. Its benefit is unknown;
-do not add another pool, graph feature or variant sweep without measurements.
+Independent static preparation may overlap compilation. Before performance work,
+the integrator requires explicit **paused** acknowledgements from every active
+lane and confirmation that local preparation processes have finished. Record
+this barrier before launch. All preparation stays paused through measurement.
+The first corrected LFM3 screen started too early and was excluded; its complete
+unchanged matrix was rerun after pause. Do not repeat that scheduling mistake.
+[Retained exclusion](../artifacts/lfm3-tokens2-2026-11-13/tokens2-screen-exclusion-2.json).
+
+This ownership and queue policy avoids file collisions and measurement overlap;
+delivery speedup remains unmeasured. Reassign a lane to Astra when the combined
+packet is ready; a finite failed experiment ends with an explicit closure.
 
 ## Keep four slots useful
 

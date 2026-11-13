@@ -657,20 +657,18 @@ stays separate and opt-in.
 [Scope, results and evidence](gemma-summary-overhead.md),
 [checks/review/publication](../artifacts/lfm3-tokens2-2026-11-13/gemma-stronger-publication-checks.json).
 
-Q2.G's [9B128/256 evaluation](qwen35-9b-context256.md) is in progress. The separate
-producer and strict reader preserve both original profiles/gates. Fresh required
-Rust checks,190portable Python tests, native build/ABI and two strict release-probe
-builds pass; version2 adds session setup timing and10synthetic metric/closure
-checks pass. Native capture v2 preserves primary guard/cleanup results before
-parsing; strict receipt/raw linkage and2new synthetic failure controls pass.
-Both captures now reject45,332/79.35M comparisons each;14,847 saved coordinates
-have disjoint original profile tolerances. Native functional/recovery checks pass
-at5.667GBpeak and3positive/39damage controls pass. No managed adoption follows.
-The first benchmark attempt rejects before samples; retry2 preserves raw
-preflight and passes12metric/preflight tests. After power correction,40measured/
-12warm samples close at nominal boundaries:128medians32.068/30.848s and256medians
-68.399/63.330s. First256 cohort varies widely; all samples retained. Full outputs
-match; peak5.676GB conservative charge and1positive/17performance controls pass.
-Astra approves scoped diagnostic retention and commit, no findings; no
-optimization, overhead or adoption claim.
-[Review/commit](../artifacts/qwen35-9b-context256-2026-11-09/publication-checks.json).
+The bounded two-token LFM3 experiment is **closed, rejected for code retention**.
+Correctness/allocation controls, fmt, strict CPU/Metal Clippy and 794 CPU/954 Metal
+tests pass. Corrected fixed operator cohorts preserve whole outputs and reduce
+large-shape latency 48.99/49.53%, but eight slower one-token pairs across six
+configurations leave the original compatibility gate unresolved. Astra approves
+evidence-only closure; all five candidate code files are restored exactly to
+`cf80a168`. No further variant search or model/request integration follows.
+Original negatives, the excluded preparation-overlap screen and full quiet-host
+rerun are retained. Exclusive file ownership, one heavy queue and explicit pause
+acknowledgements govern [parallel delivery](parallel-delivery.md); no workflow
+speedup is measured yet.
+[Scope](lfm3-two-token-projection.md),
+[review](../artifacts/lfm3-tokens2-2026-11-13/tokens2-astra-review-2.json),
+[revert](../artifacts/lfm3-tokens2-2026-11-13/tokens2-code-revert-2.json),
+[checks/review/publication](../artifacts/lfm3-tokens2-2026-11-13/tokens2-publication-checks-2.json).
