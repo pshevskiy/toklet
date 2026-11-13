@@ -1,111 +1,96 @@
 # Parallel engine and CLI delivery
 
-The current track is Qwen3.5-2B real-source conversion and engine/CLI
-diagnostics, followed by numerical investigation. The typed-source/tiny-graph slice is published as `025bcd1e`;
-Ministral's `8b6220e9` numerical rejection remains explicit. Keep acceptance in
-[PLAN](../PLAN.md#validation-and-performance-policy) and preserve model order,
-existing source eligibility and earlier rejection decisions.
+Shorten the path from a measured bottleneck to a checked, reviewed change.
+Keep the original [acceptance policy](../PLAN.md#validation-and-performance-policy),
+model priorities and numerical decisions. Engine/CLI leads; interactive screen
+capture and iPhone runtime remain deferred. No delivery speedup is measured yet.
 
-## Assign independent work
+## Current assignments
 
-Use three implementation lanes and one integrator, with exclusive file ownership.
-Keep one model milestone in flight. Parallelize its independent mechanisms and
-preparation; close its pass/reject decision before opening another model campaign.
-The [previous dispatch receipt](../artifacts/qwen35-2b-source-planning-2026-11-13/parallel-work-plan-1.json)
-records the completed typed-source slice. Current source/conversion evidence is
-in [TODO](../TODO.md#current-and-next-task); keep the current phase's owners and
-next executable commands separate from completed history.
+The Qwen3.5-2B diagnostic is published as `f53af39b`. Context17 rejects three of
+680,841,024 comparisons; none of 26 bounded local policies passes both selected
+cases under both unchanged profiles. Stop that variant search and close its
+evidence. The qualified LFM3 CPU route provides the next performance hypothesis;
+fresh current profiling must precede a kernel change.
 
-| Owner | Current work | Handoff |
+| Lane | Exclusive ownership now | Ready handoff |
 | --- | --- | --- |
-| Source lane | Parent lineage, bounded Q4 conversion and saved-byte audit | Frozen source/child manifests and complete tensor coverage; prepare the next bounded source task after handoff |
-| Graph lane | Explicit token-ID CLI, native capture and transaction/repair controls | Exact build/test/CLI commands with environment and output paths; existing numerical loops unchanged |
-| Reference lane | Independent reader, full-coordinate reference and comparison | Frozen protocol, runtime admission and executable capture/check commands, independent of native output |
-| Integrator | Shared declarations, manifest parser, serial check queue, status, Astra and publication | One bound set of source inputs, combined results/review and exact-head CI |
+| Evidence | `docs/qwen35-2b-attention-localization.md` | Concise pass/reject scope, exact receipts and limitations |
+| Performance | `artifacts/qwen35-2b-attention-2026-11-13/lfm3-current-profile-handoff-1.json` | One existing probe/guard command, source/build pins, outputs and advance/stop rule |
+| Correctness | `artifacts/qwen35-2b-attention-2026-11-13/lfm3-tokens2-test-handoff-1.json` | Independent arithmetic/error controls and smallest failing-case test sequence |
+| Integrator | Shared APIs, TODO/improvements, queue, checks, review and publication | One frozen diff with combined evidence; reviewed commit/push and exact-head CI |
 
-Agree on the small API before editing shared files. Hand off a concrete function
-signature, ownership/accounting rule and acceptance command; identify any unknown
-that blocks actual qualification. Mark a lane ready for integration only when its
-files and generation commands are available. Do not wait for a lane's entire
-full-model campaign before integrating its first useful change.
-Prefer one executable handoff plus a short summary of changed files, inputs,
-outputs and blockers. Link raw logs and manifests instead of copying them into
-each handoff or status update.
+The [source preflight](../artifacts/qwen35-2b-attention-2026-11-13/lfm3-next-performance-preflight-1.json)
+confirms prefill already batches tokens. A two-token BF16 projection tile could
+reuse weights while preserving each output's arithmetic. Its benefit is unknown;
+do not add another pool, graph feature or variant sweep without measurements.
 
-Reuse the clean worktree and Cargo cache. Each lane may run cheap static or
-stdlib-only controls over its owned files. The integrator owns shared edits,
-compilation and model/runtime execution. A completed lane frees its slot for
-Astra or independent next-task preparation; at most four agents run at once.
-Explicitly dispatch and acknowledge a follow-up when an owner has completed;
-sending a message alone does not restart an idle agent. Confirm a running owner
-before waiting on a handoff that blocks the heavy-job queue.
+## Keep four slots useful
 
-## Follow the dependency chain
+Use one integrator and up to three independent owners. Give each owner an
+exclusive file set, concrete output, acceptance command and stopping rule.
+Agree on shared signatures before source edits. Each handoff contains paths,
+input hashes, the next executable command and unresolved dependencies; link logs
+instead of copying them. Preparation is not successful execution.
 
-For the current real-source phase, source authentication, parent comparison,
-conversion/audit, Metal/GPU/state/CLI controls and the short graph have passed.
-Context17 rejects three of 680,841,024 comparisons with identical native traces
-and completed offline audits. Conditional fixed255 is not launched. Astra
-approves diagnostic retention; local-input investigation and the original deeper
-graph/codec/quality/fit → performance/observer-overhead gates remain open. A
-numerical rejection stops dependent cohorts and becomes an explicit reviewed
-decision; it does not qualify the remaining gates. Model qualification can span
-several reviewable code milestones.
+Reassign a finished lane to Astra when the combined diff and check results are
+ready. During review, other owners may prepare independent fixtures, commands or
+documentation. Explicitly dispatch follow-ups to completed agents and require a
+running acknowledgement; a message alone does not restart them. Integrate useful
+ready slices without waiting for unrelated preparation to finish.
 
-1. In parallel, implement typed source loading, graph binding and independent
-   fixture/reference work. The integrator resolves source lineage and storage
-   requirements and wires the agreed interface.
-2. Run the first integrated compile as soon as those interfaces are present.
-   Prove the tiny ratio-one graph, exact F32 small values, session recovery and
-   memory accounting before spending time on full payloads or captures.
-3. Authenticate source values and conversion semantics before admitting a real
-   child. Reserve the complete selected phase, including sources, child, captures,
-   temporary workspace and disk floor, before downloading its payloads. Admit
-   deeper graph/stock-quality phases separately once their prerequisites pass;
-   their original quality and memory gates remain required before performance.
-4. Freeze the combined inputs. Run applicable fmt, strict Clippy, CPU, Metal and
-   explicit session/GPU checks. Reuse results only with verified unchanged
-   relevant source/dependency inputs. Record why a repeated check was necessary.
-5. A failing numerical, state, codec or fit gate stops its dependent quality and
-   performance cohorts. Preserve the failure and record a scoped diagnostic or
-   rejection decision. Independent portable work can continue.
-6. Send Astra the frozen diff, invariants and combined results in one request.
-   Resolve findings there; commit/push the reviewed milestone once and verify
-   exact-head CI. Do not create separate routine helper/publication reviews.
+Keep one implementation experiment active. Read-only preparation for the next
+task can overlap a settled pass/reject decision and its evidence closure.
+Do not open a second model campaign to fill a slot.
 
-The [current critical-path analysis](../artifacts/qwen35-2b-payload-2026-11-13/velocity-critical-path-1.json)
-records five concrete changes: one active model, cheap preflight before heavy
-work, reuse across matching input hashes, independent preparation during the
-serial queue, and short graph pass/reject checkpoints before dependent campaigns.
-The [graph/CLI handoff](../artifacts/qwen35-2b-payload-2026-11-13/graph-execution-handoff-1.json)
-and [reference handoff](../artifacts/qwen35-2b-payload-2026-11-13/reference-execution-handoff-1.json)
-contain prospective commands; preparation does not count as successful execution.
+## Use short decision checkpoints
 
-## Serialize scarce resources
+1. Confirm the bottleneck using current source and a representative workload.
+   Freeze one hypothesis, primary metric, finite candidate list and stop rule.
+2. Implement one mechanism with an independent oracle. Run cheap boundary,
+   arithmetic, error, allocation and state controls before full-model work.
+3. Run the first integrated compile as soon as the small interface is ready.
+   Fix integration failures before collecting expensive captures.
+4. Advance to applicable full graph/state/quality and resource gates only after
+   local gates pass. A failure stops dependent performance/adoption cohorts.
+   Further experiments require new evidence and a new declared hypothesis.
+5. Measure a promising candidate in release mode, including complete requests,
+   confirmation and sustained workloads required by PLAN. Retain or revert.
+6. Submit one frozen diff, invariants and combined results to Astra. Resolve
+   findings in that review, then commit/push and verify exact-head CI.
 
-One queue owns builds and memory-intensive conversion, numerical, model and
-quality jobs. Performance cohorts run alone, with the required power/thermal
-conditions and no competing preparation. Keep the 6 GiB engine, 512 MiB
-setup/audit including its 32 MiB helper reservation, 3 GiB compiler-only and
-2 GiB disk-floor policies. Parallel agents do not grant parallel heavy jobs.
+The [completed 2B checkpoint](../artifacts/qwen35-2b-attention-2026-11-13/two-f32-qk-check-1/result.json)
+ends its finite search. It does not establish that every possible algorithm fails.
+Original numerical, quality and observer-overhead gates remain unchanged.
 
-Prepare bounded codec metadata, control inputs, documentation or a future diff
-while a heavy job runs. Watch remote CI or prepare the next source contract while
-Astra reviews. Avoid importing a numerical runtime or starting another model to
-fill an idle slot. Engine/CLI work requires no screen-sharing picker.
+## Protect the heavy queue and reuse evidence
 
-## Measure delivery velocity
+Only the integrator starts compilers, conversions, numerical runtimes, model
+loads and quality jobs. Performance cohorts run alone with recorded power and
+thermal conditions; even cheap background preparation pauses during measurement.
+Keep the 6 GiB engine, 512 MiB setup including 32 MiB helper, 3 GiB compiler-only
+and 2 GiB free-disk limits. Reuse the clean worktree and Cargo cache.
 
-Use the milestone receipt as the event ledger: dispatch, first integrated check,
-source freeze, required checks complete, review request/approval, push and green
-CI. Preserve actual timestamps; record missing clocks as missing. Track total
-elapsed time, heavy-queue execution/wait, review wait, rework and repeated-check
-reasons. Keep raw logs in artifacts and summarize only counts and evidence links
-in TODO/improvements.
+Use existing probes and guards. Check interpreter, arguments, input/runtime pins,
+output paths and phase disk admission before entering the queue. Add a helper
+only when an existing tool cannot express a necessary measurement or control.
 
-Estimate remaining time from the longest dependency chain and observed job
-lengths, with unresolved source/numerical issues stated separately. Do not sum
-parallel lane estimates or promise a workflow speedup before comparable completed
-milestones demonstrate one. The earlier
-[conversion timings](../artifacts/ministral3-conversion-2026-11-13/velocity-observations-1.json)
-are descriptive observations, not a measured effect of parallel delivery.
+Reuse successful checks only when their relevant source, dependency, feature,
+compiler and runtime inputs are unchanged. Record each invalidation and rerun
+reason. Documentation-only changes need content/link/whitespace checks. Kernel
+changes retain required fmt, strict CPU/Metal Clippy, CPU/Metal tests and affected
+model/session/device checks. New numerical inputs invalidate their downstream
+captures; unchanged model bytes do not waive a changed kernel's validation.
+
+## Measure the workflow
+
+Use the existing milestone receipt as one event ledger: dispatch/acknowledgement,
+handoff ready, first integrated check, input freeze, queue start/end, checks
+complete, Astra request/approval, push and green CI. Preserve actual timestamps;
+leave missing historical clocks unset.
+
+Report elapsed time to reviewed green CI, heavy-queue wait/execution, review wait,
+first-check time, rework and repeated-check reasons. Estimate the next checkpoint
+from the longest dependency chain and observed jobs, with numerical uncertainty
+separate. Do not sum parallel estimates or predict a workflow speedup without
+comparable completed milestones.

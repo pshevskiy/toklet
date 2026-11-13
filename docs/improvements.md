@@ -587,7 +587,7 @@ Mac ceiling, 512/32 pilot and 512 MiB codec budget stay fixed; iPhone is deferre
 
 | Scope | Retained result or restriction | Evidence |
 | --- | --- | --- |
-| Gemma Heretic affine4 | Cold planning, authenticated mixed-format loading and independent fidelity are complete; task-quality loss rejects adoption. Keep official BF16/G2 selected. | [Artifact and decision](gemma-heretic-mlx.md) |
+| Gemma Heretic affine4 | Cold planning, authenticated mixed-format loading and independent fidelity are complete; task-quality loss rejects adoption. Keep official BF16/G2 selected. | [Artifact](gemma-heretic-mlx.md), [quality rejection](gemma-heretic-quality-probes.md) |
 | Qwen3.5-4B | Separate pinned owners, scalar/hybrid graph, codec and generation state bridge are delivered. Full 128/256 fidelity fails: 13,505 failures/3,132 disjoint intervals. No managed adoption; unchanged gates bind later work. | [Model plan](model-observability-plan.md), [decision](../artifacts/qwen35-context256-2026-11-09/decision.json) |
 | Qwen3.5-9B recipe/store/head | Separate strict source and untied-head support retain original packed owners and authenticate the complete 5.038 GB stream. These mechanisms alone do not qualify execution or fit. | [Recipe](qwen35-9b-cold.md), [store](qwen35-9b-storage.md), [head](qwen35-untied-head.md) |
 | 9B one-input oracle/Metal | Both complete dual-profile captures pass. Hybrid Metal has zero retained CPU matrix bytes and 5.667 GB peak; 64.72×/64.42× applies only to the raw one-input baseline. | [Oracle](qwen35-9b-oracle.md), [Metal](qwen35-9b-metal.md) |
@@ -617,6 +617,21 @@ adoption remain open; no performance gain follows. Failed monitor, reader,
 allocator, import, binary-selection and audit-wrapper attempts stay retained.
 [Scope](qwen35-2b-real-source.md),
 [review/commit](../artifacts/qwen35-2b-payload-2026-11-13/publication-checks.json).
+
+The bounded follow-up reproduces all 34,119 native arrays and recovers all
+17,394 staged prefix arrays exactly. None of the 24 precision policies or two
+declared FP32 reduction schemes passes both selected cases under both original
+profiles. This variant search stops with no engine change; Astra approves
+the evidence closure with no findings. [Final local rejection](../artifacts/qwen35-2b-attention-2026-11-13/two-f32-qk-check-1/result.json).
+
+Delivery now overlaps evidence closure, current LFM3 profiling preparation and
+independent exactness controls with exclusive file ownership. One integrator
+keeps the serial heavy queue, required checks, combined Astra review and push.
+LFM3 two-token weight reuse remains a hypothesis pending current profiling;
+there is no measured workflow or kernel speedup.
+[Delivery plan](parallel-delivery.md),
+[checks/review/publication](../artifacts/qwen35-2b-attention-2026-11-13/velocity-publication-checks.json),
+[source preflight](../artifacts/qwen35-2b-attention-2026-11-13/lfm3-next-performance-preflight-1.json).
 
 Q2.G's [9B128/256 evaluation](qwen35-9b-context256.md) is in progress. The separate
 producer and strict reader preserve both original profiles/gates. Fresh required

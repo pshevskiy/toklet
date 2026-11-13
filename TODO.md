@@ -64,18 +64,29 @@ LFM3 CPU code and portable measurements are published as `612771d7` on
   [Scope](docs/qwen35-2b-real-source.md),
   [checks/review/commit](artifacts/qwen35-2b-payload-2026-11-13/publication-checks.json).
 
-Current/next task: **localize the Qwen3.5-2B attention-context rejection**.
-All three failures share token 12/layer 15/head 6/feature 55. Preserve bounded
-native Q/K/V/scores/probability and independent operands before distinguishing
-local accumulation from upstream propagation; the discarded passing values
-cannot establish the cause. No numerical change is qualified yet.
-[Localization](artifacts/qwen35-2b-payload-2026-11-13/context17-attention-localization-1.json),
-[paired decision](artifacts/qwen35-2b-payload-2026-11-13/context17-paired-decision-1.json).
+Current/next task: **close the bounded 2B investigation; profile the qualified
+LFM3 CPU route before another optimization**. All 34,119 native arrays replay
+exactly; all 17,394 recovered staged arrays match their original hashes. None
+of the 24 precision policies or two declared FP32 reduction schemes passes both
+selected cases under both unchanged profiles. Stop this variant search; no
+engine change or deeper qualification follows. Astra approves the bounded
+evidence closure with no findings. [Final local decision](artifacts/qwen35-2b-attention-2026-11-13/two-f32-qk-check-1/result.json),
+[original full rejection](artifacts/qwen35-2b-payload-2026-11-13/context17-paired-decision-1.json).
+
+Three disjoint preparation handoffs are ready: reviewed 2B evidence closure,
+current LFM3 profiling command, and independent exactness controls. The integrator owns
+shared edits, one heavy queue and combined review/publication. LFM3 already
+batches prefill; two-token BF16 weight reuse is a hypothesis pending fresh
+profiling, with no new implementation or performance claim.
+[Source preflight](artifacts/qwen35-2b-attention-2026-11-13/lfm3-next-performance-preflight-1.json),
+[delivery plan](docs/parallel-delivery.md),
+[checks/review/publication](artifacts/qwen35-2b-attention-2026-11-13/velocity-publication-checks.json).
 The authenticated official/selected tokenizer metadata correspondence is
 preparation only; runtime codec/caller/stops, >=1,025 quality capacity, both
 original full quality pairs, representative fit/performance/overhead and adoption
 remain open. [Next gates](artifacts/qwen35-2b-payload-2026-11-13/codec-quality-next-gate-1.json),
 [tokenizer metadata](artifacts/qwen35-2b-payload-2026-11-13/codec-tokenizer-auth-and-JSON-1.json).
+[Remaining-goal audit](artifacts/qwen35-2b-attention-2026-11-13/remaining-goal-requirements-1.json).
 Use independent lanes, one active model and one heavy-job queue;
 [delivery plan](docs/parallel-delivery.md). Preserve Gemma/4B/9B priority,
 original numerical/quality and 6 GiB gates, earlier model decisions and isolated
