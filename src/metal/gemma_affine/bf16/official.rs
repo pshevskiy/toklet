@@ -156,6 +156,19 @@ impl OfficialBf16 {
         self.new_session_with_profile(model, options, None)
     }
 
+    /// Explicit plain G2 companion to the diagnostic profiled session.
+    /// Uses the existing last-row prefill policy without counter resources;
+    /// `new_session` and native session construction retain their defaults.
+    pub fn new_g2_session<'model, 'owner>(
+        &'owner self,
+        model: &'model Bf16Model<'owner>,
+        options: Options,
+    ) -> std::result::Result<Bf16GenerationSession<'model, 'owner, 'owner>, session::Error> {
+        let mut session = self.new_session(model, options)?;
+        session.use_last_row_prefill();
+        Ok(session)
+    }
+
     /// Diagnostic G2 session capturing one selected committed evaluation.
     /// Charges an additional64MiB before allocating counter resources.
     pub fn new_profiled_session<'model, 'owner>(

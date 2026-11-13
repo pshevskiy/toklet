@@ -19,6 +19,17 @@ all candidate code was reverted. [Experiment decision](lfm3-two-token-projection
 | Evidence/documentation | One report or next-command preparation | Concise actual pass/reject scope, receipts and limitations |
 | Integrator | TODO/improvements, shared API, heavy queue and publication | Earliest integrated check, one combined Astra review, retained/reverted decision, commit/push and exact-head CI |
 
+The active Gemma console milestone uses these lanes concretely: the producer
+owns CLI dispatch/profile execution and the small public G2 constructor; an
+independent owner supplies parser/session-witness controls; a third owns the
+offline profile report and its controls. The integrator owns command-boundary
+tests, documentation and the serial check/model queue. The first 16 CPU controls
+passed in 5.39 seconds. The first Metal check caught a private-method boundary
+before any expensive CLI model capture; an additive owner constructor resolves
+that boundary without changing existing session defaults. These are delivery
+observations, not a measured workflow speedup.
+[Contract and ownership](../artifacts/gemma-cost-attribution-2026-11-13/implementation-contract-1.json).
+
 Independent static preparation may overlap compilation. Before performance work,
 the integrator requires explicit **paused** acknowledgements from every active
 lane and confirmation that local preparation processes have finished. Record

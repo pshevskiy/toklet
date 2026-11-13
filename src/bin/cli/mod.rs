@@ -1,6 +1,7 @@
 mod chat;
 mod inspect;
 mod plan;
+mod profile;
 mod qwen35_2b;
 use chat::{Assets, OutputDecoder, invalid};
 use serde::{Deserialize, Serialize};
@@ -36,6 +37,7 @@ const HELP: &str = "Toklet — a small Rust inference engine for Apple Silicon
 Usage: toklet [OPTIONS]
        toklet inspect --help
        toklet plan --help
+       toklet profile --help
 
   --model PATH              Local model directory
   --model-profile PROFILE   qwen (default), lfm3-bf16, ministral3-diagnostic, qwen35-2b-diagnostic
@@ -1130,6 +1132,9 @@ pub fn main() -> u8 {
     }
     if a.first().is_some_and(|value| value == "plan") {
         return plan::main(a.into_iter().skip(1).collect());
+    }
+    if a.first().is_some_and(|value| value == "profile") {
+        return profile::main(a.into_iter().skip(1).collect());
     }
     if a.is_empty() || a.len() == 1 && (a[0] == "--help" || a[0] == "-h") {
         println!("{HELP}");

@@ -624,11 +624,10 @@ declared FP32 reduction schemes passes both selected cases under both original
 profiles. This variant search stops with no engine change; Astra approves
 the evidence closure with no findings. [Final local rejection](../artifacts/qwen35-2b-attention-2026-11-13/two-f32-qk-check-1/result.json).
 
-Delivery now overlaps evidence closure, current LFM3 profiling preparation and
-independent exactness controls with exclusive file ownership. One integrator
-keeps the serial heavy queue, required checks, combined Astra review and push.
-LFM3 two-token weight reuse remains a hypothesis pending current profiling;
-there is no measured workflow or kernel speedup.
+Delivery overlaps the Gemma CLI producer, independent controls and offline
+reporting through exclusive file ownership. One integrator keeps the serial
+heavy queue, required checks, combined Astra review and push. The earlier LFM3
+two-token experiment is closed below; no workflow speedup is measured.
 [Delivery plan](parallel-delivery.md),
 [checks/review/publication](../artifacts/qwen35-2b-attention-2026-11-13/velocity-publication-checks.json),
 [source preflight](../artifacts/qwen35-2b-attention-2026-11-13/lfm3-next-performance-preflight-1.json).
@@ -702,3 +701,17 @@ output failure can retain a completed native report; native failures stay unknow
 [final checks](../artifacts/gemma-decode-rows-2026-11-13/checks-final-1.json),
 [replay/rejection](../artifacts/gemma-decode-rows-2026-11-13/independent-decode-audit-1.json),
 [review/commit/CI](../artifacts/gemma-decode-rows-2026-11-13/publication-checks-1.json).
+
+Gemma console cost attribution now has a bounded officialBF16/G2 producer and
+strict offline stable-operation report. Required fmt/strict CPU+Metal Clippy,
+815 CPU/974 Metal tests, final28 CLI unit controls (2 ignored) and11 portable controls per
+mode pass. Both full384/128 first/lastdecode captures preserve exact outputs,
+state and2x262144 selected logit bits;349tile/2gather coverage and clocks replay.
+Observed charge<=4.803GB includes helper; declared5.932GB includes all reserves.
+Host waits128–135ms and GPU unions~52ms overlap inside226–236ms frames; submission
+batching is a next hypothesis, not a measured speedup. The early private-selector
+and root optimized-wrapper failures are fixed/retained. Astra approves scoped
+functional/diagnostic retention, no findings; ordinary V2 TTFT1% remains
+unqualified/opt-in. [Review/commit/push/CI](../artifacts/gemma-cost-attribution-2026-11-13/publication-checks-1.json).
+[Scope](gemma-profile-cli.md),
+[checks](../artifacts/gemma-cost-attribution-2026-11-13/checks-final-1.json).

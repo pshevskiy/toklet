@@ -1,6 +1,6 @@
 # Toklet progress checklist
 
-Updated **13 November 2026**. **Improvement goal active; earlier Mac milestones
+Updated **14 November 2026**. **Improvement goal active; earlier Mac milestones
 complete only in their recorded scopes.** iPhone runtime work remains deferred.
 Read the current task, relevant plan criteria and targeted source. Completed
 history is in the [dated archive](docs/archive/2026-11-12/README.md).
@@ -91,11 +91,26 @@ LFM3 CPU code and portable measurements are published as `612771d7` on
 - [ ] The V2 1% TTFT bound and default adoption remain unqualified.
 
 Current/next task: **attribute dominant Gemma native cost through the console**.
-Inspect existing bounded diagnostics and exact route/resource compatibility
-before selecting implementation. Read-only preparation may overlap publication/CI;
-keep one heavy queue and pause all preparation for performance. Host/GPU fields
-remain explicitly unavailable until implemented/qualified. Keep closed LFM3 and
-Qwen searches closed; capacity512/chunk32 is separate from numerical512-input.
+- [x] Existing profiler readiness passes: France15+decode1,349tiles+2gathers,
+  bitwise logits and fault/overflow/cancel/reset controls;56.18s/4.808GB observed
+  engine charge including helper. Release compile210.66s/3.185GB stayswithin3GiB.
+  [Actual readiness](artifacts/gemma-cost-attribution-2026-11-13/readiness-result-1.json).
+- [x] Bounded officialG2 `toklet profile` and offline per-operation report are
+  implemented. Fmt, strict CPU/Metal Clippy,815 CPU/974 Metal tests, final28 CLI
+  unit controls (2 ignored) and11 portable controls per mode pass. Both full384/128 captures
+  (evaluation13/139) pass exact outputs/state,2x262144 bitwise logits and349tile/
+  2gather coverage; observed charge<=4.803GB, declared5.932GB includes all reserves.
+  First Metal integration failure and optimized-wrapper failure are retained/fixed.
+  Astra approves scoped functional/diagnostic retention, no findings; source
+  and raw evidence are frozen. Commit/push and exact-head CI status are recorded
+  in the [publication receipt](artifacts/gemma-cost-attribution-2026-11-13/publication-checks-1.json).
+  [Scope](docs/gemma-profile-cli.md),
+  [checks](artifacts/gemma-cost-attribution-2026-11-13/checks-final-1.json),
+  [actual cost replay](artifacts/gemma-cost-attribution-2026-11-13/actual-report-replay-1.json).
+Keep one heavy queue, separate3GiB compiler/6GiB model phases and pause all
+preparation for acceptance timing. Host/GPU fields in ordinary summaries remain
+unavailable; the new diagnostic is opt-in. Keep closed LFM3/Qwen searches closed;
+capacity512/chunk32 is separate from numerical512-input; UI/iPhone stay deferred.
 The stronger short headless Gemma overhead milestone is published as
 `cf80a168`; all five exact-head CI workflows/ten jobs pass.
 [Publication](artifacts/lfm3-tokens2-2026-11-13/gemma-stronger-publication-checks.json).
