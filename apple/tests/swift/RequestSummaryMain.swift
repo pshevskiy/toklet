@@ -1,5 +1,7 @@
 import Foundation
 import CToklet
+import CoreFoundation
+import CryptoKit
 
 private final class SummaryFaults: @unchecked Sendable {
     private let lock = NSLock()
@@ -49,6 +51,153 @@ struct RequestSummaryMain {
             try require(rejected,"Invalid measured pair count accepted")
         }
     }
+    struct ExpectedOutput: Equatable {
+        let tokens: [UInt32]
+        let history, committed, pending: UInt64
+        let reason, stopToken: UInt32
+
+        func validate(input: UInt64, maximum: UInt32) throws {
+            try RequestSummaryMain.require(!tokens.isEmpty && tokens.count <= Int(maximum),"Invalid workload output count")
+            try RequestSummaryMain.require(reason == 1 || reason == 2,"Invalid workload terminal reason")
+            // app_chat::gemma4::STOP_IDS; ordinary audited Chat stop policy.
+            if reason == 1 {
+                try RequestSummaryMain.require(tokens.count == Int(maximum) && stopToken == UInt32.max,"Invalid output-limit expectation")
+            } else {
+                try RequestSummaryMain.require(tokens.count < Int(maximum) && [UInt32(1),106,50].contains(stopToken),"Invalid hidden-stop expectation")
+            }
+            let sampled = UInt64(tokens.count) + (reason == 2 ? 1 : 0)
+            try RequestSummaryMain.require(pending == 1 && history == input + sampled && history == committed + pending,
+                        "Invalid workload output state")
+        }
+    }
+    struct Workload {
+        let sha256, conversationSHA256, inputSHA256: String
+        let conversation: Data
+        let input: UInt64
+        let maximum: UInt32
+        let expected: ExpectedOutput?
+    }
+    static func digest(_ data: Data) -> String {
+        SHA256.hash(data:data).map { String(format:"%02x",$0) }.joined()
+    }
+    static func unsigned(_ value: Any?, maximum: UInt64, field: String) throws -> UInt64 {
+        guard let number = value as? NSNumber,
+              CFGetTypeID(number) != CFBooleanGetTypeID(),
+              !["f","d"].contains(String(cString:number.objCType)),
+              let result = UInt64(number.stringValue), result <= maximum else {
+            throw NativeContextFailure("Expected bounded integer: " + field)
+        }
+        return result
+    }
+    static func hashField(_ value: Any?, field: String) throws -> String {
+        guard let text = value as? String, text.utf8.count == 64,
+              text.utf8.allSatisfy({ (48...57).contains($0) || (97...102).contains($0) }) else {
+            throw NativeContextFailure("Expected lowercase SHA256: " + field)
+        }
+        return text
+    }
+    static func loadWorkload(_ path: String, preflightOnly: Bool) throws -> Workload {
+        let handle = try FileHandle(forReadingFrom:URL(fileURLWithPath:path))
+        defer { try? handle.close() }
+        let raw = try handle.read(upToCount:16 * 1024 + 1) ?? Data()
+        try require(!raw.isEmpty && raw.count <= 16 * 1024,"Workload manifest byte bound")
+        guard let value = try JSONSerialization.jsonObject(with:raw) as? [String:Any] else {
+            throw NativeContextFailure("Expected workload object")
+        }
+        let keys: Set<String> = ["schema_version","workload_id","conversation_json","conversation_sha256",
+            "input_token_count","input_tokens_sha256","maximum_output_tokens","capacity","chunk",
+            "cache_policy","expected_output"]
+        try require(Set(value.keys) == keys,"Workload fields differ")
+        try require(try unsigned(value["schema_version"],maximum:1,field:"schema_version") == 1,"Workload schema differs")
+        guard let name = value["workload_id"] as? String, (1...64).contains(name.utf8.count) else {
+            throw NativeContextFailure("Invalid workload ID")
+        }
+        let nameBytes = Array(name.utf8)
+        let alphanumeric: (UInt8) -> Bool = { (97...122).contains($0) || (48...57).contains($0) }
+        try require(alphanumeric(nameBytes[0]) && nameBytes.allSatisfy({ alphanumeric($0) || $0 == 95 || $0 == 45 }),
+                    "Invalid workload ID")
+        guard let text = value["conversation_json"] as? String else { throw NativeContextFailure("Missing workload conversation") }
+        let conversation = Data(text.utf8)
+        try require((1...8192).contains(conversation.count),"Conversation byte bound")
+        let conversationHash = try hashField(value["conversation_sha256"],field:"conversation_sha256")
+        try require(digest(conversation) == conversationHash,"Conversation hash differs")
+        guard let messages = try JSONSerialization.jsonObject(with:conversation) as? [[String:Any]],
+              !messages.isEmpty && messages.count <= 63 && messages.count % 2 == 1 else {
+            throw NativeContextFailure("Expected alternating Chat conversation")
+        }
+        for (index,message) in messages.enumerated() {
+            try require(Set(message.keys) == ["role","content"] &&
+                        message["role"] as? String == (index % 2 == 0 ? "user":"assistant"),"Conversation fields/role differ")
+            guard let content = message["content"] as? String,
+                  !content.trimmingCharacters(in:.whitespacesAndNewlines).isEmpty else {
+                throw NativeContextFailure("Expected nonempty Chat content")
+            }
+        }
+        let input = try unsigned(value["input_token_count"],maximum:512,field:"input_token_count")
+        let maximum = UInt32(try unsigned(value["maximum_output_tokens"],maximum:256,field:"maximum_output_tokens"))
+        try require(input > 0 && maximum > 0 && input + UInt64(maximum) <= 512,"Workload exceeds shared window")
+        try require(try unsigned(value["capacity"],maximum:512,field:"capacity") == 512 &&
+                    unsigned(value["chunk"],maximum:32,field:"chunk") == 32 &&
+                    value["cache_policy"] as? String == "reset_chat_each_request","Workload admission policy differs")
+        let inputHash = try hashField(value["input_tokens_sha256"],field:"input_tokens_sha256")
+        var expected: ExpectedOutput?
+        if value["expected_output"] is NSNull {
+            try require(preflightOnly,"Timing workload requires frozen output")
+        } else {
+            guard let output = value["expected_output"] as? [String:Any],
+                  Set(output.keys) == ["tokens","history","committed","pending","reason","stop_token"],
+                  let tokens = output["tokens"] as? [Any], !tokens.isEmpty, tokens.count <= Int(maximum) else {
+                throw NativeContextFailure("Invalid frozen output fields")
+            }
+            expected = ExpectedOutput(tokens:try tokens.map { UInt32(try unsigned($0,maximum:UInt64(UInt32.max),field:"output token")) },
+                history:try unsigned(output["history"],maximum:512,field:"history"),
+                committed:try unsigned(output["committed"],maximum:512,field:"committed"),
+                pending:try unsigned(output["pending"],maximum:1,field:"pending"),
+                reason:UInt32(try unsigned(output["reason"],maximum:2,field:"reason")),
+                stopToken:UInt32(try unsigned(output["stop_token"],maximum:UInt64(UInt32.max),field:"stop_token")))
+            try expected?.validate(input:input,maximum:maximum)
+        }
+        return Workload(sha256:digest(raw),conversationSHA256:conversationHash,inputSHA256:inputHash,
+                        conversation:conversation,input:input,maximum:maximum,expected:expected)
+    }
+    // Called only after the existing end timestamp. No input IDs reach JSON.
+    static func workloadSample(_ snapshot: NativeSnapshot, workload: Workload) throws -> (ExpectedOutput,[String:Any]) {
+        guard snapshot.status == TOKLET_OK, let context = snapshot.liveContext,
+              let configuration = snapshot.sessionConfiguration, let budget = snapshot.requestBudget,
+              let prefix = snapshot.savedPrefix else { throw NativeContextFailure("Missing authoritative workload state") }
+        try require(configuration.capacity == 512 && configuration.chunk == 32 && context.capacity == 512 &&
+                    budget.context.capacity == 512 && configuration.modelInstance == context.modelInstance &&
+                    configuration.sessionInstance == context.sessionInstance &&
+                    budget.context.modelInstance == context.modelInstance && budget.context.sessionInstance == context.sessionInstance,
+                    "Workload context/owner differs")
+        try require(context.history == UInt64(snapshot.history) && context.committed == UInt64(snapshot.evaluated) &&
+                    context.pending == UInt64(snapshot.pending) && prefix.count == Int(snapshot.history) &&
+                    snapshot.savedHistory == prefix.count && prefix.count >= Int(workload.input),"Workload saved prefix differs")
+        let required = workload.input + UInt64(workload.maximum)
+        try require(budget.operation == 3 && budget.baseHistory == 0 && budget.input == workload.input &&
+                    budget.historyAfterInput == workload.input && budget.output == UInt64(workload.maximum) &&
+                    budget.required == required && budget.remaining == 512 - required,"Workload request admission differs")
+        var encoded = Data()
+        encoded.reserveCapacity(Int(workload.input) * 4)
+        for token in prefix.prefix(Int(workload.input)) {
+            var little = token.littleEndian
+            withUnsafeBytes(of:&little) { encoded.append(contentsOf:$0) }
+        }
+        try require(digest(encoded) == workload.inputSHA256,"Rendered workload input hash differs")
+        let actual = ExpectedOutput(tokens:snapshot.ids,history:UInt64(snapshot.history),committed:UInt64(snapshot.evaluated),
+                                  pending:UInt64(snapshot.pending),reason:snapshot.reason,stopToken:snapshot.stopToken)
+        try actual.validate(input:workload.input,maximum:workload.maximum)
+        try require(snapshot.emitted == UInt32(snapshot.ids.count) && snapshot.tokenTimings.count == snapshot.ids.count,
+                    "Workload callback count differs")
+        if let expected = workload.expected { try require(actual == expected,"Frozen workload output differs") }
+        return (actual,["workload_sha256":workload.sha256,"conversation_sha256":workload.conversationSHA256,
+            "input_tokens":workload.input,"input_tokens_sha256":workload.inputSHA256,
+            "maximum_output_tokens":workload.maximum,"capacity":512,"chunk":32,"cache_policy":"reset_chat_each_request",
+            "admission":["operation":UInt64(budget.operation),"base_history":budget.baseHistory,"input":budget.input,
+                "history_after_input":budget.historyAfterInput,"output":budget.output,"required":budget.required,"remaining":budget.remaining],
+            "reason":snapshot.reason,"stop_token":snapshot.stopToken,"status":snapshot.status,
+            "model_instance":context.modelInstance,"session_instance":context.sessionInstance])
+    }
     static func rows(_ worker: NativeWorker) throws -> [[String:Any]] {
         try worker.exportRequestSummaries().split(separator:10).map {
             try JSONSerialization.jsonObject(with:Data($0)) as! [String:Any]
@@ -85,16 +234,30 @@ struct RequestSummaryMain {
         let arguments = CommandLine.arguments
         guard arguments.count >= 2 else { throw NativeContextFailure("Expected official model folder") }
         let measuring: Bool
-        let measuredPairs: Int
-        if arguments.count == 3 {
-            measuring = true; measuredPairs = 10
-        } else if arguments.count == 5 && arguments[3] == "--measured-pairs" {
-            measuring = true; measuredPairs = try parseMeasuredPairs(arguments[4])
+        var measuredPairs = 10, workloadPath: String?
+        var preflightOnly = false
+        if arguments.count == 2 || (arguments.count == 4 && arguments[2] == "--conformance-output") {
+            measuring = false
         } else {
-            try require(arguments.count == 2 || (arguments.count == 4 && arguments[2] == "--conformance-output"),"Invalid benchmark/conformance arguments")
-            measuring = false; measuredPairs = 10
+            try require(arguments.count >= 3 && !arguments[2].hasPrefix("--"),"Expected benchmark output path before options")
+            measuring = true
+            var index = 3, seen = Set<String>()
+            while index < arguments.count {
+                let option = arguments[index]
+                try require(seen.insert(option).inserted,"Duplicate benchmark option")
+                if option == "--preflight-only" {
+                    preflightOnly = true; index += 1
+                } else {
+                    try require(option == "--measured-pairs" || option == "--workload","Unknown benchmark option")
+                    try require(index + 1 < arguments.count && !arguments[index + 1].hasPrefix("--"),"Missing benchmark option value")
+                    if option == "--measured-pairs" { measuredPairs = try parseMeasuredPairs(arguments[index + 1]) }
+                    else { workloadPath = arguments[index + 1] }
+                    index += 2
+                }
+            }
         }
-        if measuring { try require(!arguments[2].hasPrefix("--"),"Expected benchmark output path before options") }
+        try require(!preflightOnly || workloadPath != nil,"Preflight requires workload")
+        let workload = try workloadPath.map { try loadWorkload($0,preflightOnly:preflightOnly) }
         try checkMeasuredPairs()
         try checkBenchmarkRawRows()
         // Deterministic metric formulas, empty/single events and ring pressure.
@@ -150,7 +313,7 @@ struct RequestSummaryMain {
         settings.numericalBudget = 6 * 1024 * 1024 * 1024; settings.textBudget = 0
         let loaded = try run(.load(settings))
         try require(loaded.status == TOKLET_OK,loaded.message)
-        let conversation = Data(#"[{"role":"user","content":"Name the capital of France."}]"#.utf8)
+        let conversation = workload?.conversation ?? Data(#"[{"role":"user","content":"Name the capital of France."}]"#.utf8)
         func chat(_ maximum: UInt32 = 12, cancel: Int = 0) -> NativeCommand {
             .chat(id:UUID(),conversation:conversation,maximum:maximum,autoCancelAfter:cancel)
         }
@@ -161,25 +324,41 @@ struct RequestSummaryMain {
             let captureByteLimit = 512 * 1024
             var captured = Data(), capturedIDs = Set<UUID>()
             var finalNativeManifest: [String:Any]?
-            for trial in 0..<(warmupPairs + measuredPairs) {
+            var preflightExpected: ExpectedOutput?
+            let pairs = preflightOnly ? 1 : warmupPairs + measuredPairs
+            for trial in 0..<pairs {
                 var summaryID: UUID?
                 for enabled in trial % 2 == 0 ? [false,true] : [true,false] {
                     try require(worker.setRequestSummariesEnabled(enabled),"Mode switch failed")
-                    let command = chat()
+                    let command = chat(workload?.maximum ?? 12)
                     // External boundaries include collector setup, finalization,
                     // publication and idle acknowledgment in BOTH modes.
                     let start = DispatchTime.now().uptimeNanoseconds
                     let s = try run(command)
                     let end = DispatchTime.now().uptimeNanoseconds
-                    try require(s.status == TOKLET_OK && s.ids == [818,5279,529,7001,563,5213,50429,84750],"Timing output changed")
+                    var extra = [String:Any]()
+                    if let workload {
+                        let (actual,fields) = try workloadSample(s,workload:workload)
+                        extra = fields
+                        if preflightOnly {
+                            if let expected = preflightExpected { try require(actual == expected,"Preflight mode outcomes differ") }
+                            else { preflightExpected = actual }
+                        }
+                    } else {
+                        try require(s.status == TOKLET_OK && s.ids == [818,5279,529,7001,563,5213,50429,84750],"Timing output changed")
+                    }
+                    try require(!s.tokenTimings.isEmpty && s.tokenTimings[0].callbackUptimeNanoseconds >= start &&
+                                s.tokenTimings[0].callbackUptimeNanoseconds <= end,"Invalid first callback boundary")
                     guard case .chat(let requestID,_,_,_) = command else { throw NativeContextFailure("Expected Chat command") }
                     if enabled { summaryID = requestID }
-                    samples.append(["request_id":requestID.uuidString,"trial":trial,"warmup":trial<warmupPairs,"mode":enabled ? "summary":"disabled",
+                    var sample: [String:Any] = ["request_id":requestID.uuidString,"trial":trial,"warmup":!preflightOnly && trial<warmupPairs,"mode":enabled ? "summary":"disabled",
                         "ttft_ms":Double(s.tokenTimings[0].callbackUptimeNanoseconds-start)/1e6,
                         "total_ms":Double(end-start)/1e6,"submitted_uptime_ns":start,"completed_uptime_ns":end,"tokens":s.ids,
-                        "history":s.history,"committed":s.evaluated,"pending":s.pending])
+                        "history":s.history,"committed":s.evaluated,"pending":s.pending]
+                    for (key,value) in extra { sample[key] = value }
+                    samples.append(sample)
                 }
-                if measuredPairs > 10 {
+                if !preflightOnly && measuredPairs > 10 {
                     // Housekeeping follows BOTH timed intervals, for either pair order.
                     let endsEnabled = trial % 2 == 0
                     if !endsEnabled { try require(worker.setRequestSummariesEnabled(true),"Capture enable failed") }
@@ -204,7 +383,7 @@ struct RequestSummaryMain {
             }
             try JSONSerialization.data(withJSONObject:samples,options:[.prettyPrinted,.sortedKeys]).write(to:URL(fileURLWithPath:CommandLine.arguments[2]))
             let summaryOutput = URL(fileURLWithPath:CommandLine.arguments[2]+".summaries.jsonl")
-            if measuredPairs == 10 {
+            if preflightOnly || measuredPairs == 10 {
                 try worker.exportRequestSummaries().write(to:summaryOutput)
             } else {
                 guard let finalNativeManifest else { throw NativeContextFailure("Final capture manifest missing") }

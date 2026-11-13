@@ -672,3 +672,19 @@ speedup is measured yet.
 [review](../artifacts/lfm3-tokens2-2026-11-13/tokens2-astra-review-2.json),
 [revert](../artifacts/lfm3-tokens2-2026-11-13/tokens2-code-revert-2.json),
 [checks/review/publication](../artifacts/lfm3-tokens2-2026-11-13/tokens2-publication-checks-2.json).
+
+Headless Gemma workload identity/admission has complete fixed-cohort evidence.
+Astra approves scoped code retention and exact workload qualification, no findings. Strict Swift, 57 portable
+controls per Python mode, fmt, strict CPU/Metal Clippy and 786 CPU/946 Metal tests
+pass. All 52 requests/40 measured/26 summaries verify exact384input/128output,
+state512/511/1, reset admission, clocks, native work and 6 GiB fit. Both original
+1% median-ratio and paired-median 95% upper gates pass for both metrics/cohorts;
+independent replay reproduces all statistics and verifies489 current endpoints.
+The cold writer bound and launch dependency fixes are independently checked;
+original power/refusal failures remain recorded. Only this headless BF16/G2 M1
+Pro boundary is qualified; production stays disabled/opt-in. No numerical512-input,
+UI/render, tail or default-adoption qualification is transferred.
+[Scope](gemma-workload-identity.md),
+[checks](../artifacts/gemma-workload-identity-2026-11-13/checks-final-3.json),
+[audit](../artifacts/gemma-workload-identity-2026-11-13/independent-workload-audit-3.json),
+[review/commit/CI](../artifacts/gemma-workload-identity-2026-11-13/publication-checks-3.json).

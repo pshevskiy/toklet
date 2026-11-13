@@ -64,10 +64,25 @@ LFM3 CPU code and portable measurements are published as `612771d7` on
   [Scope](docs/qwen35-2b-real-source.md),
   [checks/review/commit](artifacts/qwen35-2b-payload-2026-11-13/publication-checks.json).
 
-Current/next task: **publish the closed LFM3 two-token experiment and finish the
-next engine/CLI milestone selection**. Do not reopen the bounded arithmetic or
-dispatch search. Parallel delivery now uses exclusive ownership and an explicit
-pause barrier before performance work.
+- [x] Workload-bound headless Gemma summary evidence: bounded descriptor,
+  authoritative rendered-input identity/admission and untimed output-state
+  preflight. Strict Swift 6, 57 portable controls per Python mode, fmt, strict
+  CPU/Metal Clippy and 786 CPU/946 Metal tests pass. Both fixed 3+10-pair cohorts
+  complete: 52 requests/40 measured/26 summaries match input384/output128,
+  state512/511/1 and reset admission. Both original 1% median-ratio and paired-median
+  95% upper gates pass for TTFT and complete caller time in both cohorts. Independent
+  raw replay reproduces every statistic and verifies 489 current endpoints.
+  Astra approves scoped retention with no findings; earlier failed attempts remain
+  recorded. Only this headless official BF16/G2 M1 Pro workload is qualified;
+  production summaries remain disabled/opt-in. UI/render/default adoption stays
+  separate. [Scope](docs/gemma-workload-identity.md),
+  [checks/review/commit/CI](artifacts/gemma-workload-identity-2026-11-13/publication-checks-3.json).
+
+Current/next task: **select the next native engine/CLI observability gap** from
+current metric ownership and missing phase attribution. Static preparation can
+overlap publication/CI; new implementation needs a concrete bounded contract.
+Keep the closed LFM3 arithmetic/dispatch and Qwen numerical searches closed.
+Capacity 512/chunk 32 remains separate from the numerical 512-input matrix.
 The stronger short headless Gemma overhead milestone is published as
 `cf80a168`; all five exact-head CI workflows/ten jobs pass.
 [Publication](artifacts/lfm3-tokens2-2026-11-13/gemma-stronger-publication-checks.json).

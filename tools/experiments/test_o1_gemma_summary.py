@@ -1,9 +1,12 @@
 import argparse
 import copy
+import hashlib
 import inspect
 import json
 import random
 import re
+import struct
+import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
@@ -340,6 +343,364 @@ class SummaryCaptureTests(unittest.TestCase):
         for raw in (b'', 'not bytes', b'not json\n', b'[]\n', b'{"kind":NaN}\n'):
             with self.subTest(raw=raw), self.assertRaises(ValueError):
                 summary.validate_summary_capture(raw, rows)
+
+
+def workload_descriptor():
+    conversation = '[{"role":"user","content":"Public café identity fixture."}]'
+    ids = [0x10200 + index for index in range(384)]
+    return dict(schema_version=1, workload_id='public_384_128', conversation_json=conversation,
+        conversation_sha256=hashlib.sha256(conversation.encode()).hexdigest(), input_token_count=len(ids),
+        input_tokens_sha256=hashlib.sha256(b''.join(struct.pack('<I', value) for value in ids)).hexdigest(),
+        maximum_output_tokens=128, capacity=512, chunk=32, cache_policy='reset_chat_each_request',
+        expected_output=dict(tokens=list(range(1000, 1128)), history=512, committed=511,
+                             pending=1, reason=1, stop_token=2**32 - 1))
+
+
+def workload_rows(workload, *, count=10, preflight=False, expected=None):
+    expected = expected or workload['expected_output']
+    rows = cohort(count)
+    if preflight:
+        rows = rows[:2]
+        for row in rows:
+            row.update(trial=0, warmup=False)
+    for row in rows:
+        row.update(copy.deepcopy(expected), workload_sha256=workload['_sha256'],
+            conversation_sha256=workload['conversation_sha256'], input_tokens=workload['input_token_count'],
+            input_tokens_sha256=workload['input_tokens_sha256'], maximum_output_tokens=workload['maximum_output_tokens'],
+            capacity=512, chunk=32, cache_policy='reset_chat_each_request', status=0,
+            model_instance=37, session_instance=43,
+            admission=dict(operation=3, base_history=0, input=384, history_after_input=384,
+                           output=128, required=512, remaining=0))
+    return rows
+
+
+def workload_capture(rows, workload, count=10):
+    header, records = capture_parts(rows, count)
+    for record, row in zip(records, (r for r in rows if r['mode'] == 'summary'), strict=True):
+        state = dict(modelInstance=37, sessionInstance=43, history=row['history'],
+                     committed=row['committed'], pending=row['pending'])
+        record.update(schemaVersion=2, after=state, before=copy.deepcopy(state), capacity=512, chunk=32,
+            promptTokens=384, requestedOutputTokens=128, nativeEmittedTokens=len(row['tokens']),
+            processPhysicalBytes=768*1024, sessionAdmittedBytes=512*1024,
+            submittedUptimeNanoseconds=row['submitted_uptime_ns'] + 100,
+            firstCallbackNanoseconds=row['submitted_uptime_ns'] + round(row['ttft_ms'] * 1_000_000),
+            completedUptimeNanoseconds=row['completed_uptime_ns'] - 100,
+            outcome='outputLimit' if row['reason'] == 1 else 'stopToken', nativeMetricStatus='completed',
+            nativeMetrics=dict(sessionInstance=43, reusedTokens=0, prefillTokens=384,
+                sampledTokens=row['history'] - 384, emittedTokens=len(row['tokens']),
+                prefillSeconds=.05, decodeSeconds=.1, samplingSeconds=.001, totalSeconds=.2,
+                firstTokenSeconds=.05, prefillTokensPerSecond=7680.))
+    return header, records
+
+
+class WorkloadIdentityTests(unittest.TestCase):
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.path = Path(directory.name) / 'workload.json'
+
+    def load(self, descriptor=None, *, preflight=False, raw=None):
+        if raw is None:
+            raw = json.dumps(workload_descriptor() if descriptor is None else descriptor,
+                             ensure_ascii=False, separators=(',', ':'), allow_nan=False).encode()
+        self.path.write_bytes(raw)
+        return summary.load_workload(self.path, preflight_only=preflight)
+
+    def test_exact_wire_identity_and_independent_little_endian_reference(self):
+        descriptor = workload_descriptor()
+        raw = json.dumps(descriptor, ensure_ascii=False, indent=2).encode()
+        loaded = self.load(raw=raw)
+        self.assertEqual(loaded, {**descriptor, '_sha256': hashlib.sha256(raw).hexdigest()})
+        ids = [0x10200 + index for index in range(384)]
+        reference = b''.join(bytes((v & 255, v >> 8 & 255, v >> 16 & 255, v >> 24 & 255)) for v in ids)
+        self.assertEqual(descriptor['input_tokens_sha256'], hashlib.sha256(reference).hexdigest())
+        rows = workload_rows(loaded)
+        for row in rows:
+            row['input_tokens_sha256'] = hashlib.sha256(b''.join(struct.pack('>I', v) for v in ids)).hexdigest()
+        with self.assertRaises(ValueError):
+            summary.validate_workload_rows(rows, loaded)
+
+    def test_manifest_wire_and_utf8_conversation_inclusive_bounds(self):
+        descriptor = workload_descriptor()
+        prefix, suffix = '[{"role":"user","content":"', '"}]'
+        descriptor['conversation_json'] = prefix + 'a' * (8192 - len(prefix + suffix)) + suffix
+        descriptor['conversation_sha256'] = hashlib.sha256(descriptor['conversation_json'].encode()).hexdigest()
+        raw = json.dumps(descriptor, separators=(',', ':')).encode()
+        padded = raw + b' ' * (16384 - len(raw))
+        self.assertEqual(self.load(raw=padded)['_sha256'], hashlib.sha256(padded).hexdigest())
+        for raw in (padded + b' ', b'', b'\xff', b'[]', b'{', b'null'):
+            with self.subTest(raw=repr(raw[:20])), self.assertRaises(ValueError):
+                self.load(raw=raw)
+        descriptor['conversation_json'] += ' '
+        descriptor['conversation_sha256'] = hashlib.sha256(descriptor['conversation_json'].encode()).hexdigest()
+        with self.assertRaises(ValueError):
+            self.load(descriptor)
+
+    def test_duplicate_nonfinite_unknown_and_missing_manifest_fields_reject(self):
+        descriptor = workload_descriptor()
+        raw = json.dumps(descriptor, separators=(',', ':')).encode()
+        for changed in (raw[:-1] + b',"schema_version":1}', raw.replace(b'"schema_version":1', b'"schema_version":NaN')):
+            with self.assertRaises(ValueError):
+                self.load(raw=changed)
+        for field in descriptor:
+            changed = copy.deepcopy(descriptor); changed.pop(field)
+            with self.subTest(missing=field), self.assertRaises(ValueError):
+                self.load(changed)
+        for extra in ('unknown', '_sha256'):
+            with self.assertRaises(ValueError):
+                self.load({**descriptor, extra: 'injected'})
+        for conversation in ('{}', 'null', '[NaN]', '[{"role":"user","role":"assistant","content":"x"}]'):
+            changed = copy.deepcopy(descriptor); changed['conversation_json'] = conversation
+            changed['conversation_sha256'] = hashlib.sha256(conversation.encode()).hexdigest()
+            with self.subTest(conversation=conversation), self.assertRaises(ValueError):
+                self.load(changed)
+
+    def test_exact_manifest_types_counts_hashes_and_window_admission(self):
+        changes = {
+            'schema_version': [True, 1., 0, 2], 'workload_id': ['', '_bad', 'UPPER', 'a/b', 'é', 'x' * 65, True],
+            'conversation_json': ['', [], True], 'conversation_sha256': ['0' * 64, 'A' * 64, True],
+            'input_token_count': [True, 0, 513, 384., '384', 2**64],
+            'input_tokens_sha256': ['', 'a' * 63, 'G' * 64, 'A' * 64, True],
+            'maximum_output_tokens': [True, 0, 129, 257, 128., '128'],
+            'capacity': [True, 511, 513, 512.], 'chunk': [True, 31, 33, 32.],
+            'cache_policy': ['reuse', 'reset', None],
+        }
+        for field, values in changes.items():
+            for value in values:
+                changed = workload_descriptor(); changed[field] = value
+                with self.subTest(field=field, value=value), self.assertRaises(ValueError):
+                    self.load(changed)
+
+    def test_expected_output_is_exact_typed_and_not_just_paired_agreement(self):
+        mutations = [('tokens', []), ('tokens', [True]), ('tokens', [2**32]), ('tokens', [-1]),
+                     ('tokens', [1.] * 128), ('history', True), ('history', 513), ('committed', 510),
+                     ('pending', 0), ('pending', True), ('reason', True), ('reason', 3), ('stop_token', 106)]
+        for field, value in mutations:
+            changed = workload_descriptor(); changed['expected_output'][field] = value
+            with self.subTest(field=field, value=repr(value)[:30]), self.assertRaises(ValueError):
+                self.load(changed)
+        for action in ('missing', 'extra'):
+            changed = workload_descriptor()
+            if action == 'missing': changed['expected_output'].pop('reason')
+            else: changed['expected_output']['extra'] = 0
+            with self.assertRaises(ValueError):
+                self.load(changed)
+        loaded = self.load(); rows = workload_rows(loaded)
+        for row in rows: row['tokens'][0] += 1
+        with self.assertRaises(ValueError):
+            summary.validate_workload_rows(rows, loaded)
+
+    def test_null_output_only_preflight_and_input_identity_always_required(self):
+        descriptor = workload_descriptor(); descriptor['expected_output'] = None
+        with self.assertRaises(ValueError): self.load(descriptor)
+        loaded = self.load(descriptor, preflight=True)
+        expected = workload_descriptor()['expected_output']
+        rows = workload_rows(loaded, preflight=True, expected=expected)
+        self.assertEqual(summary.validate_workload_rows(rows, loaded, preflight_only=True), expected)
+        for field in ('input_token_count', 'input_tokens_sha256'):
+            changed = copy.deepcopy(descriptor); changed[field] = None
+            with self.subTest(field=field), self.assertRaises(ValueError): self.load(changed, preflight=True)
+        for changed in (rows[:1], rows + [rows[0]], [rows[0], copy.deepcopy(rows[0])]):
+            with self.assertRaises(ValueError): summary.validate_workload_rows(changed, loaded, preflight_only=True)
+
+    def test_freeze_input_only_roundtrip_preserves_identity_and_exclusive_file(self):
+        descriptor = workload_descriptor(); descriptor['expected_output'] = None
+        loaded = self.load(descriptor, preflight=True); original = copy.deepcopy(loaded)
+        expected = workload_descriptor()['expected_output']
+        output = self.path.parent / 'frozen.json'
+        frozen = summary.freeze_workload(output, loaded, expected)
+        raw = output.read_bytes(); wire_fields = json.loads(raw)
+        self.assertEqual(wire_fields, {**descriptor, 'expected_output': expected})
+        self.assertNotIn('_sha256', wire_fields)
+        self.assertEqual(frozen, summary.load_workload(output))
+        self.assertEqual(frozen['_sha256'], hashlib.sha256(raw).hexdigest())
+        self.assertEqual(loaded, original)
+        with self.assertRaises(FileExistsError): summary.freeze_workload(output, loaded, expected)
+        self.assertEqual(output.read_bytes(), raw)
+        self.assertEqual(loaded, original)
+
+    def test_freeze_rejects_valid_input_that_expands_beyond_wire_limit_without_file(self):
+        descriptor = workload_descriptor(); descriptor['expected_output'] = None
+        encode = lambda value: json.dumps(value, ensure_ascii=False, separators=(',', ':')).encode()
+        # An inner JSON document can end in whitespace. Each added newline costs
+        # one UTF8 byte there and two escaped bytes in the outer wire document.
+        padding = min((16384 - len(encode(descriptor))) // 2,
+                      8192 - len(descriptor['conversation_json'].encode()))
+        descriptor['conversation_json'] += '\n' * padding
+        descriptor['conversation_sha256'] = hashlib.sha256(descriptor['conversation_json'].encode()).hexdigest()
+        raw = encode(descriptor)
+        self.assertLessEqual(len(raw), 16384)
+        self.assertLessEqual(len(descriptor['conversation_json'].encode()), 8192)
+        loaded = self.load(raw=raw, preflight=True); original = copy.deepcopy(loaded)
+        expected = workload_descriptor()['expected_output']
+        projected = {**descriptor, 'expected_output': expected}
+        self.assertGreater(len(json.dumps(projected, ensure_ascii=False, sort_keys=True, indent=2).encode()), 16384)
+        output = self.path.parent / 'must-not-exist.json'
+        with self.assertRaises(ValueError): summary.freeze_workload(output, loaded, expected)
+        self.assertFalse(output.exists())
+        self.assertEqual(loaded, original)
+
+    def test_old_fifteen_token_rows_cannot_claim384_or512(self):
+        loaded = self.load()
+        legacy = cohort()
+        for row in legacy:
+            row.update(tokens=[818, 5279, 529, 7001, 563, 5213, 50429, 84750],
+                       history=24, committed=23, pending=1)
+        with self.assertRaises(ValueError): summary.validate_workload_rows(legacy, loaded)
+        for actual_count in (15, 512):
+            rows = workload_rows(loaded)
+            for row in rows:
+                row['input_tokens'] = actual_count
+                row['admission'].update(input=actual_count, history_after_input=actual_count,
+                                        required=actual_count + 128, remaining=512 - actual_count - 128)
+            with self.subTest(actual_count=actual_count), self.assertRaises(ValueError):
+                summary.validate_workload_rows(rows, loaded)
+
+    def test_valid_full_cohort_preserves_original_statistics_and_warmup_validation(self):
+        loaded = self.load()
+        for count in (10, 100):
+            rows = workload_rows(loaded, count=count)
+            self.assertEqual(summary.validate_workload_rows(rows, loaded), loaded['expected_output'])
+            self.assertEqual(comparison(rows, count), comparison(cohort(count), count))
+            changed = copy.deepcopy(rows); changed[0]['conversation_sha256'] = '0' * 64
+            with self.assertRaises(ValueError): summary.validate_workload_rows(changed, loaded)
+
+    def test_actual_driver_rejects_legacy_capture_for_custom_workload(self):
+        self.load()
+        archive = self.path.parent / 'archive.a'; archive.write_bytes(b'mocked archive')
+        output = self.path.parent / 'fresh-output'
+        legacy_rows = cohort(); legacy_wire = wire(*capture_parts(legacy_rows))
+        measured_commands = []
+        def child(command, **_kwargs):
+            if '-o' in command:
+                Path(command[command.index('-o') + 1]).write_bytes(b'mocked Swift executable')
+            elif Path(command[0]).name == 'summary-check':
+                if '--conformance-output' in command:
+                    Path(command[-1]).write_bytes(legacy_wire)
+                else:
+                    measured_commands.append(command)
+                    Path(command[2]).write_text(json.dumps(legacy_rows))
+                    Path(str(command[2]) + '.summaries.jsonl').write_bytes(legacy_wire)
+            return mock.Mock(returncode=0)
+        argv = ['o1_gemma_summary.py', 'mocked-model', str(archive), str(output), '--workload', str(self.path)]
+        with mock.patch('sys.argv', argv), mock.patch.object(summary.subprocess, 'run', side_effect=child), \
+                mock.patch.object(summary.subprocess, 'check_output', return_value='synthetic'):
+            with self.assertRaises(ValueError): summary.main()
+        self.assertTrue(measured_commands, 'Identity failure must follow the mocked measured capture')
+        if (output / 'result.json').exists():
+            failure = json.loads((output / 'result.json').read_text())
+            self.assertFalse(failure.get('passed'))
+            self.assertFalse(failure.get('overhead_qualified', False))
+
+    def test_actual_admission_fields_are_exact_even_when_both_modes_match(self):
+        loaded = self.load()
+        changes = dict(operation=1, base_history=512, input=15, history_after_input=15,
+                       output=12, required=396, remaining=116, extra=0)
+        for field, value in changes.items():
+            rows = workload_rows(loaded)
+            for row in rows: row['admission'][field] = value
+            with self.subTest(field=field), self.assertRaises(ValueError): summary.validate_workload_rows(rows, loaded)
+        for value in (None, [], True):
+            rows = workload_rows(loaded); rows[0]['admission'] = value
+            with self.assertRaises(ValueError): summary.validate_workload_rows(rows, loaded)
+        rows = workload_rows(loaded); rows[0]['admission']['operation'] = True
+        with self.assertRaises(ValueError): summary.validate_workload_rows(rows, loaded)
+
+    def test_row_identity_outcomes_state_and_host_clocks_cannot_be_fabricated(self):
+        loaded = self.load()
+        changes = dict(workload_sha256='0'*64, conversation_sha256='0'*64, input_tokens=True,
+            input_tokens_sha256='0'*64, maximum_output_tokens=12, capacity=513, chunk=16,
+            cache_policy='reuse', status=1, reason=2, stop_token=106, model_instance=0,
+            session_instance=True, history=24, committed=23, pending=0,
+            submitted_uptime_ns=True, completed_uptime_ns=0)
+        for field, value in changes.items():
+            rows = workload_rows(loaded)
+            for row in rows: row[field] = value
+            with self.subTest(field=field), self.assertRaises(ValueError): summary.validate_workload_rows(rows, loaded)
+        rows = workload_rows(loaded)
+        for row in rows: row['completed_uptime_ns'] += 1_000_000_000
+        with self.assertRaises(ValueError): summary.validate_workload_rows(rows, loaded)
+
+    def test_capture_joins_actual_summary_work_and_allows_prior_reset_history(self):
+        loaded = self.load()
+        for count in (10, 100):
+            rows = workload_rows(loaded, count=count); header, records = workload_capture(rows, loaded, count)
+            self.assertGreater(records[0]['before']['history'], 0)
+            self.assertEqual(summary.validate_workload_capture(wire(header, records), rows, loaded,
+                                                              measured_pairs=count), records)
+        descriptor = workload_descriptor(); descriptor['expected_output'] = None
+        loaded = self.load(descriptor, preflight=True)
+        rows = workload_rows(loaded, preflight=True, expected=workload_descriptor()['expected_output'])
+        header, records = workload_capture(rows, loaded)
+        self.assertEqual(summary.validate_workload_capture(wire(header, records), rows, loaded,
+                                                          preflight_only=True), records)
+
+    def test_capture_wrong_native_work_status_session_and_state_reject(self):
+        loaded = self.load(); rows = workload_rows(loaded); header, records = workload_capture(rows, loaded)
+        mutations = [('promptTokens', 15), ('requestedOutputTokens', 12), ('callbackTokens', 127),
+            ('nativeEmittedTokens', 127), ('status', 1), ('outcome', 'stopToken'),
+            ('nativeMetricStatus', 'notStarted'), ('capacity', 513), ('chunk', 16),
+            ('processLifetimePeakBytes', 6*1024**3+1)]
+        for field, value in mutations:
+            changed = copy.deepcopy(records); changed[0][field] = value
+            with self.subTest(field=field), self.assertRaises(ValueError):
+                summary.validate_workload_capture(wire(header, changed), rows, loaded)
+        native_changes = [('sessionInstance', 44), ('reusedTokens', 1), ('reusedTokens', False),
+                          ('prefillTokens', 15), ('prefillTokens', 384.),
+                          ('sampledTokens', 127), ('sampledTokens', 128.), ('emittedTokens', 127)]
+        for field, value in native_changes:
+            changed = copy.deepcopy(records); changed[0]['nativeMetrics'][field] = value
+            with self.subTest(native=field), self.assertRaises(ValueError):
+                summary.validate_workload_capture(wire(header, changed), rows, loaded)
+        changed = copy.deepcopy(records); changed[0]['after']['history'] -= 1
+        with self.assertRaises(ValueError): summary.validate_workload_capture(wire(header, changed), rows, loaded)
+        changed = copy.deepcopy(records); changed[0]['after']['modelInstance'] += 1
+        with self.assertRaises(ValueError): summary.validate_workload_capture(wire(header, changed), rows, loaded)
+
+    def test_capture_schema_memory_and_nested_host_clock_boundaries(self):
+        loaded = self.load(); rows = workload_rows(loaded); header, records = workload_capture(rows, loaded)
+        bounded = copy.deepcopy(records)
+        for key in ('processLifetimePeakBytes', 'processPhysicalBytes', 'sessionAdmittedBytes'):
+            bounded[0][key] = 6 * 1024**3
+        self.assertEqual(summary.validate_workload_capture(wire(header, bounded), rows, loaded), bounded)
+        fields = ['schemaVersion', 'processLifetimePeakBytes', 'processPhysicalBytes', 'sessionAdmittedBytes',
+                  'submittedUptimeNanoseconds', 'firstCallbackNanoseconds', 'completedUptimeNanoseconds']
+        for key in fields:
+            changed = copy.deepcopy(records); changed[0].pop(key)
+            with self.subTest(missing=key), self.assertRaises(ValueError):
+                summary.validate_workload_capture(wire(header, changed), rows, loaded)
+        for key in ('processLifetimePeakBytes', 'processPhysicalBytes', 'sessionAdmittedBytes'):
+            for value in (0, -1, True, 1024., 6 * 1024**3 + 1):
+                changed = copy.deepcopy(records); changed[0][key] = value
+                with self.subTest(memory=key, value=value), self.assertRaises(ValueError):
+                    summary.validate_workload_capture(wire(header, changed), rows, loaded)
+        for value in (1, True, 2., None):
+            changed = copy.deepcopy(records); changed[0]['schemaVersion'] = value
+            with self.subTest(schema=value), self.assertRaises(ValueError):
+                summary.validate_workload_capture(wire(header, changed), rows, loaded)
+        source = next(row for row in rows if row['mode'] == 'summary')
+        changes = [('submittedUptimeNanoseconds', source['submitted_uptime_ns'] - 1),
+                   ('completedUptimeNanoseconds', source['completed_uptime_ns'] + 1),
+                   ('submittedUptimeNanoseconds', records[0]['firstCallbackNanoseconds'] + 1),
+                   ('completedUptimeNanoseconds', records[0]['firstCallbackNanoseconds'] - 1),
+                   ('firstCallbackNanoseconds', records[0]['firstCallbackNanoseconds'] + 1000)]
+        changes += [(key, True) for key in fields[-3:]]
+        for key, value in changes:
+            changed = copy.deepcopy(records); changed[0][key] = value
+            with self.subTest(clock=key, value=value), self.assertRaises(ValueError):
+                summary.validate_workload_capture(wire(header, changed), rows, loaded)
+
+    def test_hidden_stop_sampling_is_not_emitted_count_or_requested_cap(self):
+        descriptor = workload_descriptor()
+        expected = dict(tokens=[31, 32, 33], history=388, committed=387, pending=1, reason=2, stop_token=106)
+        descriptor['expected_output'] = expected
+        loaded = self.load(descriptor); rows = workload_rows(loaded)
+        self.assertEqual(summary.validate_workload_rows(rows, loaded), expected)
+        header, records = workload_capture(rows, loaded)
+        self.assertEqual(records[0]['nativeMetrics']['sampledTokens'], 4)
+        self.assertEqual(summary.validate_workload_capture(wire(header, records), rows, loaded), records)
+        records[0]['nativeMetrics']['sampledTokens'] = 3
+        with self.assertRaises(ValueError): summary.validate_workload_capture(wire(header, records), rows, loaded)
 
 
 if __name__ == '__main__':
