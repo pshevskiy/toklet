@@ -123,6 +123,11 @@ required-features = ["metal"]
 test = true
 
 [[example]]
+name = "qwen35_2b_graph_capture"
+required-features = ["metal"]
+test = true
+
+[[example]]
 name = "mlx_mac_baseline"
 required-features = ["metal"]
 

@@ -1,4 +1,4 @@
-name: Qwen3.5 2B typed fixture controls
+name: Qwen3.5 2B portable diagnostic controls
 
 "on":
   push:
@@ -18,9 +18,12 @@ jobs:
       - uses: actions/checkout@v4.2.2
         with:
           persist-credentials: false
-      - name: Validate independent typed fixture and rejection controls
+      - name: Validate typed fixture, source, conversion and graph protocol controls
         env:
           PYTHONPATH: tools/reference
           PYTHONOPTIMIZE: ${{ matrix.optimize }}
           PYTHONDONTWRITEBYTECODE: "1"
-        run: python3 -s -B -m unittest -v test_qwen35_2b_fixture
+        run: |
+          python3 -s -B -m unittest -v test_qwen35_2b_fixture
+          python3 -s -B -m unittest -v test_qwen35_2b_layout test_qwen35_2b_parent test_qwen35_2b_lineage test_qwen35_2b_convert test_qwen35_2b_audit
+          python3 -s -B -m unittest -v test_qwen35_2b_graph_protocol

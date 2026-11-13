@@ -1,6 +1,7 @@
 mod chat;
 mod inspect;
 mod plan;
+mod qwen35_2b;
 use chat::{Assets, OutputDecoder, invalid};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
@@ -37,7 +38,9 @@ Usage: toklet [OPTIONS]
        toklet plan --help
 
   --model PATH              Local model directory
-  --model-profile PROFILE   qwen (default), lfm3-bf16, ministral3-diagnostic
+  --model-profile PROFILE   qwen (default), lfm3-bf16, ministral3-diagnostic, qwen35-2b-diagnostic
+  --artifact-manifest PATH  Explicit2B child manifest (diagnostic profile only)
+  --artifact-manifest-sha256 SHA  Caller-selected manifest SHA256 (64 lower hex)
   --prompt TEXT             Chat-formatted user prompt
   --messages PATH           JSON array of chat messages
   --tools PATH              JSON tool schemas
@@ -63,6 +66,8 @@ Usage: toklet [OPTIONS]
 Generation is greedy without penalties. Text requires local tokenizer assets.
 Ministral3 diagnostic uses Metal mlx-affine/reference, token IDs and JSON only;
 its default capacity is 128 and its maximum capacity is 512.
+Qwen3.5-2B diagnostic uses GPU projections with CPU FP32 state, token IDs and
+JSON only; default capacity128/chunk32, maximum capacity512/chunk32.
 Interactive actions: generate, append (raw text or IDs), continue, reset.
 Ctrl-C cancels between backend chunks/steps; idle interactive Ctrl-C exits.";
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -70,6 +75,7 @@ enum ModelProfile {
     Qwen,
     Lfm3Bf16,
     Ministral3Diagnostic,
+    Qwen35TwoBDiagnostic,
 }
 struct Args {
     model: PathBuf,
@@ -93,6 +99,8 @@ struct Args {
     metal_projection: &'static str,
     metal_attention: &'static str,
     q4_weights: Option<PathBuf>,
+    artifact_manifest: Option<PathBuf>,
+    artifact_manifest_sha256: Option<[u8; 32]>,
 }
 fn utf8(v: OsString) -> io::Result<String> {
     v.into_string()
@@ -126,6 +134,8 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
         metal_projection: "original",
         metal_attention: "reference",
         q4_weights: None,
+        artifact_manifest: None,
+        artifact_manifest_sha256: None,
     };
     let mut seen = HashSet::new();
     let mut values = values.into_iter().peekable();
@@ -164,15 +174,20 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
                 };
             }
             "--q4-weights" => a.q4_weights = Some(value()?.into()),
+            "--artifact-manifest" => a.artifact_manifest = Some(value()?.into()),
+            "--artifact-manifest-sha256" => {
+                a.artifact_manifest_sha256 = Some(qwen35_2b::sha256(&utf8(value()?)?)?);
+            }
             "--model" => a.model = value()?.into(),
             "--model-profile" => {
                 a.model_profile = match utf8(value()?)?.as_str() {
                     "qwen" => ModelProfile::Qwen,
                     "lfm3-bf16" => ModelProfile::Lfm3Bf16,
                     "ministral3-diagnostic" => ModelProfile::Ministral3Diagnostic,
+                    "qwen35-2b-diagnostic" => ModelProfile::Qwen35TwoBDiagnostic,
                     _ => {
                         return Err(invalid(
-                            "model profile must be qwen, lfm3-bf16 or ministral3-diagnostic",
+                            "model profile must be qwen, lfm3-bf16, ministral3-diagnostic or qwen35-2b-diagnostic",
                         ));
                     }
                 };
@@ -236,7 +251,7 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
             ));
         }
         if a.prompt.is_some() || a.messages.is_some() || a.tools.is_some() || a.raw {
-            return Err(invalid("Ministral3 diagnostic accepts only token IDs"));
+            return Err(invalid("Diagnostic profile accepts only token IDs"));
         }
         if !a.json && !a.interactive {
             return Err(invalid("Ministral3 diagnostic requires JSON output"));
@@ -249,6 +264,44 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
                 "Ministral3 diagnostic supports at most 512 positions",
             ));
         }
+    }
+    if a.model_profile == ModelProfile::Qwen35TwoBDiagnostic {
+        if a.backend != "metal"
+            || a.metal_projection != "mlx-affine"
+            || a.metal_attention != "reference"
+            || a.q4_weights.is_some()
+            || seen.contains("--cpu-projection")
+        {
+            return Err(invalid(
+                "Qwen3.5-2B diagnostic requires Metal mlx-affine/reference",
+            ));
+        }
+        if a.prompt.is_some() || a.messages.is_some() || a.tools.is_some() || a.raw {
+            return Err(invalid("Qwen3.5-2B diagnostic accepts only token IDs"));
+        }
+        if !a.json && !a.interactive {
+            return Err(invalid("Qwen3.5-2B diagnostic requires JSON output"));
+        }
+        if a.artifact_manifest.is_none() || a.artifact_manifest_sha256.is_none() {
+            return Err(invalid(
+                "Qwen3.5-2B diagnostic requires an artifact manifest and its SHA256",
+            ));
+        }
+        if !seen.contains("--context-capacity") {
+            a.capacity = 128;
+        }
+        if !seen.contains("--prefill-chunk") {
+            a.chunk = 32;
+        }
+        if a.capacity > 512 || a.chunk > 32 {
+            return Err(invalid(
+                "Qwen3.5-2B diagnostic supports capacity512/chunk32 at most",
+            ));
+        }
+    } else if a.artifact_manifest.is_some() || a.artifact_manifest_sha256.is_some() {
+        return Err(invalid(
+            "artifact manifest flags require qwen35-2b-diagnostic",
+        ));
     }
     if a.backend == "metal" && seen.contains("--cpu-projection") {
         return Err(invalid("--cpu-projection requires cpu backend"));
@@ -350,6 +403,10 @@ struct ExecutionMetadata {
     quantization_group_size: Option<usize>,
     #[serde(skip_serializing_if = "Option::is_none")]
     quantizer: Option<&'static str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    state_backend: Option<&'static str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    state_dtype: Option<&'static str>,
 }
 struct Frontend {
     assets: Option<Assets>,
@@ -372,6 +429,7 @@ struct Frontend {
     backend: &'static str,
     execution: ExecutionMetadata,
     external_bytes: usize,
+    qwen35_2b_load: Option<Value>,
 }
 #[derive(Default)]
 struct OutputTiming {
@@ -388,8 +446,8 @@ impl Frontend {
                 }
                 toklet::app_chat::lfm3::render(messages)
             }
-            ModelProfile::Ministral3Diagnostic => {
-                Err(invalid("Ministral3 diagnostic accepts only token IDs"))
+            ModelProfile::Ministral3Diagnostic | ModelProfile::Qwen35TwoBDiagnostic => {
+                Err(invalid("Diagnostic profile accepts only token IDs"))
             }
         }
     }
@@ -418,10 +476,11 @@ impl Frontend {
         Ok(timing)
     }
 
-    fn execute(
+    fn execute<S: InferenceSession>(
         &mut self,
-        session: &mut impl InferenceSession,
+        session: &mut S,
         r: UserRequest,
+        diagnostic: &impl Fn(&S) -> Value,
     ) -> Result<bool, Box<dyn std::error::Error>> {
         validate_profile_input(self.model_profile, &r)?;
         let count = [r.tokens.is_some(), r.prompt.is_some(), r.messages.is_some()]
@@ -436,7 +495,15 @@ impl Frontend {
             self.finish_output(&mut out)?;
             session.try_reset()?;
             publish_terminal(&CANCELLED, |_| -> io::Result<()> {
-                writeln!(out, "{}", json!({"event":"reset"}))?;
+                writeln!(
+                    out,
+                    "{}",
+                    if self.model_profile == ModelProfile::Qwen35TwoBDiagnostic {
+                        json!({"event":"reset","hybrid":diagnostic(session)})
+                    } else {
+                        json!({"event":"reset"})
+                    }
+                )?;
                 out.flush()
             })?;
             return Ok(false);
@@ -563,6 +630,16 @@ impl Frontend {
             if self.model_profile == ModelProfile::Ministral3Diagnostic {
                 stats["model_profile"] = json!("ministral3-diagnostic");
             }
+            if self.model_profile == ModelProfile::Qwen35TwoBDiagnostic {
+                stats["model_profile"] = json!("qwen35-2b-diagnostic");
+                stats["hybrid"] = diagnostic(session);
+                stats["compilation_seconds"] = Value::Null;
+                stats["compilation_timing_status"] =
+                    json!("unavailable; context initialization includes pipeline creation");
+                if self.requests == 0 {
+                    stats["checkpoint_load"] = self.qwen35_2b_load.clone().unwrap_or(Value::Null);
+                }
+            }
             if let Some(seconds) = self.compilation_seconds {
                 stats["compilation_seconds"] =
                     json!(if self.requests == 0 { seconds } else { 0.0 });
@@ -589,13 +666,15 @@ impl Frontend {
     }
 }
 fn validate_profile_input(profile: ModelProfile, request: &UserRequest) -> io::Result<()> {
-    if profile == ModelProfile::Ministral3Diagnostic
-        && (request.prompt.is_some()
-            || request.messages.is_some()
-            || request.tools.is_some()
-            || request.raw.is_some())
+    if matches!(
+        profile,
+        ModelProfile::Ministral3Diagnostic | ModelProfile::Qwen35TwoBDiagnostic
+    ) && (request.prompt.is_some()
+        || request.messages.is_some()
+        || request.tools.is_some()
+        || request.raw.is_some())
     {
-        return Err(invalid("Ministral3 diagnostic accepts only token IDs"));
+        return Err(invalid("Diagnostic profile accepts only token IDs"));
     }
     Ok(())
 }
@@ -622,12 +701,15 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
     ctrlc::try_set_handler(|| CANCELLED.store(true, Ordering::Relaxed))?;
     let lfm3 = a.model_profile == ModelProfile::Lfm3Bf16;
     let ministral3 = a.model_profile == ModelProfile::Ministral3Diagnostic;
+    let qwen35_2b = a.model_profile == ModelProfile::Qwen35TwoBDiagnostic;
     let vocab = if lfm3 {
         toklet::model::lfm3::VOCAB
     } else if ministral3 {
         // The explicit source opener independently validates this selected
         // geometry. No generic top-level config or tokenizer is inferred.
         131_072
+    } else if qwen35_2b {
+        248_320
     } else {
         let config = chat::json_file(&a.model.join("config.json"), chat::MAX_INPUT_BYTES)?;
         config["vocab_size"]
@@ -638,6 +720,7 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
     let clock = Instant::now();
     let needs_text = a.prompt.is_some() || a.messages.is_some() || !a.json && !a.interactive;
     let assets = if !ministral3
+        && !qwen35_2b
         && (needs_text || a.interactive && a.model.join("tokenizer.json").exists())
     {
         Some(if lfm3 {
@@ -672,6 +755,9 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
         vec![toklet::app_chat::lfm3::EOS]
     } else if ministral3 {
         vec![2]
+    } else if qwen35_2b {
+        // Selected2B nested text_config EOS, without parent/codec stop inference.
+        vec![248_044]
     } else {
         chat::stop_ids(&a.model, vocab)?
     };
@@ -734,8 +820,11 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
             packed_format_version: None,
             quantization_group_size: None,
             quantizer: None,
+            state_backend: None,
+            state_dtype: None,
         },
         external_bytes,
+        qwen35_2b_load: None,
     };
 
     if lfm3 {
@@ -760,7 +849,14 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
             attention_mode: Some("Lfm3EagerCausalOrWindow256"),
             ..frontend.execution
         };
-        return run_session(frontend, &mut session, initial, a.capacity, external_bytes);
+        return run_session(
+            frontend,
+            &mut session,
+            initial,
+            a.capacity,
+            external_bytes,
+            |_| Value::Null,
+        );
     }
 
     let options = Options {
@@ -773,6 +869,21 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
         context_limit: a.capacity,
         memory_limit_bytes: budget,
     };
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    if qwen35_2b {
+        return qwen35_2b::run(
+            qwen35_2b::Inputs {
+                directory: &a.model,
+                manifest: a.artifact_manifest.as_deref().unwrap(),
+                manifest_sha256: a.artifact_manifest_sha256.unwrap(),
+                capacity: a.capacity,
+                chunk: a.chunk,
+                budget,
+            },
+            frontend,
+            initial,
+        );
+    }
     #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
     if a.backend == "metal" {
         let q4_v2 = a.q4_weights.is_some();
@@ -855,19 +966,35 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
             } else {
                 model.q4_format().map(|f| f.quantizer())
             },
+            state_backend: None,
+            state_dtype: None,
         };
         frontend.load_seconds = model.load_timing.load_seconds;
         frontend.conversion_seconds = model.load_timing.conversion_seconds;
         frontend.compilation_seconds = Some(model.load_timing.compilation_seconds);
         frontend.cpu_projection = "none";
-        return run_session(frontend, &mut session, initial, a.capacity, external_bytes);
+        return run_session(
+            frontend,
+            &mut session,
+            initial,
+            a.capacity,
+            external_bytes,
+            |_| Value::Null,
+        );
     }
     let loaded = weights::load_qwen(&a.model, load_options)?;
     let model = loaded.model.with_projection_kernel(a.projection);
     let mut session = Session::new(&model, options)?;
     frontend.load_seconds = loaded.report.load_seconds;
     frontend.conversion_seconds = loaded.report.conversion_seconds;
-    run_session(frontend, &mut session, initial, a.capacity, external_bytes)
+    run_session(
+        frontend,
+        &mut session,
+        initial,
+        a.capacity,
+        external_bytes,
+        |_| Value::Null,
+    )
 }
 fn lfm3_load_json(report: weights::Lfm3LoadReport) -> Value {
     let hash: String = report
@@ -895,12 +1022,13 @@ fn logical_memory(memory: toklet::session::Memory, external_bytes: usize) -> Val
     }
     value
 }
-fn run_session(
+fn run_session<S: InferenceSession>(
     mut frontend: Frontend,
-    session: &mut impl InferenceSession,
+    session: &mut S,
     initial: Option<UserRequest>,
     capacity: usize,
     external_bytes: usize,
+    diagnostic: impl Fn(&S) -> Value,
 ) -> Result<u8, Box<dyn std::error::Error>> {
     frontend.memory_admitted_bytes = session
         .memory()
@@ -908,7 +1036,7 @@ fn run_session(
         .checked_add(external_bytes)
         .ok_or_else(|| invalid("memory accounting overflow"))?;
     if let Some(r) = initial {
-        return Ok(if frontend.execute(session, r)? {
+        return Ok(if frontend.execute(session, r, &diagnostic)? {
             130
         } else {
             0
@@ -920,6 +1048,11 @@ fn run_session(
         "execution":frontend.execution,"logical_memory":logical_memory(memory,external_bytes)});
     if frontend.model_profile == ModelProfile::Ministral3Diagnostic {
         ready["model_profile"] = json!("ministral3-diagnostic");
+    }
+    if frontend.model_profile == ModelProfile::Qwen35TwoBDiagnostic {
+        ready["model_profile"] = json!("qwen35-2b-diagnostic");
+        ready["hybrid"] = diagnostic(session);
+        ready["checkpoint_load"] = frontend.qwen35_2b_load.clone().unwrap_or(Value::Null);
     }
     if let Some(load) = frontend.lfm3_load {
         ready["model_profile"] = json!("lfm3-bf16");
@@ -973,13 +1106,17 @@ fn run_session(
         let result = serde_json::from_slice::<UserRequest>(&line)
             .map_err(invalid)
             .map_err(|e| -> Box<dyn std::error::Error> { e.into() })
-            .and_then(|r| frontend.execute(session, r));
+            .and_then(|r| frontend.execute(session, r, &diagnostic));
         if let Err(e) = result {
             publish_terminal(&CANCELLED, |_| -> io::Result<()> {
                 writeln!(
                     io::stdout().lock(),
                     "{}",
-                    json!({"event":"error","message":e.to_string()})
+                    if frontend.model_profile == ModelProfile::Qwen35TwoBDiagnostic {
+                        json!({"event":"error","message":e.to_string(),"hybrid":diagnostic(session)})
+                    } else {
+                        json!({"event":"error","message":e.to_string()})
+                    }
                 )?;
                 io::stdout().flush()
             })?;
@@ -1033,6 +1170,93 @@ mod tests {
     use super::*;
     fn args(values: &[&str]) -> Vec<OsString> {
         values.iter().map(OsString::from).collect()
+    }
+    #[test]
+    fn two_b_interactive_inputs_remain_id_only_and_manifest_flags_are_scoped() {
+        for value in [
+            json!({"tokens":[1,2]}),
+            json!({"action":"append","tokens":[3]}),
+            json!({"action":"continue","max_new_tokens":2}),
+            json!({"action":"reset"}),
+        ] {
+            let request = serde_json::from_value(value).unwrap();
+            assert!(validate_profile_input(ModelProfile::Qwen35TwoBDiagnostic, &request).is_ok());
+        }
+        for value in [
+            json!({"prompt":"text"}),
+            json!({"messages":[]}),
+            json!({"tokens":[1],"tools":[]}),
+            json!({"tokens":[1],"raw":false}),
+        ] {
+            let request = serde_json::from_value(value).unwrap();
+            assert!(validate_profile_input(ModelProfile::Qwen35TwoBDiagnostic, &request).is_err());
+        }
+        for extra in [
+            vec!["--artifact-manifest", "missing"],
+            vec![
+                "--artifact-manifest-sha256",
+                "0000000000000000000000000000000000000000000000000000000000000000",
+            ],
+        ] {
+            let mut values = args(&["--model", "missing", "--tokens", "1", "--json"]);
+            values.extend(args(&extra));
+            assert!(parse(values).is_err());
+        }
+    }
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    #[test]
+    fn two_b_diagnostic_flags_bound_modes_and_require_manifest_before_io() {
+        let base = [
+            "--model",
+            "missing",
+            "--model-profile",
+            "qwen35-2b-diagnostic",
+            "--backend",
+            "metal",
+            "--metal-projection",
+            "mlx-affine",
+            "--artifact-manifest",
+            "missing",
+            "--artifact-manifest-sha256",
+            "abababababababababababababababababababababababababababababababab",
+            "--tokens",
+            "1",
+            "--json",
+        ];
+        let parsed = parse(args(&base)).unwrap();
+        assert_eq!((parsed.capacity, parsed.chunk), (128, 32));
+        for extra in [
+            vec!["--context-capacity", "0"],
+            vec!["--context-capacity", "513"],
+            vec!["--prefill-chunk", "33"],
+            vec!["--metal-attention", "online"],
+            vec!["--prompt", "text"],
+            vec!["--messages", "missing"],
+            vec!["--tools", "missing"],
+            vec!["--raw"],
+            vec!["--q4-weights", "missing"],
+            vec!["--cpu-projection", "scalar"],
+        ] {
+            let mut values = args(&base);
+            values.extend(args(&extra));
+            assert!(parse(values).is_err());
+        }
+        for flag in ["--artifact-manifest", "--artifact-manifest-sha256"] {
+            let mut values = base.to_vec();
+            let index = values.iter().position(|v| *v == flag).unwrap();
+            values.drain(index..index + 2);
+            assert!(parse(args(&values)).is_err());
+        }
+        for (from, to) in [("metal", "cpu"), ("mlx-affine", "original")] {
+            let mut values = base.to_vec();
+            *values.iter_mut().find(|v| **v == from).unwrap() = to;
+            assert!(parse(args(&values)).is_err());
+        }
+        for capacity in [1, 128, 512] {
+            let mut values = args(&base);
+            values.extend(args(&["--context-capacity", &capacity.to_string()]));
+            assert_eq!(parse(values).unwrap().capacity, capacity);
+        }
     }
     #[test]
     fn ministral3_diagnostic_interactive_fields_reject_before_session_changes() {

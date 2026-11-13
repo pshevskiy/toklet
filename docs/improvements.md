@@ -1,6 +1,6 @@
 # Toklet improvement index
 
-Updated **11 November 2026**. This is the compact index of retained capabilities,
+Updated **13 November 2026**. This is the compact index of retained capabilities,
 measured gains and material restrictions. The [full dated history](archive/2026-11-09/improvements.md)
 preserves every previous entry, source revision, failed check and evidence link.
 Read it only when the current task needs that detail.
@@ -269,6 +269,18 @@ diagnostic retention with no findings. No workflow speedup is measured;
 full-model qualification gates remain open.
 [Review/publication](../artifacts/qwen35-2b-source-planning-2026-11-13/publication-checks.json).
 [Diagnostic scope](qwen35-2b-typed-source.md).
+
+The next 2B slice implements the pinned raw-ID hybrid CLI, complete phase
+capture/reference protocols and bounded source/parent/conversion audits. Early
+compilation, strict CPU/Metal Clippy and 786 CPU tests pass; real qualification
+and combined Astra review remain pending. Fresh selected-source byte verification
+passes after a retained monitor-interpreter failure. Parent history and the full
+metadata directory are captured; tensor values are being compared under the
+unchanged gates. Pinned-CA TLS retains certificate/hostname verification. Source
+and reference controls pass 34/23 tests per explicit optimization mode; prior
+mock/fixture failures and journal-reservation correction remain linked in their
+receipts. No conversion, model, quality or performance result is inferred.
+[Current source evidence](../artifacts/qwen35-2b-payload-2026-11-13/source-setup-qualification-1.json).
 
 Ministral graph/CLI diagnostic code passes fmt, strict CPU/Metal Clippy,
 763 CPU/922 Metal-feature tests and all five release GPU controls, including
@@ -590,6 +602,21 @@ and linked scope reports. Metadata and narrowly passing probes do not qualify
 whole-GPU execution, default allocator/codec/application fit or managed requests.
 
 ## Current implementation
+
+The Qwen3.5-2B real-source/CLI diagnostic passes full prospective parent lineage,
+bounded Q4 conversion and saved-byte audit for 187 matrices/133 exact small
+owners. Required fmt/strict CPU+Metal Clippy, 786 CPU/946 Metal tests, 70 portable
+controls per Python mode, four GPU/state/repair and twelve CLI cases pass.
+The short graph passes 159,187,008 comparisons. Context17 rejects three of
+680,841,024 comparisons; both native traces match, all schedule/reset/causal
+controls and complete journals/failing bytes audit. Conditional fixed255,
+quality and performance do not advance. Astra approves scoped diagnostic
+retention with no blocking findings. Local-input investigation, codec/stop
+witnesses, original full quality, representative fit/performance/overhead and
+adoption remain open; no performance gain follows. Failed monitor, reader,
+allocator, import, binary-selection and audit-wrapper attempts stay retained.
+[Scope](qwen35-2b-real-source.md),
+[review/commit](../artifacts/qwen35-2b-payload-2026-11-13/publication-checks.json).
 
 Q2.G's [9B128/256 evaluation](qwen35-9b-context256.md) is in progress. The separate
 producer and strict reader preserve both original profiles/gates. Fresh required

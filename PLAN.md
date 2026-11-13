@@ -1,6 +1,6 @@
 # Toklet implementation plan
 
-Updated 12 November 2026. Read [TODO.md](TODO.md) first for the current task.
+Updated 13 November 2026. Read [TODO.md](TODO.md) first for the current task.
 This live plan retains architecture, session invariants, milestone task criteria
 and the complete validation/performance policy. Detailed chronology and original
 execution orders are in the [dated archive](docs/archive/2026-11-07/PLAN.md).
@@ -108,6 +108,16 @@ route after matched primary/compatibility/sustained measurements, all 62 state
 checks and Astra approval. Managed adoption remains unqualified.
 Any MiniCPM5 reconsideration still needs corrected original numerics and
 both complete original quality comparisons.
+
+The [Qwen3.5-2B real-source diagnostic](docs/qwen35-2b-real-source.md) now passes
+prospective parent comparison, bounded Q4 conversion/saved-byte audit, explicit
+token-ID CLI/state controls and the initial short dual-profile graph check.
+Context17 rejects three of 680,841,024 profile-coordinate comparisons; the paired
+native traces and offline audits agree. Conditional fixed255 is not launched.
+Codec/template, original full quality, representative fit, performance/observer
+overhead and adoption remain open. Existing 4B/9B eligibility,
+the 512-position diagnostic limit and original acceptance gates are unchanged;
+Astra approves scoped diagnostic retention without qualifying model adoption.
 
 The initial settings below describe the foundation. Later selected models and
 routes use their own authenticated configuration and scoped acceptance evidence;

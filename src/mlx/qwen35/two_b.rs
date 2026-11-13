@@ -25,6 +25,7 @@ const VOCAB: usize = 248320;
 const PREFIX: &str = "language_model.model.";
 const BODY_BYTES: usize = 1_059_315_904;
 
+pub mod artifact;
 mod configuration;
 pub mod payload;
 mod recipe;

@@ -50,24 +50,36 @@ LFM3 CPU code and portable measurements are published as `612771d7` on
 `codex/console-engine-comparison`.
 [Publication / CI](artifacts/lfm3-finite-guard-2026-11-11/finite-publication-checks.json).
 
-Current/next task: **qualify the selected Qwen3.5-2B source/graph route**.
-Three implementation lanes have handed off the typed source/F32 owners, hybrid
-graph binding and independent tiny fixture. Formatting, strict CPU/Metal Clippy,
-781 CPU/940 Metal-feature tests, twelve portable controls per Python mode and
-the explicit tiny GPU storage check pass. Astra approves scoped diagnostic
-retention with no findings; publication/CI is next. The
-initial legacy-example Clippy failure is retained. Parent metadata is pinned at
-`2bcf35c1` and exposes GGUF artifacts; source-value lineage and normalization
-semantics still need proof before real conversion. Full-model/CLI/quality/fit/
-performance qualification remain open; metadata and tiny tests do not advance them.
-[Dispatch and queue](artifacts/qwen35-2b-source-planning-2026-11-13/parallel-work-plan-1.json),
-[delivery plan](docs/parallel-delivery.md).
-[Review/publication](artifacts/qwen35-2b-source-planning-2026-11-13/publication-checks.json).
-Ministral diagnostic `8b6220e9` is pushed; all four exact-head CI workflows pass.
-Source authentication, bounded conversion and component YaRN checks pass. Granite's current affine4/8 route remains numerically rejected. LFM3 CPU qualification and finite-widening retention
-pass; managed application adoption remains open. Preserve the 6 GiB ceiling,
-original numerical/quality gates and prior model decisions. Engine/CLI work
-leads; interactive screen capture and iPhone runtime remain deferred.
+- [x] Qwen3.5-2B real-source/CLI diagnostic: all 320 parent tensors,
+  187 Q4 matrices/133 exact small owners, 3,238 conversion tiles and saved-byte
+  audits pass. Fmt, strict CPU/Metal Clippy, 786 CPU/946 Metal tests, 70 portable
+  controls per optimization mode, four explicit GPU/state/repair and twelve CLI
+  cases pass. Short graph passes 159,187,008 comparisons. Context17 rejects
+  3/680,841,024 comparisons: ideal FP64 fails three, staged FP32 passes; native
+  traces, nine schedule/reset controls and 10,704 causal-prefix arrays per
+  profile agree. Full journal/failure replay passes. Conditional fixed255,
+  quality and performance do not advance. Astra approves scoped diagnostic
+  retention, with no blocking code/evidence findings; model adoption stays
+  unqualified. Failed setup/audit attempts remain retained.
+  [Scope](docs/qwen35-2b-real-source.md),
+  [checks/review/commit](artifacts/qwen35-2b-payload-2026-11-13/publication-checks.json).
+
+Current/next task: **localize the Qwen3.5-2B attention-context rejection**.
+All three failures share token 12/layer 15/head 6/feature 55. Preserve bounded
+native Q/K/V/scores/probability and independent operands before distinguishing
+local accumulation from upstream propagation; the discarded passing values
+cannot establish the cause. No numerical change is qualified yet.
+[Localization](artifacts/qwen35-2b-payload-2026-11-13/context17-attention-localization-1.json),
+[paired decision](artifacts/qwen35-2b-payload-2026-11-13/context17-paired-decision-1.json).
+The authenticated official/selected tokenizer metadata correspondence is
+preparation only; runtime codec/caller/stops, >=1,025 quality capacity, both
+original full quality pairs, representative fit/performance/overhead and adoption
+remain open. [Next gates](artifacts/qwen35-2b-payload-2026-11-13/codec-quality-next-gate-1.json),
+[tokenizer metadata](artifacts/qwen35-2b-payload-2026-11-13/codec-tokenizer-auth-and-JSON-1.json).
+Use independent lanes, one active model and one heavy-job queue;
+[delivery plan](docs/parallel-delivery.md). Preserve Gemma/4B/9B priority,
+original numerical/quality and 6 GiB gates, earlier model decisions and isolated
+UI work. Engine/CLI leads; interactive capture and iPhone runtime stay deferred.
 
 - [x] S1.L original and fresh candidate quality: both complete 10,000-target/
   100-task comparisons pass unchanged gates. Stock passes 35 tasks; modified

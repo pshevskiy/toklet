@@ -1,0 +1,37 @@
+{
+  "format": "toklet-qwen35-2b-source-fixture-v1",
+  "scope": "Cold exact selected config/header and metadata-only GGUF directory. No tensor bytes or source lineage qualification.",
+  "files": {
+    "source-config.json": {
+      "bytes": 2908,
+      "sha256": "ed1c1723241f23f7f4e23430759cbd7dcfb4103cbdfe052bfe7626b57c2615b4"
+    },
+    "source-header.bin": {
+      "bytes": 75233,
+      "sha256": "ed13c70a5f6268600b730dbc480262f640decf50083cddb23a107f201b6c0060"
+    },
+    "parent-directory.bin": {
+      "bytes": 18837,
+      "sha256": "df6a5067fd5e2233936b85bff66f6dfafc1e479f447a967ccbcb31d6345467e2"
+    }
+  },
+  "source": {
+    "repository": "TheCluster/Qwen3.5-2B-Uncensored-HauhauCS-Aggressive-MLX-bf16",
+    "revision": "78efacde810bbe7d1b80410fc5ac60db4f24fd8a",
+    "container_bytes": 4426559145,
+    "container_sha256": "f04765ef799190d41131132d43d69624e9ed6eac7b7cdd2a65a2eb3e266878ab",
+    "payload_origin": 75241,
+    "payload_authenticated": false
+  },
+  "parent": {
+    "repository": "HauhauCS/Qwen3.5-2B-Uncensored-HauhauCS-Aggressive",
+    "revision": "cafbddcb9940f38618e2b2ba84149584949379f9",
+    "container_bytes": 3775708640,
+    "container_sha256": "d98cff5f907e2186ac8243ac5676a47dc24e1822cd6ed674c9c92c7503915a1b",
+    "directory_start": 10942273,
+    "directory_end": 10961110,
+    "data_offset": 10961120,
+    "full_object_authenticated": false
+  },
+  "payload_authenticated": false
+}
