@@ -1,28 +1,66 @@
 # Toklet progress checklist
 
-Updated **14 November 2026**. **Improvement goal active; earlier Mac milestones
+Updated **15 November 2026**. **Improvement goal active; earlier Mac milestones
 complete only in their recorded scopes.** iPhone runtime work remains deferred.
 Read the current task, relevant plan criteria and targeted source. Completed
 history is in the [dated archive](docs/archive/2026-11-12/README.md).
 
 ## Current and next task
 
-Current task: **ordinary official Gemma engine/CLI generation and request metrics**.
-- [x] Independent preparation identifies the existing qualified owner/codec/G2
-  session, bounded512/32 admission, clock meanings, missing metrics and exclusive
-  producer/validator/evidence files. Reuse the owner's codec once.
-  [Next-task contract](artifacts/gemma-head-batch-2026-11-14/velocity-next-cli-contract-1.json).
-- [ ] Freeze the small CLI/schema interface, dispatch independent implementation
-  and validation, and run the first CPU/Metal compile before model work. Keep
-  one mechanism active and one heavy queue; pause preparation during timing.
-- [ ] Complete affected required checks and bounded CLI/summary measurements;
-  resolve one combined Astra review, then commit/push and record exact-head CI.
+Current task: **review and publish ordinary Gemma CLI generation/request metrics**.
+- [x] Source3 is frozen at4,116 inputs,4,108 equal source2. Eight bounded header/
+  reader/fixture changes preserve numerical/model/session/codec/shader/build inputs.
+  Required fmt/strict CPU+Metal+probe Clippy pass; affected controls57CPU/72Metal
+  (2ignored each), independent reader36 per Python mode. The optimized Metal
+  binary is sealed. Earlier syntax/style failures retain their recorded scope.
+  [Checks](artifacts/gemma-cli-metrics-2026-11-14/required-checks-3.json),
+  [binary](artifacts/gemma-cli-metrics-2026-11-14/release-binary-2.json),
+  [scope](docs/gemma-cli.md).
+- [x] Source2 conformance joins63 closed old preparations plus21 fresh into an
+  84-entry inventory with four-way parity; unavailable controls stay explicit.
+  The original2400s whole attempt remains failed. All original source2 paths and
+  reader stay unchanged. Source3 has independent checks and two fresh policy
+  smokes matching IDs/state/text,10 summaries/four core reports and zero losses.
+  Actual logical collector storage is9,000+1,032,192=1,041,192 bytes, separate
+  from1,064,960-byte admission and sampled process memory. Cancellation latency
+  remains null with a fixed reason. [Joined controls](artifacts/gemma-cli-metrics-2026-11-14/conformance-join-1/result.json),
+  [delta/reuse](artifacts/gemma-cli-metrics-2026-11-14/source2-to-source3-qualification-1.json),
+  [smoke](artifacts/gemma-cli-metrics-2026-11-14/resource-header-smoke-1/result.json).
+- [x] Full frozen overhead collection completes:16 owners,128 generations
+  (48warm/80measured),128 resets,eight16-record exports. Guard passes6,264.96s
+  with5,004,482,128-byte observed peak including32MiB helper,within6GiB; source/
+  model endpoints stay equal and all children are reaped. Original sampling,
+  ABBA/BAAB order and1% gates stay unchanged. Offline calculation passes5/8
+  metric/cohort gates; per-tile cohort1 TTFT/complete and batched cohort2 TTFT
+  fail. Summary stays disabled/opt-in and overhead/adoption unqualified, as the
+  existing exit policy permits. No extraN, post-hoc exclusions or new threshold.
+  [Capture](artifacts/gemma-cli-metrics-2026-11-14/cli-overhead-3/result.json),
+  [guard](artifacts/gemma-cli-metrics-2026-11-14/cli-overhead-guard-3/result.json),
+  [statistics](artifacts/gemma-cli-metrics-2026-11-14/cli-overhead-3/offline-overhead-replay.json).
+- [x] Independent raw-clock/statistical replay passes1.02s/96.7MB with zero
+  discrepancies across128 generations/128 resets/eight exports,including all
+  original gate results and4,116 source inputs. Astra independently reproduces
+  all eight results and approves scoped functional opt-in retention with no
+  blocking/actionable findings. Failed overhead/default/adoption/whole-goal
+  qualifications remain explicit. [Review](artifacts/gemma-cli-metrics-2026-11-14/astra-review-1/verdict.json).
+  Two earlier zero-measured-sample attempts remain excluded: a duplicated core
+  counter lookup corrected with genuine wire/report regressions, then battery/
+  LPM admission during warmup. Both clean up; final10 model-free controls pass.
+  Producer, independent reader/tests and qualification preparation had exclusive
+  files; every lane paused throughout acceptance measurement.
+  [Independent replay](artifacts/gemma-cli-metrics-2026-11-14/independent-overhead-replay-1.json),
+  [adapter controls](artifacts/gemma-cli-metrics-2026-11-14/overhead-cold-controls-4/result.json),
+  [delivery policy](docs/parallel-delivery.md).
 
-The Gemma submission milestone below is published. Closed numerical searches
-stay closed; UI/screenshare and iPhone remain user-deferred. The whole improvement
-objective remains active. [Requirement audit](artifacts/gemma-head-batch-2026-11-14/remaining-goal-audit-2.json),
-[velocity plan](artifacts/gemma-head-batch-2026-11-14/velocity-plan-1.json),
-[delivery policy](docs/parallel-delivery.md).
+- [ ] Commit/push the approved23-file change and verify exact-head CI.
+
+Next after publication: **R1 ordinary-CLI regression admission/comparison and
+portable CI**, using reviewed G17 disabled-mode evidence without a new model
+campaign. [Remaining-goal audit](artifacts/gemma-cli-metrics-2026-11-14/remaining-goal-audit-4.json).
+
+The whole improvement objective remains active. Closed numerical searches stay
+closed; UI/screenshare and iPhone remain user-deferred; larger models stay research
+only. [Requirement audit](artifacts/gemma-head-batch-2026-11-14/remaining-goal-audit-2.json).
 
 ## Recent completed milestones
 

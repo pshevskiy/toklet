@@ -1,0 +1,22 @@
+{
+  "complete_sha256": "530d162dc8616d6be587437b27698edb561928cdc05962cfb886dda2feaa1dc5",
+  "retained_records": 4,
+  "completed_core_reports": 2,
+  "unavailable_core_reports": 2,
+  "retained_outcomes": {
+    "cancelled": 0,
+    "execution_error": 0,
+    "output_error": 0,
+    "rejected": 1,
+    "stop": 1,
+    "success": 2
+  },
+  "request_total_ms_p50": 11.5,
+  "prefill_ms_p50": 24.0,
+  "prefill_tokens_per_s_p50": 87.5,
+  "decode_tokens_per_s_p50": 50.0,
+  "decode_evaluations_per_s_p50": 100.0,
+  "ttft_event_ms_p50": 50.0,
+  "token_interval_mean_ms_p50": 20.0,
+  "note": "Wholly synthetic,independently authored states/clocks/budgets. No model,tokenizer,runtime,overhead or adoption evidence."
+}

@@ -1,6 +1,6 @@
 # Toklet improvement index
 
-Updated **13 November 2026**. This is the compact index of retained capabilities,
+Updated **15 November 2026**. This is the compact index of retained capabilities,
 measured gains and material restrictions. The [full dated history](archive/2026-11-09/improvements.md)
 preserves every previous entry, source revision, failed check and evidence link.
 Read it only when the current task needs that detail.
@@ -737,3 +737,38 @@ UI/iPhone/larger contexts remain unqualified. [Scope](gemma-single-row-submissio
 [checks](../artifacts/gemma-head-batch-2026-11-14/checks-final-1.json),
 [report](../artifacts/gemma-head-batch-2026-11-14/actual-submission-report-2/report.md),
 [independent replay](../artifacts/gemma-head-batch-2026-11-14/independent-submission-replay-1.json).
+
+Ordinary Gemma CLI/metrics is implemented in an isolated persistent worktree;
+Astra approves scoped functional retention with no findings; publication remains
+pending. Defaults stay per-tile/disabled. One official
+BF16 owner/codec/G2 session supports generation, cache/reset, cancellation and
+output failure, with bounded summaries/export and explicit unavailable probes.
+Logical collector fixed/ring/peak storage is9,000/1,032,192/1,041,192 bytes,
+separate from admission and process memory; signal latency remains unavailable.
+Source3 passes fmt, strict CPU/Metal/probe Clippy,57CPU/72Metal affected controls
+(two ignored each),36 reader controls per Python mode and both fresh policy
+header smokes. Source2's84-entry conformance keeps its exact scope and original
+whole-attempt timeout; unchanged numerical/quality/codec evidence is not relabelled.
+[Scope and checks](gemma-cli.md),
+[required checks](../artifacts/gemma-cli-metrics-2026-11-14/required-checks-3.json).
+
+The full fixed campaign completes16 owners,128 generations (48warm/80measured),
+128 resets and eight complete16-record exports. The6GiB guard passes6,264.96s,
+peak5,004,482,128 bytes including helper; source/model remain fixed and cleanup
+is clean. Original1% gates pass5/8 comparisons and reject per-tile cohort1 TTFT/
+complete and batched cohort2 TTFT. Summary remains opt-in, overhead/adoption
+unqualified under the existing exit policy. Both earlier zero-measured attempts
+and their runner/power failures stay evidence; noN/gate/exclusion rescue occurs.
+Independent raw replay passes with zero discrepancies across128 generations,
+128 resets,eight exports and all original statistics; within-arm drift is
+descriptive, with no causal attribution or sample exclusion. Astra independently
+reproduces all eight gate results and approves scope,with no findings; commit/
+push and CI remain pending.
+[Measurements and gate table](gemma-cli.md#fixed-overhead-measurement),
+[capture](../artifacts/gemma-cli-metrics-2026-11-14/cli-overhead-3/result.json).
+
+Delivery overlaps exclusive producer, independent reader/tests and qualification
+preparation; root owns integration and the heavy queue. All lanes pause during
+acceptance measurements. Compatible functional smokes share loaded sessions;
+benchmark validators replay genuine wire envelopes before long captures.
+Delivery speedup is unmeasured. [Assignments and policy](parallel-delivery.md).

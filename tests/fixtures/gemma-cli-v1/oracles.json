@@ -1,0 +1,219 @@
+{
+  "format": "toklet-gemma-cli-earlier-golden-bindings-v1",
+  "status": "Pinned existing authoritative earlier published BF16/G2 witness; current CLI still requires fresh parity. No model execution by this preparation.",
+  "model": {
+    "profile": "google/gemma-4-E2B-it",
+    "revision": "70af34e20bd4b7a91f0de6b22675850c43922a03",
+    "manifest_sha256": "654dc6dfd66fd893a24f0faa39355b71d5e7ffc3f53c2dac394dfcfd9ed95298",
+    "precision": "official BF16/G2, FP32 KV, FullLogits",
+    "capacity": 512,
+    "chunk": 32
+  },
+  "sources": {
+    "official_prior_receipt": {
+      "path": "/Users/coloner/work/rust/toklet/benchmarks/results/2026-11-07-o2b-gemma-workloads-v1.json",
+      "bytes": 8966,
+      "sha256": "6f5dc126ffba7a8cdc39ea6f3a7ca13a54dfe952b54fe27ec3594e1ca5c7c0ab"
+    },
+    "prior_result": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/o2b-gemma-workloads-2026-11-07/acceptance-final/result.json",
+      "bytes": 22121,
+      "sha256": "9e4efff92e0bd68176d4afed09582c3c924dc1099cc34cdde2ba05370b0f5173"
+    },
+    "prior_checks_review_commit": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/o2b-gemma-workloads-2026-11-07/checks.json",
+      "bytes": 2241,
+      "sha256": "2c2bbfeed4bbbfd94bf0537706bd621de83ddd9a2cbcb587777c94a7124d7540"
+    },
+    "controls": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/o2b-gemma-workloads-2026-11-07/acceptance-final/controls.jsonl",
+      "bytes": 14934,
+      "sha256": "5e0f9cd7e7b759c2070ae6b3670b5db9a677c77f5ea891686db5c4b8e84f366c"
+    },
+    "paired_1": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/o2b-gemma-workloads-2026-11-07/acceptance-final/paired-1.jsonl",
+      "bytes": 100488,
+      "sha256": "b85c55986baff587ed75cd0a4514d4f04d5ded3c671d41a927949ddb182f6d96"
+    },
+    "collector_source": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/gemma-cli-metrics-2026-11-14/worktree/apple/tests/swift/GemmaWorkloadMain.swift",
+      "bytes": 13731,
+      "sha256": "1a374841c880d51612af29aee0285968c2ec53cecd98d997723a2c23ce87805e"
+    },
+    "collector_source_binding": "Exact same SHA as acceptance-final/result.json source_sha256. Source creates audited chat codec and encodes [{role:user,content:Name the capital of France.}] before recording ready.prompt.",
+    "later_both_submission_arms": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/gemma-head-batch-2026-11-14/request-measurements-3/matrix_1/events.jsonl",
+      "bytes": 1542555,
+      "sha256": "7bec5f127f43c17426b2b2b3b47ee33b0921310be34293839b108b39564b5d46"
+    },
+    "later_approved_publication": {
+      "path": "/Users/coloner/work/rust/toklet/artifacts/gemma-head-batch-2026-11-14/publication-checks-1.json",
+      "bytes": 1258,
+      "sha256": "2433382f464553656dc30532ed8994bd775e7e7f3a0e5380a7fff38eab6b7088"
+    }
+  },
+  "goldens": {
+    "official_france_four": {
+      "input_ids": [
+        2,
+        105,
+        2364,
+        107,
+        1567,
+        506,
+        5279,
+        529,
+        7001,
+        236761,
+        106,
+        107,
+        105,
+        4368,
+        107
+      ],
+      "input_u32le_sha256": "6f909c8aaaaf53c8d0ac21b6d9c8c4667e6dabd80b6e090c6f79ddc3565ce66c",
+      "output_ids": [
+        818,
+        5279,
+        529,
+        7001
+      ],
+      "output_u32le_sha256": "a4363bfb21acab30ee38135b5f6a59ce5372670b95b35aef7d222d966c5f8b6b",
+      "chat_input_witness": {
+        "file": "/Users/coloner/work/rust/toklet/artifacts/o2b-gemma-workloads-2026-11-07/acceptance-final/controls.jsonl",
+        "line": 1,
+        "line_bytes": 514,
+        "line_sha256": "9ce408ba49d468a3dc3ab8bd9e0ad680b8735db74ee93f7fec5dc41258743db0"
+      },
+      "input_output_state_witness": {
+        "file": "/Users/coloner/work/rust/toklet/artifacts/o2b-gemma-workloads-2026-11-07/acceptance-final/controls.jsonl",
+        "line": 2,
+        "line_bytes": 939,
+        "line_sha256": "dd826b752ba44fa5895fe7ba9c50731a530c0614a665f142a0e95bbb8c76acab"
+      },
+      "conditions": "Official BF16/G2,15-token prepared prompt,greedy4 outputs,no intervening stop; expected final H19/K18/P1. Same first4 contain none of ordinary stop IDs1/106/50.",
+      "source_fields": [
+        "ready.prompt",
+        "reference.input",
+        "reference.ids",
+        "reference.maximum",
+        "reference.status",
+        "reference.after"
+      ]
+    },
+    "o2_append": {
+      "witness": {
+        "file": "/Users/coloner/work/rust/toklet/artifacts/o2b-gemma-workloads-2026-11-07/acceptance-final/paired-1.jsonl",
+        "line": 6,
+        "line_bytes": 575,
+        "line_sha256": "ceedd691e5394f28ed8d74bdae53a24be83b006ce68383ddf90136d8cae6384e"
+      },
+      "input_suffix_ids": [
+        107
+      ],
+      "output_ids": [
+        818,
+        5279,
+        529,
+        7001
+      ],
+      "before": {
+        "committed": 14,
+        "history": 14,
+        "pending": 0
+      },
+      "after": {
+        "committed": 18,
+        "history": 19,
+        "pending": 1
+      }
+    },
+    "o2_fully_cached": {
+      "witness": {
+        "file": "/Users/coloner/work/rust/toklet/artifacts/o2b-gemma-workloads-2026-11-07/acceptance-final/paired-1.jsonl",
+        "line": 8,
+        "line_bytes": 643,
+        "line_sha256": "5f58078c5b3690639a14d331e71f4e36d94ae9022b7352711bc3149c6bc02d5b"
+      },
+      "input_ids": [
+        2,
+        105,
+        2364,
+        107,
+        1567,
+        506,
+        5279,
+        529,
+        7001,
+        236761,
+        106,
+        107,
+        105,
+        4368,
+        107
+      ],
+      "output_ids": [
+        818,
+        5279,
+        529,
+        7001
+      ],
+      "before": {
+        "committed": 15,
+        "history": 15,
+        "pending": 0
+      },
+      "after": {
+        "committed": 18,
+        "history": 19,
+        "pending": 1
+      }
+    },
+    "o2_pending": {
+      "witness": {
+        "file": "/Users/coloner/work/rust/toklet/artifacts/o2b-gemma-workloads-2026-11-07/acceptance-final/paired-1.jsonl",
+        "line": 10,
+        "line_bytes": 553,
+        "line_sha256": "dbe507e71bb90dc827a049b61754abe0cce79e8a7a072c0c9dce9afd691706dd"
+      },
+      "input_ids": [],
+      "output_ids": [
+        5279,
+        529,
+        7001
+      ],
+      "before": {
+        "committed": 15,
+        "history": 16,
+        "pending": 1
+      },
+      "after": {
+        "committed": 18,
+        "history": 19,
+        "pending": 1
+      }
+    },
+    "o2_hidden_stop": {
+      "witness": {
+        "file": "/Users/coloner/work/rust/toklet/artifacts/o2b-gemma-workloads-2026-11-07/acceptance-final/controls.jsonl",
+        "line": 6,
+        "line_bytes": 815,
+        "line_sha256": "4fed9d249997a3a5a80e6721de71cd4bf46fc81c4de0cfaaece2d037d2bf370d"
+      },
+      "output_ids": [],
+      "after": {
+        "committed": 15,
+        "history": 16,
+        "pending": 1
+      },
+      "stop_token": 818
+    }
+  },
+  "unverified_raw_text": {
+    "text": "Paris",
+    "expected_input_ids": null,
+    "expected_output_ids": null,
+    "status": "to_derive_from_independent_codec/corpus; no earlier exact raw-Paris tokenization witness was established in this bounded audit",
+    "do_not_substitute": "The rendered15-token France prompt is not raw Paris input. Q4 Hi math and decode-only streaming fixtures do not qualify an official BF16 raw-Paris output."
+  }
+}

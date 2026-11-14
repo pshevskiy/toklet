@@ -19,30 +19,30 @@ all candidate code was reverted. [Experiment decision](lfm3-two-token-projection
 | Evidence/documentation | One report or next-command preparation | Concise actual pass/reject scope, receipts and limitations |
 | Integrator | TODO/improvements, shared API, heavy queue and publication | Earliest integrated check, one combined Astra review, retained/reverted decision, commit/push and exact-head CI |
 
-The Gemma single-row candidate passes numerical/quality gates and source4 release
-checks. Profile captures and both primary cohorts complete. An interrupted matrix
-and lost temporary worktree require recovery: all4099 source inputs and binaries
-now match exactly in persistent storage. Full canonical model hashing explicitly
-bridges a device-number-only remount; old/current actual identities remain stored.
-The source archive and independent raw primary replay preserve completed evidence.
-[Recovery](../artifacts/gemma-head-batch-2026-11-14/source-recovery/source4-restoration-1.json).
+The current mechanism is ordinary Gemma CLI request summaries. The original
+conformance attempt hit its wall deadline. Closed receipts preserve three full
+cohorts; the fresh final cohort passes in 805.87 s. A 1.15 s offline join verifies
+all 84 preparations and four-way parity while retaining the original failure.
+Source2 remains in its original persistent worktree; the final resource-header
+delta uses a separate persistent worktree. Both fresh header smokes and the
+complete frozen128-generation/80-measured overhead collection pass integrity
+checks. Three of eight original1% comparisons fail; summary stays opt-in with
+overhead unqualified. Independent raw replay agrees with all original values;
+Astra approves scoped opt-in retention with no findings; publication is next.
+[Joined controls](../artifacts/gemma-cli-metrics-2026-11-14/conformance-join-1/result.json).
 
-| Owner | Completed handoff | State |
+| Owner | Exclusive output | Next handoff |
 | --- | --- | --- |
-| Source/test owner | Sixteen exact source files recovered | Paused |
-| CLI/report owner | Four exact source files; bounded continuation and15 cold controls | Paused |
-| Benchmark/core owner | Both examples and seven Metal files recovered exactly | Paused |
-| Integrator | Persistent worktree/content archive, actual source/model/binary authentication and primary replay | Six collections terminal and clean |
+| Producer | Collector header and private Rust controls | Small patch; unchanged layout/observer invariants |
+| Independent consumer | Strict reader, synthetic fixtures/tests and metric scope | Matching wire contract with independently authored expectations |
+| Qualification preparation | Relevant-input reuse, commands and combined review packet | Exact invalidation list; fresh header smoke for both policies |
+| Integrator | Source preservation, integration, heavy queue, TODO and publication | Required checks, isolated overhead, one Astra review, push and CI |
 
-All6 measurement collections now complete and validate557 requests/431 measured;
-independent raw/statistical replay matches4720 report values. The current critical
-path is **small CLI/schema contract → parallel producer/validator/evidence →
-first integrated compile**. The submission code is pushed as `e75a9c30`; all6
-exact-head workflows/11 jobs pass. [Publication](../artifacts/gemma-head-batch-2026-11-14/publication-checks-1.json).
-Combined Astra approves
-scoped opt-in retention without actionable findings. Complete-request medians
-improve7.40/7.17%; the adverse secondary cached TTFT point stays disclosed.
-[Current scope](gemma-single-row-submission.md).
+Agree on the six header additions once. Integrate each ready patch without
+waiting for unrelated documentation. Use the first cheap compile to find API
+mismatches; freeze source only after producer and independent consumer agree.
+The critical path is **parallel edits/preparation → integrated checks/release →
+fresh header smoke → isolated overhead → combined Astra → push/CI**.
 
 Independent static preparation may overlap compilation. Before performance work,
 the integrator requires explicit **paused** acknowledgements from every active
@@ -63,6 +63,9 @@ exclusive file set, concrete output, acceptance command and stopping rule.
 Agree on shared signatures before source edits. Each handoff contains paths,
 input hashes, the next executable command and unresolved dependencies; link logs
 instead of copying them. Preparation is not successful execution.
+
+Keep the human handoff to one short page. Put machine bindings in the existing
+receipt and send only the changed facts; avoid repeated audit inventories.
 
 Reassign a finished lane to Astra when the combined diff and check results are
 ready. During review, other owners may prepare independent fixtures, commands or
@@ -88,6 +91,8 @@ add general tooling or approval rounds to occupy an available owner.
 2. Implement one mechanism with an independent oracle. Run cheap boundary,
    arithmetic, error, allocation and state controls before full-model work.
 3. Run the first integrated compile as soon as the small interface is ready.
+   Replay benchmark validators against genuine saved request and export envelopes
+   before long captures; synthetic dictionaries alone can miss wire nesting.
    Fix integration failures before collecting expensive captures.
 4. Advance to applicable full graph/state/quality and resource gates only after
    local gates pass. A failure stops dependent performance/adoption cohorts.
@@ -128,6 +133,12 @@ changes retain required fmt, strict CPU/Metal Clippy, CPU/Metal tests and affect
 model/session/device checks. New numerical inputs invalidate their downstream
 captures; unchanged model bytes do not waive a changed kernel's validation.
 
+Group queued checks by feature configuration: CPU checks/tests, then Metal
+checks/tests, then probe checks. Preserve the same commands and acceptance
+requirements while reducing feature switches. Pin the build environment and
+reuse the shared Cargo target; do not repeat a passing check solely to rename
+its receipt for a later source freeze.
+
 ## Measure the workflow
 
 Use the existing milestone receipt as one event ledger: dispatch/acknowledgement,
@@ -141,8 +152,21 @@ from the longest dependency chain and observed jobs, with numerical uncertainty
 separate. Do not sum parallel estimates or predict a workflow speedup without
 comparable completed milestones.
 
-Current review/publication preparation uses four bounded lanes: integrator,
-Astra, independent remaining-goal audit and next Gemma CLI contract. As owners
-finish, reassign them to the next contract's exclusive producer/validator/report
-files. Keep one mechanism active and one next task ready; integrate at the first
-working interface. [Current velocity plan](../artifacts/gemma-head-batch-2026-11-14/velocity-plan-1.json).
+Current conformance receipts show 24 interactive owners taking 48.67–49.25 s
+(median 48.97 s) from process spawn to externally received ready. This is a
+descriptive startup observation, including publication, rather than an isolated
+load benchmark. Repeated model starts are a concrete workflow cost.
+[Raw receipt analysis](../artifacts/gemma-cli-metrics-2026-11-14/delivery-startup-observations-1.json).
+
+For future functional controls, group compatible requests in a loaded session
+with explicit reset/state assertions. Keep separate owners where startup flags,
+process cancellation, output failure or isolation are the behavior under test.
+Do not change this milestone's frozen performance owners, warmups, sample counts
+or acceptance policy. Reuse numerical/quality/conformance checks only through
+an explicit relevant-input comparison; rerun changed header/export behavior.
+
+Keep preparation bounded to the next executable handoff. Use a single current
+status record and linked logs; do not add a runner or a second audit when the
+existing one can express the check. Route routine file-path choices directly to
+the owner without another approval round. Reserve Astra for the combined final
+diff and check results. No workflow speedup has been qualified.

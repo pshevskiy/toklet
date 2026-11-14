@@ -1,0 +1,91 @@
+{
+  "format": "toklet-gemma-cli-contract-v1",
+  "at": "2026-11-14T15:45:53.110925+00:00",
+  "base": "2063bec1111d8aae3cebec62ea358a9a65ba2d48",
+  "scope": "Ordinary official BF16/G2 Gemma generation and request metrics; full goal remains broader.",
+  "api": "src/bin/cli/gemma4.rs::run(super::Args); src/bin/cli/gemma4/summary.rs fixed typed Record/Manifest/Collector interface. Final unpublished resource additions are header-only; no Record/Manifest/Collector layout or caller API change.",
+  "flags": {
+    "model_profile": "gemma4-bf16",
+    "backend": "metal required",
+    "capacity": "default512,max512",
+    "chunk": "default32,max32",
+    "submission": "per-tile default; explicit batched-single-row uses Astra-retained constructor",
+    "request_metrics": "disabled default or summary",
+    "metrics_output": "required exactly with summary; new bounded JSONL export once after active inference ends; failure never changes inference/session result",
+    "unsupported": "tools/thinking/multimodal/checkpoint inference/kernel override flags; all old profiles retain behavior"
+  },
+  "ordinary_output": "Preserve established ready/token/done/error JSON event conventions and text/stats modes. Persistent generate/append/continue/reset, zero/one output, hidden stops, cancellation and authoritative before/after state. Token events are explicit requested user output, separate from routine telemetry.",
+  "source_constraints": "Use existing OfficialBf16 owner/model/G2 session and its one codec/response stream; never generic Assets. No numerical/source loader/shader/ABI/default change. Preserve pending UTF8 through Continue; reset only after admission; finish decoder at stop/cancel.",
+  "metrics": {
+    "schema_version": 1,
+    "export_events": [
+      "request_metrics_manifest",
+      "request_summary",
+      "request_metrics_export"
+    ],
+    "record_fields": "Fixed Rust types in summary.rs. Manifest attaches immutable route identity once; external capture manifest supplies exact source/build/runtime/model-content pins; unsupported provenance must be explicit. Header/footer are required for complete export.",
+    "ids": "One bounded <=64-byte process/session ID with PID plus creation epoch; monotonically checked request/attempt IDs assigned before handled request validation; owner generation tracks admitted reset/replay semantics. No raw prompt/output/token arrays in routine records.",
+    "timing_units": "Milliseconds in summaries, completed Report seconds multiplied by1000. Request begins at handled invocation before formatting/tokenization; ends after synchronous content publication. Declare that metadata serialization/export is outside this inner clock; matched overhead uses external submit-to-terminal event round trip including collector work. No UI/render claims from stdout.",
+    "work": "Report fields only for completed Report; error snapshots are authoritative but completed phases/counts unavailable. callback_tokens counts observed callback entries and is distinct from completed Report.emitted_tokens. N<=1/nonpositive interval -> null rates. No inferred KV work from observed callbacks.",
+    "availability": "Serialize explicit nulls and fixed reasons for missing ordinary GPU/host/wait/readback/pipeline/allocation/process-footprint/UI/energy data. Never substitute predicted inventory or diagnostic counters. Missing core phases on error are null, not0. Preserve stop semantics and cancellation acknowledgment scope.",
+    "limits": {
+      "collector_bytes": 16384,
+      "ring_bytes": 1048576,
+      "serialized_record_bytes": 4096
+    },
+    "collection": "Disabled allocates no ring. Fixed bounded serialization and circular retained records, checked/saturating explicit overflow/drop counters, ring wrap controls. At most4KiB per summary/header/footer and <=1MiB owned retention. Telemetry failure/drop never changes inference.",
+    "export": "Only after ordinary active inference ends, not per-token nor routine synchronous disk IO. create_new file avoids overwrite/symlink/FIFO hangs; explicit stdout token stream unaffected. Export_to supports failure controls. Footer gives retained/dropped/invalid/export-error counters; incomplete file/footer is not success.",
+    "collector_resources": "Manifest reports actual fixed Rust Collector layout, retained Vec ring capacity and their sum as invariant logical post-construction collector_peak_bytes, with exact exclusion scope. telemetry_admitted_bytes is the existing allowance, not an additional allocation. No sampled RSS/process or temporary constructor/export peak claim.",
+    "cancellation_availability": "cancel_to_terminal_ms remains null; fixed header reason signal_timestamp_not_observed; cancellation_outcome_and_state_do_not_measure_signal_to_ack_latency. Numeric invented latency is rejected."
+  },
+  "memory": "6GiB including32MiB helper. Reserve128MiB application +4MiB stream + active telemetry allowance before owner load. Codec1GiB counted once in owner reserve. Whole load=owner.load_admitted+external; session=session.memory.admitted+owner.session_reserved+external. Checked arithmetic; distinguish admission vs sampled footprint.",
+  "lanes": {
+    "root": [
+      "src/bin/cli/mod.rs",
+      "TODO.md",
+      "docs/improvements.md",
+      "docs/gemma-cli.md",
+      "benchmarks/gemma-cli-v1/contract.json"
+    ],
+    "producer": [
+      "src/bin/cli/gemma4.rs"
+    ],
+    "collector": [
+      "src/bin/cli/gemma4/summary.rs"
+    ],
+    "validator": [
+      "tests/cli_gemma4.rs",
+      "tests/fixtures/gemma-cli-v1/",
+      "tools/bench/gemma_cli_report.py",
+      "tools/bench/test_gemma_cli_report.py"
+    ]
+  },
+  "first_gate": "Root runs locked offline bin check CPU then Metal as soon as producer/collector interfaces compile; no model work before cheap controls. Only root starts compilers/tests/models; all lanes pause with acknowledgment during acceptance timings.",
+  "checks": "Required fmt and strict CPU/Metal all-target Clippy; relevant changed CLI/collector/reader controls; exact reuse map for unchanged library/GPU/numerical/quality inputs. Explicit real CLI state/text/stop/cancel/error parity before original3warm+10paired overhead and independent confirmation. Keep source/binary/model/runtime receipts; no gate/tolerance/N rescue.",
+  "review": "One combined Astra with diff/invariants/all checks and evidence before commit/push; default/adoption/performance qualification only to proved scope.",
+  "interface_pins": {
+    "src/bin/cli/gemma4/summary.rs": "ff779c89811912f01cd851a98f6d3a371955e25fa76eafa8025caaf5fc31f501",
+    "src/bin/cli/mod.rs": "cf789ad451209f4121ec5a7db2cb7674c1af676457523b16a2496332cef02c94"
+  },
+  "interface_updates": [
+    {
+      "at": "2026-11-14T15:50:59.969377+00:00",
+      "method": "Collector::correct_last_terminal(&Record)",
+      "invariant": "Only replace most-recent matching request/attempt/session; no new record or count drift. Correct terminal metadata output failure to OutputError without losing successful completed core fields. Inference unchanged by telemetry. All owners informed."
+    },
+    {
+      "method": "Manifest.logical_memory: toklet::session::Memory",
+      "invariant": "Attach full numerical logical memory once, including positional/PLE and metadata; check component sum and whole-admission residual, not additive duplicate totals. owner_generation stays1 for immutable owner lifetime."
+    },
+    {
+      "at": "2026-11-14T16:19:45.071459+00:00",
+      "method": "Terminal correction replay flag",
+      "invariant": "OutputError correction may set replay_required false->true or retain true; cannot clear it or mutate other payload/counters."
+    },
+    {
+      "method": "Work logical prompt and overflow reporting",
+      "invariant": "prompt_tokens is RequestAdmission.history_after_input_tokens, including reused history for Append/Continue. replayed_rows counts completed prefill overlapping prior committed positions; never infer from callbacks. Collector::note_counter_overflow marks unassignable attempt IDs before refusal and state mutation."
+    }
+  ],
+  "qualification_delta": "Source2 84-case conformance and its strict reader stay at original persistent paths. Final header-only delta gets affected checks, fresh source/binary pins, both-policy real header/export smoke and original frozen overhead; unchanged numerical/quality/state evidence is reused only through relevant-input comparison."
+}

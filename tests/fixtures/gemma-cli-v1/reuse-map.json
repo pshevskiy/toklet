@@ -1,0 +1,29 @@
+{
+  "format": "toklet-gemma-cli-reuse-preparation-v1",
+  "verified": false,
+  "base": "2063bec1111d8aae3cebec62ea358a9a65ba2d48",
+  "candidate_changes": [
+    "src/bin/cli/mod.rs",
+    "src/bin/cli/gemma4.rs",
+    "src/bin/cli/gemma4/summary.rs",
+    "tests/cli_gemma4.rs",
+    "tests/fixtures/gemma-cli-v1/",
+    "tools/bench/gemma_cli_report.py",
+    "tools/bench/test_gemma_cli_report.py",
+    "benchmarks/gemma-cli-v1/contract.json"
+  ],
+  "required_fresh": [
+    "fmt",
+    "strict CPU/Metal all-target Clippy",
+    "portable Rust CLI/collector controls",
+    "reader normal/-O controls",
+    "actual ordinary CLI source/codec/admission/text/state/stop/cancel/output/export controls",
+    "matched external submit-to-terminal3warm+10paired overhead and independent confirmation with frozen original1percent policy"
+  ],
+  "conditional_reuse": {
+    "source": "artifacts/gemma-head-batch-2026-11-14/graph-source-freeze-4.json",
+    "checks": "artifacts/gemma-head-batch-2026-11-14/checks-final-1.json",
+    "quality": "artifacts/gemma-head-batch-2026-11-14/quality-model-decision-1.json",
+    "rule": "Root must compare exact relevant library,numerical/shader/model-fixture,dependency,artifact and runtime inputs. Unchanged numerical10k-loss/100-task and kernel/state evidence may be reused only under that proof. CLI/wrapper/metrics clocks are changed and need fresh evidence. No default/UI/iPhone/new-artifact qualification."
+  }
+}

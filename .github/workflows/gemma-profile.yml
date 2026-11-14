@@ -22,3 +22,7 @@ jobs:
         run: python3 tools/bench/test_gemma_submission_report.py
       - name: Validate submission reports with Python assertions disabled
         run: python3 -O tools/bench/test_gemma_submission_report.py
+      - name: Validate ordinary CLI request summaries
+        run: python3 -B tools/bench/test_gemma_cli_report.py
+      - name: Validate CLI request summaries with Python assertions disabled
+        run: python3 -O -B tools/bench/test_gemma_cli_report.py

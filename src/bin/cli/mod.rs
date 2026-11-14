@@ -1,4 +1,5 @@
 mod chat;
+mod gemma4;
 mod inspect;
 mod plan;
 mod profile;
@@ -40,7 +41,10 @@ Usage: toklet [OPTIONS]
        toklet profile --help
 
   --model PATH              Local model directory
-  --model-profile PROFILE   qwen (default), lfm3-bf16, ministral3-diagnostic, qwen35-2b-diagnostic
+  --model-profile PROFILE   qwen (default), gemma4-bf16, lfm3-bf16, ministral3-diagnostic, qwen35-2b-diagnostic
+  --submission MODE         Gemma only: per-tile (default), batched-single-row
+  --request-metrics MODE    Gemma only: disabled (default), summary
+  --metrics-output PATH     Explicit summary JSONL export after inference
   --artifact-manifest PATH  Explicit2B child manifest (diagnostic profile only)
   --artifact-manifest-sha256 SHA  Caller-selected manifest SHA256 (64 lower hex)
   --prompt TEXT             Chat-formatted user prompt
@@ -68,6 +72,8 @@ Usage: toklet [OPTIONS]
 Generation is greedy without penalties. Text requires local tokenizer assets.
 Ministral3 diagnostic uses Metal mlx-affine/reference, token IDs and JSON only;
 its default capacity is 128 and its maximum capacity is 512.
+Gemma BF16 uses the official Metal route, capacity512/chunk32 at most;
+request metrics default to disabled and explicit summary export runs after inference.
 Qwen3.5-2B diagnostic uses GPU projections with CPU FP32 state, token IDs and
 JSON only; default capacity128/chunk32, maximum capacity512/chunk32.
 Interactive actions: generate, append (raw text or IDs), continue, reset.
@@ -75,6 +81,7 @@ Ctrl-C cancels between backend chunks/steps; idle interactive Ctrl-C exits.";
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum ModelProfile {
     Qwen,
+    Gemma4Bf16,
     Lfm3Bf16,
     Ministral3Diagnostic,
     Qwen35TwoBDiagnostic,
@@ -82,6 +89,9 @@ enum ModelProfile {
 struct Args {
     model: PathBuf,
     model_profile: ModelProfile,
+    submission: &'static str,
+    request_metrics: bool,
+    metrics_output: Option<PathBuf>,
     prompt: Option<String>,
     messages: Option<PathBuf>,
     tools: Option<PathBuf>,
@@ -117,6 +127,9 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
     let mut a = Args {
         model: PathBuf::new(),
         model_profile: ModelProfile::Qwen,
+        submission: "per-tile",
+        request_metrics: false,
+        metrics_output: None,
         prompt: None,
         messages: None,
         tools: None,
@@ -180,16 +193,36 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
             "--artifact-manifest-sha256" => {
                 a.artifact_manifest_sha256 = Some(qwen35_2b::sha256(&utf8(value()?)?)?);
             }
+            "--submission" => {
+                a.submission = match utf8(value()?)?.as_str() {
+                    "per-tile" => "per-tile",
+                    "batched-single-row" => "batched-single-row",
+                    _ => {
+                        return Err(invalid(
+                            "--submission must be per-tile or batched-single-row",
+                        ));
+                    }
+                };
+            }
+            "--request-metrics" => {
+                a.request_metrics = match utf8(value()?)?.as_str() {
+                    "disabled" => false,
+                    "summary" => true,
+                    _ => return Err(invalid("--request-metrics must be disabled or summary")),
+                };
+            }
+            "--metrics-output" => a.metrics_output = Some(value()?.into()),
             "--model" => a.model = value()?.into(),
             "--model-profile" => {
                 a.model_profile = match utf8(value()?)?.as_str() {
                     "qwen" => ModelProfile::Qwen,
+                    "gemma4-bf16" => ModelProfile::Gemma4Bf16,
                     "lfm3-bf16" => ModelProfile::Lfm3Bf16,
                     "ministral3-diagnostic" => ModelProfile::Ministral3Diagnostic,
                     "qwen35-2b-diagnostic" => ModelProfile::Qwen35TwoBDiagnostic,
                     _ => {
                         return Err(invalid(
-                            "model profile must be qwen, lfm3-bf16, ministral3-diagnostic or qwen35-2b-diagnostic",
+                            "model profile must be qwen, gemma4-bf16, lfm3-bf16, ministral3-diagnostic or qwen35-2b-diagnostic",
                         ));
                     }
                 };
@@ -230,6 +263,42 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
             "--no-eos" => a.no_eos = true,
             _ => return Err(invalid(format!("unexpected argument {flag}"))),
         }
+    }
+    if a.model_profile == ModelProfile::Gemma4Bf16 {
+        if a.backend != "metal"
+            || a.tools.is_some()
+            || a.q4_weights.is_some()
+            || seen.contains("--cpu-projection")
+            || seen.contains("--metal-projection")
+            || seen.contains("--metal-attention")
+        {
+            return Err(invalid(
+                "Gemma BF16 requires Metal with its fixed official G2 route; tools and kernel overrides are unsupported",
+            ));
+        }
+        if !seen.contains("--context-capacity") {
+            a.capacity = 512;
+        }
+        if !seen.contains("--prefill-chunk") {
+            a.chunk = 32;
+        }
+        if a.capacity > 512 || a.chunk > 32 || a.max > a.capacity {
+            return Err(invalid(
+                "Gemma BF16 supports capacity512/chunk32 at most; output must fit capacity",
+            ));
+        }
+        if a.request_metrics != a.metrics_output.is_some() {
+            return Err(invalid(
+                "Gemma summary metrics require --request-metrics summary and --metrics-output together",
+            ));
+        }
+    } else if seen.contains("--submission")
+        || seen.contains("--request-metrics")
+        || seen.contains("--metrics-output")
+    {
+        return Err(invalid(
+            "submission and request metrics flags require gemma4-bf16",
+        ));
     }
     if a.model_profile == ModelProfile::Lfm3Bf16 {
         if a.backend != "cpu" || seen.contains("--cpu-projection") || a.tools.is_some() {
@@ -448,7 +517,9 @@ impl Frontend {
                 }
                 toklet::app_chat::lfm3::render(messages)
             }
-            ModelProfile::Ministral3Diagnostic | ModelProfile::Qwen35TwoBDiagnostic => {
+            ModelProfile::Gemma4Bf16
+            | ModelProfile::Ministral3Diagnostic
+            | ModelProfile::Qwen35TwoBDiagnostic => {
                 Err(invalid("Diagnostic profile accepts only token IDs"))
             }
         }
@@ -700,6 +771,9 @@ fn array_file(path: &std::path::Path) -> io::Result<Vec<Value>> {
         .ok_or_else(|| invalid("expected a JSON array"))
 }
 fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
+    if a.model_profile == ModelProfile::Gemma4Bf16 {
+        return gemma4::run(a);
+    }
     ctrlc::try_set_handler(|| CANCELLED.store(true, Ordering::Relaxed))?;
     let lfm3 = a.model_profile == ModelProfile::Lfm3Bf16;
     let ministral3 = a.model_profile == ModelProfile::Ministral3Diagnostic;
@@ -1147,7 +1221,10 @@ pub fn main() -> u8 {
     let a = match parse(a) {
         Ok(a) => a,
         Err(e) => {
-            eprintln!("error: {e}\nUse 'toklet --help' for usage.");
+            let _ = writeln!(
+                io::stderr().lock(),
+                "error: {e}\nUse 'toklet --help' for usage."
+            );
             return 2;
         }
     };
@@ -1164,7 +1241,7 @@ pub fn main() -> u8 {
             0
         }
         Err(e) => {
-            eprintln!("error: {e}");
+            let _ = writeln!(io::stderr().lock(), "error: {e}");
             1
         }
     }
