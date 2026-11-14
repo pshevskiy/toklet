@@ -739,8 +739,8 @@ UI/iPhone/larger contexts remain unqualified. [Scope](gemma-single-row-submissio
 [independent replay](../artifacts/gemma-head-batch-2026-11-14/independent-submission-replay-1.json).
 
 Ordinary Gemma CLI/metrics is implemented in an isolated persistent worktree;
-Astra approves scoped functional retention with no findings; publication remains
-pending. Defaults stay per-tile/disabled. One official
+Astra approves scoped functional retention with no findings; code is published as
+`4f2e6236`,with all6 exact-head workflows/11 jobs green. Defaults stay per-tile/disabled. One official
 BF16 owner/codec/G2 session supports generation, cache/reset, cancellation and
 output failure, with bounded summaries/export and explicit unavailable probes.
 Logical collector fixed/ring/peak storage is9,000/1,032,192/1,041,192 bytes,
@@ -762,8 +762,8 @@ and their runner/power failures stay evidence; noN/gate/exclusion rescue occurs.
 Independent raw replay passes with zero discrepancies across128 generations,
 128 resets,eight exports and all original statistics; within-arm drift is
 descriptive, with no causal attribution or sample exclusion. Astra independently
-reproduces all eight gate results and approves scope,with no findings; commit/
-push and CI remain pending.
+reproduces all eight gate results and approves scope,with no findings. Committed
+source mapping verifies all4,116 measured inputs. [Publication](../artifacts/gemma-cli-metrics-2026-11-14/code-publication-1.json).
 [Measurements and gate table](gemma-cli.md#fixed-overhead-measurement),
 [capture](../artifacts/gemma-cli-metrics-2026-11-14/cli-overhead-3/result.json).
 

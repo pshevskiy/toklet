@@ -28,7 +28,9 @@ delta uses a separate persistent worktree. Both fresh header smokes and the
 complete frozen128-generation/80-measured overhead collection pass integrity
 checks. Three of eight original1% comparisons fail; summary stays opt-in with
 overhead unqualified. Independent raw replay agrees with all original values;
-Astra approves scoped opt-in retention with no findings; publication is next.
+Astra approves scoped opt-in retention with no findings. Code is published as
+`4f2e6236`; all6 exact-head workflows/11 jobs pass. R1 ordinary-CLI regression
+admission/comparison is the next slice.
 [Joined controls](../artifacts/gemma-cli-metrics-2026-11-14/conformance-join-1/result.json).
 
 | Owner | Exclusive output | Next handoff |

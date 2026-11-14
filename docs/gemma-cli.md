@@ -7,8 +7,10 @@ revision passes required checks and both fresh header/export smokes. The complet
 fixed overhead campaign passes collection/integrity checks; three of eight
 predeclared timing comparisons miss the1% gate. Summary remains disabled by
 default and explicitly opt-in, with overhead unqualified. Independent raw replay agrees with every captured value and statistic. Astra
-approves scoped functional retention with no actionable findings. Commit/push
-and exact-head CI remain pending; broader performance/adoption stays unqualified.
+approves scoped functional retention with no actionable findings. Code commit
+`4f2e6236` is pushed; all6 exact-head workflows/11 jobs pass and all4,116 committed
+source inputs match the measured freeze. Broader performance/adoption remains
+unqualified.
 
 The explicit `gemma4-bf16` profile uses the existing official
 `google/gemma-4-E2B-it` BF16 owner at revision
@@ -184,3 +186,5 @@ warmup, with clean cleanup. The fresh complete campaign uses the originalN/order
 [Independent raw/statistical replay](../artifacts/gemma-cli-metrics-2026-11-14/independent-overhead-replay-1.json).
 
 [Combined Astra review](../artifacts/gemma-cli-metrics-2026-11-14/astra-review-1/verdict.json).
+
+[Code publication and exact-head CI](../artifacts/gemma-cli-metrics-2026-11-14/code-publication-1.json).
