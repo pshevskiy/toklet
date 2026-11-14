@@ -129,7 +129,9 @@ helper's initial inventory error is retained with its corrected passing result.
 Astra requested owner-local power freshness, malformed-input receipts and
 bounded initial metadata reads. Six independent methods demonstrated the old
 gaps, then passed after the fixes in both modes. Astra approves scoped retention
-with no remaining findings; publication and exact-head CI remain pending.
+with no remaining findings. Code is published as `ae984fda`; the
+[live publication receipt](../artifacts/gemma-cli-regression-2026-11-15/publication-status.json)
+tracks the final head and exact-head CI result.
 [Astra approval](../artifacts/gemma-cli-regression-2026-11-15/astra-review-1/verdict-2.json).
 [Portable checks](../artifacts/gemma-cli-regression-2026-11-15/affected-checks-2.json),
 [CLI controls](../artifacts/gemma-cli-regression-2026-11-15/cli-controls-2/result.json),

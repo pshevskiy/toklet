@@ -782,7 +782,9 @@ model reads or child launches. Eight CLI controls and required-check reuse pass;
 the initial verification-helper inventory error is retained and corrected.
 Three Astra boundary findings are fixed and covered by six new regression
 methods, first demonstrated against the old code. Fresh checks pass; Astra
-approves scoped retention with no remaining findings. Publication remains pending.
+approves scoped retention with no remaining findings. Code is published as
+`ae984fda`; the [live publication receipt](../artifacts/gemma-cli-regression-2026-11-15/publication-status.json)
+tracks the final head and exact-head CI result.
 [Astra approval](../artifacts/gemma-cli-regression-2026-11-15/astra-review-1/verdict-2.json). Baseline admission establishes
 no optimization or observer gate.
 [Contract](../artifacts/gemma-cli-regression-2026-11-15/implementation-contract-1.json),
