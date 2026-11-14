@@ -133,7 +133,9 @@ Astra approves retention of this explicit BF16/G2 single-row route on the named
 host and admitted workloads, with no actionable or blocking findings. The review
 covers the combined diff, invariants, checks, evidence and recovery bridge.
 [Review](../artifacts/gemma-head-batch-2026-11-14/astra-review-1/verdict.json).
-Commit/push and exact-head CI follow. Default summary overhead remains
+Code is published as `e75a9c30`; all6 exact-head CI workflows/11 jobs pass.
+[Publication/CI](../artifacts/gemma-head-batch-2026-11-14/publication-checks-1.json).
+Default summary overhead remains
 unqualified/disabled or opt-in; no UI, tail, energy, larger-context, other-model
 or iPhone qualification is transferred.
 

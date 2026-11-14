@@ -36,7 +36,10 @@ The source archive and independent raw primary replay preserve completed evidenc
 
 All6 measurement collections now complete and validate557 requests/431 measured;
 independent raw/statistical replay matches4720 report values. The current critical
-path is **approved diff → commit/push → exact-head CI**. Combined Astra approves
+path is **small CLI/schema contract → parallel producer/validator/evidence →
+first integrated compile**. The submission code is pushed as `e75a9c30`; all6
+exact-head workflows/11 jobs pass. [Publication](../artifacts/gemma-head-batch-2026-11-14/publication-checks-1.json).
+Combined Astra approves
 scoped opt-in retention without actionable findings. Complete-request medians
 improve7.40/7.17%; the adverse secondary cached TTFT point stays disclosed.
 [Current scope](gemma-single-row-submission.md).

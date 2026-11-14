@@ -731,7 +731,8 @@ full canonical model hashes authenticate only a device-number remount. Completed
 primaries replay;178 interrupted matrix requests and failed report/path/adapter
 attempts stay retained/unqualified. Default per-tile/native behavior and disabled/
 opt-in summaries persist. Combined [Astra review](../artifacts/gemma-head-batch-2026-11-14/astra-review-1/verdict.json)
-passes; commit/push/CI remain pending;
+passes; code `e75a9c30` is pushed with all6 exact-head workflows/11 jobs passing.
+[Publication/CI](../artifacts/gemma-head-batch-2026-11-14/publication-checks-1.json);
 UI/iPhone/larger contexts remain unqualified. [Scope](gemma-single-row-submission.md),
 [checks](../artifacts/gemma-head-batch-2026-11-14/checks-final-1.json),
 [report](../artifacts/gemma-head-batch-2026-11-14/actual-submission-report-2/report.md),

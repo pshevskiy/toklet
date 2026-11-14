@@ -7,33 +7,37 @@ history is in the [dated archive](docs/archive/2026-11-12/README.md).
 
 ## Current and next task
 
-Current task: **publish the Astra-approved Gemma single-row submission**.
-- [x] Required fmt, strict CPU/Metal/probe Clippy, CPU816/Metal976 and affected
-  state/GPU/legacy controls pass or retain exact relevant-input reuse. Optimized
-  allocations are zero;45,000,704 numerical values,full10k loss and100 tasks pass
-  unchanged gates. [Checks](artifacts/gemma-head-batch-2026-11-14/checks-final-1.json),
-  [quality](artifacts/gemma-head-batch-2026-11-14/quality-model-decision-1.json).
-- [x] All6 ordinary collections validate557 requests/431 measured. Complete caller
-  medians improve7.4005/7.1650%; paired95%lower6.9263/6.9062% exceed5%. All20
-  total-clock comparisons improve; both600s sustained arms pass,peak4.820GB.
-  Independent replay reproduces4720 comparisons/zero discrepancies. Cached TTFT
-  +2.313microseconds remains disclosed,CIincludes0; no new threshold or samples.
-  [Scope/results](docs/gemma-single-row-submission.md),
-  [replay](artifacts/gemma-head-batch-2026-11-14/independent-submission-replay-1.json).
-- [x] Combined Astra approves scoped opt-in retention, no actionable/blocking
-  findings; exact4099-source/binary recovery and device-number-only content bridge
-  are accepted within recorded limits. All178 interrupted requests stay excluded.
-  [Review](artifacts/gemma-head-batch-2026-11-14/astra-review-1/verdict.json).
-- [ ] Commit/push the approved change and verify exact-head CI. Defaults remain
-  per-tile; summary/UI/iPhone/larger-context adoption stays unqualified.
+Current task: **ordinary official Gemma engine/CLI generation and request metrics**.
+- [x] Independent preparation identifies the existing qualified owner/codec/G2
+  session, bounded512/32 admission, clock meanings, missing metrics and exclusive
+  producer/validator/evidence files. Reuse the owner's codec once.
+  [Next-task contract](artifacts/gemma-head-batch-2026-11-14/velocity-next-cli-contract-1.json).
+- [ ] Freeze the small CLI/schema interface, dispatch independent implementation
+  and validation, and run the first CPU/Metal compile before model work. Keep
+  one mechanism active and one heavy queue; pause preparation during timing.
+- [ ] Complete affected required checks and bounded CLI/summary measurements;
+  resolve one combined Astra review, then commit/push and record exact-head CI.
 
-Next: ordinary official Gemma engine/CLI generation and request metrics using
-existing qualified owners/codec/session. Independent contract preparation overlaps
-publication; one heavy queue remains. [Velocity plan](artifacts/gemma-head-batch-2026-11-14/velocity-plan-1.json),
-[remaining-goal audit](artifacts/gemma-head-batch-2026-11-14/remaining-goal-audit-2.json),
-[delivery policy](docs/parallel-delivery.md). Whole improvement goal remains active.
+The Gemma submission milestone below is published. Closed numerical searches
+stay closed; UI/screenshare and iPhone remain user-deferred. The whole improvement
+objective remains active. [Requirement audit](artifacts/gemma-head-batch-2026-11-14/remaining-goal-audit-2.json),
+[velocity plan](artifacts/gemma-head-batch-2026-11-14/velocity-plan-1.json),
+[delivery policy](docs/parallel-delivery.md).
 
 ## Recent completed milestones
+
+- [x] Gemma opt-in single-row submission: required checks, exact relevant-input
+  reuse,45,000,704 numerical values,full10k loss/100-task quality and optimized
+  zero allocations pass. All6 collections validate557 requests/431 measured;
+  complete caller medians improve7.4005/7.1650%,both paired95%lower bounds exceed5%.
+  Both600s sustained arms pass,peak4.820GB. Independent replay matches4720 values.
+  Cached TTFT+2.313microseconds stays disclosed; no threshold/samples change.
+  Astra approves scoped retention,no findings. Code published as `e75a9c30`;
+  all6 exact-head workflows/11 jobs pass. Defaults stay per-tile and other
+  adoption/overhead/device gates stay unqualified. Source/recovery failures and
+  all178 excluded partial requests remain evidence.
+  [Scope](docs/gemma-single-row-submission.md),
+  [checks/review/publication](artifacts/gemma-head-batch-2026-11-14/publication-checks-1.json).
 
 - [x] S1.L external request observations: scoped publication of all
   four fresh Ollama/vLLM 3+10 cohorts and both frozen CPU baseline cohorts.
