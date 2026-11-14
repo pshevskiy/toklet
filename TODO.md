@@ -8,23 +8,40 @@ history is in the [dated archive](docs/archive/2026-11-12/README.md).
 ## Current and next task
 
 Current task: **R1 ordinary Gemma CLI regression admission/comparison and portable CI**.
-- [ ] Freeze the bounded input/statistics contract after the published G17 baseline.
+- [x] Freeze the bounded input/statistics contract after the published G17 baseline.
   A/B in G17 mean instrumentation disabled/summary,not engine variants. Preserve
   selected policy,disabled mode,raw clocks,exact work/cache/state,source/build/
   model/tokenizer identity and complete owner blocks. Independent revisions/runs
-  must not be falsely paired or allowed to confirm themselves.
-- [ ] Implement a sibling384/128 CLI adapter/comparator with independent fixtures
-  and normal/-O portable CI. Reuse the existing5% screen/status policy while
-  keeping legacy Chat API/data/math unchanged. Predeclare whole-owner resampling
-  for the new multiowner format; no G17 observer-gate reinterpretation or new
-  model campaign. [Contract](artifacts/gemma-cli-metrics-2026-11-14/r1-cli-regression-contract-1.json).
-- [ ] Run meaningful portable controls and real sealed-baseline admission; obtain
-  one combined Astra review before commit/push and exact-head CI. G17 alone is
+  must not be falsely paired or allowed to confirm themselves. Published baseline
+  uses actual4f2e6236 proof; a frozen uncommitted candidate uses base/diff/content/
+  build/check identities and a null commit until later publication.
+  [Implementation contract](artifacts/gemma-cli-regression-2026-11-15/implementation-contract-1.json),
+  [API schema](artifacts/gemma-cli-regression-2026-11-15/api-schema-1.json).
+- [x] Complete the 384/128 CLI adapter/comparator with independent fixtures and
+  normal/-O portable CI. Implementation and all 28 new controls pass in both
+  modes; all nine legacy controls pass with their arithmetic unchanged. The
+  new format preserves whole-owner resampling and the existing 5% screen.
+  Both real G17 policies admit two cohorts/four disabled owners each without
+  model reads or child launches. Eight CLI controls and required-check reuse
+  pass; an initial verification-helper inventory error is retained and corrected.
+  Named two-mode CI is wired. All three Astra findings are fixed: owner-local power freshness,
+  malformed-input receipts and bounded initial metadata reads. Six new methods
+  first reproduced the old gaps; all 28 controls now pass in both modes, as do
+  fresh CLI checks and both real admissions. Astra approves scoped retention with no
+  remaining findings; commit/push and exact-head CI are next.
+  [Astra approval](artifacts/gemma-cli-regression-2026-11-15/astra-review-1/verdict-2.json).
+  [Portable checks](artifacts/gemma-cli-regression-2026-11-15/affected-checks-2.json),
+  [real admission](artifacts/gemma-cli-regression-2026-11-15/real-baseline-admission-2.json),
+  [CLI controls](artifacts/gemma-cli-regression-2026-11-15/cli-controls-2/result.json),
+  [required-check reuse](artifacts/gemma-cli-regression-2026-11-15/required-reuse-2.json),
+  [Legacy controls](artifacts/gemma-cli-regression-2026-11-15/legacy-policy-controls-1.json),
+  [revised contract](artifacts/gemma-cli-metrics-2026-11-14/r1-cli-regression-contract-2.json).
+- [ ] Commit/push the Astra-approved slice and verify exact-head CI. G17 alone is
   descriptive baseline evidence,not a candidate comparison or accepted speedup.
 
 The whole improvement objective remains active. The approved G17 code commit
-`4f2e6236` is pushed with all6 exact-head workflows/11 jobs green. A status-only
-publication record follows; its own remote checks remain pending. Closed
+`4f2e6236` and status-only follow-up `53e00e70` are pushed; each exact head has
+all6 workflows/11 jobs green. Closed
 numerical searches stay closed; UI/screenshare and iPhone remain user-deferred;
 larger models stay research-only. [Publication](artifacts/gemma-cli-metrics-2026-11-14/code-publication-1.json),
 [remaining-goal audit](artifacts/gemma-cli-metrics-2026-11-14/remaining-goal-audit-4.json).

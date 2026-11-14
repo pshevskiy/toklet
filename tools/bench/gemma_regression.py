@@ -16,6 +16,31 @@ from request_cost_report import digest, parse, read_bounded, report_bundle, requ
 DRIVERS = ('tools/experiments/o1_gemma_summary.py','apple/tests/swift/RequestSummaryMain.swift')
 FILES = ('result.json', 'samples-1.json', 'samples-1.json.summaries.jsonl',
          'samples-2.json', 'samples-2.json.summaries.jsonl')
+SCREENING_THRESHOLD_PCT = 5
+
+
+def classify_metric(change_pct, interval):
+    """Apply the existing screen to a validated change and uncertainty interval.
+
+    Callers retain their own sampling unit: legacy Chat uses independent request
+    samples; the ordinary CLI adapter preserves complete process-owner blocks.
+    """
+    threshold = SCREENING_THRESHOLD_PCT
+    return 'regression' if change_pct >= threshold and interval[0] > 0 else (
+        'speed_signal' if change_pct <= -threshold and interval[1] < 0 else (
+            'noisy' if abs(change_pct) >= threshold
+            or (interval[0] <= -threshold and interval[1] >= threshold)
+            else 'within_threshold'))
+
+
+def classify_comparison(all_metric_states, primary_states):
+    """Preserve the existing regression and independent-confirmation policy."""
+    if 'regression' in all_metric_states:
+        return 'regression'
+    if 'noisy' in all_metric_states or (
+            'speed_signal' in primary_states and len(set(primary_states)) != 1):
+        return 'noisy'
+    return 'pass'
 
 
 def bundle(folder):
@@ -83,9 +108,7 @@ def compare(baseline_folder, candidate_folder, baseline_commit, candidate_commit
             interval = bootstrap_difference(before,after)
             # Five percent is the existing screening threshold. Ten samples can
             # only screen this fixed request; they do not establish tail or 1% gates.
-            state = 'regression' if median_change >= 5 and interval[0] > 0 else (
-                'speed_signal' if median_change <= -5 and interval[1] < 0 else (
-                    'noisy' if abs(median_change) >= 5 or (interval[0] <= -5 and interval[1] >= 5) else 'within_threshold'))
+            state = classify_metric(median_change, interval)
             metrics[metric] = dict(baseline_median=statistics.median(before),candidate_median=statistics.median(after),
                 change_pct=median_change,independent_bootstrap_95_pct=interval,status=state,
                 baseline_range=[min(before),max(before)],candidate_range=[min(after),max(after)])
@@ -94,14 +117,9 @@ def compare(baseline_folder, candidate_folder, baseline_commit, candidate_commit
     # A regression in either confirmation batch is actionable; inconsistent
     # direction is noisy, never an accepted improvement.
     total_states = [b['metrics']['total_ms']['status'] for b in batches]
-    if 'regression' in states:
-        status = 'regression'
-    elif 'noisy' in states or ('speed_signal' in total_states and len(set(total_states)) != 1):
-        status = 'noisy'
-    else:
-        status = 'pass'
+    status = classify_comparison(states, total_states)
     return dict(format='toklet-gemma-regression-v1',status=status,primary_metric='disabled_mode_caller_total_ms',
-        screening_threshold_pct=5,baseline_commit=baseline_commit,candidate_commit=candidate_commit,
+        screening_threshold_pct=SCREENING_THRESHOLD_PCT,baseline_commit=baseline_commit,candidate_commit=candidate_commit,
         baseline_bundle_sha256=bh,candidate_bundle_sha256=ch,
         baseline_measurements_sha256=bmh,candidate_measurements_sha256=cmh,
         baseline_build=bm['build_id'],candidate_build=cm['build_id'],model=br['model'],hardware=bm['hardware'],os=bm['os'],

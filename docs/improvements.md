@@ -594,7 +594,7 @@ Mac ceiling, 512/32 pilot and 512 MiB codec budget stay fixed; iPhone is deferre
 | 9B context17 | Both 33.85M-value gates, partitions, nonzero-prefix failure/repair/retry and zero-allocation checks pass. Release medians 4.093/4.121s are descriptive; no overhead, request, tail, sustained or adoption claim. | [Context17](qwen35-9b-context17.md), `41287c6c` |
 | Exact recurrence reference | All 67.17M short-context FP32/FP64 values match scalar references bitwise. Two cohorts lower helper step time 60.02/60.25% FP64 and 95.55/95.23% FP32. No engine/deeper-context gain follows. | [Reference helper](qwen35-reference-vector.md), `88950b11` |
 | LFM3 CPU BF16 | Authenticated graph/CLI, 1,025-position parity, both complete original quality comparisons and 62 state checks pass; finite widening retained after matched request measurements and Astra approval. Managed/GPU adoption stays open. | [Scope and decision](lfm3-finite-widening.md) |
-| Remaining under-4B qualification | Metadata is pinned; Granite, Ministral and Qwen3.5-2B still need payload/graph/quality/fit/request qualification. MiniCPM5's numerical rejection and LFM3's scoped CPU results remain explicit. | [Candidates and receipts](model-observability-plan.md#five-candidates-strictly-below-4b-total-parameters) |
+| Remaining under-4B qualification | MiniCPM5, converted Granite/Ministral and Qwen3.5-2B routes retain their numerical rejections. Payload/conversion/diagnostic results have advanced beyond metadata; downstream quality, fit, request and adoption gates remain unqualified where blocked. LFM3 retains its separate qualified CPU scope. | [Candidates and receipts](model-observability-plan.md#five-candidates-strictly-below-4b-total-parameters) |
 
 Original individual check counts, source revisions, measured cohorts, rejected
 experiments and Astra/commit receipts remain in the [reviewed history](archive/2026-11-09/improvements.md#latest-documentation-work)
@@ -772,3 +772,19 @@ preparation; root owns integration and the heavy queue. All lanes pause during
 acceptance measurements. Compatible functional smokes share loaded sessions;
 benchmark validators replay genuine wire envelopes before long captures.
 Delivery speedup is unmeasured. [Assignments and policy](parallel-delivery.md).
+
+The ordinary CLI R1 extension implements a published baseline, uncommitted
+candidate snapshot and later exact-content publication binding. All 28 independent
+controls and nine legacy controls pass in normal/-O modes. Whole-owner resampling
+retains correlated uncertainty; shared 5% policy helpers preserve legacy arithmetic.
+Both sealed G17 policies admit two cohorts/four disabled owners each, without
+model reads or child launches. Eight CLI controls and required-check reuse pass;
+the initial verification-helper inventory error is retained and corrected.
+Three Astra boundary findings are fixed and covered by six new regression
+methods, first demonstrated against the old code. Fresh checks pass; Astra
+approves scoped retention with no remaining findings. Publication remains pending.
+[Astra approval](../artifacts/gemma-cli-regression-2026-11-15/astra-review-1/verdict-2.json). Baseline admission establishes
+no optimization or observer gate.
+[Contract](../artifacts/gemma-cli-regression-2026-11-15/implementation-contract-1.json),
+[portable checks](../artifacts/gemma-cli-regression-2026-11-15/affected-checks-2.json),
+[real admission](../artifacts/gemma-cli-regression-2026-11-15/real-baseline-admission-2.json).

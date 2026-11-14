@@ -26,3 +26,20 @@ jobs:
         run: python3 -B tools/bench/test_gemma_cli_report.py
       - name: Validate CLI request summaries with Python assertions disabled
         run: python3 -O -B tools/bench/test_gemma_cli_report.py
+
+  cli-regression:
+    name: cli-regression (${{ matrix.optimize }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        optimize: [0, 1]
+    env:
+      PYTHONOPTIMIZE: ${{ matrix.optimize }}
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          persist-credentials: false
+      - name: Validate legacy regression policy
+        run: python3 -B tools/bench/test_gemma_regression.py
+      - name: Validate ordinary CLI regression admission and comparison
+        run: python3 -B tools/bench/test_gemma_cli_regression.py

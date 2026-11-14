@@ -1,0 +1,96 @@
+{
+  "format": "toklet-gemma-cli-independent-test-arithmetic-v1",
+  "synthetic": true,
+  "scope": "Literal independently authored expectations; no producer statistics used. Durations in milliseconds.",
+  "baseline": {
+    "ttft_ms": 20,
+    "total_ms": 100
+  },
+  "speed": {
+    "ttft_ms": 18,
+    "total_ms": 90,
+    "change_pct": -10,
+    "interval": [
+      -10,
+      -10
+    ],
+    "status": "pass",
+    "repeatable_primary_speed_signal": true
+  },
+  "regression": {
+    "ttft_ms": 22,
+    "total_ms": 110,
+    "change_pct": 10,
+    "interval": [
+      10,
+      10
+    ],
+    "status": "regression"
+  },
+  "ttft_guard": {
+    "ttft_ms": 22,
+    "total_ms": 90,
+    "ttft_change_pct": 10,
+    "total_change_pct": -10,
+    "status": "regression"
+  },
+  "confirmation_disagrees": {
+    "first_total_ms": 90,
+    "second_total_ms": 100,
+    "status": "noisy"
+  },
+  "within_five_not_one": {
+    "ttft_ms": 20.4,
+    "total_ms": 102,
+    "change_pct": 2,
+    "status": "pass",
+    "repeatable_primary_speed_signal": false
+  },
+  "owner_correlated": {
+    "baseline_owners_ms": [
+      [
+        90,
+        95,
+        100,
+        105,
+        110
+      ],
+      [
+        190,
+        195,
+        200,
+        205,
+        210
+      ]
+    ],
+    "candidate_owners_ms": [
+      [
+        81,
+        85.5,
+        90,
+        94.5,
+        99
+      ],
+      [
+        171,
+        175.5,
+        180,
+        184.5,
+        189
+      ]
+    ],
+    "baseline_median_ms": 150,
+    "candidate_median_ms": 135,
+    "change_pct": -10,
+    "whole_owner_interval": [
+      -55,
+      80
+    ],
+    "falsely_paired_interval": [
+      -10,
+      -10
+    ],
+    "status": "noisy",
+    "derivation": "Two independent owner draws give low-only/mixed/high-only pooled medians100/150/200 and90/135/180. The extreme ratios90/200-1 and180/100-1 each have probability1/16>2.5%;95% bounds are-55,+80. Rows within one process are correlated."
+  }
+}
