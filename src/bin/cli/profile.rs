@@ -14,6 +14,7 @@ use toklet::app_chat::gemma4;
 const WORKLOAD_LIMIT: usize = 16 * 1024;
 const HELP: &str =
     "Usage: toklet profile --model PATH --workload PATH --evaluation ORD --output NEW_DIR
+       [--submission per-tile|batched-single-row]
 
 Explicit official Gemma BF16/G2 diagnostic on macOS arm64 with the metal feature.
 The frozen O1 workload must include expected output; capacity512/chunk32 are fixed.
@@ -22,10 +23,18 @@ Runs ordinary then profiled generation sequentially on one authenticated owner,
 checks exact outputs/state and every selected logit bit, and writes bounded
 profile.json, inventory.json and a final manifest.json in a NEW directory.
 The selected profiler reserves64MiB inside the whole6GiB engine budget.
+Submission defaults to per-tile. Explicit batching captures schema2 groups and
+compares the candidate against ordinary G2; it is not default adoption.
 Host times include diagnostic witness work; this is not acceptance timing,
 ordinary generation adoption, or UI/device/quality qualification.
 Exit0 complete verified artifacts,2 malformed arguments/workload,1 runtime or
 export failure. No fallback, implicit download, or overwrite.";
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum Submission {
+    PerTile,
+    BatchedSingleRow,
+}
 
 #[derive(Debug)]
 struct Args {
@@ -33,10 +42,12 @@ struct Args {
     workload: PathBuf,
     evaluation: usize,
     output: PathBuf,
+    submission: Submission,
 }
 
 fn parse(values: Vec<OsString>) -> io::Result<Args> {
     let (mut model, mut workload, mut evaluation, mut output) = (None, None, None, None);
+    let mut submission = Submission::PerTile;
     let mut seen = HashSet::new();
     let mut values = values.into_iter();
     while let Some(flag) = values.next() {
@@ -51,6 +62,13 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
             "--model" if !value.is_empty() => model = Some(PathBuf::from(value)),
             "--workload" if !value.is_empty() => workload = Some(PathBuf::from(value)),
             "--output" if !value.is_empty() => output = Some(PathBuf::from(value)),
+            "--submission" => {
+                submission = match utf8(value)?.as_str() {
+                    "per-tile" => Submission::PerTile,
+                    "batched-single-row" => Submission::BatchedSingleRow,
+                    _ => return Err(invalid("submission must be per-tile or batched-single-row")),
+                };
+            }
             "--evaluation" => {
                 let text = utf8(value)?;
                 if text.is_empty() || !text.bytes().all(|b| b.is_ascii_digit()) {
@@ -70,6 +88,7 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
         workload: workload.ok_or_else(|| invalid("profile requires --workload PATH"))?,
         evaluation: evaluation.ok_or_else(|| invalid("profile requires --evaluation ORD"))?,
         output: output.ok_or_else(|| invalid("profile requires --output NEW_DIR"))?,
+        submission,
     })
 }
 
@@ -565,16 +584,17 @@ mod execution {
         hash.update(workload.sha256.as_bytes());
         hash.update((args.evaluation as u64).to_le_bytes());
         let request_id: [u8; 16] = hash.finalize()[..16].try_into().map_err(io::Error::other)?;
-        let mut profiled = owner
-            .new_profiled_session(
-                &model,
-                options,
-                Bf16ProfileOptions {
-                    request_id,
-                    evaluation_ordinal: args.evaluation,
-                },
-            )
-            .map_err(io::Error::other)?;
+        let profile_options = Bf16ProfileOptions {
+            request_id,
+            evaluation_ordinal: args.evaluation,
+        };
+        let mut profiled = match args.submission {
+            Submission::PerTile => owner.new_profiled_session(&model, options, profile_options),
+            Submission::BatchedSingleRow => {
+                owner.new_batched_profiled_session(&model, options, profile_options)
+            }
+        }
+        .map_err(io::Error::other)?;
         let profiled_admitted = profiled.memory().admitted_bytes;
         let total = combined(profiled_admitted, reserved)?;
         require(
@@ -630,7 +650,11 @@ mod execution {
         }
         let selected_sha = format!("{:x}", selected_hash.finalize());
         let frame = profiled.bf16_profile().map_err(io::Error::other)?;
-        let inventory = owner.runtime_inventory(32).map_err(io::Error::other)?;
+        let inventory = match args.submission {
+            Submission::PerTile => owner.runtime_inventory(32),
+            Submission::BatchedSingleRow => owner.runtime_inventory_batched_single_row(32),
+        }
+        .map_err(io::Error::other)?;
         let prefill = input.len().div_ceil(32);
         let (position, rows) = if args.evaluation <= prefill {
             let position = (args.evaluation - 1) * 32;
@@ -645,7 +669,12 @@ mod execution {
             .sum();
         require(
             inventory.payload_authenticated
-                && frame.schema_version == 1
+                && frame.schema_version
+                    == if args.submission == Submission::PerTile {
+                        1
+                    } else {
+                        2
+                    }
                 && frame.evaluation_ordinal == args.evaluation
                 && frame.request_id == request_id
                 && frame.status.state == Bf16CaptureState::Complete
@@ -676,6 +705,9 @@ mod execution {
             + WORKLOAD_LIMIT
             + frame.tiles.capacity() * frame.tiles.first().map_or(0, size_of_val)
             + frame.clocks.events.capacity() * frame.clocks.events.first().map_or(0, size_of_val)
+            + frame.submission_groups.as_ref().map_or(0, |groups| {
+                groups.capacity() * groups.first().map_or(0, size_of_val)
+            })
             + inventory.operations.capacity() * inventory.operations.first().map_or(0, size_of_val)
             + inventory
                 .operations
@@ -695,7 +727,7 @@ mod execution {
         inventory_json.encode(&inventory)?;
         let profile_pin = profile_json.publish(&args.output, "profile.json")?;
         let inventory_pin = inventory_json.publish(&args.output, "inventory.json")?;
-        let manifest = json!({
+        let mut manifest = json!({
             "format":"toklet-gemma-profile-v1","passed":true,
             "diagnostic_only":true,"timing_qualified":false,
             "model":{"repository":OfficialBf16::REPOSITORY,"revision":OfficialBf16::REVISION},
@@ -716,6 +748,10 @@ mod execution {
                 "combined_profiled_admitted_bytes":total},
             "clock_scope":"Completed core host times include selected diagnostic witness work; frame clocks have separate scopes. No acceptance timing or CPU/GPU origin subtraction. Numerical session admissions exclude the separately reported owner reserve."
         });
+        if args.submission == Submission::BatchedSingleRow {
+            manifest["format"] = json!("toklet-gemma-profile-v2");
+            manifest["submission_policy"] = json!("batched_single_row");
+        }
         require(
             !CANCELLED.load(Ordering::Relaxed),
             "profile publication cancelled",
@@ -758,8 +794,13 @@ pub(super) fn main(values: Vec<OsString>) -> u8 {
     }
     #[cfg(not(all(feature = "metal", target_os = "macos", target_arch = "aarch64")))]
     {
-        let Args { model, output, .. } = args;
-        let _ = (model, output, workload.sha256);
+        let Args {
+            model,
+            output,
+            submission,
+            ..
+        } = args;
+        let _ = (model, output, submission, workload.sha256);
         eprintln!("error: official BF16/G2 profiling requires macOS arm64 and the metal feature");
         1
     }

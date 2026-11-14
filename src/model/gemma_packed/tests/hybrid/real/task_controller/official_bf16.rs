@@ -20,6 +20,7 @@ fn official_bf16_generation_remaining() {
 
 fn generate(pilot: bool) {
     println!();
+    let submission = super::super::bf16::Submission::selected();
     let (tasks, inputs, input_path, input_identity) = read_tasks();
     let (source, context, path, original) = super::super::bf16::load_official();
     let owner = source.test_retained_digest();
@@ -30,20 +31,20 @@ fn generate(pilot: bool) {
         memory_limit_bytes: BUDGET,
         position_offset: 0,
     };
-    let warm = source
-        .new_generation_session(&model, &context, options)
+    let warm = submission
+        .new_generation_session(&source, &model, &context, options)
         .unwrap();
     let memory = warm.memory();
     drop(warm);
     options.memory_limit_bytes = memory.admitted_bytes - 1;
     assert!(matches!(
-        source.new_generation_session(&model, &context, options),
+        submission.new_generation_session(&source, &model, &context, options),
         Err(session::Error::MemoryBudget { required, limit })
         if required == memory.admitted_bytes && limit == required - 1
     ));
     options.memory_limit_bytes = memory.admitted_bytes;
-    let mut session = source
-        .new_generation_session(&model, &context, options)
+    let mut session = submission
+        .new_generation_session(&source, &model, &context, options)
         .unwrap();
     assert_eq!(session.memory(), memory);
     if pilot {
@@ -87,12 +88,15 @@ fn official_bf16_replay_all() {
 
 fn replay(pilot: bool) {
     println!();
+    let submission = super::super::bf16::Submission::selected();
     let (tasks, inputs, input_path, input_identity) = read_tasks();
     let trace = super::replay::Trace::read("TOKLET_GEMMA_BF16_TRAJECTORY", pilot);
     let (source, context, path, original) = super::super::bf16::load_official();
     let owner = source.test_retained_digest();
     let model = source.model_for_quality_probe(CAPACITY).unwrap();
-    let mut session = source.new_session(&model, &context, CHUNK, BUDGET).unwrap();
+    let mut session = submission
+        .new_session(&source, &model, &context, CHUNK, BUDGET)
+        .unwrap();
     super::replay::run(&tasks, &trace, &mut session, CHUNK, "BF16_REPLAY", || {
         verify_descriptor(&inputs, &input_path, input_identity);
         assert_eq!(

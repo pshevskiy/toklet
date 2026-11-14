@@ -109,6 +109,7 @@ fn official_bf16_holdout_wrap() {
 
 #[cfg(target_os = "macos")]
 fn official_bf16_wrap(fixture: WrapFixture) {
+    let submission = super::bf16::Submission::selected();
     let (source, context, path, original) = super::bf16::load_official();
     let owner = source.test_retained_digest();
     let budget = PROCESS - DIAGNOSTIC;
@@ -116,12 +117,14 @@ fn official_bf16_wrap(fixture: WrapFixture) {
     assert!(source.model(capacity).is_err());
     let model = source.model_for_quality_probe(capacity).unwrap();
     assert!(model.content_identity().is_none());
-    let warm = source.new_session(&model, &context, 32, budget).unwrap();
+    let warm = submission
+        .new_session(&source, &model, &context, 32, budget)
+        .unwrap();
     let owned = warm.allocated_bytes().unwrap();
     drop(warm);
     let required = model.model_bytes() + owned;
     assert!(matches!(
-        source.new_session(&model, &context, 32, required - 1),
+        submission.new_session(&source, &model, &context, 32, required - 1),
         Err(hybrid::Error::Metal(crate::metal::Error::Budget { required: r, limit }))
         if r == required && limit == required - 1
     ));
@@ -131,7 +134,11 @@ fn official_bf16_wrap(fixture: WrapFixture) {
     );
     run_wrap_fixture(
         &model,
-        || source.new_session(&model, &context, 32, required).unwrap(),
+        || {
+            submission
+                .new_session(&source, &model, &context, 32, required)
+                .unwrap()
+        },
         owned,
         fixture,
         || {

@@ -41,7 +41,50 @@ pub struct Bf16Weights {
     report: Bf16LoadReport,
 }
 
+#[cfg(all(feature = "gemma-head-batch-mac-probe", not(test)))]
+pub(in crate::metal::gemma_affine::bf16) struct HeadBatchParts<'a> {
+    pub tiles: &'a [Buffer<u32>],
+    pub rows: usize,
+    pub columns: usize,
+    pub maximum: f64,
+    pub input_capacity: usize,
+    pub output_capacity: usize,
+}
+
 impl Bf16Weights {
+    /// Explicit component experiment only; borrows the authenticated head and
+    /// computes the same chunk32 working capacities as the current backend.
+    #[cfg(all(feature = "gemma-head-batch-mac-probe", not(test)))]
+    pub(in crate::metal::gemma_affine::bf16) fn head_batch_parts(
+        &self,
+    ) -> Result<HeadBatchParts<'_>> {
+        let head = self.matrices[self.bindings.embedding_index()]
+            .as_ref()
+            .ok_or(Error::Options("BF16 experimental head missing"))?;
+        let input = self
+            .matrices
+            .iter()
+            .flatten()
+            .map(|m| m.columns)
+            .max()
+            .ok_or(Error::Options("BF16 experimental matrices missing"))?;
+        let output = self
+            .matrices
+            .iter()
+            .flatten()
+            .map(|m| m.rows.min(TILE_ROWS))
+            .max()
+            .ok_or(Error::Options("BF16 experimental tiles missing"))?;
+        Ok(HeadBatchParts {
+            tiles: &head.tiles,
+            rows: head.rows,
+            columns: head.columns,
+            maximum: head.maximum,
+            input_capacity: multiply(32, input)?,
+            output_capacity: multiply(32, output)?,
+        })
+    }
+
     pub fn load_text_only(
         context: &Bf16Context,
         file: File,

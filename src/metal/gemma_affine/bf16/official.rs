@@ -33,6 +33,19 @@ pub struct OfficialBf16 {
 }
 
 impl OfficialBf16 {
+    /// Explicit experimental harness only. No ordinary session selects batching.
+    #[cfg(all(feature = "gemma-head-batch-mac-probe", not(test)))]
+    pub fn run_head_batch_component_controls(start: fn(), finish: fn() -> usize) {
+        super::super::project::head_batch_experiment::run_controls(start, finish);
+    }
+
+    /// Fixed component screen using explicit offline-model/output/cohort env.
+    /// This has no graph/default/profile adoption or whole-engine qualification.
+    #[cfg(all(feature = "gemma-head-batch-mac-probe", not(test)))]
+    pub fn run_head_batch_component_screen() {
+        head_batch_probe::official_head_batch_fixed_screen();
+    }
+
     pub const REPOSITORY: &str = "google/gemma-4-E2B-it";
     pub const REVISION: &str = "70af34e20bd4b7a91f0de6b22675850c43922a03";
     pub const DECLARED_POSITIONS: usize = 131_072;
@@ -117,6 +130,16 @@ impl OfficialBf16 {
         self.weights.runtime_inventory(chunk_rows)
     }
 
+    /// Explicit candidate inventory; command predictions apply only to the
+    /// single-row operations that fit the existing initialized scratch.
+    pub fn runtime_inventory_batched_single_row(
+        &self,
+        chunk_rows: usize,
+    ) -> Result<super::resident::planning::RuntimeInventory> {
+        self.weights
+            .runtime_inventory_batched_single_row(chunk_rows)
+    }
+
     pub fn codec(&self) -> &gemma4::Codec {
         &self.codec
     }
@@ -153,7 +176,7 @@ impl OfficialBf16 {
         model: &'model Bf16Model<'owner>,
         options: Options,
     ) -> std::result::Result<Bf16GenerationSession<'model, 'owner, 'owner>, session::Error> {
-        self.new_session_with_profile(model, options, None)
+        self.new_session_with_profile(model, options, None, false)
     }
 
     /// Explicit plain G2 companion to the diagnostic profiled session.
@@ -169,6 +192,18 @@ impl OfficialBf16 {
         Ok(session)
     }
 
+    /// Opt-in G2 candidate batching independent single-row projection tiles
+    /// when existing scratch fits. Other operations retain per-tile execution.
+    pub fn new_batched_g2_session<'model, 'owner>(
+        &'owner self,
+        model: &'model Bf16Model<'owner>,
+        options: Options,
+    ) -> std::result::Result<Bf16GenerationSession<'model, 'owner, 'owner>, session::Error> {
+        let mut session = self.new_session_with_profile(model, options, None, true)?;
+        session.use_last_row_prefill();
+        Ok(session)
+    }
+
     /// Diagnostic G2 session capturing one selected committed evaluation.
     /// Charges an additional64MiB before allocating counter resources.
     pub fn new_profiled_session<'model, 'owner>(
@@ -177,7 +212,20 @@ impl OfficialBf16 {
         options: Options,
         profile: Bf16ProfileOptions,
     ) -> std::result::Result<Bf16GenerationSession<'model, 'owner, 'owner>, session::Error> {
-        let mut session = self.new_session_with_profile(model, options, Some(profile))?;
+        let mut session = self.new_session_with_profile(model, options, Some(profile), false)?;
+        session.use_last_row_prefill();
+        Ok(session)
+    }
+
+    /// Explicit candidate capture with truthful grouped submission records.
+    /// The existing profiled constructor retains its per-tile schema and policy.
+    pub fn new_batched_profiled_session<'model, 'owner>(
+        &'owner self,
+        model: &'model Bf16Model<'owner>,
+        options: Options,
+        profile: Bf16ProfileOptions,
+    ) -> std::result::Result<Bf16GenerationSession<'model, 'owner, 'owner>, session::Error> {
+        let mut session = self.new_session_with_profile(model, options, Some(profile), true)?;
         session.use_last_row_prefill();
         Ok(session)
     }
@@ -187,6 +235,7 @@ impl OfficialBf16 {
         model: &'model Bf16Model<'owner>,
         mut options: Options,
         profile: Option<Bf16ProfileOptions>,
+        single_row_batching: bool,
     ) -> std::result::Result<Bf16GenerationSession<'model, 'owner, 'owner>, session::Error> {
         self.validate_session_budget(options)?;
         let limit = options.memory_limit_bytes;
@@ -198,16 +247,26 @@ impl OfficialBf16 {
                 required: reserved + 1,
                 limit,
             })?;
-        let result = match profile {
-            Some(profile) => self.weights.new_generation_session_with_profile(
+        let result = if single_row_batching {
+            self.weights.new_generation_session_with_policy(
                 model,
                 &self.context,
                 options,
-                Some(profile),
-            ),
-            None => self
-                .weights
-                .new_generation_session(model, &self.context, options),
+                profile,
+                true,
+            )
+        } else {
+            match profile {
+                Some(profile) => self.weights.new_generation_session_with_profile(
+                    model,
+                    &self.context,
+                    options,
+                    Some(profile),
+                ),
+                None => self
+                    .weights
+                    .new_generation_session(model, &self.context, options),
+            }
         };
         match result {
             Err(session::Error::MemoryBudget { required, .. }) => {
@@ -223,3 +282,6 @@ impl OfficialBf16 {
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(all(feature = "gemma-head-batch-mac-probe", not(test)))]
+mod head_batch_probe;

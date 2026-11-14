@@ -31,8 +31,14 @@ libc = "=0.2.190"
 default = []
 metal = ["dep:objc2", "dep:objc2-foundation", "dep:objc2-metal", "dep:objc2-metal-performance-shaders"]
 affine-tile4-mac-probe = ["metal"]
+gemma-head-batch-mac-probe = ["metal"]
 llama-staged-mac-probe = ["metal"]
 llama-staged-mac-app-probe = ["llama-staged-mac-probe"]
+
+[[test]]
+name = "gemma_head_batch_probe"
+path = "tests/gemma_head_batch_probe.rs"
+required-features = ["gemma-head-batch-mac-probe"]
 
 [target.'cfg(all(any(target_os = "macos", target_os = "ios"), target_arch = "aarch64"))'.dependencies]
 objc2 = { version = "=0.6.5", optional = true }
@@ -106,6 +112,15 @@ required-features = ["metal"]
 
 [[example]]
 name = "gemma3_checkpoint"
+required-features = ["metal"]
+
+[[example]]
+name = "gemma_submission_bench"
+required-features = ["metal"]
+
+[[example]]
+name = "gemma_submission_matrix"
+path = "examples/gemma_submission_matrix.rs"
 required-features = ["metal"]
 
 [[example]]

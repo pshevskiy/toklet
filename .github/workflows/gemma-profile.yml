@@ -1,4 +1,4 @@
-name: Gemma profile report checks
+name: Gemma report checks
 
 on:
   push:
@@ -18,3 +18,7 @@ jobs:
         run: python3 tools/bench/test_gemma_profile_report.py
       - name: Validate with Python assertions disabled
         run: python3 -O tools/bench/test_gemma_profile_report.py
+      - name: Validate ordinary submission reports
+        run: python3 tools/bench/test_gemma_submission_report.py
+      - name: Validate submission reports with Python assertions disabled
+        run: python3 -O tools/bench/test_gemma_submission_report.py

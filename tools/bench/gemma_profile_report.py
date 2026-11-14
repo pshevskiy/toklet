@@ -152,9 +152,13 @@ def _id(value):
     return value['role'], layer
 
 
-def _inventory(value):
+def _inventory(value, batched=False):
     keys(value, 'payload_authenticated resident_matrix_owners resident_gpu_tile_owners '
-         'vector_owners retained_weight_owner_bytes operations', 'inventory')
+         'vector_owners retained_weight_owner_bytes operations' +
+         (' schema_version submission_policy' if batched else ''), 'inventory')
+    if batched:
+        exact(value['schema_version'], 2, 'inventory version')
+        exact(value['submission_policy'], 'batched_single_row', 'inventory submission policy')
     for name, expected in [('payload_authenticated', True), ('resident_matrix_owners', 277),
                            ('resident_gpu_tile_owners', 349), ('vector_owners', 262)]:
         exact(value[name], expected, 'inventory owner count/availability')
@@ -166,7 +170,9 @@ def _inventory(value):
         keys(op, 'id source_matrix_slot source_tensor source_rows source_columns source_bytes '
              'prefill_rows decode_rows execution coefficient_layout kernel_entry projection_tiles '
              'predicted_commands_per_chunk predicted_dispatches_per_chunk predicted_host_waits_per_chunk '
-             'modelled_prefill_output_host_bytes modelled_decode_output_host_bytes', 'selected operation')
+             'modelled_prefill_output_host_bytes modelled_decode_output_host_bytes' +
+             (' predicted_decode_commands_per_chunk predicted_decode_host_waits_per_chunk' if batched else ''),
+             'selected operation')
         identity = _id(op['id'])
         need(identity in expected and identity not in result, 'unknown/duplicate operation')
         name, slot, rows, columns = expected[identity]
@@ -184,6 +190,14 @@ def _inventory(value):
                       predicted_dispatches_per_chunk=tiles, predicted_host_waits_per_chunk=tiles,
                       modelled_prefill_output_host_bytes=0 if gather else product(rows, prefill, 4),
                       modelled_decode_output_host_bytes=0 if gather else product(rows, 4))
+        if batched:
+            # Bundles retain the frozen CLI chunk32 contract. Raw Rust frames
+            # with smaller initialized scratch have their own fit controls.
+            fits = tiles > 1 and rows <= 32 * 8192 and columns <= 32 * 12288
+            commands = 1 if fits and prefill == 1 else tiles
+            values.update(predicted_commands_per_chunk=commands, predicted_host_waits_per_chunk=commands,
+                          predicted_decode_commands_per_chunk=1 if fits else tiles,
+                          predicted_decode_host_waits_per_chunk=1 if fits else tiles)
         for key, target in values.items():
             exact(op[key], target, 'inventory ' + key)
         result[identity] = op
@@ -192,9 +206,12 @@ def _inventory(value):
 
 
 def _manifest(value):
+    batched = type(value) is dict and value.get('format') == 'toklet-gemma-profile-v2'
     keys(value, 'format passed diagnostic_only timing_qualified model workload capture parity plain '
-         'profiled inventory profile memory clock_scope', 'manifest')
-    for key, expected in [('format', 'toklet-gemma-profile-v1'), ('passed', True),
+         'profiled inventory profile memory clock_scope' + (' submission_policy' if batched else ''), 'manifest')
+    if batched:
+        exact(value['submission_policy'], 'batched_single_row', 'manifest submission policy')
+    for key, expected in [('format', 'toklet-gemma-profile-v2' if batched else 'toklet-gemma-profile-v1'), ('passed', True),
                           ('diagnostic_only', True), ('timing_qualified', False)]:
         exact(value[key], expected, 'manifest ' + key)
     model = value['model']
@@ -279,14 +296,47 @@ def _manifest(value):
          'profile constructor admission')
     need(memory['combined_profiled_admitted_bytes'] == memory['profiled_admitted_bytes']
          + memory['owner_reserved_bytes'] + 48 * MIB <= LIMIT, 'combined admission')
-    return evaluations
+    return evaluations, batched
 
 
-def _frame(frame, manifest, inventory, evaluations):
+def _submission_groups(frame, manifest, inventory):
+    """Sparse metadata identifies ownership; it never adds a second metric copy."""
+    groups = frame['submission_groups']
+    need(type(groups) is list and len(groups) <= 42, 'bounded sparse submission groups')
+    eligible = set()
+    for identity, op in inventory.items():
+        rows = manifest['capture']['input_rows'] if op['prefill_rows'] == 32 else 1
+        if op['projection_tiles'] > 1 and rows == 1 and op['source_rows'] <= 32 * 8192 and op['source_columns'] <= 32 * 12288:
+            eligible.add(identity)
+    seen, members, previous_end = set(), {}, 0
+    for index, group in enumerate(groups):
+        keys(group, 'group_id first_counter_slot tile_count owner_counter_slot operation source_matrix_slot '
+             'input_rows input_features output_features', 'submission group')
+        exact(group['group_id'], index, 'sequential submission group ID')
+        first = uint(group['first_counter_slot'], 348)
+        count = uint(group['tile_count'], 349, 2)
+        exact(group['owner_counter_slot'], first, 'first-counter owner')
+        need(first >= previous_end and first + count <= 349, 'contiguous/disjoint group range')
+        identity = _id(group['operation'])
+        need(identity in eligible and identity not in seen, 'eligible unique group identity')
+        seen.add(identity)
+        op = inventory[identity]
+        for key, target in dict(tile_count=op['projection_tiles'], source_matrix_slot=op['source_matrix_slot'],
+                                input_rows=1, input_features=op['source_columns'], output_features=op['source_rows']).items():
+            exact(group[key], target, 'submission group ' + key)
+        for slot in range(first, first + count):
+            need(slot not in members, 'overlapping submission groups')
+            members[slot] = group
+        previous_end = first + count
+    need(seen == eligible, 'complete capture-specific eligible groups')
+    return members
+
+
+def _frame(frame, manifest, inventory, evaluations, batched=False):
     keys(frame, 'schema_version request_id evaluation_ordinal evaluation status clocks tiles cpu_gathers '
          'frame_wall_seconds exclusive_host_seconds clock_bracket_seconds unattributed_host_seconds '
-         'diagnostic_allowance_bytes', 'frame')
-    exact(frame['schema_version'], 1, 'frame version')
+         'diagnostic_allowance_bytes' + (' submission_groups' if batched else ''), 'frame')
+    exact(frame['schema_version'], 2 if batched else 1, 'frame version')
     exact(frame['diagnostic_allowance_bytes'], 64 * MIB, 'diagnostic allowance')
     cap = manifest['capture']
     need(frame['request_id'] == cap['request_id'] and type(frame['request_id']) is list
@@ -314,6 +364,7 @@ def _frame(frame, manifest, inventory, evaluations):
     need(seconds(clocks['host_clock_sample_bracket_seconds']) <= bracket <= wall, 'clock brackets')
     need(type(frame['tiles']) is list and len(frame['tiles']) == 349
          and type(clocks['events']) is list and len(clocks['events']) == 349, 'tile/event coverage')
+    members = _submission_groups(frame, manifest, inventory) if batched else {}
     groups, intervals, seen = {}, [], set()
     completed_counters = {key: 0 for key in COUNTER_FIELDS}
     for slot, tile in enumerate(frame['tiles']):
@@ -335,13 +386,22 @@ def _frame(frame, manifest, inventory, evaluations):
                         output_features=op['source_rows'], input_features=op['source_columns'])
         for key, value in expected.items():
             exact(a[key], value, 'attribution ' + key)
+        submission = members.get(slot)
+        owner = submission is None or slot == submission['owner_counter_slot']
+        if submission is not None:
+            need(identity == _id(submission['operation']) and index == slot - submission['first_counter_slot'],
+                 'group contiguous tile/operation binding')
         for key in COUNTER_FIELDS:
-            exact(record[key], 1, 'completed tile counters')
+            exact(record[key], 1 if key == 'dispatches_encoded' or owner else 0, 'completed tile counters')
             completed_counters[key] = uint(completed_counters[key] + record[key])
-        exact(record['input_copy_bytes'], product(rows, a['input_features'], 4), 'logical input copy')
-        exact(record['output_copy_bytes'], product(rows, a['source_rows'], 4), 'logical output copy')
+        input_bytes = product(rows, a['input_features'], 4) if owner else 0
+        output_bytes = product(rows, a['output_features'] if submission is not None else a['source_rows'], 4) if owner else 0
+        exact(record['input_copy_bytes'], input_bytes, 'logical input copy')
+        exact(record['output_copy_bytes'], output_bytes, 'logical output copy')
         for key in HOST_FIELDS:
             seconds(record[key])
+            if submission is not None and not owner and key != 'host_encoding_seconds':
+                need(record[key] == 0, 'shared host scope belongs only to group owner')
         keys(event, 'name host_begin_seconds host_end_seconds gpu_begin_ticks gpu_end_ticks gpu_begin_seconds gpu_end_seconds', 'profile event')
         exact(event['name'], 'gemma_bf16_product', 'kernel entry')
         mirror = clocks['events'][slot]
@@ -421,20 +481,23 @@ def _frame(frame, manifest, inventory, evaluations):
     role_totals = sorted(roles.values(), key=lambda g: (-g['exclusive_host_seconds'], g['role']))
     union = interval_union(intervals)
     span = max(b for _, b in intervals) - min(a for a, _ in intervals)
-    return dict(coverage=dict(logical_operations=279, projection_operations=len(groups), tiles=349, cpu_gathers=2),
+    result = dict(coverage=dict(logical_operations=279, projection_operations=len(groups), tiles=349, cpu_gathers=2),
         completed_counters=completed_counters,
         frame=dict(wall_seconds=wall, exclusive_host_seconds=host, clock_bracket_seconds=bracket,
                    unattributed_host_seconds=remainder), host_buckets_seconds=host_sums, cpu_gather_seconds=gather_sum,
         gpu=dict(encoder_union_seconds=union, observed_span_seconds=span,
                  gaps_between_attributed_samples_seconds=max(0., span - union)),
         operations=operations, role_totals=role_totals, cpu_gathers=gathers)
+    if batched:
+        result['submission_groups'] = frame['submission_groups']
+    return result
 
 
 def report_bundle(folder):
     folder = Path(folder)
     need(stat.S_ISDIR(folder.lstat().st_mode), 'regular bundle directory required')
     manifest, manifest_file = _read(folder, 'manifest.json', 64 * 1024)
-    evaluations = _manifest(manifest)
+    evaluations, batched = _manifest(manifest)
     data, files = {}, dict(manifest=manifest_file)
     for key in ('profile', 'inventory'):
         entry = manifest[key]
@@ -444,8 +507,8 @@ def report_bundle(folder):
         digest(entry['sha256'])
         data[key], files[key] = _read(folder, key + '.json', MIB)
         need(entry == files[key], 'file SHA/length binding')
-    result = _frame(data['profile'], manifest, _inventory(data['inventory']), evaluations)
-    result.update(format='toklet-gemma-profile-cost-v1', diagnostic_only=True, timing_qualified=False,
+    result = _frame(data['profile'], manifest, _inventory(data['inventory'], batched), evaluations, batched)
+    result.update(format='toklet-gemma-profile-cost-v2' if batched else 'toklet-gemma-profile-cost-v1', diagnostic_only=True, timing_qualified=False,
                   availability='complete', model=manifest['model'], workload=manifest['workload'],
                   capture=manifest['capture'], parity=manifest['parity'], memory=manifest['memory'],
                   plain=manifest['plain'], profiled=manifest['profiled'], files=files,
@@ -457,6 +520,9 @@ def report_bundle(folder):
                          'Unattributed host includes CPU math/control/scatter; GPU gaps do not prove physical idleness.',
                          'Logit/output/history parity is producer-attested; this consumer authenticates its bundle bytes.',
                          manifest['clock_scope']])
+    if batched:
+        result['submission_policy'] = 'batched_single_row'
+        result['scope'].append('Sparse groups are metadata: shared host/copy/command/wait metrics belong only to the first-counter tile owner.')
     return result
 
 

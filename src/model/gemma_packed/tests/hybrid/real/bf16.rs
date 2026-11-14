@@ -1,9 +1,96 @@
 //! Explicit real official BF16 diagnostic and private-scratch publication checks.
 use super::*;
-use crate::metal::gemma_affine::{Bf16Context, Bf16GraphFault, Bf16Weights};
+use crate::metal::gemma_affine::{
+    Bf16Context, Bf16GenerationSession, Bf16GraphFault, Bf16Model, Bf16Session, Bf16Weights,
+};
+use std::{ffi::OsStr, io::Write};
 
 const VOCAB: usize = 262144;
 const BUDGET: usize = PROCESS - DIAGNOSTIC;
+
+/// Cold qualification selection shared by the existing original-BF16 gates.
+/// It changes submission only; output-row policy and numerical checks stay put.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub(super) enum Submission {
+    PerTile,
+    BatchedSingleRow,
+}
+
+impl Submission {
+    fn parse(value: Option<&OsStr>) -> std::result::Result<Self, &'static str> {
+        match value {
+            None => Ok(Self::PerTile),
+            Some(value) if value == "per-tile" => Ok(Self::PerTile),
+            Some(value) if value == "batched-single-row" => Ok(Self::BatchedSingleRow),
+            Some(_) => Err("TOKLET_GEMMA_BF16_SUBMISSION must be per-tile or batched-single-row"),
+        }
+    }
+
+    pub(super) fn selected() -> Self {
+        let value = std::env::var_os("TOKLET_GEMMA_BF16_SUBMISSION");
+        let selected = Self::parse(value.as_deref()).expect("valid explicit BF16 test submission");
+        let label = match selected {
+            Self::PerTile => "per_tile",
+            Self::BatchedSingleRow => "batched_single_row",
+        };
+        // Separate from capture/journal prefixes, so existing numerical readers
+        // keep their exact schemas while the worker's route remains explicit.
+        println!(
+            "\nGEMMA_BF16_SUBMISSION {}",
+            json!({"submission_policy":label,"scope":"original_bf16_qualification"})
+        );
+        std::io::stdout().flush().unwrap();
+        selected
+    }
+
+    pub(super) fn new_session<'model, 'weights, 'context>(
+        self,
+        source: &'weights Bf16Weights,
+        model: &'model Bf16Model<'weights>,
+        context: &'context Bf16Context,
+        chunk: usize,
+        budget: usize,
+    ) -> std::result::Result<Bf16Session<'model, 'weights, 'context>, hybrid::Error> {
+        match self {
+            Self::PerTile => source.new_session(model, context, chunk, budget),
+            Self::BatchedSingleRow => source.new_batched_session(model, context, chunk, budget),
+        }
+    }
+
+    pub(super) fn new_generation_session<'model, 'weights, 'context>(
+        self,
+        source: &'weights Bf16Weights,
+        model: &'model Bf16Model<'weights>,
+        context: &'context Bf16Context,
+        options: crate::session::Options,
+    ) -> std::result::Result<Bf16GenerationSession<'model, 'weights, 'context>, crate::session::Error>
+    {
+        match self {
+            Self::PerTile => source.new_generation_session(model, context, options),
+            Self::BatchedSingleRow => {
+                source.new_generation_session_with_policy(model, context, options, None, true)
+            }
+        }
+    }
+}
+
+#[test]
+fn official_bf16_submission_selector_requires_a_known_explicit_route() {
+    assert_eq!(Submission::parse(None), Ok(Submission::PerTile));
+    assert_eq!(
+        Submission::parse(Some(OsStr::new("per-tile"))),
+        Ok(Submission::PerTile)
+    );
+    assert_eq!(
+        Submission::parse(Some(OsStr::new("batched-single-row"))),
+        Ok(Submission::BatchedSingleRow)
+    );
+    for unknown in ["", "unknown", "PER-TILE", "batched_single_row"] {
+        assert!(Submission::parse(Some(OsStr::new(unknown))).is_err());
+    }
+    use std::os::unix::ffi::OsStrExt;
+    assert!(Submission::parse(Some(OsStr::from_bytes(&[0xff]))).is_err());
+}
 
 pub(super) fn load_official() -> (Bf16Weights, Bf16Context, std::path::PathBuf, [u64; 7]) {
     let root = std::path::PathBuf::from(std::env::var_os("TOKLET_GEMMA_BF16_MODEL").unwrap());
@@ -23,6 +110,7 @@ pub(super) fn load_official() -> (Bf16Weights, Bf16Context, std::path::PathBuf, 
 #[test]
 #[ignore = "explicit official BF16 short Metal graph and rollback witness"]
 fn official_bf16_short_graph_preserves_state_and_causal_rows() {
+    let submission = Submission::selected();
     let (weights, context, path, original) = load_official();
     assert!(weights.model(0).is_err());
     assert!(weights.model(33).is_err());
@@ -33,19 +121,19 @@ fn official_bf16_short_graph_preserves_state_and_causal_rows() {
     for (label, ids) in [("original", IDS), ("future", [2, 100, 257, 101])] {
         let mut expected = None;
         for chunk in [32, 3, 1] {
-            let warm = weights
-                .new_session(&model, &context, chunk, BUDGET)
+            let warm = submission
+                .new_session(&weights, &model, &context, chunk, BUDGET)
                 .unwrap();
             let owned = warm.allocated_bytes().unwrap();
             let required = model.model_bytes() + owned;
             drop(warm);
             assert!(matches!(
-                weights.new_session(&model, &context, chunk, required - 1),
+                submission.new_session(&weights, &model, &context, chunk, required - 1),
                 Err(hybrid::Error::Metal(crate::metal::Error::Budget { required: r, limit }))
                     if r == required && limit == required - 1
             ));
-            let mut session = weights
-                .new_session(&model, &context, chunk, required)
+            let mut session = submission
+                .new_session(&weights, &model, &context, chunk, required)
                 .unwrap();
             let pointers_before = pointers(&session);
             let mut rows = Vec::with_capacity(ids.len() * VOCAB);
@@ -103,7 +191,9 @@ fn official_bf16_short_graph_preserves_state_and_causal_rows() {
         (Bf16GraphFault::AfterFirstHeadTile, "head_tile"),
         (Bf16GraphFault::AfterPle, "ple"),
     ] {
-        let mut session = weights.new_session(&model, &context, 3, BUDGET).unwrap();
+        let mut session = submission
+            .new_session(&weights, &model, &context, 3, BUDGET)
+            .unwrap();
         session.forward(&[2]).unwrap();
         let before = snapshot(&session);
         session.operations.set_fault(fault);
@@ -152,6 +242,7 @@ fn trace_producers(
     attention_details: bool,
 ) {
     const CHUNK: usize = 32;
+    let submission = Submission::selected();
     let ids: Vec<u32> =
         include_bytes!("../../../../../../benchmarks/gemma-e2b-wrap-v1/tokens.u32le")
             .chunks_exact(4)
@@ -165,7 +256,9 @@ fn trace_producers(
     let (source, context, path, original) = load_official();
     let owner = source.test_retained_digest();
     let model = source.model_for_quality_probe(ids.len()).unwrap();
-    let mut session = source.new_session(&model, &context, CHUNK, BUDGET).unwrap();
+    let mut session = submission
+        .new_session(&source, &model, &context, CHUNK, BUDGET)
+        .unwrap();
     let allocated = session.allocated_bytes().unwrap();
     let owners = pointers(&session);
     let mut capture = capture::Capture::bounded(8 * 1024 * 1024);

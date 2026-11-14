@@ -26,6 +26,10 @@ pub struct SelectedOperation {
     pub predicted_host_waits_per_chunk: usize,
     pub modelled_prefill_output_host_bytes: usize,
     pub modelled_decode_output_host_bytes: usize,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub predicted_decode_commands_per_chunk: Option<usize>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub predicted_decode_host_waits_per_chunk: Option<usize>,
 }
 
 fn selected(logical: Operation, tiles: usize) -> Result<SelectedOperation> {
@@ -44,8 +48,43 @@ fn selected(logical: Operation, tiles: usize) -> Result<SelectedOperation> {
         predicted_commands_per_chunk: tiles,
         predicted_dispatches_per_chunk: tiles,
         predicted_host_waits_per_chunk: tiles,
+        predicted_decode_commands_per_chunk: None,
+        predicted_decode_host_waits_per_chunk: None,
         logical,
     })
+}
+
+fn batch_predictions(operation: &mut SelectedOperation, input: usize, output: usize) {
+    let fits = operation.projection_tiles > 1
+        && operation.logical.source_columns <= input
+        && operation.logical.source_rows <= output;
+    let prefill = if fits && operation.logical.prefill_rows == 1 {
+        1
+    } else {
+        operation.projection_tiles
+    };
+    let decode = if fits { 1 } else { operation.projection_tiles };
+    operation.predicted_commands_per_chunk = prefill;
+    operation.predicted_host_waits_per_chunk = prefill;
+    operation.predicted_decode_commands_per_chunk = Some(decode);
+    operation.predicted_decode_host_waits_per_chunk = Some(decode);
+}
+
+fn batch_capacities(operations: &[SelectedOperation], chunk: usize) -> Result<(usize, usize)> {
+    if !(1..=32).contains(&chunk) {
+        return Err(Error::Options("BF16 batch prediction chunk outside1..32"));
+    }
+    let projections = operations.iter().filter(|op| op.projection_tiles > 0);
+    let columns = projections
+        .clone()
+        .map(|op| op.logical.source_columns)
+        .max()
+        .unwrap_or(0);
+    let rows = projections
+        .map(|op| op.logical.source_rows.min(TILE_ROWS))
+        .max()
+        .unwrap_or(0);
+    Ok((multiply(chunk, columns)?, multiply(chunk, rows)?))
 }
 
 #[derive(Debug, Serialize)]
@@ -247,6 +286,10 @@ pub struct RuntimeInventory {
     pub vector_owners: usize,
     pub retained_weight_owner_bytes: usize,
     pub operations: Vec<SelectedOperation>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub schema_version: Option<u32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub submission_policy: Option<&'static str>,
 }
 
 impl Bf16Weights {
@@ -307,7 +350,25 @@ impl Bf16Weights {
             vector_owners: self.vector_count(),
             retained_weight_owner_bytes: self.report.retained_bytes,
             operations,
+            schema_version: None,
+            submission_policy: None,
         })
+    }
+
+    /// Candidate predictions retain exact legacy geometry and shared ownership.
+    /// Command/wait predictions distinguish configured prefill from decode.
+    pub fn runtime_inventory_batched_single_row(
+        &self,
+        chunk_rows: usize,
+    ) -> Result<RuntimeInventory> {
+        let mut inventory = self.runtime_inventory(chunk_rows)?;
+        let (input, output) = batch_capacities(&inventory.operations, chunk_rows)?;
+        for operation in &mut inventory.operations {
+            batch_predictions(operation, input, output);
+        }
+        inventory.schema_version = Some(2);
+        inventory.submission_policy = Some("batched_single_row");
+        Ok(inventory)
     }
 }
 

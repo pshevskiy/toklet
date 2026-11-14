@@ -86,3 +86,21 @@ Declared combined admission is5,931,514,488B; observed guarded peaks are
 [offline cost replay](../artifacts/gemma-cost-attribution-2026-11-13/actual-report-replay-1.json).
 [Frozen contract](../artifacts/gemma-cost-attribution-2026-11-13/implementation-contract-1.json),
 [integration boundary fix](../artifacts/gemma-cost-attribution-2026-11-13/interface-adjustments-2.json).
+
+## Candidate single-row submission
+
+`--submission batched-single-row` explicitly selects the candidate; omission or
+`--submission per-tile` preserves the legacy route and schema1. Candidate schema2
+adds sparse submission groups and a matching inventory route. Shared command,
+wait, copy and host metrics belong to one first-tile owner; every tile retains
+its own encoder interval/dispatch. The reader validates both schemas and avoids
+counting shared work more than once.
+
+Fresh selected captures12/13/139 pass bitwise logits and request/state parity.
+Each retains349 dispatches; prefill uses278 commands/waits with41 groups and
+decode277 with42. Ordinary release cohorts are separate from these diagnostic
+clocks. Their measurements, fidelity checks, one secondary cached TTFT estimate,
+recovery history and combined Astra approval are recorded in
+[Gemma single-row submission](gemma-single-row-submission.md). Existing native
+and session defaults remain unchanged; no summary/UI/default qualification
+follows from selecting this diagnostic.

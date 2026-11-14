@@ -2,6 +2,7 @@
 use super::profile::{Bf16Trace, ProfileOptions};
 use super::*;
 use crate::{
+    metal::gemma_affine::project::bf16_batch,
     metal::gemma_affine::resident::hybrid::Error as GraphError,
     mlx::gemma4::bf16::rows::Workspace as PleWorkspace,
     model::gemma_packed::{
@@ -11,6 +12,12 @@ use crate::{
 };
 
 type GraphResult<T> = std::result::Result<T, GraphError>;
+
+#[derive(Clone, Copy, Default)]
+struct SessionPolicy {
+    profile: Option<ProfileOptions>,
+    single_row_batching: bool,
+}
 pub type Bf16Model<'weights> = graph::Model<'weights, MatrixRef<'weights>>;
 pub type Bf16Session<'model, 'weights, 'context> =
     graph::Session<'model, 'weights, MatrixRef<'weights>, Backend<'weights, 'context>>;
@@ -143,10 +150,50 @@ impl Bf16Weights {
         chunk_rows: usize,
         budget: usize,
     ) -> GraphResult<Bf16Session<'model, 'weights, 'context>> {
+        self.new_session_with_policy(model, context, chunk_rows, budget, SessionPolicy::default())
+    }
+
+    /// Test-only raw numerical qualification of the explicitly enabled policy.
+    /// Shares all validation and admission with the unchanged default factory.
+    #[cfg(test)]
+    pub(crate) fn new_batched_session<'model, 'weights, 'context>(
+        &'weights self,
+        model: &'model Bf16Model<'weights>,
+        context: &'context Bf16Context,
+        chunk_rows: usize,
+        budget: usize,
+    ) -> GraphResult<Bf16Session<'model, 'weights, 'context>> {
+        self.new_session_with_policy(
+            model,
+            context,
+            chunk_rows,
+            budget,
+            SessionPolicy {
+                profile: None,
+                single_row_batching: true,
+            },
+        )
+    }
+
+    fn new_session_with_policy<'model, 'weights, 'context>(
+        &'weights self,
+        model: &'model Bf16Model<'weights>,
+        context: &'context Bf16Context,
+        chunk_rows: usize,
+        budget: usize,
+        policy: SessionPolicy,
+    ) -> GraphResult<Bf16Session<'model, 'weights, 'context>> {
         let numerical = model
             .planned_backend_session_bytes_for_chunk::<Backend<'weights, 'context>>(chunk_rows)?;
         let fixed = add(model.model_bytes(), numerical)?;
-        let backend = self.admit_backend(model, context, chunk_rows, fixed, budget, None)?;
+        let backend = self.admit_backend(model, context, chunk_rows, fixed, budget, policy)?;
+        #[cfg(test)]
+        if policy.single_row_batching {
+            assert!(
+                backend.single_row_batching,
+                "raw candidate policy was not enabled"
+            );
+        }
         model.session_with_backend_for_chunk(backend, chunk_rows, budget)
     }
 
@@ -168,6 +215,18 @@ impl Bf16Weights {
         profile: Option<ProfileOptions>,
     ) -> std::result::Result<Bf16GenerationSession<'model, 'weights, 'context>, crate::session::Error>
     {
+        self.new_generation_session_with_policy(model, context, options, profile, false)
+    }
+
+    pub(crate) fn new_generation_session_with_policy<'model, 'weights, 'context>(
+        &'weights self,
+        model: &'model Bf16Model<'weights>,
+        context: &'context Bf16Context,
+        options: crate::session::Options,
+        profile: Option<ProfileOptions>,
+        single_row_batching: bool,
+    ) -> std::result::Result<Bf16GenerationSession<'model, 'weights, 'context>, crate::session::Error>
+    {
         use crate::session::Error as SessionError;
         graph::generation::validate_options(model, options)?;
         if let Some(profile) = profile {
@@ -181,7 +240,10 @@ impl Bf16Weights {
                 options.prefill_chunk_size,
                 fixed,
                 options.memory_limit_bytes,
-                profile,
+                SessionPolicy {
+                    profile,
+                    single_row_batching,
+                },
             )
             .map_err(|error| match error {
                 GraphError::Metal(Error::Budget { required, limit }) => {
@@ -229,7 +291,7 @@ impl Bf16Weights {
         chunk_rows: usize,
         fixed: usize,
         budget: usize,
-        profile: Option<ProfileOptions>,
+        policy: SessionPolicy,
     ) -> GraphResult<Backend<'weights, 'context>> {
         if !std::ptr::eq(&*self.device, &*context.0.gpu.device)
             || model
@@ -240,13 +302,13 @@ impl Bf16Weights {
         }
         let counts = Counts::new(self, chunk_rows)?;
         let minimum = counts.memory(counts.tile, counts.ple)?.total()?;
-        let diagnostic = if profile.is_some() {
+        let diagnostic = if policy.profile.is_some() {
             profile::ALLOWANCE_BYTES
         } else {
             0
         };
         check_budget(add(add(fixed, minimum)?, diagnostic)?, budget)?;
-        Backend::new(self, context, chunk_rows, counts, budget - fixed, profile)
+        Backend::new(self, context, chunk_rows, counts, budget - fixed, policy)
     }
 }
 
@@ -320,6 +382,7 @@ pub struct Backend<'weights, 'context> {
     memory: BackendMemory,
     failed: bool,
     trace: Option<Box<Bf16Trace>>,
+    single_row_batching: bool,
     #[cfg(test)]
     fault: Option<Fault>,
 }
@@ -338,9 +401,9 @@ impl<'weights, 'context> Backend<'weights, 'context> {
         chunk: usize,
         counts: Counts,
         budget: usize,
-        profile: Option<ProfileOptions>,
+        policy: SessionPolicy,
     ) -> GraphResult<Self> {
-        let diagnostic = if profile.is_some() {
+        let diagnostic = if policy.profile.is_some() {
             profile::ALLOWANCE_BYTES
         } else {
             0
@@ -361,8 +424,12 @@ impl<'weights, 'context> Backend<'weights, 'context> {
         memory.metadata_allowance_bytes = add(memory.metadata_allowance_bytes, diagnostic)?;
         tile.resize(counts.tile, 0.);
         let gpu = &context.0.gpu;
-        let trace = profile
-            .map(|options| Bf16Trace::new(source, gpu, options).map(Box::new))
+        let trace = policy
+            .profile
+            .map(|options| {
+                Bf16Trace::new(source, gpu, options, policy.single_row_batching, tile.len())
+                    .map(Box::new)
+            })
             .transpose()?;
         Ok(Self {
             source,
@@ -377,6 +444,7 @@ impl<'weights, 'context> Backend<'weights, 'context> {
             memory,
             failed: false,
             trace,
+            single_row_batching: policy.single_row_batching,
             #[cfg(test)]
             fault: None,
         })
@@ -439,14 +507,75 @@ impl<'weights> Operations<MatrixRef<'weights>> for Backend<'weights, '_> {
         }
         admit(matrix.columns, matrix.maximum, input)?;
         self.failed = true;
+        let mut operation = weight.operation;
+        if operation.role == crate::mlx::gemma4::bf16::execution::Role::TokenEmbedding {
+            operation.role = crate::mlx::gemma4::bf16::execution::Role::OutputHead;
+        }
+        if self.single_row_batching
+            && tokens == 1
+            && matrix.tiles.len() > 1
+            && matrix.rows <= self.tile.len()
+            && self
+                .output
+                .len
+                .checked_sub(GUARD)
+                .is_some_and(|n| matrix.rows <= n)
+        {
+            let observation = match self.trace.as_mut() {
+                Some(trace) => trace.register_batch(
+                    operation,
+                    weight.index,
+                    matrix.rows,
+                    matrix.columns,
+                    matrix.tiles.len(),
+                )?,
+                None => None,
+            };
+            let tiled = bf16_batch::TiledBf16 {
+                tiles: &matrix.tiles,
+                rows: matrix.rows,
+                columns: matrix.columns,
+            };
+            let buffers = project::Buffers {
+                input: &mut self.input,
+                output: &mut self.output,
+                status: &mut self.status,
+                pending: &mut self.pending,
+            };
+            #[cfg(test)]
+            {
+                // Preserve the late fault after real GPU work and the first
+                // private CPU tile, before parent graph/KV publication.
+                let fault = (weight.index == self.source.bindings.embedding_index()
+                    && self.fault == Some(Fault::AfterFirstHeadTile))
+                .then_some(bf16_batch::Fault::AfterFirstCopy);
+                bf16_batch::run_with_fault(
+                    self.context,
+                    tiled,
+                    buffers,
+                    input,
+                    &mut self.tile[..matrix.rows],
+                    observation,
+                    fault,
+                )?;
+            }
+            #[cfg(not(test))]
+            bf16_batch::run(
+                self.context,
+                tiled,
+                buffers,
+                input,
+                &mut self.tile[..matrix.rows],
+                observation,
+            )?;
+            output.copy_from_slice(&self.tile[..matrix.rows]);
+            self.failed = false;
+            return Ok(());
+        }
         for (tile_index, weights) in matrix.tiles.iter().enumerate() {
             let first = tile_index * TILE_ROWS;
             let rows = (matrix.rows - first).min(TILE_ROWS);
             let active = &mut self.tile[..rows * tokens];
-            let mut operation = weight.operation;
-            if operation.role == crate::mlx::gemma4::bf16::execution::Role::TokenEmbedding {
-                operation.role = crate::mlx::gemma4::bf16::execution::Role::OutputHead;
-            }
             let observation = self.trace.as_mut().and_then(|trace| {
                 trace.observation(project::TileAttribution {
                     operation,
@@ -539,5 +668,15 @@ impl<'weights> Operations<MatrixRef<'weights>> for Backend<'weights, '_> {
 
     fn memory(&self) -> std::result::Result<BackendMemory, crate::model::Error> {
         Ok(self.memory)
+    }
+}
+
+impl Drop for Backend<'_, '_> {
+    fn drop(&mut self) {
+        // Only submitted commands are stored here. Failed/injected work must
+        // finish GPU access before any session-owned shared scratch is freed.
+        if let Some(command) = self.pending.take() {
+            command.waitUntilCompleted();
+        }
     }
 }

@@ -128,6 +128,47 @@ def write_bundle(folder, manifest, frame, inventory):
     (folder / 'manifest.json').write_text(json.dumps(manifest, separators=(',', ':'), allow_nan=False))
 
 
+def batched_fixture(**kwargs):
+    manifest, frame, inventory = fixture(**kwargs)
+    manifest.update(format='toklet-gemma-profile-v2', submission_policy='batched_single_row')
+    inventory.update(schema_version=2, submission_policy='batched_single_row')
+    by_id = {}
+    for op in inventory['operations']:
+        identity = (op['id']['role'], op['id']['layer'])
+        by_id[identity] = op
+        # Fixed chunk32 initialized buffers from the independent source shapes.
+        fits = op['projection_tiles'] > 1 and op['source_rows'] <= 262144 and op['source_columns'] <= 393216
+        prefill = 1 if fits and op['prefill_rows'] == 1 else op['projection_tiles']
+        op.update(predicted_commands_per_chunk=prefill, predicted_host_waits_per_chunk=prefill,
+                  predicted_decode_commands_per_chunk=1 if fits else op['projection_tiles'],
+                  predicted_decode_host_waits_per_chunk=1 if fits else op['projection_tiles'])
+    groups = []
+    shared = ['host_staging_seconds', 'host_commit_seconds', 'host_wait_seconds', 'host_validation_and_copy_seconds']
+    first = 0
+    while first < len(frame['tiles']):
+        record = frame['tiles'][first]['record']
+        a = record['attribution']
+        op = by_id[(a['operation']['role'], a['operation']['layer'])]
+        count = op['projection_tiles']
+        if count > 1 and a['input_rows'] == 1 and op['source_rows'] <= 262144 and op['source_columns'] <= 393216:
+            groups.append(dict(group_id=len(groups), first_counter_slot=first, tile_count=count,
+                owner_counter_slot=first, operation=copy.deepcopy(op['id']), source_matrix_slot=op['source_matrix_slot'],
+                input_rows=1, input_features=op['source_columns'], output_features=op['source_rows']))
+            record['input_copy_bytes'] = op['source_columns'] * 4
+            record['output_copy_bytes'] = op['source_rows'] * 4
+            for tile in frame['tiles'][first + 1:first + count]:
+                other = tile['record']
+                for key in shared: other[key] = 0.0
+                other.update(commands_submitted=0, host_wait_calls=0, input_copy_bytes=0, output_copy_bytes=0)
+        first += count
+    frame.update(schema_version=2, submission_groups=groups)
+    host = sum(tile['record'][key] for tile in frame['tiles'] for key in shared + ['host_encoding_seconds'])
+    host += sum(g['host_end_seconds'] - g['host_begin_seconds'] for g in frame['cpu_gathers'])
+    frame.update(exclusive_host_seconds=host,
+                 unattributed_host_seconds=frame['frame_wall_seconds'] - host - frame['clock_bracket_seconds'])
+    return manifest, frame, inventory
+
+
 class Reports(unittest.TestCase):
     def validate(self, data):
         with tempfile.TemporaryDirectory() as temporary:
@@ -303,6 +344,92 @@ class Reports(unittest.TestCase):
             self.assertEqual(failure.exception.code, 2)
             self.assertFalse(out.exists())
             self.assertFalse(md.exists())
+
+    def test_v2_prefill_decode_and_single_row_tail_groups_are_capture_specific(self):
+        for kwargs, groups, commands in [({}, 41, 278), ({'ordinal': 2}, 42, 277),
+                                         ({'input_count': 33, 'ordinal': 2}, 42, 277),
+                                         ({'input_count': 384, 'maximum': 128, 'emitted': 128, 'ordinal': 12}, 41, 278),
+                                         ({'input_count': 384, 'maximum': 128, 'emitted': 128, 'ordinal': 139}, 42, 277)]:
+            value = self.validate(batched_fixture(**kwargs))
+            self.assertEqual(value['format'], 'toklet-gemma-profile-cost-v2')
+            self.assertEqual(value['submission_policy'], 'batched_single_row')
+            self.assertEqual(len(value['submission_groups']), groups)
+            self.assertEqual(value['completed_counters'],
+                             dict(dispatches_encoded=349, commands_submitted=commands, host_wait_calls=commands))
+            head = next(row for row in value['operations'] if row['role'] == 'output_head')
+            self.assertEqual(head['completed_counters'], dict(dispatches_encoded=32, commands_submitted=1, host_wait_calls=1))
+            self.assertEqual((head['input_copy_bytes'], head['output_copy_bytes']), (6144, 1048576))
+            self.assertAlmostEqual(value['gpu']['encoder_union_seconds'], .02)
+        zero = self.validate(batched_fixture(maximum=1, emitted=1, zero=True))
+        self.assertEqual(zero['gpu']['encoder_union_seconds'], 0)
+        self.assertEqual(zero['availability'], 'complete')
+
+    def test_v1_wire_does_not_silently_gain_group_or_policy_fields(self):
+        data = fixture()
+        self.assertEqual(len(data[2]), 6)
+        self.assertNotIn('submission_groups', data[1])
+        value = self.validate(data)
+        self.assertNotIn('submission_groups', value)
+        self.assertNotIn('submission_policy', value)
+        self.assertEqual(value['format'], 'toklet-gemma-profile-cost-v1')
+        for part, key, value in [(0, 'submission_policy', 'batched_single_row'),
+                                 (1, 'submission_groups', []), (2, 'schema_version', 2)]:
+            data = fixture(); data[part][key] = value
+            with self.subTest(part=part), self.assertRaises(ValueError): self.validate(data)
+
+    def test_v2_rejects_old_trace_relabel_and_mixed_manifest_frame_inventory_versions(self):
+        for part in ('manifest', 'frame', 'inventory', 'missing-groups', 'old-records'):
+            data = batched_fixture()
+            if part == 'manifest': data[0]['format'] = 'toklet-gemma-profile-v1'
+            if part == 'frame': data[1]['schema_version'] = 1
+            if part == 'inventory': del data[2]['schema_version']
+            if part == 'missing-groups': data[1]['submission_groups'] = []
+            if part == 'old-records': data[1]['tiles'] = fixture()[1]['tiles']
+            with self.subTest(part=part), self.assertRaises(ValueError): self.validate(data)
+
+    def test_v2_sparse_groups_require_exact_ranges_owners_shapes_and_eligible_set(self):
+        changes = [('group_id', True), ('owner_counter_slot', 1), ('first_counter_slot', 348),
+                   ('tile_count', 1), ('input_rows', 2), ('input_features', 1),
+                   ('output_features', 8192), ('source_matrix_slot', 277)]
+        for key, value in changes:
+            data = batched_fixture(); data[1]['submission_groups'][0][key] = value
+            with self.subTest(key=key), self.assertRaises(ValueError): self.validate(data)
+        for damage in ('duplicate-id', 'overlap', 'missing', 'extra', 'unknown', 'noncontiguous-tile'):
+            data = batched_fixture(); groups = data[1]['submission_groups']
+            if damage == 'duplicate-id': groups[1]['group_id'] = 0
+            if damage == 'overlap': groups[1]['first_counter_slot'] = groups[0]['first_counter_slot']
+            if damage == 'missing': groups.pop()
+            if damage == 'extra': groups.append(copy.deepcopy(groups[-1]))
+            if damage == 'unknown': groups[0]['operation']['role'] = 'unknown'
+            if damage == 'noncontiguous-tile': data[1]['tiles'][1]['record']['attribution']['tile_index'] = 2
+            with self.subTest(damage=damage), self.assertRaises(ValueError): self.validate(data)
+
+    def test_v2_shared_counts_bytes_and_host_cost_belong_only_to_first_owner(self):
+        for key, value in [('commands_submitted', 1), ('host_wait_calls', 1), ('input_copy_bytes', 6144),
+                           ('output_copy_bytes', 32768), ('host_staging_seconds', .0001),
+                           ('host_commit_seconds', .0001), ('host_wait_seconds', .0001),
+                           ('host_validation_and_copy_seconds', .0001), ('dispatches_encoded', 0)]:
+            data = batched_fixture(); slot = data[1]['submission_groups'][0]['first_counter_slot'] + 1
+            data[1]['tiles'][slot]['record'][key] = value
+            with self.subTest(key=key), self.assertRaises(ValueError): self.validate(data)
+        for key in ('commands_submitted', 'host_wait_calls', 'input_copy_bytes', 'output_copy_bytes'):
+            data = batched_fixture(); slot = data[1]['submission_groups'][0]['owner_counter_slot']
+            data[1]['tiles'][slot]['record'][key] = 0
+            with self.subTest(owner=key), self.assertRaises(ValueError): self.validate(data)
+        data = batched_fixture()
+        fallback = next(tile['record'] for tile in data[1]['tiles'] if tile['record']['attribution']['operation'] == dict(role='query', layer=0))
+        fallback['commands_submitted'] = 0
+        with self.assertRaises(ValueError): self.validate(data)
+
+    def test_v2_does_not_expand_frozen_cli_chunk_or_accept_false_decode_predictions(self):
+        for damage in ('chunk', 'scratch-fit', 'decode-wait', 'configured-prefill'):
+            data = batched_fixture()
+            if damage == 'chunk': data[0]['workload']['chunk'] = 3
+            op = next(op for op in data[2]['operations'] if op['id']['role'] == 'output_head')
+            if damage == 'scratch-fit': op['predicted_decode_commands_per_chunk'] = 32
+            if damage == 'decode-wait': op['predicted_decode_host_waits_per_chunk'] = 32
+            if damage == 'configured-prefill': op['predicted_commands_per_chunk'] = 32
+            with self.subTest(damage=damage), self.assertRaises(ValueError): self.validate(data)
 
 
 if __name__ == '__main__':

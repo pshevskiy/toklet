@@ -104,20 +104,25 @@ fn official_bf16_remaining_loss_blocks() {
 #[cfg(target_os = "macos")]
 fn run_bf16_blocks(blocks: &[usize]) {
     println!();
+    let submission = super::bf16::Submission::selected();
     let (source, context, path, original) = super::bf16::load_official();
     let snapshot = source.test_retained_digest();
     let budget = PROCESS - DIAGNOSTIC;
     let model = source.model_for_quality_probe(1025).unwrap();
-    let warm = source.new_session(&model, &context, 32, budget).unwrap();
+    let warm = submission
+        .new_session(&source, &model, &context, 32, budget)
+        .unwrap();
     let owned = warm.allocated_bytes().unwrap();
     let required = model.model_bytes() + owned;
     drop(warm);
     assert!(matches!(
-        source.new_session(&model, &context, 32, required - 1),
+        submission.new_session(&source, &model, &context, 32, required - 1),
         Err(hybrid::Error::Metal(crate::metal::Error::Budget { required: r, limit }))
         if r == required && limit == required - 1
     ));
-    let mut session = source.new_session(&model, &context, 32, required).unwrap();
+    let mut session = submission
+        .new_session(&source, &model, &context, 32, required)
+        .unwrap();
     emit(
         "BF16_LOSS_ADMISSION",
         json!({"required_bytes":required,"session_bytes":owned}),

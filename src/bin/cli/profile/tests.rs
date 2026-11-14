@@ -1,4 +1,4 @@
-use super::{Witness, Workload, load_workload, parse};
+use super::{Submission, Witness, Workload, load_workload, parse};
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
 use std::{
@@ -120,6 +120,26 @@ fn arguments_require_the_four_explicit_options_and_preserve_paths() {
         let mut values = arguments();
         values[5] = ordinal.into();
         assert_eq!(parse(values).unwrap().evaluation.to_string(), ordinal);
+    }
+}
+
+#[test]
+fn submission_defaults_to_legacy_and_requires_an_explicit_known_policy() {
+    assert_eq!(parse(arguments()).unwrap().submission, Submission::PerTile);
+    for (value, expected) in [
+        ("per-tile", Submission::PerTile),
+        ("batched-single-row", Submission::BatchedSingleRow),
+    ] {
+        let mut values = arguments();
+        values.extend(["--submission".into(), value.into()]);
+        assert_eq!(parse(values.clone()).unwrap().submission, expected);
+        values.extend(["--submission".into(), value.into()]);
+        assert!(parse(values).is_err());
+    }
+    for value in ["", "batch", "batched_single_row", "PER-TILE"] {
+        let mut values = arguments();
+        values.extend(["--submission".into(), value.into()]);
+        assert!(parse(values).is_err());
     }
 }
 

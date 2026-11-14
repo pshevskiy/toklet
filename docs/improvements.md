@@ -715,3 +715,24 @@ functional/diagnostic retention, no findings; ordinary V2 TTFT1% remains
 unqualified/opt-in. [Review/commit/push/CI](../artifacts/gemma-cost-attribution-2026-11-13/publication-checks-1.json).
 [Scope](gemma-profile-cli.md),
 [checks](../artifacts/gemma-cost-attribution-2026-11-13/checks-final-1.json).
+
+Gemma single-row submission is retained as an opt-in source4 route after combined
+Astra approval with no actionable or blocking findings; publication follows. Required checks and exact source reuse cover CPU816/Metal976,
+original45,000,704 numerical values,full10k loss/100-task quality,state/GPU/profile
+and strict optimized zero-allocation controls. All6 ordinary collections validate
+557 requests/431 measured,including both600s sustained arms,peak4.820GB. Complete
+caller medians improve7.4005/7.1650%; paired95%lower6.9263/6.9062% exceeds5% in both
+cohorts. All20 total-clock comparisons improve; independent65-pin replay matches
+4720 report values. One secondary cached TTFT point is+2.313microseconds in
+confirmation,CIincludes0; no universal TTFT claim or new noise threshold follows.
+
+Source4099/binaries are recovered exactly into persistent storage and archived;
+full canonical model hashes authenticate only a device-number remount. Completed
+primaries replay;178 interrupted matrix requests and failed report/path/adapter
+attempts stay retained/unqualified. Default per-tile/native behavior and disabled/
+opt-in summaries persist. Combined [Astra review](../artifacts/gemma-head-batch-2026-11-14/astra-review-1/verdict.json)
+passes; commit/push/CI remain pending;
+UI/iPhone/larger contexts remain unqualified. [Scope](gemma-single-row-submission.md),
+[checks](../artifacts/gemma-head-batch-2026-11-14/checks-final-1.json),
+[report](../artifacts/gemma-head-batch-2026-11-14/actual-submission-report-2/report.md),
+[independent replay](../artifacts/gemma-head-batch-2026-11-14/independent-submission-replay-1.json).

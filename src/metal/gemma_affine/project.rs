@@ -2,6 +2,12 @@
 use super::*;
 use crate::{metal::profile::Trace, mlx::gemma4::bf16::execution::OperationId};
 
+#[cfg(target_os = "macos")]
+pub(in crate::metal::gemma_affine) mod bf16_batch;
+
+#[cfg(all(target_os = "macos", any(test, feature = "gemma-head-batch-mac-probe")))]
+pub(in crate::metal::gemma_affine) mod head_batch_experiment;
+
 #[derive(Clone, Copy, Debug, serde::Serialize)]
 pub struct TileAttribution {
     pub operation: OperationId,
@@ -28,6 +34,31 @@ pub struct TileRecord {
     pub host_wait_calls: usize,
     pub input_copy_bytes: usize,
     pub output_copy_bytes: usize,
+}
+
+/// Sparse metadata for one actual multi-tile submission. Shared metrics live
+/// once on the first tile record, while every tile retains its encoder event.
+#[derive(Clone, Copy, Debug, serde::Serialize)]
+#[cfg(target_os = "macos")]
+pub struct SubmissionGroup {
+    pub group_id: usize,
+    pub first_counter_slot: usize,
+    pub tile_count: usize,
+    pub owner_counter_slot: usize,
+    pub operation: OperationId,
+    pub source_matrix_slot: usize,
+    pub input_rows: usize,
+    pub input_features: usize,
+    pub output_features: usize,
+}
+
+#[cfg(target_os = "macos")]
+pub(super) struct BatchObservation<'a> {
+    pub trace: &'a Trace,
+    pub records: &'a mut Vec<TileRecord>,
+    pub capacity: usize,
+    pub overflowed: &'a mut bool,
+    pub group: SubmissionGroup,
 }
 
 pub(super) struct Observation<'a> {

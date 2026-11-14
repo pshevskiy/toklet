@@ -7,6 +7,34 @@ history is in the [dated archive](docs/archive/2026-11-12/README.md).
 
 ## Current and next task
 
+Current task: **publish the Astra-approved Gemma single-row submission**.
+- [x] Required fmt, strict CPU/Metal/probe Clippy, CPU816/Metal976 and affected
+  state/GPU/legacy controls pass or retain exact relevant-input reuse. Optimized
+  allocations are zero;45,000,704 numerical values,full10k loss and100 tasks pass
+  unchanged gates. [Checks](artifacts/gemma-head-batch-2026-11-14/checks-final-1.json),
+  [quality](artifacts/gemma-head-batch-2026-11-14/quality-model-decision-1.json).
+- [x] All6 ordinary collections validate557 requests/431 measured. Complete caller
+  medians improve7.4005/7.1650%; paired95%lower6.9263/6.9062% exceed5%. All20
+  total-clock comparisons improve; both600s sustained arms pass,peak4.820GB.
+  Independent replay reproduces4720 comparisons/zero discrepancies. Cached TTFT
+  +2.313microseconds remains disclosed,CIincludes0; no new threshold or samples.
+  [Scope/results](docs/gemma-single-row-submission.md),
+  [replay](artifacts/gemma-head-batch-2026-11-14/independent-submission-replay-1.json).
+- [x] Combined Astra approves scoped opt-in retention, no actionable/blocking
+  findings; exact4099-source/binary recovery and device-number-only content bridge
+  are accepted within recorded limits. All178 interrupted requests stay excluded.
+  [Review](artifacts/gemma-head-batch-2026-11-14/astra-review-1/verdict.json).
+- [ ] Commit/push the approved change and verify exact-head CI. Defaults remain
+  per-tile; summary/UI/iPhone/larger-context adoption stays unqualified.
+
+Next: ordinary official Gemma engine/CLI generation and request metrics using
+existing qualified owners/codec/session. Independent contract preparation overlaps
+publication; one heavy queue remains. [Velocity plan](artifacts/gemma-head-batch-2026-11-14/velocity-plan-1.json),
+[remaining-goal audit](artifacts/gemma-head-batch-2026-11-14/remaining-goal-audit-2.json),
+[delivery policy](docs/parallel-delivery.md). Whole improvement goal remains active.
+
+## Recent completed milestones
+
 - [x] S1.L external request observations: scoped publication of all
   four fresh Ollama/vLLM 3+10 cohorts and both frozen CPU baseline cohorts.
   Exact vLLM inputs pass, but only 3/13 output-ID/text rows match CPU per cohort;
@@ -90,7 +118,6 @@ LFM3 CPU code and portable measurements are published as `612771d7` on
   [checks/review/commit/CI](artifacts/gemma-decode-rows-2026-11-13/publication-checks-1.json).
 - [ ] The V2 1% TTFT bound and default adoption remain unqualified.
 
-Current/next task: **attribute dominant Gemma native cost through the console**.
 - [x] Existing profiler readiness passes: France15+decode1,349tiles+2gathers,
   bitwise logits and fault/overflow/cancel/reset controls;56.18s/4.808GB observed
   engine charge including helper. Release compile210.66s/3.185GB stayswithin3GiB.
@@ -393,7 +420,7 @@ model, context, device or adoption qualification.
 | Q2.F: 9B context17 | Both 33.85M-value gates and prefix/repair/zero-allocation witnesses pass; descriptive release medians 4.093/4.121s. [Scope](docs/qwen35-9b-context17.md), `41287c6c`. |
 | Q2.G0: exact reference helper | All 67.17M short-context profile values bitwise match scalar references. Helper gains are separate from engine speed or deeper-context qualification. [Scope](docs/qwen35-reference-vector.md), `88950b11`. |
 | LFM3 CPU BF16 | Authenticated graph/CLI, 1,025-position parity, complete original quality and 62 state checks pass; finite widening retained after Astra with 29.0–29.5% primary gains. Managed/GPU adoption remains open. [Scope](docs/lfm3-finite-widening.md). |
-| Five under-4B candidates | Metadata research complete; payload, new graphs, numerical/quality/fit/request and adoption gates remain open. [Selected order and evidence](docs/model-observability-plan.md#five-candidates-strictly-below-4b-total-parameters). |
+| Five under-4B candidates | LFM3 CPU retained; MiniCPM/Granite/Ministral/Qwen2B current routes have scoped numerical rejection decisions. Dependent adoption gates do not advance; closed searches stay closed. [Current requirement audit](artifacts/gemma-head-batch-2026-11-14/remaining-goal-audit-2.json), [selected order](docs/model-observability-plan.md#five-candidates-strictly-below-4b-total-parameters). |
 
 ## Remaining observability gates
 

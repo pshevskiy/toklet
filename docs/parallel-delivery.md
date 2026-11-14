@@ -19,16 +19,27 @@ all candidate code was reverted. [Experiment decision](lfm3-two-token-projection
 | Evidence/documentation | One report or next-command preparation | Concise actual pass/reject scope, receipts and limitations |
 | Integrator | TODO/improvements, shared API, heavy queue and publication | Earliest integrated check, one combined Astra review, retained/reverted decision, commit/push and exact-head CI |
 
-The active Gemma console milestone uses these lanes concretely: the producer
-owns CLI dispatch/profile execution and the small public G2 constructor; an
-independent owner supplies parser/session-witness controls; a third owns the
-offline profile report and its controls. The integrator owns command-boundary
-tests, documentation and the serial check/model queue. The first 16 CPU controls
-passed in 5.39 seconds. The first Metal check caught a private-method boundary
-before any expensive CLI model capture; an additive owner constructor resolves
-that boundary without changing existing session defaults. These are delivery
-observations, not a measured workflow speedup.
-[Contract and ownership](../artifacts/gemma-cost-attribution-2026-11-13/implementation-contract-1.json).
+The Gemma single-row candidate passes numerical/quality gates and source4 release
+checks. Profile captures and both primary cohorts complete. An interrupted matrix
+and lost temporary worktree require recovery: all4099 source inputs and binaries
+now match exactly in persistent storage. Full canonical model hashing explicitly
+bridges a device-number-only remount; old/current actual identities remain stored.
+The source archive and independent raw primary replay preserve completed evidence.
+[Recovery](../artifacts/gemma-head-batch-2026-11-14/source-recovery/source4-restoration-1.json).
+
+| Owner | Completed handoff | State |
+| --- | --- | --- |
+| Source/test owner | Sixteen exact source files recovered | Paused |
+| CLI/report owner | Four exact source files; bounded continuation and15 cold controls | Paused |
+| Benchmark/core owner | Both examples and seven Metal files recovered exactly | Paused |
+| Integrator | Persistent worktree/content archive, actual source/model/binary authentication and primary replay | Six collections terminal and clean |
+
+All6 measurement collections now complete and validate557 requests/431 measured;
+independent raw/statistical replay matches4720 report values. The current critical
+path is **approved diff → commit/push → exact-head CI**. Combined Astra approves
+scoped opt-in retention without actionable findings. Complete-request medians
+improve7.40/7.17%; the adverse secondary cached TTFT point stays disclosed.
+[Current scope](gemma-single-row-submission.md).
 
 Independent static preparation may overlap compilation. Before performance work,
 the integrator requires explicit **paused** acknowledgements from every active
@@ -59,6 +70,13 @@ ready slices without waiting for unrelated preparation to finish.
 Keep one implementation experiment active. Read-only preparation for the next
 task can overlap a settled pass/reject decision and its evidence closure.
 Do not open a second model campaign to fill a slot.
+
+Prepare benchmark commands, report contracts, a real resource/lifecycle smoke
+case and the review-packet outline alongside implementation, before long quality
+runs. Establish a feasible optimized qualification target early. The current
+closed build/variant searches remain closed; unchanged scientific checks are
+reused by relevant-input proof. Each lane stops after one bounded handoff; do not
+add general tooling or approval rounds to occupy an available owner.
 
 ## Use short decision checkpoints
 
@@ -92,6 +110,14 @@ Use existing probes and guards. Check interpreter, arguments, input/runtime pins
 output paths and phase disk admission before entering the queue. Add a helper
 only when an existing tool cannot express a necessary measurement or control.
 
+Keep uncommitted source in persistent artifact-backed worktrees and archive actual
+frozen contents before long runs; hashes alone cannot restore missing files.
+When a tool handle disappears, inspect its recorded process birth identities and
+terminal artifacts before restarting. Reuse complete cohorts only through exact
+source/input/binary and raw-data replay. Incomplete cohorts require fresh original
+warmups/repetitions. A remount must preserve actual new identities and authenticate
+contents explicitly; never rewrite observed identities to make a stale check pass.
+
 Reuse successful checks only when their relevant source, dependency, feature,
 compiler and runtime inputs are unchanged. Record each invalidation and rerun
 reason. Documentation-only changes need content/link/whitespace checks. Kernel
@@ -111,3 +137,9 @@ first-check time, rework and repeated-check reasons. Estimate the next checkpoin
 from the longest dependency chain and observed jobs, with numerical uncertainty
 separate. Do not sum parallel estimates or predict a workflow speedup without
 comparable completed milestones.
+
+Current review/publication preparation uses four bounded lanes: integrator,
+Astra, independent remaining-goal audit and next Gemma CLI contract. As owners
+finish, reassign them to the next contract's exclusive producer/validator/report
+files. Keep one mechanism active and one next task ready; integrate at the first
+working interface. [Current velocity plan](../artifacts/gemma-head-batch-2026-11-14/velocity-plan-1.json).
