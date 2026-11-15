@@ -49,11 +49,13 @@ authorization covers that audit; optional user direction is not a prerequisite.
 
 | Alternative source | Observed cold evidence | Still required |
 | --- | --- | --- |
-| [TheWirelessPhoenix Huihui 4B](https://huggingface.co/TheWirelessPhoenix/Qwen3.5-4B-abliterated_4bit/tree/916d9f7c2e27ed41e2b9ed39f3a2badccb2bbc7c) | Revision `916d9f7c`; all 924 header descriptors match the existing 4B layout. Publisher declares Huihui lineage and MLX-LM 0.31.3 conversion | Full content authentication, exact conversion lineage, separate source/codec admission and unchanged numerical/quality/memory gates |
+| [TheWirelessPhoenix Huihui 4B](https://huggingface.co/TheWirelessPhoenix/Qwen3.5-4B-abliterated_4bit/tree/916d9f7c2e27ed41e2b9ed39f3a2badccb2bbc7c) | Revision `916d9f7c`; complete child/parent authentication and all 426/924 arrays match one Metal conversion witness; [scope](qwen35-alternative-correspondence.md) | Historical converter environment unavailable; separate native source/codec admission and unchanged numerical/quality/memory gates |
 | [Interim Labs Huihui 9B](https://huggingface.co/interimlabs/InterimLabs-Huihui-Qwen3.5-9B-abliterated-MLX-4bit/tree/eca302ac442310980ec393e56546aa4e8a2ee894) | Revision `eca302ac`; 927 renamed tensors, 24 `A_log` vectors changed from BF16 to F32, all payload ranges repacked | Full content/lineage proof and fresh offsets. Stored dtype alone proves no value/precision gain; no original numerical failure is cleared |
 
-Only bounded metadata and header bytes were read. File size is not physical
-admission, and publisher context limits do not expand Toklet's qualified limits.
+The 4B source audit now reads and authenticates complete contents, with exact
+conversion correspondence under a predefined Metal witness. The 9B source is
+metadata/header-only. Neither result is physical model admission; publisher
+context limits do not expand Toklet's qualified limits.
 The [source proposal](../artifacts/qwen35-alternative-admission-2026-11-15/source-profile-contract-2.json)
 and [header/lineage comparison](../artifacts/qwen35-alternative-admission-2026-11-15/header-lineage-decision-2.json)
 retain both original dual-profile gates and stop downstream work on failure.

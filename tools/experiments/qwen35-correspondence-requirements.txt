@@ -1,0 +1,5 @@
+# CPython 3.12: Linux x86_64 and macOS arm64 wheels only.
+numpy==2.3.2 \
+    --hash=sha256:8145dd6d10df13c559d1e4314df29695613575183fa2e2d11fac4c208c8a1f73 \
+    --hash=sha256:2f4f0215edb189048a3c03bd5b19345bdfa7b45a7a6f72ae5945d2a28272727f \
+    --hash=sha256:8b1224a734cd509f70816455c3cffe13a4f599b1bf7130f913ba0e2c0b2006c0

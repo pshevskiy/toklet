@@ -599,9 +599,13 @@ Mac ceiling, 512/32 pilot and 512 MiB codec budget stay fixed; iPhone is deferre
 The [Qwen alternative preflight](../artifacts/qwen35-alternative-admission-2026-11-15/header-lineage-decision-2.json)
 records two separate Huihui-derived sources for a finite cold-admission audit. The 4B header is unchanged;
 9B renames 927 tensors and stores 24 `A_log` vectors as F32, with fresh offsets.
-Bounded metadata/header checks pass after correcting the local CA-bundle path;
-no tensor values, exact upstream lineage, fit or numerical improvement is proved.
-Original rejections and gates remain binding. [Admission contract](../artifacts/qwen35-alternative-admission-2026-11-15/source-profile-contract-2.json).
+The 4B child and both parent shards now authenticate completely. One predefined
+Metal conversion witness matches all 426/924 arrays and 65,699,840 groups, with
+zero mismatches; 24 independent controls pass per Python mode. The bounded setup
+peaks at 167,985,152 bytes including helper. Historical conversion environment,
+native admission, numerical/quality/fit and performance remain unqualified;
+9B remains header-only. [Scope and evidence](qwen35-alternative-correspondence.md).
+Astra approves scoped functional retention, no findings. [Publication](../artifacts/qwen35-alternative-admission-2026-11-15/correspondence-publication-1.json). Original rejections and gates remain binding. [Admission contract](../artifacts/qwen35-alternative-admission-2026-11-15/source-profile-contract-2.json).
 
 Original individual check counts, source revisions, measured cohorts, rejected
 experiments and Astra/commit receipts remain in the [reviewed history](archive/2026-11-09/improvements.md#latest-documentation-work)

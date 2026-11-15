@@ -1,0 +1,220 @@
+{
+  "format": "toklet-qwen35-independent-affine-goldens-v1",
+  "scope": "Independently authored mathematical source-profile witnesses only. Not tensor correspondence,historical converter,numerical/model/quality/performance/adoption evidence.",
+  "primary_notes_sha256": "7ab43fe40e7ec90aa96df8400708f7a664ac3587a6c149e8d22a4a66cd33ca56",
+  "groups": [
+    {
+      "name": "code_half_and_unrounded_metadata",
+      "input_pattern": [
+        "bf00",
+        "3f80",
+        "3e80",
+        "3f40"
+      ],
+      "cpu_rint": {
+        "word_pattern": [
+          "280f280f"
+        ],
+        "scale": "bdcd",
+        "bias": "3f80"
+      },
+      "metal_round": {
+        "word_pattern": [
+          "380f380f"
+        ],
+        "scale": "bdcd",
+        "bias": "3f80"
+      },
+      "explanation": "FP32scale=-0.1,bias=1;codesCPU15,0,8,2 vsMetal15,0,8,3. StoredBF16scale would wrongly code0.25 as7."
+    },
+    {
+      "name": "q0_half_and_upper_clamp",
+      "input_pattern": [
+        "c108",
+        "40d0"
+      ],
+      "cpu_rint": {
+        "word_pattern": [
+          "e0e0e0e0"
+        ],
+        "scale": "3f88",
+        "bias": "c108"
+      },
+      "metal_round": {
+        "word_pattern": [
+          "f0f0f0f0"
+        ],
+        "scale": "3f72",
+        "bias": "c108"
+      },
+      "explanation": "[-8.5,6.5],initialscale1;CPUq0=-8 scale1.0625,Metalq0=-9 scale8.5/9;Metalhighcode16 clamps15."
+    },
+    {
+      "name": "negative_only_maximum_initialization",
+      "input_pattern": [
+        "c080",
+        "bf80"
+      ],
+      "cpu_rint": {
+        "word_pattern": [
+          "f0f0f0f0"
+        ],
+        "scale": "3e4d",
+        "bias": "c080"
+      },
+      "metal_round": {
+        "word_pattern": [
+          "b0b0b0b0"
+        ],
+        "scale": "3e89",
+        "bias": "c080"
+      },
+      "explanation": "[-4,-1]:CPUtrue max-1 gives0.2;Metalmax0 gives4/15. Codes0/15 vs0/11."
+    },
+    {
+      "name": "all_positive_zero",
+      "input_pattern": [
+        "0000"
+      ],
+      "cpu_rint": {
+        "word_pattern": [
+          "00000000"
+        ],
+        "scale": "b3d7",
+        "bias": "0000"
+      },
+      "metal_round": {
+        "word_pattern": [
+          "00000000"
+        ],
+        "scale": "b3d7",
+        "bias": "0000"
+      },
+      "explanation": "Signednegative epsilon floor,zeroq0,bias+0."
+    },
+    {
+      "name": "constant_positive",
+      "input_pattern": [
+        "3f80"
+      ],
+      "cpu_rint": {
+        "word_pattern": [
+          "00000000"
+        ],
+        "scale": "b3d7",
+        "bias": "3f80"
+      },
+      "metal_round": {
+        "word_pattern": [
+          "00000000"
+        ],
+        "scale": "b3d7",
+        "bias": "3f80"
+      },
+      "explanation": "Constant+1,negativeepsilon,endpointbias+1."
+    },
+    {
+      "name": "constant_negative",
+      "input_pattern": [
+        "bf80"
+      ],
+      "cpu_rint": {
+        "word_pattern": [
+          "00000000"
+        ],
+        "scale": "b3d7",
+        "bias": "bf80"
+      },
+      "metal_round": {
+        "word_pattern": [
+          "00000000"
+        ],
+        "scale": "3d89",
+        "bias": "bf80"
+      },
+      "explanation": "CPUequalabs sides retainnegativeepsilon;Metalextra0givespositive1/15."
+    },
+    {
+      "name": "positive_subnormal_q0_zero",
+      "input_pattern": [
+        "0001",
+        "0002"
+      ],
+      "cpu_rint": {
+        "word_pattern": [
+          "00000000"
+        ],
+        "scale": "b3d7",
+        "bias": "0000"
+      },
+      "metal_round": {
+        "word_pattern": [
+          "00000000"
+        ],
+        "scale": "b3d7",
+        "bias": "0000"
+      },
+      "explanation": "Epsilon dominates;q0rounds0 andbiasmust+0,notedge."
+    },
+    {
+      "name": "negative_subnormal_q0_zero",
+      "input_pattern": [
+        "8001",
+        "8002"
+      ],
+      "cpu_rint": {
+        "word_pattern": [
+          "00000000"
+        ],
+        "scale": "33d7",
+        "bias": "0000"
+      },
+      "metal_round": {
+        "word_pattern": [
+          "00000000"
+        ],
+        "scale": "33d7",
+        "bias": "0000"
+      },
+      "explanation": "Positiveepsilon side;q0roundsnegative0,biasmust+0."
+    },
+    {
+      "name": "low_to_high_nibble_and_word_order",
+      "input_pattern": [
+        "0000",
+        "3f80",
+        "4000",
+        "4040",
+        "4080",
+        "40a0",
+        "40c0",
+        "40e0",
+        "4100",
+        "4110",
+        "4120",
+        "4130",
+        "4140",
+        "4150",
+        "4160",
+        "4170"
+      ],
+      "cpu_rint": {
+        "word_pattern": [
+          "89abcdef",
+          "01234567"
+        ],
+        "scale": "bf80",
+        "bias": "4170"
+      },
+      "metal_round": {
+        "word_pattern": [
+          "89abcdef",
+          "01234567"
+        ],
+        "scale": "bf80",
+        "bias": "4170"
+      },
+      "explanation": "Source0..15 givescodes15..0,lowcodeinnibble0;littleendianbytesefcdab8967452301 repeat."
+    }
+  ]
+}

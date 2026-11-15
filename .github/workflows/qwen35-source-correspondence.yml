@@ -1,0 +1,36 @@
+name: Qwen3.5 source correspondence controls
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  portable:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        optimize: ["0", "1"]
+    env:
+      PYTHONOPTIMIZE: ${{ matrix.optimize }}
+      PYTHONDONTWRITEBYTECODE: "1"
+      OPENBLAS_NUM_THREADS: "1"
+      OMP_NUM_THREADS: "1"
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: "3.12"
+      - name: Install pinned numerical test dependency
+        run: >-
+          python -m pip install --disable-pip-version-check --only-binary=:all:
+          --no-deps --require-hashes
+          -r tools/experiments/qwen35-correspondence-requirements.txt
+      - name: Run independent offline controls
+        run: >-
+          python -B -m unittest discover -s tools/experiments
+          -p test_qwen35_parent_correspondence.py

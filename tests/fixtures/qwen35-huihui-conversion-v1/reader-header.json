@@ -1,0 +1,35 @@
+{
+  "__metadata__": {
+    "scope": "tiny synthetic reader fixture; not actual source admission"
+  },
+  "a": {
+    "dtype": "BF16",
+    "shape": [
+      2
+    ],
+    "data_offsets": [
+      0,
+      4
+    ]
+  },
+  "b": {
+    "dtype": "U32",
+    "shape": [
+      1
+    ],
+    "data_offsets": [
+      4,
+      8
+    ]
+  },
+  "c": {
+    "dtype": "F32",
+    "shape": [
+      1
+    ],
+    "data_offsets": [
+      8,
+      12
+    ]
+  }
+}

@@ -7,22 +7,23 @@ history is in the [dated archive](docs/archive/2026-11-12/README.md).
 
 ## Current and next task
 
-Current task: **finite Qwen3.5-4B alternative lineage/conversion and owner-admission audit**.
+Current task: **distinct pinned Huihui Qwen3.5-4B native source admission**.
 - [x] R1 is published as `ae984fda` plus status `2a76caef`; each exact head has
   all six workflows/13 jobs green. [Publication](artifacts/gemma-cli-regression-2026-11-15/publication-status.json).
-- [x] Pin two separate Huihui-derived candidate metadata/headers. The 4B header
-  matches 924 old descriptors. The 9B header maps 927 renamed tensors, with 24
-  `A_log` vectors stored as F32 and every payload range repacked. No tensor
-  values, exact upstream conversion lineage, numerical quality or fit is proved.
-  The initial Python CA-path failure is retained; verified certifi retry passes.
-- [ ] Inspect pinned MLX-LM 0.31.3 converter/sanitizer/quantization source and the
-  exact parent/stock shard headers. Map all 426 text tensors into 924 child
-  descriptors, explain exclusions/aliases and complete the unique-owner phase
-  ledger at capacity512/chunk32 within 6 GiB, including transients and helper.
-- [ ] After metadata/resource prerequisites pass, authenticate full contents and
-  independently verify conversion/value correspondence. Preserve the original
-  idealFP64/stagedFP32 128/256 gates before any downstream campaign. A failed
-  prerequisite stops that candidate; no native kernel search is warranted now.
+- [x] Finite 4B parent/child audit: authenticate all three complete files
+  (11,445,857,581 bytes); reconstruct all 426/924 arrays; one predefined Metal
+  witness matches all 65,699,840 groups and 961,536 unquantized words exactly.
+  CPU differs in 6,863,958 code/metadata words. Full setup peak167,985,152 bytes
+  including helper; interrupted download and failed reuse assertion remain.
+- [x] Checker: 24 independent tests per Python mode, AST/link/whitespace/YAML
+  checks and exact relevant Rust-check reuse pass. Astra approves scoped
+  functional retention, no findings. [Scope/evidence](docs/qwen35-alternative-correspondence.md),
+  [review](artifacts/qwen35-alternative-admission-2026-11-15/astra-correspondence-review-1/verdict.json),
+  [commit/push/CI](artifacts/qwen35-alternative-admission-2026-11-15/correspondence-publication-1.json).
+- [ ] Add a separately pinned diagnostic source wrapper, preserving old source
+  identities/rejections. Admit actual CPU/consuming-GPU owners before the original
+  idealFP64/stagedFP32 128/256 comparisons. Native/codec, quality, physical fit,
+  request metrics and performance remain unqualified. No kernel variant search.
 
 Next: the frozen 9B candidate after the 4B disposition. Existing full-goal
 permission covers this finite audit; the pending user preference is optional

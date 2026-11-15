@@ -1,0 +1,200 @@
+{
+  "format": "toklet-qwen35-independent-bf16-goldens-v1",
+  "scope": "Source software RNE/canonicalNaN only; not universal historical native CPU/Metal NaN/FTZ behavior.",
+  "f32_to_bf16": [
+    {
+      "f32_bits": "00000000",
+      "bf16_bits": "0000"
+    },
+    {
+      "f32_bits": "80000000",
+      "bf16_bits": "8000"
+    },
+    {
+      "f32_bits": "3f800000",
+      "bf16_bits": "3f80"
+    },
+    {
+      "f32_bits": "3f807fff",
+      "bf16_bits": "3f80"
+    },
+    {
+      "f32_bits": "3f808000",
+      "bf16_bits": "3f80"
+    },
+    {
+      "f32_bits": "3f808001",
+      "bf16_bits": "3f81"
+    },
+    {
+      "f32_bits": "3f817fff",
+      "bf16_bits": "3f81"
+    },
+    {
+      "f32_bits": "3f818000",
+      "bf16_bits": "3f82"
+    },
+    {
+      "f32_bits": "3f818001",
+      "bf16_bits": "3f82"
+    },
+    {
+      "f32_bits": "bf808000",
+      "bf16_bits": "bf80"
+    },
+    {
+      "f32_bits": "bf818000",
+      "bf16_bits": "bf82"
+    },
+    {
+      "f32_bits": "00000001",
+      "bf16_bits": "0000"
+    },
+    {
+      "f32_bits": "00007fff",
+      "bf16_bits": "0000"
+    },
+    {
+      "f32_bits": "00008000",
+      "bf16_bits": "0000"
+    },
+    {
+      "f32_bits": "00008001",
+      "bf16_bits": "0001"
+    },
+    {
+      "f32_bits": "00018000",
+      "bf16_bits": "0002"
+    },
+    {
+      "f32_bits": "007f8000",
+      "bf16_bits": "0080"
+    },
+    {
+      "f32_bits": "7f7f0000",
+      "bf16_bits": "7f7f"
+    },
+    {
+      "f32_bits": "7f7f7fff",
+      "bf16_bits": "7f7f"
+    },
+    {
+      "f32_bits": "7f7f8000",
+      "bf16_bits": "7f80"
+    },
+    {
+      "f32_bits": "ff7f8000",
+      "bf16_bits": "ff80"
+    },
+    {
+      "f32_bits": "7f800000",
+      "bf16_bits": "7f80"
+    },
+    {
+      "f32_bits": "ff800000",
+      "bf16_bits": "ff80"
+    },
+    {
+      "f32_bits": "7fc01234",
+      "bf16_bits": "7fc0"
+    },
+    {
+      "f32_bits": "ffc01234",
+      "bf16_bits": "7fc0"
+    },
+    {
+      "f32_bits": "7f800001",
+      "bf16_bits": "7fc0"
+    },
+    {
+      "f32_bits": "ff800001",
+      "bf16_bits": "7fc0"
+    },
+    {
+      "f32_bits": "ffffffff",
+      "bf16_bits": "7fc0"
+    }
+  ],
+  "add_one": [
+    {
+      "input": "0000",
+      "output": "3f80"
+    },
+    {
+      "input": "8000",
+      "output": "3f80"
+    },
+    {
+      "input": "3f80",
+      "output": "4000"
+    },
+    {
+      "input": "bf80",
+      "output": "0000"
+    },
+    {
+      "input": "3f00",
+      "output": "3fc0"
+    },
+    {
+      "input": "bf00",
+      "output": "3f00"
+    },
+    {
+      "input": "3f81",
+      "output": "4000"
+    },
+    {
+      "input": "3f83",
+      "output": "4002"
+    },
+    {
+      "input": "bf81",
+      "output": "bc00"
+    },
+    {
+      "input": "3b80",
+      "output": "3f80"
+    },
+    {
+      "input": "3c00",
+      "output": "3f81"
+    },
+    {
+      "input": "bb80",
+      "output": "3f7f"
+    },
+    {
+      "input": "0001",
+      "output": "3f80"
+    },
+    {
+      "input": "8001",
+      "output": "3f80"
+    },
+    {
+      "input": "7f7f",
+      "output": "7f7f"
+    },
+    {
+      "input": "ff7f",
+      "output": "ff7f"
+    },
+    {
+      "input": "7f80",
+      "output": "7f80"
+    },
+    {
+      "input": "ff80",
+      "output": "ff80"
+    },
+    {
+      "input": "7f81",
+      "output": "7fc0"
+    },
+    {
+      "input": "ff81",
+      "output": "7fc0"
+    }
+  ]
+}
