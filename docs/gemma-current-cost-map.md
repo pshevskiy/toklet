@@ -1,0 +1,133 @@
+# Gemma current-path cost observations
+
+15 November 2026. G1 diagnostic work for the active
+[competitive GPU goal](mlx-gpu-performance-plan.md). These observations identify
+the next optimization target; they do not qualify a speedup, summary overhead
+or a win over an external engine.
+
+## Current binary and workload
+
+The named host is Apple M1 Pro/MacBookPro18,3, 16 GiB, macOS 26.6.2/25G83.
+The reused release binary has SHA-256
+`da693435917e603244428dd746e8a4788032d345013595b0066615c71308e175`.
+All 4,106 relevant compiled source/test/example inputs match its frozen source.
+It uses the authenticated official Gemma 4 E2B BF16 checkpoint, FP32 graph/KV,
+capacity 512, chunk 32 and explicit batched-single-row submission. The workload
+is the unchanged 384-input/128-output golden, with reset, no EOS stop and state
+512 history/511 committed/one pending token. Decode evaluations total 127.
+
+All actual runs use the existing owned-process guard with the 6 GiB ceiling,
+32 MiB helper reserve and 2 GiB disk floor. Preparation requires another 3 GiB
+disk reservation. AC power, Low Power Mode off and thermal state zero are
+checked repeatedly. Existing Ollama app/server identities are allowed only
+while its local residency API reports no loaded models; foreign named engine
+or build work rejects admission. These observations do not prove continuous
+global exclusivity or a continuous allocator cap.
+
+## CPU sampling
+
+Three complete warmups precede one sampled request. Eight-second prefill and
+ten-second decode sampling commands use `/usr/bin/sample` at one millisecond
+intervals. Their enclosing parent-clock brackets fall wholly before the first
+token and between first/last tokens respectively. The prefill command's bracket
+is longer than eight seconds because sampling/symbol processing is included.
+Exact output IDs, work and state pass for all four requests; all six model files
+authenticate before and after. No engine source is changed by this collection.
+
+The denominator is the main thread only: 5,776 pre-first-token samples and 7,366
+decode samples. A tree parser partitions exclusive sample weights once, so
+recursive/inlined appearances are not summed as separate work. Other threads
+are excluded. Ten parser controls pass, including recursive frames, other-thread
+exclusion, exclusive parent remainders and malformed/truncated trees.
+
+| Main-thread sample bucket | Pre-first-token share | Decode share |
+| --- | ---: | ---: |
+| CPU span attention | 46.68% | 28.77% |
+| Metal completion wait, including GPU execution | 46.57% | 59.76% |
+| Other projection host work | 1.54% | 5.08% |
+| Identified projection fill/copy | 0.40% | 3.39% |
+| CPU GELU | 2.61% | 0.86% |
+| CPU RMSNorm | 1.11% | 0.07% |
+| Other identified/unknown main-thread work | 1.09% | 2.08% |
+
+These are statistical sample shares in two windows, not exact CPU durations,
+GPU occupancy, whole-request shares or an additive speed forecast. Inlined
+validation and copies can remain in other projection work. An absent stack
+sample does not prove zero cost. The sampled request clocks include profiler
+effects and are excluded from acceptance timings.
+
+Peak guard charge is 5,075,048,616 bytes including the helper reserve. The
+collection closes with no live owned process or cleanup error.
+[Fixed protocol](../artifacts/mlx-gpu-gap-2026-11-15/g1-cpu-protocol-1.json),
+[raw/checked capture](../artifacts/mlx-gpu-gap-2026-11-15/g1-cpu-sample-1/result.json),
+[sample analysis](../artifacts/mlx-gpu-gap-2026-11-15/g1-cpu-analysis-1.json),
+[guard](../artifacts/mlx-gpu-gap-2026-11-15/g1-cpu-guard-1/result.json).
+
+## Completed GPU frames
+
+The existing CLI runs plain and profiled generation sequentially on one owner,
+checks complete output/state plus every selected logit bit, and exports a
+bounded selected frame. Each case below passes the strict offline report.
+
+| Evaluation | Position/input rows | Frame wall ms | GPU encoder union ms | Host wait ms | Unattributed host ms | Commands/waits |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| First prefill, 1, diagnostic fix | 0/32 | 597.288 | 363.901 | 441.517 | 121.721 | 278 |
+| Final prefill, 12 | 352/32 | 1453.541 | 427.811 | 604.701 | 818.651 | 278 |
+| First decode, 13 | 384/1 | 203.984 | 52.281 | 118.489 | 64.289 | 277 |
+| Last decode, 139 | 510/1 | 224.476 | 55.338 | 119.907 | 83.724 | 277 |
+
+Each frame has 349 projection dispatches and two CPU gathers. GPU intervals
+overlap host waits; they are not added or subtracted to invent queue time.
+Unattributed host time is not an exact attention timer. These selected frames
+are not whole-request operator totals or independent performance cohorts.
+Peak guard charge is 5,001,975,256 bytes including the helper reserve; completion
+and cleanup pass.
+[Capture/replay](../artifacts/mlx-gpu-gap-2026-11-15/g1-gpu-captures-2/result.json),
+[guard](../artifacts/mlx-gpu-gap-2026-11-15/g1-gpu-guard-2/result.json).
+
+First prefill uses the new diagnostic binary
+`1955f486db7a54568bd5d8fdd8535975d2e96b8ee5414b87519dda8af8f50943`;
+the other three frames use the earlier verified binary above. The diagnostic
+change leaves numerical functions and kernels unchanged, with an
+[exact inverse/source proof](../artifacts/mlx-gpu-gap-2026-11-15/g1-diagnostic-numerical-invariance-1.json).
+Its complete 384/128 plain/profile outputs and all 262,144 selected prefix-logit
+values agree bit for bit; the frame has 32 committed tokens. Peak guard charge is
+4,999,828,856 bytes including helper, with clean completion. The different
+frames/binaries are not pooled or compared as an overhead experiment.
+[Early capture](../artifacts/mlx-gpu-gap-2026-11-15/g1-gpu-captures-3/result.json),
+[early guard](../artifacts/mlx-gpu-gap-2026-11-15/g1-gpu-guard-3/result.json).
+
+## Early-prefill diagnostic gap and fix
+
+The first attempt at ordinal one fails with `selected logits unavailable` and
+cleans up. Generation correctly hides ordinary sampling logits until all queued
+prompt rows are evaluated. The old generic profile witness incorrectly needs
+those ordinary logits at every selected ordinal. The failed attempt remains
+[separate evidence](../artifacts/mlx-gpu-gap-2026-11-15/g1-early-prefill-coverage-gap-1.json).
+
+The fix adds a borrowed diagnostic view carrying its committed prefix
+length and updates the profile witness to require that exact prefix. It does
+not expose queued rows through ordinary `logits()`, advance state, add numerical
+work or change kernels/scheduling. Frozen scalar-prefix, no-allocation, replay
+invalidation and private-witness controls cover the new behavior. Fmt, strict
+CPU/Metal all-target Clippy, 847 CPU tests and 1,019 Metal tests pass (53/365
+ignored respectively), as does the release build. The actual early capture
+above passes. Astra approves the scoped diagnostic fix and observations with no findings.
+Publication is tracked in the [receipt](../artifacts/mlx-gpu-gap-2026-11-15/g1-publication-1.json).
+[Full checks](../artifacts/mlx-gpu-gap-2026-11-15/g1-required-checks-progress-1.json).
+
+## Decision and remaining work
+
+Prioritize GPU-resident attention and dependent projection scheduling. CPU
+attention is a directly observed large stack bucket; matrix GPU work and
+completion boundaries also remain substantial. Do not spend the next kernel
+iteration on small normalization/rotary stack buckets solely because their
+standalone implementations exist. Qualify one accurate attention/block
+mechanism before composing a full resident graph.
+
+G1 remains in progress: measure summary callback/validation/serialization costs
+and finish publication of this approved diagnostic fix. The old three
+of eight summary-overhead failures remain binding; this CPU/GPU diagnosis does
+not explain their causal cost. G0 common-artifact/cache/output comparability
+also remains open. The active goal still requires actual matched wins against
+both external engines and the unchanged 1% overhead gates.

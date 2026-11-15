@@ -41,6 +41,17 @@ Two bounded selected-logit buffers remain in memory; full logit traces are not
 exported. `profile.json` and `inventory.json` each have a 1 MiB limit; the final
 manifest has a 64 KiB limit and binds their exact bytes/SHA-256 hashes.
 
+Intermediate prefill evaluations use an explicit borrowed committed-prefix
+distribution for the selected-logit witness. Its prefix length must match the
+completed evaluation; ordinary sampling `logits()` remains unavailable while
+queued prompt rows or sampled tokens are pending. No extra evaluation is run.
+This fixes the former ordinal-one failure on the 384/128 workload without
+changing numerical kernels or sampling eligibility. Required checks pass, and
+all 262,144 selected prefix-logit values agree bit for bit in an actual capture;
+Astra approves scoped diagnostic retention with no findings; publication is
+tracked in the [receipt](../artifacts/mlx-gpu-gap-2026-11-15/g1-publication-1.json).
+[Current cost observations and fix](gemma-current-cost-map.md).
+
 The report validates current stable operation IDs and source geometry, all 349
 projection tiles and two CPU gathers, complete/nonoverflow state and paired-clock
 calibration. It groups the five exclusive host buckets by role/layer/source/shape

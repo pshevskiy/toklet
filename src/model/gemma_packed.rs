@@ -19,7 +19,7 @@ pub(crate) use e2b::{official_bf16_planned_kv, official_bf16_planned_layout};
 mod forward;
 pub(crate) mod generation;
 pub(crate) mod operations;
-pub use generation::GenerationSession;
+pub use generation::{CommittedLogits, GenerationSession};
 pub use operations::{BackendMemory, MatrixDescriptor, MatrixSource, Operations, Scalar};
 #[cfg(test)]
 mod tests;

@@ -1,8 +1,10 @@
 # Beat the MLX GPU baselines
 
-Updated 15 November 2026. Status: **active goal; diagnosis and implementation
-plan only**. No new performance win, GPU qualification or overhead pass is
-claimed. The previous [delivery outcomes](improvement-outcomes.md) remain valid.
+Updated 15 November 2026. Status: **active goal; G1 diagnosis and diagnostic
+implementation underway**. No new performance win, model adoption or overhead
+pass is claimed. The [current cost map](gemma-current-cost-map.md) identifies CPU
+attention and completion waits as the next targets; summary-component costing
+remains open. Previous [delivery outcomes](improvement-outcomes.md) remain valid.
 
 ## Goal and completion rule
 

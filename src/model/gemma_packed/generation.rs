@@ -7,6 +7,15 @@
 use super::*;
 use crate::session::{self, InferenceSession, Memory, Options};
 
+/// Borrowed diagnostic distribution for a completed, committed token prefix.
+/// Queued prompt rows and sampled pending tokens are excluded from this prefix.
+/// This is not the next-token distribution for the complete queued history.
+#[derive(Clone, Copy, Debug)]
+pub struct CommittedLogits<'a> {
+    pub committed_tokens: usize,
+    pub values: &'a [f32],
+}
+
 pub struct GenerationSession<'model, 'weights, M = Matrix<'weights>, B = Scalar> {
     inner: Session<'model, 'weights, M, B>,
     history: Vec<u32>,
@@ -209,6 +218,26 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
         let values = self.inner.logits();
         let start = values.len().checked_sub(self.vocab_size())?;
         Some(&values[start..])
+    }
+    /// Inspect the last retained committed evaluation without evaluating any
+    /// queued input or changing sampling eligibility. The prefix length is
+    /// explicit because ordinary `logits()` remains unavailable during prefill
+    /// and after sampling a pending token. Replay-invalidated or unpublished
+    /// distributions remain unavailable. This borrowed view allocates nothing.
+    pub fn diagnostic_committed_logits(&self) -> Option<CommittedLogits<'_>> {
+        let committed = self.evaluated_len();
+        if self.needs_replay || committed == 0 {
+            return None;
+        }
+        if self.history().get(..committed)? != self.inner.tokens() {
+            return None;
+        }
+        let values = self.inner.logits();
+        let start = values.len().checked_sub(self.vocab_size())?;
+        Some(CommittedLogits {
+            committed_tokens: committed,
+            values: &values[start..],
+        })
     }
     fn validate(&self, tokens: &[u32], base: usize) -> Result<(), session::Error> {
         let end = base

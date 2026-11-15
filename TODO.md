@@ -9,16 +9,27 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 ## Current and next task
 
 - [x] Create the competitive GPU goal and audit existing profiles/source. LFM3
-  remains CPU; Gemma is hybrid with277 batched-decode waits, CPU attention/unary
+  remains CPU; Gemma is hybrid with 277 batched decode waits, CPU attention/unary
   work, compensated projection and no tiled-prefill GEMM. These findings do not
   establish additive cost shares or a qualified external speedup ratio.
 - [x] Draft G0–G6/O4 implementation and benchmark gates, preserving numerics,
   full quality/state, 6 GiB and the original 1% overhead bound. All 440 relative
   links/26 anchors and whitespace pass; Astra approves the planning scope with
   no findings. No new engine code or win is claimed.
-- [ ] **Next: G1 current-path cost map**, with G0 matched-artifact/runtime
-  admission prepared alongside it. Rank CPU stages, current command/wait/copy
-  costs and summary components before selecting an implementation experiment.
+- [ ] **G1 diagnostics and prefix-witness fix:** CPU sampling and four GPU
+  frames pass exact output/state/selected-logit checks under 6 GiB. Attention
+  accounts for 46.68% pre-first-token / 28.77% decode main-thread samples;
+  completion waits account for 46.57% / 59.76%, including GPU execution.
+  These are diagnostic observations. [Cost map](docs/gemma-current-cost-map.md).
+- [x] The old early-prefill failure is retained. A borrowed committed-prefix
+  view fixes that diagnostic while ordinary sampling logits remain hidden for
+  pending input. Fmt, strict CPU/Metal Clippy, 847 CPU / 1,019 Metal tests and
+  release build pass; fresh early-prefix parity passes all 262,144 logit values.
+  Astra approves the scoped fix/evidence with no findings; publication is tracked
+  in the [receipt](artifacts/mlx-gpu-gap-2026-11-15/g1-publication-1.json). No new performance win.
+- [ ] **Next:** finish publication, measure summary components for
+  O4 and prepare G0 matched-artifact admission. Prioritize accurate resident
+  GPU attention and dependent scheduling from the measured cost map.
 - [ ] Then O4 bounded typed summaries; G2 resident GPU block; G3 prefill/decode
   matrix kernels; G4 output/weight traffic; G5 LFM3 GPU; G6 confirmed external
   wins. Each code task needs required checks, measurements and Astra before commit.

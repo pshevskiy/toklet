@@ -528,6 +528,8 @@ struct FixtureSession {
     successful: usize,
     logits: Vec<f32>,
     visible: bool,
+    hide_pending: bool,
+    diagnostic_committed_override: Option<usize>,
     fail_next: bool,
     fail_reset: bool,
     nonfinite: bool,
@@ -542,6 +544,8 @@ impl FixtureSession {
             successful: 0,
             logits: vec![0.0; 4],
             visible: true,
+            hide_pending: false,
+            diagnostic_committed_override: None,
             fail_next: false,
             fail_reset: false,
             nonfinite: false,
@@ -551,6 +555,16 @@ impl FixtureSession {
 
     fn row(step: usize) -> [f32; 4] {
         [f32::from_bits(1), -0.0, step as f32 + 0.25, -17.5]
+    }
+}
+
+impl super::EvaluationLogits for FixtureSession {
+    fn evaluation_logits(&self) -> Option<toklet::model::gemma_packed::CommittedLogits<'_>> {
+        self.visible
+            .then_some(toklet::model::gemma_packed::CommittedLogits {
+                committed_tokens: self.diagnostic_committed_override.unwrap_or(self.committed),
+                values: &self.logits,
+            })
     }
 }
 
@@ -584,7 +598,8 @@ impl InferenceSession for FixtureSession {
         }
     }
     fn logits(&self) -> Option<&[f32]> {
-        self.visible.then_some(self.logits.as_slice())
+        (self.visible && (!self.hide_pending || self.pending_len() == 0))
+            .then_some(self.logits.as_slice())
     }
     fn greedy_token(&self) -> Option<Result<u32, toklet::cpu::Error>> {
         // Deliberately differs from row argmax: the wrapper must forward it.
@@ -637,6 +652,32 @@ impl InferenceSession for FixtureSession {
         self.committed = 0;
         Ok(())
     }
+}
+
+#[test]
+fn intermediate_prefill_witness_does_not_expose_sampling_logits() {
+    let mut inner = FixtureSession::new();
+    inner.hide_pending = true;
+    let mut selected = [0.; 4];
+    let mut witness = Witness::new(&mut inner, 1, &mut selected).unwrap();
+    assert_eq!(witness.evaluate_next_chunk().unwrap(), 2);
+    assert_eq!(witness.evaluated_len(), 2);
+    assert_eq!(witness.pending_len(), 4);
+    assert!(witness.logits().is_none());
+    assert!(witness.captured);
+    assert_eq!(bits(witness.selected), bits(&FixtureSession::row(1)));
+}
+
+#[test]
+fn selected_witness_rejects_a_distribution_for_a_different_prefix() {
+    let mut inner = FixtureSession::new();
+    inner.diagnostic_committed_override = Some(3);
+    let mut selected = [-99.; 4];
+    let mut witness = Witness::new(&mut inner, 1, &mut selected).unwrap();
+    assert!(witness.evaluate_next_chunk().is_err());
+    assert!(!witness.captured);
+    assert_eq!(witness.evaluated_len(), 2);
+    assert_eq!(witness.selected, &[-99.; 4]);
 }
 
 #[test]

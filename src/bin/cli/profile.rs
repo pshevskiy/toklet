@@ -223,6 +223,21 @@ use toklet::session::{self, InferenceSession, Memory};
     test,
     all(feature = "metal", target_os = "macos", target_arch = "aarch64")
 ))]
+trait EvaluationLogits: InferenceSession {
+    fn evaluation_logits(&self) -> Option<toklet::model::gemma_packed::CommittedLogits<'_>>;
+}
+
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+impl EvaluationLogits for toklet::metal::gemma_affine::Bf16GenerationSession<'_, '_, '_> {
+    fn evaluation_logits(&self) -> Option<toklet::model::gemma_packed::CommittedLogits<'_>> {
+        self.diagnostic_committed_logits()
+    }
+}
+
+#[cfg(any(
+    test,
+    all(feature = "metal", target_os = "macos", target_arch = "aarch64")
+))]
 struct Witness<'a, S> {
     inner: &'a mut S,
     ordinal: usize,
@@ -235,7 +250,7 @@ struct Witness<'a, S> {
     test,
     all(feature = "metal", target_os = "macos", target_arch = "aarch64")
 ))]
-impl<'a, S: InferenceSession> Witness<'a, S> {
+impl<'a, S: EvaluationLogits> Witness<'a, S> {
     fn new(inner: &'a mut S, ordinal: usize, selected: &'a mut [f32]) -> io::Result<Self> {
         if !(1..=512).contains(&ordinal) || selected.len() != inner.vocab_size() {
             return Err(invalid("invalid selected-logit witness bounds"));
@@ -254,7 +269,7 @@ impl<'a, S: InferenceSession> Witness<'a, S> {
     test,
     all(feature = "metal", target_os = "macos", target_arch = "aarch64")
 ))]
-impl<S: InferenceSession> InferenceSession for Witness<'_, S> {
+impl<S: EvaluationLogits> InferenceSession for Witness<'_, S> {
     fn history(&self) -> &[u32] {
         self.inner.history()
     }
@@ -291,12 +306,17 @@ impl<S: InferenceSession> InferenceSession for Witness<'_, S> {
         if self.evaluations == self.ordinal {
             let values = self
                 .inner
-                .logits()
+                .evaluation_logits()
                 .ok_or_else(|| session::Error::Backend("selected logits unavailable".into()))?;
-            if values.len() != self.selected.len() || values.iter().any(|v| !v.is_finite()) {
+            if rows == 0
+                || values.committed_tokens == 0
+                || values.committed_tokens != self.inner.evaluated_len()
+                || values.values.len() != self.selected.len()
+                || values.values.iter().any(|v| !v.is_finite())
+            {
                 return Err(session::Error::Backend("invalid selected logits".into()));
             }
-            self.selected.copy_from_slice(values);
+            self.selected.copy_from_slice(values.values);
             self.captured = true;
         }
         Ok(rows)

@@ -205,6 +205,47 @@ fn committed_prefix_pending_and_fork_replay_match_frozen_rows() {
 }
 
 #[test]
+fn diagnostic_committed_distribution_is_borrowed_and_prefix_bound() {
+    let data = fixture::Fixture::new();
+    let model = Model::new(data.weights()).unwrap();
+    let mut session = model.new_generation_session(options()).unwrap();
+    assert!(session.diagnostic_committed_logits().is_none());
+    session.append(&data.ids[..5]).unwrap();
+    assert!(session.diagnostic_committed_logits().is_none());
+    assert_eq!(session.evaluate_next_chunk().unwrap(), 3);
+    assert!(session.logits().is_none());
+    let measured = Measurement::start();
+    let view = session.diagnostic_committed_logits().unwrap();
+    let allocated = measured.finish();
+    assert_eq!(allocated, 0);
+    assert_eq!(view.committed_tokens, 3);
+    both(&data, "logits", view.values, 2, 1);
+    assert_eq!(
+        view.values.as_ptr(),
+        session.inner.logits()[2 * VOCAB_SIZE..].as_ptr()
+    );
+    assert_eq!(session.pending_len(), 2);
+    assert_eq!(session.evaluate_next_chunk().unwrap(), 2);
+    let view = session.diagnostic_committed_logits().unwrap();
+    assert_eq!(view.committed_tokens, 5);
+    assert_eq!(view.values, session.logits().unwrap());
+    session.append(&data.ids[5..6]).unwrap();
+    assert!(session.logits().is_none());
+    assert_eq!(
+        session
+            .diagnostic_committed_logits()
+            .unwrap()
+            .committed_tokens,
+        5
+    );
+    session.set_tokens(&data.ids[1..4]).unwrap();
+    assert!(session.needs_replay);
+    assert!(session.diagnostic_committed_logits().is_none());
+    session.reset();
+    assert!(session.diagnostic_committed_logits().is_none());
+}
+
+#[test]
 fn real_reset_error_and_late_forward_error_keep_pending_state_retryable() {
     let data = fixture::Fixture::new();
     let model = Model::new(data.weights()).unwrap();

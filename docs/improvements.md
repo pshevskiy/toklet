@@ -22,6 +22,19 @@ original 1% overhead gates. No new implementation or speedup is claimed. All
 scope with no findings. Prior numerical/model rejections and UI/iPhone deferrals
 remain binding. [Evidence](../artifacts/mlx-gpu-gap-2026-11-15/planning-checks-1.json).
 
+The [current Gemma cost map](gemma-current-cost-map.md) records four selected
+GPU frames and two main-thread sample windows from guarded 384/128 work.
+CPU attention has 46.68%/28.77% sample share before first token/during decode;
+completion waits include GPU execution and retain 278 prefill / 277 decode
+boundaries. The diagnostic fix exposes an explicitly committed-prefix view
+without changing ordinary sampling eligibility, kernels or scheduling. Required
+fmt/strict CPU+Metal Clippy, 847 CPU / 1,019 Metal tests (53/365 ignored) and
+release build pass; actual first-prefill parity checks 262,144 logit values.
+The failed attempt is preserved. Astra approves the scoped fix/evidence with
+no findings; [publication](../artifacts/mlx-gpu-gap-2026-11-15/g1-publication-1.json)
+is tracked separately. Summary cost attribution and the original overhead/
+competitive gates remain open.
+
 The [LFM3 external request observations](lfm3-engine-comparison.md) record
 78 requests across two 3+10 cohorts per engine, with preserved raw observations,
 model/executable identities and clock/memory scope. Ollama lacks authoritative
