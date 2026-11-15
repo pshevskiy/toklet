@@ -54,6 +54,14 @@ The live-log reader's partial-line failure and the independent replay's initial
 copied-digest typo are retained; neither changed numerical inputs. The corrected
 replay and full audit pass within separate 512 MiB guards.
 
+The CI follow-up distinguishes current-platform recurrence equivalence from
+captured Mac trace bytes. Both packed and dense paths must match the unchanged
+local scalar graph bitwise on every platform. A separate macOS-arm64 check
+retains every original captured-byte assertion; fixture and producer hashes are
+authenticated everywhere. All seven checks pass locally in both Python modes.
+The Linux fixture assertion failure is retained. Numerical implementations,
+original model gates and captured real-model evidence are unchanged.
+
 The user's closing direction accepts explicit Qwen rejection decisions. The
 separate Interim Labs 9B candidate remains metadata/header-only and is not
 pursued. Original [4B](qwen35-context256.md) and [9B](qwen35-9b-context256.md)

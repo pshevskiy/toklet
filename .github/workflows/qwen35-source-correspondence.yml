@@ -11,6 +11,7 @@ jobs:
   portable:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         optimize: ["0", "1"]
     env:

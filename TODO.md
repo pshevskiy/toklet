@@ -7,7 +7,7 @@ history is in the [dated archive](docs/archive/2026-11-12/README.md).
 
 ## Current and next task
 
-Current task: **publish the completed Huihui4B diagnostic and explicit Qwen rejection decisions**.
+Current task: **resolve the recurrence CI portability assertion, then close publication**.
 - [x] R1 is published as `ae984fda` plus status `2a76caef`; both exact heads have
   all six workflows/13 jobs green. Source correspondence is published as
   `600f8d83`, all seven workflows/15 jobs green.
@@ -20,7 +20,12 @@ Current task: **publish the completed Huihui4B diagnostic and explicit Qwen reje
 - [x] Combined Astra code/evidence/closure review approves scoped diagnostic and
   rejection retention, no findings. [Review](artifacts/qwen35-alternative-admission-2026-11-15/astra-envelope-review-1/verdict.json).
   Monitor partial-line and replay copied-digest failures are retained; corrected checks pass.
-- [ ] Commit, authorized push, exact-head CI and final requirement audit.
+- [ ] Code `155c6718` is committed/pushed. New24+17 Linux controls pass; a legacy
+  dense-vs-captured-Mac assertion fails by1ULP. Preserve that exact Mac gate and
+  add unconditional dense/packed scalar-vector byte parity on every platform;
+  seven Mac controls pass in both modes; Astra approves the fix with no findings.
+  Linux confirmation and final publication remain pending. [Investigation](artifacts/qwen35-alternative-admission-2026-11-15/ci-portability-investigation-1.json).
+  [Follow-up review](artifacts/qwen35-alternative-admission-2026-11-15/astra-envelope-review-1/verdict-2.json). Final requirement audit remains pending.
   [Publication](artifacts/qwen35-alternative-admission-2026-11-15/envelope-publication-1.json).
 
 The user chose **finish with explicit Qwen rejection decisions**. Stop the queued

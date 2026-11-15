@@ -4,6 +4,8 @@ import hashlib
 import json
 import math
 from pathlib import Path
+import platform
+import sys
 import tempfile
 import time
 import unittest
@@ -96,8 +98,28 @@ class Controls(unittest.TestCase):
                     self.assertEqual(bits(a['values'],staged),bits(b['values'],staged))
 
     def test_untied_dense_fixture_and_packed_paths_stay_bit_exact(self):
-        folder=ROOT/'tests/fixtures/qwen35-untied-graph-v1';m=json.loads((folder/'manifest.json').read_text())
-        reference=(folder/'reference.bin').read_bytes();raw=b'X'+(folder/'weights.bin').read_bytes()
+        self._untied_paths(compare_capture=False)
+
+    @unittest.skipUnless(sys.platform=='darwin' and platform.machine()=='arm64',
+                         'Captured untied trace bytes require the qualified macOS arm64 runtime')
+    def test_untied_captured_macos_fixture_remains_bit_exact(self):
+        self._untied_paths(compare_capture=True)
+
+    def _untied_paths(self, *, compare_capture):
+        folder=ROOT/'tests/fixtures/qwen35-untied-graph-v1'
+        manifest=(folder/'manifest.json').read_bytes()
+        self.assertEqual(hashlib.sha256(manifest).hexdigest(),
+            '20df794140773b0c0997fdf668a6c37004f4b15e38fa28d43b6fc74094f18e5e')
+        m=json.loads(manifest)
+        reference=(folder/'reference.bin').read_bytes();stored=(folder/'weights.bin').read_bytes()
+        self.assertEqual(len(reference),m['reference_bytes'])
+        self.assertEqual(hashlib.sha256(reference).hexdigest(),m['reference_sha256'])
+        self.assertEqual(len(stored),m['weights_bytes'])
+        self.assertEqual(hashlib.sha256(stored).hexdigest(),m['weights_sha256'])
+        for name, expected in m['producer_source_sha256'].items():
+            self.assertEqual(hashlib.sha256((ROOT/'tools/reference'/name).read_bytes()).hexdigest(),expected)
+        raw=b'X'+stored
+        first_archival_drift=None
         with tempfile.TemporaryDirectory() as tmp:
             path=Path(tmp)/'weights';path.write_bytes(raw);deadline=time.monotonic()+120
             with bf16_source.Source(path,len(raw),hashlib.sha256(raw).hexdigest(),deadline=deadline) as owner:
@@ -117,13 +139,35 @@ class Controls(unittest.TestCase):
                             geometry=m['geometry'],math_type=weights.math_type(matrices))
                         dense_got=vector.forward(dense,vectors,case['tokens'],case['position_offset'],staged,
                             geometry=m['geometry'],math_type=DenseOutputMath)
+                        dense_old=scalar.forward(dense,vectors,case['tokens'],case['position_offset'],staged,
+                            geometry=m['geometry'],math_type=DenseOutputMath)
                         self.assertEqual(len(got),len(old));self.assertEqual(len(dense_got),len(case['profiles'][profile]))
                         for a,b in zip(got,old,strict=True):
                             for k in ['token','layer','stage']:self.assertEqual(a[k],b[k])
                             self.assertEqual(bits(a['values'],staged),bits(b['values'],staged))
+                        # Portable recurrence equivalence is exact against the
+                        # unchanged scalar graph on this runtime, for BOTH paths.
+                        self.assertEqual(len(dense_got),len(dense_old))
+                        for a,b in zip(dense_got,dense_old,strict=True):
+                            for k in ['token','layer','stage']:self.assertEqual(a[k],b[k])
+                            self.assertEqual(bits(a['values'],staged),bits(b['values'],staged))
                         for a,b in zip(dense_got,case['profiles'][profile],strict=True):
                             for k in ['token','layer','stage']:self.assertEqual(a[k],b[k])
-                            self.assertEqual(bits(a['values'],staged),reference[b['offset']:b['offset']+b['bytes']])
+                            actual=bits(a['values'],staged)
+                            captured=reference[b['offset']:b['offset']+b['bytes']]
+                            if compare_capture:
+                                self.assertEqual(actual,captured)
+                            elif actual!=captured and first_archival_drift is None:
+                                width=4 if staged else 8
+                                at=next(i for i in range(len(a['values']))
+                                    if actual[i*width:(i+1)*width]!=captured[i*width:(i+1)*width])
+                                first_archival_drift=dict(case=case['name'],profile=profile,
+                                    token=a['token'],layer=a['layer'],stage=a['stage'],index=at,
+                                    local_scalar_and_vector_bits=actual[at*width:(at+1)*width].hex(),
+                                    captured_macos_bits=captured[at*width:(at+1)*width].hex())
+        if first_archival_drift is not None:
+            print('Captured-fixture runtime difference; all local scalar/vector bits match: '
+                  +json.dumps(first_archival_drift,sort_keys=True))
 
 
 if __name__=='__main__':unittest.main()

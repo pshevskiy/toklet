@@ -606,7 +606,11 @@ monitor and copied-digest replay failures are retained and corrected.
 [Decision/evidence](qwen35-huihui4b-envelope.md). Astra approves scoped diagnostic/
 rejection retention, no findings. [Publication](../artifacts/qwen35-alternative-admission-2026-11-15/envelope-publication-1.json). The user chose explicit Qwen rejection decisions; original4B/9B
 rejections stay closed and the newer9B candidate remains metadata-only, not pursued.
-Positive Qwen performance/adoption stays unqualified. [All outcomes](improvement-outcomes.md).
+Positive Qwen performance/adoption stays unqualified. [All outcomes](improvement-outcomes.md). A legacy Linux assertion against captured
+Mac trace bytes requires a CI follow-up: keep the exact Mac probe and add dense/
+packed parity against the unchanged local scalar graph on every platform. Seven
+Mac controls pass per Python mode; Astra approves the fix with no findings.
+Exact-head Linux CI remains pending.
 
 Original individual check counts, source revisions, measured cohorts, rejected
 experiments and Astra/commit receipts remain in the [reviewed history](archive/2026-11-09/improvements.md#latest-documentation-work)
