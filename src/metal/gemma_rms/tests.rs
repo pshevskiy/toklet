@@ -93,7 +93,7 @@ fn real_frozen_math_guards_partitions_and_failure_state() {
         let context = Context::new(CONTEXT_ALLOWANCE_BYTES).unwrap();
         report(
             "GEMMA_RMS_META",
-            json!({"device":context.device_name(),"context_allowance_bytes":CONTEXT_ALLOWANCE_BYTES,"simd_widths":context.widths,"graph_qualified":false,"source_parity_qualified":false}),
+            json!({"device":context.device_name(),"context_allowance_bytes":CONTEXT_ALLOWANCE_BYTES,"simd_widths":context.pipelines.widths,"graph_qualified":false,"source_parity_qualified":false}),
         );
         let data = reference();
         let mut partitions = 0;
@@ -231,4 +231,21 @@ fn real_frozen_math_guards_partitions_and_failure_state() {
             json!({"passed":true,"cases":16,"repeats":2,"partitions":partitions,"weighted_ones_compared":true,"overflow_poison_and_recreate":true,"driver_failure_injected":false}),
         );
     });
+}
+
+#[test]
+fn borrowed_geometry_matches_standalone_admission_without_gpu() {
+    for learned in [false, true] {
+        let g = Geometry::new(256, 512, EPSILON, learned).unwrap();
+        assert_eq!(g.values, 32 * 8 * 512);
+        assert_eq!(g.weights, if learned { 512 } else { 1 });
+        assert_eq!(
+            g.words,
+            [256, 512, (f64::from(EPSILON).sqrt() as f32).to_bits()]
+        );
+    }
+    for (rows, width) in [(0, 4), (257, 4), (1, 1537), (usize::MAX, usize::MAX)] {
+        assert!(Geometry::new(rows, width, EPSILON, false).is_err());
+    }
+    assert!(Geometry::new(1, 4, f32::from_bits(EPSILON.to_bits() + 1), false).is_err());
 }

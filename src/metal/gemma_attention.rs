@@ -343,41 +343,7 @@ impl Geometry {
     }
 }
 
-/// Checked element range into an initialized FP32-bit-pattern buffer. Empty
-/// spans still bind a valid in-allocation offset, though kernels never read it.
-#[derive(Clone, Copy)]
-pub(super) struct BufferRange<'a> {
-    raw: &'a ProtocolObject<dyn MTLBuffer>,
-    offset: usize,
-    len: usize,
-}
-impl<'a> BufferRange<'a> {
-    pub(super) fn new(buffer: &'a Buffer<u32>, offset: usize, len: usize) -> Result<Self> {
-        let end = offset
-            .checked_add(len)
-            .ok_or(Error::Options("Gemma attention buffer range overflow"))?;
-        if offset >= buffer.len
-            || end > buffer.len
-            || buffer.len.checked_mul(4) != Some(buffer.raw.length())
-        {
-            return Err(Error::Options(
-                "Gemma attention buffer range exceeds storage",
-            ));
-        }
-        Ok(Self {
-            raw: &buffer.raw,
-            offset,
-            len,
-        })
-    }
-    fn overlaps(self, other: Self) -> bool {
-        std::ptr::eq(self.raw, other.raw)
-            && self.offset < other.offset + other.len
-            && other.offset < self.offset + self.len
-            && self.len != 0
-            && other.len != 0
-    }
-}
+pub(super) use super::memory::BufferRange;
 pub(super) struct DeviceSegment<'a> {
     pub k: BufferRange<'a>,
     pub v: BufferRange<'a>,

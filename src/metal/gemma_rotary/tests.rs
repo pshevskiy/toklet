@@ -294,3 +294,45 @@ fn real_frozen_math_rounding_guards_and_failure_state() {
         );
     });
 }
+
+#[test]
+fn composable_32_rows_keep_public_bound_and_checked_coefficients() {
+    let mut s = shape();
+    s.tokens = 32;
+    s.heads = 8;
+    s.head_dim = 512;
+    s.rotated_dims = 128;
+    s.offset = 131040;
+    assert!(Sizes::new(&s).is_err());
+    let sizes = Sizes::composable(&s).unwrap();
+    assert_eq!(sizes.values, 32 * 8 * 512);
+    assert_eq!(sizes.coefficients, 32 * 128);
+    let mut words = vec![0; sizes.coefficients];
+    prepare_coefficients(&s, &mut words).unwrap();
+    for pair in 0..s.rotated_dims / 2 {
+        for token in 0..s.tokens {
+            let inverse = f64::from(s.base).powf(-2.0 * pair as f64 / s.head_dim as f64)
+                / f64::from(s.factor);
+            let (sin, cos) = ((s.offset + token) as f64 * inverse).sin_cos();
+            let index = 2 * (token * (s.rotated_dims / 2) + pair);
+            assert_eq!(
+                &words[index..index + 2],
+                &[(cos as f32).to_bits(), (sin as f32).to_bits()]
+            );
+        }
+    }
+    let mut short = vec![0xa1234567; sizes.coefficients - 1];
+    assert!(prepare_coefficients(&s, &mut short).is_err());
+    assert!(short.iter().all(|&v| v == 0xa1234567));
+    for (tokens, offset) in [
+        (0, 0),
+        (33, 0),
+        (usize::MAX, 0),
+        (32, 131041),
+        (32, usize::MAX),
+    ] {
+        s.tokens = tokens;
+        s.offset = offset;
+        assert!(Sizes::composable(&s).is_err());
+    }
+}

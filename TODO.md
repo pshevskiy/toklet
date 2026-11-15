@@ -59,7 +59,26 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 - [x] G0 header ledger: active BF16 tensors alone total 9.257 GB including
   4.698 GB PLE; media removal alone does not establish 6 GiB full residency.
   No conversion, new artifact hunt or runtime/quality claim.
-- [ ] **Next:** qualify FP32 GELU and one complete resident producer block;
+- [x] Workspace `5e886fd1` is pushed; all seven exact-head workflows/15 jobs
+  pass and all 4,170 compiled inputs match committed Git bytes.
+- [x] **GELU tail feasibility:** direct FP32 tanh rejection remains. The fixed
+  196,632-byte table passes native/independent scans of all 16,777,217 tail inputs,
+  original 42 cases, target arithmetic, forced whole-case replay and corruptions.
+  Normal fallback: two adversarial/boundary cases, none of 24 saved model cases.
+  Astra approves artifact-only retention; outer-domain/production/full-block
+  qualification remains open. [Checks/review](artifacts/mlx-gpu-gap-2026-11-15/g2-gelu-tail-review-checks-1.json).
+- [x] **Shared GPU encoders.** Sol freezes checked RMS/rotary encoding
+  on the existing GPU/command and one-command attention chains up to 32 queries.
+  Fmt/strict CPU+Metal Clippy, 847 CPU/1,024 Metal tests, release and seven
+  explicit GPU tests pass. Independent normal/optimized replay checks 622,632
+  values, 9,025 exact masks and 98,308 inactive copies; 33 corruptions reject.
+  Attention still allocates zero Rust memory over 32 warmed operations.
+  Astra approves the scoped encoder/composition change with no findings. [Progress](artifacts/mlx-gpu-gap-2026-11-15/g2-next-mechanism-progress-2.json).
+- [x] Sol freezes 92 untouched producer-block states, eight cases and 34 BF16
+  tensor descriptors; normal/optimized independent readers and eight corruption
+  controls pass. Metadata/fixture evidence only, no new block execution.
+  [Handoff](artifacts/mlx-gpu-gap-2026-11-15/g2-producer-block-fixture-1/handoff.json).
+- [ ] **Current:** qualify full-domain FP32 GELU and one complete resident producer block;
   preserve projection admission and proposed-KV publication. Then genuine deeper
   own inputs, complete graph and G0 matched-artifact admission. O4 typed-ring
   rewriting remains conditional on useful request-level evidence.

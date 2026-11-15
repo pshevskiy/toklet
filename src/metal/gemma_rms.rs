@@ -5,7 +5,7 @@
 //! FP64 mathematical fixtures; no source parity, whole graph or speed claim.
 use super::{
     Error, Result,
-    memory::{Buffer, Gpu, validate_buffer_bytes},
+    memory::{Buffer, BufferRange, Gpu, validate_buffer_bytes, validate_encode_ranges},
 };
 use objc2::{
     rc::{Retained, autoreleasepool},
@@ -25,6 +25,10 @@ const SENTINEL: u32 = 0x5a17_0031;
 /// it once, separately from each owner's admitted buffers and caller storage.
 pub struct Context {
     gpu: Gpu,
+    pipelines: Pipelines,
+}
+pub(super) struct Pipelines {
+    device: Retained<ProtocolObject<dyn MTLDevice>>,
     pipelines: [Retained<ProtocolObject<dyn MTLComputePipelineState>>; 2],
     widths: [usize; 2],
 }
@@ -38,49 +42,8 @@ impl Context {
         }
         autoreleasepool(|_| {
             let gpu = Gpu::new()?;
-            let options = MTLCompileOptions::new();
-            options.setLanguageVersion(MTLLanguageVersion::Version2_3);
-            options.setMathMode(MTLMathMode::Safe);
-            options.setMathFloatingPointFunctions(MTLMathFloatingPointFunctions::Precise);
-            if options.mathMode() != MTLMathMode::Safe
-                || options.mathFloatingPointFunctions() != MTLMathFloatingPointFunctions::Precise
-                || options.languageVersion() != MTLLanguageVersion::Version2_3
-            {
-                return Err(Error::Unsupported("Gemma RMS precise math unavailable"));
-            }
-            let library = gpu
-                .device
-                .newLibraryWithSource_options_error(
-                    &NSString::from_str(include_str!("gemma_rms.metal")),
-                    Some(&options),
-                )
-                .map_err(|e| Error::Native(e.to_string()))?;
-            let pipeline = |name| {
-                let function = library
-                    .newFunctionWithName(&NSString::from_str(name))
-                    .ok_or_else(|| Error::Native("Gemma RMS kernel absent".into()))?;
-                gpu.device
-                    .newComputePipelineStateWithFunction_error(&function)
-                    .map_err(|e| Error::Native(e.to_string()))
-            };
-            let pipelines = [
-                pipeline("gemma_rms_unlearned")?,
-                pipeline("gemma_rms_learned")?,
-            ];
-            let widths = pipelines.each_ref().map(|p| p.threadExecutionWidth());
-            for (pipeline, &width) in pipelines.iter().zip(&widths) {
-                if width == 0
-                    || width > pipeline.maxTotalThreadsPerThreadgroup()
-                    || width > u16::MAX as usize
-                {
-                    return Err(Error::Unsupported("Gemma RMS launch width unavailable"));
-                }
-            }
-            Ok(Self {
-                gpu,
-                pipelines,
-                widths,
-            })
+            let pipelines = Pipelines::new(&gpu)?;
+            Ok(Self { gpu, pipelines })
         })
     }
     pub fn device_name(&self) -> String {
@@ -125,13 +88,168 @@ impl Context {
             width,
             sizes,
             variant: usize::from(weights.is_some()),
-            root_epsilon: (f64::from(epsilon).sqrt() as f32).to_bits(),
             input: Buffer::new(&self.gpu, sizes.values + GUARD)?,
             output: Buffer::new(&self.gpu, sizes.values + GUARD)?,
             weights: weight_buffer,
             status: Buffer::new(&self.gpu, 1 + GUARD)?,
             poisoned: false,
             pending: None,
+        })
+    }
+}
+impl Pipelines {
+    pub(super) fn new(gpu: &Gpu) -> Result<Self> {
+        autoreleasepool(|_| {
+            let options = MTLCompileOptions::new();
+            options.setLanguageVersion(MTLLanguageVersion::Version2_3);
+            options.setMathMode(MTLMathMode::Safe);
+            options.setMathFloatingPointFunctions(MTLMathFloatingPointFunctions::Precise);
+            if options.mathMode() != MTLMathMode::Safe
+                || options.mathFloatingPointFunctions() != MTLMathFloatingPointFunctions::Precise
+                || options.languageVersion() != MTLLanguageVersion::Version2_3
+            {
+                return Err(Error::Unsupported("Gemma RMS precise math unavailable"));
+            }
+            let library = gpu
+                .device
+                .newLibraryWithSource_options_error(
+                    &NSString::from_str(include_str!("gemma_rms.metal")),
+                    Some(&options),
+                )
+                .map_err(|e| Error::Native(e.to_string()))?;
+            let pipeline = |name| {
+                let function = library
+                    .newFunctionWithName(&NSString::from_str(name))
+                    .ok_or_else(|| Error::Native("Gemma RMS kernel absent".into()))?;
+                gpu.device
+                    .newComputePipelineStateWithFunction_error(&function)
+                    .map_err(|e| Error::Native(e.to_string()))
+            };
+            let pipelines = [
+                pipeline("gemma_rms_unlearned")?,
+                pipeline("gemma_rms_learned")?,
+            ];
+            let widths = pipelines.each_ref().map(|p| p.threadExecutionWidth());
+            for (pipeline, &width) in pipelines.iter().zip(&widths) {
+                if width == 0
+                    || width > pipeline.maxTotalThreadsPerThreadgroup()
+                    || width > u16::MAX as usize
+                {
+                    return Err(Error::Unsupported("Gemma RMS launch width unavailable"));
+                }
+            }
+            Ok(Self {
+                device: gpu.device.clone(),
+                pipelines,
+                widths,
+            })
+        })
+    }
+    /// Encode only. Caller initializes status, excludes CPU views through terminal
+    /// completion, validates status/guards and publishes all dependent outputs atomically.
+    /// Invalid geometry/resources/commands reject before creating an encoder.
+    pub(super) fn encode(
+        &self,
+        command: &ProtocolObject<dyn MTLCommandBuffer>,
+        buffers: &DeviceBuffers<'_>,
+        rows: usize,
+        width: usize,
+        epsilon: f32,
+        learned: bool,
+    ) -> Result<()> {
+        let g = Geometry::new(rows, width, epsilon, learned)?;
+        if buffers.input.len != g.values
+            || buffers.output.len != g.values
+            || buffers.weights.len != g.weights
+            || buffers.status.len != 1
+        {
+            return Err(Error::Options("Gemma RMS borrowed buffer length"));
+        }
+        validate_encode_ranges(
+            command,
+            &self.device,
+            &[
+                buffers.input,
+                buffers.weights,
+                buffers.output,
+                buffers.status,
+            ],
+            2,
+        )?;
+        let encoder = command
+            .computeCommandEncoder()
+            .ok_or_else(|| Error::Native("Gemma RMS encoder absent".into()))?;
+        let variant = usize::from(learned);
+        encoder.setComputePipelineState(&self.pipelines[variant]);
+        // SAFETY: checked same-device retained/tracked u32 ranges, ABI lengths
+        // and disjoint writable ranges. Shape bytes copy immediately. Caller
+        // retains synchronization/guard validation and publication responsibility.
+        unsafe {
+            for (slot, b) in [buffers.input, buffers.weights, buffers.output]
+                .iter()
+                .enumerate()
+            {
+                encoder.setBuffer_offset_atIndex(Some(b.raw), b.offset * 4, slot);
+            }
+            encoder.setBytes_length_atIndex(
+                NonNull::from(&g.words).cast(),
+                size_of::<[u32; 3]>(),
+                3,
+            );
+            encoder.setBuffer_offset_atIndex(
+                Some(buffers.status.raw),
+                buffers.status.offset * 4,
+                4,
+            );
+        }
+        encoder.dispatchThreadgroups_threadsPerThreadgroup(
+            MTLSize {
+                width: rows,
+                height: 1,
+                depth: 1,
+            },
+            MTLSize {
+                width: self.widths[variant],
+                height: 1,
+                depth: 1,
+            },
+        );
+        encoder.endEncoding();
+        Ok(())
+    }
+}
+pub(super) struct DeviceBuffers<'a> {
+    pub input: BufferRange<'a>,
+    pub weights: BufferRange<'a>,
+    pub output: BufferRange<'a>,
+    pub status: BufferRange<'a>,
+}
+struct Geometry {
+    words: [u32; 3],
+    values: usize,
+    weights: usize,
+}
+impl Geometry {
+    fn new(rows: usize, width: usize, epsilon: f32, learned: bool) -> Result<Self> {
+        if !(1..=256).contains(&rows)
+            || !(1..=1536).contains(&width)
+            || epsilon.to_bits() != EPSILON.to_bits()
+        {
+            return Err(Error::Options(
+                "Gemma RMS fixed geometry/epsilon outside bounds",
+            ));
+        }
+        let values = rows
+            .checked_mul(width)
+            .ok_or(Error::Options("Gemma RMS size overflow"))?;
+        Ok(Self {
+            words: [
+                rows as u32,
+                width as u32,
+                (f64::from(epsilon).sqrt() as f32).to_bits(),
+            ],
+            values,
+            weights: if learned { width } else { 1 },
         })
     }
 }
@@ -143,19 +261,12 @@ struct Sizes {
 }
 impl Sizes {
     fn new(rows: usize, width: usize, epsilon: f32, weights: Option<&[f32]>) -> Result<Self> {
-        if !(1..=256).contains(&rows)
-            || !(1..=1536).contains(&width)
-            || epsilon.to_bits() != EPSILON.to_bits()
-            || weights.is_some_and(|w| w.len() != width || w.iter().any(|x| !x.is_finite()))
-        {
-            return Err(Error::Options(
-                "Gemma RMS fixed geometry/epsilon/weights outside bounds",
-            ));
+        let g = Geometry::new(rows, width, epsilon, weights.is_some())?;
+        if weights.is_some_and(|w| w.len() != width || w.iter().any(|x| !x.is_finite())) {
+            return Err(Error::Options("Gemma RMS weights outside bounds"));
         }
-        let values = rows
-            .checked_mul(width)
-            .ok_or(Error::Options("Gemma RMS size overflow"))?;
-        let weights = if weights.is_some() { width } else { 1 };
+        let values = g.values;
+        let weights = g.weights;
         // Dimensions are bounded above before these additions/multiplications.
         let words = 2 * (values + GUARD) + weights + GUARD + 1 + GUARD;
         let owned = words
@@ -179,7 +290,6 @@ pub struct Rms<'a> {
     width: usize,
     sizes: Sizes,
     variant: usize,
-    root_epsilon: u32,
     input: Buffer<u32>,
     output: Buffer<u32>,
     weights: Buffer<u32>,
@@ -220,40 +330,19 @@ impl Rms<'_> {
                 out[0] = 0;
             });
             let raw = self.context.gpu.command()?;
-            let encoder = raw
-                .computeCommandEncoder()
-                .ok_or_else(|| Error::Native("Gemma RMS encoder absent".into()))?;
-            encoder.setComputePipelineState(&self.context.pipelines[self.variant]);
-            let shape = [self.rows as u32, self.width as u32, self.root_epsilon];
-            // SAFETY: private shader ABI, initialized same-device aligned u32
-            // buffers, disjoint and admitted with guards. Validated dimensions
-            // bound indices; parameters copy immediately. Tracked hazards and
-            // retained command/resources protect GPU lifetimes. CPU views are
-            // excluded until checked completion below.
-            unsafe {
-                encoder.setBuffer_offset_atIndex(Some(&self.input.raw), 0, 0);
-                encoder.setBuffer_offset_atIndex(Some(&self.weights.raw), 0, 1);
-                encoder.setBuffer_offset_atIndex(Some(&self.output.raw), 0, 2);
-                encoder.setBytes_length_atIndex(
-                    NonNull::from(&shape).cast(),
-                    size_of::<[u32; 3]>(),
-                    3,
-                );
-                encoder.setBuffer_offset_atIndex(Some(&self.status.raw), 0, 4);
-            }
-            encoder.dispatchThreadgroups_threadsPerThreadgroup(
-                MTLSize {
-                    width: self.rows,
-                    height: 1,
-                    depth: 1,
+            self.context.pipelines.encode(
+                &raw,
+                &DeviceBuffers {
+                    input: BufferRange::new(&self.input, 0, self.sizes.values)?,
+                    weights: BufferRange::new(&self.weights, 0, self.sizes.weights)?,
+                    output: BufferRange::new(&self.output, 0, self.sizes.values)?,
+                    status: BufferRange::new(&self.status, 0, 1)?,
                 },
-                MTLSize {
-                    width: self.context.widths[self.variant],
-                    height: 1,
-                    depth: 1,
-                },
-            );
-            encoder.endEncoding();
+                self.rows,
+                self.width,
+                EPSILON,
+                self.variant != 0,
+            )?;
             self.pending = Some(raw);
             let command = self.pending.as_ref().unwrap();
             command.commit();

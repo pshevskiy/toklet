@@ -6,7 +6,7 @@
 //! Active subnormal arithmetic is not bitwise qualified; inactive bits copy exactly.
 use super::{
     Error, Result,
-    memory::{Buffer, Gpu},
+    memory::{Buffer, BufferRange, Gpu, validate_encode_ranges},
 };
 use crate::cpu::ProportionalRotaryShape;
 use objc2::{
@@ -27,6 +27,10 @@ const SENTINEL: u32 = 0x5a17_0031;
 /// inputs/outputs and multiple simultaneous operators need their own allowance.
 pub struct Context {
     gpu: Gpu,
+    pipelines: Pipelines,
+}
+pub(super) struct Pipelines {
+    device: Retained<ProtocolObject<dyn MTLDevice>>,
     pipeline: Retained<ProtocolObject<dyn MTLComputePipelineState>>,
     width: usize,
 }
@@ -40,6 +44,48 @@ impl Context {
         }
         autoreleasepool(|_| {
             let gpu = Gpu::new()?;
+            let pipelines = Pipelines::new(&gpu)?;
+            Ok(Self { gpu, pipelines })
+        })
+    }
+    pub fn device_name(&self) -> String {
+        self.gpu.device.name().to_string()
+    }
+    /// Cache coefficients for this immutable shape/offset. Admit owned bytes
+    /// separately from the shared context, counted once across all operators.
+    pub fn rotary(
+        &self,
+        shape: ProportionalRotaryShape,
+        available_owned_bytes: usize,
+    ) -> Result<Rotary<'_>> {
+        let sizes = Sizes::new(&shape)?;
+        if sizes.owned > available_owned_bytes {
+            return Err(Error::Budget {
+                required: sizes.owned,
+                limit: available_owned_bytes,
+            });
+        }
+        let mut coefficients = Buffer::<u32>::new(&self.gpu, sizes.coefficients + GUARD)?;
+        coefficients.with_mut(|out| {
+            out.fill(SENTINEL);
+            prepare_coefficients(&shape, &mut out[..sizes.coefficients])
+        })?;
+        Ok(Rotary {
+            context: self,
+            shape,
+            sizes,
+            input: Buffer::new(&self.gpu, sizes.values + GUARD)?,
+            output: Buffer::new(&self.gpu, sizes.values + GUARD)?,
+            coefficients,
+            status: Buffer::new(&self.gpu, 1 + GUARD)?,
+            poisoned: false,
+            pending: None,
+        })
+    }
+}
+impl Pipelines {
+    pub(super) fn new(gpu: &Gpu) -> Result<Self> {
+        autoreleasepool(|_| {
             let options = MTLCompileOptions::new();
             options.setLanguageVersion(MTLLanguageVersion::Version2_3);
             options.setMathMode(MTLMathMode::Safe);
@@ -72,56 +118,118 @@ impl Context {
                 return Err(Error::Unsupported("Gemma rotary launch width unavailable"));
             }
             Ok(Self {
-                gpu,
+                device: gpu.device.clone(),
                 pipeline,
                 width,
             })
         })
     }
-    pub fn device_name(&self) -> String {
-        self.gpu.device.name().to_string()
-    }
-    /// Cache coefficients for this immutable shape/offset. Admit owned bytes
-    /// separately from the shared context, counted once across all operators.
-    pub fn rotary(
+    /// Encode only, including up to 32 producer rows. The standalone public
+    /// owner retains its original eight-row bound. Coefficients are prepared
+    /// once with prepare_coefficients for exactly this immutable shape/offset.
+    /// Caller owns status initialization, completion, guard checks/publication.
+    pub(super) fn encode(
         &self,
-        shape: ProportionalRotaryShape,
-        available_owned_bytes: usize,
-    ) -> Result<Rotary<'_>> {
-        let sizes = Sizes::new(&shape)?;
-        if sizes.owned > available_owned_bytes {
-            return Err(Error::Budget {
-                required: sizes.owned,
-                limit: available_owned_bytes,
-            });
+        command: &ProtocolObject<dyn MTLCommandBuffer>,
+        buffers: &DeviceBuffers<'_>,
+        shape: &ProportionalRotaryShape,
+    ) -> Result<()> {
+        let sizes = Sizes::composable(shape)?;
+        if buffers.input.len != sizes.values
+            || buffers.output.len != sizes.values
+            || buffers.coefficients.len != sizes.coefficients
+            || buffers.status.len != 1
+        {
+            return Err(Error::Options("Gemma rotary borrowed buffer length"));
         }
-        let mut coefficients = Buffer::<u32>::new(&self.gpu, sizes.coefficients + GUARD)?;
-        coefficients.with_mut(|out| {
-            out.fill(SENTINEL);
-            for pair in 0..shape.rotated_dims / 2 {
-                let inverse = f64::from(shape.base)
-                    .powf(-2.0 * pair as f64 / shape.head_dim as f64)
-                    / f64::from(shape.factor);
-                for token in 0..shape.tokens {
-                    let (sine, cosine) = ((shape.offset + token) as f64 * inverse).sin_cos();
-                    let index = 2 * (token * (shape.rotated_dims / 2) + pair);
-                    out[index] = (cosine as f32).to_bits();
-                    out[index + 1] = (sine as f32).to_bits();
-                }
+        validate_encode_ranges(
+            command,
+            &self.device,
+            &[
+                buffers.input,
+                buffers.coefficients,
+                buffers.output,
+                buffers.status,
+            ],
+            2,
+        )?;
+        let count = sizes.values / 2;
+        if count
+            .div_ceil(self.width)
+            .checked_mul(self.width)
+            .is_none_or(|n| n > u32::MAX as usize)
+        {
+            return Err(Error::Options("Gemma rotary rounded dispatch overflow"));
+        }
+        let words = [
+            shape.tokens as u32,
+            shape.heads as u32,
+            shape.head_dim as u32,
+            (shape.rotated_dims / 2) as u32,
+        ];
+        let encoder = command
+            .computeCommandEncoder()
+            .ok_or_else(|| Error::Native("Gemma rotary encoder absent".into()))?;
+        encoder.setComputePipelineState(&self.pipeline);
+        // SAFETY: checked geometry, lengths, same-device retained/tracked typed
+        // resources and writable disjointness. Bytes copy immediately; caller
+        // excludes CPU access until terminal completion and validates publication.
+        unsafe {
+            for (slot, b) in [buffers.input, buffers.coefficients, buffers.output]
+                .iter()
+                .enumerate()
+            {
+                encoder.setBuffer_offset_atIndex(Some(b.raw), b.offset * 4, slot);
             }
-        });
-        Ok(Rotary {
-            context: self,
-            shape,
-            sizes,
-            input: Buffer::new(&self.gpu, sizes.values + GUARD)?,
-            output: Buffer::new(&self.gpu, sizes.values + GUARD)?,
-            coefficients,
-            status: Buffer::new(&self.gpu, 1 + GUARD)?,
-            poisoned: false,
-            pending: None,
-        })
+            encoder.setBytes_length_atIndex(NonNull::from(&words).cast(), size_of::<[u32; 4]>(), 3);
+            encoder.setBuffer_offset_atIndex(
+                Some(buffers.status.raw),
+                buffers.status.offset * 4,
+                4,
+            );
+        }
+        encoder.dispatchThreadgroups_threadsPerThreadgroup(
+            MTLSize {
+                width: count.div_ceil(self.width),
+                height: 1,
+                depth: 1,
+            },
+            MTLSize {
+                width: self.width,
+                height: 1,
+                depth: 1,
+            },
+        );
+        encoder.endEncoding();
+        Ok(())
     }
+}
+pub(super) struct DeviceBuffers<'a> {
+    pub input: BufferRange<'a>,
+    pub coefficients: BufferRange<'a>,
+    pub output: BufferRange<'a>,
+    pub status: BufferRange<'a>,
+}
+/// Checked host FP64 phase/trig -> FP32 coefficients; same calculation as the
+/// qualified standalone owner. Writes only the exact supplied active payload.
+pub(super) fn prepare_coefficients(shape: &ProportionalRotaryShape, out: &mut [u32]) -> Result<()> {
+    let sizes = Sizes::composable(shape)?;
+    if out.len() != sizes.coefficients {
+        return Err(Error::Options(
+            "Gemma rotary coefficient preparation length",
+        ));
+    }
+    for pair in 0..shape.rotated_dims / 2 {
+        let inverse = f64::from(shape.base).powf(-2.0 * pair as f64 / shape.head_dim as f64)
+            / f64::from(shape.factor);
+        for token in 0..shape.tokens {
+            let (sine, cosine) = ((shape.offset + token) as f64 * inverse).sin_cos();
+            let index = 2 * (token * (shape.rotated_dims / 2) + pair);
+            out[index] = (cosine as f32).to_bits();
+            out[index + 1] = (sine as f32).to_bits();
+        }
+    }
+    Ok(())
 }
 #[derive(Clone, Copy)]
 struct Sizes {
@@ -131,7 +239,13 @@ struct Sizes {
 }
 impl Sizes {
     fn new(s: &ProportionalRotaryShape) -> Result<Self> {
-        if !(1..=8).contains(&s.tokens)
+        if !(1..=8).contains(&s.tokens) {
+            return Err(Error::Options("Gemma rotary standalone token bound"));
+        }
+        Self::composable(s)
+    }
+    fn composable(s: &ProportionalRotaryShape) -> Result<Self> {
+        if !(1..=32).contains(&s.tokens)
             || !(1..=8).contains(&s.heads)
             || !(2..=512).contains(&s.head_dim)
             || !s.head_dim.is_multiple_of(2)
@@ -218,46 +332,16 @@ impl Rotary<'_> {
                 out[0] = 0;
             });
             let raw = self.context.gpu.command()?;
-            let encoder = raw
-                .computeCommandEncoder()
-                .ok_or_else(|| Error::Native("Gemma rotary encoder absent".into()))?;
-            encoder.setComputePipelineState(&self.context.pipeline);
-            let shape = [
-                self.shape.tokens as u32,
-                self.shape.heads as u32,
-                self.shape.head_dim as u32,
-                (self.shape.rotated_dims / 2) as u32,
-            ];
-            // SAFETY: private fixed shader ABI. All u32 buffers are initialized,
-            // aligned, same-device, disjoint and admitted with trailing guards.
-            // Validated shapes bound every index; parameters copy immediately.
-            // Tracked hazards and retained command resources protect lifetimes.
-            // CPU views are excluded until checked command completion below.
-            unsafe {
-                encoder.setBuffer_offset_atIndex(Some(&self.input.raw), 0, 0);
-                encoder.setBuffer_offset_atIndex(Some(&self.coefficients.raw), 0, 1);
-                encoder.setBuffer_offset_atIndex(Some(&self.output.raw), 0, 2);
-                encoder.setBytes_length_atIndex(
-                    NonNull::from(&shape).cast(),
-                    size_of::<[u32; 4]>(),
-                    3,
-                );
-                encoder.setBuffer_offset_atIndex(Some(&self.status.raw), 0, 4);
-            }
-            let count = self.sizes.values / 2;
-            encoder.dispatchThreadgroups_threadsPerThreadgroup(
-                MTLSize {
-                    width: count.div_ceil(self.context.width),
-                    height: 1,
-                    depth: 1,
+            self.context.pipelines.encode(
+                &raw,
+                &DeviceBuffers {
+                    input: BufferRange::new(&self.input, 0, self.sizes.values)?,
+                    coefficients: BufferRange::new(&self.coefficients, 0, self.sizes.coefficients)?,
+                    output: BufferRange::new(&self.output, 0, self.sizes.values)?,
+                    status: BufferRange::new(&self.status, 0, 1)?,
                 },
-                MTLSize {
-                    width: self.context.width,
-                    height: 1,
-                    depth: 1,
-                },
-            );
-            encoder.endEncoding();
+                &self.shape,
+            )?;
             self.pending = Some(raw);
             let command = self.pending.as_ref().unwrap();
             command.commit();

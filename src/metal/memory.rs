@@ -92,6 +92,67 @@ impl<T: Scalar> Buffer<T> {
         }
     }
 }
+/// Checked element range into an initialized FP32-bit-pattern buffer. Empty
+/// spans still bind a valid in-allocation offset, though kernels never read it.
+#[derive(Clone, Copy)]
+pub(super) struct BufferRange<'a> {
+    pub(super) raw: &'a ProtocolObject<dyn MTLBuffer>,
+    pub(super) offset: usize,
+    pub(super) len: usize,
+}
+impl<'a> BufferRange<'a> {
+    pub(super) fn new(buffer: &'a Buffer<u32>, offset: usize, len: usize) -> Result<Self> {
+        let end = offset
+            .checked_add(len)
+            .ok_or(Error::Options("FP32 buffer range overflow"))?;
+        if offset >= buffer.len
+            || end > buffer.len
+            || buffer.len.checked_mul(4) != Some(buffer.raw.length())
+        {
+            return Err(Error::Options("FP32 buffer range exceeds storage"));
+        }
+        Ok(Self {
+            raw: &buffer.raw,
+            offset,
+            len,
+        })
+    }
+    pub(super) fn overlaps(self, other: Self) -> bool {
+        std::ptr::eq(self.raw, other.raw)
+            && self.offset < other.offset + other.len
+            && other.offset < self.offset + self.len
+            && self.len != 0
+            && other.len != 0
+    }
+}
+/// Preflight all borrowed resources before creating an encoder. Read-only
+/// ranges may alias; every writable range must be disjoint from every other
+/// range. The command retains resources; the caller owns completion/publication.
+pub(super) fn validate_encode_ranges(
+    command: &ProtocolObject<dyn MTLCommandBuffer>,
+    device: &ProtocolObject<dyn MTLDevice>,
+    ranges: &[BufferRange<'_>],
+    read_only: usize,
+) -> Result<()> {
+    if read_only > ranges.len()
+        || !command.retainedReferences()
+        || command.status() != MTLCommandBufferStatus::NotEnqueued
+        || !std::ptr::eq(&*command.device(), device)
+    {
+        return Err(Error::Options("FP32 encoder command contract differs"));
+    }
+    for (i, &range) in ranges.iter().enumerate() {
+        if !std::ptr::eq(&*range.raw.device(), device) {
+            return Err(Error::Options("FP32 encoder foreign device buffer"));
+        }
+        for &other in &ranges[..i] {
+            if i >= read_only && range.overlaps(other) {
+                return Err(Error::Options("FP32 encoder writable buffer overlap"));
+            }
+        }
+    }
+    Ok(())
+}
 #[derive(Clone, Copy)]
 pub(super) struct Layout {
     pub rows: usize,

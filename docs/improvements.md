@@ -66,6 +66,20 @@ full-block quality/state, overhead and external-speed gates remain open.
 [Apple hardware focus](apple-silicon-gpu-goal.md) records parallel Astra research /
 Sol implementation and keeps ANE conditional on precision, placement and costs.
 
+The direct FP32 GELU tanh candidate fails three amplified-tail families at
+unchanged gates. Its bounded successor uses a fixed 196,632-byte tail table:
+native and independent scans cover all 16,777,217 FP32 tail inputs. Original
+42 cases, target arithmetic, forced whole-case replay and corruption controls
+pass; normal fallback occurs in two adversarial/boundary cases, none of the
+24 saved model cases. Astra approves artifact-only retention with no findings;
+outer-domain admission, production/block adoption and speed remain unqualified.
+Shared RMS/rotary encoders now compose with attention on one retained command
+and guarded shared allocation, including 32-query local/global geometry.
+Required checks, 847 CPU/1,024 Metal tests, seven explicit GPU tests and
+622,632 independent numerical comparisons pass; exact masks/inactive copies,
+33 reader corruptions and zero warmed attention Rust allocations pass.
+Astra approves scoped retention with no findings; ordinary graph and request speed remain unchanged. [Current evidence](../artifacts/mlx-gpu-gap-2026-11-15/g2-next-mechanism-progress-2.json).
+
 The [LFM3 external request observations](lfm3-engine-comparison.md) record
 78 requests across two 3+10 cohorts per engine, with preserved raw observations,
 model/executable identities and clock/memory scope. Ollama lacks authoritative

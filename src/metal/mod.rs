@@ -29,6 +29,8 @@ pub use capture::Capture;
 pub mod gemma3;
 pub mod gemma_affine;
 pub mod gemma_attention;
+#[cfg(test)]
+mod gemma_chain_tests;
 pub mod gemma_rms;
 pub mod gemma_rotary;
 pub mod lfm2;
