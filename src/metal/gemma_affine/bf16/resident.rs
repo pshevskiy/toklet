@@ -9,6 +9,9 @@ use std::{fs::File, io::Read};
 pub(super) mod graph;
 pub(super) mod planning;
 pub(super) mod profile;
+// Explicit first producer experiment; no ordinary graph route selects it.
+#[cfg_attr(not(test), allow(dead_code))]
+pub(super) mod producer;
 
 const TILE_ROWS: usize = 8192;
 const MATRIX_SLOTS: usize = 278;
@@ -20,6 +23,25 @@ struct Matrix {
     columns: usize,
     tiles: Vec<Buffer<u32>>,
     maximum: f64,
+}
+
+impl Matrix {
+    /// Cold borrowed view for the explicit one-tile producer experiment. The
+    /// immutable loader-scanned maximum stays paired with this exact storage.
+    /// Guards are validated by the transaction after checked completion.
+    #[cfg_attr(not(test), allow(dead_code))]
+    fn single_tile(&self, context: &Bf16Context) -> Result<project::bf16_encode::Bf16Tile<'_>> {
+        if self.tiles.len() != 1 || self.rows > TILE_ROWS {
+            return Err(Error::Options("BF16 producer matrix is not one tile"));
+        }
+        project::bf16_encode::Bf16Tile::new(
+            &context.0.gpu,
+            self.rows,
+            self.columns,
+            &self.tiles[0],
+            self.maximum,
+        )
+    }
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -426,3 +448,6 @@ impl Bf16Weights {
 
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+mod encode_tests;

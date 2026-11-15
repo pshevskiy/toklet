@@ -31,7 +31,11 @@ pub mod gemma_affine;
 pub mod gemma_attention;
 #[cfg(test)]
 mod gemma_chain_tests;
+mod gemma_gelu;
 pub mod gemma_rms;
+// Private producer prerequisite; ordinary graph selection remains unchanged.
+#[cfg_attr(not(test), allow(dead_code))]
+mod gemma_residual;
 pub mod gemma_rotary;
 pub mod lfm2;
 mod llama3_rotary;

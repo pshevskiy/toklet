@@ -8,6 +8,14 @@ pub(in crate::metal::gemma_affine) mod bf16_batch;
 #[cfg(all(target_os = "macos", any(test, feature = "gemma-head-batch-mac-probe")))]
 pub(in crate::metal::gemma_affine) mod head_batch_experiment;
 
+// Explicit primitive seam until a separately qualified producer owner selects it.
+#[cfg(target_os = "macos")]
+#[cfg_attr(not(test), allow(dead_code))]
+pub(in crate::metal::gemma_affine) mod bf16_encode;
+#[cfg(target_os = "macos")]
+#[cfg_attr(not(test), allow(unused_imports))]
+pub(super) use bf16_encode::encode_bf16;
+
 #[derive(Clone, Copy, Debug, serde::Serialize)]
 pub struct TileAttribution {
     pub operation: OperationId,

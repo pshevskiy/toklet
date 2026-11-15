@@ -59,6 +59,13 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 - [x] G0 header ledger: active BF16 tensors alone total 9.257 GB including
   4.698 GB PLE; media removal alone does not establish 6 GiB full residency.
   No conversion, new artifact hunt or runtime/quality claim.
+- [x] G0 source research proposes one BF16-native Q4 conversion/two authenticated
+  views with identical active bytes; Ollama needs 10.6 MB unused extras. No
+  conversion/import/precision/runtime qualification. App plist is now 0.40.16;
+  fresh server identity is required. [Research](artifacts/mlx-gpu-gap-2026-11-15/astra-common-q4-import-research-1.md).
+- [x] G0 precision audit: stock controls do not establish matched FP32 execution.
+  Exact-widening adapters require separate qualification/disclosure; stock
+  observations stay distinct. No conversion/run. [Precision findings](artifacts/mlx-gpu-gap-2026-11-15/astra-common-q4-precision-research-1.md).
 - [x] Workspace `5e886fd1` is pushed; all seven exact-head workflows/15 jobs
   pass and all 4,170 compiled inputs match committed Git bytes.
 - [x] **Full-finite GELU feasibility:** a fixed 3,317,784-byte table passes
@@ -78,11 +85,34 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   tensor descriptors; normal/optimized independent readers and eight corruption
   controls pass. Metadata/fixture evidence only, no new block execution.
   [Handoff](artifacts/mlx-gpu-gap-2026-11-15/g2-producer-block-fixture-1/handoff.json).
-- [ ] **Current:** validate the isolated projection/GELU/FP32 add-scale prerequisites,
-  then compose one complete resident producer block;
-  preserve projection admission and proposed-KV publication. Then genuine deeper
-  own inputs, complete graph and G0 matched-artifact admission. O4 typed-ring
-  rewriting remains conditional on useful request-level evidence.
+- [x] G0 synthetic exact-widening mechanism and independent normal/optimized
+  replay pass; Astra reader findings are fixed and final review approves.
+  No full-model adapter, stock precision equivalence or speed win is qualified.
+  [Review/evidence](artifacts/mlx-gpu-gap-2026-11-15/astra-fp32-widen-review-1/verdict.json).
+- [x] **Resident producer-block pilot:** all eight nominal original cases
+  complete on one command/wait with zero CPU replay; initial max-only prefills
+  took ten. Independent normal/optimized replay passes 847,360 original values,
+  192 exact masks, 46 causal-prefix pairs and transaction/fault controls under
+  6 GiB. Required fmt/strict CPU+Metal Clippy, 1,034 Metal tests and release builds
+  pass; 847 unchanged CPU tests are reused. Astra combined review approves with
+  no findings. [Pilot/scope](docs/gemma-gpu-producer.md),
+  [review](artifacts/mlx-gpu-gap-2026-11-15/astra-producer-block-review-1/verdict.json),
+  [publication](artifacts/mlx-gpu-gap-2026-11-15/g2-producer-publication-1.json).
+- [ ] **Current:** qualify checked multi-tile BF16 output for PLE/consumer FFN/head.
+  Astra supplies the layout/proof recipe; Sol prepares an isolated draft. Then
+  compose deeper own-input producer/consumer layers 13→14→15 with graph-wide
+  replay/publication. In parallel, Sol prepares the bounded common-Q4 exporter;
+  no conversion, full adapter, quality or stock precision equivalence is qualified.
+  Ordinary CLI graph, allocation/request-speed and all competitive/overhead gates
+  remain open. [Current evidence/failures](artifacts/mlx-gpu-gap-2026-11-15/g2-producer-prerequisites-applied-1.json).
+- [x] G3 research proposes bounded four-token weight reuse with unchanged
+  compensated order; no implementation/speed claim. Fresh resident-graph
+  profiling precedes selection. [Experiment brief](artifacts/mlx-gpu-gap-2026-11-15/astra-prefill-weight-reuse-research-1.md).
+- [x] Static next-graph prep identifies layers 13→14→15, strided multi-tile
+  output and remaining CPU validation/commit touches. Astra supplies the checked
+  GPU layout recipe; Sol prepares an isolated draft while final checks run.
+  [Graph handoff](artifacts/mlx-gpu-gap-2026-11-15/g2-resident-graph-integration-prep-1.md),
+  [projection brief](artifacts/mlx-gpu-gap-2026-11-15/astra-bf16-multitile-research-1.md).
 - [ ] Then G2 complete resident graph; G3 prefill/decode matrix kernels; G4 output/weight
   traffic; G5 LFM3 GPU; G6 confirmed external wins and all original overhead gates.
   Each code task needs required checks, measurements and Astra before commit.

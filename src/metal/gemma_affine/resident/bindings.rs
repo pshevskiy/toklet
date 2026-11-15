@@ -33,6 +33,16 @@ pub(in crate::metal::gemma_affine) struct Bindings {
     final_norm: usize,
     layers: [LayerBindings; 35],
 }
+/// Fixed cold roles for the two first producer qualification layers.
+#[derive(Clone, Copy)]
+pub(in crate::metal::gemma_affine) struct ProducerSlots {
+    pub geometry: LayerPlan,
+    /// Q,K,V,O,FFgate,FFup,FFdown,PLEgate,PLEprojection.
+    pub matrices: [usize; 9],
+    /// Input,Q,K,postattention,preFF,postFF,postPLE normalization.
+    pub norms: [usize; 7],
+    pub scalar: usize,
+}
 impl Bindings {
     #[cfg(target_os = "macos")]
     pub(super) fn heretic(cold: &crate::mlx::gemma4::uncensored::Plan) -> Result<Self> {
@@ -316,6 +326,45 @@ impl Bindings {
             return Err(Error::Options("Gemma role coverage incomplete"));
         }
         Ok(())
+    }
+    pub(in crate::metal::gemma_affine) fn producer_slots(
+        &self,
+        index: usize,
+    ) -> Result<ProducerSlots> {
+        if index != 0 && index != 4 {
+            return Err(Error::Options("BF16 first producer layer outside scope"));
+        }
+        let l = &self.layers[index];
+        let kv =
+            l.kv.as_ref()
+                .ok_or(Error::Options("BF16 first producer has no KV projection"))?;
+        if l.geometry.producer != index || l.geometry.intermediate != 6144 {
+            return Err(Error::Options("BF16 first producer geometry differs"));
+        }
+        Ok(ProducerSlots {
+            geometry: l.geometry,
+            matrices: [
+                l.q,
+                kv.k,
+                kv.v,
+                l.o,
+                l.gate,
+                l.up,
+                l.down,
+                l.ple_gate,
+                l.ple_projection,
+            ],
+            norms: [
+                l.input_norm,
+                l.q_norm,
+                kv.norm,
+                l.post_attention_norm,
+                l.pre_ff_norm,
+                l.post_ff_norm,
+                l.post_ple_norm,
+            ],
+            scalar: l.scalar,
+        })
     }
     pub(in crate::metal::gemma_affine) fn embedding_index(&self) -> usize {
         self.embedding

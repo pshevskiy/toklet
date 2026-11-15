@@ -78,6 +78,16 @@ checks, explicit GPU/raw replay/allocation checks and Astra approval. All seven
 code-head workflows/15 jobs pass. The ordinary graph and request speed remain
 unchanged. [Implementation/evidence](gemma-gpu-attention.md).
 
+The [resident producer-block pilot](gemma-gpu-producer.md) keeps all eight nominal
+original cases on one completed command/wait with zero CPU replay. The max-only
+prefills previously took ten commands/waits. Independent replay passes 847,360
+original values, exact masking/prefix and transaction/fault controls under 6 GiB.
+Fmt/strict CPU+Metal Clippy, 1,034 Metal tests and release builds pass; 847 unchanged
+CPU tests are reused. Astra approves the combined scoped change with no findings.
+The ordinary CLI graph, whole graph, allocation/request speed, summary overhead
+and external wins remain unqualified.
+[Review/publication](../artifacts/mlx-gpu-gap-2026-11-15/g2-producer-publication-1.json).
+
 The [LFM3 external request observations](lfm3-engine-comparison.md) record
 78 requests across two 3+10 cohorts per engine, with preserved raw observations,
 model/executable identities and clock/memory scope. Ollama lacks authoritative

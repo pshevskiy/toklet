@@ -15,7 +15,9 @@ Prioritize these mechanisms:
 
 - Compose accurate projections, RMS/rotary, attention and FP32 pointwise work on
   one command. The new [attention encoder](gemma-gpu-attention.md) supports shared
-  ring views and caller-owned commands; the complete block remains next.
+  ring views and caller-owned commands; the [complete-block pilot](gemma-gpu-producer.md)
+  now keeps all eight nominal cases on one command/wait. Whole-graph integration
+  and request performance remain open.
 - Reuse weights across prefill rows with a qualified matrix/tiled kernel. Keep
   single-token decode focused on weight traffic and dispatch cost. Measure
   actual request effects on the named M1 Pro, rather than infer throughput from
