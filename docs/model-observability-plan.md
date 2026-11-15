@@ -1,6 +1,6 @@
 # Model roadmap: observability before optimization
 
-Updated 13 November 2026. Selected order: **Gemma 4 E2B → Qwen3.5-4B →
+Updated 15 November 2026. Selected order: **Gemma 4 E2B → Qwen3.5-4B →
 Qwen3.5-9B**. Qwen2.5-1.5B remains a historical regression reference, not the
 next adoption target. The [O1 opt-in pilot](o1-gemma-request-summaries.md) now
 implements available worker-boundary observations. The additive
@@ -41,6 +41,23 @@ as the reference; record the modified checkpoint as a distinct model identity.
 | Gemma 4 E2B first | [deadbydawn101/gemma-4-E2B-Heretic-Uncensored-mlx-4bit](https://huggingface.co/deadbydawn101/gemma-4-E2B-Heretic-Uncensored-mlx-4bit), `cde01efc` | Affine 4-bit, group 64; derived from p-e-w's Heretic ARA checkpoint. Evaluate after O1/O2 on the qualified official BF16 route. Existing Gemma Q4/QAT quality failures remain binding for their artifacts; they neither qualify nor automatically reject this different artifact |
 | Qwen3.5-4B second | [avan-ag/Qwen3.5-4B-Uncensored-MLX-4bit](https://huggingface.co/avan-ag/Qwen3.5-4B-Uncensored-MLX-4bit), `fb98fbc5` | Affine 4-bit, group 64; DavidAU fine-tuned lineage, not simply stock Qwen quantization. Preserve this distinction in quality and timing comparisons |
 | Qwen3.5-9B third | [lukey03/Qwen3.5-9B-abliterated-MLX-4bit](https://huggingface.co/lukey03/Qwen3.5-9B-abliterated-MLX-4bit), `8ff61b6a` | Affine 4-bit, group 64, text-only configuration. Inspect exact packed tensors and memory before admission; do not transfer multimodal claims from the official model |
+
+A bounded 15 November alternative preflight records two **separate cold-admission
+candidates**. Existing preferred-source identities and rejection decisions stay
+binding; these are separate sources for a finite 4B-then-9B audit. Existing goal
+authorization covers that audit; optional user direction is not a prerequisite.
+
+| Alternative source | Observed cold evidence | Still required |
+| --- | --- | --- |
+| [TheWirelessPhoenix Huihui 4B](https://huggingface.co/TheWirelessPhoenix/Qwen3.5-4B-abliterated_4bit/tree/916d9f7c2e27ed41e2b9ed39f3a2badccb2bbc7c) | Revision `916d9f7c`; all 924 header descriptors match the existing 4B layout. Publisher declares Huihui lineage and MLX-LM 0.31.3 conversion | Full content authentication, exact conversion lineage, separate source/codec admission and unchanged numerical/quality/memory gates |
+| [Interim Labs Huihui 9B](https://huggingface.co/interimlabs/InterimLabs-Huihui-Qwen3.5-9B-abliterated-MLX-4bit/tree/eca302ac442310980ec393e56546aa4e8a2ee894) | Revision `eca302ac`; 927 renamed tensors, 24 `A_log` vectors changed from BF16 to F32, all payload ranges repacked | Full content/lineage proof and fresh offsets. Stored dtype alone proves no value/precision gain; no original numerical failure is cleared |
+
+Only bounded metadata and header bytes were read. File size is not physical
+admission, and publisher context limits do not expand Toklet's qualified limits.
+The [source proposal](../artifacts/qwen35-alternative-admission-2026-11-15/source-profile-contract-2.json)
+and [header/lineage comparison](../artifacts/qwen35-alternative-admission-2026-11-15/header-lineage-decision-2.json)
+retain both original dual-profile gates and stop downstream work on failure.
+No model execution, new loader, optimization, performance or adoption is claimed.
 
 Full inspected revisions/configuration are in the
 [artifact record](../artifacts/model-observability-plan-2026-11-07/artifact-candidates.json).

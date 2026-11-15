@@ -7,32 +7,36 @@ history is in the [dated archive](docs/archive/2026-11-12/README.md).
 
 ## Current and next task
 
-Current task: **finish R1 publication verification and resolve the next model route**.
-- [x] Implement and locally validate the 384/128 ordinary Gemma CLI regression
-  adapter, whole-owner sampling, frozen candidate proof and later publication
-  binding. All 28 new controls pass in both Python modes; nine legacy controls
-  per mode are reused against unchanged inputs. Eight CLI controls and both real
-  G17 policy admissions pass, without model reads or child launches.
-- [x] Resolve all three Astra findings, obtain scoped approval and publish code
-  as `ae984fda`. Six independent methods first reproduce the original gaps, then
-  pass after fixes. Required engine checks reuse unchanged inputs. The initial
-  verification-helper inventory error and original review remain evidence.
-- CI verification and the final publication head are tracked in the
-  [live publication receipt](artifacts/gemma-cli-regression-2026-11-15/publication-status.json).
-  It records pending, failed or complete status without rewriting raw evidence.
-  [Checks](artifacts/gemma-cli-regression-2026-11-15/checks-2.json),
-  [Astra approval](artifacts/gemma-cli-regression-2026-11-15/astra-review-1/verdict-2.json),
-  [usage and scope](docs/gemma-regression-job.md).
+Current task: **finite Qwen3.5-4B alternative lineage/conversion and owner-admission audit**.
+- [x] R1 is published as `ae984fda` plus status `2a76caef`; each exact head has
+  all six workflows/13 jobs green. [Publication](artifacts/gemma-cli-regression-2026-11-15/publication-status.json).
+- [x] Pin two separate Huihui-derived candidate metadata/headers. The 4B header
+  matches 924 old descriptors. The 9B header maps 927 renamed tensors, with 24
+  `A_log` vectors stored as F32 and every payload range repacked. No tensor
+  values, exact upstream conversion lineage, numerical quality or fit is proved.
+  The initial Python CA-path failure is retained; verified certifi retry passes.
+- [ ] Inspect pinned MLX-LM 0.31.3 converter/sanitizer/quantization source and the
+  exact parent/stock shard headers. Map all 426 text tensors into 924 child
+  descriptors, explain exclusions/aliases and complete the unique-owner phase
+  ledger at capacity512/chunk32 within 6 GiB, including transients and helper.
+- [ ] After metadata/resource prerequisites pass, authenticate full contents and
+  independently verify conversion/value correspondence. Preserve the original
+  idealFP64/stagedFP32 128/256 gates before any downstream campaign. A failed
+  prerequisite stops that candidate; no native kernel search is warranted now.
 
-Next: resolve the remaining model-route direction. Positive Qwen3.5-4B/9B
-request, quality, performance and adoption proof is absent after their numerical
-rejections; closed searches stay closed. User direction is requested on final
-rejection dispositions, alternative pinned Qwen artifacts or LFM3 CLI metrics.
-LFM3 managed/Q4 scope remains conditional and open. G17 alone is descriptive
-baseline evidence, never a candidate speedup or observer-overhead pass.
-The whole improvement goal remains active; UI/screenshare and iPhone are
-user-deferred and larger models stay research-only.
-[Requirement dispositions](artifacts/gemma-cli-regression-2026-11-15/whole-goal-disposition-audit-1.json).
+Next: the frozen 9B candidate after the 4B disposition. Existing full-goal
+permission covers this finite audit; the pending user preference is optional
+steering. Astra identified and corrected the earlier invented selection barrier;
+Astra approves the corrected planning boundary with no remaining findings. [Active contract](artifacts/qwen35-alternative-admission-2026-11-15/source-profile-contract-2.json),
+[superseding decision](artifacts/qwen35-alternative-admission-2026-11-15/header-lineage-decision-2.json),
+[review](artifacts/qwen35-alternative-admission-2026-11-15/astra-review-1/verdict-2.json).
+
+The whole improvement goal stays active. Positive Qwen request/quality/
+performance/adoption proof remains absent on the original rejected trajectories;
+closed searches and gates remain binding. The separate LFM3 CPU summary
+[feasibility audit](artifacts/lfm3-cli-metrics-2026-11-15/feasibility-audit-1.json)
+does not replace this work; managed/Q4 scope remains conditional. UI/screenshare
+and iPhone remain user-deferred, and larger models remain research-only.
 
 ## Recent completed milestones
 

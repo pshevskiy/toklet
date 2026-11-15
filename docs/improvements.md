@@ -596,6 +596,13 @@ Mac ceiling, 512/32 pilot and 512 MiB codec budget stay fixed; iPhone is deferre
 | LFM3 CPU BF16 | Authenticated graph/CLI, 1,025-position parity, both complete original quality comparisons and 62 state checks pass; finite widening retained after matched request measurements and Astra approval. Managed/GPU adoption stays open. | [Scope and decision](lfm3-finite-widening.md) |
 | Remaining under-4B qualification | MiniCPM5, converted Granite/Ministral and Qwen3.5-2B routes retain their numerical rejections. Payload/conversion/diagnostic results have advanced beyond metadata; downstream quality, fit, request and adoption gates remain unqualified where blocked. LFM3 retains its separate qualified CPU scope. | [Candidates and receipts](model-observability-plan.md#five-candidates-strictly-below-4b-total-parameters) |
 
+The [Qwen alternative preflight](../artifacts/qwen35-alternative-admission-2026-11-15/header-lineage-decision-2.json)
+records two separate Huihui-derived sources for a finite cold-admission audit. The 4B header is unchanged;
+9B renames 927 tensors and stores 24 `A_log` vectors as F32, with fresh offsets.
+Bounded metadata/header checks pass after correcting the local CA-bundle path;
+no tensor values, exact upstream lineage, fit or numerical improvement is proved.
+Original rejections and gates remain binding. [Admission contract](../artifacts/qwen35-alternative-admission-2026-11-15/source-profile-contract-2.json).
+
 Original individual check counts, source revisions, measured cohorts, rejected
 experiments and Astra/commit receipts remain in the [reviewed history](archive/2026-11-09/improvements.md#latest-documentation-work)
 and linked scope reports. Metadata and narrowly passing probes do not qualify
