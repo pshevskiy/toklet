@@ -1,10 +1,14 @@
 # Beat the MLX GPU baselines
 
-Updated 15 November 2026. Status: **active goal; G1 diagnosis and diagnostic
-implementation underway**. No new performance win, model adoption or overhead
-pass is claimed. The [current cost map](gemma-current-cost-map.md) identifies CPU
-attention and completion waits as the next targets; summary-component costing
-remains open. Previous [delivery outcomes](improvement-outcomes.md) remain valid.
+Updated 15 November 2026. Status: **active goal; G1 delivered, G2 workspace
+implemented and reviewed**. The [cost map](gemma-current-cost-map.md) identifies
+CPU attention and completion waits as the next targets. The
+[reusable attention building block](gemma-gpu-attention.md) prepares shared-buffer
+block composition; [Apple hardware priorities](apple-silicon-gpu-goal.md) focus on
+GPU residency, unified-memory reuse and bounded ANE feasibility. Astra research
+and Sol implementation proceed in parallel; hardware measurements stay serial.
+No new engine speedup, model adoption or overhead pass is claimed. Previous
+[delivery outcomes](improvement-outcomes.md) remain valid.
 
 ## Goal and completion rule
 

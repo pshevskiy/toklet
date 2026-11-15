@@ -45,10 +45,24 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   case and independent 42-pair certificate pass. Follow-up Astra review approves scoped feasibility, no remaining findings;
   no production integration or speed claim. [Review/publication](artifacts/mlx-gpu-gap-2026-11-15/g2-feasibility-publication-1.json).
   [Scope/evidence](docs/gemma-current-cost-map.md#g2-attention-feasibility-follow-up).
-- [ ] **Next:** bounded reusable attention workspace and checked completion/
-  poisoning, then deeper own inputs and complete block composition. G0
-  matched-artifact admission remains open. Defer O4 typed-ring rewriting until
-  request-level evidence demonstrates a useful effect.
+- [x] **Reusable GPU attention workspace.** Sol implements fixed
+  buffers, checked shared-ring views/caller-command encoding, guarded publication
+  and poisoning. Fmt/strict CPU+Metal Clippy, 847 CPU/1,022 Metal tests, release,
+  three explicit GPU tests and zero Rust allocations over 32 warm operations pass.
+  Independent normal/optimized replay passes 2,844,296 values/136,568 exact masks.
+  Astra combined review approves scoped retention with no findings.
+  [Publication](artifacts/mlx-gpu-gap-2026-11-15/g2-workspace-publication-1.json). [Implementation/evidence](docs/gemma-gpu-attention.md).
+- [x] Parallel Astra GPU/Apple-hardware research supplies block/admission/commit
+  guidance; Sol prepares the next FP32 GELU experiment independently. Focus on
+  GPU residency, unified-memory reuse and fewer CPU handoffs; ANE remains a
+  separately qualified public-API experiment. [Hardware focus](docs/apple-silicon-gpu-goal.md).
+- [x] G0 header ledger: active BF16 tensors alone total 9.257 GB including
+  4.698 GB PLE; media removal alone does not establish 6 GiB full residency.
+  No conversion, new artifact hunt or runtime/quality claim.
+- [ ] **Next:** qualify FP32 GELU and one complete resident producer block;
+  preserve projection admission and proposed-KV publication. Then genuine deeper
+  own inputs, complete graph and G0 matched-artifact admission. O4 typed-ring
+  rewriting remains conditional on useful request-level evidence.
 - [ ] Then G2 resident block; G3 prefill/decode matrix kernels; G4 output/weight
   traffic; G5 LFM3 GPU; G6 confirmed external wins and all original overhead gates.
   Each code task needs required checks, measurements and Astra before commit.

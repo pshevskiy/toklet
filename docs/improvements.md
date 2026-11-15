@@ -56,6 +56,16 @@ integration, full quality/state and request-speed qualification remain open.
 Astra identified a non-isolating overflow injection; its corrected masked-only
 case and 42-pair certificate pass. Astra approves scoped feasibility after the fix, with no remaining findings.
 
+The [reusable GPU attention workspace](gemma-gpu-attention.md) adds bounded
+buffers, checked shared-ring views and caller-owned encoding, one command/wait,
+guarded publication and permanent poisoning after execution failure. Required
+fmt/strict CPU+Metal Clippy, 847 CPU/1,022 Metal tests and release pass. Explicit
+GPU checks and 2,844,296 independent value comparisons pass; 32 warmed operations
+allocate zero Rust memory. Astra approves scoped retention with no findings; the ordinary model graph,
+full-block quality/state, overhead and external-speed gates remain open.
+[Apple hardware focus](apple-silicon-gpu-goal.md) records parallel Astra research /
+Sol implementation and keeps ANE conditional on precision, placement and costs.
+
 The [LFM3 external request observations](lfm3-engine-comparison.md) record
 78 requests across two 3+10 cohorts per engine, with preserved raw observations,
 model/executable identities and clock/memory scope. Ollama lacks authoritative

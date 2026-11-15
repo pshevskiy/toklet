@@ -28,6 +28,7 @@ mod strided_half_product;
 pub use capture::Capture;
 pub mod gemma3;
 pub mod gemma_affine;
+pub mod gemma_attention;
 pub mod gemma_rms;
 pub mod gemma_rotary;
 pub mod lfm2;

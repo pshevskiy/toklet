@@ -252,3 +252,12 @@ Next implement a bounded reusable workspace and checked completion/poisoning
 boundary for this one mechanism, then test genuine deeper own inputs and a
 complete block. Keep whole-graph/full quality/state and request-performance
 qualification open. These untimed probes establish no speedup or external win.
+
+## Reusable workspace implementation
+
+The [engine attention workspace](gemma-gpu-attention.md) now implements bounded
+reuse and a checked borrowed-buffer encode seam on the existing GPU context.
+Required checks pass; independent replay covers 2,844,296 values including actual
+32-row capacity controls, and 32 warmed operations allocate no Rust memory.
+Astra approves the scoped owner/encoder with no findings. Ordinary graph execution and request-performance gates
+remain unchanged. [Hardware priorities](apple-silicon-gpu-goal.md).
