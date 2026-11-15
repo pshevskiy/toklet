@@ -46,6 +46,16 @@ effect and prioritize accurate GPU attention. All three original overhead
 failures remain binding. All 422 relative links and whitespace pass; Astra
 approves the component evidence and decision with no findings.
 
+The artifact-only [G2 attention feasibility probe](gemma-current-cost-map.md#g2-attention-feasibility-follow-up)
+passes 932,968 frozen and 376,320 saved real original-BF16 graph input values at
+unchanged bounds, with exact masks and bitwise segment-layout agreement. Four
+GPU fault injections and eight raw-reader corruption controls pass; all guards
+close under 512 MiB. Four dependent dispatches use one command/wait without
+intermediate readback. Production code is unchanged; reusable ownership,
+integration, full quality/state and request-speed qualification remain open.
+Astra identified a non-isolating overflow injection; its corrected masked-only
+case and 42-pair certificate pass. Astra approves scoped feasibility after the fix, with no remaining findings.
+
 The [LFM3 external request observations](lfm3-engine-comparison.md) record
 78 requests across two 3+10 cohorts per engine, with preserved raw observations,
 model/executable identities and clock/memory scope. Ollama lacks authoritative

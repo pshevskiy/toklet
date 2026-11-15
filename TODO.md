@@ -35,8 +35,18 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   [Evidence](artifacts/mlx-gpu-gap-2026-11-15/g1-summary-component-analysis-1.json).
   All 422 relative links/whitespace and Astra evidence review pass, no findings.
   Production inputs are unchanged; no new 1% pass.
-- [ ] **Next:** G2 accurate resident GPU attention feasibility using the frozen
-  D256/D512 full/local and cancellation fixtures, then block composition; G0
+- [x] G1 component decision published as `1aaf1601`; Astra approves, 422 links
+  and whitespace pass. Production inputs remain unchanged. [Receipt](artifacts/mlx-gpu-gap-2026-11-15/g1-summary-publication-1.json).
+- [x] **G2 feasibility:** artifact-only GPU attention passes 932,968 frozen
+  values plus 376,320 saved original-BF16 graph own-input values. Both layouts
+  agree bitwise, exact masks pass, four GPU faults reject, and normal/optimized
+  raw replay passes eight corruption controls. All guards close under 512 MiB.
+  Astra found a non-isolating overflow injection; the corrected masked-only
+  case and independent 42-pair certificate pass. Follow-up Astra review approves scoped feasibility, no remaining findings;
+  no production integration or speed claim. [Review/publication](artifacts/mlx-gpu-gap-2026-11-15/g2-feasibility-publication-1.json).
+  [Scope/evidence](docs/gemma-current-cost-map.md#g2-attention-feasibility-follow-up).
+- [ ] **Next:** bounded reusable attention workspace and checked completion/
+  poisoning, then deeper own inputs and complete block composition. G0
   matched-artifact admission remains open. Defer O4 typed-ring rewriting until
   request-level evidence demonstrates a useful effect.
 - [ ] Then G2 resident block; G3 prefill/decode matrix kernels; G4 output/weight

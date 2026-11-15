@@ -191,3 +191,64 @@ seven exact-head workflows/15 jobs passing. G0 common-artifact/cache/output
 comparability and G2's accurate resident attention are next. The active goal
 still requires actual matched wins against both external engines and all
 original 1% overhead gates; the three old failures remain binding.
+
+## G2 attention feasibility follow-up
+
+An artifact-only GPU primitive keeps FP32 Q and three immutable K/V segments on
+the device through dependent validation, QK, softmax and probability–V encoders.
+The four dispatches share one command and one completion wait. There are no
+intermediate CPU readbacks. Compensated three-term dot/context accumulation and
+product-error recovery preserve the FP32 score/probability/context boundaries;
+softmax uses Safe/Precise FP32 exponential and a compensated denominator. This
+is a feasibility experiment, not a public owner, integrated block or replacement
+for the existing CPU reference.
+
+On M1 Pro, eight frozen D3–D512/full/local/translated/cancellation cases pass in
+two segment layouts: all 932,968 values meet the original
+`1e-5 + 1e-4 * abs(expected)` bound, with 111,608 exact masked zeros. Maximum
+error uses 0.011921 of that bound. Contiguous and three-segment outputs are
+bitwise equal. The expectations precede this GPU implementation.
+
+A second input family extracts authenticated saved staged-FP32 graph states
+computed from official original BF16 rows. Layers 0/4/13/14/15/34 cover both
+head dimensions, early/late producers and shared KV. Original/future sequences
+supply four-row prefill and final-row decode over four keys: 24 cases, each in
+two layouts. All 376,320 values pass, with 1,152 exact masked zeros and maximum
+bound fraction 0.009036. Context expectations are unchanged historical arrays;
+independent scalar-fsum score/probability replay reproduces those contexts
+exactly before GPU execution. There are 1,170 probabilities between 0.01 and
+0.99 in the input family. This strengthens short own-input coverage; it is not
+a fresh BF16 runtime, long-context graph or quality result.
+
+Four actual GPU fault injections reject a NaN query, masked NaN value, masked
+infinite key and masked score overflow from finite inputs. All input words and
+buffer/status guards remain unchanged. They check primitive status handling;
+they do not qualify session-prefix recovery or transactional KV publication.
+Astra found the first overflow injection also overflowed visible scores. That
+non-isolating attempt is retained. The corrected injection zeroes feature zero
+in all Q/K rows, then sets only query/head zero and future key six to MAX. An
+independent certificate checks all 42 pairs: exactly that masked pair overflows,
+all 24 visible pairs and every other pair remain finite. The corrected actual
+GPU run returns rejection status one with unchanged inputs/guards.
+The independent raw reader also rejects eight corruptions, including a masked
+1e-6 probability that passes the pointwise tolerance but violates exact zero.
+Normal and optimized-Python replay agree for both input families and faults.
+
+All seven execution guards close without survivors. Maximum sampled charge is
+117,030,912 bytes including helper; the separate terminal direct-pair maximum
+is 152,109,056 bytes, under the 512 MiB probe cap. Production sources, defaults,
+model gates and numerical reference remain unchanged. Artifact-only release
+builds pass; ordinary source checks are reused only for unchanged inputs.
+Astra approves scoped primitive feasibility after the isolated-overflow correction,
+with no remaining findings. Production ownership/integration remains unqualified.
+
+[Fixture protocol](../artifacts/mlx-gpu-gap-2026-11-15/g2-attention-feasibility-1/protocol.json),
+[fixture replay and eight controls](../artifacts/mlx-gpu-gap-2026-11-15/g2-attention-replay-1.json),
+[own-input protocol](../artifacts/mlx-gpu-gap-2026-11-15/g2-attention-own-input-1/protocol.json),
+[own-input and initial GPU fault replay](../artifacts/mlx-gpu-gap-2026-11-15/g2-attention-own-replay-1.json),
+[isolated masked-overflow correction](../artifacts/mlx-gpu-gap-2026-11-15/g2-masked-overflow-replay-2.json).
+
+Next implement a bounded reusable workspace and checked completion/poisoning
+boundary for this one mechanism, then test genuine deeper own inputs and a
+complete block. Keep whole-graph/full quality/state and request-performance
+qualification open. These untimed probes establish no speedup or external win.
