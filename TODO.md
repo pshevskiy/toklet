@@ -61,12 +61,12 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   No conversion, new artifact hunt or runtime/quality claim.
 - [x] Workspace `5e886fd1` is pushed; all seven exact-head workflows/15 jobs
   pass and all 4,170 compiled inputs match committed Git bytes.
-- [x] **GELU tail feasibility:** direct FP32 tanh rejection remains. The fixed
-  196,632-byte table passes native/independent scans of all 16,777,217 tail inputs,
-  original 42 cases, target arithmetic, forced whole-case replay and corruptions.
-  Normal fallback: two adversarial/boundary cases, none of 24 saved model cases.
-  Astra approves artifact-only retention; outer-domain/production/full-block
-  qualification remains open. [Checks/review](artifacts/mlx-gpu-gap-2026-11-15/g2-gelu-tail-review-checks-1.json).
+- [x] **Full-finite GELU feasibility:** a fixed 3,317,784-byte table passes
+  exhaustive native/independent scans of all 4,278,190,080 finite FP32 gates,
+  original 42 cases, GPU controls, forced whole-case replay and corruptions.
+  Five boundary/adversarial cases replay; none of 24 saved model cases does.
+  Astra approves artifact-only retention, no findings. Direct-tanh rejection
+  remains; production/block/speed qualification is open. [Scope/checks](docs/gemma-gpu-gelu.md).
 - [x] **Shared GPU encoders.** Sol freezes checked RMS/rotary encoding
   on the existing GPU/command and one-command attention chains up to 32 queries.
   Fmt/strict CPU+Metal Clippy, 847 CPU/1,024 Metal tests, release and seven
@@ -78,13 +78,16 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   tensor descriptors; normal/optimized independent readers and eight corruption
   controls pass. Metadata/fixture evidence only, no new block execution.
   [Handoff](artifacts/mlx-gpu-gap-2026-11-15/g2-producer-block-fixture-1/handoff.json).
-- [ ] **Current:** qualify full-domain FP32 GELU and one complete resident producer block;
+- [ ] **Current:** validate the isolated projection/GELU/FP32 add-scale prerequisites,
+  then compose one complete resident producer block;
   preserve projection admission and proposed-KV publication. Then genuine deeper
   own inputs, complete graph and G0 matched-artifact admission. O4 typed-ring
   rewriting remains conditional on useful request-level evidence.
-- [ ] Then G2 resident block; G3 prefill/decode matrix kernels; G4 output/weight
+- [ ] Then G2 complete resident graph; G3 prefill/decode matrix kernels; G4 output/weight
   traffic; G5 LFM3 GPU; G6 confirmed external wins and all original overhead gates.
   Each code task needs required checks, measurements and Astra before commit.
+- [x] Shared encoders `b5437a76` are pushed; all seven workflows/15 jobs pass.
+  [Publication/source/CI](artifacts/mlx-gpu-gap-2026-11-15/g2-shared-encoders-publication-1.json).
 
 Previous Gemma 7.4005%/7.1650% opt-in gains and LFM3 CPU retention remain valid;
 summary overhead still fails 3/8 comparisons and defaults stay disabled. Qwen 4B/9B
