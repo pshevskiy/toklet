@@ -32,4 +32,8 @@ The 6 GiB Mac ceiling, immutable weights/session ownership, exact cache/state
 rules, independent numerical fixtures and original complete quality gates remain
 binding. A rejected prerequisite stops downstream qualification.
 
-Current checks, Astra review and publication status live in [TODO](../TODO.md).
+The final diagnostic and CI correction are published as `155c6718` and
+`60415234`, with Astra approval and all seven code-head workflows/15 jobs green.
+[Publication](../artifacts/qwen35-alternative-admission-2026-11-15/envelope-publication-1.json),
+[requirement audit](../artifacts/qwen35-alternative-admission-2026-11-15/whole-goal-final-audit-1.json)
+and [current checklist](../TODO.md) retain the exact scope and evidence.

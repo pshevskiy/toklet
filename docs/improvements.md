@@ -610,7 +610,11 @@ Positive Qwen performance/adoption stays unqualified. [All outcomes](improvement
 Mac trace bytes requires a CI follow-up: keep the exact Mac probe and add dense/
 packed parity against the unchanged local scalar graph on every platform. Seven
 Mac controls pass per Python mode; Astra approves the fix with no findings.
-Exact-head Linux CI remains pending.
+The fix is published as `60415234`; all seven exact-head workflows/15 jobs pass,
+including exact local scalar/vector parity in both Linux modes. The captured
+Mac archive probe remains exact locally and explicitly unavailable on Linux.
+The [final requirement audit](../artifacts/qwen35-alternative-admission-2026-11-15/whole-goal-final-audit-1.json)
+reconciles the delivery, accepted rejections and deferrals.
 
 Original individual check counts, source revisions, measured cohorts, rejected
 experiments and Astra/commit receipts remain in the [reviewed history](archive/2026-11-09/improvements.md#latest-documentation-work)

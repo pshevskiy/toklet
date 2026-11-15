@@ -1,44 +1,42 @@
 # Toklet progress checklist
 
-Updated **15 November 2026**. **Improvement goal active; earlier Mac milestones
-complete only in their recorded scopes.** iPhone runtime work remains deferred.
+Updated **15 November 2026**. **Engine/CLI delivery and model decisions verified
+in their recorded scopes.** iPhone runtime work remains deferred.
 Read the current task, relevant plan criteria and targeted source. Completed
 history is in the [dated archive](docs/archive/2026-11-12/README.md).
 
 ## Current and next task
 
-Current task: **resolve the recurrence CI portability assertion, then close publication**.
-- [x] R1 is published as `ae984fda` plus status `2a76caef`; both exact heads have
-  all six workflows/13 jobs green. Source correspondence is published as
-  `600f8d83`, all seven workflows/15 jobs green.
-- [x] New reference/auditor code: 17 independent controls plus six recurrence
-  controls pass per Python mode; exact relevant Rust checks are reusable. Full
-  4,204-array/461,893,632-byte capture passes source/runtime/6GiB/cleanup checks,
-  peak1,365,065,728 bytes including helper. Full audit rejects372 intervals
-  (54 at128,318 at256); independent wider replay certifies all372 with zero
-  discrepancies. [Decision/evidence](docs/qwen35-huihui4b-envelope.md).
-- [x] Combined Astra code/evidence/closure review approves scoped diagnostic and
-  rejection retention, no findings. [Review](artifacts/qwen35-alternative-admission-2026-11-15/astra-envelope-review-1/verdict.json).
-  Monitor partial-line and replay copied-digest failures are retained; corrected checks pass.
-- [ ] Code `155c6718` is committed/pushed. New24+17 Linux controls pass; a legacy
-  dense-vs-captured-Mac assertion fails by1ULP. Preserve that exact Mac gate and
-  add unconditional dense/packed scalar-vector byte parity on every platform;
-  seven Mac controls pass in both modes; Astra approves the fix with no findings.
-  Linux confirmation and final publication remain pending. [Investigation](artifacts/qwen35-alternative-admission-2026-11-15/ci-portability-investigation-1.json).
-  [Follow-up review](artifacts/qwen35-alternative-admission-2026-11-15/astra-envelope-review-1/verdict-2.json). Final requirement audit remains pending.
-  [Publication](artifacts/qwen35-alternative-admission-2026-11-15/envelope-publication-1.json).
+Status: **selected engine/CLI improvement delivery is verified**.
+- [x] Gemma O1/O2/O3 metrics, matched baselines/reporting, runtime explanations
+  and ordinary CLI integration are delivered. Summaries stay disabled/opt-in:
+  the original1%CLI overhead bound fails three of eight comparisons.
+- [x] Gemma official BF16 single-row opt-in passes numerical/full quality/state/
+  memory gates and both5%performance cohorts (caller medians improve7.4005%/
+  7.1650%). R1 Chat/CLI regression jobs and actual baseline admission are delivered.
+- [x] LFM3 BF16 CPU/CLI and measured finite widening are retained. MiniCPM5,
+  Granite, Ministral and Qwen2B keep explicit numerical non-adoption decisions.
+  [All outcomes and evidence](docs/improvement-outcomes.md).
+- [x] Qwen closes with the user's explicit rejection decision. Selected4B/9B
+  failed gates remain binding. New Huihui4B source conversion passes, then the
+  complete128/256 reference audit rejects372 disjoint intervals; independent
+  wider replay certifies all372. New9B remains metadata-only and is not pursued.
+  [Decision](docs/qwen35-huihui4b-envelope.md), [closing direction](artifacts/qwen35-alternative-admission-2026-11-15/closure-contract-3.json).
+- [x] Code `155c6718` plus CI correction `60415234` is committed/pushed; Astra
+  approves both with no findings. All seven exact-code-head workflows/15 jobs
+  pass. New24+17 controls pass per Linux mode; six recurrence comparisons pass
+  with one explicit Mac-archive skip. All seven Mac recurrence checks pass in
+  both modes, preserving the original exact captured-byte gate. Failed attempts
+  remain evidence. [Publication](artifacts/qwen35-alternative-admission-2026-11-15/envelope-publication-1.json).
+- [x] Original numerical/quality/state gates,6GiB limit, user11WIPfiles/TODOrow,
+  main/two stashes and app symlink are preserved. [Requirement audit](artifacts/qwen35-alternative-admission-2026-11-15/whole-goal-final-audit-1.json).
 
-The user chose **finish with explicit Qwen rejection decisions**. Stop the queued
-alternative9B evaluation and keep its metadata-only scope. Original selected4B/
-9B rejections, numerical/quality/state gates and6GiB ceiling remain binding;
-positive Qwen request/performance/adoption remains unmet. [Closing direction](artifacts/qwen35-alternative-admission-2026-11-15/closure-contract-3.json).
-
-The [outcome index](docs/improvement-outcomes.md) records scoped Gemma O1/O2/O3,
-ordinary CLI, measured retention and R1 delivery; qualified LFM3 CPU/CLI retention;
-and explicit MiniCPM5/Granite/Ministral/Qwen2B rejections. Conditional managed/GPU/
-Q4 extensions and unsupported ordinary counters stay unqualified. UI/screenshare
-and iPhone remain user-deferred; larger models remain research-only. The full
-improvement goal remains active until final checks/review/publication/audit pass.
+Positive Qwen quality/request/performance/adoption remains unmet. Unsupported
+ordinary GPU/host/cancel-signal counters remain null with reasons; conditional
+managed/GPU/Q4 extensions remain unqualified. UI/screenshare and iPhone remain
+user-deferred; larger models remain research-only. Those statuses are preserved
+rather than claimed complete. Final publication and goal state are recorded in
+the linked requirement audit.
 
 ## Recent completed milestones
 
