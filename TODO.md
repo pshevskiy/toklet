@@ -1,44 +1,42 @@
 # Toklet progress checklist
 
-Updated **15 November 2026**. **Engine/CLI delivery and model decisions verified
-in their recorded scopes.** iPhone runtime work remains deferred.
-Read the current task, relevant plan criteria and targeted source. Completed
-history is in the [dated archive](docs/archive/2026-11-12/README.md).
+Updated **15 November 2026**. **Active goal: beat Ollama MLX GPU and vLLM MLX GPU**
+on matched Gemma/LFM3 workloads. UI/screenshare and iPhone remain deferred.
+Read the current task and [competitive GPU plan](docs/mlx-gpu-performance-plan.md).
+Previous delivery and model decisions are in [outcomes](docs/improvement-outcomes.md);
+completed history remains in the [dated archive](docs/archive/2026-11-12/README.md).
 
 ## Current and next task
 
-Status: **selected engine/CLI improvement delivery is verified**.
-- [x] Gemma O1/O2/O3 metrics, matched baselines/reporting, runtime explanations
-  and ordinary CLI integration are delivered. Summaries stay disabled/opt-in:
-  the original1%CLI overhead bound fails three of eight comparisons.
-- [x] Gemma official BF16 single-row opt-in passes numerical/full quality/state/
-  memory gates and both5%performance cohorts (caller medians improve7.4005%/
-  7.1650%). R1 Chat/CLI regression jobs and actual baseline admission are delivered.
-- [x] LFM3 BF16 CPU/CLI and measured finite widening are retained. MiniCPM5,
-  Granite, Ministral and Qwen2B keep explicit numerical non-adoption decisions.
-  [All outcomes and evidence](docs/improvement-outcomes.md).
-- [x] Qwen closes with the user's explicit rejection decision. Selected4B/9B
-  failed gates remain binding. New Huihui4B source conversion passes, then the
-  complete128/256 reference audit rejects372 disjoint intervals; independent
-  wider replay certifies all372. New9B remains metadata-only and is not pursued.
-  [Decision](docs/qwen35-huihui4b-envelope.md), [closing direction](artifacts/qwen35-alternative-admission-2026-11-15/closure-contract-3.json).
-- [x] Code `155c6718` plus CI correction `60415234` is committed/pushed; Astra
-  approves both with no findings. All seven exact-code-head workflows/15 jobs
-  pass. New24+17 controls pass per Linux mode; six recurrence comparisons pass
-  with one explicit Mac-archive skip. All seven Mac recurrence checks pass in
-  both modes, preserving the original exact captured-byte gate. Failed attempts
-  remain evidence. [Publication](artifacts/qwen35-alternative-admission-2026-11-15/envelope-publication-1.json).
-- [x] Original numerical/quality/state gates,6GiB limit, user11WIPfiles/TODOrow,
-  main/two stashes and app symlink are preserved. [Requirement audit](artifacts/qwen35-alternative-admission-2026-11-15/whole-goal-final-audit-1.json).
+- [x] Create the competitive GPU goal and audit existing profiles/source. LFM3
+  remains CPU; Gemma is hybrid with277 batched-decode waits, CPU attention/unary
+  work, compensated projection and no tiled-prefill GEMM. These findings do not
+  establish additive cost shares or a qualified external speedup ratio.
+- [x] Draft G0–G6/O4 implementation and benchmark gates, preserving numerics,
+  full quality/state, 6 GiB and the original 1% overhead bound. All 440 relative
+  links/26 anchors and whitespace pass; Astra approves the planning scope with
+  no findings. No new engine code or win is claimed.
+- [ ] **Next: G1 current-path cost map**, with G0 matched-artifact/runtime
+  admission prepared alongside it. Rank CPU stages, current command/wait/copy
+  costs and summary components before selecting an implementation experiment.
+- [ ] Then O4 bounded typed summaries; G2 resident GPU block; G3 prefill/decode
+  matrix kernels; G4 output/weight traffic; G5 LFM3 GPU; G6 confirmed external
+  wins. Each code task needs required checks, measurements and Astra before commit.
 
-Positive Qwen quality/request/performance/adoption remains unmet. Unsupported
-ordinary GPU/host/cancel-signal counters remain null with reasons; conditional
-managed/GPU/Q4 extensions remain unqualified. UI/screenshare and iPhone remain
-user-deferred; larger models remain research-only. Those statuses are preserved
-rather than claimed complete. Final publication and goal state are recorded in
-the linked requirement audit.
+Previous Gemma 7.4005%/7.1650% opt-in gains and LFM3 CPU retention remain valid;
+summary overhead still fails 3/8 comparisons and defaults stay disabled. Qwen 4B/9B
+rejections remain closed; no artifact hunt is reopened. Preferred rejected
+Heretic Q4 is not a qualified shared benchmark. The new goal stays active until
+actual matched wins and all original overhead gates pass.
+[Planning evidence](artifacts/mlx-gpu-gap-2026-11-15/planning-checks-1.json).
 
 ## Recent completed milestones
+
+- [x] 2026-11-15 performance recap: reconciled Gemma/LFM3 before/after,
+  Ollama/vLLM observations, sampled memory and all eight CLI overhead outcomes.
+  [Gemma](docs/gemma-single-row-submission.md), [external Gemma](docs/console-engine-comparison.md),
+  [LFM3](docs/lfm3-engine-comparison.md), [overhead](docs/gemma-cli.md#fixed-overhead-measurement).
+  Existing evidence only; no new benchmark or qualified cross-engine ratio.
 
 - [x] Ordinary official BF16/G2 Gemma CLI and bounded request summaries are
   published as `4f2e6236`. Required fmt/strict CPU+Metal+probe Clippy,57CPU/72Metal
@@ -102,9 +100,7 @@ the linked requirement audit.
   Actual engine
   startup, quality and performance are separate. [Scope](docs/lfm3-http-metrics.md).
 
-Active goal: implement the whole selected observability/performance/model
-roadmap. Order remains Gemma 4 E2B, Qwen3.5-4B, Qwen3.5-9B, then the selected
-under-4B track; [model/metric plan](docs/model-observability-plan.md).
+Previous roadmap delivery is reconciled in [outcomes](docs/improvement-outcomes.md).
 LFM3 CPU code and portable measurements are published as `612771d7` on
 `codex/console-engine-comparison`.
 [Publication / CI](artifacts/lfm3-finite-guard-2026-11-11/finite-publication-checks.json).

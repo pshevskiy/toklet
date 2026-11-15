@@ -6,8 +6,13 @@ and the complete validation/performance policy. Detailed chronology and original
 execution orders are in the [dated archive](docs/archive/2026-11-07/PLAN.md).
 Read a linked historical section only when the current task needs it.
 
-M0–M7 are complete in their recorded, qualified scopes. Active Mac delivery is
-complete; further physical iPhone work is deferred by the user. M8 support is
+M0–M7 are complete in their recorded, qualified scopes. The previous selected
+Mac delivery is complete. The new [competitive MLX GPU program](docs/mlx-gpu-performance-plan.md)
+is active: qualify matched external workloads, remove measured hybrid execution
+bottlenecks, pass the original 1% summary overhead bound, and beat both Ollama MLX
+GPU and vLLM MLX GPU by at least 5% complete-request latency in independent
+confirmation cohorts. This is a target, not an achieved result. Further physical
+iPhone work remains deferred by the user. M8 support is
 model/path/device-specific, and M9's first delivery is a qualified Mac opt-in.
 Neither status grants blanket model, context, quality or device support.
 

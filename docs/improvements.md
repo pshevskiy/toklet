@@ -10,6 +10,18 @@ Gains from different experiments cannot be added together. Current task and
 qualification scope live in [TODO](../TODO.md); acceptance policy is in
 [PLAN](../PLAN.md#validation-and-performance-policy).
 
+The new [competitive MLX GPU plan](mlx-gpu-performance-plan.md) starts an active
+Gemma/LFM3 goal. Static/profile diagnosis identifies CPU-only LFM3, hybrid Gemma,
+277 batched-decode command/wait boundaries, compensated dot projections and missing
+cross-token prefill tiling. Summary callbacks and pre-terminal JSON work are
+measurement targets; observed drift prevents a causal 10.72% collector claim.
+G0–G6/O4 freeze matched artifacts/work/cache/clocks, qualify resident GPU blocks
+and matrix kernels, reduce telemetry work and require actual 5% wins plus the
+original 1% overhead gates. No new implementation or speedup is claimed. All
+440 relative links/26 anchors and whitespace pass; Astra approves the planning
+scope with no findings. Prior numerical/model rejections and UI/iPhone deferrals
+remain binding. [Evidence](../artifacts/mlx-gpu-gap-2026-11-15/planning-checks-1.json).
+
 The [LFM3 external request observations](lfm3-engine-comparison.md) record
 78 requests across two 3+10 cohorts per engine, with preserved raw observations,
 model/executable identities and clock/memory scope. Ollama lacks authoritative
