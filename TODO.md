@@ -16,7 +16,7 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   full quality/state, 6 GiB and the original 1% overhead bound. All 440 relative
   links/26 anchors and whitespace pass; Astra approves the planning scope with
   no findings. No new engine code or win is claimed.
-- [ ] **G1 diagnostics and prefix-witness fix:** CPU sampling and four GPU
+- [x] **G1 diagnostics and prefix-witness fix:** CPU sampling and four GPU
   frames pass exact output/state/selected-logit checks under 6 GiB. Attention
   accounts for 46.68% pre-first-token / 28.77% decode main-thread samples;
   completion waits account for 46.57% / 59.76%, including GPU execution.
@@ -25,14 +25,23 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   view fixes that diagnostic while ordinary sampling logits remain hidden for
   pending input. Fmt, strict CPU/Metal Clippy, 847 CPU / 1,019 Metal tests and
   release build pass; fresh early-prefix parity passes all 262,144 logit values.
-  Astra approves the scoped fix/evidence with no findings; publication is tracked
+  Astra approves the scoped fix/evidence with no findings. Code `42efe9c8` is
+  pushed; all seven exact-head workflows/15 jobs pass. Publication is tracked
   in the [receipt](artifacts/mlx-gpu-gap-2026-11-15/g1-publication-1.json). No new performance win.
-- [ ] **Next:** finish publication, measure summary components for
-  O4 and prepare G0 matched-artifact admission. Prioritize accurate resident
-  GPU attention and dependent scheduling from the measured cost map.
-- [ ] Then O4 bounded typed summaries; G2 resident GPU block; G3 prefill/decode
-  matrix kernels; G4 output/weight traffic; G5 LFM3 GPU; G6 confirmed external
-  wins. Each code task needs required checks, measurements and Astra before commit.
+- [x] Summary component probe: genuine manifest/summary parity and all 280
+  measured/84 warmup samples replay. Confirming full insertion is 3.569/3.555 us;
+  callback clock accounting is about 133 ns/token, excluding decoder/I/O bodies.
+  Expected overwrites and guards pass; sandbox/build preparation failures remain.
+  [Evidence](artifacts/mlx-gpu-gap-2026-11-15/g1-summary-component-analysis-1.json).
+  All 422 relative links/whitespace and Astra evidence review pass, no findings.
+  Production inputs are unchanged; no new 1% pass.
+- [ ] **Next:** G2 accurate resident GPU attention feasibility using the frozen
+  D256/D512 full/local and cancellation fixtures, then block composition; G0
+  matched-artifact admission remains open. Defer O4 typed-ring rewriting until
+  request-level evidence demonstrates a useful effect.
+- [ ] Then G2 resident block; G3 prefill/decode matrix kernels; G4 output/weight
+  traffic; G5 LFM3 GPU; G6 confirmed external wins and all original overhead gates.
+  Each code task needs required checks, measurements and Astra before commit.
 
 Previous Gemma 7.4005%/7.1650% opt-in gains and LFM3 CPU retention remain valid;
 summary overhead still fails 3/8 comparisons and defaults stay disabled. Qwen 4B/9B

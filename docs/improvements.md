@@ -35,6 +35,17 @@ no findings; [publication](../artifacts/mlx-gpu-gap-2026-11-15/g1-publication-1.
 is tracked separately. Summary cost attribution and the original overhead/
 competitive gates remain open.
 
+The genuine-record [summary component probe](gemma-current-cost-map.md#summary-component-measurements)
+retains 280 measured/84 warmup samples across two processes and reproduces the
+captured summary/manifest exactly. Confirming full insertion medians are
+3.569/3.555 us; token accounting is about 133 ns per token, excluding decoder and
+I/O bodies. Logical collector/ring storage stays 9,000/1,032,192 bytes; guard and
+expected overwrite accounting pass. No production code changes or new overhead
+qualification follow. Defer the typed-ring rewrite pending a useful request-scale
+effect and prioritize accurate GPU attention. All three original overhead
+failures remain binding. All 422 relative links and whitespace pass; Astra
+approves the component evidence and decision with no findings.
+
 The [LFM3 external request observations](lfm3-engine-comparison.md) record
 78 requests across two 3+10 cohorts per engine, with preserved raw observations,
 model/executable identities and clock/memory scope. Ollama lacks authoritative

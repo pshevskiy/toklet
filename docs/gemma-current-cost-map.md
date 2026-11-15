@@ -116,6 +116,57 @@ above passes. Astra approves the scoped diagnostic fix and observations with no 
 Publication is tracked in the [receipt](../artifacts/mlx-gpu-gap-2026-11-15/g1-publication-1.json).
 [Full checks](../artifacts/mlx-gpu-gap-2026-11-15/g1-required-checks-progress-1.json).
 
+## Summary component measurements
+
+The unchanged production collector was compiled into a standalone release probe
+with the existing release dependencies. Its production source prefix is byte
+identical. A genuine successful 384/128 record and its manifest reproduce the
+saved JSON values exactly before timing. Each process runs three warmup and ten
+measured repetitions per component in forward and reverse component order.
+Two processes retain all 280 measured and 84 warmup samples; the second adds
+explicit empty-Ollama residency/birth checks to the power/thermal and foreign
+engine/build admission used by the first. No model runs inside this probe.
+
+The second process observes the following medians. Values are per operation;
+callback accounting is per token, with 128-token batches. These component
+orders are not independent complete-request confirmation cohorts.
+
+| Component | Forward order | Reverse order |
+| --- | ---: | ---: |
+| Disabled `Collector::record` | 1.24 ns | 1.24 ns |
+| Complete enabled `Collector::record` | 3.569 us | 3.555 us |
+| Record validation plus session/memory checks | 51.83 ns | 52.18 ns |
+| Summary JSON serialization | 3.461 us | 3.469 us |
+| Bounded ring insertion/copy | 46.34 ns | 46.31 ns |
+| Token clock/interval accounting | 133.34 ns | 133.51 ns |
+| Empty black-box callback baseline | 0.31 ns | 0.31 ns |
+
+Enabled insertion includes the actual validation, serialization, distinct
+monotone request IDs and bounded overwrites. Each process completes 425,984
+insertions, retains 252 rows and records exactly 425,732 expected overwrites,
+zero invalid records and zero export errors. A row is 2,263 bytes. The collector
+retains its existing 9,000-byte value and 1,032,192-byte ring; these are logical
+bytes, not a measured allocator peak. The confirming guard's maximum sampled
+charge is 91,996,160 bytes including the 32 MiB helper reserve, with clean exit.
+
+The callback component copies the real token event accounting block, surrounds
+empty decoder/writer bodies with the same clocks, and checks 128 callbacks/127
+intervals. It excludes actual decoding, output I/O/flush and callback delivery.
+Its roughly 17.1 us per 128-token batch is a component observation, not measured
+request overhead. Separate component medians must not be added or differenced
+as a causal decomposition. Standalone loops also omit inference cache/scheduler
+effects. This evidence does not establish that the old 3/8 overhead failures
+were noise, or qualify any new 1% result.
+
+The first preparation is stopped by sandbox process-observation denial; a
+subsequent build finds an ambiguous integer in the artifact-only repetition
+index. Both failures are preserved. The corrected artifact leaves production
+code untouched, and both complete successful runs remain in the analysis.
+[Fixed component protocol](../artifacts/mlx-gpu-gap-2026-11-15/g1-summary-probe-2/protocol.json),
+[raw confirming output](../artifacts/mlx-gpu-gap-2026-11-15/g1-summary-probe-2/run-2/stdout.log),
+[guard](../artifacts/mlx-gpu-gap-2026-11-15/g1-summary-probe-2/run-2/result.json),
+[complete replay/dispersion](../artifacts/mlx-gpu-gap-2026-11-15/g1-summary-component-analysis-1.json).
+
 ## Decision and remaining work
 
 Prioritize GPU-resident attention and dependent projection scheduling. CPU
@@ -125,9 +176,18 @@ iteration on small normalization/rotary stack buckets solely because their
 standalone implementations exist. Qualify one accurate attention/block
 mechanism before composing a full resident graph.
 
-G1 remains in progress: measure summary callback/validation/serialization costs
-and finish publication of this approved diagnostic fix. The old three
-of eight summary-overhead failures remain binding; this CPU/GPU diagnosis does
-not explain their causal cost. G0 common-artifact/cache/output comparability
-also remains open. The active goal still requires actual matched wins against
-both external engines and the unchanged 1% overhead gates.
+Defer the proposed typed-ring rewrite: measured insertion costs a few
+microseconds, and no request-scale benefit has been demonstrated. Preserve the
+bounded collector and original schema. Revisit callback specialization or
+export-only serialization if a retained candidate demonstrates a useful effect;
+file export is already outside inference. Run matched A/A diagnostics to assess
+variation before the unchanged fixed-N overhead campaign on that candidate.
+Neither new diagnostics nor A/A can replace its original eight comparisons.
+
+G1's CPU/GPU and summary component measurements are complete. All 422 relative
+links and whitespace pass; Astra approves the evidence and decision with no
+findings. No production source changes in this measurement task. The prefix-witness code is already pushed as `42efe9c8`, with all
+seven exact-head workflows/15 jobs passing. G0 common-artifact/cache/output
+comparability and G2's accurate resident attention are next. The active goal
+still requires actual matched wins against both external engines and all
+original 1% overhead gates; the three old failures remain binding.
