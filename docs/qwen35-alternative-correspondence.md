@@ -35,11 +35,13 @@ streaming check does not admit a resident reference model.
 
 The result proves correspondence under the defined Metal witness. Historical
 converter invocation, installed backend/compiler, dependency versions and
-floating-point environment remain unavailable. Native source/codec admission,
-the original idealFP64/stagedFP32 128/256 comparisons, state, quality, physical
-fit, request metrics and performance gates remain open. Existing source
-rejections are preserved. The separately pinned 9B candidate follows the 4B
-disposition.
+floating-point environment remain unavailable. The completed original
+idealFP64/stagedFP32 128/256 comparison rejects numerical qualification. Native
+source/codec admission, state, quality, physical fit, request metrics and
+performance remain unqualified. Existing source
+rejections are preserved. The [completed numerical audit](qwen35-huihui4b-envelope.md) rejects this 4B
+candidate. The user chose explicit Qwen rejection decisions; the separately pinned
+9B alternative remains metadata-only and is not pursued.
 
 ## Portable checks
 

@@ -7,37 +7,33 @@ history is in the [dated archive](docs/archive/2026-11-12/README.md).
 
 ## Current and next task
 
-Current task: **distinct pinned Huihui Qwen3.5-4B native source admission**.
-- [x] R1 is published as `ae984fda` plus status `2a76caef`; each exact head has
-  all six workflows/13 jobs green. [Publication](artifacts/gemma-cli-regression-2026-11-15/publication-status.json).
-- [x] Finite 4B parent/child audit: authenticate all three complete files
-  (11,445,857,581 bytes); reconstruct all 426/924 arrays; one predefined Metal
-  witness matches all 65,699,840 groups and 961,536 unquantized words exactly.
-  CPU differs in 6,863,958 code/metadata words. Full setup peak167,985,152 bytes
-  including helper; interrupted download and failed reuse assertion remain.
-- [x] Checker: 24 independent tests per Python mode, AST/link/whitespace/YAML
-  checks and exact relevant Rust-check reuse pass. Astra approves scoped
-  functional retention, no findings. [Scope/evidence](docs/qwen35-alternative-correspondence.md),
-  [review](artifacts/qwen35-alternative-admission-2026-11-15/astra-correspondence-review-1/verdict.json),
-  [commit/push/CI](artifacts/qwen35-alternative-admission-2026-11-15/correspondence-publication-1.json).
-- [ ] Add a separately pinned diagnostic source wrapper, preserving old source
-  identities/rejections. Admit actual CPU/consuming-GPU owners before the original
-  idealFP64/stagedFP32 128/256 comparisons. Native/codec, quality, physical fit,
-  request metrics and performance remain unqualified. No kernel variant search.
+Current task: **publish the completed Huihui4B diagnostic and explicit Qwen rejection decisions**.
+- [x] R1 is published as `ae984fda` plus status `2a76caef`; both exact heads have
+  all six workflows/13 jobs green. Source correspondence is published as
+  `600f8d83`, all seven workflows/15 jobs green.
+- [x] New reference/auditor code: 17 independent controls plus six recurrence
+  controls pass per Python mode; exact relevant Rust checks are reusable. Full
+  4,204-array/461,893,632-byte capture passes source/runtime/6GiB/cleanup checks,
+  peak1,365,065,728 bytes including helper. Full audit rejects372 intervals
+  (54 at128,318 at256); independent wider replay certifies all372 with zero
+  discrepancies. [Decision/evidence](docs/qwen35-huihui4b-envelope.md).
+- [x] Combined Astra code/evidence/closure review approves scoped diagnostic and
+  rejection retention, no findings. [Review](artifacts/qwen35-alternative-admission-2026-11-15/astra-envelope-review-1/verdict.json).
+  Monitor partial-line and replay copied-digest failures are retained; corrected checks pass.
+- [ ] Commit, authorized push, exact-head CI and final requirement audit.
+  [Publication](artifacts/qwen35-alternative-admission-2026-11-15/envelope-publication-1.json).
 
-Next: the frozen 9B candidate after the 4B disposition. Existing full-goal
-permission covers this finite audit; the pending user preference is optional
-steering. Astra identified and corrected the earlier invented selection barrier;
-Astra approves the corrected planning boundary with no remaining findings. [Active contract](artifacts/qwen35-alternative-admission-2026-11-15/source-profile-contract-2.json),
-[superseding decision](artifacts/qwen35-alternative-admission-2026-11-15/header-lineage-decision-2.json),
-[review](artifacts/qwen35-alternative-admission-2026-11-15/astra-review-1/verdict-2.json).
+The user chose **finish with explicit Qwen rejection decisions**. Stop the queued
+alternative9B evaluation and keep its metadata-only scope. Original selected4B/
+9B rejections, numerical/quality/state gates and6GiB ceiling remain binding;
+positive Qwen request/performance/adoption remains unmet. [Closing direction](artifacts/qwen35-alternative-admission-2026-11-15/closure-contract-3.json).
 
-The whole improvement goal stays active. Positive Qwen request/quality/
-performance/adoption proof remains absent on the original rejected trajectories;
-closed searches and gates remain binding. The separate LFM3 CPU summary
-[feasibility audit](artifacts/lfm3-cli-metrics-2026-11-15/feasibility-audit-1.json)
-does not replace this work; managed/Q4 scope remains conditional. UI/screenshare
-and iPhone remain user-deferred, and larger models remain research-only.
+The [outcome index](docs/improvement-outcomes.md) records scoped Gemma O1/O2/O3,
+ordinary CLI, measured retention and R1 delivery; qualified LFM3 CPU/CLI retention;
+and explicit MiniCPM5/Granite/Ministral/Qwen2B rejections. Conditional managed/GPU/
+Q4 extensions and unsupported ordinary counters stay unqualified. UI/screenshare
+and iPhone remain user-deferred; larger models remain research-only. The full
+improvement goal remains active until final checks/review/publication/audit pass.
 
 ## Recent completed milestones
 

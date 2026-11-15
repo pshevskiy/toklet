@@ -38,28 +38,26 @@ as the reference; record the modified checkpoint as a distinct model identity.
 
 | Main route | Candidate, inspected revision prefix | Format and adoption work |
 | --- | --- | --- |
-| Gemma 4 E2B first | [deadbydawn101/gemma-4-E2B-Heretic-Uncensored-mlx-4bit](https://huggingface.co/deadbydawn101/gemma-4-E2B-Heretic-Uncensored-mlx-4bit), `cde01efc` | Affine 4-bit, group 64; derived from p-e-w's Heretic ARA checkpoint. Evaluate after O1/O2 on the qualified official BF16 route. Existing Gemma Q4/QAT quality failures remain binding for their artifacts; they neither qualify nor automatically reject this different artifact |
+| Gemma 4 E2B first | [deadbydawn101/gemma-4-E2B-Heretic-Uncensored-mlx-4bit](https://huggingface.co/deadbydawn101/gemma-4-E2B-Heretic-Uncensored-mlx-4bit), `cde01efc` | Affine 4-bit, group 64; derived from p-e-w's Heretic ARA checkpoint. Independently evaluated; numerical and full quantized quality/adoption gates reject this exact artifact. [Decision](gemma-heretic-quality-probes.md). Official BF16 remains the qualified primary route |
 | Qwen3.5-4B second | [avan-ag/Qwen3.5-4B-Uncensored-MLX-4bit](https://huggingface.co/avan-ag/Qwen3.5-4B-Uncensored-MLX-4bit), `fb98fbc5` | Affine 4-bit, group 64; DavidAU fine-tuned lineage, not simply stock Qwen quantization. Preserve this distinction in quality and timing comparisons |
 | Qwen3.5-9B third | [lukey03/Qwen3.5-9B-abliterated-MLX-4bit](https://huggingface.co/lukey03/Qwen3.5-9B-abliterated-MLX-4bit), `8ff61b6a` | Affine 4-bit, group 64, text-only configuration. Inspect exact packed tensors and memory before admission; do not transfer multimodal claims from the official model |
 
-A bounded 15 November alternative preflight records two **separate cold-admission
-candidates**. Existing preferred-source identities and rejection decisions stay
-binding; these are separate sources for a finite 4B-then-9B audit. Existing goal
-authorization covers that audit; optional user direction is not a prerequisite.
+The user's closing direction accepts **explicit Qwen rejection decisions**.
+The selected Avan 4B and Lukey 9B routes retain their original numerical
+rejections. The separate Huihui 4B source passes complete parent/child conversion
+correspondence, then rejects the unchanged inference-reference gate at 372
+checkpoint observations (54 at128,318 at256). Independent wider-interval replay
+certifies every failure. [Complete decision](qwen35-huihui4b-envelope.md).
 
-| Alternative source | Observed cold evidence | Still required |
-| --- | --- | --- |
-| [TheWirelessPhoenix Huihui 4B](https://huggingface.co/TheWirelessPhoenix/Qwen3.5-4B-abliterated_4bit/tree/916d9f7c2e27ed41e2b9ed39f3a2badccb2bbc7c) | Revision `916d9f7c`; complete child/parent authentication and all 426/924 arrays match one Metal conversion witness; [scope](qwen35-alternative-correspondence.md) | Historical converter environment unavailable; separate native source/codec admission and unchanged numerical/quality/memory gates |
-| [Interim Labs Huihui 9B](https://huggingface.co/interimlabs/InterimLabs-Huihui-Qwen3.5-9B-abliterated-MLX-4bit/tree/eca302ac442310980ec393e56546aa4e8a2ee894) | Revision `eca302ac`; 927 renamed tensors, 24 `A_log` vectors changed from BF16 to F32, all payload ranges repacked | Full content/lineage proof and fresh offsets. Stored dtype alone proves no value/precision gain; no original numerical failure is cleared |
-
-The 4B source audit now reads and authenticates complete contents, with exact
-conversion correspondence under a predefined Metal witness. The 9B source is
-metadata/header-only. Neither result is physical model admission; publisher
-context limits do not expand Toklet's qualified limits.
-The [source proposal](../artifacts/qwen35-alternative-admission-2026-11-15/source-profile-contract-2.json)
-and [header/lineage comparison](../artifacts/qwen35-alternative-admission-2026-11-15/header-lineage-decision-2.json)
-retain both original dual-profile gates and stop downstream work on failure.
-No model execution, new loader, optimization, performance or adoption is claimed.
+The Interim Labs 9B alternative at `eca302ac` remains metadata/header-only:
+927 renamed/repacked tensors and 24 F32 `A_log` vectors. It is not pursued;
+no numerical failure is attributed to this unexecuted source. No new Qwen
+native adapter, quality/request/performance campaign or model adoption follows.
+Positive Qwen outcomes remain unqualified. Original profiles, tolerances,
+quality gates and the 6 GiB ceiling are preserved.
+[Closing direction](../artifacts/qwen35-alternative-admission-2026-11-15/closure-contract-3.json)
+supersedes the former 4B-then-9B queue; its metadata/source evidence is retained.
+The [outcome index](improvement-outcomes.md) records all selected model decisions.
 
 Full inspected revisions/configuration are in the
 [artifact record](../artifacts/model-observability-plan-2026-11-07/artifact-candidates.json).

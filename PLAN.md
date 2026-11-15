@@ -1,6 +1,6 @@
 # Toklet implementation plan
 
-Updated 13 November 2026. Read [TODO.md](TODO.md) first for the current task.
+Updated 15 November 2026. Read [TODO.md](TODO.md) first for the current task.
 This live plan retains architecture, session invariants, milestone task criteria
 and the complete validation/performance policy. Detailed chronology and original
 execution orders are in the [dated archive](docs/archive/2026-11-07/PLAN.md).
@@ -27,6 +27,12 @@ Current extension contracts:
   fidelity rejections and original adoption-quality gates.
 
 ## Current model priority and observability gates
+
+The [delivery outcomes](docs/improvement-outcomes.md) reconcile the completed
+engine/CLI work and model decisions. The user chose to finish Qwen with explicit
+rejections; the original failed gates remain failed and the newer9B alternative
+is not pursued. Positive Qwen performance/adoption is not qualified. The order
+below records the selected program; deferred/conditional routes keep their scope.
 
 1. **Gemma 4 E2B first:** O1 request-summary metrics and O2 matched baseline on
    the existing qualified BF16 Mac route; then one measured optimization and

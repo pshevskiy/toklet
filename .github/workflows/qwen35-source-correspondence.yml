@@ -34,3 +34,11 @@ jobs:
         run: >-
           python -B -m unittest discover -s tools/experiments
           -p test_qwen35_parent_correspondence.py
+      - name: Run fixed-source reference and envelope controls
+        run: >-
+          python -B -m unittest discover -s tools/reference
+          -p test_qwen35_huihui4b_reference.py
+      - name: Run ordered recurrence regression controls
+        run: >-
+          python -B -m unittest discover -s tools/reference
+          -p test_qwen35_recurrent_vector.py
