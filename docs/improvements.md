@@ -137,11 +137,29 @@ Whole-model/request, quality, overhead and external wins remain unqualified.
 [Retained graph scope](gemma-gpu-rms-scheduling.md),
 [final checks](../artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-code-review-prep-1/final-check-completion-1.json),
 [combined code review](../artifacts/mlx-gpu-gap-2026-11-15/astra-rms-two-phase-code-review-1/verdict.json).
+Published `0bfd68c3`; all seven workflows/15 jobs pass and all 4,209 compiled
+inputs match committed bytes. [Publication/source/CI](../artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-graph-publication-1.json).
 [Current build](../artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-graph-build-progress-4.json),
 [hardware](../artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-graph-hardware-progress-3.json),
 [independent replay](../artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-graph-readers-run-1/result.json).
 [Combined artifact evidence](../artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-artifact-review-checks-1.json),
 [Astra approval](../artifacts/mlx-gpu-gap-2026-11-15/astra-rms-two-phase-artifact-review-1/verdict.json).
+
+The next private borrowed-Q4 projection source3 passes fmt/strict CPU+Metal
+Clippy/certified release unit and all 35 targeted GPU/reader/regression stages.
+Warm32 allocates zero Rust memory; the observed peak is 505,348,096 bytes with
+helper. Full Metal1052pass/409ignored and releaseCLI also pass, with847CPUtests
+reused against4009 exact inputs. Astra approves the scoped private prerequisite
+with no required fixes; no model/graph/route/performance adoption is qualified.
+[Scope/review](gemma-gpu-q4-projection.md).
+[Current checks/failure](../artifacts/mlx-gpu-gap-2026-11-15/g0-q4-borrowed-encode-progress-5.json),
+[retained failure](../artifacts/mlx-gpu-gap-2026-11-15/g0-q4-borrowed-encode-progress-1.json).
+
+The RMS reduction/root/output split passes original numerical/fault gates and
+eight readers, but prefill is 6.657%/7.528% slower and decode improves less than
+1%. Astra approves rejecting it as a performance candidate. The two-phase graph
+remains; no additional pipeline/dispatch complexity is integrated.
+[Measured rejection](../artifacts/mlx-gpu-gap-2026-11-15/astra-rms-three-phase-review-1/verdict.json).
 
 The [LFM3 external request observations](lfm3-engine-comparison.md) record
 78 requests across two 3+10 cohorts per engine, with preserved raw observations,

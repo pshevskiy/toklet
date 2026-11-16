@@ -194,6 +194,27 @@ impl Plan {
         Ok(())
     }
 }
+// Deliberately malformed owner metadata for the private all-chunk preflight
+// control. No raw buffer/slice escapes and no ordinary loader path calls it.
+#[cfg(all(test, target_os = "macos"))]
+impl Weights {
+    pub(in crate::metal::gemma_affine) fn diagnostic_shorten_chunk_codes(
+        &mut self,
+        index: usize,
+    ) -> Result<()> {
+        let chunk = self
+            .chunks
+            .get_mut(index)
+            .ok_or(Error::Options("Q4 diagnostic chunk index differs"))?;
+        chunk.codes.len = chunk
+            .codes
+            .len
+            .checked_sub(1)
+            .ok_or(Error::Options("Q4 diagnostic code length underflow"))?;
+        Ok(())
+    }
+}
+
 /// Cold actual-capacity observations, admitted before callbacks/upload. Keeping
 /// this separate preserves the immutable owner's qualified layout and lifetime.
 pub(crate) struct UploadStats {

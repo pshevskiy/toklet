@@ -94,7 +94,12 @@ Bridge the authenticated common-Q4 owner into resident execution before full
 Q4's float2 compensated dot,16,384 tile size and actual16-value codebook bound.
 Do not reuse BF16's float3/8,192-tile proof by rounding Q4 bounds. Build fresh
 Q4 own-input fixtures and preserve synchronous packed replay without a second
-full model copy. Full original common-Q4 quality remains a separate gate.
+full model copy. The private borrowed-Q4 leaf now passes four build checks,
+35 targeted GPU/reader/regression stages, 1,052 Metal tests (409 ignored) and
+release CLI; combined Astra review approves scoped retention, no required
+fixes. This covers existing immutable owners and bounded real/synthetic fixtures, without model/graph/route
+or speed qualification. Full original common-Q4 quality remains a separate gate.
+[Qualified leaf scope/checks/review](gemma-gpu-q4-projection.md).
 [Concrete Q4 bridge](../artifacts/mlx-gpu-gap-2026-11-15/astra-common-q4-resident-bridge-research-1.md),
 [first bounded encoding mechanism](../artifacts/mlx-gpu-gap-2026-11-15/astra-common-q4-first-encode-mechanism-1.md).
 

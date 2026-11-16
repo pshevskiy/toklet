@@ -16,6 +16,10 @@ pub(in crate::metal::gemma_affine) mod bf16_encode;
 // Qualification-only until a separately reviewed resident graph consumes it.
 #[cfg(all(test, target_os = "macos"))]
 pub(in crate::metal::gemma_affine) mod bf16_tiled;
+
+// One private Q4 prerequisite; ordinary synchronous selection is unchanged.
+#[cfg(all(test, target_os = "macos"))]
+pub(in crate::metal::gemma_affine) mod affine4_tiled;
 #[cfg(target_os = "macos")]
 #[cfg_attr(not(test), allow(unused_imports))]
 pub(super) use bf16_encode::encode_bf16;

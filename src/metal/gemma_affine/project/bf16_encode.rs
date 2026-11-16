@@ -455,6 +455,69 @@ impl AdmissionPipeline {
         Ok(())
     }
 
+    // The Q4 facade owns the complete all-chunk/coefficient/alias preflight.
+    // These narrow methods reuse byteexact input-only admission arithmetic;
+    // the matrix view carries true general-FP32 codebook maximum thresholds.
+    #[cfg(all(test, target_os = "macos"))]
+    pub(super) fn preflight_affine4_with_l1(
+        &self,
+        command: &ProtocolObject<dyn MTLCommandBuffer>,
+        matrix: super::affine4_tiled::Affine4MatrixView<'_>,
+        input: BufferRange<'_>,
+        status: BufferRange<'_>,
+        tokens: usize,
+    ) -> Result<()> {
+        let words = matrix.admission_words(tokens)?;
+        let values = (words[0] as usize)
+            .checked_mul(words[1] as usize)
+            .ok_or(Error::Options("Q4 admission input size overflow"))?;
+        if input.len != values || status.len != 1 {
+            return Err(Error::Options("Q4 borrowed L1 admission lengths differ"));
+        }
+        for range in [input, status] {
+            super::affine4_tiled::physical_range(range)?;
+        }
+        validate_encode_ranges(command, &self.device, &[input, status], 1)
+    }
+    #[cfg(all(test, target_os = "macos"))]
+    pub(super) fn encode_affine4_with_l1(
+        &self,
+        command: &ProtocolObject<dyn MTLCommandBuffer>,
+        matrix: super::affine4_tiled::Affine4MatrixView<'_>,
+        input: BufferRange<'_>,
+        status: BufferRange<'_>,
+        tokens: usize,
+    ) -> Result<()> {
+        self.preflight_affine4_with_l1(command, matrix, input, status, tokens)?;
+        let words = matrix.admission_words(tokens)?;
+        let encoder = command
+            .computeCommandEncoder()
+            .ok_or_else(|| Error::Native("Q4 L1 admission encoder absent".into()))?;
+        encoder.setComputePipelineState(&self.l1_pipeline);
+        // SAFETY: unchanged four-u32/input/status ABI, exact bounded shape,
+        // retained same-device NotEnqueued command and distinct tracked status.
+        // No CPU view, reset, commit/wait or publication occurs here.
+        unsafe {
+            encoder.setBuffer_offset_atIndex(Some(input.raw), input.offset * 4, 0);
+            encoder.setBytes_length_atIndex(NonNull::from(&words).cast(), size_of::<[u32; 4]>(), 1);
+            encoder.setBuffer_offset_atIndex(Some(status.raw), status.offset * 4, 2);
+        }
+        encoder.dispatchThreadgroups_threadsPerThreadgroup(
+            MTLSize {
+                width: tokens,
+                height: 1,
+                depth: 1,
+            },
+            MTLSize {
+                width: self.l1_width,
+                height: 1,
+                depth: 1,
+            },
+        );
+        encoder.endEncoding();
+        Ok(())
+    }
+
     #[cfg(test)]
     pub(in crate::metal::gemma_affine) fn encode_l1_diagnostic(
         &self,

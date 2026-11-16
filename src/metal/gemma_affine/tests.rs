@@ -1,7 +1,7 @@
 use super::*;
 use crate as engine;
 #[path = "../../../tests/common/gemma_affine_fixture.rs"]
-mod fixture;
+pub(super) mod fixture;
 #[path = "../../../tests/common/gemma_affine_l1_fixture.rs"]
 pub(super) mod l1_fixture;
 use serde_json::{Value, json};

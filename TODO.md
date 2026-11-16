@@ -178,14 +178,45 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   [Scope/measurements](docs/gemma-gpu-rms-scheduling.md),
   [final 32-stage checks](artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-code-review-prep-1/final-check-completion-1.json),
   [combined Astra review](artifacts/mlx-gpu-gap-2026-11-15/astra-rms-two-phase-code-review-1/verdict.json).
-- [ ] **Current Q4 resident projection:** qualify Sol's frozen seven-path
-  borrowed-Q4 encoding mechanism on the retained RMS/pool baseline. Keep the
-  authenticated owner/packed chunks/resident PLE, compensated dot, 16,384 tile
-  size and true 16-code bounds; no second full model copy. Fmt/build, explicit
-  original-oracle/strided GPU checks, independent raw readers, required checks
-  and combined Astra review precede commit and block/full-graph composition.
-  [Frozen mechanism](artifacts/mlx-gpu-gap-2026-11-15/g0-q4-borrowed-encode-draft-1/source-handoff-v1.json),
-  [bridge research](artifacts/mlx-gpu-gap-2026-11-15/astra-common-q4-resident-bridge-research-1.md).
+  Pushed `0bfd68c3`; all seven workflows/15 jobs pass and all 4,209 compiled
+  inputs match committed Git blobs. [Publication/source/CI](artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-graph-publication-1.json).
+- [x] **Borrowed Q4 GPU projection:** source3 passes fmt/strict CPU+Metal Clippy,
+  certified release unit, all 35 targeted GPU/reader/regression stages, full Metal
+  1,052 tests (409 ignored) and release CLI; 847 CPU tests reuse 4,009 exact inputs.
+  Whole-matrix preflight borrows the existing packed owner with all-16-code
+  general-FP32 bounds; product math is unchanged. Warm32 allocates zero Rust
+  memory; observed peak 505,348,096 bytes includes the helper. Astra approves
+  the private prerequisite with no required fixes. No model/graph/route/speed
+  adoption is qualified. Failed capture/guard/compile attempts remain linked.
+  [Scope](docs/gemma-gpu-q4-projection.md),
+  [all actual checks/failures](artifacts/mlx-gpu-gap-2026-11-15/g0-q4-borrowed-encode-progress-5.json),
+  [combined Astra review](artifacts/mlx-gpu-gap-2026-11-15/astra-q4-borrowed-code-review-1/verdict.json).
+- [ ] **Next resident Q4 composition:** bridge the authenticated packed owner,
+  small norm views and same-owner reference into a bounded resident block before
+  full graph/CLI adoption. Preserve 16,384-row Q4 chunks, original numerics,
+  shared KV/prefix/failure semantics and 6 GiB without a second full model copy.
+  Original common-Q4 full quality and stock precision/identity remain separate
+  gates. Get Astra design/check/review for each concrete composition mechanism.
+  [Bridge rationale](artifacts/mlx-gpu-gap-2026-11-15/astra-common-q4-resident-bridge-research-1.md).
+- [x] Fresh RMS A/B diagnostics and all four independent readers pass unchanged
+  leaf gates and exact guard2 bits. A takes about 29–32 ms and B 5–8 ms in the
+  separate schedules; these intervals are not additive graph cost shares.
+  Astra selects a bounded reduction→denominator→output scheduling experiment,
+  with unchanged arithmetic and distinct intermediate receipts.
+  [Actual attribution](artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-attribution-root-run-1/result.json),
+  [next experiment](artifacts/mlx-gpu-gap-2026-11-15/astra-rms-reduction-root-split-research-1/RESEARCH.md).
+- [x] **RMS three-phase rejection:** fresh compilation, 336 normal/forced cases,
+  original controls, 12 stage faults and all eight independent readers pass.
+  Whole-command prefill is 6.657%/7.528% slower; decode improves 0.471%/0.508%,
+  below the 5% retention gate. Astra approves rejecting it as a performance
+  candidate; artifacts remain and the published two-phase graph is retained.
+  [Actual checks](artifacts/mlx-gpu-gap-2026-11-15/g2-rms-three-phase-root-run-1/result.json),
+  [final Astra decision](artifacts/mlx-gpu-gap-2026-11-15/astra-rms-three-phase-review-1/verdict.json).
+- [ ] Stock startup remains unrun. Astra requires lifecycle-wide aggregate log
+  limits and sealed guard plan/ledger/log transport; Sol prepares an artifact-only
+  child before any model launch. Loaded-content/all-activation precision and
+  matched performance remain unqualified.
+  [Consolidated review](artifacts/mlx-gpu-gap-2026-11-15/astra-stock-startup-review-1/execution-approval.json).
 - [x] G3 research proposes bounded four-token weight reuse with unchanged
   compensated order; no implementation/speed claim. Fresh resident-graph
   profiling precedes selection. [Experiment brief](artifacts/mlx-gpu-gap-2026-11-15/astra-prefill-weight-reuse-research-1.md).
