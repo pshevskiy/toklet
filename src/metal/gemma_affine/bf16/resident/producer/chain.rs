@@ -8,6 +8,7 @@ mod kv;
 mod layout;
 mod pool;
 mod reference;
+pub(super) mod rms_phase;
 mod timing;
 use kv::CacheStorage;
 use layout::{LayerLayout, LayerStorage, sentinel, tail, validate_storage};
@@ -91,7 +92,8 @@ pub(super) struct ResidentGraph<'w> {
     norms: [Buffer<u32>; 3],
     rope: [Buffer<u32>; 2],
     strided: StridedBf16Pipelines,
-    precision_rms: rms::precision::Pipelines,
+    precision_rms: rms_phase::Family,
+    phase_plan: Option<rms_phase::Plan>,
 }
 fn norm_words(d: usize, producer: bool) -> usize {
     5 * H
@@ -123,6 +125,27 @@ impl<'w> ResidentGraph<'w> {
         table: &'w gelu::CertifiedTable,
         options: Options,
         available: usize,
+    ) -> Result<Self> {
+        Self::new_variant(source, context, pipelines, table, options, available, false)
+    }
+    pub fn new_two_phase(
+        source: &'w Bf16Weights,
+        context: &'w Bf16Context,
+        pipelines: &'w Pipelines,
+        table: &'w gelu::CertifiedTable,
+        options: Options,
+        available: usize,
+    ) -> Result<Self> {
+        Self::new_variant(source, context, pipelines, table, options, available, true)
+    }
+    fn new_variant(
+        source: &'w Bf16Weights,
+        context: &'w Bf16Context,
+        pipelines: &'w Pipelines,
+        table: &'w gelu::CertifiedTable,
+        options: Options,
+        available: usize,
+        paired: bool,
     ) -> Result<Self> {
         check_budget(Self::planned_bytes(options)?, available)?;
         if !std::ptr::eq(&*source.device, &*context.0.gpu.device)
@@ -160,11 +183,25 @@ impl<'w> ResidentGraph<'w> {
         };
         let rope = [make_rope(256, 256, 10000.)?, make_rope(512, 128, 1000000.)?];
         let strided = StridedBf16Pipelines::new(&context.0, StridedBf16Pipelines::policy_bytes())?;
-        let precision_rms = rms::precision::Pipelines::new(
-            &context.0.gpu,
-            &pipelines.rms,
-            rms::precision::POLICY_BYTES,
-        )?;
+        let (precision_rms, phase_plan) = if paired {
+            (
+                rms_phase::Family::Paired(rms::precision::two_phase::Pipelines::new(
+                    &context.0.gpu,
+                    &pipelines.rms,
+                    rms::precision::POLICY_BYTES,
+                )?),
+                Some(rms_phase::Plan::new(options.max_rows)?),
+            )
+        } else {
+            (
+                rms_phase::Family::Row(rms::precision::Pipelines::new(
+                    &context.0.gpu,
+                    &pipelines.rms,
+                    rms::precision::POLICY_BYTES,
+                )?),
+                None,
+            )
+        };
         let graph = Self {
             source,
             context,
@@ -176,9 +213,19 @@ impl<'w> ResidentGraph<'w> {
             rope,
             strided,
             precision_rms,
+            phase_plan,
         };
         check_budget(graph.admitted_bytes(), available)?;
         Ok(graph)
+    }
+    fn phase_parts(
+        &self,
+    ) -> Result<Option<(&rms::precision::two_phase::Pipelines, &rms_phase::Plan)>> {
+        match (self.precision_rms.paired(), self.phase_plan.as_ref()) {
+            (None, None) => Ok(None),
+            (Some(p), Some(plan)) => Ok(Some((p, plan))),
+            _ => Err(Error::Options("paired RMS graph family/plan differs")),
+        }
     }
     fn layer(
         source: &'w Bf16Weights,
@@ -367,13 +414,14 @@ impl<'w> ResidentGraph<'w> {
     }
     fn layer_recipe<'a>(
         &'a self,
-        storage: &'a pool::Storage,
+        storage: (&'a pool::Storage, Option<&'a rms_phase::Scratch>),
         entry: (&'a Buffer<u32>, &'a [Region; 4]),
         caches: &'a [CacheStorage; 2],
         frame: &'a GraphFrame,
         node: usize,
         force_reference: bool,
     ) -> Result<recipe::Recipe<'a>> {
+        let (storage, phase) = storage;
         let (entry, entry_regions) = entry;
         let plan = &self.plans[node];
         let f = frame.nodes[node];
@@ -437,9 +485,23 @@ impl<'w> ResidentGraph<'w> {
                 node,
             )?,
             norms,
-            norm_kind: recipe::NormKind::Precision {
-                pipelines: &self.precision_rms,
-                reasons: plan.layout.rms_reasons(storage.reasons(node), f)?,
+            norm_kind: match &self.precision_rms {
+                rms_phase::Family::Row(pipelines) => recipe::NormKind::Precision {
+                    pipelines,
+                    reasons: plan.layout.rms_reasons(storage.reasons(node), f)?,
+                },
+                rms_phase::Family::Paired(pipelines) => recipe::NormKind::Paired {
+                    pipelines,
+                    reasons: plan.layout.rms_reasons(storage.reasons(node), f)?,
+                    plan: self
+                        .phase_plan
+                        .as_ref()
+                        .ok_or(Error::Options("paired RMS graph plan absent"))?,
+                    phase: phase.ok_or(Error::Options("paired RMS session bank absent"))?,
+                    node,
+                    epoch: rms::precision::two_phase::epoch(frame.epoch)?,
+                    fail_after_a: None,
+                },
             },
             status: BufferRange::new(storage.status(node), 0, STATUS_WORDS)?,
             coefficients: BufferRange::new(
@@ -501,6 +563,10 @@ pub(super) struct Metrics {
     pub pool_test_fault_fill_span_bytes: usize,
     pub pool_reference_reset_bytes: usize,
     pub pool_descriptor_preflight_bytes: usize,
+    pub rms_phase_gpu_bytes: usize,
+    pub rms_phase_snapshot_bytes: usize,
+    pub rms_phase_preflight_bytes: usize,
+    pub rms_phase_validated_operations: usize,
     pub shared_pool_audit_pipeline_metadata_bytes: usize,
     pub pooled_storage: bool,
     pub stage_write_span_bytes: usize,
@@ -553,6 +619,7 @@ impl Metrics {
 pub(super) struct ResidentSession<'g, 'w> {
     graph: &'g ResidentGraph<'w>,
     storage: pool::Storage,
+    rms_phase: Option<rms_phase::Scratch>,
     caches: [CacheStorage; 2],
     entry: Buffer<u32>,
     entry_regions: [Region; 4],
@@ -609,6 +676,9 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
         )?;
         bytes = add(bytes, Self::entry_plan(graph.options.max_rows).1 * 4)?;
         bytes = add(bytes, graph.options.max_rows * H * 4)?;
+        if let Some((_, plan)) = graph.phase_parts()? {
+            bytes = add(bytes, plan.payload_bytes()?)?;
+        }
         add(bytes, reference::Runner::planned_bytes(graph)?)
     }
     pub fn new(graph: &'g ResidentGraph<'w>, available: usize) -> Result<Self> {
@@ -641,6 +711,10 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
             pooled,
             diagnostic,
         )?;
+        let rms_phase = graph
+            .phase_parts()?
+            .map(|(_, plan)| rms_phase::Scratch::new(gpu, plan))
+            .transpose()?;
         let caches = [
             CacheStorage::new(gpu, 256, 512, Some(512), identity()?)?,
             CacheStorage::new(gpu, 512, graph.options.capacity, None, identity()?)?,
@@ -653,6 +727,7 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
         let mut session = Self {
             graph,
             storage,
+            rms_phase,
             caches,
             entry,
             entry_regions,
@@ -680,6 +755,7 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
     pub fn owned_bytes(&self) -> usize {
         size_of::<Self>()
             + self.storage.payload_bytes()
+            + self.rms_phase.as_ref().map_or(0, rms_phase::Scratch::bytes)
             + self
                 .caches
                 .iter()
@@ -804,6 +880,9 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
             .epoch
             .checked_add(1)
             .ok_or(Error::Options("chain epoch exhausted"))?;
+        if self.graph.phase_parts()?.is_some() {
+            rms::precision::two_phase::epoch(epoch)?;
+        }
         let mut history = [0; POSITIONS];
         history[..prefix.len()].copy_from_slice(prefix);
         for cache in &self.caches {
@@ -835,7 +914,7 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
         for node in 0..3 {
             self.graph
                 .layer_recipe(
-                    &self.storage,
+                    (&self.storage, self.rms_phase.as_ref()),
                     (&self.entry, &self.entry_regions),
                     &self.caches,
                     &frame,
@@ -860,6 +939,11 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
             &self.entry,
             Self::entry_plan(self.graph.options.max_rows).1,
         )?;
+        match (self.graph.phase_parts()?, self.rms_phase.as_ref()) {
+            (Some((_, plan)), Some(s)) => s.validate(gpu, plan)?,
+            (None, None) => (),
+            _ => return Err(Error::Options("paired RMS owner family differs")),
+        }
         if self.published.len() != self.graph.options.max_rows * H {
             return Err(Error::Options("chain published storage differs"));
         }
@@ -870,7 +954,24 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
         frame: &GraphFrame,
         host_upload: bool,
         command: &ProtocolObject<dyn MTLCommandBuffer>,
-    ) {
+    ) -> Result<()> {
+        let (phase_preflight, mut phase_writes) =
+            if let Some((pipelines, plan)) = self.graph.phase_parts()? {
+                let phase = self
+                    .rms_phase
+                    .as_mut()
+                    .ok_or(Error::Options("paired RMS session bank absent"))?;
+                let checked = match phase.unchanged() {
+                    Ok(bytes) => bytes,
+                    Err(error) => {
+                        self.poisoned = true;
+                        return Err(error);
+                    }
+                };
+                (checked, phase.reset(plan, frame, pipelines)?)
+            } else {
+                (0, 0)
+            };
         self.busy = true;
         self.poisoned = true;
         self.epoch = frame.epoch;
@@ -879,6 +980,9 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
         let storage_writes = self
             .storage
             .reset(self.graph.plans.each_ref().map(|p| p.layout), frame);
+        if let Some(plan) = &self.graph.phase_plan {
+            phase_writes += plan.initialize_statuses(&mut self.storage);
+        }
         self.metrics = Metrics {
             epoch: frame.epoch,
             command_identity: std::ptr::from_ref(command).cast::<()>() as usize,
@@ -886,7 +990,13 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
             encoded_dispatches: Some(0),
             pool_audit_dispatches: Some(0),
             pooled_storage: self.storage.pooled(),
-            stage_write_span_bytes: self.entry.len * 4 + storage_writes,
+            stage_write_span_bytes: self.entry.len * 4 + storage_writes + phase_writes,
+            rms_phase_gpu_bytes: self.rms_phase.as_ref().map_or(0, |s| s.buffer.len * 4),
+            rms_phase_snapshot_bytes: self
+                .rms_phase
+                .as_ref()
+                .map_or(0, |s| s.bytes() - s.buffer.len * 4),
+            rms_phase_preflight_bytes: phase_preflight,
             shared_pool_audit_pipeline_metadata_bytes: self
                 .graph
                 .pipelines
@@ -912,6 +1022,7 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
                 + rms::precision::POLICY_BYTES,
             ..Metrics::default()
         };
+        Ok(())
     }
     pub fn begin<'s>(
         &'s mut self,
@@ -935,7 +1046,7 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
             }
         }
         let stage_start = Instant::now();
-        self.stage(&frame, true, &command);
+        self.stage(&frame, true, &command)?;
         self.metrics.pool_descriptor_preflight_bytes = descriptor_bytes;
         self.entry.with_mut(|words| {
             for (i, input) in inputs.into_iter().enumerate() {
@@ -996,13 +1107,16 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
             };
             check(&self.entry)?;
             self.storage.visit_buffers(&check)?;
+            if let Some(phase) = &self.rms_phase {
+                check(&phase.buffer)?;
+            }
             for cache in &self.caches {
                 check(&cache.k)?;
                 check(&cache.v)?;
             }
         }
         let stage_start = Instant::now();
-        self.stage(&frame, false, command);
+        self.stage(&frame, false, command)?;
         self.metrics.pool_descriptor_preflight_bytes = descriptor_bytes;
         let mut tx = GraphTransaction {
             session: self,
@@ -1369,7 +1483,7 @@ impl GraphTransaction<'_, '_, '_> {
             self.session
                 .graph
                 .layer_recipe(
-                    &self.session.storage,
+                    (&self.session.storage, self.session.rms_phase.as_ref()),
                     (&self.session.entry, &self.session.entry_regions),
                     &self.session.caches,
                     &self.frame,
@@ -1392,7 +1506,7 @@ impl GraphTransaction<'_, '_, '_> {
         for node in 0..3 {
             self.copy_node_inputs(node)?;
             let operation = self.session.graph.layer_recipe(
-                &self.session.storage,
+                (&self.session.storage, self.session.rms_phase.as_ref()),
                 (&self.session.entry, &self.session.entry_regions),
                 &self.session.caches,
                 &self.frame,
@@ -1554,6 +1668,21 @@ impl<'s, 'g, 'w> GraphTransaction<'s, 'g, 'w> {
                 &mut self.rms_snapshot[node],
             )?;
         }
+        if let Some((pipelines, plan)) = self.session.graph.phase_parts()? {
+            self.session.metrics.validation_span_bytes += self
+                .session
+                .rms_phase
+                .as_mut()
+                .ok_or(Error::Options("paired RMS session bank absent"))?
+                .snapshot_completed(
+                    plan,
+                    &self.frame,
+                    pipelines,
+                    &self.session.storage,
+                    self.session.graph.plans.each_ref().map(|p| p.layout),
+                )?;
+            self.session.metrics.rms_phase_validated_operations = 22;
+        }
         self.session.metrics.validation_span_bytes += self.session.storage.snapshot_audits();
         let replay = chain_status_decision(&self.status_snapshot)?;
         if let Some((node, reason)) = replay {
@@ -1653,6 +1782,9 @@ impl CompletedGraph<'_, '_, '_> {
             if current != e.rms_snapshot[node] {
                 return Err(Error::Options("chain RMS reasons changed after validation"));
             }
+        }
+        if let Some(phase) = &e.session.rms_phase {
+            e.session.metrics.validation_span_bytes += phase.unchanged()?;
         }
         if !e.session.storage.unchanged_audits() {
             return Err(Error::Options(
@@ -1772,8 +1904,21 @@ impl Drop for GraphTransaction<'_, '_, '_> {
             }
             _ => (),
         }
-        let terminal = self.command.status() == MTLCommandBufferStatus::Completed
+        let mut terminal = self.command.status() == MTLCommandBufferStatus::Completed
             && self.command.error().is_none();
+        if terminal && !self.encoding_started {
+            terminal &= match self.session.graph.phase_parts() {
+                Ok(Some((pipelines, plan))) => {
+                    self.session.rms_phase.as_mut().is_some_and(|phase| {
+                        phase
+                            .snapshot_unencoded(plan, &self.frame, pipelines)
+                            .is_ok()
+                    })
+                }
+                Ok(None) => self.session.rms_phase.is_none(),
+                Err(_) => false,
+            };
+        }
         debug_assert!(!self.published || self.validated);
         self.session.busy = false;
         if !terminal || self.encoding_started && !self.validated {

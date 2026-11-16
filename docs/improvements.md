@@ -117,7 +117,8 @@ under 6 GiB; 100 tasks/replay/grade, stock precision and final engine review rem
 Pooled scratch source3 passes all new GPU numerical/lifecycle/warm/resident checks.
 Old regressions and required fmt/strict Clippy, 1,047 Metal tests/release pass;
 847 unchanged CPU tests are reused. Astra approves scoped code retention with
-no required fixes. [Scope](gemma-gpu-pool.md). A disk-floor interruption is
+no required fixes. Pushed `14fbb1b5`; all 7 workflows/15 jobs pass.
+[Scope](gemma-gpu-pool.md). A disk-floor interruption is
 retained and 8.16 GB owned compiler cache reclaimed without deleting evidence.
 [Hardware summary](../artifacts/mlx-gpu-gap-2026-11-15/g2-scratch-pool-hardware-summary-1.json),
 [continuation](../artifacts/mlx-gpu-gap-2026-11-15/g2-scratch-pool-final-prep-1/continuation-handoff-v1.json).
@@ -125,8 +126,20 @@ retained and 8.16 GB owned compiler cache reclaimed without deleting evidence.
 The two-phase RMS scheduling experiment passes 336 cases with exact current-kernel
 bit/status/reason parity and the original scalar gates. Two reversed aggregate
 runs lower 22-norm GPU medians from 147.73/149.12 to 37.93/37.77 ms prefill and
-131.67/131.43 to 38.08/37.50 ms decode. Astra approves artifact retention with no required fixes. Graph
-integration, full quality/request speed, overhead and external wins remain open.
+131.67/131.43 to 38.08/37.50 ms decode. Astra approves artifact retention with no
+required fixes. The source4 private graph integration passes 16 numerical cells,
+28 lifecycle controls, 64 warm zero-Rust-allocation operations and all 12 guarded
+independent readers. Both three-layer GPU timing runs show about 69% lower
+prefill /68% lower decode time, adding 14,232 session bytes. All 32 final stages pass, including strict CPU/Metal Clippy, 1,050 Metal
+tests (403 ignored), release builds and old regressions; 847 CPU tests reuse exact
+unchanged inputs. Astra approves private graph retention with no required fixes.
+Whole-model/request, quality, overhead and external wins remain unqualified.
+[Retained graph scope](gemma-gpu-rms-scheduling.md),
+[final checks](../artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-code-review-prep-1/final-check-completion-1.json),
+[combined code review](../artifacts/mlx-gpu-gap-2026-11-15/astra-rms-two-phase-code-review-1/verdict.json).
+[Current build](../artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-graph-build-progress-4.json),
+[hardware](../artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-graph-hardware-progress-3.json),
+[independent replay](../artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-graph-readers-run-1/result.json).
 [Combined artifact evidence](../artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-artifact-review-checks-1.json),
 [Astra approval](../artifacts/mlx-gpu-gap-2026-11-15/astra-rms-two-phase-artifact-review-1/verdict.json).
 

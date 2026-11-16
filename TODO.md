@@ -126,6 +126,12 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   under 6 GiB; 100 tasks, replay, isolated grade, stock precision and final engine
   review remain. The cold controller pauses cleanly after loss. The Nov4 native
   baseline was already packed affine4; equal mean loss establishes no new gain.
+  Read-only resume prechecks reject the current inherited-environment digest;
+  no new model work/campaign bytes changed. Astra approves a separate phase
+  authority retaining old/new environment identities and every original stage/gate;
+  actual admission/tasks/replay/grade have not run.
+  [Authority review](artifacts/mlx-gpu-gap-2026-11-15/astra-common-q4-phase-authority-review-1/verdict.json). [Precheck](artifacts/mlx-gpu-gap-2026-11-15/g0-common-q4-resume-environment-check-2.json),
+  [resume research](artifacts/mlx-gpu-gap-2026-11-15/astra-common-q4-environment-resume-research-1/RESEARCH.md).
   [Functional checks](artifacts/mlx-gpu-gap-2026-11-15/g0-common-q4-required-cli-run-4/result.json),
   [full loss](artifacts/mlx-gpu-gap-2026-11-15/g0-common-q4-full-loss-analysis-prep-1/loss-result.json),
   [baseline trace](artifacts/mlx-gpu-gap-2026-11-15/astra-common-q4-loss-identity-research-1/FINDING.md).
@@ -138,7 +144,8 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   Fmt/strict CPU+Metal Clippy, 1,047 Metal tests (397 ignored), release CLI/unit
   pass; 847 CPU tests reuse 4,009 exact inputs. Astra approves scoped retention
   with no required fixes. [Scope](docs/gemma-gpu-pool.md),
-  [review/publication](artifacts/mlx-gpu-gap-2026-11-15/g2-scratch-pool-publication-1.json).
+  Pushed `14fbb1b5`; all 7 workflows/15 jobs pass.
+  [Review/publication/source/CI](artifacts/mlx-gpu-gap-2026-11-15/g2-scratch-pool-publication-1.json).
   A reader was interrupted at the original 2 GiB disk floor; 8.16 GB regenerable
   Cargo debug cache was reclaimed, with sources/models/evidence/actual binaries
   preserved. Passed native work is authenticated and reused by the continuation.
@@ -159,12 +166,26 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   No chain/request/quality/overhead/adoption win is qualified.
   [Combined checks/review packet](artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-artifact-review-checks-1.json),
   [integration design](artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-integration-design-1/handoff.json).
-- [ ] Integrate the qualified RMS scheduling candidate and reusable scratch, then bridge the
-  authenticated common-Q4 owner into resident execution before extending the
-  full graph/CLI. Q4 keeps its own compensated dot, tile size and codebook proof;
-  BF16 fixture approval does not transfer. Astra freezes the first checked
-  borrowed-Q4 projection mechanism for Sol. [First mechanism](artifacts/mlx-gpu-gap-2026-11-15/astra-common-q4-first-encode-mechanism-1.md),
-  [Q4 bridge research](artifacts/mlx-gpu-gap-2026-11-15/astra-common-q4-resident-bridge-research-1.md).
+- [x] **Two-phase RMS graph:** source4 passes fmt/strict CPU+Metal Clippy,
+  certified release unit, 1,050 Metal tests (403 ignored), release CLI, all old
+  regressions and all 12 paired independent readers. The 16 numerical cells,
+  28 lifecycle controls and 64 warm zero-Rust-allocation operations pass; selected
+  source2 evidence and 847 CPU tests reuse exact unchanged inputs. Two three-layer
+  completed GPU-command runs lower prefill about 69% /decode about 68%, adding
+  14,232 session bytes. Astra approves scoped retention with no required fixes;
+  earlier Clippy/test-helper failures remain retained. No ordinary CLI/full-model,
+  request, quality, overhead or external win is claimed.
+  [Scope/measurements](docs/gemma-gpu-rms-scheduling.md),
+  [final 32-stage checks](artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-code-review-prep-1/final-check-completion-1.json),
+  [combined Astra review](artifacts/mlx-gpu-gap-2026-11-15/astra-rms-two-phase-code-review-1/verdict.json).
+- [ ] **Current Q4 resident projection:** qualify Sol's frozen seven-path
+  borrowed-Q4 encoding mechanism on the retained RMS/pool baseline. Keep the
+  authenticated owner/packed chunks/resident PLE, compensated dot, 16,384 tile
+  size and true 16-code bounds; no second full model copy. Fmt/build, explicit
+  original-oracle/strided GPU checks, independent raw readers, required checks
+  and combined Astra review precede commit and block/full-graph composition.
+  [Frozen mechanism](artifacts/mlx-gpu-gap-2026-11-15/g0-q4-borrowed-encode-draft-1/source-handoff-v1.json),
+  [bridge research](artifacts/mlx-gpu-gap-2026-11-15/astra-common-q4-resident-bridge-research-1.md).
 - [x] G3 research proposes bounded four-token weight reuse with unchanged
   compensated order; no implementation/speed claim. Fresh resident-graph
   profiling precedes selection. [Experiment brief](artifacts/mlx-gpu-gap-2026-11-15/astra-prefill-weight-reuse-research-1.md).

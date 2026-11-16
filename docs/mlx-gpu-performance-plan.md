@@ -74,8 +74,17 @@ is established. Astra approves artifact retention with no required fixes. Before
 qualify persistent per-operation context/header banks, checked nonwrapping epoch
 admission, complete paired preflight, partial-encoding failure/drain and late
 publication. Preserve original reduction/output arithmetic, whole-chain replay
-and global guard/fatal precedence. Sol prepares the conditional integration in
-parallel; frozen model/check sources remain unchanged.
+and global guard/fatal precedence. Sol's source4 private integration now passes
+16 numerical cells, 28 lifecycle controls, 64 warm zero-Rust-allocation operations
+and all 12 guarded independent readers. Both three-layer completed GPU-command
+runs show about 69% lower prefill /68% lower decode time, adding 14,232 session
+bytes. These timings cover this bounded graph only. All old regressions and
+32 final required stages pass, including 1,050 Metal tests (403 ignored), strict
+CPU/Metal Clippy and release builds. Astra approves private graph retention;
+full-model, request and external gates remain open.
+[Qualified graph/check/review scope](gemma-gpu-rms-scheduling.md).
+[Actual graph replay](../artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-graph-readers-run-1/result.json),
+[hardware/lifecycle](../artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-graph-hardware-progress-3.json).
 [Actual candidate/check packet](../artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-artifact-review-checks-1.json),
 [Astra artifact review](../artifacts/mlx-gpu-gap-2026-11-15/astra-rms-two-phase-artifact-review-1/verdict.json),
 [conditional integration](../artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-integration-design-1/handoff.json).

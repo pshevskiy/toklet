@@ -19,6 +19,16 @@ pub(super) enum NormKind<'a> {
         pipelines: &'a rms::precision::Pipelines,
         reasons: [Option<BufferRange<'a>>; 8],
     },
+    #[cfg(test)]
+    Paired {
+        pipelines: &'a rms::precision::two_phase::Pipelines,
+        reasons: [Option<BufferRange<'a>>; 8],
+        plan: &'a chain::rms_phase::Plan,
+        phase: &'a chain::rms_phase::Scratch,
+        node: usize,
+        epoch: u32,
+        fail_after_a: Option<usize>,
+    },
 }
 #[derive(Clone, Copy)]
 pub(super) struct Shape {
@@ -130,7 +140,7 @@ impl Recipe<'_> {
             return Err(Error::Options("layer recipe geometry differs"));
         }
         let first = self.r(State::Hidden)?;
-        let mut ranges = [first; 64];
+        let mut ranges = [first; 80];
         let mut n = 0;
         for state in [State::Hidden, State::PleInput] {
             ranges[n] = self.r(state)?;
@@ -197,7 +207,9 @@ impl Recipe<'_> {
         ranges[n] = self.status;
         n += 1;
         #[cfg(test)]
-        if let NormKind::Precision { reasons, .. } = self.norm_kind {
+        if let NormKind::Precision { reasons, .. } | NormKind::Paired { reasons, .. } =
+            self.norm_kind
+        {
             for (slot, range) in reasons.into_iter().enumerate() {
                 let active = s.producer || (slot != 2 && slot != 7);
                 match (active, range) {
@@ -207,6 +219,59 @@ impl Recipe<'_> {
                     }
                     (false, None) => (),
                     _ => return Err(Error::Options("layer RMS reason extent differs")),
+                }
+            }
+        }
+        #[cfg(test)]
+        if let NormKind::Paired {
+            pipelines,
+            reasons,
+            plan,
+            phase,
+            node,
+            epoch,
+            ..
+        } = self.norm_kind
+        {
+            use State::*;
+            let states = [
+                [Hidden, InputNorm],
+                [QRaw, QNorm],
+                [KRaw, KNorm],
+                [AttentionRaw, AttentionNorm],
+                [AttentionResidual, PreFf],
+                [FfDown, FfNorm],
+                [PleProjection, PleNorm],
+                [VRaw, VProposal],
+            ];
+            for (norm, slot) in plan.slots(phase, s.rows, node)?.into_iter().enumerate() {
+                if let Some(slot) = slot {
+                    let r = rms::precision::two_phase::PairRanges {
+                        input: self.r(states[norm][0])?,
+                        weights: self.norm(norm)?,
+                        output: self.r(states[norm][1])?,
+                        status: self.s(rms::precision::STATUS_SLOTS[norm])?,
+                        reasons: reasons[norm].ok_or(Error::Options("paired RMS reason absent"))?,
+                        context: slot.context,
+                        header: slot.header,
+                    };
+                    pipelines.preflight(
+                        command,
+                        &r,
+                        rms::precision::two_phase::Shape {
+                            rows: s.rows * if norm == 1 { 8 } else { 1 },
+                            width: if [1, 2, 7].contains(&norm) { s.d } else { H },
+                            learned: norm != 7,
+                            epoch,
+                            op_tag: slot.op_tag,
+                        },
+                    )?;
+                    ranges[n] = slot.context;
+                    n += 1;
+                    ranges[n] = slot.header;
+                    n += 1;
+                } else if s.producer || (norm != 2 && norm != 7) {
+                    return Err(Error::Options("paired RMS metadata role absent"));
                 }
             }
         }
@@ -241,6 +306,41 @@ impl Recipe<'_> {
         let result = match self.norm_kind {
             NormKind::Original(pipelines) => {
                 pipelines.encode(c, &buffers, shape[0], shape[1], 1e-6, norm != 7)
+            }
+            #[cfg(test)]
+            NormKind::Paired {
+                pipelines,
+                reasons,
+                plan,
+                phase,
+                node,
+                epoch,
+                fail_after_a,
+            } => {
+                let slot = plan.slots(phase, self.shape.rows, node)?[norm]
+                    .ok_or(Error::Options("paired RMS metadata absent"))?;
+                let ranges = rms::precision::two_phase::PairRanges {
+                    input: buffers.input,
+                    weights: buffers.weights,
+                    output: buffers.output,
+                    status: buffers.status,
+                    reasons: reasons[norm].ok_or(Error::Options("paired RMS reason absent"))?,
+                    context: slot.context,
+                    header: slot.header,
+                };
+                let shape = rms::precision::two_phase::Shape {
+                    rows: shape[0],
+                    width: shape[1],
+                    learned: norm != 7,
+                    epoch,
+                    op_tag: slot.op_tag,
+                };
+                let result = if fail_after_a == Some(norm) {
+                    pipelines.encode_partial(c, &ranges, shape)
+                } else {
+                    pipelines.encode(c, &ranges, shape)
+                };
+                return self.record(result, 2);
             }
             #[cfg(test)]
             NormKind::Precision { pipelines, reasons } => pipelines.encode(
