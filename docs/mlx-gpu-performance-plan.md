@@ -53,13 +53,41 @@ These are source-derived allocation estimates, not measured memory savings.
 Audit each node on the GPU before its storage is overwritten, retain persistent
 per-node fault receipts, and publish both donor caches only after all checks.
 Reusing storage must preserve the original numerical, guard and failure gates.
+The bounded 13→14→15 pool now passes numerical/state/allocation and required
+checks; Astra approves scoped retention. Full 35-layer/ordinary CLI remain open.
+[Qualified pool scope](gemma-gpu-pool.md).
 [Reproducible pool/layout research](../artifacts/mlx-gpu-gap-2026-11-15/astra-resident-scratch-reuse-research-1.md).
 
-Before extending the full graph, screen the 22 actual RMS operations with
-authenticated own-input arrays and unchanged shaders. Record repeated completed
-GPU time and the same-input CPU oracle; an isolated norm aggregate cannot
-establish a chain cost share.
-[RMS timing experiment](../artifacts/mlx-gpu-gap-2026-11-15/astra-source8-rms-timing-research-1.md).
+The 22-operation own-input RMS attribution identified a scheduling bottleneck.
+The two-phase artifact now passes 336 original/own-input/derived cases, exact
+current-kernel output/status/reason parity, fresh scalar gates, 14 GPU faults and
+normal/optimized readers. Two reversed 3-warmup/10-sample runs measure:
+
+| Aggregate GPU time (ms) | Reference run 1/run 2 | Two-phase run 1/run 2 |
+| --- | --- | --- |
+| Prefill 22 norms |147.73 /149.12 |37.93 /37.77 |
+| Decode 22 norms |131.67 /131.43 |38.08 /37.50 |
+
+Both use one completed command/wait; the candidate has 44 dispatches versus 22.
+This is an isolated aggregate result; no chain/request cost share or adoption
+is established. Astra approves artifact retention with no required fixes. Before graph composition,
+qualify persistent per-operation context/header banks, checked nonwrapping epoch
+admission, complete paired preflight, partial-encoding failure/drain and late
+publication. Preserve original reduction/output arithmetic, whole-chain replay
+and global guard/fatal precedence. Sol prepares the conditional integration in
+parallel; frozen model/check sources remain unchanged.
+[Actual candidate/check packet](../artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-artifact-review-checks-1.json),
+[Astra artifact review](../artifacts/mlx-gpu-gap-2026-11-15/astra-rms-two-phase-artifact-review-1/verdict.json),
+[conditional integration](../artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-integration-design-1/handoff.json).
+
+Bridge the authenticated common-Q4 owner into resident execution before full
+35-layer composition. Borrow its existing packed chunks and resident PLE; retain
+Q4's float2 compensated dot,16,384 tile size and actual16-value codebook bound.
+Do not reuse BF16's float3/8,192-tile proof by rounding Q4 bounds. Build fresh
+Q4 own-input fixtures and preserve synchronous packed replay without a second
+full model copy. Full original common-Q4 quality remains a separate gate.
+[Concrete Q4 bridge](../artifacts/mlx-gpu-gap-2026-11-15/astra-common-q4-resident-bridge-research-1.md),
+[first bounded encoding mechanism](../artifacts/mlx-gpu-gap-2026-11-15/astra-common-q4-first-encode-mechanism-1.md).
 
 After full-graph correctness, profile the resident request again. Select prefill
 weight reuse, GPU output selection or further fusion from that measurement;

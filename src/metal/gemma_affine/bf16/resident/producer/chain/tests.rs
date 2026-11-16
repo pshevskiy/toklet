@@ -382,6 +382,14 @@ fn core_pipelines(
     table: &gelu::CertifiedTable,
     available: usize,
 ) -> Pipelines {
+    selected_pipelines(context, table, available, false)
+}
+fn selected_pipelines(
+    context: &Bf16Context,
+    table: &gelu::CertifiedTable,
+    available: usize,
+    pooled: bool,
+) -> Pipelines {
     check_budget(PIPELINE_POLICY_BYTES, available).unwrap();
     // Test-only cold constructor: exactly one selected GELU pipeline, never a
     // v1 pipeline compiled and then replaced. Existing six-family policy stays.
@@ -394,7 +402,12 @@ fn core_pipelines(
         rotary: rotary::Pipelines::new(gpu).unwrap(),
         attention: attention::Pipelines::new(gpu).unwrap(),
         gelu,
-        residual: residual::Pipelines::new(gpu).unwrap(),
+        residual: if pooled {
+            residual::Pipelines::new_for_pool(gpu)
+        } else {
+            residual::Pipelines::new(gpu)
+        }
+        .unwrap(),
         admission: AdmissionPipeline::new(gpu).unwrap(),
     }
 }
@@ -553,9 +566,9 @@ fn capture_states(tx: &GraphTransaction<'_, '_, '_>, raw: &mut RawWriter) -> Vec
             desc["name"] = json!(format!("{state:?}"));
             states.push(desc);
         }
-        let status = tx.session.storage[node].status.with_slice(|s|raw.words(&s[..STATUS_WORDS]));
+        let status = tx.session.storage.status(node).with_slice(|s|raw.words(&s[..STATUS_WORDS]));
         let mut reasons = Vec::new();
-        tx.session.storage[node].rms_reasons.with_slice(|words| {
+        tx.session.storage.reasons(node).with_slice(|words| {
             for (slot, region) in layout.rms_plan().0.into_iter().enumerate() {
                 if let Some(region) = region {
                     let rows = frame.rows * if slot == 1 { 8 } else { 1 };
@@ -655,12 +668,22 @@ fn ledger(graph: &ResidentGraph<'_>, session: &ResidentSession<'_, '_>) -> usize
 #[test]
 #[ignore = "explicit authenticated contiguous13->14->15 eight-cell resident/state/commit qualification"]
 fn genuine_deep_chain_eight_cells_share_one_transaction_and_commit_both_caches() {
+    nominal_cells(false);
+}
+
+#[test]
+#[ignore = "explicit pooled contiguous13->14->15 historical-state/atomic-commit qualification"]
+fn pooled_deep_chain_eight_cells_share_one_transaction_and_commit_both_caches() {
+    nominal_cells(true);
+}
+
+fn nominal_cells(pooled: bool) {
     autoreleasepool(|_| {
         let fixture = Fixture::load();
         let context = Bf16Context::new(CONTEXT_ALLOWANCE_BYTES).unwrap();
         let source = source(&context);
         let table = table(&context);
-        let pipelines = core_pipelines(&context, &table, PIPELINE_POLICY_BYTES);
+        let pipelines = selected_pipelines(&context, &table, PIPELINE_POLICY_BYTES, pooled);
         let options = Options {
             capacity: 512,
             max_rows: 4,
@@ -676,14 +699,22 @@ fn genuine_deep_chain_eight_cells_share_one_transaction_and_commit_both_caches()
         .unwrap();
         let original_weights = weights_hash(&graph);
         let cancel = AtomicBool::new(false);
-        let mut raw = RawWriter::new("toklet-g2-deep-chain-cells-v1");
+        let mut raw = RawWriter::new(if pooled {
+            "toklet-g2-pooled-deep-chain-cells-v1"
+        } else {
+            "toklet-g2-deep-chain-cells-v1"
+        });
         let mut original_prefix = None;
         let mut future_prefix = None;
         for case in fixture.protocol["cases"].as_array().unwrap() {
             autoreleasepool(|_| {
-                let mut session =
-                    ResidentSession::new(&graph, ResidentSession::planned_bytes(&graph).unwrap())
-                        .unwrap();
+                let mut session = ResidentSession::new_storage(
+                    &graph,
+                    ResidentSession::planned_storage_bytes(&graph, pooled, pooled).unwrap(),
+                    pooled,
+                    pooled,
+                )
+                .unwrap();
                 assert!(ledger(&graph, &session) <= LIMIT);
                 fixture.seed(&mut session, case);
                 let cache_before = session.caches.each_ref().map(cache_hash);
@@ -723,7 +754,10 @@ fn genuine_deep_chain_eight_cells_share_one_transaction_and_commit_both_caches()
                 let completed = tx.complete(&cancel).unwrap();
                 expected_states(&completed, &fixture, case);
                 assert_eq!(completed.metrics().replay_count, 0);
-                assert_eq!(completed.metrics().encoded_dispatches, Some(102));
+                assert_eq!(
+                    completed.metrics().encoded_dispatches,
+                    Some(if pooled { 105 } else { 102 })
+                );
                 let proposals: [(Vec<u32>, Vec<u32>); 2] = std::array::from_fn(|node| {
                     (
                         completed
@@ -764,8 +798,9 @@ fn genuine_deep_chain_eight_cells_share_one_transaction_and_commit_both_caches()
                     });
                     kv.push(json!({"layer":LAYERS[node],"generation":c.generation,"offset":c.offset,"K":c.k.with_slice(|s|raw.words(&s[..4*c.d])),"V":c.v.with_slice(|s|raw.words(&s[..4*c.d])),"guarded_sha256":cache_hash(c)}));
                 }
+                let audit = pooled::pool_capture(&session, &mut raw);
                 let output_raw = raw.words(&output.iter().map(|x| x.to_bits()).collect::<Vec<_>>());
-                raw.cases.push(json!({"name":case["name"],"sequence":case["sequence"],"mode":case["mode"],"output_mode":case["output_mode"],"nodes":states,"exact_mask_zeros":masks,"cache_before_sha256":cache_before,"cache_after_candidate_sha256":candidate_cache,"cache_generations_before":generations,"committed_cache":kv,"output":output_raw,"metrics":metrics,"model_payload_authenticated_by_existing_loader":true,"deep_entry_input_bytes":hidden.len()*4,"checkpoint_PLE15_uses_full_All_view_before_Last":true}));
+                raw.cases.push(json!({"name":case["name"],"sequence":case["sequence"],"mode":case["mode"],"output_mode":case["output_mode"],"nodes":states,"pool_audit":audit,"exact_mask_zeros":masks,"cache_before_sha256":cache_before,"cache_after_candidate_sha256":candidate_cache,"cache_generations_before":generations,"committed_cache":kv,"output":output_raw,"metrics":metrics,"model_payload_authenticated_by_existing_loader":true,"deep_entry_input_bytes":hidden.len()*4,"checkpoint_PLE15_uses_full_All_view_before_Last":true}));
             });
         }
         assert_eq!(original_prefix.as_ref().unwrap().len(), 64);
@@ -809,7 +844,7 @@ fn run<'s, 'g, 'w>(
 fn status_capture(session: &ResidentSession<'_, '_>, raw: &mut RawWriter) -> Value {
     let mut words = [0; 3 * STATUS_WORDS];
     for node in 0..3 {
-        session.storage[node].status.with_slice(|s| {
+        session.storage.status(node).with_slice(|s| {
             words[node * STATUS_WORDS..(node + 1) * STATUS_WORDS]
                 .copy_from_slice(&s[..STATUS_WORDS])
         });
@@ -1005,7 +1040,9 @@ fn whole_chain_replay_and_lifecycle_keep_exact_committed_prefix() {
                 let prefix_before = session.prefix().to_vec();
                 let output = vec![99.; H];
                 let tx = run(&mut session, &fixture, decode, &cancel);
-                tx.session.storage[node].status.with_mut(|s| s[slot] = word);
+                tx.session.storage.separate_mut().unwrap()[node]
+                    .status
+                    .with_mut(|s| s[slot] = word);
                 let error = tx.complete(&cancel).err().unwrap().to_string();
                 assert_eq!(session.poisoned, expected_poison);
                 assert_eq!(session.metrics.reference_commands, Some(0));
@@ -1027,7 +1064,9 @@ fn whole_chain_replay_and_lifecycle_keep_exact_committed_prefix() {
             let mut session = seeded(&graph, &fixture, decode);
             session.force_reference_node = Some(0);
             let tx = run(&mut session, &fixture, decode, &cancel);
-            tx.session.storage[2].status.with_mut(|s| s[34] = 1);
+            tx.session.storage.separate_mut().unwrap()[2]
+                .status
+                .with_mut(|s| s[34] = 1);
             let completed = tx.complete(&cancel).unwrap();
             expected_states(&completed, &fixture, decode);
             let mut output = vec![99.; H];
@@ -1043,7 +1082,7 @@ fn whole_chain_replay_and_lifecycle_keep_exact_committed_prefix() {
             let output = vec![99.; H];
             let tx = run(&mut session, &fixture, decode, &cancel);
             let inactive = 8 * P;
-            tx.session.storage[2].intervals[1].with_mut(|s| {
+            tx.session.storage.separate_mut().unwrap()[2].intervals[1].with_mut(|s| {
                 assert_eq!(s[inactive], SENTINEL);
                 s[inactive] = 0;
             });
@@ -1303,7 +1342,7 @@ fn whole_chain_replay_and_lifecycle_keep_exact_committed_prefix() {
             queued.commit();
             queued.waitUntilCompleted();
             let command = gpu.command().unwrap();
-            let aliased = session.storage[0].arena.raw.clone();
+            let aliased = session.storage.separate_mut().unwrap()[0].arena.raw.clone();
             let mut ranges = spans.map(|r| r.range(&input, r.len).unwrap());
             ranges[0] = BufferRange {
                 raw: &aliased,
@@ -1679,17 +1718,22 @@ fn unchanged_reference_chain_from_same_checkpoint_checks_all_frozen_states() {
 }
 
 fn inject_rms_reference(tx: &mut GraphTransaction<'_, '_, '_>) {
-    tx.session.storage[0].status.with_mut(|s| s[0] = 2);
+    tx.session.storage.separate_mut().unwrap()[0]
+        .status
+        .with_mut(|s| s[0] = 2);
     let region = tx.session.graph.plans[0].layout.rms_plan().0[0].unwrap();
-    tx.session.storage[0]
+    tx.session.storage.separate_mut().unwrap()[0]
         .rms_reasons
         .with_mut(|s| s[region.start] |= 16);
 }
 fn rms_failure_storage(session: &ResidentSession<'_, '_>, raw: &mut RawWriter) {
-    let reasons = session
-        .storage
-        .iter()
-        .map(|s| s.rms_reasons.with_slice(|words| raw.words(words)))
+    let reasons = (0..3)
+        .map(|node| {
+            session
+                .storage
+                .reasons(node)
+                .with_slice(|words| raw.words(words))
+        })
         .collect::<Vec<_>>();
     raw.cases.last_mut().unwrap()["rms_reason_storage"] = json!(reasons);
 }
@@ -1753,10 +1797,15 @@ fn high_accuracy_rms_reference_status_and_contracts_preserve_prefix() {
                 tx.encode_all(&cancel).unwrap();
                 tx.submit_and_wait().unwrap();
                 if natural {
-                    assert_eq!(tx.session.storage[0].status.with_slice(|s| s[0]), 2);
+                    assert_eq!(
+                        tx.session.storage.separate_mut().unwrap()[0]
+                            .status
+                            .with_slice(|s| s[0]),
+                        2
+                    );
                     let region = graph.plans[0].layout.rms_plan().0[0].unwrap();
                     assert_ne!(
-                        tx.session.storage[0]
+                        tx.session.storage.separate_mut().unwrap()[0]
                             .rms_reasons
                             .with_slice(|s| s[region.start])
                             & 1,
@@ -1766,7 +1815,9 @@ fn high_accuracy_rms_reference_status_and_contracts_preserve_prefix() {
                     inject_rms_reference(&mut tx);
                 }
                 if late_fatal {
-                    tx.session.storage[2].status.with_mut(|s| s[25] = 1);
+                    tx.session.storage.separate_mut().unwrap()[2]
+                        .status
+                        .with_mut(|s| s[25] = 1);
                 }
                 let candidate = capture_states(&tx, &mut raw);
                 assert_eq!(tx.session.caches.each_ref().map(cache_hash), before);
@@ -1823,22 +1874,30 @@ fn high_accuracy_rms_reference_status_and_contracts_preserve_prefix() {
                 match kind {
                     0 => {
                         let region = graph.plans[2].layout.rms_plan().0[0].unwrap();
-                        tx.session.storage[2]
+                        tx.session.storage.separate_mut().unwrap()[2]
                             .rms_reasons
                             .with_mut(|s| s[region.start] |= 1 << 20);
                     }
-                    1 => tx.session.storage[2].status.with_mut(|s| s[6] = 2),
+                    1 => tx.session.storage.separate_mut().unwrap()[2]
+                        .status
+                        .with_mut(|s| s[6] = 2),
                     2 => {
-                        tx.session.storage[0].status.with_mut(|s| s[0] = 1);
-                        tx.session.storage[2].status.with_mut(|s| s[0] = 2);
+                        tx.session.storage.separate_mut().unwrap()[0]
+                            .status
+                            .with_mut(|s| s[0] = 1);
+                        tx.session.storage.separate_mut().unwrap()[2]
+                            .status
+                            .with_mut(|s| s[0] = 2);
                     }
                     3 => {
                         let region = graph.plans[2].layout.rms_plan().0[0].unwrap();
                         let inactive = region.start + tx.frame.nodes[2].rows;
-                        tx.session.storage[2].rms_reasons.with_mut(|s| {
-                            assert_eq!(s[inactive], SENTINEL);
-                            s[inactive] = 0;
-                        });
+                        tx.session.storage.separate_mut().unwrap()[2]
+                            .rms_reasons
+                            .with_mut(|s| {
+                                assert_eq!(s[inactive], SENTINEL);
+                                s[inactive] = 0;
+                            });
                     }
                     _ => unreachable!(),
                 }
@@ -1858,7 +1917,7 @@ fn high_accuracy_rms_reference_status_and_contracts_preserve_prefix() {
             let completed = tx.complete(&cancel).unwrap();
             expected_states(&completed, &fixture, decode);
             let region = graph.plans[1].layout.rms_plan().0[0].unwrap();
-            completed.0.session.storage[1]
+            completed.0.session.storage.separate_mut().unwrap()[1]
                 .rms_reasons
                 .with_mut(|s| s[region.start] ^= 16);
             let mut output = vec![99.; H];
@@ -1883,3 +1942,5 @@ fn high_accuracy_rms_reference_status_and_contracts_preserve_prefix() {
         raw.finish();
     });
 }
+
+mod pooled;

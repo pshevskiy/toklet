@@ -6,6 +6,7 @@ use project::bf16_tiled::{Bf16MatrixView, StridedBf16Pipelines};
 use std::time::Instant;
 mod kv;
 mod layout;
+mod pool;
 mod reference;
 mod timing;
 use kv::CacheStorage;
@@ -366,24 +367,46 @@ impl<'w> ResidentGraph<'w> {
     }
     fn layer_recipe<'a>(
         &'a self,
-        storage: &'a [LayerStorage; 3],
+        storage: &'a pool::Storage,
+        entry: (&'a Buffer<u32>, &'a [Region; 4]),
         caches: &'a [CacheStorage; 2],
-        frame: &GraphFrame,
+        frame: &'a GraphFrame,
         node: usize,
         force_reference: bool,
     ) -> Result<recipe::Recipe<'a>> {
+        let (entry, entry_regions) = entry;
         let plan = &self.plans[node];
         let f = frame.nodes[node];
-        let layer = &storage[node];
+        let layouts = self.plans.each_ref().map(|p| p.layout);
         plan.layout.check_frame(f)?;
         let (cache, donor) = match plan.kind {
             LayerKind::Producer { cache } => (cache, node),
             LayerKind::Consumer { donor } => (donor, donor),
         };
-        let donor_frame = frame.nodes[donor];
-        let donor_layout = self.plans[donor].layout;
-        let k = donor_layout.range(&storage[donor].arena, State::KProposal, donor_frame)?;
-        let v = donor_layout.range(&storage[donor].arena, State::VProposal, donor_frame)?;
+        let k = storage
+            .range(
+                pool::View {
+                    entry,
+                    entry_regions,
+                    layouts,
+                    frame,
+                },
+                donor,
+                State::KProposal,
+            )?
+            .ok_or(Error::Options("chain donor key absent"))?;
+        let v = storage
+            .range(
+                pool::View {
+                    entry,
+                    entry_regions,
+                    layouts,
+                    frame,
+                },
+                donor,
+                State::VProposal,
+            )?
+            .ok_or(Error::Options("chain donor value absent"))?;
         let segments = caches[cache].segments(f, k, v)?;
         let mut norms = [None; 8];
         for (i, r) in plan.norm_regions.iter().enumerate() {
@@ -404,26 +427,28 @@ impl<'w> ResidentGraph<'w> {
                 })
             }),
             admissions: plan.admissions,
-            states: plan.layout.states(&layer.arena, f)?,
+            states: storage.states(
+                pool::View {
+                    entry,
+                    entry_regions,
+                    layouts,
+                    frame,
+                },
+                node,
+            )?,
             norms,
             norm_kind: recipe::NormKind::Precision {
                 pipelines: &self.precision_rms,
-                reasons: plan.layout.rms_reasons(&layer.rms_reasons, f)?,
+                reasons: plan.layout.rms_reasons(storage.reasons(node), f)?,
             },
-            status: BufferRange::new(&layer.status, 0, STATUS_WORDS)?,
+            status: BufferRange::new(storage.status(node), 0, STATUS_WORDS)?,
             coefficients: BufferRange::new(
                 &self.rope[rope],
                 f.query_start * rotated,
                 f.rows * rotated,
             )?,
-            flags: [
-                BufferRange::new(&layer.flags[0], 0, f.rows * plan.layout.ff)?,
-                BufferRange::new(&layer.flags[1], 0, f.rows * P)?,
-            ],
-            intervals: [
-                BufferRange::new(&layer.intervals[0], 0, 8 * f.rows * plan.layout.ff)?,
-                BufferRange::new(&layer.intervals[1], 0, 8 * f.rows * P)?,
-            ],
+            flags: storage.flags(plan.layout, f, node)?,
+            intervals: storage.intervals(plan.layout, f, node)?,
             segments,
             shape: recipe::Shape {
                 rows: f.rows,
@@ -466,6 +491,21 @@ pub(super) struct Metrics {
     pub candidate_gpu_timing_scope: Option<&'static str>,
     pub encoding_complete: bool,
     pub encoded_dispatches: Option<usize>,
+    pub pool_audit_dispatches: Option<usize>,
+    pub pool_audit_read_span_bytes: usize,
+    pub pool_audit_fill_span_bytes: usize,
+    pub pool_diagnostic_blit_copies: usize,
+    pub pool_diagnostic_copy_bytes: usize,
+    pub pool_diagnostic_upload_bytes: usize,
+    pub pool_test_fault_blit_fills: usize,
+    pub pool_test_fault_fill_span_bytes: usize,
+    pub pool_reference_reset_bytes: usize,
+    pub pool_descriptor_preflight_bytes: usize,
+    pub shared_pool_audit_pipeline_metadata_bytes: usize,
+    pub pooled_storage: bool,
+    pub stage_write_span_bytes: usize,
+    pub stage_seconds: f64,
+    pub whole_evaluation_seconds: Option<f64>,
     pub blit_copies: usize,
     pub candidate_commands: usize,
     pub candidate_waits: usize,
@@ -512,7 +552,7 @@ impl Metrics {
 }
 pub(super) struct ResidentSession<'g, 'w> {
     graph: &'g ResidentGraph<'w>,
-    storage: [LayerStorage; 3],
+    storage: pool::Storage,
     caches: [CacheStorage; 2],
     entry: Buffer<u32>,
     entry_regions: [Region; 4],
@@ -528,6 +568,7 @@ pub(super) struct ResidentSession<'g, 'w> {
     metrics: Metrics,
     diagnostic_bytes: Cell<usize>,
     force_reference_node: Option<usize>,
+    retirement_fault: Option<pool::RetirementFault>,
 }
 impl<'g, 'w> ResidentSession<'g, 'w> {
     fn entry_plan(rows: usize) -> ([Region; 4], usize) {
@@ -543,13 +584,21 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
         (regions, cursor)
     }
     pub fn planned_bytes(graph: &ResidentGraph<'_>) -> Result<usize> {
-        let mut bytes = size_of::<Self>();
-        for p in &graph.plans {
-            bytes = add(
-                bytes,
-                LayerStorage::planned_bytes(p.layout)? - size_of::<LayerStorage>(),
-            )?;
-        }
+        Self::planned_storage_bytes(graph, false, false)
+    }
+    pub fn planned_pooled_bytes(graph: &ResidentGraph<'_>, diagnostic: bool) -> Result<usize> {
+        Self::planned_storage_bytes(graph, true, diagnostic)
+    }
+    fn planned_storage_bytes(
+        graph: &ResidentGraph<'_>,
+        pooled: bool,
+        diagnostic: bool,
+    ) -> Result<usize> {
+        let layouts = graph.plans.each_ref().map(|p| p.layout);
+        let mut bytes = add(
+            size_of::<Self>(),
+            pool::Storage::planned_payload(layouts, pooled, diagnostic)?,
+        )?;
         bytes = add(
             bytes,
             CacheStorage::planned_bytes(256, 512)? - size_of::<CacheStorage>(),
@@ -563,13 +612,35 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
         add(bytes, reference::Runner::planned_bytes(graph)?)
     }
     pub fn new(graph: &'g ResidentGraph<'w>, available: usize) -> Result<Self> {
-        check_budget(Self::planned_bytes(graph)?, available)?;
+        Self::new_storage(graph, available, false, false)
+    }
+    pub fn new_pooled(
+        graph: &'g ResidentGraph<'w>,
+        available: usize,
+        diagnostic: bool,
+    ) -> Result<Self> {
+        Self::new_storage(graph, available, true, diagnostic)
+    }
+    fn new_storage(
+        graph: &'g ResidentGraph<'w>,
+        available: usize,
+        pooled: bool,
+        diagnostic: bool,
+    ) -> Result<Self> {
+        check_budget(
+            Self::planned_storage_bytes(graph, pooled, diagnostic)?,
+            available,
+        )?;
+        if pooled && graph.pipelines.residual.pool_audit.is_none() {
+            return Err(Error::Options("pool requires cold audit pipeline"));
+        }
         let gpu = &graph.context.0.gpu;
-        let storage = [
-            LayerStorage::new(gpu, graph.plans[0].layout)?,
-            LayerStorage::new(gpu, graph.plans[1].layout)?,
-            LayerStorage::new(gpu, graph.plans[2].layout)?,
-        ];
+        let storage = pool::Storage::new(
+            gpu,
+            graph.plans.each_ref().map(|p| p.layout),
+            pooled,
+            diagnostic,
+        )?;
         let caches = [
             CacheStorage::new(gpu, 256, 512, Some(512), identity()?)?,
             CacheStorage::new(gpu, 512, graph.options.capacity, None, identity()?)?,
@@ -600,20 +671,15 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
             },
             diagnostic_bytes: Cell::new(0),
             force_reference_node: None,
+            retirement_fault: None,
         };
-        for storage in &mut session.storage {
-            storage.reset();
-        }
+        session.storage.initialize();
         check_budget(session.owned_bytes(), available)?;
         Ok(session)
     }
     pub fn owned_bytes(&self) -> usize {
         size_of::<Self>()
-            + self
-                .storage
-                .iter()
-                .map(|s| s.bytes() - size_of::<LayerStorage>())
-                .sum::<usize>()
+            + self.storage.payload_bytes()
             + self
                 .caches
                 .iter()
@@ -717,7 +783,7 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
         prefix: &[u32],
         mode: OutputRows,
         cancel: &AtomicBool,
-    ) -> Result<GraphFrame> {
+    ) -> Result<(GraphFrame, usize)> {
         if self.busy
             || self.poisoned
             || cancel.load(Ordering::Acquire)
@@ -768,16 +834,25 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
         };
         for node in 0..3 {
             self.graph
-                .layer_recipe(&self.storage, &self.caches, &frame, node, false)?
+                .layer_recipe(
+                    &self.storage,
+                    (&self.entry, &self.entry_regions),
+                    &self.caches,
+                    &frame,
+                    node,
+                    false,
+                )?
                 .preflight(command)?;
         }
-        Ok(frame)
+        self.storage
+            .preflight_fault(self.graph, command, self.retirement_fault)?;
+        let descriptor_bytes = self.storage.preflight(self.graph, command, &frame)?;
+        Ok((frame, descriptor_bytes))
     }
     fn validate_storage(&self) -> Result<()> {
         let gpu = &self.graph.context.0.gpu;
-        for (s, p) in self.storage.iter().zip(&self.graph.plans) {
-            s.validate(gpu, p.layout)?;
-        }
+        self.storage
+            .validate(gpu, self.graph.plans.each_ref().map(|p| p.layout))?;
         self.caches[0].validate(gpu, 256, 512, Some(512))?;
         self.caches[1].validate(gpu, 512, self.graph.options.capacity, None)?;
         validate_storage(
@@ -801,14 +876,24 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
         self.epoch = frame.epoch;
         self.diagnostic_bytes.set(0);
         self.entry.with_mut(|s| s.fill(SENTINEL));
-        for node in &mut self.storage {
-            node.reset();
-        }
+        let storage_writes = self
+            .storage
+            .reset(self.graph.plans.each_ref().map(|p| p.layout), frame);
         self.metrics = Metrics {
             epoch: frame.epoch,
             command_identity: std::ptr::from_ref(command).cast::<()>() as usize,
             candidate_gpu_timing_unavailable_reason: Some(timing::NOT_OBSERVED),
             encoded_dispatches: Some(0),
+            pool_audit_dispatches: Some(0),
+            pooled_storage: self.storage.pooled(),
+            stage_write_span_bytes: self.entry.len * 4 + storage_writes,
+            shared_pool_audit_pipeline_metadata_bytes: self
+                .graph
+                .pipelines
+                .residual
+                .pool_audit
+                .as_ref()
+                .map_or(0, |p| p.metadata_bytes()),
             reference_commands: Some(0),
             reference_waits: Some(0),
             reference_input_bytes: Some(0),
@@ -836,8 +921,9 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
         mode: OutputRows,
         cancel: &AtomicBool,
     ) -> Result<GraphTransaction<'s, 'g, 'w>> {
+        let evaluation_start = Instant::now();
         let command = self.graph.context.0.gpu.command()?;
-        let frame = self.frame(&command, prefix, mode, cancel)?;
+        let (frame, descriptor_bytes) = self.frame(&command, prefix, mode, cancel)?;
         let inputs = [hidden, ple[0], ple[1], ple[2]];
         for (i, input) in inputs.iter().enumerate() {
             if input.len() != frame.rows * if i == 0 { H } else { P }
@@ -848,7 +934,9 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
                 ));
             }
         }
+        let stage_start = Instant::now();
         self.stage(&frame, true, &command);
+        self.metrics.pool_descriptor_preflight_bytes = descriptor_bytes;
         self.entry.with_mut(|words| {
             for (i, input) in inputs.into_iter().enumerate() {
                 let region = self.entry_regions[i];
@@ -860,10 +948,12 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
                 }
             }
         });
+        self.metrics.stage_seconds = stage_start.elapsed().as_secs_f64();
         Ok(GraphTransaction {
             session: self,
             command,
             frame,
+            evaluation_start,
             encoding_started: false,
             encoded: false,
             validated: false,
@@ -881,7 +971,8 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
         mode: OutputRows,
         cancel: &AtomicBool,
     ) -> Result<GraphTransaction<'s, 'g, 'w>> {
-        let frame = self.frame(command, prefix, mode, cancel)?;
+        let evaluation_start = Instant::now();
+        let (frame, descriptor_bytes) = self.frame(command, prefix, mode, cancel)?;
         for (i, &input) in inputs.iter().enumerate() {
             let width = if i == 0 { H } else { P };
             if input.len != frame.rows * width
@@ -904,21 +995,20 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
                 )
             };
             check(&self.entry)?;
-            for storage in &self.storage {
-                for b in storage.buffers() {
-                    check(b)?;
-                }
-            }
+            self.storage.visit_buffers(&check)?;
             for cache in &self.caches {
                 check(&cache.k)?;
                 check(&cache.v)?;
             }
         }
+        let stage_start = Instant::now();
         self.stage(&frame, false, command);
+        self.metrics.pool_descriptor_preflight_bytes = descriptor_bytes;
         let mut tx = GraphTransaction {
             session: self,
             command: command.clone(),
             frame,
+            evaluation_start,
             encoding_started: false,
             encoded: false,
             validated: false,
@@ -928,6 +1018,7 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
             rms_snapshot: [[0; MAX_RMS_REASONS]; 3],
         };
         tx.copy_external_checkpoint()?;
+        tx.session.metrics.stage_seconds = stage_start.elapsed().as_secs_f64();
         Ok(tx)
     }
     fn validate_frame(&self, frame: &GraphFrame) -> Result<()> {
@@ -965,6 +1056,11 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
         self.graph.table.check_completed_guards(command)?;
         let mut bytes = 0;
         let mut valid = true;
+        self.storage.audit_integrity(
+            self.graph.plans.each_ref().map(|p| p.layout),
+            frame,
+            &mut bytes,
+        )?;
         self.entry.with_slice(|s| {
             valid &= sentinel(&s[..GUARD], &mut bytes);
             for (i, r) in self.entry_regions.iter().enumerate() {
@@ -973,9 +1069,10 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
             }
         });
         for node in 0..3 {
-            valid &= self.storage[node].guards(
+            valid &= self.storage.guards_node(
                 self.graph.plans[node].layout,
                 frame.nodes[node],
+                node,
                 &mut bytes,
             );
             self.graph.norms[node].with_slice(|s| {
@@ -1013,14 +1110,15 @@ impl<'g, 'w> ResidentSession<'g, 'w> {
     }
     fn finite(&mut self, frame: &GraphFrame) -> Result<()> {
         let mut bytes = 0;
-        let mut finite = true;
-        for node in 0..3 {
-            finite &= self.storage[node].finite(
-                self.graph.plans[node].layout,
-                frame.nodes[node],
-                &mut bytes,
-            );
-        }
+        let finite = self.storage.finite(
+            pool::View {
+                entry: &self.entry,
+                entry_regions: &self.entry_regions,
+                layouts: self.graph.plans.each_ref().map(|p| p.layout),
+                frame,
+            },
+            &mut bytes,
+        )?;
         self.metrics.validation_span_bytes += bytes;
         if !finite {
             return Err(Error::Nonfinite);
@@ -1124,6 +1222,7 @@ pub(super) struct GraphTransaction<'s, 'g, 'w> {
     session: &'s mut ResidentSession<'g, 'w>,
     command: Retained<ProtocolObject<dyn MTLCommandBuffer>>,
     frame: GraphFrame,
+    evaluation_start: Instant,
     encoding_started: bool,
     encoded: bool,
     validated: bool,
@@ -1162,6 +1261,50 @@ impl GraphTransaction<'_, '_, '_> {
         Ok(())
     }
     fn copy_node_inputs(&mut self, node: usize) -> Result<()> {
+        if self.session.storage.pooled() {
+            let f = self.frame.nodes[node];
+            let layouts = self.session.graph.plans.each_ref().map(|p| p.layout);
+            let target = self
+                .session
+                .storage
+                .range(
+                    pool::View {
+                        entry: &self.session.entry,
+                        entry_regions: &self.session.entry_regions,
+                        layouts,
+                        frame: &self.frame,
+                    },
+                    node,
+                    State::PleInput,
+                )?
+                .ok_or(Error::Options("pool PLE input absent"))?;
+            let dropped = if node == 2 && self.frame.mode == OutputRows::Last {
+                self.frame.rows - 1
+            } else {
+                0
+            };
+            let source = self.session.entry_regions[node + 1];
+            let encoder = self
+                .command
+                .blitCommandEncoder()
+                .ok_or_else(|| Error::Native("pool PLE blit encoder absent".into()))?;
+            // SAFETY: all-node recipe preflight proved exact tracked disjoint
+            // ranges. Immutable entry and persistent previous Output remain
+            // live; Last narrows only the consumer query/PLE rows.
+            unsafe {
+                encoder.copyFromBuffer_sourceOffset_toBuffer_destinationOffset_size(
+                    &self.session.entry.raw,
+                    (source.start + dropped * P) * 4,
+                    target.raw,
+                    target.offset * 4,
+                    target.len * 4,
+                );
+            }
+            encoder.endEncoding();
+            self.session.metrics.blit_copies += 1;
+            self.session.metrics.device_checkpoint_copy_bytes += f.rows * P * 4;
+            return Ok(());
+        }
         let f = self.frame.nodes[node];
         let plan = &self.session.graph.plans[node];
         let (raw, offset) = if node == 0 {
@@ -1178,7 +1321,7 @@ impl GraphTransaction<'_, '_, '_> {
                 0
             };
             (
-                &*self.session.storage[node - 1].arena.raw,
+                &*self.session.storage.separate()?[node - 1].arena.raw,
                 r.start + dropped * H,
             )
         };
@@ -1200,14 +1343,14 @@ impl GraphTransaction<'_, '_, '_> {
             encoder.copyFromBuffer_sourceOffset_toBuffer_destinationOffset_size(
                 raw,
                 offset * 4,
-                &self.session.storage[node].arena.raw,
+                &self.session.storage.separate()?[node].arena.raw,
                 plan.layout.region(State::Hidden).start * 4,
                 f.rows * H * 4,
             );
             encoder.copyFromBuffer_sourceOffset_toBuffer_destinationOffset_size(
                 &self.session.entry.raw,
                 (ple.start + dropped * P) * 4,
-                &self.session.storage[node].arena.raw,
+                &self.session.storage.separate()?[node].arena.raw,
                 plan.layout.region(State::PleInput).start * 4,
                 f.rows * P * 4,
             );
@@ -1227,6 +1370,7 @@ impl GraphTransaction<'_, '_, '_> {
                 .graph
                 .layer_recipe(
                     &self.session.storage,
+                    (&self.session.entry, &self.session.entry_regions),
                     &self.session.caches,
                     &self.frame,
                     node,
@@ -1234,12 +1378,22 @@ impl GraphTransaction<'_, '_, '_> {
                 )?
                 .preflight(&self.command)?;
         }
+        self.session.metrics.pool_descriptor_preflight_bytes +=
+            self.session
+                .storage
+                .preflight(self.session.graph, &self.command, &self.frame)?;
+        self.session.storage.preflight_fault(
+            self.session.graph,
+            &self.command,
+            self.session.retirement_fault,
+        )?;
         self.encoding_started = true;
         let start = Instant::now();
         for node in 0..3 {
             self.copy_node_inputs(node)?;
             let operation = self.session.graph.layer_recipe(
                 &self.session.storage,
+                (&self.session.entry, &self.session.entry_regions),
                 &self.session.caches,
                 &self.frame,
                 node,
@@ -1252,6 +1406,60 @@ impl GraphTransaction<'_, '_, '_> {
                 .metrics
                 .record_recipe_encoding(&result, count, unknown);
             result?;
+            if self.session.storage.pooled() {
+                if let Err(error) = self.session.storage.encode_fault(
+                    self.session.graph,
+                    &self.command,
+                    self.session.retirement_fault,
+                    node,
+                ) {
+                    self.session.metrics.encoded_dispatches = None;
+                    return Err(error);
+                }
+                if self
+                    .session
+                    .retirement_fault
+                    .is_some_and(|fault| fault.node == node)
+                {
+                    self.session.metrics.pool_test_fault_blit_fills += 1;
+                    self.session.metrics.pool_test_fault_fill_span_bytes += 4;
+                }
+                let diagnostic = self.session.storage.copy_retired(
+                    self.session.graph,
+                    &self.command,
+                    &self.frame,
+                    node,
+                );
+                if diagnostic.is_err() {
+                    self.session.metrics.encoded_dispatches = None;
+                }
+                let (copies, bytes) = diagnostic?;
+                self.session.metrics.pool_diagnostic_blit_copies += copies;
+                self.session.metrics.blit_copies += copies;
+                self.session.metrics.pool_diagnostic_copy_bytes += bytes;
+                let audit =
+                    self.session
+                        .storage
+                        .encode_retirement(self.session.graph, &self.command, node);
+                let status = audit
+                    .as_ref()
+                    .map(|_| ())
+                    .map_err(|_| Error::Options("pool audit encode failed"));
+                self.session
+                    .metrics
+                    .record_recipe_encoding(&status, 1, false);
+                self.session.metrics.pool_audit_dispatches = if audit.is_err() {
+                    None
+                } else {
+                    self.session.metrics.pool_audit_dispatches.map(|n| n + 1)
+                };
+                audit?;
+                let span = self.session.storage.pool_words() * 4;
+                self.session.metrics.pool_audit_read_span_bytes += span;
+                if node < 2 {
+                    self.session.metrics.pool_audit_fill_span_bytes += span;
+                }
+            }
         }
         self.session.metrics.encode_seconds = start.elapsed().as_secs_f64();
         self.session.metrics.encoding_complete = true;
@@ -1305,15 +1513,22 @@ impl GraphTransaction<'_, '_, '_> {
         {
             return Err(Error::Completion);
         }
-        let layout = self.session.graph.plans[node].layout;
-        let r = layout.region(state);
-        let n = layout.active(state, self.frame.nodes[node]);
+        let layouts = self.session.graph.plans.each_ref().map(|p| p.layout);
+        let n = layouts[node].active(state, self.frame.nodes[node]);
         self.session
             .diagnostic_bytes
             .set(self.session.diagnostic_bytes.get() + n * 4);
-        Ok(self.session.storage[node]
-            .arena
-            .with_slice(|s| read(&s[r.start..r.start + n])))
+        self.session.storage.with_state(
+            pool::View {
+                entry: &self.session.entry,
+                entry_regions: &self.session.entry_regions,
+                layouts,
+                frame: &self.frame,
+            },
+            node,
+            state,
+            read,
+        )
     }
 }
 impl<'s, 'g, 'w> GraphTransaction<'s, 'g, 'w> {
@@ -1329,15 +1544,17 @@ impl<'s, 'g, 'w> GraphTransaction<'s, 'g, 'w> {
         self.session.guards(&self.frame, &self.command)?;
         // Global contracts/proof integrity precede ANY early replay decision.
         for node in 0..3 {
-            self.session.storage[node].status.with_slice(|s| {
+            self.session.storage.status(node).with_slice(|s| {
                 self.status_snapshot[node].copy_from_slice(&s[..STATUS_WORDS]);
             });
-            self.session.metrics.validation_span_bytes += self.session.storage[node].snapshot_rms(
+            self.session.metrics.validation_span_bytes += self.session.storage.snapshot_rms(
                 self.session.graph.plans[node].layout,
                 self.frame.nodes[node],
+                node,
                 &mut self.rms_snapshot[node],
             )?;
         }
+        self.session.metrics.validation_span_bytes += self.session.storage.snapshot_audits();
         let replay = chain_status_decision(&self.status_snapshot)?;
         if let Some((node, reason)) = replay {
             self.session.metrics.replay_count = 1;
@@ -1370,10 +1587,18 @@ impl<'s, 'g, 'w> GraphTransaction<'s, 'g, 'w> {
                 .then_some(session.reference.readback_bytes);
             session.metrics.checkpoint_readback_bytes = session.reference.checkpoint_bytes;
             result?;
-            session.metrics.reference_upload_bytes =
-                session
+            if session.storage.pooled() {
+                session.metrics.validation_span_bytes += session
                     .reference
-                    .upload(session.graph, &mut session.storage, &self.frame);
+                    .validate_finite(session.graph, &self.frame)?;
+            }
+            let (upload, reset, diagnostic) =
+                session
+                    .storage
+                    .upload_reference(&session.reference, session.graph, &self.frame);
+            session.metrics.reference_upload_bytes = upload;
+            session.metrics.pool_reference_reset_bytes = reset;
+            session.metrics.pool_diagnostic_upload_bytes = diagnostic;
             session.guards(&self.frame, &self.command)?;
         }
         self.session.finite(&self.frame)?;
@@ -1409,22 +1634,30 @@ impl CompletedGraph<'_, '_, '_> {
         e.session.validate_frame(&e.frame)?;
         e.session.guards(&e.frame, &e.command)?;
         for node in 0..3 {
-            let unchanged = e.session.storage[node]
-                .status
+            let unchanged = e
+                .session
+                .storage
+                .status(node)
                 .with_slice(|s| s[..STATUS_WORDS] == e.status_snapshot[node]);
             if !unchanged {
                 return Err(Error::Options("chain status changed after validation"));
             }
             chain_audit_status_words(&e.status_snapshot[node], node == 2)?;
             let mut current = [0; MAX_RMS_REASONS];
-            e.session.metrics.validation_span_bytes += e.session.storage[node].snapshot_rms(
+            e.session.metrics.validation_span_bytes += e.session.storage.snapshot_rms(
                 e.session.graph.plans[node].layout,
                 e.frame.nodes[node],
+                node,
                 &mut current,
             )?;
             if current != e.rms_snapshot[node] {
                 return Err(Error::Options("chain RMS reasons changed after validation"));
             }
+        }
+        if !e.session.storage.unchanged_audits() {
+            return Err(Error::Options(
+                "pool audit receipts changed after validation",
+            ));
         }
         e.session.finite(&e.frame)?;
         let runs = [
@@ -1448,33 +1681,52 @@ impl CompletedGraph<'_, '_, '_> {
             e.session.poisoned = false;
             return Err(Error::Options("chain canceled before publication"));
         }
+        let layouts = e.session.graph.plans.each_ref().map(|p| p.layout);
+        let k = [
+            e.session
+                .storage
+                .live_state(layouts[0], e.frame.nodes[0], 0, State::KProposal)?,
+            e.session
+                .storage
+                .live_state(layouts[1], e.frame.nodes[1], 1, State::KProposal)?,
+        ];
+        let v = [
+            e.session
+                .storage
+                .live_state(layouts[0], e.frame.nodes[0], 0, State::VProposal)?,
+            e.session
+                .storage
+                .live_state(layouts[1], e.frame.nodes[1], 1, State::VProposal)?,
+        ];
+        let (out_buffer, out) =
+            e.session
+                .storage
+                .live_state(layouts[2], e.frame.nodes[2], 2, State::Output)?;
         // Every fallible operation has completed. Exclusive session borrowing
         // excludes reset/other commits; cancellation is observed next boundary.
         for (node, runs) in runs.iter().enumerate() {
             let d = e.session.caches[node].d;
-            let layout = e.session.graph.plans[node].layout;
-            let k = layout.region(State::KProposal);
-            let v = layout.region(State::VProposal);
             let cache = &mut e.session.caches[node];
-            e.session.storage[node].arena.with_slice(|s| {
+            k[node].0.with_slice(|s| {
                 cache.k.with_mut(|dst| {
                     for run in *runs {
                         let n = run.rows * d;
-                        let start = k.start + run.source_row * d;
+                        let start = k[node].1.start + run.source_row * d;
                         dst[run.slot * d..run.slot * d + n].copy_from_slice(&s[start..start + n]);
                     }
-                });
+                })
+            });
+            v[node].0.with_slice(|s| {
                 cache.v.with_mut(|dst| {
                     for run in *runs {
                         let n = run.rows * d;
-                        let start = v.start + run.source_row * d;
+                        let start = v[node].1.start + run.source_row * d;
                         dst[run.slot * d..run.slot * d + n].copy_from_slice(&s[start..start + n]);
                     }
-                });
+                })
             });
         }
-        let out = e.session.graph.plans[2].layout.region(State::Output);
-        e.session.storage[2].arena.with_slice(|s| {
+        out_buffer.with_slice(|s| {
             for (dst, &word) in e.session.published[..count]
                 .iter_mut()
                 .zip(&s[out.start..out.start + count])
@@ -1495,6 +1747,8 @@ impl CompletedGraph<'_, '_, '_> {
         e.session.metrics.new_kv_copy_bytes = e.frame.rows * (256 + 512) * 8;
         e.session.metrics.output_copy_bytes = count * 4 * (1 + usize::from(output.is_some()));
         e.session.metrics.publication_seconds = start.elapsed().as_secs_f64();
+        e.session.metrics.whole_evaluation_seconds =
+            Some(e.evaluation_start.elapsed().as_secs_f64());
         e.session.poisoned = false;
         e.published = true;
         Ok(e.session.observed_metrics())

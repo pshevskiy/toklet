@@ -16,6 +16,9 @@ use objc2_foundation::NSString;
 use objc2_metal::*;
 use std::{mem::size_of, ptr::NonNull};
 
+#[cfg(test)]
+pub(super) mod pool_audit;
+
 const MAX_VALUES: usize = 32 * 1536;
 const FATAL: u32 = 1;
 const REPLAY: u32 = 2;
@@ -24,6 +27,8 @@ pub(super) struct Pipelines {
     device: Retained<ProtocolObject<dyn MTLDevice>>,
     pipelines: [Retained<ProtocolObject<dyn MTLComputePipelineState>>; 2],
     widths: [usize; 2],
+    #[cfg(test)]
+    pub(super) pool_audit: Option<pool_audit::Pipeline>,
 }
 #[derive(Debug, PartialEq, Eq)]
 pub(super) enum Decision {
@@ -64,53 +69,71 @@ fn geometry(count: usize, output: usize, status: usize, width: usize) -> Result<
 impl Pipelines {
     pub(super) fn new(gpu: &Gpu) -> Result<Self> {
         autoreleasepool(|_| {
-            let options = MTLCompileOptions::new();
-            options.setLanguageVersion(MTLLanguageVersion::Version2_3);
-            options.setMathMode(MTLMathMode::Safe);
-            options.setMathFloatingPointFunctions(MTLMathFloatingPointFunctions::Precise);
-            if options.languageVersion() != MTLLanguageVersion::Version2_3
-                || options.mathMode() != MTLMathMode::Safe
-                || options.mathFloatingPointFunctions() != MTLMathFloatingPointFunctions::Precise
+            let library = Self::library(gpu, include_str!("gemma_residual.metal"))?;
+            Self::from_library(gpu, &library)
+        })
+    }
+    #[cfg(test)]
+    pub(super) fn new_for_pool(gpu: &Gpu) -> Result<Self> {
+        autoreleasepool(|_| {
+            let source = concat!(
+                include_str!("gemma_residual.metal"),
+                "\n",
+                include_str!("gemma_residual/pool_audit.metal")
+            );
+            let library = Self::library(gpu, source)?;
+            let mut result = Self::from_library(gpu, &library)?;
+            result.pool_audit = Some(pool_audit::Pipeline::new(gpu, &library)?);
+            Ok(result)
+        })
+    }
+    fn library(gpu: &Gpu, source: &str) -> Result<Retained<ProtocolObject<dyn MTLLibrary>>> {
+        let options = MTLCompileOptions::new();
+        options.setLanguageVersion(MTLLanguageVersion::Version2_3);
+        options.setMathMode(MTLMathMode::Safe);
+        options.setMathFloatingPointFunctions(MTLMathFloatingPointFunctions::Precise);
+        if options.languageVersion() != MTLLanguageVersion::Version2_3
+            || options.mathMode() != MTLMathMode::Safe
+            || options.mathFloatingPointFunctions() != MTLMathFloatingPointFunctions::Precise
+        {
+            return Err(Error::Unsupported(
+                "Gemma FP32 residual precise policy unavailable",
+            ));
+        }
+        let library = gpu
+            .device
+            .newLibraryWithSource_options_error(&NSString::from_str(source), Some(&options))
+            .map_err(|e| Error::Native(e.to_string()))?;
+        Ok(library)
+    }
+    fn from_library(gpu: &Gpu, library: &ProtocolObject<dyn MTLLibrary>) -> Result<Self> {
+        let compile = |name| {
+            let function = library
+                .newFunctionWithName(&NSString::from_str(name))
+                .ok_or_else(|| Error::Native("Gemma FP32 residual kernel absent".into()))?;
+            gpu.device
+                .newComputePipelineStateWithFunction_error(&function)
+                .map_err(|e| Error::Native(e.to_string()))
+        };
+        let pipelines = [
+            compile("gemma_fp32_residual_add")?,
+            compile("gemma_fp32_scalar_multiply")?,
+        ];
+        let widths = pipelines.each_ref().map(|p| p.threadExecutionWidth());
+        for (p, &width) in pipelines.iter().zip(&widths) {
+            if width == 0 || width > p.maxTotalThreadsPerThreadgroup() || width > u16::MAX as usize
             {
                 return Err(Error::Unsupported(
-                    "Gemma FP32 residual precise policy unavailable",
+                    "Gemma FP32 residual launch width unavailable",
                 ));
             }
-            let library = gpu
-                .device
-                .newLibraryWithSource_options_error(
-                    &NSString::from_str(include_str!("gemma_residual.metal")),
-                    Some(&options),
-                )
-                .map_err(|e| Error::Native(e.to_string()))?;
-            let compile = |name| {
-                let function = library
-                    .newFunctionWithName(&NSString::from_str(name))
-                    .ok_or_else(|| Error::Native("Gemma FP32 residual kernel absent".into()))?;
-                gpu.device
-                    .newComputePipelineStateWithFunction_error(&function)
-                    .map_err(|e| Error::Native(e.to_string()))
-            };
-            let pipelines = [
-                compile("gemma_fp32_residual_add")?,
-                compile("gemma_fp32_scalar_multiply")?,
-            ];
-            let widths = pipelines.each_ref().map(|p| p.threadExecutionWidth());
-            for (p, &width) in pipelines.iter().zip(&widths) {
-                if width == 0
-                    || width > p.maxTotalThreadsPerThreadgroup()
-                    || width > u16::MAX as usize
-                {
-                    return Err(Error::Unsupported(
-                        "Gemma FP32 residual launch width unavailable",
-                    ));
-                }
-            }
-            Ok(Self {
-                device: gpu.device.clone(),
-                pipelines,
-                widths,
-            })
+        }
+        Ok(Self {
+            device: gpu.device.clone(),
+            pipelines,
+            widths,
+            #[cfg(test)]
+            pool_audit: None,
         })
     }
 

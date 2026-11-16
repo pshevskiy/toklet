@@ -452,6 +452,29 @@ impl Runner {
         }
         Ok(())
     }
+    /// Pool replay validates all old logical states before discarding retired
+    /// candidate-finite receipts. Arithmetic/order and the replay owner stay unchanged.
+    pub fn validate_finite(&self, graph: &ResidentGraph<'_>, frame: &GraphFrame) -> Result<usize> {
+        let mut valid = true;
+        let mut bytes = 0;
+        for (node, plan) in graph.plans.iter().enumerate() {
+            for state in STATES {
+                let n = plan.layout.active(state, frame.nodes[node]);
+                let values = self.states[node][state as usize]
+                    .get(..n)
+                    .ok_or(Error::Options("chain reference active extent differs"))?;
+                for value in values {
+                    valid &= value.is_finite();
+                }
+                bytes += n * 4;
+            }
+        }
+        if valid {
+            Ok(bytes)
+        } else {
+            Err(Error::Nonfinite)
+        }
+    }
     pub fn upload(
         &self,
         graph: &ResidentGraph<'_>,

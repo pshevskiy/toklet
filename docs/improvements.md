@@ -108,11 +108,27 @@ engine change with both findings resolved.
 [Publication/source/CI](../artifacts/mlx-gpu-gap-2026-11-15/g2-deep-chain-publication-1.json).
 [Artifact review](../artifacts/mlx-gpu-gap-2026-11-15/astra-gelu-core-review-1/verdict.json),
 [current engine checks](../artifacts/mlx-gpu-gap-2026-11-15/g2-deep-chain-progress-1.json).
-The common-Q4 owner/CLI passes release/lint, 850 CPU/1,041 Metal tests, actual
-state/59 codec cases, projection readers and CLI diagnostics. Both legacy BF16
-policies retain golden tokens/schema. Full quality, final Astra review and
-adoption remain open; these functional checks establish no speed/overhead win.
-[Q4 checks](../artifacts/mlx-gpu-gap-2026-11-15/g0-common-q4-progress-1.json).
+The combined common-Q4 source5 owner/CLI passes release/lint, 1,051 Metal tests,
+state/59 codec cases and CLI diagnostics; 850 CPU tests reuse 4,015 exact inputs.
+Fresh original 10,000-target loss and independent full-vocabulary anchors pass
+under 6 GiB; 100 tasks/replay/grade, stock precision and final engine review remain.
+[Full-loss result](../artifacts/mlx-gpu-gap-2026-11-15/g0-common-q4-full-loss-analysis-prep-1/loss-result.json).
+
+Pooled scratch source3 passes all new GPU numerical/lifecycle/warm/resident checks.
+Old regressions and required fmt/strict Clippy, 1,047 Metal tests/release pass;
+847 unchanged CPU tests are reused. Astra approves scoped code retention with
+no required fixes. [Scope](gemma-gpu-pool.md). A disk-floor interruption is
+retained and 8.16 GB owned compiler cache reclaimed without deleting evidence.
+[Hardware summary](../artifacts/mlx-gpu-gap-2026-11-15/g2-scratch-pool-hardware-summary-1.json),
+[continuation](../artifacts/mlx-gpu-gap-2026-11-15/g2-scratch-pool-final-prep-1/continuation-handoff-v1.json).
+
+The two-phase RMS scheduling experiment passes 336 cases with exact current-kernel
+bit/status/reason parity and the original scalar gates. Two reversed aggregate
+runs lower 22-norm GPU medians from 147.73/149.12 to 37.93/37.77 ms prefill and
+131.67/131.43 to 38.08/37.50 ms decode. Astra approves artifact retention with no required fixes. Graph
+integration, full quality/request speed, overhead and external wins remain open.
+[Combined artifact evidence](../artifacts/mlx-gpu-gap-2026-11-15/g2-rms-two-phase-artifact-review-checks-1.json),
+[Astra approval](../artifacts/mlx-gpu-gap-2026-11-15/astra-rms-two-phase-artifact-review-1/verdict.json).
 
 The [LFM3 external request observations](lfm3-engine-comparison.md) record
 78 requests across two 3+10 cohorts per engine, with preserved raw observations,
