@@ -1,7 +1,7 @@
 # Beat the MLX GPU baselines
 
-Updated 15 November 2026. Status: **active goal; G1 delivered, G2 workspace
-implemented and reviewed**. The [cost map](gemma-current-cost-map.md) identifies
+Updated 16 November 2026. Status: **active goal; G1 and bounded G2 producer
+pilot delivered; bounded three-layer numerical/state and required checks pass, Astra approves**. The [cost map](gemma-current-cost-map.md) identifies
 CPU attention and completion waits as the next targets. The
 [reusable attention building block](gemma-gpu-attention.md) prepares shared-buffer
 block composition; [Apple hardware priorities](apple-silicon-gpu-goal.md) focus on
@@ -34,6 +34,63 @@ overflow/errors, and no extra GPU submissions, waits or numerical allocations.
 The 6 GiB engine ceiling includes weights, KV, scratch, codec, telemetry,
 temporary resources and the existing helper reserve. Memory saving is a
 separate measured claim, not a requirement inferred from faster execution.
+
+## Apple Silicon execution sequence
+
+Prioritize the GPU and shared physical owners on the measured M1 Pro. First
+qualify the coupled local/global/shared-KV chain; then move the complete Gemma
+execution into the ordinary CLI with one checked publication boundary per
+chunk/token. Keep immutable weights, committed KV, private proposals and scratch
+resident, pass checked buffer ranges between encoders, and count actual commands,
+waits and host bytes rather than treating shared memory as automatic zero-copy.
+
+Use reusable layer pools before extending the diagnostic layout to all 35
+layers. Static accounting finds 1,101,144,264 bytes for 35 separate layer arenas
+and CPU state shadows, excluding weights, committed KV and graph I/O. Proposed
+separate one-row and 32-row pools use 843,440 and 26,778,288 bytes; proposals, KV,
+transaction receipts and bounded CPU replay storage remain additional owners.
+These are source-derived allocation estimates, not measured memory savings.
+Audit each node on the GPU before its storage is overwritten, retain persistent
+per-node fault receipts, and publish both donor caches only after all checks.
+Reusing storage must preserve the original numerical, guard and failure gates.
+[Reproducible pool/layout research](../artifacts/mlx-gpu-gap-2026-11-15/astra-resident-scratch-reuse-research-1.md).
+
+Before extending the full graph, screen the 22 actual RMS operations with
+authenticated own-input arrays and unchanged shaders. Record repeated completed
+GPU time and the same-input CPU oracle; an isolated norm aggregate cannot
+establish a chain cost share.
+[RMS timing experiment](../artifacts/mlx-gpu-gap-2026-11-15/astra-source8-rms-timing-research-1.md).
+
+After full-graph correctness, profile the resident request again. Select prefill
+weight reuse, GPU output selection or further fusion from that measurement;
+retain each only when it improves completed requests at the original bounds.
+Record CPU encode/validation time, completed GPU time, dispatch/command/wait
+counts, host staging/readback bytes and physical owner sizes separately. Export
+summaries outside timed numerical work and rerun the unchanged overhead campaign.
+
+Neural Engine experiments remain conditional on actual public-API placement,
+qualified precision and a measured benefit after conversion and CPU/GPU crossings.
+FP32 graph residency on Metal is the immediate path; do not infer ANE execution
+from a compute-unit setting or successful Core ML compilation.
+
+Keep the current numerical repair bounded: native one-key replay identifies
+GELU table interpolation independently of attention. Preserve the approved parent
+table/proof and evaluate one finer high-curvature core before composing more
+layers. The selected refinement appends 90,114 bins (2,162,736 bytes) over
+the symmetric core; unchanged outside coverage is inherited with an explicit
+composition proof. Native/core target validation, four independent raw readers and all corruption
+controls pass. Astra approves the artifact composition; source8 integration,
+eight-cell coupled/state validation and required checks pass. Astra approves
+the bounded combined engine change, including the failure-count correction.
+[Publication/source/CI](../artifacts/mlx-gpu-gap-2026-11-15/g2-deep-chain-publication-1.json).
+[Core review/checks](../artifacts/mlx-gpu-gap-2026-11-15/astra-gelu-core-review-1/verdict.json),
+[frozen selection](../artifacts/mlx-gpu-gap-2026-11-15/astra-gelu-core-refinement-research-1.md).
+A Mac hostname change affects provenance text, not the mathematical platform;
+keep kernel/OS/compiler/device checks and original sealed material.
+[Native evidence](../artifacts/mlx-gpu-gap-2026-11-15/g2-deep-native-reader-progress-1.json),
+[actual host binding](../artifacts/mlx-gpu-gap-2026-11-15/g2-deep-native-host-binding-2.json).
+
+[Hardware/API constraints](apple-silicon-gpu-goal.md#neural-engine-feasibility).
 
 ## What currently explains the gap
 
@@ -136,6 +193,34 @@ Q4 and label the difference an engine win. LFM3's existing shared BF16 source
 fits both external engines, but its GPU execution must still qualify in Toklet.
 No Qwen variant hunt is reopened.
 
+The common precision candidate stores exactly widened FP32 scale/bias/vector
+values from the same BF16-source affine4 quantizer, with unchanged U32 codes.
+The actual conversion and independent normal/optimized validators pass for both
+external-compatible views, with identical active component bytes. Conversion
+peaks at 311,705,600 observed bytes including helper; this does not qualify
+runtime model memory, quality or speed. [Conversion and validation](../artifacts/mlx-gpu-gap-2026-11-15/g0-q4-full-progress-1.json).
+
+Toklet's independently authenticated third disk view uses its existing strict
+U32/BF16 format. Conversion and both independent validators pass 723,455,267
+code/value words; the observed conversion peak is 112,197,632 bytes including
+helper. [Third-view checks](../artifacts/mlx-gpu-gap-2026-11-15/g0-third-view-progress-1.json). Integer stripping of the zero low bits recovers every
+canonical BF16 component; codes, tokenizer and exact decoded FP32 values must
+match the external views. Toklet's stored bytes/dtypes differ losslessly, so the
+three-engine identity proof is canonical component digests plus decoded values,
+not identical container bytes. This prospective protocol is frozen before any
+acceptance samples; earlier incomparable timings remain incomparable. No new
+runtime F32 format API is needed. An explicit common-Q4 owner/CLI selection and
+full original quality/state/precision qualification remain required.
+[Third-view and CLI recipe](../artifacts/mlx-gpu-gap-2026-11-15/astra-third-view-q4-cli-integration-research-1.md).
+
+The bounded stock reload probe passes component and 46-parameter tiny Gemma
+loader/forward/KV checks; independent readers verify 4,608 reconstructions and
+15 corruption controls. This proves synthetic saved-dtype behavior only;
+full-model and actual Ollama/vLLM worker precision evidence remains required.
+[Tiny proof](../artifacts/mlx-gpu-gap-2026-11-15/g0-stored-fp32-reader-progress-1.json).
+Full original numerical, quality/state and 6 GiB gates still apply.
+[Stored-FP32 research](../artifacts/mlx-gpu-gap-2026-11-15/astra-common-q4-stored-fp32-research-1.md).
+
 Freeze these cells before collecting candidate acceptance data:
 
 - Gemma: reset 15/8 short case with explicit stopping, fixed 128/128 and
@@ -149,6 +234,25 @@ Freeze these cells before collecting candidate acceptance data:
 - For ordinary generation, freeze raw-text/template mode, greedy/stop policy,
   output cap and actual authoritative IDs/counts. Keep EOS/task-quality runs
   separate from fixed-work runs. No post-hoc prompt selection to obtain a match.
+
+
+For a prospective Gemma warm zero-reuse comparison, raw prompts may have
+predeclared distinct first token IDs across every retained prompt, including
+warmups. Freeze the complete prompt set and all three engines' identical
+per-sample input IDs/counts before any acceptance data. Verify actual stock
+input tokenization and cached-count zero; a mismatch or early stop leaves that
+cell unqualified, without prompt replacement or sample exclusion. Keep the
+15/8, 128/128 and 384/128 work and the original native reset/state cells. This
+cache-miss strategy does not flush the server or rescue historical fixed-prompt
+results; LFM3 requires its own cache/tokenizer qualification.
+
+Count-defined ordinary generation may use authoritative output counts and stop
+reason when sampled IDs are unavailable. Record missing IDs as null; never infer
+them from text re-tokenization. Explicit ID-dependent quality/state/teacher-force
+gates remain unchanged. Report hidden one-ahead work separately. Freeze public
+Done versus runner-EOF/cleanup clocks without mixing them, and do not infer
+allocated KV capacity from Ollama's soft num_ctx option. [Source/control limits](../artifacts/mlx-gpu-gap-2026-11-15/astra-ollama-work-cache-controls-research-1.md),
+[prospective zero-reuse/count-work clarification](../artifacts/mlx-gpu-gap-2026-11-15/astra-ollama-work-cache-controls-addendum-1.md).
 
 Use release binaries, exact source/runtime/model hashes, three warmups and ten
 measured samples for initial screening, independently repeated in reversed

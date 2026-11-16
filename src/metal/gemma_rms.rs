@@ -380,3 +380,6 @@ impl Rms<'_> {
 }
 #[cfg(test)]
 mod tests;
+
+#[cfg(test)]
+pub(super) mod precision;

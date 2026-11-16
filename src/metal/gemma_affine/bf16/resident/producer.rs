@@ -15,8 +15,11 @@ use std::{
     cell::Cell,
     sync::atomic::{AtomicBool, AtomicU64, Ordering},
 };
+#[cfg(test)]
+pub(super) mod chain;
 mod kv;
 mod layout;
+mod recipe;
 mod reference;
 pub(super) use kv::ProducerKv;
 pub(super) use layout::State;
@@ -164,6 +167,7 @@ impl<'a> ProducerBlock<'a> {
             return Err(Error::Options("producer foreign pipeline device"));
         }
         table.validate_device(&context.0.gpu)?;
+        pipelines.gelu.validate_table(table)?;
         let slots = source.bindings.producer_slots(layer)?;
         let d = slots.geometry.head_dim;
         if slots.geometry.kind
@@ -324,9 +328,6 @@ impl<'a> ProducerBlock<'a> {
     fn r(&self, s: State, f: &Frame) -> Result<BufferRange<'_>> {
         self.layout.range(&self.arena, s, f)
     }
-    fn s(&self, i: usize) -> Result<BufferRange<'_>> {
-        BufferRange::new(&self.status, i, 1)
-    }
     fn rope(&self, f: &Frame, heads: usize) -> cpu::ProportionalRotaryShape {
         cpu::ProportionalRotaryShape {
             tokens: f.rows,
@@ -337,171 +338,6 @@ impl<'a> ProducerBlock<'a> {
             base: if self.layer == 0 { 10000. } else { 1000000. },
             factor: 1.,
         }
-    }
-    fn rms(
-        &self,
-        c: &ProtocolObject<dyn MTLCommandBuffer>,
-        f: &Frame,
-        states: [State; 2],
-        norm: usize,
-        status: usize,
-        shape: [usize; 2],
-    ) -> Result<()> {
-        let [input, out] = states;
-        let [rows, width] = shape;
-        self.record(
-            self.pipelines.rms.encode(
-                c,
-                &rms::DeviceBuffers {
-                    input: self.r(input, f)?,
-                    weights: self.norm_regions[norm]
-                        .range(&self.norms, self.norm_regions[norm].len)?,
-                    output: self.r(out, f)?,
-                    status: self.s(status)?,
-                },
-                rows,
-                width,
-                1e-6,
-                norm != 7,
-            ),
-            1,
-        )
-    }
-    fn project(
-        &self,
-        c: &ProtocolObject<dyn MTLCommandBuffer>,
-        f: &Frame,
-        m: usize,
-        input: State,
-        out: State,
-        status: usize,
-    ) -> Result<()> {
-        self.record(
-            project::encode_bf16(
-                &self.context.0,
-                c,
-                self.tiles[m],
-                self.r(input, f)?,
-                self.r(out, f)?,
-                self.s(status)?,
-                f.rows,
-            ),
-            1,
-        )
-    }
-    fn admit(
-        &self,
-        c: &ProtocolObject<dyn MTLCommandBuffer>,
-        f: &Frame,
-        group: usize,
-        input: State,
-        status: usize,
-    ) -> Result<()> {
-        self.record(
-            self.pipelines.admission.encode_with_l1(
-                c,
-                self.admission_tiles[group],
-                self.r(input, f)?,
-                self.s(status)?,
-                f.rows,
-            ),
-            1,
-        )
-    }
-    fn rotate(
-        &self,
-        c: &ProtocolObject<dyn MTLCommandBuffer>,
-        f: &Frame,
-        input: State,
-        out: State,
-        heads: usize,
-        status: usize,
-    ) -> Result<()> {
-        self.record(
-            self.pipelines.rotary.encode(
-                c,
-                &rotary::DeviceBuffers {
-                    input: self.r(input, f)?,
-                    output: self.r(out, f)?,
-                    status: self.s(status)?,
-                    coefficients: BufferRange::new(
-                        &self.coefficients,
-                        0,
-                        f.rows * self.slots.geometry.rotated_dims,
-                    )?,
-                },
-                &self.rope(f, heads),
-            ),
-            1,
-        )
-    }
-    fn add(
-        &self,
-        c: &ProtocolObject<dyn MTLCommandBuffer>,
-        f: &Frame,
-        a: State,
-        b: State,
-        out: State,
-        status: usize,
-    ) -> Result<()> {
-        self.record(
-            self.pipelines.residual.encode_add(
-                c,
-                self.r(a, f)?,
-                self.r(b, f)?,
-                self.r(out, f)?,
-                self.s(status)?,
-            ),
-            1,
-        )
-    }
-    fn gelu(
-        &self,
-        c: &ProtocolObject<dyn MTLCommandBuffer>,
-        f: &Frame,
-        index: usize,
-        states: [State; 4],
-        status: usize,
-    ) -> Result<()> {
-        let [gate, up, activation, product] = states;
-        let width = if index == 0 { F } else { P };
-        let n = f.rows * width;
-        let buffers = gelu::DeviceBuffers {
-            gate: self.r(gate, f)?,
-            up: self.r(up, f)?,
-            activated: self.r(activation, f)?,
-            product: self.r(product, f)?,
-            status: self.s(status)?,
-            lane_flags: BufferRange::new(&self.gelu_flags[index], 0, n)?,
-            intervals: BufferRange::new(&self.gelu_intervals[index], 0, 8 * n)?,
-        };
-        #[cfg(test)]
-        if self.fault == Some(Fault::GeluReplay) {
-            return self.record(
-                self.pipelines.gelu.encode_forced_reference(
-                    c,
-                    self.table,
-                    &buffers,
-                    gelu::Shape {
-                        rows: f.rows,
-                        width,
-                    },
-                ),
-                1,
-            );
-        }
-        self.record(
-            self.pipelines.gelu.encode(
-                c,
-                self.table,
-                &buffers,
-                gelu::Shape {
-                    rows: f.rows,
-                    width,
-                },
-            ),
-            1,
-        )
     }
     /// Stage the retained checkpoint, then encode35 dependent dispatches into
     /// the caller's retained NotEnqueued command. No submit/wait occurs here.
@@ -706,96 +542,85 @@ impl<'a> ProducerBlock<'a> {
         cache: &ProducerKv,
         f: &Frame,
     ) -> Result<()> {
-        use State::*;
         let d = self.layout.d;
-        self.rms(c, f, [Hidden, InputNorm], 0, 0, [f.rows, H])?;
-        self.admit(c, f, 0, InputNorm, 1)?;
-        self.project(c, f, 0, InputNorm, QRaw, 2)?;
-        self.rms(c, f, [QRaw, QNorm], 1, 3, [f.rows * 8, d])?;
-        self.rotate(c, f, QNorm, QRotary, 8, 4)?;
-        self.project(c, f, 1, InputNorm, KRaw, 5)?;
-        self.rms(c, f, [KRaw, KNorm], 2, 6, [f.rows, d])?;
-        self.rotate(c, f, KNorm, KProposal, 1, 7)?;
-        self.project(c, f, 2, InputNorm, VRaw, 8)?;
-        self.rms(c, f, [VRaw, VProposal], 7, 9, [f.rows, d])?;
+        let mut states = [None; 32];
+        for state in STATES {
+            states[state as usize] = Some(self.r(state, f)?);
+        }
+        let mut norms = [None; 8];
+        for (i, region) in self.norm_regions.iter().enumerate() {
+            norms[i] = Some(region.range(&self.norms, region.len)?);
+        }
         let old = window_rows::old_spans(cache.capacity, f.offset, cache.window);
         let segment = |i: usize| -> Result<attention::DeviceSegment<'_>> {
-            let s = old[i];
+            let span = old[i];
             Ok(attention::DeviceSegment {
-                k: BufferRange::new(&cache.k, s.slot * d, s.rows * d)?,
-                v: BufferRange::new(&cache.v, s.slot * d, s.rows * d)?,
-                keys: s.rows,
-                head_stride: s.rows * d,
-                key_start: s.position,
+                k: BufferRange::new(&cache.k, span.slot * d, span.rows * d)?,
+                v: BufferRange::new(&cache.v, span.slot * d, span.rows * d)?,
+                keys: span.rows,
+                head_stride: span.rows * d,
+                key_start: span.position,
             })
         };
-        self.record(
-            self.pipelines.attention.encode(
-                c,
-                &attention::DeviceBuffers {
-                    q: self.r(QRotary, f)?,
-                    segments: [
-                        segment(0)?,
-                        segment(1)?,
-                        attention::DeviceSegment {
-                            k: self.r(KProposal, f)?,
-                            v: self.r(VProposal, f)?,
-                            keys: f.rows,
-                            head_stride: f.rows * d,
-                            key_start: f.offset,
-                        },
-                    ],
-                    scores: self.r(Scores, f)?,
-                    probabilities: self.r(Probabilities, f)?,
-                    output: self.r(Context, f)?,
-                    status: self.s(10)?,
+        let operation = recipe::Recipe {
+            context: self.context,
+            pipelines: self.pipelines,
+            table: self.table,
+            projections: self
+                .tiles
+                .map(|tile| Some(recipe::Projection::Single(tile))),
+            admissions: self.admission_tiles,
+            states,
+            norms,
+            norm_kind: recipe::NormKind::Original(&self.pipelines.rms),
+            status: BufferRange::new(&self.status, 0, STATUS_WORDS)?,
+            coefficients: BufferRange::new(
+                &self.coefficients,
+                0,
+                f.rows * self.slots.geometry.rotated_dims,
+            )?,
+            flags: [
+                BufferRange::new(&self.gelu_flags[0], 0, f.rows * F)?,
+                BufferRange::new(&self.gelu_flags[1], 0, f.rows * P)?,
+            ],
+            intervals: [
+                BufferRange::new(&self.gelu_intervals[0], 0, 8 * f.rows * F)?,
+                BufferRange::new(&self.gelu_intervals[1], 0, 8 * f.rows * P)?,
+            ],
+            segments: [
+                segment(0)?,
+                segment(1)?,
+                attention::DeviceSegment {
+                    k: self.r(State::KProposal, f)?,
+                    v: self.r(State::VProposal, f)?,
+                    keys: f.rows,
+                    head_stride: f.rows * d,
+                    key_start: f.offset,
                 },
-                &cpu::SpanAttentionShape {
-                    queries: f.rows,
-                    keys: f.end,
-                    query_heads: 8,
-                    kv_heads: 1,
-                    head_dim: d,
-                    query_start: f.offset,
-                    key_start: 0,
-                    window: cache.window,
-                    scale: 1.,
-                },
-            ),
-            4,
-        )?;
-        // Slots11..13 are reserved zero: existing four attention encoders share
-        // one fatal-only status, so their graph-order interpretation is identical.
-        self.admit(c, f, 1, Context, 14)?;
-        self.project(c, f, 3, Context, AttentionRaw, 15)?;
-        self.rms(c, f, [AttentionRaw, AttentionNorm], 3, 16, [f.rows, H])?;
-        self.add(c, f, AttentionNorm, Hidden, AttentionResidual, 17)?;
-        self.rms(c, f, [AttentionResidual, PreFf], 4, 18, [f.rows, H])?;
-        self.admit(c, f, 2, PreFf, 19)?;
-        self.project(c, f, 4, PreFf, FfGate, 20)?;
-        self.project(c, f, 5, PreFf, FfUp, 21)?;
-        self.gelu(c, f, 0, [FfGate, FfUp, FfActivation, FfProduct], 22)?;
-        self.admit(c, f, 3, FfProduct, 23)?;
-        self.project(c, f, 6, FfProduct, FfDown, 24)?;
-        self.rms(c, f, [FfDown, FfNorm], 5, 25, [f.rows, H])?;
-        self.add(c, f, FfNorm, AttentionResidual, FfResidual, 26)?;
-        self.admit(c, f, 4, FfResidual, 27)?;
-        self.project(c, f, 7, FfResidual, PleGate, 28)?;
-        self.gelu(c, f, 1, [PleGate, PleInput, PleActivation, PleProduct], 29)?;
-        self.admit(c, f, 5, PleProduct, 30)?;
-        self.project(c, f, 8, PleProduct, PleProjection, 31)?;
-        self.rms(c, f, [PleProjection, PleNorm], 6, 32, [f.rows, H])?;
-        self.add(c, f, FfResidual, PleNorm, PleResidual, 33)?;
-        self.record(
-            self.pipelines.residual.encode_scale(
-                c,
-                self.r(PleResidual, f)?,
-                self.r(Output, f)?,
-                self.s(34)?,
-                self.scalar,
-            ),
-            1,
-        )
+            ],
+            shape: recipe::Shape {
+                rows: f.rows,
+                d,
+                ff: F,
+                rotated: self.slots.geometry.rotated_dims,
+                query_start: f.offset,
+                key_start: 0,
+                keys: f.end,
+                window: cache.window,
+                theta: self.rope(f, 8).base,
+                producer: true,
+            },
+            scalar: self.scalar,
+            dispatches: Cell::new(0),
+            partial_count_unknown: Cell::new(false),
+            #[cfg(test)]
+            force_gelu_reference: self.fault == Some(Fault::GeluReplay),
+        };
+        let result = operation.encode(c);
+        let mut metrics = self.metrics.get();
+        metrics.encoded_dispatches += operation.dispatches.get();
+        self.metrics.set(metrics);
+        result
     }
 }
 
@@ -857,14 +682,7 @@ impl ProducerBlock<'_> {
                 * 4
             + self.reference.allocation_bytes()
     }
-    fn record(&self, result: Result<()>, dispatches: usize) -> Result<()> {
-        if result.is_ok() {
-            let mut m = self.metrics.get();
-            m.encoded_dispatches += dispatches;
-            self.metrics.set(m);
-        }
-        result
-    }
+
     fn guards(
         &self,
         f: &Frame,
@@ -927,10 +745,17 @@ impl ProducerBlock<'_> {
 /// requests replay. Numeric errors retain graph order: speculative descendants
 /// of the first replay request are discarded with the candidate.
 fn status_words_decision(words: &[u32]) -> Result<Option<ReplayReason>> {
+    audit_status_words(words, false)?;
+    numerical_status_decision(words)
+}
+fn audit_status_words(words: &[u32], consumer: bool) -> Result<()> {
     if words.len() != STATUS_WORDS {
         return Err(Error::Options("producer status extent differs"));
     }
     for (slot, &word) in words.iter().enumerate() {
+        if consumer && (5..=9).contains(&slot) && word != 0 {
+            return Err(Error::Options("consumer reserved K/V status differs"));
+        }
         let allowed = if [1, 14, 19, 23, 27, 30, 17, 26, 33, 34].contains(&slot) {
             3
         } else if [22, 29].contains(&slot) {
@@ -946,6 +771,12 @@ fn status_words_decision(words: &[u32]) -> Result<Option<ReplayReason>> {
         if word & !allowed != 0 {
             return Err(Error::Options("producer status contract differs"));
         }
+    }
+    Ok(())
+}
+fn numerical_status_decision(words: &[u32]) -> Result<Option<ReplayReason>> {
+    if words.len() != STATUS_WORDS {
+        return Err(Error::Options("producer status extent differs"));
     }
     for (slot, &word) in words.iter().enumerate() {
         if [1, 14, 19, 23, 27, 30].contains(&slot) {

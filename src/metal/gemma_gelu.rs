@@ -95,6 +95,38 @@ fn host_output(program: &str, args: &[&str]) -> Result<String> {
         .map(|s| s.trim().to_owned())
         .map_err(|_| Error::Unsupported("Gemma GELU native host text differs"))
 }
+/// Derive the mathematical platform key from immutable recorded provenance.
+/// Remove only the known nodename field. Preserve the remaining bytes exactly;
+/// this is not a whitespace-normalizing parser for a live `uname -a` response.
+fn math_host_identity(recorded_uname: &str) -> Option<String> {
+    let (system, node_and_rest) = recorded_uname.split_once(' ')?;
+    let (node, rest) = node_and_rest.split_once(' ')?;
+    if system.is_empty()
+        || node.is_empty()
+        || rest.is_empty()
+        || system.bytes().any(|b| b.is_ascii_whitespace())
+        || node.bytes().any(|b| b.is_ascii_whitespace())
+        || rest.starts_with(' ')
+        || rest.ends_with(' ')
+        || recorded_uname.bytes().any(|b| b.is_ascii_control())
+    {
+        return None;
+    }
+    Some(format!("{system} {rest}"))
+}
+/// Runtime identity excludes the mutable nodename at its source (`-srvm`).
+/// Certificate material retains its original complete hostname and exact hash.
+fn validate_native_host_identity(math_uname: &str, version: &str) -> Result<()> {
+    let qualified = math_host_identity(HOST_UNAME).ok_or(Error::Unsupported(
+        "Gemma GELU qualified host identity malformed",
+    ))?;
+    if math_uname != qualified || version != HOST_VERSION {
+        return Err(Error::Unsupported(
+            "Gemma GELU native host/OS requires requalification",
+        ));
+    }
+    Ok(())
+}
 fn matches(raw: &[u8], len: usize, sha: &str) -> bool {
     raw.len() == len && format!("{:x}", Sha256::digest(raw)) == sha
 }
@@ -175,13 +207,10 @@ impl CertifiedTable {
         }
         validate_material(b)?;
         validate_compiled_reference()?;
-        if host_output("/usr/bin/uname", &["-a"])? != HOST_UNAME
-            || host_output("/usr/bin/sw_vers", &[])? != HOST_VERSION
-        {
-            return Err(Error::Unsupported(
-                "Gemma GELU native host/OS requires requalification",
-            ));
-        }
+        validate_native_host_identity(
+            &host_output("/usr/bin/uname", &["-srvm"])?,
+            &host_output("/usr/bin/sw_vers", &[])?,
+        )?;
         validate_buffer_bytes((TABLE_WORDS + 2 * GUARD) * 4, gpu.device.maxBufferLength())?;
         let mut buffer = Buffer::new(gpu, TABLE_WORDS + 2 * GUARD)?;
         buffer.with_mut(|out| {
@@ -199,11 +228,32 @@ impl CertifiedTable {
         })
     }
     pub(super) fn owned_bytes(&self) -> usize {
-        Self::planned_owned_bytes()
+        // Both admitted variants own this same header and seven-word guards.
+        // No parent GPU payload or second table owner is retained for v2.
+        self.buffer.len * 4 + size_of::<Self>()
+    }
+    fn table_words(&self) -> Result<usize> {
+        let words = match self.buffer.len {
+            n if n == TABLE_WORDS + 2 * GUARD => TABLE_WORDS,
+            #[cfg(test)]
+            n if n == core::TABLE_BYTES / 4 + 2 * GUARD => core::TABLE_BYTES / 4,
+            _ => {
+                return Err(Error::Options(
+                    "Gemma GELU table allocation is not a sealed variant",
+                ));
+            }
+        };
+        // The accepted fixed sizes above make multiplication bounded. Reject
+        // a relabelled owner length before cold graph allocation or encoding.
+        if self.buffer.raw.length() != self.buffer.len * 4 {
+            return Err(Error::Options("Gemma GELU table physical length differs"));
+        }
+        Ok(words)
     }
     /// Cold block preflight, before any earlier operator is encoded. No CPU
     /// buffer view, submission or completion wait is needed for device identity.
     pub(super) fn validate_device(&self, gpu: &Gpu) -> Result<()> {
+        self.table_words()?;
         if !std::ptr::eq(&*self.device, &*gpu.device)
             || !std::ptr::eq(&*self.buffer.raw.device(), &*gpu.device)
         {
@@ -212,7 +262,7 @@ impl CertifiedTable {
         Ok(())
     }
     fn range(&self) -> Result<BufferRange<'_>> {
-        BufferRange::new(&self.buffer, GUARD, TABLE_WORDS)
+        BufferRange::new(&self.buffer, GUARD, self.table_words()?)
     }
     /// Cold table remains immutable. Caller invokes this only at a checked
     /// whole-command completion boundary, before any speculative publication.
@@ -227,10 +277,11 @@ impl CertifiedTable {
         {
             return Err(Error::Completion);
         }
+        let table_words = self.table_words()?;
         if !self.buffer.with_slice(|s| {
             s[..GUARD]
                 .iter()
-                .chain(&s[GUARD + TABLE_WORDS..])
+                .chain(&s[GUARD + table_words..])
                 .all(|&x| x == SENTINEL)
         }) {
             return Err(Error::Options("Gemma GELU table guard changed"));
@@ -293,12 +344,18 @@ pub(super) struct Pipelines {
     device: Retained<ProtocolObject<dyn MTLDevice>>,
     pipeline: Retained<ProtocolObject<dyn MTLComputePipelineState>>,
     width: usize,
+    table_words: usize,
 }
 impl Pipelines {
     pub(super) fn new(gpu: &Gpu) -> Result<Self> {
         if !matches(include_bytes!("gemma_gelu.metal"), 9176, SHADER_SHA) {
             return Err(Error::Options("Gemma GELU qualified shader changed"));
         }
+        Self::compile(gpu, include_str!("gemma_gelu.metal"), TABLE_WORDS)
+    }
+    // One selection at construction, shared ABI and concrete encode thereafter.
+    // The existing compiler-policy reservation covers one selected pipeline.
+    fn compile(gpu: &Gpu, source: &str, table_words: usize) -> Result<Self> {
         autoreleasepool(|_| {
             let options = MTLCompileOptions::new();
             options.setLanguageVersion(MTLLanguageVersion::Version2_3);
@@ -312,10 +369,7 @@ impl Pipelines {
             }
             let library = gpu
                 .device
-                .newLibraryWithSource_options_error(
-                    &NSString::from_str(include_str!("gemma_gelu.metal")),
-                    Some(&options),
-                )
+                .newLibraryWithSource_options_error(&NSString::from_str(source), Some(&options))
                 .map_err(|e| Error::Native(e.to_string()))?;
             let function = library
                 .newFunctionWithName(&NSString::from_str("gated_gelu"))
@@ -335,8 +389,20 @@ impl Pipelines {
                 device: gpu.device.clone(),
                 pipeline,
                 width,
+                table_words,
             })
         })
+    }
+    /// Cold graph preflight also uses this before earlier dependent operators.
+    /// Same-device fixed payload length identifies the sealed table variant.
+    pub(super) fn validate_table(&self, table: &CertifiedTable) -> Result<()> {
+        if self.table_words != table.table_words()? || !std::ptr::eq(&*self.device, &*table.device)
+        {
+            return Err(Error::Options(
+                "Gemma GELU table/pipeline variant or device differs",
+            ));
+        }
+        Ok(())
     }
     /// Encode only. Caller zeroes shared transaction status, retains all inputs,
     /// buffers/table and command until checked terminal completion, then checks
@@ -373,6 +439,7 @@ impl Pipelines {
     ) -> Result<()> {
         let (values, intervals) = shape.lengths()?;
         let table_range = table.range()?;
+        self.validate_table(table)?;
         let ranges = [
             b.gate,
             b.up,
@@ -386,7 +453,7 @@ impl Pipelines {
         let lengths = [
             values,
             values,
-            TABLE_WORDS,
+            self.table_words,
             values,
             values,
             1,
@@ -446,5 +513,9 @@ impl Pipelines {
         Ok(())
     }
 }
+// Only the isolated deep-chain qualification consumer selects the core overlay.
+// Remove this gate only with a qualified ordinary graph consumer.
+#[cfg(test)]
+pub(super) mod core;
 #[cfg(test)]
 mod tests;

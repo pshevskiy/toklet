@@ -1,6 +1,6 @@
 # Toklet progress checklist
 
-Updated **15 November 2026**. **Active goal: beat Ollama MLX GPU and vLLM MLX GPU**
+Updated **16 November 2026**. **Active goal: beat Ollama MLX GPU and vLLM MLX GPU**
 on matched Gemma/LFM3 workloads. UI/screenshare and iPhone remain deferred.
 Read the current task and [competitive GPU plan](docs/mlx-gpu-performance-plan.md).
 Previous delivery and model decisions are in [outcomes](docs/improvement-outcomes.md);
@@ -98,13 +98,43 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   no findings. [Pilot/scope](docs/gemma-gpu-producer.md),
   [review](artifacts/mlx-gpu-gap-2026-11-15/astra-producer-block-review-1/verdict.json),
   [publication](artifacts/mlx-gpu-gap-2026-11-15/g2-producer-publication-1.json).
-- [ ] **Current:** qualify checked multi-tile BF16 output for PLE/consumer FFN/head.
-  Astra supplies the layout/proof recipe; Sol prepares an isolated draft. Then
-  compose deeper own-input producer/consumer layers 13→14→15 with graph-wide
-  replay/publication. In parallel, Sol prepares the bounded common-Q4 exporter;
-  no conversion, full adapter, quality or stock precision equivalence is qualified.
-  Ordinary CLI graph, allocation/request-speed and all competitive/overhead gates
-  remain open. [Current evidence/failures](artifacts/mlx-gpu-gap-2026-11-15/g2-producer-prerequisites-applied-1.json).
+- [x] Producer pilot `c93d5794` is pushed; all seven exact-head workflows/15
+  jobs pass. [Publication/source/CI](artifacts/mlx-gpu-gap-2026-11-15/g2-producer-publication-1.json).
+- [x] **Finer-core GELU artifact:** native/independent proof covers all
+  184,549,378 replacement inputs with unchanged parent coverage. GPU normal/
+  forced runs and four raw readers pass 2,106,831 comparisons each, 14 raw
+  corruptions per reader and 14 native semantic controls plus both positive
+  baselines. Astra approves artifact-only retention; failures remain linked.
+  [Review/evidence](artifacts/mlx-gpu-gap-2026-11-15/astra-gelu-core-review-1/verdict.json).
+- [x] **Resident Gemma chain:** qualify the 13→14→15 chain at unchanged
+  limits. Higher-accuracy RMS/host controls pass, but the old coupled candidate
+  failed. The approved core table and optional completed-command GPU timing are
+  implemented in source8. Optimized build and all eight coupled cells pass
+  2,375,680 values with one command/wait each and no replay. State/RMS controls,
+  32 zero-Rust-allocation warm iterations and the old pilot pass. Fmt, strict CPU/Metal Clippy, 1,043 Metal tests and release builds pass;
+  847 unchanged CPU tests are reused. Astra's failure-metric finding is fixed;
+  fresh source9 fmt/Metal Clippy, 1,044 Metal tests, release and the pure error
+  regression pass. Numerical GPU evidence is reused from unchanged source8 work.
+  Astra approves the final combined code change with both findings resolved.
+  [Publication/source/CI receipt](artifacts/mlx-gpu-gap-2026-11-15/g2-deep-chain-publication-1.json).
+  [Current checks, research and failures](artifacts/mlx-gpu-gap-2026-11-15/g2-deep-chain-progress-1.json).
+- [ ] **Parallel G0:** three common-Q4 views pass independent code/value
+  identity checks. The explicit owner/CLI passes fmt, strict CPU/Metal Clippy,
+  release, 850 CPU/1,041 Metal tests (53/389 ignored), actual state/all 59 codec
+  cases, projection replay and plan/summary-enabled/disabled CLI diagnostics.
+  Both legacy BF16 CLI policies retain golden tokens/schema under 6 GiB.
+  The two monitor interruptions remain recorded. The original 1,024-target loss
+  pilot is running; it qualifies no full quality or performance claim. Full original quality, stock
+  precision matching and final code Astra review remain open; no speed or
+  overhead qualification. [Current evidence/failures](artifacts/mlx-gpu-gap-2026-11-15/g0-common-q4-progress-1.json).
+- [ ] **Current G2 follow-up:** time the 22 actual RMS operations, qualify pooled layer scratch
+  with validation before reuse, then connect the
+  full resident graph to the CLI. The source8 GPU audit/fill recipe preserves
+  runtime finite/guard/replay ordering; its payload estimates are planning only.
+  [Source-pinned pool research](artifacts/mlx-gpu-gap-2026-11-15/astra-source8-scratch-pool-research-1.md),
+  [RMS timing recipe](artifacts/mlx-gpu-gap-2026-11-15/astra-source8-rms-timing-research-1.md). Prospective first-ID-distinct raw prompts preserve the same
+  workload and original native reset/state/quality/overhead cells; no external
+  acceptance data or win. [GPU/unified-memory sequence and comparison protocol](docs/mlx-gpu-performance-plan.md).
 - [x] G3 research proposes bounded four-token weight reuse with unchanged
   compensated order; no implementation/speed claim. Fresh resident-graph
   profiling precedes selection. [Experiment brief](artifacts/mlx-gpu-gap-2026-11-15/astra-prefill-weight-reuse-research-1.md).

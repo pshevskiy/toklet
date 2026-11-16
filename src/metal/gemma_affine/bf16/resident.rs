@@ -26,6 +26,23 @@ struct Matrix {
 }
 
 impl Matrix {
+    /// Cold qualification view over existing immutable tiles, sharing one
+    /// loader-authenticated whole-matrix max/L1 proof and no weight copy.
+    /// Remove this test gate only with the real resident graph consumer.
+    #[cfg(test)]
+    fn borrowed_tiled(
+        &self,
+        context: &Bf16Context,
+    ) -> Result<project::bf16_tiled::Bf16MatrixView<'_>> {
+        project::bf16_tiled::Bf16MatrixView::new(
+            &context.0,
+            &self.tiles,
+            self.rows,
+            self.columns,
+            self.maximum,
+        )
+    }
+
     /// Cold borrowed view for the explicit one-tile producer experiment. The
     /// immutable loader-scanned maximum stays paired with this exact storage.
     /// Guards are validated by the transaction after checked completion.
@@ -451,3 +468,6 @@ mod tests;
 
 #[cfg(test)]
 mod encode_tests;
+
+#[cfg(test)]
+mod tiled_encode_tests;

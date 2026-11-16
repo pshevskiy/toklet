@@ -1,6 +1,6 @@
 # Toklet improvement index
 
-Updated **15 November 2026**. This is the compact index of retained capabilities,
+Updated **16 November 2026**. This is the compact index of retained capabilities,
 measured gains and material restrictions. The [full dated history](archive/2026-11-09/improvements.md)
 preserves every previous entry, source revision, failed check and evidence link.
 Read it only when the current task needs that detail.
@@ -87,6 +87,32 @@ CPU tests are reused. Astra approves the combined scoped change with no findings
 The ordinary CLI graph, whole graph, allocation/request speed, summary overhead
 and external wins remain unqualified.
 [Review/publication](../artifacts/mlx-gpu-gap-2026-11-15/g2-producer-publication-1.json).
+
+Checked multi-tile BF16 output is the next prerequisite. The frozen six-file
+Sol draft preserves the original shader and proofs; targeted build/GPU and
+independent replay pass 29 cases, failure controls and 32 zero-allocation warmed
+chains. Complete-task checks/Astra remain pending while the deeper chain is
+composed. This test-gated prerequisite does not change ordinary generation. [Progress](../artifacts/mlx-gpu-gap-2026-11-15/g2-bf16-strided-progress-1.json).
+
+The old deeper-chain failure is retained: native replay isolated table GELU
+interpolation for a one-key token, with separate later-token softmax drift.
+The finer core passes exhaustive native/independent proof, GPU original/extra
+cases, four raw readers and all corruption controls. Astra approves artifact
+retention, with no coupled or production approval. The source8 integration and
+optional completed-command GPU timestamps pass the original eight coupled
+cells (2,375,680 values), state/RMS controls and 32 warmed zero-Rust-allocation
+iterations. The source9 failure-count correction passes fresh fmt/Metal Clippy,
+1,044 Metal tests, release and a pure error regression; CPU/CLI and numerical GPU
+evidence reuse is explicitly bounded. Astra approves the combined bounded
+engine change with both findings resolved.
+[Publication/source/CI](../artifacts/mlx-gpu-gap-2026-11-15/g2-deep-chain-publication-1.json).
+[Artifact review](../artifacts/mlx-gpu-gap-2026-11-15/astra-gelu-core-review-1/verdict.json),
+[current engine checks](../artifacts/mlx-gpu-gap-2026-11-15/g2-deep-chain-progress-1.json).
+The common-Q4 owner/CLI passes release/lint, 850 CPU/1,041 Metal tests, actual
+state/59 codec cases, projection readers and CLI diagnostics. Both legacy BF16
+policies retain golden tokens/schema. Full quality, final Astra review and
+adoption remain open; these functional checks establish no speed/overhead win.
+[Q4 checks](../artifacts/mlx-gpu-gap-2026-11-15/g0-common-q4-progress-1.json).
 
 The [LFM3 external request observations](lfm3-engine-comparison.md) record
 78 requests across two 3+10 cohorts per engine, with preserved raw observations,
@@ -888,3 +914,16 @@ no optimization or observer gate.
 [Contract](../artifacts/gemma-cli-regression-2026-11-15/implementation-contract-1.json),
 [portable checks](../artifacts/gemma-cli-regression-2026-11-15/affected-checks-2.json),
 [real admission](../artifacts/gemma-cli-regression-2026-11-15/real-baseline-admission-2.json).
+
+The coupled 13→14→15 chain now passes all eight original cells, state/replay
+controls, 32 zero-Rust-allocation warm iterations and the original producer
+regression. The old coupled failures remain linked. Higher-accuracy RMS and the
+approved finer-core GELU table preserve the original gates; optional completed-
+command GPU timestamps add no submissions or waits. Required checks pass with
+1,044 Metal tests and 847 unchanged CPU tests reused. A failure-count correction
+passes the release regression; Astra approves with no remaining findings. The common-Q4 conversion/owner/CLI checks also pass, with original
+full quality and stock precision matching still open. No ordinary resident
+route change, full-model fit or new speed gain is claimed.
+[Chain scope/checks](gemma-gpu-chain.md),
+[chain status](../artifacts/mlx-gpu-gap-2026-11-15/g2-deep-chain-progress-1.json),
+[quantizer checks](../artifacts/mlx-gpu-gap-2026-11-15/g0-q4-prepare-progress-3.json).

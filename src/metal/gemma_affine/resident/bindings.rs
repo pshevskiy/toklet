@@ -43,6 +43,25 @@ pub(in crate::metal::gemma_affine) struct ProducerSlots {
     pub norms: [usize; 7],
     pub scalar: usize,
 }
+/// Cold common roles plus optional producer KV; no invented consumer tensors.
+#[cfg(all(test, target_os = "macos"))]
+#[derive(Clone, Copy)]
+pub(in crate::metal::gemma_affine) struct ChainLayerSlots {
+    pub geometry: LayerPlan,
+    /// Q,O,FFgate,FFup,FFdown,PLEgate,PLEprojection.
+    pub matrices: [usize; 7],
+    /// Input,Q,postattention,preFF,postFF,postPLE normalization.
+    pub norms: [usize; 6],
+    pub kv: Option<ChainKvSlots>,
+    pub scalar: usize,
+}
+#[cfg(all(test, target_os = "macos"))]
+#[derive(Clone, Copy)]
+pub(in crate::metal::gemma_affine) struct ChainKvSlots {
+    pub k: usize,
+    pub v: usize,
+    pub norm: usize,
+}
 impl Bindings {
     #[cfg(target_os = "macos")]
     pub(super) fn heretic(cold: &crate::mlx::gemma4::uncensored::Plan) -> Result<Self> {
@@ -326,6 +345,45 @@ impl Bindings {
             return Err(Error::Options("Gemma role coverage incomplete"));
         }
         Ok(())
+    }
+    #[cfg(all(test, target_os = "macos"))]
+    pub(in crate::metal::gemma_affine) fn chain_layer_slots(
+        &self,
+        index: usize,
+    ) -> Result<ChainLayerSlots> {
+        let layer = self
+            .layers
+            .get(index)
+            .ok_or(Error::Options("chain layer index outside model"))?;
+        if (layer.geometry.producer == index) != layer.kv.is_some() {
+            return Err(Error::Options("chain producer role differs"));
+        }
+        Ok(ChainLayerSlots {
+            geometry: layer.geometry,
+            matrices: [
+                layer.q,
+                layer.o,
+                layer.gate,
+                layer.up,
+                layer.down,
+                layer.ple_gate,
+                layer.ple_projection,
+            ],
+            norms: [
+                layer.input_norm,
+                layer.q_norm,
+                layer.post_attention_norm,
+                layer.pre_ff_norm,
+                layer.post_ff_norm,
+                layer.post_ple_norm,
+            ],
+            kv: layer.kv.as_ref().map(|kv| ChainKvSlots {
+                k: kv.k,
+                v: kv.v,
+                norm: kv.norm,
+            }),
+            scalar: layer.scalar,
+        })
     }
     pub(in crate::metal::gemma_affine) fn producer_slots(
         &self,

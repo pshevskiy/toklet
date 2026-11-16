@@ -7,6 +7,83 @@ use std::{
 };
 
 #[test]
+fn mathematical_host_identity_omits_only_recorded_nodename() {
+    let qualified = math_host_identity(HOST_UNAME).unwrap();
+    assert_eq!(
+        qualified,
+        "Darwin 25.6.0 Darwin Kernel Version 25.6.0: Fri Jul 31 19:18:49 PDT 2026; root:xnu-12377.161.14~5/RELEASE_ARM64_T6000 arm64"
+    );
+    for node in ["MacBookPro.lan", "another-qualified-host.local"] {
+        let renamed = HOST_UNAME.replacen("Dmitrijs-MacBook-Pro-2.local", node, 1);
+        assert_eq!(math_host_identity(&renamed), Some(qualified.clone()));
+    }
+    // No token whitespace canonicalization: kernel-body bytes survive intact.
+    assert_eq!(
+        math_host_identity("Darwin recorded-node release kernel  body machine"),
+        Some("Darwin release kernel  body machine".to_owned())
+    );
+    for malformed in [
+        "",
+        "Darwin",
+        "Darwin node",
+        " Darwin node kernel",
+        "Darwin  kernel",
+        "Darwin node ",
+        "Darwin node  kernel",
+        "Darwin node kernel ",
+        "Darwin\tnode kernel rest",
+        "Darwin node kernel\nrest",
+        "Darwin node kernel\trest",
+    ] {
+        assert!(math_host_identity(malformed).is_none(), "{malformed:?}");
+    }
+}
+
+#[test]
+fn native_host_comparison_preserves_exact_kernel_os_and_build_binding() {
+    let qualified = math_host_identity(HOST_UNAME).unwrap();
+    validate_native_host_identity(&qualified, HOST_VERSION).unwrap();
+    for changed in [
+        String::new(),
+        HOST_UNAME.to_owned(), // Live output must omit node, not normalize -a.
+        "Darwin 25.6.0 arm64".to_owned(),
+        format!("{qualified} extra"),
+        format!(" {qualified}"),
+        format!("{qualified} "),
+        qualified.replacen("Darwin", "Other", 1),
+        qualified.replacen("25.6.0", "25.6.1", 1),
+        qualified.replacen("Kernel Version", "Kernel Version changed", 1),
+        qualified.replacen("19:18:49", "19:18:50", 1),
+        qualified.replace("arm64", "x86_64"),
+        qualified.replacen("Darwin ", "Darwin  ", 1),
+        qualified.replacen("Kernel Version", "Kernel\nVersion", 1),
+    ] {
+        assert!(
+            validate_native_host_identity(&changed, HOST_VERSION).is_err(),
+            "{changed:?}"
+        );
+    }
+    for changed in [
+        String::new(),
+        HOST_VERSION.replace("macOS", "otherOS"),
+        HOST_VERSION.replace("26.6.2", "26.6.3"),
+        HOST_VERSION.replace("25G83", "25G84"),
+        HOST_VERSION.replace('\t', " "),
+        format!("{HOST_VERSION}\nextra"),
+    ] {
+        assert!(validate_native_host_identity(&qualified, &changed).is_err());
+    }
+    // Existing markers and debug admission remain strict. A pure test cannot
+    // manufacture a certified release build or suppress this check.
+    if cfg!(debug_assertions)
+        || option_env!("TOKLET_GELU_CERTIFIED_RUSTC_VV") != Some(COMPILER)
+        || option_env!("TOKLET_GELU_CERTIFIED_BUILD_PROFILE") != Some(BUILD_PROFILE)
+    {
+        assert!(validate_compiled_reference().is_err());
+    }
+}
+
+#[test]
 fn geometry_and_fatal_priority_are_hardware_independent() {
     for (rows, width) in [
         (0, 1),
@@ -692,4 +769,235 @@ fn preflight_rejections_create_no_encoder_and_preserve_status() {
     ] {
         assert!(guarded(b, active));
     }
+}
+
+#[test]
+fn core_overlay_keeps_one_owner_and_exact_payload_delta() {
+    assert_eq!(
+        CertifiedTable::planned_core_owned_bytes() - CertifiedTable::planned_owned_bytes(),
+        2_162_736
+    );
+    assert!(matches(
+        include_bytes!("core.metal"),
+        10345,
+        "7ad303748504528c1e6f8243c4ba6c710af21f3907b2df3442eb97f7d9ad2d21"
+    ));
+    assert!(
+        super::core::validate_material(&super::core::ApprovedCoreBytes {
+            table: &[],
+            certificate: &[],
+            native_verification: &[],
+            artifact_review: &[],
+            parent_certificate: &[],
+            parent_native_verification: &[],
+            parent_artifact_review: &[],
+        })
+        .is_err()
+    );
+}
+struct CoreMaterial {
+    table: Vec<u8>,
+    certificate: Vec<u8>,
+    native: Vec<u8>,
+    review: Vec<u8>,
+    parent_certificate: Vec<u8>,
+    parent_native: Vec<u8>,
+    parent_review: Vec<u8>,
+}
+impl CoreMaterial {
+    fn load() -> Self {
+        Self {
+            table: read_exact_file(
+                &env_path("TOKLET_GELU_CORE_TABLE"),
+                super::core::TABLE_BYTES,
+                super::core::TABLE_SHA,
+            ),
+            certificate: read_exact_file(
+                &env_path("TOKLET_GELU_CORE_CERTIFICATE"),
+                5608,
+                super::core::CERT_SHA,
+            ),
+            native: read_exact_file(
+                &env_path("TOKLET_GELU_CORE_NATIVE_VERIFICATION"),
+                988,
+                super::core::NATIVE_SHA,
+            ),
+            review: read_exact_file(
+                &env_path("TOKLET_GELU_CORE_ARTIFACT_REVIEW"),
+                super::core::CORE_REVIEW_BYTES,
+                super::core::CORE_REVIEW_SHA,
+            ),
+            parent_certificate: read_exact_file(
+                &env_path("TOKLET_GELU_CERTIFICATE"),
+                2309,
+                CERT_SHA,
+            ),
+            parent_native: read_exact_file(
+                &env_path("TOKLET_GELU_NATIVE_VERIFICATION"),
+                635,
+                NATIVE_SHA,
+            ),
+            parent_review: read_exact_file(
+                &env_path("TOKLET_GELU_ARTIFACT_REVIEW"),
+                13881,
+                ARTIFACT_REVIEW_SHA,
+            ),
+        }
+    }
+    fn borrowed(&self) -> super::core::ApprovedCoreBytes<'_> {
+        super::core::ApprovedCoreBytes {
+            table: &self.table,
+            certificate: &self.certificate,
+            native_verification: &self.native,
+            artifact_review: &self.review,
+            parent_certificate: &self.parent_certificate,
+            parent_native_verification: &self.parent_native,
+            parent_artifact_review: &self.parent_review,
+        }
+    }
+}
+#[test]
+#[ignore = "explicit sealed core/parent provenance and modified-material rejection; no GPU"]
+fn core_material_binds_parent_core_native_and_approval_without_editing_v1() {
+    let mut material = CoreMaterial::load();
+    super::core::validate_material(&material.borrowed()).unwrap();
+    for index in [
+        0,
+        TABLE_BYTES - 4,
+        TABLE_BYTES,
+        TABLE_BYTES + 16,
+        super::core::TABLE_BYTES - 4,
+    ] {
+        material.table[index] ^= 1;
+        assert!(super::core::validate_material(&material.borrowed()).is_err());
+        material.table[index] ^= 1;
+    }
+    for part in 0..6 {
+        let raw = match part {
+            0 => &mut material.certificate,
+            1 => &mut material.native,
+            2 => &mut material.review,
+            3 => &mut material.parent_certificate,
+            4 => &mut material.parent_native,
+            _ => &mut material.parent_review,
+        };
+        raw[0] ^= 1;
+        assert!(super::core::validate_material(&material.borrowed()).is_err());
+        let raw = match part {
+            0 => &mut material.certificate,
+            1 => &mut material.native,
+            2 => &mut material.review,
+            3 => &mut material.parent_certificate,
+            4 => &mut material.parent_native,
+            _ => &mut material.parent_review,
+        };
+        raw[0] ^= 1;
+    }
+    // The original trusted material validator still sees the exact borrowed
+    // parent prefix. No old table/evidence hashes or APIs were repurposed.
+    validate_material(&ApprovedBytes {
+        table: &material.table[..TABLE_BYTES],
+        certificate: &material.parent_certificate,
+        native_verification: &material.parent_native,
+        artifact_review: &material.parent_review,
+    })
+    .unwrap();
+}
+#[test]
+#[ignore = "explicit Apple GPU core variant/budget/alias/preflight/completion guard checks"]
+fn core_table_pipeline_agreement_precedes_encoder_and_shared_guard_read() {
+    validate_compiled_reference().unwrap();
+    let gpu = Gpu::new().unwrap();
+    let material = CoreMaterial::load();
+    assert!(matches!(
+        CertifiedTable::from_approved_core(
+            &gpu,
+            &material.borrowed(),
+            CertifiedTable::planned_core_owned_bytes() - 1
+        ),
+        Err(Error::Budget { .. })
+    ));
+    let mut table = CertifiedTable::from_approved_core(
+        &gpu,
+        &material.borrowed(),
+        CertifiedTable::planned_core_owned_bytes(),
+    )
+    .unwrap();
+    drop(material);
+    assert_eq!(
+        table.owned_bytes(),
+        CertifiedTable::planned_core_owned_bytes()
+    );
+    let mut pipelines = Pipelines::new_core(&gpu).unwrap();
+    pipelines.validate_table(&table).unwrap();
+    let mut scratch = Scratch::new(&gpu);
+    scratch.stage(&[0.5; 17], &[1.; 17]);
+    let command = gpu.command().unwrap();
+    let buffers = scratch.buffers(17);
+    let admitted_words = table.buffer.len;
+    for invalid in [
+        0,
+        2 * GUARD,
+        TABLE_WORDS + 2 * GUARD,
+        admitted_words - 1,
+        admitted_words + 1,
+        usize::MAX,
+    ] {
+        table.buffer.len = invalid;
+        assert!(table.table_words().is_err());
+        assert!(table.validate_device(&gpu).is_err());
+        assert!(pipelines.validate_table(&table).is_err());
+        assert!(
+            pipelines
+                .encode(&command, &table, &buffers, Shape { rows: 1, width: 17 })
+                .is_err()
+        );
+        assert_eq!(command.status(), MTLCommandBufferStatus::NotEnqueued);
+        assert_eq!(scratch.status.with_slice(|s| s[GUARD]), 0);
+    }
+    table.buffer.len = admitted_words;
+    table.validate_device(&gpu).unwrap();
+    // Inject the alternative cold tag without compiling/retaining a second
+    // pipeline or parent GPU table. This is the same public-private preflight.
+    pipelines.table_words = TABLE_WORDS;
+    assert!(pipelines.validate_table(&table).is_err());
+    assert!(
+        pipelines
+            .encode(&command, &table, &buffers, Shape { rows: 1, width: 17 })
+            .is_err()
+    );
+    assert_eq!(command.status(), MTLCommandBufferStatus::NotEnqueued);
+    assert_eq!(scratch.status.with_slice(|s| s[GUARD]), 0);
+    pipelines.table_words = super::core::TABLE_BYTES / 4;
+    let mut alias = scratch.buffers(17);
+    let mut into_table = table.range().unwrap();
+    into_table.len = 17;
+    alias.product = into_table;
+    assert!(
+        pipelines
+            .encode(&command, &table, &alias, Shape { rows: 1, width: 17 })
+            .is_err()
+    );
+    assert_eq!(command.status(), MTLCommandBufferStatus::NotEnqueued);
+    pipelines
+        .encode(&command, &table, &buffers, Shape { rows: 1, width: 17 })
+        .unwrap();
+    command.commit();
+    command.waitUntilCompleted();
+    assert_eq!(command.status(), MTLCommandBufferStatus::Completed);
+    table.check_completed_guards(&command).unwrap();
+    assert_eq!(
+        CompletionStatus::parse(scratch.status.with_slice(|s| s[GUARD])).unwrap(),
+        CompletionStatus::CandidateReady
+    );
+    let mut expected = [0.; 17];
+    crate::cpu::gated_gelu_tanh(&[0.5; 17], &[1.; 17], &mut expected).unwrap();
+    scratch.product.with_slice(|s| {
+        for (&a, &e) in s[GUARD..GUARD + 17].iter().zip(&expected) {
+            close(f32::from_bits(a), f64::from(e));
+        }
+    });
+    let last = table.buffer.len - 1;
+    table.buffer.with_mut(|s| s[last] = 0);
+    assert!(table.check_completed_guards(&command).is_err());
 }
