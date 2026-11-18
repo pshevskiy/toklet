@@ -12,7 +12,7 @@ use std::fmt;
 
 mod binding;
 mod execution;
-mod forward;
+pub(super) mod forward;
 mod generation;
 pub use execution::{Cpu, Execution, MatrixStorage};
 pub use generation::{GenerationMemory, GenerationSession, GenerationState, PrefixAction};
@@ -20,7 +20,7 @@ pub use generation::{GenerationMemory, GenerationSession, GenerationState, Prefi
 mod metal;
 #[cfg(all(feature = "metal", target_os = "macos"))]
 pub use metal::{MetalExecution, MetalMatrix, MetalModel, MetalSession};
-mod state;
+pub(super) mod state;
 pub use state::{Memory, Options, Outcome, Session, Work};
 #[cfg(test)]
 mod tests;

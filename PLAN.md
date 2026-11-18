@@ -1,6 +1,6 @@
 # Toklet implementation plan
 
-Updated 15 November 2026. Read [TODO.md](TODO.md) first for the current task.
+Updated 19 November 2026. Read [TODO.md](TODO.md) first for the current task.
 This live plan retains architecture, session invariants, milestone task criteria
 and the complete validation/performance policy. Detailed chronology and original
 execution orders are in the [dated archive](docs/archive/2026-11-07/PLAN.md).
@@ -49,6 +49,12 @@ below records the selected program; deferred/conditional routes keep their scope
 3. **Under-4B track:** MiniCPM5-2B, LFM3-1.7B, Granite 4.2 3B, Ministral 3 3B
    Reasoning and Qwen3.5-2B. Exact total counts, ranking rationale, inspected MLX
    variants and conversion gaps are in the [shortlist](docs/model-observability-plan.md#five-candidates-strictly-below-4b-total-parameters).
+4. **SenseNova-Loop-9B text CLI:** add the official release as a separate
+   model-support track alongside the competitive GPU program. Start with
+   the public MLX 4-bit conversion at `b9a36a97` and authenticate its
+   tokenizer, tensor spans and quantization. Pin official reference source
+   at `3e1ba6e8`. [Release](https://huggingface.co/sensenova/SenseNova-Loop-9B)
+   · [MLX conversion](https://huggingface.co/nativ-community/SenseNova-Loop-9B-4bit).
 
 The [metric contract](docs/model-observability-plan.md#metric-contract) is the
 first implementation deliverable: request/phase timings, event/visible/answer
@@ -133,6 +139,24 @@ Astra approves scoped diagnostic retention without qualifying model adoption.
 The initial settings below describe the foundation. Later selected models and
 routes use their own authenticated configuration and scoped acceptance evidence;
 initial settings do not expand or replace those contracts.
+
+### SenseNova-Loop-9B acceptance
+
+- One immutable set of 32 physical layers. The two passes through layers
+  4–27 give 56 executions with 42 distinct linear-attention state slots
+  and 14 distinct full-attention KV slots. Positions advance per token.
+  Each pass opens and closes its two residual streams independently.
+- Match the original attention and FFN routing, FP32 Sinkhorn, BF16
+  boundaries, YaRN and tokenizer stop behavior. Check small independent
+  fixtures and exact-checkpoint prompt, cached decode, chunking, reset,
+  cancellation and failure parity before enabling a text CLI profile.
+- Count the exact text tensor spans, transient loading bytes, state,
+  scratch and telemetry against 6 GiB. The MLX package's two shards occupy
+  5,962,816,708 bytes on disk. Verified headers identify 5,050,626,048
+  text payload bytes and 912,020,960 vision payload bytes. Establish
+  supported context by admission and observed memory. Report text TTFT,
+  prefill and decode rates, completed request latency, and KV and recurrent
+  state bytes. Vision and MTP need their own gates.
 
 ## Scope and decisions
 

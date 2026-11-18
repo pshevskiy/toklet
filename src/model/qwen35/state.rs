@@ -43,7 +43,7 @@ pub struct Memory {
     pub admitted_bytes: usize,
 }
 impl Memory {
-    pub(super) fn sum(&mut self) -> Result<()> {
+    pub(in crate::model) fn sum(&mut self) -> Result<()> {
         self.admitted_bytes = [
             self.weights_and_model_bytes,
             self.recurrent_bank_bytes,
@@ -59,7 +59,7 @@ impl Memory {
         .try_fold(0, add)?;
         Ok(())
     }
-    pub(super) fn admit(self, limit: usize) -> Result<()> {
+    pub(in crate::model) fn admit(self, limit: usize) -> Result<()> {
         let limit = limit.min(MEMORY_LIMIT);
         if self.admitted_bytes > limit {
             return Err(Error::MemoryBudget {
@@ -71,22 +71,22 @@ impl Memory {
     }
 }
 
-pub(super) struct Banks {
+pub(in crate::model) struct Banks {
     committed: Vec<f32>,
     staged: [Vec<f32>; 2],
 }
 impl Banks {
     #[cfg(test)]
-    pub(super) fn committed(&self) -> &[f32] {
+    pub(in crate::model) fn committed(&self) -> &[f32] {
         &self.committed
     }
-    fn new(count: usize) -> Result<Self> {
+    pub(in crate::model) fn new(count: usize) -> Result<Self> {
         Ok(Self {
             committed: zeros(count)?,
             staged: [zeros(count)?, zeros(count)?],
         })
     }
-    pub(super) fn next(&mut self, local: usize) -> (&[f32], &mut [f32]) {
+    pub(in crate::model) fn next(&mut self, local: usize) -> (&[f32], &mut [f32]) {
         if local == 0 {
             return (&self.committed, &mut self.staged[0]);
         }
@@ -97,10 +97,10 @@ impl Banks {
             (&b[0], &mut a[0])
         }
     }
-    fn commit(&mut self, last: usize) {
+    pub(in crate::model) fn commit(&mut self, last: usize) {
         std::mem::swap(&mut self.committed, &mut self.staged[last]);
     }
-    fn bytes(&self) -> Result<usize> {
+    pub(in crate::model) fn bytes(&self) -> Result<usize> {
         mul(
             add(
                 add(self.committed.capacity(), self.staged[0].capacity())?,
@@ -109,19 +109,19 @@ impl Banks {
             4,
         )
     }
-    fn reset(&mut self) {
+    pub(in crate::model) fn reset(&mut self) {
         self.committed.fill(0.);
     }
 }
-pub(super) struct DeltaState {
+pub(in crate::model) struct DeltaState {
     pub rnn: Banks,
     pub history: Banks,
 }
-pub(super) struct Kv {
+pub(in crate::model) struct Kv {
     pub k: Vec<f32>,
     pub v: Vec<f32>,
 }
-pub(super) struct DeltaScratch {
+pub(in crate::model) struct DeltaScratch {
     pub qkv: Vec<f32>,
     pub conv: Vec<f32>,
     pub activated: Vec<f32>,
@@ -136,7 +136,7 @@ pub(super) struct DeltaScratch {
     pub norm: Vec<f32>,
     pub gated: Vec<f32>,
 }
-pub(super) struct AttentionScratch {
+pub(in crate::model) struct AttentionScratch {
     pub q_gate: Vec<f32>,
     pub q: Vec<f32>,
     pub q_norm: Vec<f32>,
@@ -151,7 +151,7 @@ pub(super) struct AttentionScratch {
     pub scores: Vec<f32>,
     pub probabilities: Vec<f32>,
 }
-pub(super) struct Scratch {
+pub(in crate::model) struct Scratch {
     pub x: Vec<f32>,
     pub input_norm: Vec<f32>,
     pub operator: Vec<f32>,
@@ -165,7 +165,7 @@ pub(super) struct Scratch {
     pub attention: AttentionScratch,
 }
 impl Scratch {
-    fn new(c: Config, capacity: usize) -> Result<Self> {
+    pub(in crate::model) fn new(c: Config, capacity: usize) -> Result<Self> {
         let qw = c.query_width()?;
         let kw = c.kv_width()?;
         let dk = c.key_width()?;
@@ -213,7 +213,7 @@ impl Scratch {
             },
         })
     }
-    fn bytes(&self) -> Result<usize> {
+    pub(in crate::model) fn bytes(&self) -> Result<usize> {
         let d = &self.delta;
         let a = &self.attention;
         let all = [
@@ -255,7 +255,7 @@ impl Scratch {
         ];
         mul(all.into_iter().try_fold(0, |n, v| add(n, v.capacity()))?, 4)
     }
-    fn planned(c: Config, capacity: usize) -> Result<usize> {
+    pub(in crate::model) fn planned(c: Config, capacity: usize) -> Result<usize> {
         let h = mul(c.hidden, 6)?;
         let mlp = mul(c.intermediate, 3)?;
         let d = [
@@ -552,7 +552,7 @@ impl<'model, 'weights> Session<'model, 'weights> {
         Self::with_execution(model, options, Cpu)
     }
 }
-pub(super) fn check_cancel(cancel: &AtomicBool) -> Result<()> {
+pub(in crate::model) fn check_cancel(cancel: &AtomicBool) -> Result<()> {
     if cancel.load(Ordering::Relaxed) {
         Err(Error::Cancelled)
     } else {

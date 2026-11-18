@@ -22,6 +22,7 @@ pub mod ministral3_rotary;
 pub(crate) mod packed_operations;
 mod position;
 pub mod qwen35;
+pub mod sensenova_loop;
 pub mod shared_kv;
 pub mod short_conv;
 pub mod short_conv3;

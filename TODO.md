@@ -8,6 +8,23 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- [ ] **SenseNova-Loop-9B text CLI.** Twenty targeted checks and six console
+  preflight checks pass. The explicit CPU scalar profile builds. State
+  rollback, BF16 routing and rotary, tokenizer, and packed metadata are
+  covered. The optimized scalar engine authenticates both whole shards
+  and passes real prefill, cached decode, cancellation and exact reset
+  replay at capacity 4. The guarded peak is 5.11 GiB. The pinned MLX
+  comparison matches all three greedy IDs over 744,960 logits. The MLX
+  peak was 5.62 GiB. Maximum absolute logit difference was 0.328125. Astra
+  confirms the binding seal and the diagnostic comparison. Post-seal
+  strict checks, 864 CPU and 1,069 Metal tests, the optimized CLI build and
+  five final CLI controls pass after a disk-floor retry. The CLI reports
+  first flushed output, committed-work rates and state and scratch bytes.
+  Astra approves the experimental profile. The successful whole-file text
+  CLI and wider qualification remain open.
+  [Model gates](PLAN.md#sensenova-loop-9b-acceptance) ·
+  [Check results](artifacts/sensenova-loop-9b-2026-11-18/native-progress-15-experimental-reviewed.json).
+
 - [x] Create the competitive GPU goal and audit existing profiles/source. LFM3
   remains CPU; Gemma is hybrid with 277 batched decode waits, CPU attention/unary
   work, compensated projection and no tiled-prefill GEMM. These findings do not

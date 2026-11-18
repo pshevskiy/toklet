@@ -22,6 +22,22 @@ original 1% overhead gates. No new implementation or speedup is claimed. All
 scope with no findings. Prior numerical/model rejections and UI/iPhone deferrals
 remain binding. [Evidence](../artifacts/mlx-gpu-gap-2026-11-15/planning-checks-1.json).
 
+The [SenseNova-Loop-9B text plan](../PLAN.md#sensenova-loop-9b-acceptance)
+pins the official release and public MLX conversion. Twenty targeted checks
+pass, including second-pass rollback, BF16 rotary and 24,576 exact layer-4
+router words. The CPU scalar CLI builds and passes six console preflight
+cases. The optimized native test authenticates both original shards,
+passes real prefill, cached decode, cancellation and exact reset replay,
+and peaks at 5.11 GiB for capacity 4. Same-weight stock MLX uses 5.62 GiB
+and all three greedy IDs match across the 744,960-logit diagnostic. Both
+independent readers agree. Astra confirms the binding seal and the
+same-weight diagnostic. The CLI reports first flushed output, committed-token
+throughput and KV, recurrent, convolution and scratch bytes. Strict checks,
+864 CPU and 1,069 Metal tests, the optimized CLI build, and five final CLI
+preflights pass after a disk-floor retry. Astra approves experimental use. The
+successful whole-file text runtime awaits a complete on-disk snapshot.
+[Checks and limitations](../artifacts/sensenova-loop-9b-2026-11-18/native-progress-15-experimental-reviewed.json).
+
 The [current Gemma cost map](gemma-current-cost-map.md) records four selected
 GPU frames and two main-thread sample windows from guarded 384/128 work.
 CPU attention has 46.68%/28.77% sample share before first token/during decode;

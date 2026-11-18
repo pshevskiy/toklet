@@ -1,0 +1,209 @@
+{
+  "format": "toklet-sensenova-loop-text-oracle-v1",
+  "revision": "b9a36a9750f28b7a0916dd403a87d1f79a02e1cc",
+  "asset_authority_sha256": "e94b5149c5f71d76316506aa6f00e67ba8d9fc459848ea62816ed89824a68801",
+  "eos_ids": [
+    248044,
+    248046
+  ],
+  "version": {
+    "Jinja2": "3.1.6",
+    "tokenizers": "0.22.2",
+    "transformers": "5.7.0"
+  },
+  "cases": [
+    {
+      "label": "single",
+      "messages": [
+        {
+          "role": "user",
+          "content": "  What is 13×7?\n"
+        }
+      ],
+      "rendered": "<|im_start|>user\nWhat is 13×7?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "ids": [
+        248045,
+        846,
+        198,
+        3710,
+        369,
+        220,
+        16,
+        18,
+        17044,
+        22,
+        30,
+        248046,
+        198,
+        248045,
+        74455,
+        198,
+        248068,
+        271,
+        248069,
+        271
+      ]
+    },
+    {
+      "label": "history",
+      "messages": [
+        {
+          "role": "user",
+          "content": "\tHello\n"
+        },
+        {
+          "role": "assistant",
+          "content": "  Hello!\r\n"
+        },
+        {
+          "role": "user",
+          "content": "　Please continue. "
+        }
+      ],
+      "rendered": "<|im_start|>user\nHello<|im_end|>\n<|im_start|>assistant\nHello!<|im_end|>\n<|im_start|>user\nPlease continue.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "ids": [
+        248045,
+        846,
+        198,
+        9419,
+        248046,
+        198,
+        248045,
+        74455,
+        198,
+        9419,
+        0,
+        248046,
+        198,
+        248045,
+        846,
+        198,
+        5328,
+        2962,
+        13,
+        248046,
+        198,
+        248045,
+        74455,
+        198,
+        248068,
+        271,
+        248069,
+        271
+      ]
+    },
+    {
+      "label": "system_multilingual",
+      "messages": [
+        {
+          "role": "system",
+          "content": "  简洁回答。  "
+        },
+        {
+          "role": "user",
+          "content": "  東京 👋\n"
+        },
+        {
+          "role": "assistant",
+          "content": "\tBonjour, Café.\n"
+        },
+        {
+          "role": "user",
+          "content": "  ¿Y ahora?  "
+        }
+      ],
+      "rendered": "<|im_start|>system\n简洁回答。<|im_end|>\n<|im_start|>user\n東京 👋<|im_end|>\n<|im_start|>assistant\nBonjour, Café.<|im_end|>\n<|im_start|>user\n¿Y ahora?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "ids": [
+        248045,
+        8678,
+        198,
+        110123,
+        97913,
+        1710,
+        248046,
+        198,
+        248045,
+        846,
+        198,
+        115197,
+        59720,
+        233,
+        248046,
+        198,
+        248045,
+        74455,
+        198,
+        78768,
+        11,
+        63457,
+        13,
+        248046,
+        198,
+        248045,
+        846,
+        198,
+        29197,
+        56,
+        44774,
+        30,
+        248046,
+        198,
+        248045,
+        74455,
+        198,
+        248068,
+        271,
+        248069,
+        271
+      ]
+    },
+    {
+      "label": "nfc_and_multiline",
+      "messages": [
+        {
+          "role": "user",
+          "content": "\nCafé — two lines.\nSecond line.\n"
+        }
+      ],
+      "rendered": "<|im_start|>user\nCafé — two lines.\nSecond line.<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "ids": [
+        248045,
+        846,
+        198,
+        34,
+        2492,
+        933,
+        1892,
+        1330,
+        4965,
+        13,
+        198,
+        15207,
+        1500,
+        13,
+        248046,
+        198,
+        248045,
+        74455,
+        198,
+        248068,
+        271,
+        248069,
+        271
+      ]
+    }
+  ],
+  "response": {
+    "text": " 東京 👋 café!",
+    "ids": [
+      248044,
+      220,
+      115197,
+      59720,
+      233,
+      50203,
+      0,
+      248046
+    ]
+  }
+}

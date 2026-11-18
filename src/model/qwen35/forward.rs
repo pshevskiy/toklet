@@ -1,8 +1,9 @@
 use super::*;
+use crate::model::sensenova_loop::rotary::TextRotary;
 use state::{AttentionScratch, DeltaScratch, DeltaState, Kv, Scratch, check_cancel};
 use std::sync::atomic::AtomicBool;
 
-pub(super) struct Trace<'a, F> {
+pub(in crate::model) struct Trace<'a, F> {
     pub observe: &'a mut F,
     pub token: usize,
     pub position: usize,
@@ -77,7 +78,7 @@ fn sigmoid(x: f32) -> f32 {
 }
 
 #[allow(clippy::too_many_arguments)]
-fn delta<
+pub(in crate::model) fn delta<
     const TRACE: bool,
     F: for<'b> FnMut(Observation<'b>) -> Result<()>,
     M: MatrixStorage,
@@ -86,11 +87,13 @@ fn delta<
     c: Config,
     w: &DeltaWeights<'_, M>,
     execute: &mut E,
-    state: &mut DeltaState,
+    history: &[f32],
+    next_history: &mut [f32],
+    previous: &[f32],
+    next: &mut [f32],
     s: &mut DeltaScratch,
     input: &[f32],
     output: &mut [f32],
-    local: usize,
     work: &mut Work,
     t: &mut Trace<'_, F>,
 ) -> Result<()> {
@@ -102,7 +105,6 @@ fn delta<
     t.emit::<TRACE>("delta_a", None, &s.a)?;
     project(execute, &w.b, input, &mut s.b, work)?;
     t.emit::<TRACE>("delta_b", None, &s.b)?;
-    let (history, next_history) = state.history.next(local);
     cpu::causal_depthwise_conv_step(
         &s.qkv,
         w.convolution,
@@ -126,7 +128,6 @@ fn delta<
     cpu::gated_delta_gates(&s.a, &s.b, w.a_log, w.dt_bias, &mut s.decay, &mut s.beta)?;
     t.emit::<TRACE>("delta_decay", None, &s.decay)?;
     t.emit::<TRACE>("delta_beta", None, &s.beta)?;
-    let (previous, next) = state.rnn.next(local);
     cpu::gated_delta_step(
         &s.q,
         &s.k,
@@ -162,7 +163,7 @@ fn delta<
 }
 
 #[allow(clippy::too_many_arguments)]
-fn attention<
+pub(in crate::model) fn attention<
     const TRACE: bool,
     F: for<'b> FnMut(Observation<'b>) -> Result<()>,
     M: MatrixStorage,
@@ -178,6 +179,7 @@ fn attention<
     position: usize,
     absolute: usize,
     capacity: usize,
+    rotary: Option<&TextRotary>,
     work: &mut Work,
     t: &mut Trace<'_, F>,
 ) -> Result<()> {
@@ -213,8 +215,17 @@ fn attention<
     )?;
     t.emit::<TRACE>("attention_q_norm", None, &s.q_norm)?;
     t.emit::<TRACE>("attention_k_norm", None, &s.k_norm)?;
-    partial_rotary(&s.q_norm, &mut s.q_rot, c.query_heads, c, absolute)?;
-    partial_rotary(&s.k_norm, &mut s.k_rot, c.kv_heads, c, absolute)?;
+    if let Some(rotary) = rotary {
+        s.q_rot.copy_from_slice(&s.q_norm);
+        s.k_rot.copy_from_slice(&s.k_norm);
+        rotary.apply_bf16(absolute, &mut s.q_rot, &mut s.k_rot)?;
+        for value in &mut s.v {
+            *value = half::bf16::from_f32(*value).to_f32();
+        }
+    } else {
+        partial_rotary(&s.q_norm, &mut s.q_rot, c.query_heads, c, absolute)?;
+        partial_rotary(&s.k_norm, &mut s.k_rot, c.kv_heads, c, absolute)?;
+    }
     t.emit::<TRACE>("attention_q_rot", None, &s.q_rot)?;
     t.emit::<TRACE>("attention_k_rot", None, &s.k_rot)?;
     let stride = capacity * c.head_dim;
@@ -273,6 +284,28 @@ fn attention<
     project(execute, &w.out, &s.gated, output, work)
 }
 
+pub(in crate::model) fn mlp_normalized<
+    const TRACE: bool,
+    F: for<'b> FnMut(Observation<'b>) -> Result<()>,
+    M: MatrixStorage,
+    E: Execution<M>,
+>(
+    w: &LayerWeights<'_, M>,
+    execute: &mut E,
+    s: &mut Scratch,
+    work: &mut Work,
+    t: &mut Trace<'_, F>,
+) -> Result<()> {
+    project(execute, &w.gate, &s.post_norm, &mut s.gate, work)?;
+    t.emit::<TRACE>("mlp_gate", None, &s.gate)?;
+    project(execute, &w.up, &s.post_norm, &mut s.up, work)?;
+    t.emit::<TRACE>("mlp_up", None, &s.up)?;
+    cpu::gated_silu(&s.gate, &s.up, &mut s.activated)?;
+    t.emit::<TRACE>("mlp_activated", None, &s.activated)?;
+    project(execute, &w.down, &s.activated, &mut s.output, work)?;
+    t.emit::<TRACE>("mlp_output", None, &s.output)
+}
+
 #[allow(clippy::too_many_arguments)]
 pub(super) fn frame<
     const TRACE: bool,
@@ -312,18 +345,25 @@ pub(super) fn frame<
         )?;
         t.emit::<TRACE>("input_norm", None, &s.input_norm)?;
         match &w.mixing {
-            MixingWeights::Delta(d) => delta::<TRACE, F, M, E>(
-                c,
-                d,
-                execute,
-                &mut states[layer.owner],
-                &mut s.delta,
-                &s.input_norm,
-                &mut s.operator,
-                local,
-                work,
-                t,
-            )?,
+            MixingWeights::Delta(d) => {
+                let state = &mut states[layer.owner];
+                let (history, next_history) = state.history.next(local);
+                let (previous, next) = state.rnn.next(local);
+                delta::<TRACE, F, M, E>(
+                    c,
+                    d,
+                    execute,
+                    history,
+                    next_history,
+                    previous,
+                    next,
+                    &mut s.delta,
+                    &s.input_norm,
+                    &mut s.operator,
+                    work,
+                    t,
+                )?;
+            }
             MixingWeights::Attention(a) => attention::<TRACE, F, M, E>(
                 c,
                 a,
@@ -335,6 +375,7 @@ pub(super) fn frame<
                 position,
                 absolute,
                 capacity,
+                None,
                 work,
                 t,
             )?,
@@ -351,14 +392,7 @@ pub(super) fn frame<
             c.rms_epsilon,
         )?;
         t.emit::<TRACE>("post_norm", None, &s.post_norm)?;
-        project(execute, &w.gate, &s.post_norm, &mut s.gate, work)?;
-        t.emit::<TRACE>("mlp_gate", None, &s.gate)?;
-        project(execute, &w.up, &s.post_norm, &mut s.up, work)?;
-        t.emit::<TRACE>("mlp_up", None, &s.up)?;
-        cpu::gated_silu(&s.gate, &s.up, &mut s.activated)?;
-        t.emit::<TRACE>("mlp_activated", None, &s.activated)?;
-        project(execute, &w.down, &s.activated, &mut s.output, work)?;
-        t.emit::<TRACE>("mlp_output", None, &s.output)?;
+        mlp_normalized::<TRACE, F, M, E>(w, execute, s, work, t)?;
         cpu::residual_add(&mut s.x, &s.output)?;
         t.emit::<TRACE>("layer_output", None, &s.x)?;
     }

@@ -110,6 +110,27 @@ cargo test --locked --offline --release --bin toklet full_pinned_tokenizer_match
 python3 tools/reference/cli.py --output artifacts/qwen-cli-check
 ```
 
+### SenseNova-Loop-9B
+
+The experimental text profile runs the pinned SenseNova-Loop-9B MLX 4-bit
+conversion through Toklet's CPU reference engine. Download the exact snapshot
+with the Hugging Face CLI and point Toklet at its local directory. The two
+weight shards require 5.96 GB on disk. [MLX conversion](https://huggingface.co/nativ-community/SenseNova-Loop-9B-4bit/tree/b9a36a9750f28b7a0916dd403a87d1f79a02e1cc)
+
+```sh
+hf download nativ-community/SenseNova-Loop-9B-4bit \
+  --revision b9a36a9750f28b7a0916dd403a87d1f79a02e1cc \
+  --local-dir models/SenseNova-Loop-9B-4bit
+target/release/toklet --model-profile sensenova-loop-9b-mlx --backend cpu \
+  --model models/SenseNova-Loop-9B-4bit --tokens 9419,198 \
+  --context-capacity 4 --prefill-chunk 2 --max-new-tokens 2 --json
+```
+
+The profile also accepts `--prompt` or `--messages`. The exact-weight engine
+check covers capacity 4 with chunk size 2. The profile admits up to 512
+positions with chunks up to 32. Whole-file CLI qualification is tracked in
+[TODO.md](TODO.md#current-and-next-task).
+
 ## Historical implementation and qualification notes
 
 The following notes preserve the implementation sequence and the scope known at

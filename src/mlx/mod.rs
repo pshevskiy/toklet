@@ -19,4 +19,5 @@ pub mod qwen;
 mod qwen3;
 pub mod qwen35;
 pub mod reference;
+pub mod sensenova_loop;
 mod tensor_metadata;

@@ -4,6 +4,7 @@ mod inspect;
 mod plan;
 mod profile;
 mod qwen35_2b;
+mod sensenova;
 use chat::{Assets, OutputDecoder, invalid};
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
@@ -41,7 +42,7 @@ Usage: toklet [OPTIONS]
        toklet profile --help
 
   --model PATH              Local model directory
-  --model-profile PROFILE   qwen (default), gemma4-bf16, lfm3-bf16, ministral3-diagnostic, qwen35-2b-diagnostic
+  --model-profile PROFILE   qwen (default), gemma4-bf16, lfm3-bf16, ministral3-diagnostic, qwen35-2b-diagnostic, sensenova-loop-9b-mlx
   --submission MODE         Gemma only: per-tile (default), batched-single-row
   --request-metrics MODE    Gemma only: disabled (default), summary
   --metrics-output PATH     Explicit summary JSONL export after inference
@@ -76,6 +77,8 @@ Gemma BF16 uses the official Metal route, capacity512/chunk32 at most;
 request metrics default to disabled and explicit summary export runs after inference.
 Qwen3.5-2B diagnostic uses GPU projections with CPU FP32 state, token IDs and
 JSON only; default capacity128/chunk32, maximum capacity512/chunk32.
+SenseNova-Loop-9B uses pinned MLX 4-bit weights and one-shot CPU text or token IDs.
+Its default and maximum are capacity512/chunk32.
 Interactive actions: generate, append (raw text or IDs), continue, reset.
 Ctrl-C cancels between backend chunks/steps; idle interactive Ctrl-C exits.";
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -83,6 +86,7 @@ enum ModelProfile {
     Qwen,
     Gemma4Bf16,
     Lfm3Bf16,
+    SenseNovaLoopMlx,
     Ministral3Diagnostic,
     Qwen35TwoBDiagnostic,
 }
@@ -218,11 +222,12 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
                     "qwen" => ModelProfile::Qwen,
                     "gemma4-bf16" => ModelProfile::Gemma4Bf16,
                     "lfm3-bf16" => ModelProfile::Lfm3Bf16,
+                    "sensenova-loop-9b-mlx" => ModelProfile::SenseNovaLoopMlx,
                     "ministral3-diagnostic" => ModelProfile::Ministral3Diagnostic,
                     "qwen35-2b-diagnostic" => ModelProfile::Qwen35TwoBDiagnostic,
                     _ => {
                         return Err(invalid(
-                            "model profile must be qwen, gemma4-bf16, lfm3-bf16, ministral3-diagnostic or qwen35-2b-diagnostic",
+                            "model profile must be qwen, gemma4-bf16, lfm3-bf16, ministral3-diagnostic, qwen35-2b-diagnostic or sensenova-loop-9b-mlx",
                         ));
                     }
                 };
@@ -299,6 +304,27 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
         return Err(invalid(
             "submission and request metrics flags require gemma4-bf16",
         ));
+    }
+    if a.model_profile == ModelProfile::SenseNovaLoopMlx {
+        if a.backend != "cpu"
+            || seen.contains("--cpu-projection")
+            || a.tools.is_some()
+            || a.raw
+            || a.interactive
+        {
+            return Err(invalid(
+                "SenseNova uses the fixed CPU scalar reference and one-shot text or IDs",
+            ));
+        }
+        if !seen.contains("--context-capacity") {
+            a.capacity = 512;
+        }
+        if !seen.contains("--prefill-chunk") {
+            a.chunk = 32;
+        }
+        if a.capacity > 512 || a.chunk > 32 || a.max > a.capacity {
+            return Err(invalid("SenseNova supports capacity512/chunk32 at most"));
+        }
     }
     if a.model_profile == ModelProfile::Lfm3Bf16 {
         if a.backend != "cpu" || seen.contains("--cpu-projection") || a.tools.is_some() {
@@ -517,7 +543,8 @@ impl Frontend {
                 }
                 toklet::app_chat::lfm3::render(messages)
             }
-            ModelProfile::Gemma4Bf16
+            ModelProfile::SenseNovaLoopMlx
+            | ModelProfile::Gemma4Bf16
             | ModelProfile::Ministral3Diagnostic
             | ModelProfile::Qwen35TwoBDiagnostic => {
                 Err(invalid("Diagnostic profile accepts only token IDs"))
@@ -771,6 +798,9 @@ fn array_file(path: &std::path::Path) -> io::Result<Vec<Value>> {
         .ok_or_else(|| invalid("expected a JSON array"))
 }
 fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
+    if a.model_profile == ModelProfile::SenseNovaLoopMlx {
+        return sensenova::run(a);
+    }
     if a.model_profile == ModelProfile::Gemma4Bf16 {
         return gemma4::run(a);
     }

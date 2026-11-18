@@ -18,6 +18,7 @@ pub mod minicpm5;
 pub mod qwen35;
 pub mod qwen3_content;
 mod qwen_content;
+pub mod sensenova_loop;
 pub mod stream;
 
 pub const MAX_TEXT: usize = 64 * 1024;
