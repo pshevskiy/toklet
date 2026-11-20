@@ -1,5 +1,5 @@
 //! Shared T128 storage for the three individually completed Q/K/V projections.
-use super::{pair::domain_tag, *};
+use super::{pair::domain_tag, projection_tile::NormalExtent, *};
 use crate::{metal::lfm3_shared_weights::BankRef, model::Error};
 
 const T: usize = 128;
@@ -35,14 +35,31 @@ struct Census {
     wait: f64,
 }
 
+// Reuse the duplicate scalar pipeline pair's inline slots. Other
+// workspace fields and all GPU buffer extents retain their released shape.
+const _: () = {
+    assert!(size_of::<Option<Kernels>>() == size_of::<Kernels>());
+    assert!(std::mem::align_of::<Option<Kernels>>() == std::mem::align_of::<Kernels>());
+};
+
 pub(super) struct Workspace {
-    kernels: Kernels,
+    panel: Option<Kernels>,
     input: Buffer<u16>,
     tags: Buffer<u32>,
     planes: [Plane; 3],
     owners: [[usize; 3]; L],
     census: [[Census; 3]; L],
 }
+
+const _: () = assert!(
+    size_of::<Option<Workspace>>()
+        == size_of::<Kernels>()
+            + size_of::<Buffer<u16>>()
+            + size_of::<Buffer<u32>>()
+            + size_of::<[Plane; 3]>()
+            + size_of::<[[usize; 3]; L]>()
+            + size_of::<[[Census; 3]; L]>()
+);
 
 impl Workspace {
     pub(super) const BYTE_SIZES: [usize; 14] = [
@@ -64,8 +81,7 @@ impl Workspace {
 
     pub(super) fn new(gpu: &Gpu) -> std::result::Result<Self, Error> {
         Ok(Self {
-            kernels: Kernels::with_shader(gpu, include_str!("normal_domain.metal"))
-                .ok_or(Error::InvalidConfig("LFM3 QKV pipelines"))?,
+            panel: Kernels::with_shader(gpu, include_str!("panel84_attention_linear.metal")),
             input: Buffer::new(gpu, T * I).map_err(|_| Error::Allocation)?,
             tags: Buffer::new(gpu, T).map_err(|_| Error::Allocation)?,
             planes: [
@@ -76,6 +92,10 @@ impl Workspace {
             owners: [[0; 3]; L],
             census: Default::default(),
         })
+    }
+
+    pub(super) fn panel(&self) -> Option<&Kernels> {
+        self.panel.as_ref()
     }
 
     fn slot(layer: usize) -> std::result::Result<usize, Error> {
@@ -121,6 +141,7 @@ impl Workspace {
     pub(super) fn run(
         &mut self,
         gpu: &Gpu,
+        scalar: &Kernels,
         layer: usize,
         banks: [BankRef<'_>; 3],
         rhs: &[bf16],
@@ -150,9 +171,23 @@ impl Workspace {
                 }
             })
         });
+        let input_extent = self
+            .panel
+            .as_ref()
+            .and_then(|_| self.tags.with_slice(NormalExtent::from_tags));
         for (j, (bank, plane)) in banks.into_iter().zip(&mut self.planes).enumerate() {
             let n = N[j];
             let active = T * n;
+            let offset = slot * n;
+            let panel = self.panel.as_ref().filter(|_| {
+                input_extent.is_some_and(|x| {
+                    plane
+                        .weight_tags
+                        .with_slice(|w| x.certifies(&w[offset..offset + n]))
+                })
+            });
+            let kernels = panel.unwrap_or(scalar);
+            let groups = if panel.is_some() { active / 32 } else { active };
             plane.output.with_mut(|w| w.fill(SENTINEL));
             plane.routes.with_mut(|w| w.fill(ROUTE_GUARD));
             plane
@@ -163,8 +198,8 @@ impl Workspace {
                 .command()
                 .map_err(|_| Error::InvalidConfig("LFM3 QKV command"))?;
             for (pipeline, groups, project) in [
-                (&self.kernels.admission, admission_groups, false),
-                (&self.kernels.projection, active, true),
+                (&kernels.admission, admission_groups, false),
+                (&kernels.projection, groups, true),
             ] {
                 let enc = command
                     .computeCommandEncoder()
@@ -184,12 +219,14 @@ impl Workspace {
                     if project {
                         enc.setBuffer_offset_atIndex(Some(&plane.output.raw), 0, 4);
                         enc.setBuffer_offset_atIndex(Some(&plane.routes.raw), 0, 5);
-                        enc.setBuffer_offset_atIndex(Some(&self.tags.raw), 0, 6);
-                        enc.setBuffer_offset_atIndex(
-                            Some(&plane.weight_tags.raw),
-                            slot * n * size_of::<u32>(),
-                            7,
-                        );
+                        if panel.is_none() {
+                            enc.setBuffer_offset_atIndex(Some(&self.tags.raw), 0, 6);
+                            enc.setBuffer_offset_atIndex(
+                                Some(&plane.weight_tags.raw),
+                                offset * size_of::<u32>(),
+                                7,
+                            );
+                        }
                     }
                 }
                 enc.dispatchThreadgroups_threadsPerThreadgroup(
@@ -239,7 +276,7 @@ impl Workspace {
                                 native += 1;
                                 true
                             } else {
-                                (v & 4095) + (v >> 12) <= 2080
+                                panel.is_none() && (v & 4095) + (v >> 12) <= 2080
                             }
                         }))
             });

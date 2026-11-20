@@ -187,3 +187,31 @@ pub(super) fn record(word: u32, shift: u32, k: usize, tiled: bool, rows: &mut [u
     rows[index] += 1;
     true
 }
+
+// The extrema of the Cartesian product are sums of the independent
+// input and weight extrema. Every individual pair then meets normal_pair.
+#[derive(Clone, Copy)]
+pub(super) struct NormalExtent {
+    min: i32,
+    max: i32,
+}
+
+impl NormalExtent {
+    pub(super) fn from_tags(tags: &[u32]) -> Option<Self> {
+        let mut min = 255;
+        let mut max = 0;
+        for &tag in tags {
+            if tag & 0x30000 != 0x10000 {
+                return None;
+            }
+            min = min.min((tag & 255) as i32);
+            max = max.max(((tag >> 8) & 255) as i32);
+        }
+        (min <= max).then_some(Self { min, max })
+    }
+
+    pub(super) fn certifies(self, weights: &[u32]) -> bool {
+        Self::from_tags(weights)
+            .is_some_and(|w| self.min + w.min - 254 >= -112 && self.max + w.max - 254 <= 109)
+    }
+}

@@ -80,10 +80,15 @@ impl SharedMlpWorkspace {
         input: &[bf16],
         out: [&mut [bf16]; 3],
     ) -> std::result::Result<(), Error> {
+        let scalar = self
+            .output
+            .as_ref()
+            .ok_or(Error::InvalidConfig("LFM3 output workspace"))?
+            .scalar_kernels();
         self.qkv
             .as_mut()
             .ok_or(Error::InvalidConfig("LFM3 QKV workspace absent"))?
-            .run(&self.pair.gpu, layer, banks, input, out)
+            .run(&self.pair.gpu, scalar, layer, banks, input, out)
     }
 
     pub(crate) fn qkv_stats(&self) -> Option<serde_json::Value> {
@@ -596,10 +601,21 @@ impl SharedMlpWorkspace {
         output: &mut [bf16],
         count: usize,
     ) -> std::result::Result<(), Error> {
+        let panel = self
+            .qkv
+            .as_ref()
+            .and_then(super::qkv_workspace::Workspace::panel);
         self.output
             .as_mut()
             .ok_or(Error::InvalidConfig("LFM3 output workspace"))?
-            .project(&self.pair.gpu, bank, (layer, role), input, output, count)?;
+            .project(
+                &self.pair.gpu,
+                bank,
+                (layer, role, panel),
+                input,
+                output,
+                count,
+            )?;
         Ok(())
     }
 

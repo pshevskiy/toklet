@@ -1,6 +1,6 @@
 //! One synchronous operator output workspace for the all-layer shared-placement witness.
-use super::pair::domain_tag;
 use super::*;
+use super::{pair::domain_tag, projection_tile::NormalExtent};
 use crate::{metal::lfm3_shared_weights::BankRef, model::Error};
 const O: usize = 2048;
 
@@ -53,6 +53,10 @@ impl OutputWorkspace {
         })
     }
 
+    pub(super) fn scalar_kernels(&self) -> &Kernels {
+        &self.kernels
+    }
+
     pub(super) fn seal_tags(
         &mut self,
         gpu: &Gpu,
@@ -93,7 +97,7 @@ impl OutputWorkspace {
         &mut self,
         gpu: &Gpu,
         bank: BankRef<'_>,
-        (layer, role): (usize, usize),
+        (layer, role, panel): (usize, usize, Option<&Kernels>),
         input: &[bf16],
         output: &mut [bf16],
         count: usize,
@@ -129,6 +133,16 @@ impl OutputWorkspace {
                 }
             });
         });
+        let panel = panel.filter(|_| {
+            role == 1
+                && count == MAX
+                && self
+                    .input_tags
+                    .with_slice(NormalExtent::from_tags)
+                    .is_some_and(|x| tags.with_slice(|w| x.certifies(w)))
+        });
+        let kernels = panel.unwrap_or(&self.kernels);
+        let groups = if panel.is_some() { active / 32 } else { active };
         self.candidate.with_mut(|dst| dst[..=active].fill(SENTINEL));
         self.routes.with_mut(|dst| dst[..=active].fill(ROUTE_GUARD));
         self.status
@@ -138,8 +152,8 @@ impl OutputWorkspace {
             .command()
             .map_err(|_| Error::InvalidConfig("LFM3 shared operator output command"))?;
         for (pipeline, groups, project) in [
-            (&self.kernels.admission, admission_groups, false),
-            (&self.kernels.projection, active, true),
+            (&kernels.admission, admission_groups, false),
+            (&kernels.projection, groups, true),
         ] {
             let encoder = command
                 .computeCommandEncoder()
@@ -159,8 +173,10 @@ impl OutputWorkspace {
                 if project {
                     encoder.setBuffer_offset_atIndex(Some(&self.candidate.raw), 0, 4);
                     encoder.setBuffer_offset_atIndex(Some(&self.routes.raw), 0, 5);
-                    encoder.setBuffer_offset_atIndex(Some(&self.input_tags.raw), 0, 6);
-                    encoder.setBuffer_offset_atIndex(Some(&tags.raw), 0, 7);
+                    if panel.is_none() {
+                        encoder.setBuffer_offset_atIndex(Some(&self.input_tags.raw), 0, 6);
+                        encoder.setBuffer_offset_atIndex(Some(&tags.raw), 0, 7);
+                    }
                 }
             }
             encoder.dispatchThreadgroups_threadsPerThreadgroup(
@@ -205,7 +221,7 @@ impl OutputWorkspace {
                             native += 1;
                             true
                         } else {
-                            (v & 4095) + (v >> 12) <= (I + 32) as u32
+                            panel.is_none() && (v & 4095) + (v >> 12) <= (I + 32) as u32
                         }
                     })
                 } else {
