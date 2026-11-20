@@ -38,6 +38,12 @@ pub mod gemma_rms;
 mod gemma_residual;
 pub mod gemma_rotary;
 pub mod lfm2;
+#[cfg(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64"))]
+mod lfm3;
+#[cfg(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64"))]
+pub(crate) use lfm3::SharedMlpWorkspace;
+#[cfg(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64"))]
+pub(crate) mod lfm3_shared_weights;
 mod llama3_rotary;
 #[cfg(all(feature = "llama-staged-mac-probe", target_os = "macos"))]
 mod llama_staged;

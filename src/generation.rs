@@ -215,7 +215,15 @@ pub fn generate(
             return Ok(finish(report, session, started));
         }
         let clock = Instant::now();
-        let evaluated = session.evaluate_next_chunk()?;
+        let evaluated = match session.evaluate_next_chunk() {
+            Ok(evaluated) => evaluated,
+            Err(session::Error::Model(crate::model::Error::Cancelled)) => {
+                report.prefill_seconds += clock.elapsed().as_secs_f64();
+                report.reason = StopReason::Cancelled;
+                return Ok(finish(report, session, started));
+            }
+            Err(error) => return Err(error.into()),
+        };
         report.prefill_seconds += clock.elapsed().as_secs_f64();
         report.prefill_tokens += evaluated;
     }
@@ -226,7 +234,15 @@ pub fn generate(
         }
         if index > 0 {
             let clock = Instant::now();
-            report.decode_evaluations += session.evaluate_next_chunk()?;
+            match session.evaluate_next_chunk() {
+                Ok(evaluated) => report.decode_evaluations += evaluated,
+                Err(session::Error::Model(crate::model::Error::Cancelled)) => {
+                    report.decode_seconds += clock.elapsed().as_secs_f64();
+                    report.reason = StopReason::Cancelled;
+                    break;
+                }
+                Err(error) => return Err(error.into()),
+            }
             report.decode_seconds += clock.elapsed().as_secs_f64();
             if cancelled.load(Ordering::Relaxed) {
                 report.reason = StopReason::Cancelled;

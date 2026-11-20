@@ -150,6 +150,7 @@ pub enum Error {
         limit: usize,
     },
     ScratchMismatch,
+    Cancelled,
     Allocation,
 }
 
@@ -181,6 +182,7 @@ impl fmt::Display for Error {
             Self::ScratchMismatch => {
                 write!(f, "scratch belongs to a different decoder configuration")
             }
+            Self::Cancelled => f.write_str("decoder frame cancelled before commit"),
             Self::Allocation => write!(f, "unable to allocate decoder buffers"),
         }
     }

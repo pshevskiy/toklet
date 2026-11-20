@@ -14,6 +14,11 @@ use crate::model::{
     lfm3_state::CONV_LAYERS,
 };
 
+#[cfg(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64"))]
+mod shared;
+#[cfg(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64"))]
+pub(crate) use shared::{QKV_BANKS, QKV_BYTES, TIED_BYTES, load_lfm3_shared, plan_lfm3_shared};
+
 pub(crate) const PARAMETERS: usize = 1_728_801_536;
 const BYTES: u64 = 3_457_635_448;
 const ORIGIN: usize = 32_376;
@@ -62,6 +67,8 @@ pub(crate) struct Layer {
 
 pub(crate) struct Weights {
     data: Vec<bf16>,
+    #[cfg(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64"))]
+    shared: Option<shared::SharedWeights>,
     pub embedding: Tensor,
     pub final_norm: Tensor,
     pub layers: [Layer; LAYERS],
@@ -69,7 +76,19 @@ pub(crate) struct Weights {
 
 impl Weights {
     pub fn get(&self, tensor: Tensor) -> &[bf16] {
+        #[cfg(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64"))]
+        if let Some(shared) = &self.shared {
+            return shared.get(&self.data, tensor);
+        }
         &self.data[tensor.begin..tensor.end]
+    }
+
+    #[cfg(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64"))]
+    pub(crate) fn shared_bank(
+        &self,
+        tensor: Tensor,
+    ) -> Option<crate::metal::lfm3_shared_weights::BankRef<'_>> {
+        self.shared.as_ref()?.bank(tensor)
     }
 }
 
@@ -140,23 +159,18 @@ pub struct Lfm3LoadReport {
     pub rotary_ns: u128,
 }
 
-/// Load one immutable BF16 bank from the authenticated single-file candidate.
-/// Admit the requested model and exclusive session before reading payload.
-pub fn load_lfm3(
-    directory: &Path,
-    capacity: usize,
-    chunk: usize,
-    memory_limit_bytes: usize,
-) -> Result<LoadedLfm3, Error> {
-    let memory = Model::plan(capacity, chunk)?;
-    let limit = memory_limit_bytes.min(INITIAL_MEMORY_LIMIT_BYTES);
-    let required = memory
-        .total_bytes
-        .checked_add(LOAD_ALLOWANCE)
-        .ok_or_else(|| invalid("LFM3 working-set size overflow"))?;
-    if required > limit {
-        return Err(Error::Budget { required, limit });
-    }
+struct Source {
+    audit: FileAudit,
+    embedding: Tensor,
+    final_norm: Tensor,
+    layers: [Layer; LAYERS],
+    authenticated_ns: u128,
+    layout_ns: u128,
+    #[cfg(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64"))]
+    metadata: Metadata,
+}
+
+fn read_source(directory: &Path) -> Result<Source, Error> {
     let files = [ExpectedFile {
         name: "model.safetensors",
         bytes: BYTES,
@@ -198,6 +212,44 @@ pub fn load_lfm3(
         .try_into()
         .map_err(|_| invalid("LFM3 layer count"))?;
     let layout_ns = started.elapsed().as_nanos();
+    Ok(Source {
+        audit,
+        embedding,
+        final_norm,
+        layers,
+        authenticated_ns,
+        layout_ns,
+        #[cfg(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64"))]
+        metadata,
+    })
+}
+
+/// Load one immutable BF16 bank from the authenticated single-file candidate.
+/// Admit the requested model and exclusive session before reading payload.
+pub fn load_lfm3(
+    directory: &Path,
+    capacity: usize,
+    chunk: usize,
+    memory_limit_bytes: usize,
+) -> Result<LoadedLfm3, Error> {
+    let memory = Model::plan(capacity, chunk)?;
+    let limit = memory_limit_bytes.min(INITIAL_MEMORY_LIMIT_BYTES);
+    let required = memory
+        .total_bytes
+        .checked_add(LOAD_ALLOWANCE)
+        .ok_or_else(|| invalid("LFM3 working-set size overflow"))?;
+    if required > limit {
+        return Err(Error::Budget { required, limit });
+    }
+    let Source {
+        mut audit,
+        embedding,
+        final_norm,
+        layers,
+        authenticated_ns,
+        layout_ns,
+        ..
+    } = read_source(directory)?;
     let started = Instant::now();
     let mut data = reserve(PARAMETERS)?;
     audit.visit(1, |bytes| {
@@ -222,6 +274,8 @@ pub fn load_lfm3(
     let model = Model::from_verified(
         Weights {
             data,
+            #[cfg(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64"))]
+            shared: None,
             embedding,
             final_norm,
             layers,

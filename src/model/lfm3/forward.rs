@@ -33,10 +33,53 @@ impl Session<'_> {
     pub(super) fn step<const TRACE: bool, F>(
         &mut self,
         tokens: &[u32],
-        mut observer: F,
+        observer: F,
     ) -> Result<&[bf16], Error>
     where
         F: FnMut(Observation<'_>) -> Result<(), Error>,
+    {
+        self.step_placed::<TRACE, false, _, _, _, _, _, _, _, _>(
+            tokens,
+            observer,
+            |_, _, _, _| unreachable!(),
+            |_, _, _, _, _| unreachable!(),
+            |_, _, _, _| unreachable!(),
+            |_, _, _, _, _| unreachable!(),
+            |_, _, _| Ok(false),
+            |_, _, _| Ok(false),
+            |_, _, _, _, _| Ok(false),
+        )
+    }
+
+    // The operator closures are statically dispatched and borrow disjoint session resources.
+    #[allow(clippy::too_many_arguments)]
+    pub(super) fn step_placed<const TRACE: bool, const METAL: bool, F, P, M, D, O, Q, J, A>(
+        &mut self,
+        tokens: &[u32],
+        mut observer: F,
+        mut project_conv: P,
+        mut pair: M,
+        mut down: D,
+        mut output_projection: O,
+        mut qkv: Q,
+        mut head: J,
+        mut placed_attention: A,
+    ) -> Result<&[bf16], Error>
+    where
+        F: FnMut(Observation<'_>) -> Result<(), Error>,
+        P: FnMut(usize, &[bf16], &mut [bf16], usize) -> Result<(), Error>,
+        M: FnMut(usize, &[bf16], &mut [bf16], &mut [bf16], usize) -> Result<(), Error>,
+        D: FnMut(usize, &[bf16], &mut [bf16], usize) -> Result<(), Error>,
+        O: FnMut(usize, usize, &[bf16], &mut [bf16], usize) -> Result<(), Error>,
+        Q: FnMut(usize, &[bf16], [&mut [bf16]; 3]) -> Result<bool, Error>,
+        A: FnMut(
+            usize,
+            &[bf16],
+            &[cpu::KvSegment<'_, bf16>; 3],
+            &mut [bf16],
+            &cpu::SpanAttentionShape,
+        ) -> Result<bool, Error>,
+        J: FnMut(&[bf16], &mut [bf16], usize) -> Result<bool, Error>,
     {
         let count = tokens.len();
         let offset = self.state.offset();
@@ -111,14 +154,19 @@ impl Session<'_> {
                     coefficients,
                     output: project_out,
                 } => {
-                    linear(
-                        normalized,
-                        weights.get(project),
-                        bcx,
-                        count,
-                        HIDDEN,
-                        3 * HIDDEN,
-                    )?;
+                    if METAL {
+                        project_conv(index, normalized, bcx, count)?;
+                    } else {
+                        linear(
+                            normalized,
+                            weights.get(project),
+                            bcx,
+                            count,
+                            HIDDEN,
+                            3 * HIDDEN,
+                        )?;
+                    }
+
                     for (row, bx) in bcx
                         .chunks_exact(3 * HIDDEN)
                         .zip(post.chunks_exact_mut(HIDDEN))
@@ -141,14 +189,19 @@ impl Session<'_> {
                     {
                         mul(&row[HIDDEN..2 * HIDDEN], conv, gated)?;
                     }
-                    linear(
-                        post,
-                        weights.get(project_out),
-                        output,
-                        count,
-                        HIDDEN,
-                        HIDDEN,
-                    )?;
+
+                    if METAL {
+                        output_projection(index, 0, post, output, count)?;
+                    } else {
+                        linear(
+                            post,
+                            weights.get(project_out),
+                            output,
+                            count,
+                            HIDDEN,
+                            HIDDEN,
+                        )?;
+                    }
                 }
                 Operator::Attention {
                     q,
@@ -165,7 +218,15 @@ impl Session<'_> {
                     } else {
                         &self.model.full_rotary
                     };
-                    linear(normalized, weights.get(q), output, count, HIDDEN, HIDDEN)?;
+                    let new_v = &mut values.next().unwrap()[..kv_words];
+                    let placed = if count == 128 {
+                        qkv(index, normalized, [&mut *output, &mut *kv, &mut *new_v])?
+                    } else {
+                        false
+                    };
+                    if !placed {
+                        linear(normalized, weights.get(q), output, count, HIDDEN, HIDDEN)?;
+                    }
                     norm(
                         output,
                         weights.get(q_norm),
@@ -175,14 +236,17 @@ impl Session<'_> {
                     )?;
                     rotary.apply(post, query, count, QUERY_HEADS, offset)?;
 
-                    linear(normalized, weights.get(k), kv, count, HIDDEN, KV_WIDTH)?;
+                    if !placed {
+                        linear(normalized, weights.get(k), kv, count, HIDDEN, KV_WIDTH)?;
+                    }
                     norm(kv, weights.get(k_norm), kv_norm, count * KV_HEADS, HEAD_DIM)?;
                     rotary.apply(kv_norm, kv, count, KV_HEADS, offset)?;
                     let new_k = &mut keys.next().unwrap()[..kv_words];
                     head_major(kv, new_k, count);
-                    linear(normalized, weights.get(v), kv, count, HIDDEN, KV_WIDTH)?;
-                    let new_v = &mut values.next().unwrap()[..kv_words];
-                    head_major(kv, new_v, count);
+                    if !placed {
+                        linear(normalized, weights.get(v), kv, count, HIDDEN, KV_WIDTH)?;
+                        head_major(kv, new_v, count);
+                    }
                     let cache = &self.state.caches()[slot];
                     let frame = cache.prepare(new_k, new_v, count)?;
                     let view = cache.view(&frame)?;
@@ -202,13 +266,17 @@ impl Session<'_> {
                         )?;
                         report(layer_index, "value_proposal", new_v, None)?;
                     }
-                    attention(
-                        query,
-                        &segments,
-                        post,
-                        &mut self.scratch.scores[..shape.keys],
-                        &shape,
-                    )?;
+
+                    if !placed_attention(index, query, &segments, post, &shape)? {
+                        attention(
+                            query,
+                            &segments,
+                            post,
+                            &mut self.scratch.scores[..shape.keys],
+                            &shape,
+                        )?;
+                    }
+
                     kv_frames.push(frame);
                     linear(
                         normalized,
@@ -220,14 +288,19 @@ impl Session<'_> {
                     )?;
                     sigmoid(gate_raw, gate_sigmoid)?;
                     head_gate(post, gate_sigmoid, query, count)?;
-                    linear(
-                        query,
-                        weights.get(project_out),
-                        output,
-                        count,
-                        HIDDEN,
-                        HIDDEN,
-                    )?;
+
+                    if METAL {
+                        output_projection(index, 1, query, output, count)?;
+                    } else {
+                        linear(
+                            query,
+                            weights.get(project_out),
+                            output,
+                            count,
+                            HIDDEN,
+                            HIDDEN,
+                        )?;
+                    }
                 }
             }
 
@@ -246,32 +319,45 @@ impl Session<'_> {
                 count,
                 HIDDEN,
             )?;
-            linear(
-                normalized,
-                weights.get(layer.gate),
-                gate,
-                count,
-                HIDDEN,
-                INTERMEDIATE,
-            )?;
-            silu(gate, activated)?;
-            linear(
-                normalized,
-                weights.get(layer.up),
-                up,
-                count,
-                HIDDEN,
-                INTERMEDIATE,
-            )?;
+
+            if METAL {
+                pair(index, normalized, gate, up, count)?;
+
+                silu(gate, activated)?;
+            } else {
+                linear(
+                    normalized,
+                    weights.get(layer.gate),
+                    gate,
+                    count,
+                    HIDDEN,
+                    INTERMEDIATE,
+                )?;
+                silu(gate, activated)?;
+                linear(
+                    normalized,
+                    weights.get(layer.up),
+                    up,
+                    count,
+                    HIDDEN,
+                    INTERMEDIATE,
+                )?;
+            }
             mul(activated, up, gate)?;
-            linear(
-                gate,
-                weights.get(layer.down),
-                output,
-                count,
-                INTERMEDIATE,
-                HIDDEN,
-            )?;
+
+            if METAL {
+                down(index, gate, output, count)?;
+            } else {
+                linear(
+                    gate,
+                    weights.get(layer.down),
+                    output,
+                    count,
+                    INTERMEDIATE,
+                    HIDDEN,
+                )?;
+            }
+
             norm(
                 output,
                 weights.get(layer.post_ffn_norm),
@@ -290,17 +376,15 @@ impl Session<'_> {
             HIDDEN,
         )?;
         report(None, "final_norm", normalized, None)?;
-        linear(
-            &normalized[width - HIDDEN..],
-            embedding,
-            &mut self.scratch.logits,
-            1,
-            HIDDEN,
-            VOCAB,
-        )?;
+
+        let row = &normalized[width - HIDDEN..];
+        if !head(row, &mut self.scratch.logits, count)? {
+            linear(row, embedding, &mut self.scratch.logits, 1, HIDDEN, VOCAB)?;
+        }
         report(None, "logits", &self.scratch.logits, None)?;
 
         // No fallible operations after the joint validation and state copy.
+
         self.state.commit(&conv_frames, &kv_frames, count)?;
         self.history[offset..end].copy_from_slice(tokens);
         std::mem::swap(&mut self.logits, &mut self.scratch.logits);

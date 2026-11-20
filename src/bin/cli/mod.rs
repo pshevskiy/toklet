@@ -327,12 +327,31 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
         }
     }
     if a.model_profile == ModelProfile::Lfm3Bf16 {
-        if a.backend != "cpu" || seen.contains("--cpu-projection") || a.tools.is_some() {
+        if seen.contains("--cpu-projection") || a.tools.is_some() {
             return Err(invalid(
-                "LFM3 uses the fixed BF16 CPU graph and plain-text chat",
+                "LFM3 uses fixed BF16 arithmetic and plain-text chat",
             ));
         }
-        if !seen.contains("--prefill-chunk") {
+        if a.backend == "metal" {
+            if !cfg!(all(
+                feature = "lfm3-metal",
+                target_os = "macos",
+                target_arch = "aarch64"
+            )) {
+                return Err(invalid(
+                    "LFM3 Metal requires the lfm3-metal feature on Apple Silicon macOS",
+                ));
+            }
+            if !(a.interactive && a.capacity == 2048 && a.chunk == 128)
+                || seen.contains("--metal-projection")
+                || seen.contains("--metal-attention")
+                || a.q4_weights.is_some()
+            {
+                return Err(invalid(
+                    "LFM3 Metal requires interactive capacity 2048 and prefill chunk 128",
+                ));
+            }
+        } else if !seen.contains("--prefill-chunk") {
             a.chunk = 16;
         }
     }
@@ -747,6 +766,9 @@ impl Frontend {
             if let Some(load) = self.lfm3_load {
                 stats["model_profile"] = json!("lfm3-bf16");
                 stats["decode_evaluations"] = json!(report.decode_evaluations);
+                if self.backend == "metal" {
+                    stats["lfm3_metal"] = diagnostic(session);
+                }
                 if self.requests == 0 {
                     stats["checkpoint_load"] = lfm3_load_json(load);
                 }
@@ -940,6 +962,17 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
             .checked_sub(extra)
             .ok_or_else(|| invalid("LFM3 generation owners exceed memory budget"))?;
         let started = Instant::now();
+        #[cfg(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64"))]
+        let (loaded, metal) = if a.backend == "metal" {
+            let (loaded, owner) = GenerationSession::load_metal(&a.model, budget, &CANCELLED)?;
+            (loaded, Some(owner))
+        } else {
+            (
+                weights::load_lfm3(&a.model, a.capacity, a.chunk, load_budget)?,
+                None,
+            )
+        };
+        #[cfg(not(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64")))]
         let loaded = weights::load_lfm3(&a.model, a.capacity, a.chunk, load_budget)?;
         frontend.load_seconds = started.elapsed().as_secs_f64();
         frontend.lfm3_load = Some(loaded.report);
@@ -955,6 +988,20 @@ fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
             attention_mode: Some("Lfm3EagerCausalOrWindow256"),
             ..frontend.execution
         };
+        #[cfg(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64"))]
+        if let Some(owner) = metal {
+            session.attach_metal(owner)?;
+            frontend.execution.projection_mode = "Lfm3Bf16Metal";
+            frontend.execution.attention_mode = Some("Lfm3Bf16MetalLatePrefill");
+            return run_session(
+                frontend,
+                &mut session,
+                initial,
+                a.capacity,
+                external_bytes,
+                GenerationSession::metal_report,
+            );
+        }
         return run_session(
             frontend,
             &mut session,
@@ -1163,6 +1210,9 @@ fn run_session<S: InferenceSession>(
     if let Some(load) = frontend.lfm3_load {
         ready["model_profile"] = json!("lfm3-bf16");
         ready["checkpoint_load"] = lfm3_load_json(load);
+        if frontend.backend == "metal" {
+            ready["lfm3_metal"] = diagnostic(session);
+        }
     }
     writeln!(io::stdout().lock(), "{ready}")?;
     io::stdout().flush()?;
@@ -1462,6 +1512,40 @@ mod tests {
             values.extend(args(&options));
             assert!(parse(values).is_err());
         }
+    }
+
+    #[test]
+    fn lfm3_metal_accepts_only_its_supported_interactive_profile() {
+        let profile = [
+            "--model",
+            "missing",
+            "--model-profile",
+            "lfm3-bf16",
+            "--backend",
+            "metal",
+            "--interactive",
+            "--context-capacity",
+            "2048",
+            "--prefill-chunk",
+            "128",
+        ];
+        let result = parse(args(&profile));
+        if cfg!(all(
+            feature = "lfm3-metal",
+            target_os = "macos",
+            target_arch = "aarch64"
+        )) {
+            let request = result.unwrap();
+            assert_eq!(request.backend, "metal");
+            assert!(request.interactive);
+            assert_eq!((request.capacity, request.chunk), (2048, 128));
+        } else {
+            assert!(result.is_err());
+        }
+
+        let mut other_chunk = profile;
+        *other_chunk.last_mut().unwrap() = "64";
+        assert!(parse(args(&other_chunk)).is_err());
     }
 
     #[test]

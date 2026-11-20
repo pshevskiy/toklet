@@ -11,6 +11,8 @@ pub struct GenerationSession<'a> {
     history: Vec<u32>,
     logits: Vec<f32>,
     memory: session::Memory,
+    #[cfg(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64"))]
+    shared: Option<SharedMlpSetup>,
 }
 
 impl<'a> GenerationSession<'a> {
@@ -41,6 +43,8 @@ impl<'a> GenerationSession<'a> {
             inner,
             history,
             logits,
+            #[cfg(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64"))]
+            shared: None,
             memory: session::Memory {
                 weights_bytes: numerical.weights_bytes,
                 positional_bytes: numerical.positional_bytes,
@@ -131,6 +135,13 @@ impl InferenceSession for GenerationSession<'_> {
         if count == 0 {
             return Ok(0);
         }
+        #[cfg(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64"))]
+        if let Some(owner) = self.shared.as_mut() {
+            let logits =
+                Self::step_shared(&mut self.inner, owner, &self.history[start..start + count])?;
+            widen(logits, &mut self.logits);
+            return Ok(count);
+        }
         let logits = self.inner.forward(&self.history[start..start + count])?;
         widen(logits, &mut self.logits);
         Ok(count)
@@ -151,3 +162,6 @@ impl InferenceSession for GenerationSession<'_> {
         Ok(())
     }
 }
+
+#[cfg(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64"))]
+include!("shared_generation.rs");

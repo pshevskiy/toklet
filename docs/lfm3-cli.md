@@ -1,4 +1,4 @@
-# LFM3 BF16 CPU console route
+# LFM3 BF16 console routes
 
 Select the authenticated checkpoint explicitly with `--model-profile lfm3-bf16`.
 
@@ -13,6 +13,27 @@ apply. Plain chat renders system, user and assistant string messages using the
 source defaults for thinking. Structured content and tool messages are outside
 this route. Greedy sampling is the shared console policy. The pinned EOS and
 caller stop IDs are hidden when sampled.
+
+## Experimental Metal opt-in
+
+Build the CLI with the `lfm3-metal` feature on Apple Silicon macOS.
+Select the interactive Metal route with 2,048 context positions and a
+128-token prefill chunk.
+
+```sh
+cargo build --release --features lfm3-metal --bin toklet
+target/release/toklet --model-profile lfm3-bf16 --backend metal --interactive \
+  --model /path/to/lfm3 --context-capacity 2048 --prefill-chunk 128
+```
+
+Ready and Done report the Metal backend and `lfm3_metal` counters.
+The GPU vocabulary head and CPU embedding gather share a single BF16
+table. The separate release smoke verifies exact public output and
+state, SIGINT continuation and reset. Its reset-empty 512/32 request
+completes in 13.764 s of engine time at a guarded peak of 3.43 GiB.
+[Release smoke and observation](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-metal-opt-in-smoke-1/observed-normal.json).
+
+## CPU console behavior
 
 The text route verifies the exact config, generation config, tokenizer config,
 template and tokenizer before parsing. The source tokenizer's batch padding is
