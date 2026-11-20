@@ -331,18 +331,9 @@ impl SharedMlpWorkspace {
         } else {
             None
         };
-        let (times, receipt) = self.pair.project_selected(
-            x,
-            gate,
-            up,
-            tokens,
-            |i, encoder| {
-                // SAFETY: checked same-device distinct immutable bank; both banks
-                // outlive the retained command. Workspace owns all writable buffers.
-                unsafe { banks[i].bind_read_only(encoder, 1) };
-            },
-            launch,
-        )?;
+        let (times, receipt) = self
+            .pair
+            .project_selected(x, gate, up, tokens, banks, launch)?;
         if let Some(d) = self.domain.as_mut() {
             for (total, increment) in d.native.iter_mut().zip(receipt.native) {
                 // Selected output count is bounded by the checked possible count.
@@ -390,18 +381,9 @@ impl SharedMlpWorkspace {
             .transpose()?
             .flatten();
         let tiled = tile.is_some();
-        let (times, _, census) = self.down.project_selected(
-            &self.pair.gpu,
-            x,
-            output,
-            tokens,
-            |encoder| {
-                // SAFETY: checked same-device immutable input bank outlives the
-                // retained command. Down scratch is private and its wait is synchronous.
-                unsafe { bank.bind_read_only(encoder, 1) };
-            },
-            tile,
-        )?;
+        let (times, _, census) =
+            self.down
+                .project_selected(&self.pair.gpu, x, output, tokens, bank, tile)?;
         if let Some(tiles) = &mut self.projection_tiles {
             tiles.completed(1, layer, tokens, tiled, census);
         }

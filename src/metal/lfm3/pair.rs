@@ -56,7 +56,7 @@ impl PairWorkspace {
         gate: &mut [bf16],
         up: &mut [bf16],
         count: usize,
-        bind: impl Fn(usize, &ProtocolObject<dyn MTLComputeCommandEncoder>),
+        banks: [crate::metal::lfm3_shared_weights::BankRef<'_>; 2],
         mut domain: Option<DomainLaunch<'_>>,
     ) -> std::result::Result<([f64; 2], PairRoutes), crate::model::Error> {
         use crate::model::Error;
@@ -104,7 +104,7 @@ impl PairWorkspace {
         }
         let status = &mut self.status;
         status.with_mut(|dst| dst.copy_from_slice(&[0, STATUS_GUARD]));
-        let dims = [count as u32, I as u32, MLP as u32, 0];
+        let (dims, admission_groups) = Kernels::sealed_admission(banks[0], count, I, MLP);
         let command = self
             .gpu
             .command()
@@ -119,12 +119,13 @@ impl PairWorkspace {
             .filter(|d| d.selected)
             .map_or(&self.kernels.projection, |d| &d.kernels.projection);
         for (pipeline, project) in [(&self.kernels.admission, false), (projection, true)] {
-            for i in 0..2 {
+            for (i, bank) in banks.iter().enumerate() {
                 let encoder = command
                     .computeCommandEncoder()
                     .ok_or(Error::InvalidConfig("LFM3 pair encoder allocation"))?;
                 encoder.setComputePipelineState(pipeline);
-                bind(i, &encoder);
+                // SAFETY: the model caller checks both sealed banks and retains them until completion.
+                unsafe { bank.bind_read_only(&encoder, 1) };
                 // SAFETY: each buffer is same-device, initialized, tracked and
                 // retained through the one wait. Both admissions precede both
                 // projections; input is shared read-only, candidates disjoint.
@@ -154,7 +155,7 @@ impl PairWorkspace {
                         width: if project {
                             projection_groups
                         } else {
-                            (MLP * I).div_ceil(32)
+                            admission_groups
                         },
                         height: 1,
                         depth: 1,

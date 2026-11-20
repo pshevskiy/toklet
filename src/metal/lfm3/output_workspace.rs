@@ -133,12 +133,12 @@ impl OutputWorkspace {
         self.routes.with_mut(|dst| dst[..=active].fill(ROUTE_GUARD));
         self.status
             .with_mut(|dst| dst.copy_from_slice(&[0, STATUS_GUARD]));
-        let dims = [count as u32, I as u32, O as u32, 0];
+        let (dims, admission_groups) = Kernels::sealed_admission(bank, count, I, O);
         let command = gpu
             .command()
             .map_err(|_| Error::InvalidConfig("LFM3 shared operator output command"))?;
         for (pipeline, groups, project) in [
-            (&self.kernels.admission, (I * O).div_ceil(32), false),
+            (&self.kernels.admission, admission_groups, false),
             (&self.kernels.projection, active, true),
         ] {
             let encoder = command

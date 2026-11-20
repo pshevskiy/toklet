@@ -344,9 +344,10 @@ impl<'a> GenerationSession<'a> {
             .ok_or(crate::cpu::Error::SizeOverflow)
             .map_err(Error::from)?;
         let cancelled = setup.cancelled;
+        let eligible_head = |count| matches!(count, 1 | 128);
         let tied_next = setup
             .tied_published
-            .checked_add(u64::from(tokens.len() == 1))
+            .checked_add(u64::from(eligible_head(tokens.len())))
             .ok_or(crate::cpu::Error::SizeOverflow)
             .map_err(Error::from)?;
         let workspace = std::cell::RefCell::new(&mut setup.workspace);
@@ -403,7 +404,7 @@ impl<'a> GenerationSession<'a> {
                 Ok(true)
             },
             |input, out, count| {
-                if count != 1 {
+                if !eligible_head(count) {
                     return Ok(false);
                 }
                 workspace.borrow_mut().tied(
@@ -467,6 +468,7 @@ impl<'a> GenerationSession<'a> {
             });
         let mut report = serde_json::json!({
             "mode": "gate-up-down",
+            "weight_admission":"sealed-input-only",
             "shared_mlp_weight_bytes": setup.weight_bytes,
             "shared_mlp_weight_padding_bytes": setup.padding_bytes,
             "cold_loader_allowance_bytes": setup.allowance,
@@ -517,7 +519,7 @@ impl<'a> GenerationSession<'a> {
         let tied_bytes = tied_count * crate::weights::lfm3::TIED_BYTES;
         {
             report["tied_table_owner"] = serde_json::json!({
-                "placement":"metal-t1",
+                "placement":"metal-t1-t128",
                 "banks":1, "payload_bytes":tied_bytes, "published":setup.tied_published,
                 "workspace":setup.workspace.tied_report(),
             });

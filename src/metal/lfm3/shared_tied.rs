@@ -86,7 +86,7 @@ fn run(
     seen.with_mut(|d| d.fill(SENTINEL));
     routes.with_mut(|d| d.fill(ROUTE_GUARD));
     status.with_mut(|d| d.copy_from_slice(&[0, STATUS_GUARD]));
-    let dims = [1, I as u32, rows as u32, 0];
+    let (dims, admission_groups) = Kernels::sealed_admission(weight, 1, I, rows);
     let command = gpu.command()?;
     if !command.retainedReferences()
         || !std::ptr::eq(&*command.device(), &*gpu.device)
@@ -100,7 +100,7 @@ fn run(
         depth: 1,
     };
     for (pso, count, project) in [
-        (&kernels.admission, words.div_ceil(32), false),
+        (&kernels.admission, admission_groups, false),
         (&kernels.projection, rows, true),
     ] {
         let encoder = command.computeCommandEncoder().ok_or(Error::Completion)?;

@@ -50,7 +50,7 @@ impl DownWorkspace {
         input: &[bf16],
         dst: &mut [bf16],
         tokens: usize,
-        bind: impl Fn(&ProtocolObject<dyn MTLComputeCommandEncoder>),
+        bank: crate::metal::lfm3_shared_weights::BankRef<'_>,
         mut tile: Option<super::projection_tile::Launch<'_>>,
     ) -> std::result::Result<ProjectionReport, crate::model::Error> {
         use crate::model::Error;
@@ -79,7 +79,7 @@ impl DownWorkspace {
         self.routes.with_mut(|x| x[..=active].fill(ROUTE_GUARD));
         self.status
             .with_mut(|x| x.copy_from_slice(&[0, STATUS_GUARD]));
-        let dims = [tokens as u32, K as u32, N as u32, 0];
+        let (dims, admission_groups) = Kernels::sealed_admission(bank, tokens, K, N);
         let command = gpu
             .command()
             .map_err(|_| Error::InvalidConfig("LFM3 down command allocation"))?;
@@ -93,7 +93,8 @@ impl DownWorkspace {
                 .computeCommandEncoder()
                 .ok_or(Error::InvalidConfig("LFM3 down encoder allocation"))?;
             encoder.setComputePipelineState(ps);
-            bind(&encoder);
+            // SAFETY: the model caller checks the sealed bank and retains it until completion.
+            unsafe { bank.bind_read_only(&encoder, 1) };
             // SAFETY: fixed initialized tracked buffers with matching ABI,
             // private writable allocations, owned through synchronous completion.
             unsafe {
@@ -114,11 +115,7 @@ impl DownWorkspace {
             }
             encoder.dispatchThreadgroups_threadsPerThreadgroup(
                 MTLSize {
-                    width: if ordered {
-                        groups
-                    } else {
-                        (K * N).div_ceil(32)
-                    },
+                    width: if ordered { groups } else { admission_groups },
                     height: 1,
                     depth: 1,
                 },

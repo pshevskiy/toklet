@@ -12,7 +12,7 @@ kernel void lfm3_admit(
     uint index [[thread_position_in_grid]]
 ) {
     const uint input_count = dims.x * dims.y;
-    const uint weight_count = dims.y * dims.z;
+    const uint weight_count = dims.w;
     if ((index < input_count && (input[index] & 0x7fff) >= 0x7f80) ||
         (index < weight_count && (weight[index] & 0x7fff) >= 0x7f80)) {
         atomic_fetch_or_explicit(status, 2u, memory_order_relaxed);

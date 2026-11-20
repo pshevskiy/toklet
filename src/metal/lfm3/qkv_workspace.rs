@@ -158,12 +158,12 @@ impl Workspace {
             plane
                 .status
                 .with_mut(|w| w.copy_from_slice(&[0, STATUS_GUARD]));
-            let dims = [T as u32, I as u32, n as u32, 0];
+            let (dims, admission_groups) = Kernels::sealed_admission(bank, T, I, n);
             let command = gpu
                 .command()
                 .map_err(|_| Error::InvalidConfig("LFM3 QKV command"))?;
             for (pipeline, groups, project) in [
-                (&self.kernels.admission, (I * n).div_ceil(32), false),
+                (&self.kernels.admission, admission_groups, false),
                 (&self.kernels.projection, active, true),
             ] {
                 let enc = command

@@ -23,6 +23,20 @@ struct Kernels {
 }
 
 impl Kernels {
+    // Only a shape- and device-validated immutable BankRef can select the
+    // input-only scan. The fourth word is the shader's weight check extent.
+    fn sealed_admission(
+        _bank: crate::metal::lfm3_shared_weights::BankRef<'_>,
+        tokens: usize,
+        input: usize,
+        output: usize,
+    ) -> ([u32; 4], usize) {
+        (
+            [tokens as u32, input as u32, output as u32, 0],
+            (tokens * input).div_ceil(32),
+        )
+    }
+
     fn with_shader(gpu: &Gpu, shader: &str) -> Option<Self> {
         let options = MTLCompileOptions::new();
         options.setLanguageVersion(MTLLanguageVersion::Version2_3);
