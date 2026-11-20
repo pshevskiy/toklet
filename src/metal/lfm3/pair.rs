@@ -5,12 +5,12 @@ const MLP: usize = 7680;
 const MAX: usize = 128;
 
 pub(super) struct PairWorkspace {
-    kernels: Kernels,
+    pub(super) kernels: Kernels,
     pub(super) gpu: Gpu,
-    staged: Buffer<u16>,
-    output: [Buffer<u16>; 2],
-    routes: [Buffer<u32>; 2],
-    status: Buffer<u32>,
+    pub(super) staged: Buffer<u16>,
+    pub(super) output: [Buffer<u16>; 2],
+    pub(super) routes: [Buffer<u32>; 2],
+    pub(super) status: Buffer<u32>,
     pub(super) submitted: u64,
 }
 

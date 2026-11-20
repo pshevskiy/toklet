@@ -87,6 +87,7 @@ mod output_workspace;
 mod pair;
 mod projection_tile;
 mod qkv_workspace;
+mod resident_mlp;
 mod shared_mlp;
 mod shared_tied;
 

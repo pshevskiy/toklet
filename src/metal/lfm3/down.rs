@@ -10,9 +10,9 @@ type ProjectionReport = ([f64; 2], [u64; 3], [u64; 3]);
 
 pub(super) struct DownWorkspace {
     input: Buffer<u16>,
-    output: Buffer<u16>,
-    routes: Buffer<u32>,
-    status: Buffer<u32>,
+    pub(super) output: Buffer<u16>,
+    pub(super) routes: Buffer<u32>,
+    pub(super) status: Buffer<u32>,
     kernels: Kernels,
     submissions: u64,
 }

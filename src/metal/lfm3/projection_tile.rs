@@ -167,8 +167,13 @@ impl Launch<'_> {
         // original synchronous wait. Sealing bounds the selected complete row span.
         unsafe {
             encoder.setBuffer_offset_atIndex(Some(&self.input.raw), 0, 6);
-            encoder.setBuffer_offset_atIndex(Some(&self.weights.raw), self.offset_bytes, 7);
         }
+        self.bind_weight_tags(encoder);
+    }
+
+    pub(super) fn bind_weight_tags(&self, encoder: &ProtocolObject<dyn MTLComputeCommandEncoder>) {
+        // SAFETY: The complete row span was checked when this launch was sealed.
+        unsafe { encoder.setBuffer_offset_atIndex(Some(&self.weights.raw), self.offset_bytes, 7) };
     }
 }
 

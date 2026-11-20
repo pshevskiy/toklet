@@ -38,9 +38,11 @@ impl Session<'_> {
     where
         F: FnMut(Observation<'_>) -> Result<(), Error>,
     {
-        self.step_placed::<TRACE, false, _, _, _, _, _, _, _, _>(
+        self.step_placed::<TRACE, false, _, _, _, _, _, _, _, _, _>(
             tokens,
             observer,
+            false,
+            |_, _, _| unreachable!(),
             |_, _, _, _| unreachable!(),
             |_, _, _, _, _| unreachable!(),
             |_, _, _, _| unreachable!(),
@@ -53,10 +55,12 @@ impl Session<'_> {
 
     // The operator closures are statically dispatched and borrow disjoint session resources.
     #[allow(clippy::too_many_arguments)]
-    pub(super) fn step_placed<const TRACE: bool, const METAL: bool, F, P, M, D, O, Q, J, A>(
+    pub(super) fn step_placed<const TRACE: bool, const METAL: bool, F, R, P, M, D, O, Q, J, A>(
         &mut self,
         tokens: &[u32],
         mut observer: F,
+        resident_mlp: bool,
+        mut resident_ffn: R,
         mut project_conv: P,
         mut pair: M,
         mut down: D,
@@ -67,6 +71,7 @@ impl Session<'_> {
     ) -> Result<&[bf16], Error>
     where
         F: FnMut(Observation<'_>) -> Result<(), Error>,
+        R: FnMut(usize, &[bf16], &mut [bf16]) -> Result<(), Error>,
         P: FnMut(usize, &[bf16], &mut [bf16], usize) -> Result<(), Error>,
         M: FnMut(usize, &[bf16], &mut [bf16], &mut [bf16], usize) -> Result<(), Error>,
         D: FnMut(usize, &[bf16], &mut [bf16], usize) -> Result<(), Error>,
@@ -82,6 +87,7 @@ impl Session<'_> {
         J: FnMut(&[bf16], &mut [bf16], usize) -> Result<bool, Error>,
     {
         let count = tokens.len();
+        let resident_mlp = METAL && resident_mlp && count == 128;
         let offset = self.state.offset();
         let end = self.state.admit(count)?;
         if count > self.model.chunk {
@@ -320,42 +326,46 @@ impl Session<'_> {
                 HIDDEN,
             )?;
 
-            if METAL {
-                pair(index, normalized, gate, up, count)?;
-
-                silu(gate, activated)?;
+            if resident_mlp {
+                resident_ffn(index, normalized, output)?;
             } else {
-                linear(
-                    normalized,
-                    weights.get(layer.gate),
-                    gate,
-                    count,
-                    HIDDEN,
-                    INTERMEDIATE,
-                )?;
-                silu(gate, activated)?;
-                linear(
-                    normalized,
-                    weights.get(layer.up),
-                    up,
-                    count,
-                    HIDDEN,
-                    INTERMEDIATE,
-                )?;
-            }
-            mul(activated, up, gate)?;
+                if METAL {
+                    pair(index, normalized, gate, up, count)?;
 
-            if METAL {
-                down(index, gate, output, count)?;
-            } else {
-                linear(
-                    gate,
-                    weights.get(layer.down),
-                    output,
-                    count,
-                    INTERMEDIATE,
-                    HIDDEN,
-                )?;
+                    silu(gate, activated)?;
+                } else {
+                    linear(
+                        normalized,
+                        weights.get(layer.gate),
+                        gate,
+                        count,
+                        HIDDEN,
+                        INTERMEDIATE,
+                    )?;
+                    silu(gate, activated)?;
+                    linear(
+                        normalized,
+                        weights.get(layer.up),
+                        up,
+                        count,
+                        HIDDEN,
+                        INTERMEDIATE,
+                    )?;
+                }
+                mul(activated, up, gate)?;
+
+                if METAL {
+                    down(index, gate, output, count)?;
+                } else {
+                    linear(
+                        gate,
+                        weights.get(layer.down),
+                        output,
+                        count,
+                        INTERMEDIATE,
+                        HIDDEN,
+                    )?;
+                }
             }
 
             norm(

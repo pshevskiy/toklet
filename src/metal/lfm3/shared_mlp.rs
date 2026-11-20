@@ -8,6 +8,7 @@ use crate::{metal::lfm3_shared_weights::BankRef, model::Error};
 pub(crate) struct SharedMlpWorkspace {
     pair: PairWorkspace,
     down: DownWorkspace,
+    resident: Option<Box<[super::resident_mlp::Workspace; 1]>>,
     domain: Option<DomainMetadata>,
     conv: Option<super::conv_workspace::ConvWorkspace>,
     output: Option<super::output_workspace::OutputWorkspace>,
@@ -162,6 +163,7 @@ impl SharedMlpWorkspace {
             domain,
             pair,
             down,
+            resident: None,
             completed: [0; 2],
             clocks: [[0.; 2]; 2],
         })
@@ -390,6 +392,99 @@ impl SharedMlpWorkspace {
         self.completed[1] += 1;
         self.record(1, times);
         Ok(())
+    }
+
+    pub(crate) const RESIDENT_MLP_BUFFERS: [usize; 7] =
+        super::resident_mlp::Workspace::BUFFER_BYTES;
+    pub(crate) const RESIDENT_MLP_LUT_TEMP_BYTES: usize =
+        super::resident_mlp::Workspace::LUT_TEMP_BYTES;
+
+    pub(crate) const RESIDENT_MLP_OWNER_BYTES: usize = size_of::<super::resident_mlp::Workspace>();
+
+    pub(crate) fn prepare_resident_mlp(&mut self, admitted_bytes: usize) -> Result<(), Error> {
+        // Keep optional state out of the inline session and reserve host storage
+        // fallibly before allocating or compiling the optional Metal workspace.
+        let mut owner = crate::model::lfm3::reserve(1)?;
+        owner.push(super::resident_mlp::Workspace::new(
+            &self.pair.gpu,
+            admitted_bytes,
+        )?);
+        self.resident = Some(
+            owner
+                .into_boxed_slice()
+                .try_into()
+                .map_err(|_| Error::InvalidConfig("LFM3 resident MLP owner extent"))?,
+        );
+        Ok(())
+    }
+
+    pub(crate) fn resident_mlp_published(&self) -> Option<u64> {
+        self.resident.as_ref().map(|owner| owner[0].published)
+    }
+
+    pub(crate) fn commit_resident_mlp(&mut self, published: u64) {
+        // A publication was reserved only when this owner was present.
+        self.resident.as_mut().unwrap()[0].published = published;
+    }
+
+    pub(crate) fn resident_mlp(
+        &mut self,
+        layer: usize,
+        banks: [BankRef<'_>; 3],
+        input: &[bf16],
+        output: &mut [bf16],
+        cancelled: &std::sync::atomic::AtomicBool,
+    ) -> Result<(), Error> {
+        for bank in banks {
+            self.validate(bank)?;
+        }
+        let [gate, up, down] = banks.map(BankRef::identity);
+        if gate == up || gate == down || up == down {
+            return Err(Error::InvalidConfig("LFM3 resident MLP aliased banks"));
+        }
+        let domain = self
+            .domain
+            .as_mut()
+            .ok_or(Error::InvalidConfig("LFM3 resident MLP Pair domain"))?;
+        if domain.bank_ids.get(layer) != Some(&[gate, up]) {
+            return Err(Error::InvalidConfig("LFM3 resident MLP Pair banks"));
+        }
+        let panel = domain
+            .t4
+            .as_ref()
+            .filter(|p| p.selected)
+            .ok_or(Error::InvalidConfig("LFM3 resident MLP Pair panel"))?;
+        let pair_launch = DomainLaunch {
+            tile_size: panel.tile_size,
+            selected: domain.chosen,
+            kernels: &panel.pipeline,
+            input: &mut domain.input,
+            weights: &domain.weights,
+            layer,
+        };
+        let down_launch = self
+            .projection_tiles
+            .as_mut()
+            .ok_or(Error::InvalidConfig("LFM3 resident MLP Down tile owner"))?
+            .launch(1, layer, banks[2], TAG_T)?
+            .ok_or(Error::InvalidConfig("LFM3 resident MLP Down tile"))?;
+        self.resident
+            .as_mut()
+            .ok_or(Error::InvalidConfig("LFM3 resident MLP workspace absent"))?[0]
+            .run(
+                &mut self.pair,
+                &mut self.down,
+                input,
+                banks,
+                output,
+                pair_launch,
+                down_launch,
+                cancelled,
+            )
+    }
+
+    pub(crate) fn resident_mlp_report(&self) -> Option<serde_json::Value> {
+        self.resident.as_ref().map(|owner| owner[0].report())
     }
 
     fn record(&mut self, role: usize, [gpu, wait]: [f64; 2]) {

@@ -20,7 +20,6 @@ pub struct SharedMlpSetup {
     load_seconds: f64,
     tag_seconds: f64,
     published: u64,
-    conv_published: u64,
 }
 
 impl<'a> GenerationSession<'a> {
@@ -85,13 +84,32 @@ impl<'a> GenerationSession<'a> {
                 add(qkv_budget, tied_budget)?,
             )?,
         )?;
-        let extra = add(extra, attention_budget)?;
-        let plan = plan_lfm3_shared(&device, capacity, chunk, extra, budget)?;
+        let mut extra = add(extra, attention_budget)?;
+        let mut plan = plan_lfm3_shared(&device, capacity, chunk, extra, budget)?;
+        let limit = budget.min(crate::weights::INITIAL_MEMORY_LIMIT_BYTES);
+        let resident_plan = aligned(SharedMlpWorkspace::RESIDENT_MLP_LUT_TEMP_BYTES)
+            .and_then(|initial| {
+                SharedMlpWorkspace::RESIDENT_MLP_BUFFERS
+                    .into_iter()
+                    .try_fold(initial, |total, bytes| add(total, aligned(bytes)?))
+            })
+            .ok()
+            .and_then(|bytes| bytes.checked_add(SharedMlpWorkspace::RESIDENT_MLP_OWNER_BYTES))
+            .and_then(|bytes| {
+                let required = plan.required_bytes.checked_add(bytes)?;
+                (required <= limit).then_some((bytes, required))
+            });
         let planning_seconds = clock.elapsed().as_secs_f64();
         let clock = std::time::Instant::now();
         let mut workspace = SharedMlpWorkspace::new(&device)?;
         workspace.prepare_qkv()?;
         workspace.prepare_last3_attention(true)?;
+        if let Some((bytes, required)) = resident_plan
+            && workspace.prepare_resident_mlp(bytes).is_ok()
+        {
+            extra = add(extra, bytes)?;
+            plan.required_bytes = required;
+        }
         let workspace_seconds = clock.elapsed().as_secs_f64();
         let clock = std::time::Instant::now();
         let loaded = load_lfm3_shared(directory, &device, capacity, chunk, extra, budget)?;
@@ -201,7 +219,6 @@ impl<'a> GenerationSession<'a> {
                 load_seconds,
                 tag_seconds,
                 published: 0,
-                conv_published: 0,
                 output_published: [0; 2],
                 qkv_budget,
                 qkv_published: 0,
@@ -312,15 +329,25 @@ impl<'a> GenerationSession<'a> {
                 .shared_bank(tensor)
                 .ok_or(Error::InvalidConfig("LFM3 shared MLP bank absent"))
         };
+        let visits = super::LAYERS as u64;
+        let resident_next = if tokens.len() == 128 {
+            setup
+                .workspace
+                .resident_mlp_published()
+                .map(|published| {
+                    published
+                        .checked_add(visits)
+                        .ok_or(crate::cpu::Error::SizeOverflow)
+                })
+                .transpose()
+                .map_err(Error::from)?
+        } else {
+            None
+        };
+        let resident_mlp = resident_next.is_some();
         let next = setup
             .published
-            .checked_add(super::LAYERS as u64)
-            .ok_or(crate::cpu::Error::SizeOverflow)
-            .map_err(Error::from)?;
-        // Both callbacks are invoked serially in layer order by the reused CPU graph.
-        let next_conv = setup
-            .conv_published
-            .checked_add(super::CONV_LAYERS.len() as u64)
+            .checked_add(if resident_mlp { 0 } else { visits })
             .ok_or(crate::cpu::Error::SizeOverflow)
             .map_err(Error::from)?;
         let mut output_next = setup.output_published;
@@ -351,9 +378,20 @@ impl<'a> GenerationSession<'a> {
             .ok_or(crate::cpu::Error::SizeOverflow)
             .map_err(Error::from)?;
         let workspace = std::cell::RefCell::new(&mut setup.workspace);
-        let logits = inner.step_placed::<false, true, _, _, _, _, _, _, _, _>(
+        let logits = inner.step_placed::<false, true, _, _, _, _, _, _, _, _, _>(
             tokens,
             |_| unreachable!(),
+            resident_mlp,
+            |layer, input, output| {
+                let ffn = &weights.layers[layer];
+                workspace.borrow_mut().resident_mlp(
+                    layer,
+                    [bank(ffn.gate)?, bank(ffn.up)?, bank(ffn.down)?],
+                    input,
+                    output,
+                    cancelled,
+                )
+            },
             |layer, input, out, count| {
                 let crate::weights::lfm3::Operator::Convolution { bcx, .. } =
                     weights.layers[layer].operator
@@ -429,7 +467,9 @@ impl<'a> GenerationSession<'a> {
         setup.qkv_published = qkv_next;
         setup.output_published = output_next;
         setup.published = next;
-        setup.conv_published = next_conv;
+        if let Some(published) = resident_next {
+            workspace.into_inner().commit_resident_mlp(published);
+        }
         Ok(logits)
     }
 
@@ -492,6 +532,9 @@ impl<'a> GenerationSession<'a> {
             "history_u32le_sha256": format!("{:x}",history.finalize()),
             "committed_logits_bf16le_sha256": self.inner.logits().map(|_|format!("{:x}",logits.finalize())),
         });
+        if let Some(resident) = setup.workspace.resident_mlp_report() {
+            report["resident_mlp"] = resident;
+        }
         if let Some(domain) = domain {
             report["gate_up_domain"] = domain;
         }
@@ -537,7 +580,7 @@ impl<'a> GenerationSession<'a> {
                 "compact_cpu_weight_payload_bytes": setup.weight_bytes-banks_bytes,
                 "convin_bank_payload_bytes": CONV_BYTES,
                 "workspace_bytes": crate::metal::SharedMlpWorkspace::CONV_BYTES,
-                "submitted": submitted, "completed": completed, "published": setup.conv_published,
+                "submitted": submitted, "completed": completed, "published": setup.output_published[0],
                 "completed_gpu_seconds": clocks[0], "commit_wait_seconds": clocks[1],
             });
         }
