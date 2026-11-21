@@ -235,21 +235,33 @@ prefill accounts for about 84% of the remaining median latency gap.
 [Joined attention command](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-attention-pair-1/normal.json) ·
 [Connected attention trial](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-connected-1/RUN.md).
 
+Nanbeige's four-cut T128 layer-zero GQA baseline measures 6.203
+and 4.654 ms in opposite orders. The reverse result misses the
+5.250 ms absolute screen, so keep the current GQA kernel. The
+five-cut resident LFM3 convolution screen gives conditional lower
+savings of 0.112–0.121 s against a 0.452 s request-level screen.
+Keep the current convolution handoff.
+[GQA baseline](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gqa-offsets-1/RUN.md) ·
+[Convolution screen](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-connected-conv-chain-2/RUN.md).
+
 For request-summary qualification, compare the same CLI output mode with
 summary collection enabled and disabled. Keep counters at existing completion
 boundaries and write one bounded summary after the last token. Sample command
 and GPU timings in a separate diagnostic run. Verify the paired and marginal
 95% upper bounds for first-token and completion overhead in both owner orders.
 The LFM3 fixed-N campaign's failing marginal TTFT upper is 1.06524%.
-The replay localizes much of the variable native prefill interval around
-96 resident FFN command completions. A separate M1 Pro run brackets
-all 96 Metal commands with Mach ticks using 3,840 bytes of fixed
-records. Measure submission and host wake on actual LFM3 requests in
-both modes before choosing any scheduler change. Keep the fixed-N
-gate and its original workload.
-[LFM3 wait analysis](../artifacts/mlx-gpu-gap-2026-11-15/astra-lfm3-o4-prefill-wait-variance-1/RESULT.md) ·
-[LFM3 timing contract](../artifacts/mlx-gpu-gap-2026-11-15/astra-lfm3-o4-prefill-wait-variance-1/BRACKETS.md) ·
-[Clock calibration](../artifacts/mlx-gpu-gap-2026-11-15/root-o4-mach-metal-clock-1/RUN.md).
+The eight-owner timing diagnostic measures all 96 resident FFN Metal
+commands per request. The submit segment shifts in the same direction
+with summary enabled in both orders. Most TTFT variance remains
+inside other engine prefill work after accounting for resident FFN
+and T128 Q/K/V waits. Next, counterbalance observation per request
+within a resident owner. Preallocate the same recorder in both arms,
+toggle before request observation begins, and verify ordinal,
+reset, clocks, tokens, state and export counts. Measure submit
+and wire TTFT together while retaining the original fixed-N workload
+and acceptance gate.
+[LFM3 timing diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-brackets-1/RUN.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-brackets-1/REVIEW.md).
 
 [Pinned MLX package](https://huggingface.co/MercuriusDream/Nanbeige4.2-3B-mlx-4bit/tree/c21f850c4096b67a1b53a2c8eb4f8c8652f89375) ·
 [Upstream config](https://huggingface.co/Nanbeige/Nanbeige4.2-3B/blob/main/config.json) ·

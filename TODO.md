@@ -79,16 +79,17 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 - [ ] Measure bounded request-summary overhead through the original
   protocol. A same-binary replay of the two published Nanbeige owners
   gives a maximum paired or marginal upper drift bound of 0.07581%
-  for warmed engine TTFT and completion. This scopes a subsequent
-  enabled/disabled measurement. The previously frozen LFM3 campaign
-  requires 5 GiB free before launch and the current disk is below it.
-  Astra's offline analysis isolates variation in the interval around
-  the 96 existing resident-FFN GPU completions. A bounded native probe
-  verifies the Mach/Metal clock join for all 96 commands. The next
-  LFM3 diagnostic measures submit and wake intervals in both modes.
+  for warmed engine TTFT and completion. On LFM3, all 64 requests
+  and 6,144 FFN command brackets pass at 3.72 GiB. After accounting
+  for the serial T128 Q/K/V waits, remaining engine prefill contributes
+  52.95% and 77.09% of observed TTFT variance. FFN submit shifts
+  +11.17 and +4.89 ms with summary enabled across owners. Astra
+  verifies the decomposition. Counterbalance observer admission
+  within a loaded owner next. The original 1.06524% marginal TTFT
+  upper still exceeds the 1% gate.
   [Timing control](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-modern-decode-1/timing-control-normal.json) ·
-  [LFM3 wait analysis](artifacts/mlx-gpu-gap-2026-11-15/astra-lfm3-o4-prefill-wait-variance-1/RESULT.md) ·
-  [Clock calibration](artifacts/mlx-gpu-gap-2026-11-15/root-o4-mach-metal-clock-1/RUN.md).
+  [LFM3 live diagnostic](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-brackets-1/RUN.md) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-brackets-1/REVIEW.md).
 - [x] Price the remaining Nanbeige gap against the direct MLX GPU graph.
   Both owners reproduce the 32 released IDs on all 26 requests.
   Direct MLX finishes in 3.315–3.316 s versus Toklet's 5.841–5.842 s.
@@ -163,6 +164,12 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   of 1.196 and 1.225 ms miss the 1.311 ms development screen.
   Astra approves retaining the evidence and closing the standalone trial.
   [Gate and up comparison](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-k64-pair-1/RUN.md).
+- [x] Measure T128 grouped-query attention at past lengths 0, 128, 256
+  and 384. The guarded layer-zero baseline matches all 2,621,440 K/V
+  words and all 104 timed outputs. Four-cut medians sum to 6.203
+  and 4.654 ms. The reverse order falls below the 5.250 ms
+  zero-cost screen. Astra approves closing the isolated experiment.
+  [Four-depth baseline](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gqa-offsets-1/RUN.md).
 - [ ] Admit external Nanbeige engines on exactly matching work.
   The installed vLLM Metal source replay takes only 22 of the 44 model
   visits. Its paged KV wrapper also aliases physical indexes if given
@@ -179,27 +186,28 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   [Logical loop replay](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-double-loop-1/RUN.md) ·
   [Reviewed overlay](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-live-overlay-1/RUN.md) ·
   [Live admission](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-overlay-smoke-1/RUN.md).
-- [ ] Price a resident T128 LFM3 convolution handoff on the original
+- [x] Price a resident T128 LFM3 convolution handoff on the original
   matched tape. The previous ConvOut tile saved about 0.83 s of prefill
   and added 0.10–0.12 s to decode. Start with the authenticated gated
   outputs and private history. Keep the dense BF16 reduction and the
   signed-zero fallback. The guarded CPU reconstruction matches all
   1,050,624 gated words across four adjacent prefill cuts and T1/512,
   including 342 negative zeros. Astra verified history custody.
-  Test the complete GPU handoff and separate decode control next.
+  The native handoff reproduces all five cuts and proposed histories.
+  Holding the output panel fixed gives hypothetical lower prefill
+  savings of 0.112–0.121 s over 52 visits, below the 0.452 s screen.
+  The separate T1 test gives mixed timing. Astra approves closing
+  the isolated experiment.
+  [Native handoff](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-connected-conv-chain-2/normal.json) ·
   [Exact operands](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-conv-old-history-1/normal.json) ·
   [Consecutive prefix](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-convolution-prefix-1/RUN.md) ·
   [Prior crossover](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-release4b-convout-crossover-1/recovery-normal.json).
 
 ### Paused LFM3 implementation work
 
-The bridge fixture replays 264,192 original gated words and both 12,288-word
-private history proposals. The independent checkpoint reconstruction confirms
-all old T1 words. Sol's connected Metal screen was interrupted before native
-timing. The resumed artifact binds the old operands, scalar fallback and
-qualified output panels. Native carrier orchestration is paused for the
-Nanbeige work. [Verified fixture](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-conv-old-history-1/normal.json) ·
-[Independent history reconstruction](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-conv-old-history-1/embedding-normal.json).
+Native carrier orchestration stays paused after the resident
+convolution handoff misses the request-level development screen.
+[Native trial](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-connected-conv-chain-2/RUN.md).
 
 ### Earlier task records
 

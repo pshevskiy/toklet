@@ -122,6 +122,37 @@ and all 32 output IDs. Its vocabulary head scores 32 rows across
 [Gate/up comparison](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-k64-pair-1/RUN.md) ·
 [vLLM workload admission](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-overlay-smoke-1/RUN.md).
 
+### Prefill attribution and observer timing
+
+The Nanbeige T128 layer-zero GQA baseline verifies 2,621,440 K/V
+words and all 104 timed outputs. The four-cut median sum falls
+from 6.203 ms to 4.654 ms when run in reverse order. The reverse
+misses the 5.250 ms zero-cost screen for the L0×44 projection.
+Astra approves retaining the baseline and closing the isolated trial.
+[Four-depth baseline](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gqa-offsets-1/RUN.md).
+
+The resident LFM3 convolution handoff matches all 1,050,624
+gated BF16 words and 61,440 private history words across five
+adjacent cuts. The best conditional lower prefill savings with the
+same exceptional ConvOut panel are 0.112–0.121 s over 52 eligible
+visits. Both miss the 0.452 s development screen. The corresponding
+released scalar comparison is slower in both orders, and the T1
+comparison gives mixed timings. Astra approves closing the trial.
+[Resident handoff](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-connected-conv-chain-2/RUN.md).
+
+The detached LFM3 O4 diagnostic passes all 64 requests and
+6,144 Metal command brackets at 3.72 GiB. After removing resident FFN
+brackets and serial T128 Q/K/V waits, remaining engine prefill
+contributes 52.95% and 77.09% of observed TTFT variance. Mean TTFT
+with summary enabled shifts +40.54 and −46.05 ms across the two orders.
+The FFN submit interval shifts +11.17 and +4.89 ms. Astra verifies
+the physical and wire attribution. The original 1% overhead gate
+remains open. The detached build, two offline readers and five
+negative clock controls pass. Retiring two authenticated public
+parent shards of a closed Qwen4B investigation recovered 8.45 GiB.
+[Diagnostic and checks](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-brackets-1/RUN.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-brackets-1/REVIEW.md).
+
 ### LFM3 Metal sampled decode
 
 The GPU Q/K/V and dedicated FFN kernels run on sampled single-token
