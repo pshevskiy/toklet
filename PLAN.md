@@ -1,18 +1,17 @@
 # Toklet implementation plan
 
-Updated 19 November 2026. Read [TODO.md](TODO.md) first for the current task.
+Updated 21 November 2026. Read [TODO.md](TODO.md) first for the current task.
 This live plan retains architecture, session invariants, milestone task criteria
 and the complete validation/performance policy. Detailed chronology and original
 execution orders are in the [dated archive](docs/archive/2026-11-07/PLAN.md).
 Read a linked historical section only when the current task needs it.
 
 M0–M7 are complete in their recorded, qualified scopes. The previous selected
-Mac delivery is complete. The new [competitive MLX GPU program](docs/mlx-gpu-performance-plan.md)
-is active: qualify matched external workloads, remove measured hybrid execution
-bottlenecks, pass the original 1% summary overhead bound, and beat both Ollama MLX
-GPU and vLLM MLX GPU by at least 5% complete-request latency in independent
-confirmation cohorts. This is a target, not an achieved result. Further physical
-iPhone work remains deferred by the user. M8 support is
+Mac delivery is complete. The [competitive MLX GPU program](docs/mlx-gpu-performance-plan.md)
+is paused. Its target remains at least 5% lower complete-request latency than
+Ollama MLX GPU and vLLM MLX GPU on matched workloads in independent confirmation
+cohorts, with the original 1% summary overhead bound. The architecture proposal
+includes iPhone. Physical device testing is pending. M8 support is
 model/path/device-specific, and M9's first delivery is a qualified Mac opt-in.
 Neither status grants blanket model, context, quality or device support.
 
@@ -31,13 +30,21 @@ Current extension contracts:
 - [Gemma3 native conformance](docs/gemma3-native-conformance.md): preserve historic
   fidelity rejections and original adoption-quality gates.
 
-## Current model priority and observability gates
+## Model priority and observability gates
+
+The next model target is **Nanbeige4.2-3B on MLX affine 4-bit weights**. The
+[Rust and Metal architecture proposal](docs/mlx-gpu-performance-plan.md#rust-and-metal-architecture-proposal)
+sets the admission work and shared execution design for Apple Silicon Mac and
+iPhone. The performance goal is paused. LFM3-1.7B supplies the historical
+matched-input diagnostic for sizing the engine changes. Keep the 6 GiB Mac
+working-set ceiling and the existing quality, state, matched-engine and
+request-summary gates. Qualify iPhone memory and latency on named devices.
 
 The [delivery outcomes](docs/improvement-outcomes.md) reconcile the completed
 engine/CLI work and model decisions. The user chose to finish Qwen with explicit
 rejections; the original failed gates remain failed and the newer9B alternative
 is not pursued. Positive Qwen performance/adoption is not qualified. The order
-below records the selected program; deferred/conditional routes keep their scope.
+below records the earlier model program and its route decisions.
 
 1. **Gemma 4 E2B first:** O1 request-summary metrics and O2 matched baseline on
    the existing qualified BF16 Mac route; then one measured optimization and

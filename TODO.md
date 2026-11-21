@@ -1,12 +1,36 @@
 # Toklet progress checklist
 
-Updated **16 November 2026**. **Active goal: beat Ollama MLX GPU and vLLM MLX GPU**
-on matched Gemma/LFM3 workloads. UI/screenshare and iPhone remain deferred.
-Read the current task and [competitive GPU plan](docs/mlx-gpu-performance-plan.md).
+Updated **21 November 2026**. The competitive GPU implementation goal is paused.
+The new model admission target is Nanbeige4.2-3B, MLX affine 4-bit.
+Read the current task and [Rust and Metal proposal](docs/mlx-gpu-performance-plan.md#rust-and-metal-architecture-proposal).
 Previous delivery and model decisions are in [outcomes](docs/improvement-outcomes.md);
 completed history remains in the [dated archive](docs/archive/2026-11-12/README.md).
 
 ## Current and next task
+
+- [x] Diagnose the LFM3 gap with Astra. The controlled comparison measures
+  9.63× first-ID and 6.02× request completion. Decode GPU work alone is
+  1.419 s. The proposal prioritizes tiled prefill, packed decode and keeping
+  dependent operations resident across a complete GPU block.
+- [x] Select Nanbeige4.2-3B as the next intelligence-first admission target.
+  The pinned MLX package is about 2.35 GB for weights. The 2,048-position
+  BF16 K/V payload estimate is 352 MiB. Direct MLX supplies reference evidence
+  for the Rust/Metal engine. Existing numerical rejections retain their scope.
+- [ ] After the performance goal resumes, measure a direct MLX replay of the
+  frozen LFM3 tape before implementing a connected Metal block. Independently
+  qualify the Nanbeige artifact, two-pass cache ownership and fit before use.
+  Current free disk is 2.82 GiB. The 2.36 GB package would breach the existing
+  2 GiB benchmark disk floor. This iteration contains no new device measurements.
+
+### Paused LFM3 implementation work
+
+The bridge fixture replays 264,192 original gated words and both 12,288-word
+private history proposals. The independent checkpoint reconstruction confirms
+all old T1 words. Sol's connected Metal screen was interrupted before native
+timing. [Verified fixture](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-conv-old-history-1/normal.json) ·
+[Independent history reconstruction](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-conv-old-history-1/embedding-normal.json).
+
+### Earlier task records
 
 - [ ] **SenseNova-Loop-9B text CLI.** Twenty targeted checks and six console
   preflight checks pass. The explicit CPU scalar profile builds. State

@@ -1,6 +1,6 @@
 # Toklet improvement index
 
-Updated **16 November 2026**. This is the compact index of retained capabilities,
+Updated **21 November 2026**. This is the compact index of retained capabilities,
 measured gains and material restrictions. The [full dated history](archive/2026-11-09/improvements.md)
 preserves every previous entry, source revision, failed check and evidence link.
 Read it only when the current task needs that detail.
@@ -9,6 +9,16 @@ Measurements apply to the named hardware, route, workload and timing boundary.
 Gains from different experiments cannot be added together. Current task and
 qualification scope live in [TODO](../TODO.md); acceptance policy is in
 [PLAN](../PLAN.md#validation-and-performance-policy).
+
+### Engine architecture and model decision
+
+The Astra investigation places 70% of the controlled vLLM completion gap
+before the first ID. The released decode trace has 1.419 s of GPU time and
+0.703 s of host wait outside GPU execution. The next model target is
+Nanbeige4.2-3B MLX 4-bit. The plan starts with a direct MLX reference and
+proposes a modular Rust and Metal runtime with separate prefill and decode
+plans. The implementation goal is paused and model admission remains open.
+[Diagnosis and proposal](mlx-gpu-performance-plan.md#rust-and-metal-architecture-proposal).
 
 ### LFM3 Metal sampled decode
 

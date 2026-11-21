@@ -1,14 +1,163 @@
 # Beat the MLX GPU baselines
 
-Updated 16 November 2026. Status: **active goal; G1 and bounded G2 producer
-pilot delivered; bounded three-layer numerical/state and required checks pass, Astra approves**. The [cost map](gemma-current-cost-map.md) identifies
+Updated 21 November 2026. The competitive goal is paused. Released LFM3
+`4b50550a` improves warmed completion by 21–22% against its Toklet predecessor.
+The controlled external comparison shows a 9.63× first-ID and 6.02× completion
+gap to vLLM Metal. Nanbeige4.2-3B is the next model admission target. Prior
+performance and adoption decisions retain their original scope.
+[Released LFM3 evidence](improvements.md#lfm3-metal-sampled-decode) ·
+[Controlled comparison](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-trial5-pushed-controlled-clock-2/join-normal.json).
+
+G1 and the bounded G2 producer pilot are delivered.
+Astra approves the three-layer numerical, state and required checks. The
+[cost map](gemma-current-cost-map.md) identifies
 CPU attention and completion waits as the next targets. The
 [reusable attention building block](gemma-gpu-attention.md) prepares shared-buffer
 block composition; [Apple hardware priorities](apple-silicon-gpu-goal.md) focus on
 GPU residency, unified-memory reuse and bounded ANE feasibility. Astra research
-and Sol implementation proceed in parallel; hardware measurements stay serial.
-No new engine speedup, model adoption or overhead pass is claimed. Previous
-[delivery outcomes](improvement-outcomes.md) remain valid.
+and Sol implementation proceed in parallel. Hardware measurements stay serial.
+The LFM3 placement improves internal warmed latency. External wins, model
+adoption and overhead qualification remain open.
+[Delivery outcomes](improvement-outcomes.md).
+
+## Rust and Metal architecture proposal
+
+### What caused the measured gap
+
+On the 16 GB M1 Pro, the controlled BF16 LFM3 trial uses 512 uncached prompt
+tokens and 31 matched decode forwards. The vLLM clock includes a forced token
+at sample eight. One owner per engine and different final unconsumed samples
+limit this to a controlled diagnostic. The ordinary confirmation is open.
+
+| Client completion boundary | Toklet | vLLM Metal | Toklet elapsed time ratio |
+| --- | ---: | ---: | ---: |
+| First token ID | 4.660 s | 0.484 s | 9.63× |
+| First ID through Done | 2.500 s | 0.707 s | 3.54× |
+| Request completion | 7.170 s | 1.191 s | 6.02× |
+| Guarded peak under each owner's measurement scope | 3.48 GiB | 5.27 GiB | — |
+
+About 70% of the wall gap accumulates before the first ID. On a separate
+released decode trace, 2.504 s of engine time decomposes into 1.419 s of GPU
+execution, 0.703 s of host wait outside GPU execution, 0.210 s of CPU attention
+and 0.172 s elsewhere. Eliminating every nondevice decode cost would still
+leave 1.419 s. The prefill diagnostic assigns 2.58–2.59 s to measured
+device intervals, 0.27–0.29 s to wait outside the device and 1.75–1.77 s
+outside captured waits, including unclocked stages. These diagnostics have
+separate scope and cannot be joined into one
+request breakdown. [Decode trace](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-release4b-dec-readback-1/normal.json) ·
+[Prefill trace and bounds](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-prefill-first-token-budget-1/normal.json).
+
+Toklet's strict BF16 route preserves a particular CPU accumulation order and
+validates results at several producer/consumer boundaries. In the isolated
+T128 gate/up test, MLX takes 2.28 ms for the same operands. Toklet takes
+9.29 ms on-device and 11.98 ms through validation. The results differ in
+480 of 1,966,080 BF16 words. The MLX engine selects tiled GEMM for batch
+shapes and evaluates dependent work together. vLLM Metal uses MLX, paged
+attention and ShortConv for this LFM3 route. This explains the measured
+opportunity in arithmetic and scheduling. Public vLLM request clocks do not
+attribute its time to individual kernels. [MLX projection experiment](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-mlx-dense-t4-pair-2/run-1/normal.json) ·
+[Toklet Panel84 verification](../artifacts/mlx-gpu-gap-2026-11-15/astra-lfm3-panel84-pair-actual-review-1/REVIEW.md) ·
+[MLX shape dispatch](https://github.com/ml-explore/mlx/blob/v0.32.4/mlx/backend/metal/matmul.cpp#L1449-L1576) ·
+[LFM3 in vLLM Metal](https://github.com/vllm-project/vllm-metal/pull/1212).
+
+### Production execution on Apple Silicon
+
+Extend the existing family-adapter and capacity plan with a prepared Metal
+execution path. [Shared blocks and capacity](shared-block-model-plan.md).
+
+| Component | Proposed boundary |
+| --- | --- |
+| Model adapters | Parse and validate pinned checkpoint config, tokenizer and tensor layouts once. Lower concrete blocks with explicit activation and weight precision, RoPE and state semantics. Keep optional image and audio encoders and their preprocessing behind separate adapters that produce bounded decoder inputs. |
+| Execution plan | Construct immutable prefill and decode plans from model blocks, shape, precision and supported Metal capabilities. Resolve buffer ranges, scratch lifetimes and pipeline handles during preparation. Select concrete kernels outside their inner loops. Begin with the blocks required by the pilot. |
+| Prefill | Use tiled GEMM and fused unpacking of packed weights, resident GQA/SDPA, and fused pointwise operations where measured. Encode projection, attention and FFN together within each admitted chunk while keeping state private. Increase the internal prefill tile window only after checking causal offsets, cancellation, cache publication and peak memory. Keep required logits at existing public checkpoints available. |
+| Decode | Use separate packed GEMV/vector kernels. Keep K/V and recurrent state resident. Encode the token through the sampler and read back the selected ID and status at a checked completion. Keep cancellation, error and retry eligible for exact prefix recovery. Full logits and stages remain available in diagnostics. |
+| Unified memory | Use one immutable backing allocation per bank. Borrow or map it directly when platform alignment, lifetime and residency permit it. Otherwise stage it once within the load budget. Reuse session storage and activation scratch by lifetime. Maintain explicit GPU dependencies and keep state proposals private until the owning command completes successfully. |
+| Apple devices | Share the Rust planning, state and Metal core across arm64 macOS and iOS. Query device and OS capabilities before selecting pipelines. Layer a small lifecycle integration over it for iOS cancellation and memory pressure. Admit iPhone context, quantization and scratch against an independently tested device budget. Measure sustained speed, memory and thermal behavior on physical devices before claiming support there. |
+
+Dense and sliding-window decoders share attention, projection, norms,
+activation and residual kernels. LFM adds causal convolution state. Nanbeige
+repeats the same weight-backed blocks with separate K/V in each loop. Hybrid
+linear attention and MoE can add their own typed state and grouped execution
+when a model under qualification requires them. Preserve distinct cache
+positions per sequence and per logical layer, and tag reusable prefixes with
+model, precision and position semantics. Leave use of the Neural Engine
+conditional on an independently instrumented Core ML prototype and a
+measured latency/memory benefit. [Metal synchronization](https://developer.apple.com/documentation/metal/resource-synchronization) ·
+[Metal memory recommendation](https://developer.apple.com/documentation/metal/mtldevice/recommendedmaxworkingsetsize) ·
+[iOS process budget](https://developer.apple.com/documentation/os/os_proc_available_memory) ·
+[Core ML device placement](https://developer.apple.com/documentation/coreml/mlcomputeplan-1w21n).
+
+### Implementation order and decision points
+
+1. **Measure a direct MLX reference before changing the engine.** Replay the
+   exact LFM3 diagnostic tape using a local MLX owner without the HTTP serving
+   loop. Freeze arithmetic, phases, output and work contracts first. Compare
+   through the same first-ID and Done boundaries. Attribute HTTP and serving
+   overhead only in a same-worker comparison that preserves the vLLM forward
+   path, logits coverage, effective shapes, state and intervention. Record engine
+   completion, client/output overhead, commands, readbacks and peak memory.
+   Use the frozen three warmups and ten observations in both owner orders.
+   A 5% edge over the controlled vLLM result would take about 1.131 s, roughly
+   60 ms below that measurement. If direct MLX leaves little margin, the Rust
+   implementation needs a measured kernel or memory-traffic advantage.
+2. **Implement one connected Rust/Metal block.** Price matmul, attention and
+   FFN on the same authentic operands at T128 and T1 with scoped completion
+   clocks. Compare against the existing route and the independent MLX path.
+   Use both reversed orders and scale disjoint savings by actual shape and
+   layer counts before committing to an end-to-end backend. A shorter submit
+   clock alone does not justify retention.
+3. **Qualify a separate production arithmetic route.** Keep the current
+   exact CPU/Metal references and original gates for existing routes. Freeze
+   the new packed format, accumulation and activation rules before running
+   the reference comparisons. Require independent numerical, loss and task
+   checks, exact token/cache correspondence where specified, and cancellation,
+   retry, reset and memory-pressure recovery. An unsupported or failed route
+   stays out of the default. Unsupported precision must be explicit.
+4. **Confirm full request behavior.** Measure initial load separately. Measure
+   TTFT, first visible/answer latency, decode throughput, completion and peak
+   memory on the same weights, tokenizer, token work, precision and cache
+   policy. Confirm the existing 5% requirement in both cohorts. Keep request
+   summaries bounded and record stage completions at existing synchronization
+   boundaries. Keep high-resolution GPU tracing opt-in. Apply both original
+   marginal and paired 95% overhead bounds of 1% to TTFT and completion.
+   The historical LFM3 marginal first-ID upper bound is 1.065%. It remains
+   open across this architecture change. [Overhead audit](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-pre-first-audit-1/RESULT.md).
+
+### Next model admission
+
+**Nanbeige4.2-3B** is the intelligence-first text target for this Mac. The
+model card reports 87.4 GPQA Diamond, 72.5 LiveCodeBench v6 and 63.6
+SWE-bench Verified in its thinking-mode setup. In Artificial Analysis's
+separate 16K evaluation of phone-scale quantized models it shares the lead
+with LFM2.5-2.6B at 63 and scores 65 versus 64 at the 64K limit.
+LFM2.5-2.6B answers substantially faster in the separate device test. This
+selection weights reasoning and coding alongside memory headroom. Those
+evaluations use other runtimes and quantizations. Preserve a fixed-token
+engine benchmark and a separate quality test with bounded answer time.
+[Model card and evaluation setup](https://huggingface.co/Nanbeige/Nanbeige4.2-3B) ·
+[Independent quantized evaluation](https://artificialanalysis.ai/articles/mobile-phone-intelligence-inference).
+
+Start from `MercuriusDream/Nanbeige4.2-3B-mlx-4bit` at
+`c21f850c4096b67a1b53a2c8eb4f8c8652f89375`. The repository lists 2.35 GB
+of weights. The model has about 4.17B total parameters, including its
+embeddings and head. Its 22 physical layers run twice. The 44 independent
+KV sets with eight heads of width 128 require 352 MiB of raw BF16 K/V
+at 2,048 positions. Preserve the 6,144-wide Q projection and each pass's
+final norm. Compare both loop-boundary residuals, distinct cache slots,
+and cached decode against full recomputation under two prompt partitions.
+Validate allocator and load transients within the 6 GiB ceiling. Merged
+upstream MLX-LM support provides an independent reference. The exact build
+still needs loaded parity and support checks in Toklet, vLLM Metal and
+Ollama MLX. Use current LFM3 evidence to calibrate the engine. Compare
+Nanbeige on external engines only after the same artifact and arithmetic
+are verified. The modified Heretic MLX variant can qualify separately if
+it preserves reasoning, coding and tool-call quality on the same tasks.
+Model installation and app adoption are pending.
+[Pinned MLX package](https://huggingface.co/MercuriusDream/Nanbeige4.2-3B-mlx-4bit/tree/c21f850c4096b67a1b53a2c8eb4f8c8652f89375) ·
+[Upstream config](https://huggingface.co/Nanbeige/Nanbeige4.2-3B/blob/main/config.json) ·
+[Publisher execution order](https://huggingface.co/Nanbeige/Nanbeige4.2-3B/blob/main/modeling_nanbeige.py) ·
+[Merged MLX reference](https://github.com/ml-explore/mlx-lm/pull/1597) ·
+[Heretic MLX package](https://huggingface.co/WaveCut/Nanbeige4.2-3B-heretic-MLX-DWQ-4bit).
 
 ## Goal and completion rule
 

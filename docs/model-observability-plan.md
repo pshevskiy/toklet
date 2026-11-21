@@ -1,8 +1,11 @@
 # Model roadmap: observability before optimization
 
-Updated 15 November 2026. Selected order: **Gemma 4 E2B → Qwen3.5-4B →
-Qwen3.5-9B**. Qwen2.5-1.5B remains a historical regression reference, not the
-next adoption target. The [O1 opt-in pilot](o1-gemma-request-summaries.md) now
+Updated 21 November 2026. **Nanbeige4.2-3B MLX 4-bit** is the next model
+admission target. Its [admission plan](mlx-gpu-performance-plan.md#next-model-admission)
+preserves the existing 6 GiB Mac ceiling and request-summary requirements.
+The performance implementation goal is paused. The earlier Gemma 4 E2B and
+Qwen3.5-4B/9B program remains recorded below. Qwen2.5-1.5B remains a historical
+regression reference. The [O1 opt-in pilot](o1-gemma-request-summaries.md) now
 implements available worker-boundary observations. The additive
 [O2.A phase API/report](o2-gemma-cost-report.md) now exposes completed native
 phases. [O2.B1 numerical coverage](o2-gemma-workloads.md) adds two matched
@@ -14,6 +17,8 @@ what actually runs. [PLAN](../PLAN.md#validation-and-performance-policy) retains
 the binding numerical, quality, memory and measurement gates.
 
 ## Delivery order
+
+The table records the earlier Gemma and Qwen program.
 
 | Stage | Delivery | Acceptance before advancing |
 | --- | --- | --- |
