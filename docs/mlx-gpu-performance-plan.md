@@ -187,6 +187,16 @@ same numerical, latency and memory gates.
 [Pinned FFN operands and tile work](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/RUN.md).
 [Connected results](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-connected-1/normal.json).
 
+The subsequent direct MLX graph reproduces all 32 sampled IDs in
+two warmed owners. It completes in 3.315–3.316 s beside the released
+Toklet result of 5.841–5.842 s. Of the 2.53 s difference, about 92%
+accumulates in prefill. The T128 gate and up projection references
+match all 2,752,512 BF16 words with completed times of 3.21–3.22 ms
+in MLX and 5.36–5.37 ms of device time in Toklet. Test a smaller
+threadgroup with lane-local accumulation and stores on these inputs
+before any wider rollout. Recheck bitwise outputs, bounds, terminal
+state and full request latency. [Current timing evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-modern-decode-1/RUN.md).
+
 For request-summary qualification, compare the same CLI output mode with
 summary collection enabled and disabled. Keep counters at existing completion
 boundaries and write one bounded summary after the last token. Sample command

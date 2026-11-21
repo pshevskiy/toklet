@@ -65,6 +65,16 @@ approves the experimental scope. Full-request timing covers T128 on
 M1 Pro. [Connected results](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-connected-1/normal.json) ·
 [Final checks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-connected-1/RUN.md).
 
+The subsequent connected FP32 vector bias sum improves Nanbeige logit
+agreement against MLX 0.32.4 on the fixed tape. All 32 greedy decisions
+and the rollback controls pass. Decode improves 6.98% and 7.40% in
+the two warmed orders. Completion improves 1.31% and 1.39%. Retain
+the arithmetic as an experiment while full quality and the 5% request
+threshold remain open. Direct MLX finishes in 3.315–3.316 s versus
+5.841–5.842 s for Toklet, with about 92% of that gap in prefill.
+The matched T128 gate/up panels agree bitwise and identify the next
+kernel opportunity. [Decode, direct timing and admission evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-modern-decode-1/RUN.md).
+
 ### LFM3 Metal sampled decode
 
 The GPU Q/K/V and dedicated FFN kernels run on sampled single-token

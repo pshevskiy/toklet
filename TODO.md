@@ -56,18 +56,52 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   Completion improves 10.10% in both orders at a 2.47 GiB peak. TTFT improves
   12.18% and 12.14%. Both decode intervals include zero. The full Metal
   suite, archived partition replay, GPU rounding and rollback, and CLI
-  stats pass. Astra approves the scoped Mac change.
+  stats pass. Astra approves the scoped Mac change. Pushed `13086f54`.
   [Connected result](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-connected-1/normal.json) ·
   [Checks and review](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-connected-1/RUN.md).
-- [ ] Check modern MLX vector arithmetic at wider decode scopes. The old
+- [x] Price modern MLX vector arithmetic at wider decode scopes. The old
   BF16 four-term bias sum explains every changed word of the T1 V fixture.
   The single-operator modern Rust and Metal candidate matches all 1,024
   reference words in 52 guarded calls. GPU medians improve 7.24% and 7.95%.
-  Full parity, held-out loss and task cases, cross-engine latency and
-  request-summary overhead remain open.
+  The full fixed-tape MLX 0.32.4 reference authenticates 35 logit rows
+  and all 44 K/V owners under 6 GiB. All 32 raw argmax decisions match
+  the released tape. The native overlays match all 32 IDs and prefill
+  boundaries. Across 31 decode rows, RMS logit error against MLX falls
+  from 0.421082 to 0.274795, and the rollback controls pass. Both
+  warmed orders save 6.98–7.40% decode and 1.31–1.39% completion.
+  Retain the experiment under the original whole-request and quality gates.
+  [Connected MLX reference](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-modern-decode-1/mlx-normal.json) ·
+  [Native numerical join](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-modern-decode-1/sol-native-connected-1/normal-2.json) ·
+  [Connected decode timings](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-modern-decode-1/sol-native-connected-1/price-3/normal.json) ·
   [Modern MLX replay](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/mlx32.4-normal.json) ·
   [T1 arithmetic replay](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/astra-t1-affine-bias-versions-1/result.json) ·
   [T1 native operator](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/modern-t1-metal-1/normal-3.json).
+- [ ] Measure bounded request-summary overhead through the original
+  protocol. A same-binary replay of the two published Nanbeige owners
+  gives a maximum paired or marginal upper drift bound of 0.07581%
+  for warmed engine TTFT and completion. This scopes a subsequent
+  enabled/disabled measurement.
+  [Timing control](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-modern-decode-1/timing-control-normal.json).
+- [x] Price the remaining Nanbeige gap against the direct MLX GPU graph.
+  Both owners reproduce the 32 released IDs on all 26 requests.
+  Direct MLX finishes in 3.315–3.316 s versus Toklet's 5.841–5.842 s.
+  Prefill accounts for about 92% of the gap in median completion.
+  Exact T128 gate/up operands match 2,752,512 words. Direct MLX takes
+  3.21–3.22 ms per projection through completion. Toklet's device
+  time is 5.36–5.37 ms.
+  [Direct timing](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-modern-decode-1/direct-normal.json).
+- [ ] Test a narrower-threadgroup T128 gate/up tile using fewer shared
+  bytes and lane-local output. Preserve BF16 reconstruction, FP32
+  accumulation order and the matched output panel. Require isolated
+  and connected timing under the existing memory and numerical gates.
+  [Matched operator evidence](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-modern-decode-1/direct-ffn-normal.json).
+- [ ] Admit external Nanbeige engines on exactly matching work.
+  The installed vLLM Metal source replay takes only 22 of the 44 model
+  visits. Its paged KV wrapper also aliases physical indexes if given
+  44 arguments. The publisher's Ollama fork preserves packed weights
+  and cache ownership, with a different public prefill/drain schedule.
+  Preserve the independent Gemma and LFM3 benchmark gates.
+  [External admission proof](artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-external-admission-1/result.json).
 
 ### Paused LFM3 implementation work
 
