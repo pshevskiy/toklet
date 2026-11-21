@@ -169,12 +169,23 @@ Accumulate four contiguous 768-wide products at T128 and eight 384-wide
 products at T64. Round each partial to BF16 and round each ordered addition,
 initially inside the existing output tile. Check the 64-channel witness, the
 full V output against MLX at both shapes and the separate T1 control.
-Profile gate, up and down projections after this check. They account for
-69% of per-block projection multiplies. Collect GPU duration after completion,
-CPU encoding and wait time, readback, dispatches and logical byte counts.
-Collect hardware traffic separately when the device supports it. Apply the
-existing full-request gain and memory gates before retaining a speed change.
-[Split-K witness](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/astra-splitk-l0-value-1/result.json).
+The implementation matches every frozen 0.32.3 word and costs GPU time.
+The newer installed MLX 0.32.4 stack keeps FP32 subtotals. On identical
+operands its T128 and T64 output panels differ in 11 of 131,072 words.
+The existing unsplit Toklet route stays much closer to these modern panels.
+Keep the previous BF16 split arithmetic as a reference diagnostic.
+[Timed operator and reference versions](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/RUN.md).
+
+Gate, up and down account for 69% of per-block projection multiplies.
+The retained 32-row tile keeps the same accumulation order for each output.
+At T128 it halves their tile-weight reconstruction count across all 44 block
+visits. The exact T64 and T128 operator checks and the connected 512/32
+workload pass. M1 Pro completion improves 10.10% in both orders. The full
+request runs use four T128 chunks at 2.47 GiB peak and preserve token IDs,
+committed KV and terminal logits. Assess additional shapes through the
+same numerical, latency and memory gates.
+[Pinned FFN operands and tile work](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/RUN.md).
+[Connected results](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-connected-1/normal.json).
 
 For request-summary qualification, compare the same CLI output mode with
 summary collection enabled and disabled. Keep counters at existing completion

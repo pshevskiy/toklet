@@ -271,29 +271,37 @@ impl<'a> Session<'a> {
             context.encode(encoder, op, buffers, shape, groups);
         };
         let weights = |id: usize| &*model.weights[id].raw;
-        let projection = Projection::for_chunk(rows);
-        let affine =
-            |matrix: Matrix, input: &RawBuffer, output: &RawBuffer, count: usize, input_row| {
-                let columns = matrix.layout.columns();
-                let outputs = matrix.layout.rows();
-                let (op, groups) = match projection {
-                    Projection::GroupedVector => (Op::Vector, [outputs / 4, 1]),
-                    Projection::TiledBf16 => (Op::Tiled, [outputs / 32, count.div_ceil(16usize)]),
-                };
-                dispatch(
-                    op,
-                    &[
-                        weights(matrix.weights),
-                        weights(matrix.scales),
-                        weights(matrix.biases),
-                        input,
-                        output,
-                        &s.status.raw,
-                    ],
-                    &[count as u32, columns as u32, outputs as u32, input_row],
-                    groups,
-                );
-            };
+        let ordinary = match Projection::for_chunk(rows) {
+            Projection::GroupedVector => (Op::Vector, 1, 4),
+            Projection::TiledBf16 => (Op::Tiled, 16, 32),
+        };
+        let ffn = if model.ffn_m32_prefill_rows().contains(&rows) {
+            (Op::FfnM32, 32, 32)
+        } else {
+            ordinary
+        };
+        let affine = |(op, m_tile, n_tile): (Op, usize, usize),
+                      matrix: Matrix,
+                      input: &RawBuffer,
+                      output: &RawBuffer,
+                      count: usize,
+                      input_row| {
+            let columns = matrix.layout.columns();
+            let outputs = matrix.layout.rows();
+            dispatch(
+                op,
+                &[
+                    weights(matrix.weights),
+                    weights(matrix.scales),
+                    weights(matrix.biases),
+                    input,
+                    output,
+                    &s.status.raw,
+                ],
+                &[count as u32, columns as u32, outputs as u32, input_row],
+                [outputs / n_tile, count.div_ceil(m_tile)],
+            );
+        };
         let norm = |input: &RawBuffer, gain: usize, output: &RawBuffer| {
             dispatch(
                 Op::Rms,
@@ -340,7 +348,7 @@ impl<'a> Session<'a> {
                 (block.key, &s.key),
                 (block.value, &s.value),
             ] {
-                affine(matrix, &s.normalized.raw, &target.raw, rows, 0);
+                affine(ordinary, matrix, &s.normalized.raw, &target.raw, rows, 0);
             }
             dispatch(
                 Op::RotateCache,
@@ -367,22 +375,29 @@ impl<'a> Session<'a> {
                 &cache_shape,
                 [rows * plan::QUERY_HEADS, 1],
             );
-            affine(block.attention_out, &s.attention.raw, &s.delta.raw, rows, 0);
+            affine(
+                ordinary,
+                block.attention_out,
+                &s.attention.raw,
+                &s.delta.raw,
+                rows,
+                0,
+            );
             residual_add();
             norm(
                 &s.residual.raw,
                 block.post_attention_norm,
                 &s.normalized.raw,
             );
-            affine(block.gate, &s.normalized.raw, &s.gate.raw, rows, 0);
-            affine(block.up, &s.normalized.raw, &s.up.raw, rows, 0);
+            affine(ffn, block.gate, &s.normalized.raw, &s.gate.raw, rows, 0);
+            affine(ffn, block.up, &s.normalized.raw, &s.up.raw, rows, 0);
             dispatch(
                 Op::Swiglu,
                 &[&s.gate.raw, &s.up.raw, &s.status.raw],
                 &[rows as u32, INTERMEDIATE as u32],
                 [(rows * INTERMEDIATE).div_ceil(32), 1],
             );
-            affine(block.down, &s.gate.raw, &s.delta.raw, rows, 0);
+            affine(ffn, block.down, &s.gate.raw, &s.delta.raw, rows, 0);
             residual_add();
 
             if visit.normalize_after {
@@ -412,6 +427,7 @@ impl<'a> Session<'a> {
             }
         }
         affine(
+            ordinary,
             model.plan.head,
             &s.normalized.raw,
             &s.logits.raw,

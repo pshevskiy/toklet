@@ -145,4 +145,13 @@ impl Model {
     pub fn device_name(&self) -> String {
         self.context.device.name().to_string()
     }
+
+    /// Active prefill row counts eligible for the prepared M32 FFN pipeline.
+    pub fn ffn_m32_prefill_rows(&self) -> &'static [usize] {
+        if self.context.has_ffn_m32() {
+            &[64, 128]
+        } else {
+            &[]
+        }
+    }
 }

@@ -30,13 +30,44 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   comparisons. Formatting, strict Clippy in both configurations, 869 default
   tests, 1,074 Metal tests and both explicit GPU controls pass. The library
   rerun passes after bytecode cleanup freed 210 MB. Astra’s review conditions
-  for the experimental profile are satisfied.
+  for the experimental profile are satisfied. Pushed `d4b485bf`.
   [Admission and native evidence](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/RUN.md).
-- [ ] Price an exact split-K prefill operator on the frozen layer-zero V case.
-  Astra reproduces the three observed schedules across 64 authentic channels.
-  Wider parity, the 10,000 held-out targets, 100 task cases, cross-engine
-  latency and request-summary overhead remain open.
-  [Split-K replay](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/astra-splitk-l0-value-1/result.json).
+- [x] Price inline BF16 split-K on the frozen layer-zero V case.
+  All 262,144 prefill values match MLX 0.32.3. Both warmed orders show a
+  slowdown. The guarded MLX 0.32.4 replay keeps FP32 subtotals and matches
+  the released T128 path at 131,046 of 131,072 words. Astra approves retaining
+  the old split-K experiment as evidence. No engine variant is added.
+  [Matched inputs](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/astra-splitk-panel-invariants-1/result.json) ·
+  [Operator replay](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/sol-inline-splitk-l0-value-1/summary-normal.json).
+- [x] Price 32-row FFN tiling on authentic prefill operands.
+  The guarded MLX 0.32.4 run freezes gate, up and down inputs at T128, both
+  T64 windows and T43. The packed banks are authenticated ranges in the
+  existing shard. A 32-row tile halves the FFN weight reconstruction count
+  at T128. All 7,790,592 native output words and all canaries pass. GPU
+  medians improve at T64 and T128. T43 slows in both orders. Astra approves
+  testing the connected gate, up and down path at exact T64 and T128.
+  [FFN inputs](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/ffn-inputs-1/input.json) ·
+  [Native comparison](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/sol-ffn-m32-1/summary-normal.json) ·
+  [Tile census](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/normal.json).
+- [x] Qualify 32-row FFN tiling on complete requests. Keep the released tile
+  for other row counts and all other operators. Compare two owner orders
+  on the frozen 512/32 tape and require matching IDs, committed KV and full
+  terminal logits. The 52 requests and separate terminal diagnostics pass.
+  Completion improves 10.10% in both orders at a 2.47 GiB peak. TTFT improves
+  12.18% and 12.14%. Both decode intervals include zero. The full Metal
+  suite, archived partition replay, GPU rounding and rollback, and CLI
+  stats pass. Astra approves the scoped Mac change.
+  [Connected result](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-connected-1/normal.json) ·
+  [Checks and review](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-connected-1/RUN.md).
+- [ ] Check modern MLX vector arithmetic at wider decode scopes. The old
+  BF16 four-term bias sum explains every changed word of the T1 V fixture.
+  The single-operator modern Rust and Metal candidate matches all 1,024
+  reference words in 52 guarded calls. GPU medians improve 7.24% and 7.95%.
+  Full parity, held-out loss and task cases, cross-engine latency and
+  request-summary overhead remain open.
+  [Modern MLX replay](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/mlx32.4-normal.json) ·
+  [T1 arithmetic replay](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/astra-t1-affine-bias-versions-1/result.json) ·
+  [T1 native operator](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/modern-t1-metal-1/normal-3.json).
 
 ### Paused LFM3 implementation work
 

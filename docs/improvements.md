@@ -44,6 +44,27 @@ adoption and comparative performance remain open.
 [Native comparisons](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/native-final-normal.json) ·
 [Split-K witness](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/astra-splitk-l0-value-1/result.json).
 
+The inline split-K diagnostic matches all 262,144 layer-zero V prefill words
+from MLX 0.32.3. Both reversed warmed orders increase GPU time. The identical
+MLX 0.32.4 inputs favor the released unsplit projection. Its differences are
+26 of 131,072 words at T128, and 16 and eight of 65,536 in the T64 windows.
+Astra keeps the BF16 split-K experiment as evidence. The operator result
+prioritizes larger FFN tiles and a separately tested FP32 vector bias sum.
+[Paired timing and version replay](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/RUN.md).
+
+The Mac path uses 32-row tiles for gate, up and down at
+64 or 128 prefill rows. Two accumulator tiles share one packed-weight
+reconstruction. The 52-request M1 Pro comparison reduces median 512/32
+completion by 10.10% in both orders, and TTFT by 12.18% and 12.14%.
+Both decode intervals include zero. Identical greedy IDs, all 44 committed
+KV prefixes and full terminal logits pass at 2.47 GiB guarded peak.
+The API and CLI report the prepared row sizes. Formatting, both strict
+Clippy configurations, 1,074 Metal tests and two explicit GPU controls
+pass. The unchanged default inputs retain their 869-test result. Astra
+approves the experimental scope. Full-request timing covers T128 on
+M1 Pro. [Connected results](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-connected-1/normal.json) ·
+[Final checks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-connected-1/RUN.md).
+
 ### LFM3 Metal sampled decode
 
 The GPU Q/K/V and dedicated FFN kernels run on sampled single-token
