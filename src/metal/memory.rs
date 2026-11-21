@@ -29,12 +29,15 @@ pub(super) fn validate_buffer_bytes(bytes: usize, maximum: usize) -> Result<()> 
 }
 impl<T: Scalar> Buffer<T> {
     pub fn new(gpu: &Gpu, len: usize) -> Result<Self> {
+        Self::on_device(&gpu.device, len)
+    }
+
+    pub(super) fn on_device(device: &ProtocolObject<dyn MTLDevice>, len: usize) -> Result<Self> {
         let bytes = len
             .checked_mul(size_of::<T>())
             .ok_or(Error::Options("buffer bytes overflow"))?;
-        validate_buffer_bytes(bytes, gpu.device.maxBufferLength())?;
-        let raw = gpu
-            .device
+        validate_buffer_bytes(bytes, device.maxBufferLength())?;
+        let raw = device
             .newBufferWithLength_options(
                 bytes,
                 MTLResourceOptions::StorageModeShared
@@ -348,6 +351,19 @@ pub(super) struct Gpu {
     #[cfg(all(feature = "llama-staged-mac-probe", target_os = "macos"))]
     llama_staged: OnceLock<std::result::Result<super::llama_staged::Pipeline, String>>,
 }
+pub(super) fn system_device() -> Result<Retained<ProtocolObject<dyn MTLDevice>>> {
+    // Safe/Precise compile options require macOS15 or iOS18 in the SDK.
+    let minimum = if cfg!(target_os = "ios") { 18 } else { 15 };
+    if NSProcessInfo::processInfo()
+        .operatingSystemVersion()
+        .majorVersion
+        < minimum
+    {
+        return Err(Error::Unsupported("Metal requires macOS15+ or iOS18+"));
+    }
+    MTLCreateSystemDefaultDevice().ok_or(Error::Unsupported("no Metal device"))
+}
+
 impl Gpu {
     pub(super) fn rms_parallel_store(&self) -> Result<&super::rms_store::Pipeline> {
         self.rms_parallel_store
@@ -388,18 +404,7 @@ impl Gpu {
         self.pipelines[kernel as usize].threadExecutionWidth()
     }
     pub fn new() -> Result<Self> {
-        // Safe/Precise compile options require macOS15 or iOS18 in the SDK.
-        // Keep the runtime guard before sending either selector; simulator and
-        // device still have to pass unified-memory/MPS/pipeline capabilities.
-        let minimum = if cfg!(target_os = "ios") { 18 } else { 15 };
-        if NSProcessInfo::processInfo()
-            .operatingSystemVersion()
-            .majorVersion
-            < minimum
-        {
-            return Err(Error::Unsupported("Metal requires macOS15+ or iOS18+"));
-        }
-        let device = MTLCreateSystemDefaultDevice().ok_or(Error::Unsupported("no Metal device"))?;
+        let device = system_device()?;
         if !device.hasUnifiedMemory() || !unsafe { MPSSupportsMTLDevice(Some(&device)) } {
             return Err(Error::Unsupported("requires unified-memory MPS device"));
         }

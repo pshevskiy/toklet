@@ -7,10 +7,18 @@ still authorize loading. Other Hugging Face results remain discoverable without
 becoming executable. Model declarations are shared input/history/output windows,
 not tokens per second or a promise that the engine can use that whole window.
 
-The [forward model/metric plan](model-observability-plan.md) prioritizes Gemma 4
-E2B, Qwen3.5-4B and Qwen3.5-9B plus a smaller-model research track. It prefers
-uncensored MLX candidates but adds no entries to this qualified-coverage table;
-existing Qwen2.5-1.5B evidence remains valid in its recorded scope.
+The [forward model and metrics plan](model-observability-plan.md) selects
+Nanbeige4.2-3B affine 4-bit as its next admission target. Earlier Gemma and
+Qwen results retain their recorded scope.
+
+The experimental CLI profile `nanbeige4.2-3b-mlx-q4` selects the pinned
+`MercuriusDream/Nanbeige4.2-3B-mlx-4bit` artifact at `c21f850c` with
+`--backend metal`. It runs on the tested M1 Pro with a 2,048-position
+capacity and prefill chunks up to 128. Rendered text uses the Hugging Face
+skip-special decoding policy. JSON exposes raw generated IDs. The initial
+two-partition witness matches the two observed MLX greedy IDs and has
+remaining BF16 differences. Full numerical, loss, task, competitive and
+iPhone qualification are pending. [Pinned artifact, checks and limits](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/RUN.md).
 
 | Pinned artifact (revision prefix) | Backend / route | Declared positions | Qualified or tested scope | Ordinary app |
 | --- | --- | ---: | --- | --- |

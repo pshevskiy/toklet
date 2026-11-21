@@ -1,6 +1,6 @@
 # Beat the MLX GPU baselines
 
-Updated 21 November 2026. The competitive goal is paused. Released LFM3
+Updated 22 November 2026. The competitive goal is active. Released LFM3
 `4b50550a` improves warmed completion by 21–22% against its Toklet predecessor.
 The controlled external comparison shows a 9.63× first-ID and 6.02× completion
 gap to vLLM Metal. Nanbeige4.2-3B is the next model admission target. Prior
@@ -100,6 +100,11 @@ measured latency/memory benefit. [Metal synchronization](https://developer.apple
    A 5% edge over the controlled vLLM result would take about 1.131 s, roughly
    60 ms below that measurement. If direct MLX leaves little margin, the Rust
    implementation needs a measured kernel or memory-traffic advantage.
+   The actual same-worker runs verify all 52 requests. HTTP and direct median
+   completion measure 1.289/1.284 s and 1.288/1.286 s in opposite orders.
+   Paired 95% intervals include zero and their upper ends are below 5%.
+   Keep the server path as a benchmark boundary and work on GPU execution.
+   [Completed replay](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-same-worker-replay-1/normal.json).
 2. **Implement one connected Rust/Metal block.** Price matmul, attention and
    FFN on the same authentic operands at T128 and T1 with scoped completion
    clocks. Compare against the existing route and the independent MLX path.
@@ -152,7 +157,30 @@ Ollama MLX. Use current LFM3 evidence to calibrate the engine. Compare
 Nanbeige on external engines only after the same artifact and arithmetic
 are verified. The modified Heretic MLX variant can qualify separately if
 it preserves reasoning, coding and tool-call quality on the same tasks.
-Model installation and app adoption are pending.
+The pinned model and tokenizer are installed locally. The experimental
+Rust and Metal CLI checks both greedy anchors and all 44 independent cache
+owners at two prompt partitions. Native logits differ from MLX. The next
+operator test isolates the first layer-zero V divergence using authentic
+split-K operands. App adoption and external engine speed tests are pending.
+[Native admission results](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/RUN.md).
+
+Test the resident layer-zero V matrix with identical BF16-normalized inputs.
+Accumulate four contiguous 768-wide products at T128 and eight 384-wide
+products at T64. Round each partial to BF16 and round each ordered addition,
+initially inside the existing output tile. Check the 64-channel witness, the
+full V output against MLX at both shapes and the separate T1 control.
+Profile gate, up and down projections after this check. They account for
+69% of per-block projection multiplies. Collect GPU duration after completion,
+CPU encoding and wait time, readback, dispatches and logical byte counts.
+Collect hardware traffic separately when the device supports it. Apply the
+existing full-request gain and memory gates before retaining a speed change.
+[Split-K witness](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/astra-splitk-l0-value-1/result.json).
+
+For request-summary qualification, compare the same CLI output mode with
+summary collection enabled and disabled. Keep counters at existing completion
+boundaries and write one bounded summary after the last token. Sample command
+and GPU timings in a separate diagnostic run. Verify the paired and marginal
+95% upper bounds for first-token and completion overhead in both owner orders.
 [Pinned MLX package](https://huggingface.co/MercuriusDream/Nanbeige4.2-3B-mlx-4bit/tree/c21f850c4096b67a1b53a2c8eb4f8c8652f89375) ·
 [Upstream config](https://huggingface.co/Nanbeige/Nanbeige4.2-3B/blob/main/config.json) ·
 [Publisher execution order](https://huggingface.co/Nanbeige/Nanbeige4.2-3B/blob/main/modeling_nanbeige.py) ·

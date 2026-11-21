@@ -1,6 +1,8 @@
 mod chat;
 mod gemma4;
 mod inspect;
+#[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+mod nanbeige;
 mod plan;
 mod profile;
 mod qwen35_2b;
@@ -42,7 +44,7 @@ Usage: toklet [OPTIONS]
        toklet profile --help
 
   --model PATH              Local model directory
-  --model-profile PROFILE   qwen (default), gemma4-bf16, lfm3-bf16, ministral3-diagnostic, qwen35-2b-diagnostic, sensenova-loop-9b-mlx
+  --model-profile PROFILE   qwen (default), gemma4-bf16, lfm3-bf16, ministral3-diagnostic, qwen35-2b-diagnostic, sensenova-loop-9b-mlx, nanbeige4.2-3b-mlx-q4
   --submission MODE         Gemma only: per-tile (default), batched-single-row
   --request-metrics MODE    Gemma only: disabled (default), summary
   --metrics-output PATH     Explicit summary JSONL export after inference
@@ -64,6 +66,7 @@ Usage: toklet [OPTIONS]
   --q4-weights PATH         Explicit Q4 v2 packed artifact for the v2 mode
   --stop-token ID           Additional stop ID; repeatable
   --no-eos                  Ignore configured EOS IDs
+  --no-thinking             Nanbeige only: close the empty reasoning block before generation
   --json                    JSON token events and statistics
   --stats                   Statistics to stderr with text output
   --interactive             Persistent JSON-lines requests on stdin
@@ -79,6 +82,9 @@ Qwen3.5-2B diagnostic uses GPU projections with CPU FP32 state, token IDs and
 JSON only; default capacity128/chunk32, maximum capacity512/chunk32.
 SenseNova-Loop-9B uses pinned MLX 4-bit weights and one-shot CPU text or token IDs.
 Its default and maximum are capacity512/chunk32.
+Nanbeige4.2-3B is an experimental one-shot Metal route for pinned MLX 4-bit weights.
+It samples raw logits greedily. Text uses Hugging Face decoding with special
+tokens skipped, and JSON emits model token IDs. Maximum capacity2048/chunk128.
 Interactive actions: generate, append (raw text or IDs), continue, reset.
 Ctrl-C cancels between backend chunks/steps; idle interactive Ctrl-C exits.";
 #[derive(Clone, Copy, PartialEq, Eq)]
@@ -87,6 +93,7 @@ enum ModelProfile {
     Gemma4Bf16,
     Lfm3Bf16,
     SenseNovaLoopMlx,
+    NanbeigeMlx,
     Ministral3Diagnostic,
     Qwen35TwoBDiagnostic,
 }
@@ -106,6 +113,7 @@ struct Args {
     stats: bool,
     interactive: bool,
     no_eos: bool,
+    no_thinking: bool,
     stop: Vec<u32>,
     max: usize,
     capacity: usize,
@@ -144,6 +152,7 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
         stats: false,
         interactive: false,
         no_eos: false,
+        no_thinking: false,
         stop: Vec::new(),
         max: 32,
         capacity: 2048,
@@ -223,11 +232,12 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
                     "gemma4-bf16" => ModelProfile::Gemma4Bf16,
                     "lfm3-bf16" => ModelProfile::Lfm3Bf16,
                     "sensenova-loop-9b-mlx" => ModelProfile::SenseNovaLoopMlx,
+                    toklet::mlx::nanbeige::PROFILE => ModelProfile::NanbeigeMlx,
                     "ministral3-diagnostic" => ModelProfile::Ministral3Diagnostic,
                     "qwen35-2b-diagnostic" => ModelProfile::Qwen35TwoBDiagnostic,
                     _ => {
                         return Err(invalid(
-                            "model profile must be qwen, gemma4-bf16, lfm3-bf16, ministral3-diagnostic, qwen35-2b-diagnostic or sensenova-loop-9b-mlx",
+                            "model profile must be qwen, gemma4-bf16, lfm3-bf16, ministral3-diagnostic, qwen35-2b-diagnostic, sensenova-loop-9b-mlx or nanbeige4.2-3b-mlx-q4",
                         ));
                     }
                 };
@@ -266,6 +276,7 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
             "--stats" => a.stats = true,
             "--interactive" => a.interactive = true,
             "--no-eos" => a.no_eos = true,
+            "--no-thinking" => a.no_thinking = true,
             _ => return Err(invalid(format!("unexpected argument {flag}"))),
         }
     }
@@ -304,6 +315,38 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
         return Err(invalid(
             "submission and request metrics flags require gemma4-bf16",
         ));
+    }
+    if a.model_profile == ModelProfile::NanbeigeMlx {
+        use toklet::mlx::nanbeige::{MAX_CAPACITY, MAX_CHUNK};
+        if a.backend != "metal"
+            || a.interactive
+            || a.tools.is_some()
+            || a.q4_weights.is_some()
+            || [
+                "--metal-projection",
+                "--metal-attention",
+                "--cpu-projection",
+            ]
+            .iter()
+            .any(|flag| seen.contains(*flag))
+        {
+            return Err(invalid(
+                "Nanbeige requires one-shot Metal with its fixed affine Q4 kernels",
+            ));
+        }
+        if a.capacity > MAX_CAPACITY || a.chunk > MAX_CHUNK || a.max > a.capacity {
+            return Err(invalid("Nanbeige supports capacity2048/chunk128 at most"));
+        }
+        if a.raw && a.prompt.is_none() {
+            return Err(invalid("Nanbeige --raw requires --prompt"));
+        }
+        if a.no_thinking && (a.raw || a.prompt.is_none() && a.messages.is_none()) {
+            return Err(invalid(
+                "--no-thinking requires formatted Nanbeige chat input",
+            ));
+        }
+    } else if a.no_thinking {
+        return Err(invalid("--no-thinking requires nanbeige4.2-3b-mlx-q4"));
     }
     if a.model_profile == ModelProfile::SenseNovaLoopMlx {
         if a.backend != "cpu"
@@ -563,6 +606,7 @@ impl Frontend {
                 toklet::app_chat::lfm3::render(messages)
             }
             ModelProfile::SenseNovaLoopMlx
+            | ModelProfile::NanbeigeMlx
             | ModelProfile::Gemma4Bf16
             | ModelProfile::Ministral3Diagnostic
             | ModelProfile::Qwen35TwoBDiagnostic => {
@@ -820,6 +864,10 @@ fn array_file(path: &std::path::Path) -> io::Result<Vec<Value>> {
         .ok_or_else(|| invalid("expected a JSON array"))
 }
 fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    if a.model_profile == ModelProfile::NanbeigeMlx {
+        return nanbeige::run(a);
+    }
     if a.model_profile == ModelProfile::SenseNovaLoopMlx {
         return sensenova::run(a);
     }

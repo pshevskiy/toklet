@@ -128,6 +128,13 @@ pub(super) fn precise_library(
     gpu: &Gpu,
     source: &str,
 ) -> Result<Retained<ProtocolObject<dyn MTLLibrary>>> {
+    precise_library_on(&gpu.device, source)
+}
+
+pub(super) fn precise_library_on(
+    device: &ProtocolObject<dyn MTLDevice>,
+    source: &str,
+) -> Result<Retained<ProtocolObject<dyn MTLLibrary>>> {
     let options = MTLCompileOptions::new();
     options.setLanguageVersion(MTLLanguageVersion::Version2_3);
     options.setMathMode(MTLMathMode::Safe);
@@ -138,7 +145,7 @@ pub(super) fn precise_library(
     {
         return Err(Error::Unsupported("MLX precise math policy unavailable"));
     }
-    gpu.device
+    device
         .newLibraryWithSource_options_error(&NSString::from_str(source), Some(&options))
         .map_err(|e| Error::Native(e.to_string()))
 }

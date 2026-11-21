@@ -15,6 +15,7 @@ pub mod gemma4;
 pub mod lfm3;
 pub mod llama3;
 pub mod minicpm5;
+pub mod nanbeige;
 pub mod qwen35;
 pub mod qwen3_content;
 mod qwen_content;

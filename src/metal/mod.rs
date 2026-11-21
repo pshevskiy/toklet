@@ -57,6 +57,7 @@ pub mod mlx;
 mod moe_experts_half;
 mod moe_ffn;
 mod moe_router_half;
+pub mod nanbeige;
 pub mod planning;
 mod positional;
 mod profile;

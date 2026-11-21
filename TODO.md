@@ -1,6 +1,6 @@
 # Toklet progress checklist
 
-Updated **21 November 2026**. The competitive GPU implementation goal is paused.
+Updated **22 November 2026**. The competitive GPU implementation goal is active.
 The new model admission target is Nanbeige4.2-3B, MLX affine 4-bit.
 Read the current task and [Rust and Metal proposal](docs/mlx-gpu-performance-plan.md#rust-and-metal-architecture-proposal).
 Previous delivery and model decisions are in [outcomes](docs/improvement-outcomes.md);
@@ -16,11 +16,27 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   The pinned MLX package is about 2.35 GB for weights. The 2,048-position
   BF16 K/V payload estimate is 352 MiB. Direct MLX supplies reference evidence
   for the Rust/Metal engine. Existing numerical rejections retain their scope.
-- [ ] After the performance goal resumes, measure a direct MLX replay of the
-  frozen LFM3 tape before implementing a connected Metal block. Independently
-  qualify the Nanbeige artifact, two-pass cache ownership and fit before use.
-  Current free disk is 2.82 GiB. The 2.36 GB package would breach the existing
-  2 GiB benchmark disk floor. This iteration contains no new device measurements.
+- [x] Run the matched vLLM worker replay. AC and Low Power Mode admission
+  pass on retry. Both orders verify all 52 requests, the same live worker per
+  owner and the frozen zero-reuse 512/32 work. Median direct completion saves
+  5.54 and 2.76 ms at 5.27 GiB peak. Both paired completion ranges include zero
+  and stay below 5%. Both readers agree.
+  [Actual replay](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-same-worker-replay-1/normal.json).
+- [x] Add the experimental Nanbeige Rust and Metal CLI.
+  The full shard and all 513 entries authenticate. Two passes reuse 22 aligned
+  weight blocks with 44 independent cache owners. The M1 Pro CLI generates text
+  at capacity 2,048. Both partitions match MLX's greedy IDs and preserve cache
+  state through cancellation, retry and reset. Both readers agree on 30 raw
+  comparisons. Formatting, strict Clippy in both configurations, 869 default
+  tests, 1,074 Metal tests and both explicit GPU controls pass. The library
+  rerun passes after bytecode cleanup freed 210 MB. Astra’s review conditions
+  for the experimental profile are satisfied.
+  [Admission and native evidence](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/RUN.md).
+- [ ] Price an exact split-K prefill operator on the frozen layer-zero V case.
+  Astra reproduces the three observed schedules across 64 authentic channels.
+  Wider parity, the 10,000 held-out targets, 100 task cases, cross-engine
+  latency and request-summary overhead remain open.
+  [Split-K replay](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/astra-splitk-l0-value-1/result.json).
 
 ### Paused LFM3 implementation work
 

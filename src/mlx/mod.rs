@@ -12,6 +12,7 @@ pub mod gemma4;
 pub mod granite_moe;
 pub mod lfm2;
 pub mod ministral3;
+pub mod nanbeige;
 pub mod native_limits;
 mod payload;
 mod phi3;

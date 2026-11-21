@@ -1,6 +1,6 @@
 # Toklet improvement index
 
-Updated **21 November 2026**. This is the compact index of retained capabilities,
+Updated **22 November 2026**. This is the compact index of retained capabilities,
 measured gains and material restrictions. The [full dated history](archive/2026-11-09/improvements.md)
 preserves every previous entry, source revision, failed check and evidence link.
 Read it only when the current task needs that detail.
@@ -17,8 +17,32 @@ before the first ID. The released decode trace has 1.419 s of GPU time and
 0.703 s of host wait outside GPU execution. The next model target is
 Nanbeige4.2-3B MLX 4-bit. The plan starts with a direct MLX reference and
 proposes a modular Rust and Metal runtime with separate prefill and decode
-plans. The implementation goal is paused and model admission remains open.
+plans. After AC admission, the same-worker replay verifies 52 requests in
+opposite orders. Bypassing the HTTP path saves 5.54 and 2.76 ms at median
+completion, with paired 95% intervals including zero. Peak is 5.27 GiB.
+The Nanbeige metadata and tokenizer join all 513 tensor entries and identify
+156 unaligned packed file spans, plus 37 padded rows outside the tokenizer.
+Qualifying the new engine model route remains open.
+[Same-worker replay](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-same-worker-replay-1/normal.json) ·
+[Nanbeige evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/RUN.md).
 [Diagnosis and proposal](mlx-gpu-performance-plan.md#rust-and-metal-architecture-proposal).
+
+### Experimental Nanbeige Metal CLI
+
+The explicit affine Q4 profile authenticates the checkpoint, loads aligned
+packed banks, executes two passes through 22 shared blocks and retains 44
+independent BF16 K/V states. The M1 Pro CLI runs at capacity 2,048. Both
+matched partitions reproduce greedy IDs 858 and 461. Thirty independently
+checked native and MLX BF16 comparisons retain nonzero error. The final
+capacity-129 diagnostic peaks at 2.31 GiB. Astra confirms the experimental
+scope and finds that MLX's split-K BF16 stores explain all 64 sampled
+layer-zero V values. Formatting, both strict Clippy configurations, 869
+default tests, 1,074 Metal tests and both explicit GPU controls pass. The
+Metal library rerun uses a symbol-stripped, unoptimized Toklet package.
+The real-model measurements use the optimized release binary. Numerical
+adoption and comparative performance remain open.
+[Native comparisons](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/native-final-normal.json) ·
+[Split-K witness](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/astra-splitk-l0-value-1/result.json).
 
 ### LFM3 Metal sampled decode
 
