@@ -82,7 +82,13 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   for warmed engine TTFT and completion. This scopes a subsequent
   enabled/disabled measurement. The previously frozen LFM3 campaign
   requires 5 GiB free before launch and the current disk is below it.
-  [Timing control](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-modern-decode-1/timing-control-normal.json).
+  Astra's offline analysis isolates variation in the interval around
+  the 96 existing resident-FFN GPU completions. A bounded native probe
+  verifies the Mach/Metal clock join for all 96 commands. The next
+  LFM3 diagnostic measures submit and wake intervals in both modes.
+  [Timing control](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-modern-decode-1/timing-control-normal.json) ·
+  [LFM3 wait analysis](artifacts/mlx-gpu-gap-2026-11-15/astra-lfm3-o4-prefill-wait-variance-1/RESULT.md) ·
+  [Clock calibration](artifacts/mlx-gpu-gap-2026-11-15/root-o4-mach-metal-clock-1/RUN.md).
 - [x] Price the remaining Nanbeige gap against the direct MLX GPU graph.
   Both owners reproduce the 32 released IDs on all 26 requests.
   Direct MLX finishes in 3.315–3.316 s versus Toklet's 5.841–5.842 s.
@@ -131,27 +137,58 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   Its savings fall below the request screen.
   [Token and weight spans](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-query-input-1/normal.json) ·
   [Query timing](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-query-compact-1/normal-1.json).
-- [ ] Price query and attention output together in one T128 layer-zero
-  command. Keep distinct K/V owners, exact output panels and causal masking.
-  With the K64 request median, the next screen needs about 1.452 ms per
-  visit before a connected trial. The pinned MLX capture reproduces
-  causal row zero and the archived post-attention normalization.
+- [x] Price query and attention output together in one T128 layer-zero
+  command. Both native variants match 3,276,800 BF16 words, including
+  the original K/V prefixes and causal controls. Both paired GPU lower
+  savings exceed 2.70 ms per visit and clear the 1.452 ms screen.
+  Astra approves the scoped connected trial. Both O variants also
+  match all 393,216 words on the separately frozen MLX O input.
   [Pinned attention banks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-input-1/banks-normal.json) ·
-  [Captured attention operands](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-input-1/normal.json).
+  [Captured attention operands](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-input-1/normal.json) ·
+  [Joined command](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-attention-pair-1/normal.json).
+- [x] Qualify the paired T128 query and output route on the frozen
+  512/32 requests. Admit both existing shaders and validate the actual
+  attention buffer's GPU address once during session creation.
+  All 52 matched requests pass with exact terminal state and 9.71%
+  and 9.86% lower median completion. Strict Clippy, CLI stats and both
+  archived model partitions pass. The guarded retry passes all
+  1,074 Metal tests and both GPU controls after cache recovery.
+  Astra approves the exact experimental Mac change.
+  [Connected trial](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-connected-1/RUN.md) ·
+  [Exact checks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/release-attention-candidate-1/final-check-summary.json) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/release-attention-candidate-1/REVIEW.md) ·
+  [Cache recovery](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/release-attention-candidate-1/cache-recovery-after-disk-stop.json).
+- [x] Price K64 for Nanbeige's T128 gate and up projections together.
+  All 2,752,512 BF16 outputs match. Both paired lower savings
+  of 1.196 and 1.225 ms miss the 1.311 ms development screen.
+  Astra approves retaining the evidence and closing the standalone trial.
+  [Gate and up comparison](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-k64-pair-1/RUN.md).
 - [ ] Admit external Nanbeige engines on exactly matching work.
   The installed vLLM Metal source replay takes only 22 of the 44 model
   visits. Its paged KV wrapper also aliases physical indexes if given
   44 arguments. The publisher's Ollama fork preserves packed weights
   and cache ownership, with a different public prefill/drain schedule.
-  Preserve the independent Gemma and LFM3 benchmark gates.
-  [External admission proof](artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-external-admission-1/result.json).
+  The Astra-reviewed vLLM source replay verifies 44 distinct cache
+  owners and offsets, norm after visits 22 and 44, and a scheduler
+  charge of 180,224 bytes per BF16 position. The guarded local
+  overlay smoke verifies the 44 regions, all 32 output IDs, zero
+  reuse, and 4×128 plus 31×1 scheduled rows at 4.27 GiB peak.
+  vLLM scores 32 retained rows across 35 forwards. Toklet scores
+  35. Matched head work, committed state, and external timing remain open.
+  [External admission proof](artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-external-admission-1/result.json) ·
+  [Logical loop replay](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-double-loop-1/RUN.md) ·
+  [Reviewed overlay](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-live-overlay-1/RUN.md) ·
+  [Live admission](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-overlay-smoke-1/RUN.md).
 - [ ] Price a resident T128 LFM3 convolution handoff on the original
   matched tape. The previous ConvOut tile saved about 0.83 s of prefill
   and added 0.10–0.12 s to decode. Start with the authenticated gated
   outputs and private history. Keep the dense BF16 reduction and the
-  signed-zero fallback. Test the complete handoff and the separate T1
-  control before committing the connected path.
+  signed-zero fallback. The guarded CPU reconstruction matches all
+  1,050,624 gated words across four adjacent prefill cuts and T1/512,
+  including 342 negative zeros. Astra verified history custody.
+  Test the complete GPU handoff and separate decode control next.
   [Exact operands](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-conv-old-history-1/normal.json) ·
+  [Consecutive prefix](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-convolution-prefix-1/RUN.md) ·
   [Prior crossover](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-release4b-convout-crossover-1/recovery-normal.json).
 
 ### Paused LFM3 implementation work

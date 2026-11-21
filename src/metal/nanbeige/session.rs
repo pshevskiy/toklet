@@ -1,7 +1,7 @@
 use super::{
     Buffer, Error, HIDDEN, INTERMEDIATE, KV_WIDTH, LOGIT_ROWS, Model, Options, QUERY_WIDTH, Result,
     Sizes,
-    kernel::{Encoder, Op, RawBuffer, down_k64_aligned},
+    kernel::{Encoder, Op, RawBuffer, k64_input_aligned},
     plan::{self, Matrix, Projection},
 };
 use crate::{
@@ -53,6 +53,7 @@ pub struct Session<'a> {
     kv: Kv,
     scratch: Scratch,
     down_k64_ready: bool,
+    attention_compact_ready: bool,
     diagnostic: Option<Diagnostic>,
 }
 
@@ -130,8 +131,11 @@ impl<'a> Session<'a> {
                 up: words(chunk * INTERMEDIATE)?,
                 logits: words(LOGIT_ROWS)?,
             };
-            let down_k64_ready = model.down_k64_prefill_rows().contains(&chunk)
-                && down_k64_aligned(&scratch.gate.raw);
+            let k64_ready = model.down_k64_prefill_rows().contains(&chunk);
+            let down_k64_ready = k64_ready && k64_input_aligned(&scratch.gate.raw);
+            let attention_compact_ready = k64_ready
+                && model.gate_up_compact_prefill_rows().contains(&chunk)
+                && k64_input_aligned(&scratch.attention.raw);
             Ok(Self {
                 model,
                 options,
@@ -144,6 +148,7 @@ impl<'a> Session<'a> {
                 kv,
                 scratch,
                 down_k64_ready,
+                attention_compact_ready,
                 diagnostic,
             })
         })
@@ -153,6 +158,15 @@ impl<'a> Session<'a> {
     pub fn down_k64_prefill_rows(&self) -> &'static [usize] {
         if self.down_k64_ready {
             self.model.down_k64_prefill_rows()
+        } else {
+            &[]
+        }
+    }
+
+    /// Active prefill row counts eligible for the paired compact Q and O projections.
+    pub fn attention_compact_prefill_rows(&self) -> &'static [usize] {
+        if self.attention_compact_ready {
+            &[128]
         } else {
             &[]
         }
@@ -290,6 +304,11 @@ impl<'a> Session<'a> {
             Projection::GroupedVector => (Op::Vector, 1, 4),
             Projection::TiledBf16 => (Op::Tiled, 16, 32),
         };
+        let (query, attention_out) = if self.attention_compact_prefill_rows().contains(&rows) {
+            ((Op::GateUpCompact, 32, 32), (Op::DownK64, 32, 32))
+        } else {
+            (ordinary, ordinary)
+        };
         let ffn = if model.ffn_m32_prefill_rows().contains(&rows) {
             (Op::FfnM32, 32, 32)
         } else {
@@ -368,12 +387,12 @@ impl<'a> Session<'a> {
                 self.options.position_offset as u32,
             ];
             norm(&s.residual.raw, block.input_norm, &s.normalized.raw);
-            for (matrix, target) in [
-                (block.query, &s.query),
-                (block.key, &s.key),
-                (block.value, &s.value),
+            for (projection, matrix, target) in [
+                (query, block.query, &s.query),
+                (ordinary, block.key, &s.key),
+                (ordinary, block.value, &s.value),
             ] {
-                affine(ordinary, matrix, &s.normalized.raw, &target.raw, rows, 0);
+                affine(projection, matrix, &s.normalized.raw, &target.raw, rows, 0);
             }
             dispatch(
                 Op::RotateCache,
@@ -401,7 +420,7 @@ impl<'a> Session<'a> {
                 [rows * plan::QUERY_HEADS, 1],
             );
             affine(
-                ordinary,
+                attention_out,
                 block.attention_out,
                 &s.attention.raw,
                 &s.delta.raw,

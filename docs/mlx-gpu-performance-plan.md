@@ -221,11 +221,36 @@ and post-attention FFN normalization witnesses.
 [Query operator](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-query-compact-1/RUN.md) ·
 [MLX attention operands](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-input-1/normal.json).
 
+One completed T128 layer-zero attention command uses the existing
+compact K32 query and K64 output tiles. The two native arms share
+K/V projection, RoPE, cache layout and causal GQA. Both replay all
+3,276,800 BF16 words exactly. The paired lower GPU savings are
+2.702 and 2.727 ms. The independently captured MLX O input yields
+393,216 exact output words with both native projection tiles.
+Astra approves a connected trial that checks the aligned attention
+input separately from the FFN down input.
+The 52 matched requests pass all terminal state joins. Completion
+falls to 4.61–4.62 s. Compared with the archived direct MLX reference,
+prefill accounts for about 84% of the remaining median latency gap.
+[Joined attention command](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-attention-pair-1/normal.json) ·
+[Connected attention trial](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-connected-1/RUN.md).
+
 For request-summary qualification, compare the same CLI output mode with
 summary collection enabled and disabled. Keep counters at existing completion
 boundaries and write one bounded summary after the last token. Sample command
 and GPU timings in a separate diagnostic run. Verify the paired and marginal
 95% upper bounds for first-token and completion overhead in both owner orders.
+The LFM3 fixed-N campaign's failing marginal TTFT upper is 1.06524%.
+The replay localizes much of the variable native prefill interval around
+96 resident FFN command completions. A separate M1 Pro run brackets
+all 96 Metal commands with Mach ticks using 3,840 bytes of fixed
+records. Measure submission and host wake on actual LFM3 requests in
+both modes before choosing any scheduler change. Keep the fixed-N
+gate and its original workload.
+[LFM3 wait analysis](../artifacts/mlx-gpu-gap-2026-11-15/astra-lfm3-o4-prefill-wait-variance-1/RESULT.md) ·
+[LFM3 timing contract](../artifacts/mlx-gpu-gap-2026-11-15/astra-lfm3-o4-prefill-wait-variance-1/BRACKETS.md) ·
+[Clock calibration](../artifacts/mlx-gpu-gap-2026-11-15/root-o4-mach-metal-clock-1/RUN.md).
+
 [Pinned MLX package](https://huggingface.co/MercuriusDream/Nanbeige4.2-3B-mlx-4bit/tree/c21f850c4096b67a1b53a2c8eb4f8c8652f89375) ·
 [Upstream config](https://huggingface.co/Nanbeige/Nanbeige4.2-3B/blob/main/config.json) ·
 [Publisher execution order](https://huggingface.co/Nanbeige/Nanbeige4.2-3B/blob/main/modeling_nanbeige.py) ·

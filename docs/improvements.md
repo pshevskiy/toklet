@@ -102,6 +102,26 @@ Its isolated savings fall below the request-level screen.
 [Connected trial](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-down-connected-1/RUN.md) ·
 [Query projection](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-query-compact-1/RUN.md).
 
+The paired compact attention route reuses K32 for query and K64 for
+output on T128 Mac requests. The CLI reports the effective session
+route after checking the aligned GPU input. The 52-request trial
+reduces median completion by 9.71% and 9.86% and TTFT by 12.43% and
+12.60% in opposite orders. IDs, all 44 committed K/V prefixes,
+and terminal logits match at 2.46 GiB peak guarded charge. The
+exact-source checks pass and Astra approves the three-file route.
+[Connected trial](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-connected-1/RUN.md) ·
+[Joined attention command](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-attention-pair-1/normal.json) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/release-attention-candidate-1/REVIEW.md).
+
+The K64 gate/up pair agrees on 2,752,512 BF16 words and runs in
+7.26 ms versus 8.51–8.53 ms for K32. Both paired lower savings
+fall below 1.311 ms per visit. Astra retains the isolated evidence.
+The local vLLM overlay smoke verifies 44 disjoint cache regions
+and all 32 output IDs. Its vocabulary head scores 32 rows across
+35 forwards. The Toklet route scores 35.
+[Gate/up comparison](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-k64-pair-1/RUN.md) ·
+[vLLM workload admission](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-overlay-smoke-1/RUN.md).
+
 ### LFM3 Metal sampled decode
 
 The GPU Q/K/V and dedicated FFN kernels run on sampled single-token

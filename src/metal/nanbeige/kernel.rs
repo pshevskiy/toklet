@@ -86,7 +86,7 @@ pub(super) struct Context {
 
 // K64 loads four adjacent BF16 words per vector. Both admitted K strides
 // and all tile offsets are multiples of four words.
-pub(super) fn down_k64_aligned(input: &RawBuffer) -> bool {
+pub(super) fn k64_input_aligned(input: &RawBuffer) -> bool {
     if !input.respondsToSelector(sel!(gpuAddress)) {
         return false;
     }
@@ -230,7 +230,7 @@ impl Context {
         let mut input = Buffer::<u16>::on_device(&self.device, M * K).ok()?;
         let mut output = Buffer::<u16>::on_device(&self.device, (M + 1) * N).ok()?;
         let status = Buffer::<u32>::on_device(&self.device, 1).ok()?;
-        if matches!(op, Op::DownK64) && !down_k64_aligned(&input.raw) {
+        if matches!(op, Op::DownK64) && !k64_input_aligned(&input.raw) {
             return Some(false);
         }
         packed.with_mut(|words| {
