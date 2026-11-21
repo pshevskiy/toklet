@@ -80,7 +80,8 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   protocol. A same-binary replay of the two published Nanbeige owners
   gives a maximum paired or marginal upper drift bound of 0.07581%
   for warmed engine TTFT and completion. This scopes a subsequent
-  enabled/disabled measurement.
+  enabled/disabled measurement. The previously frozen LFM3 campaign
+  requires 5 GiB free before launch and the current disk is below it.
   [Timing control](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-modern-decode-1/timing-control-normal.json).
 - [x] Price the remaining Nanbeige gap against the direct MLX GPU graph.
   Both owners reproduce the 32 released IDs on all 26 requests.
@@ -90,11 +91,24 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   3.21–3.22 ms per projection through completion. Toklet's device
   time is 5.36–5.37 ms.
   [Direct timing](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-modern-decode-1/direct-normal.json).
-- [ ] Test a narrower-threadgroup T128 gate/up tile using fewer shared
+- [x] Qualify a narrower-threadgroup T128 gate/up tile using fewer shared
   bytes and lane-local output. Preserve BF16 reconstruction, FP32
   accumulation order and the matched output panel. Require isolated
   and connected timing under the existing memory and numerical gates.
-  [Matched operator evidence](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-modern-decode-1/direct-ffn-normal.json).
+  A guarded native fragment probe verifies FP32 and FP16 normal and
+  transposed layouts on this M1 Pro. The candidate keeps independent
+  panel and analytical controls. Both compact variants match all
+  2,752,512 words. The direct GPU pair falls from 10.72 ms to 8.53–8.54 ms,
+  and Astra approves the connected T128 trial. The 52 matched requests
+  pass at 2.47 GiB with 7.01% and 7.07% completion gains. Both paired
+  intervals clear 5%. Full Metal, both targeted GPU controls, strict
+  Clippy, archived parity and CLI readiness pass. Astra approves the
+  exact five-file experimental Mac scope.
+  [Fragment probe](artifacts/mlx-gpu-gap-2026-11-15/root-metal-fragment-map-1/RUN.md) ·
+  [Matched operator evidence](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-modern-decode-1/direct-ffn-normal.json) ·
+  [Compact panel and timing](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/sol-ffn-compact-128-1/summary-normal.json) ·
+  [Connected trial](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-compact-connected-1/RUN.md) ·
+  [Exact checks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/release-compact-candidate-1/final-check-summary.json).
 - [ ] Admit external Nanbeige engines on exactly matching work.
   The installed vLLM Metal source replay takes only 22 of the 44 model
   visits. Its paged KV wrapper also aliases physical indexes if given
@@ -102,6 +116,14 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   and cache ownership, with a different public prefill/drain schedule.
   Preserve the independent Gemma and LFM3 benchmark gates.
   [External admission proof](artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-external-admission-1/result.json).
+- [ ] Price a resident T128 LFM3 convolution handoff on the original
+  matched tape. The previous ConvOut tile saved about 0.83 s of prefill
+  and added 0.10–0.12 s to decode. Start with the authenticated gated
+  outputs and private history. Keep the dense BF16 reduction and the
+  signed-zero fallback. Test the complete handoff and the separate T1
+  control before committing the connected path.
+  [Exact operands](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-conv-old-history-1/normal.json) ·
+  [Prior crossover](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-release4b-convout-crossover-1/recovery-normal.json).
 
 ### Paused LFM3 implementation work
 

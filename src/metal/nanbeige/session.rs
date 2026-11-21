@@ -280,6 +280,11 @@ impl<'a> Session<'a> {
         } else {
             ordinary
         };
+        let gate_up = if model.gate_up_compact_prefill_rows().contains(&rows) {
+            (Op::GateUpCompact, 32, 32)
+        } else {
+            ffn
+        };
         let affine = |(op, m_tile, n_tile): (Op, usize, usize),
                       matrix: Matrix,
                       input: &RawBuffer,
@@ -389,8 +394,8 @@ impl<'a> Session<'a> {
                 block.post_attention_norm,
                 &s.normalized.raw,
             );
-            affine(ffn, block.gate, &s.normalized.raw, &s.gate.raw, rows, 0);
-            affine(ffn, block.up, &s.normalized.raw, &s.up.raw, rows, 0);
+            affine(gate_up, block.gate, &s.normalized.raw, &s.gate.raw, rows, 0);
+            affine(gate_up, block.up, &s.normalized.raw, &s.up.raw, rows, 0);
             dispatch(
                 Op::Swiglu,
                 &[&s.gate.raw, &s.up.raw, &s.status.raw],

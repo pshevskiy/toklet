@@ -154,4 +154,13 @@ impl Model {
             &[]
         }
     }
+
+    /// Active prefill row counts eligible for compact gate and up projections.
+    pub fn gate_up_compact_prefill_rows(&self) -> &'static [usize] {
+        if self.context.has_gate_up_compact() {
+            &[128]
+        } else {
+            &[]
+        }
+    }
 }

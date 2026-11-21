@@ -75,6 +75,17 @@ threshold remain open. Direct MLX finishes in 3.315–3.316 s versus
 The matched T128 gate/up panels agree bitwise and identify the next
 kernel opportunity. [Decode, direct timing and admission evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-modern-decode-1/RUN.md).
 
+The compact T128 gate and up tile uses 128 threads, 5 KiB of shared
+scratch and lane-local output. The optional Mac pipeline tests its
+actual compiled layout with a signed Q4 basis at model load. All
+52 M1 Pro requests match the previous route's token IDs and all
+four terminal diagnostics match their full KV and logits. Median
+completion improves 7.01% and 7.07%, with 8.67% and 8.65% shorter
+TTFT. Peak guarded charge is 2.47 GiB. Both strict Clippy builds,
+1,074 Metal tests and two explicit GPU controls pass. Astra approves
+the experimental Mac profile.
+[Paired performance and verification](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-compact-connected-1/RUN.md).
+
 ### LFM3 Metal sampled decode
 
 The GPU Q/K/V and dedicated FFN kernels run on sampled single-token
