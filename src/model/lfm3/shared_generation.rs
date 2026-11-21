@@ -4,6 +4,7 @@ pub struct SharedMlpSetup {
     output_published: [u64; 2],
     qkv_budget: usize,
     qkv_published: u64,
+    qkv_t1_published: u64,
     cancelled: &'static std::sync::atomic::AtomicBool,
     tied_published: u64,
     attention_budget: usize,
@@ -108,6 +109,22 @@ impl<'a> GenerationSession<'a> {
             && workspace.prepare_resident_mlp(bytes).is_ok()
         {
             extra = add(extra, bytes)?;
+            plan.required_bytes = required;
+        }
+        let t1_charge = SharedMlpWorkspace::QKV_T1_NATIVE_ALLOWANCE;
+        if let Some(required) = plan.required_bytes.checked_add(t1_charge)
+            && required <= limit
+            && workspace.prepare_qkv_t1()
+        {
+            extra = add(extra, t1_charge)?;
+            plan.required_bytes = required;
+        }
+        let decode_allowance = SharedMlpWorkspace::DECODE_FFN_PIPELINE_ALLOWANCE;
+        if let Some(required) = plan.required_bytes.checked_add(decode_allowance)
+            && required <= limit
+            && workspace.prepare_decode_ffn()
+        {
+            extra = add(extra, decode_allowance)?;
             plan.required_bytes = required;
         }
         let workspace_seconds = clock.elapsed().as_secs_f64();
@@ -222,6 +239,7 @@ impl<'a> GenerationSession<'a> {
                 output_published: [0; 2],
                 qkv_budget,
                 qkv_published: 0,
+                qkv_t1_published: 0,
                 attention_budget,
                 cancelled,
                 tied_published: 0,
@@ -321,6 +339,7 @@ impl<'a> GenerationSession<'a> {
         inner: &'step mut Session<'a>,
         setup: &mut SharedMlpSetup,
         tokens: &[u32],
+        decode: bool,
     ) -> Result<&'step [half::bf16], session::Error> {
         use super::super::Error;
         let weights = &inner.model.weights;
@@ -370,6 +389,16 @@ impl<'a> GenerationSession<'a> {
             })
             .ok_or(crate::cpu::Error::SizeOverflow)
             .map_err(Error::from)?;
+        let gpu_qkv_t1 = decode && tokens.len() == 1 && setup.workspace.has_qkv_t1();
+        let qkv_t1_next = setup
+            .qkv_t1_published
+            .checked_add(if gpu_qkv_t1 {
+                (super::LAYERS - super::CONV_LAYERS.len()) as u64
+            } else {
+                0
+            })
+            .ok_or(crate::cpu::Error::SizeOverflow)
+            .map_err(Error::from)?;
         let cancelled = setup.cancelled;
         let eligible_head = |count| matches!(count, 1 | 128);
         let tied_next = setup
@@ -406,13 +435,13 @@ impl<'a> GenerationSession<'a> {
                 let layer = &weights.layers[layer_index];
                 let banks = [bank(layer.gate)?, bank(layer.up)?];
                 let mut workspace = workspace.borrow_mut();
-                workspace.pair(layer_index, banks, input, gate, up, count)?;
+                workspace.pair(layer_index, banks, input, [gate, up], count, decode)?;
                 Ok(())
             },
             |layer, input, out, count| {
                 let down = weights.layers[layer].down;
                 let mut workspace = workspace.borrow_mut();
-                workspace.down(layer, bank(down)?, input, out, count)?;
+                workspace.down(layer, bank(down)?, input, out, count, decode)?;
                 Ok(())
             },
             |layer, role, input, out, count| {
@@ -426,7 +455,7 @@ impl<'a> GenerationSession<'a> {
                 )
             },
             |layer, input, out| {
-                if !gpu_qkv {
+                if !gpu_qkv && !gpu_qkv_t1 {
                     return Ok(false);
                 }
                 let crate::weights::lfm3::Operator::Attention { q, k, v, .. } =
@@ -436,9 +465,14 @@ impl<'a> GenerationSession<'a> {
                         "LFM3 QKV selected non-attention layer",
                     ));
                 };
-                workspace
-                    .borrow_mut()
-                    .qkv(layer, [bank(q)?, bank(k)?, bank(v)?], input, out)?;
+                let banks = [bank(q)?, bank(k)?, bank(v)?];
+                if gpu_qkv_t1 {
+                    workspace
+                        .borrow_mut()
+                        .qkv_t1(layer, banks, input, out, cancelled)?;
+                } else {
+                    workspace.borrow_mut().qkv(layer, banks, input, out)?;
+                }
                 Ok(true)
             },
             |input, out, count| {
@@ -465,6 +499,7 @@ impl<'a> GenerationSession<'a> {
         )?;
         setup.tied_published = tied_next;
         setup.qkv_published = qkv_next;
+        setup.qkv_t1_published = qkv_t1_next;
         setup.output_published = output_next;
         setup.published = next;
         if let Some(published) = resident_next {
@@ -532,6 +567,10 @@ impl<'a> GenerationSession<'a> {
             "history_u32le_sha256": format!("{:x}",history.finalize()),
             "committed_logits_bf16le_sha256": self.inner.logits().map(|_|format!("{:x}",logits.finalize())),
         });
+        if setup.workspace.has_decode_ffn() {
+            report["ffn_t1_pipeline_allowance_bytes"] =
+                serde_json::json!(crate::metal::SharedMlpWorkspace::DECODE_FFN_PIPELINE_ALLOWANCE);
+        }
         if let Some(resident) = setup.workspace.resident_mlp_report() {
             report["resident_mlp"] = resident;
         }
@@ -557,6 +596,12 @@ impl<'a> GenerationSession<'a> {
                 "banks":qkv_count,"payload_bytes":qkv_bytes,"admitted_bytes":setup.qkv_budget,
                 "published_sets":setup.qkv_published,"roles":setup.workspace.qkv_stats(),
             });
+        }
+        if let Some(mut t1) = setup.workspace.qkv_t1_stats() {
+            t1["published_sets"] = serde_json::json!(setup.qkv_t1_published);
+            t1["native_allowance_bytes"] =
+                serde_json::json!(crate::metal::SharedMlpWorkspace::QKV_T1_NATIVE_ALLOWANCE);
+            report["qkv_owner"]["t1"] = t1;
         }
         let tied_count = 1;
         let tied_bytes = tied_count * crate::weights::lfm3::TIED_BYTES;

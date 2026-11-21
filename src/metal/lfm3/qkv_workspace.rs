@@ -2,6 +2,9 @@
 use super::{pair::domain_tag, projection_tile::NormalExtent, *};
 use crate::{metal::lfm3_shared_weights::BankRef, model::Error};
 
+#[path = "qkv_t1.rs"]
+mod qkv_t1;
+
 const T: usize = 128;
 const N: [usize; 3] = [2048, 512, 512];
 const L: usize = 11;
@@ -44,6 +47,7 @@ const _: () = {
 
 pub(super) struct Workspace {
     panel: Option<Kernels>,
+    t1: Option<qkv_t1::T1>,
     input: Buffer<u16>,
     tags: Buffer<u32>,
     planes: [Plane; 3],
@@ -54,6 +58,7 @@ pub(super) struct Workspace {
 const _: () = assert!(
     size_of::<Option<Workspace>>()
         == size_of::<Kernels>()
+            + size_of::<Option<qkv_t1::T1>>()
             + size_of::<Buffer<u16>>()
             + size_of::<Buffer<u32>>()
             + size_of::<[Plane; 3]>()
@@ -82,6 +87,7 @@ impl Workspace {
     pub(super) fn new(gpu: &Gpu) -> std::result::Result<Self, Error> {
         Ok(Self {
             panel: Kernels::with_shader(gpu, include_str!("panel84_attention_linear.metal")),
+            t1: None,
             input: Buffer::new(gpu, T * I).map_err(|_| Error::Allocation)?,
             tags: Buffer::new(gpu, T).map_err(|_| Error::Allocation)?,
             planes: [

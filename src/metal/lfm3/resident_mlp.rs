@@ -314,7 +314,7 @@ impl Workspace {
             linear.encode(&command, &pair.kernels.admission, *groups, false)?;
         }
         for (linear, _) in &projections {
-            linear.encode(&command, &domain.kernels.projection, PRODUCT / TILE, true)?;
+            linear.encode(&command, domain.projection, PRODUCT / TILE, true)?;
         }
         let count = PRODUCT as u32;
         for (pipeline, product) in [(&self.bridge.admit, false), (&self.bridge.product, true)] {

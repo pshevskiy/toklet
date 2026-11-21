@@ -234,7 +234,7 @@ pub fn generate(
         }
         if index > 0 {
             let clock = Instant::now();
-            match session.evaluate_next_chunk() {
+            match session.evaluate_next_decode_chunk() {
                 Ok(evaluated) => report.decode_evaluations += evaluated,
                 Err(session::Error::Model(crate::model::Error::Cancelled)) => {
                     report.decode_seconds += clock.elapsed().as_secs_f64();

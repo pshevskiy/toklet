@@ -68,7 +68,8 @@ impl PairWorkspace {
             return Err(Error::InvalidConfig("selected LFM3 MLP pair extents"));
         }
         let tile_size = domain.as_ref().map_or(1, |d| d.tile_size);
-        if tile_size != 1 && count != MAX {
+        let fma4 = count == 1 && tile_size == 4 && domain.as_ref().is_some_and(|d| d.selected);
+        if tile_size != 1 && count != MAX && !fma4 {
             return Err(Error::InvalidConfig("LFM3 shared T4 prefill extent"));
         }
         let active = count * MLP;
@@ -117,7 +118,7 @@ impl PairWorkspace {
         let projection = domain
             .as_ref()
             .filter(|d| d.selected)
-            .map_or(&self.kernels.projection, |d| &d.kernels.projection);
+            .map_or(&self.kernels.projection, |d| d.projection);
         for (pipeline, project) in [(&self.kernels.admission, false), (projection, true)] {
             for (i, bank) in banks.iter().enumerate() {
                 let encoder = command
@@ -255,7 +256,7 @@ pub(super) struct PairRoutes {
 pub(super) struct DomainLaunch<'a> {
     pub(super) tile_size: usize,
     pub(super) selected: bool,
-    pub(super) kernels: &'a Kernels,
+    pub(super) projection: &'a Retained<ProtocolObject<dyn MTLComputePipelineState>>,
     pub(super) input: &'a mut Buffer<u32>,
     pub(super) weights: &'a Buffer<u32>,
     pub(super) layer: usize,

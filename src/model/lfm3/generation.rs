@@ -89,6 +89,30 @@ fn widen(source: &[half::bf16], target: &mut [f32]) {
     }
 }
 
+impl GenerationSession<'_> {
+    fn evaluate_chunk(&mut self, _decode: bool) -> Result<usize, session::Error> {
+        let start = self.evaluated_len();
+        let count = self.pending_len().min(self.inner.model.chunk);
+        if count == 0 {
+            return Ok(0);
+        }
+        #[cfg(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64"))]
+        if let Some(owner) = self.shared.as_mut() {
+            let logits = Self::step_shared(
+                &mut self.inner,
+                owner,
+                &self.history[start..start + count],
+                _decode,
+            )?;
+            widen(logits, &mut self.logits);
+            return Ok(count);
+        }
+        let logits = self.inner.forward(&self.history[start..start + count])?;
+        widen(logits, &mut self.logits);
+        Ok(count)
+    }
+}
+
 impl InferenceSession for GenerationSession<'_> {
     fn history(&self) -> &[u32] {
         &self.history
@@ -130,21 +154,11 @@ impl InferenceSession for GenerationSession<'_> {
     }
 
     fn evaluate_next_chunk(&mut self) -> Result<usize, session::Error> {
-        let start = self.evaluated_len();
-        let count = self.pending_len().min(self.inner.model.chunk);
-        if count == 0 {
-            return Ok(0);
-        }
-        #[cfg(all(feature = "lfm3-metal", target_os = "macos", target_arch = "aarch64"))]
-        if let Some(owner) = self.shared.as_mut() {
-            let logits =
-                Self::step_shared(&mut self.inner, owner, &self.history[start..start + count])?;
-            widen(logits, &mut self.logits);
-            return Ok(count);
-        }
-        let logits = self.inner.forward(&self.history[start..start + count])?;
-        widen(logits, &mut self.logits);
-        Ok(count)
+        self.evaluate_chunk(false)
+    }
+
+    fn evaluate_next_decode_chunk(&mut self) -> Result<usize, session::Error> {
+        self.evaluate_chunk(true)
     }
 
     fn discard_pending(&mut self) {

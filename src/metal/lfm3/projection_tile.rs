@@ -73,20 +73,23 @@ impl Tiles {
         Ok(())
     }
 
-    pub(super) fn launch(
-        &mut self,
+    pub(super) fn launch<'p>(
+        &'p mut self,
         role: usize,
         layer: usize,
         bank: BankRef<'_>,
         tokens: usize,
-    ) -> std::result::Result<Option<Launch<'_>>, Error> {
+        decode_projection: Option<&'p Retained<ProtocolObject<dyn MTLComputePipelineState>>>,
+    ) -> std::result::Result<Option<Launch<'p>>, Error> {
         let (identity, offset) = self.banks[role][layer];
         if self.sealed != [CONVS, LAYERS] || identity == 0 || identity != bank.identity() {
             return Err(Error::InvalidConfig("LFM3 projection tile bank identity"));
         }
-        Ok((tokens == T).then(|| Launch {
+        let fma4 = decode_projection.is_some() && tokens == 1 && role == 1;
+        Ok((tokens == T || fma4).then(|| Launch {
             kernels: &self.kernels[role],
-            outputs_per_group: 32,
+            decode_projection: if fma4 { decode_projection } else { None },
+            outputs_per_group: if fma4 { 4 } else { 32 },
             input: &mut self.input[role],
             weights: &self.weights[role],
             offset_bytes: offset * size_of::<u32>(),
@@ -122,15 +125,22 @@ impl Tiles {
                 .enumerate()
                 .filter(|(layer, _)| self.banks[role][*layer].0 != 0)
                 .map(|(layer, shapes)| {
-                    let shape = |s: &Census| {
-                        serde_json::json!({
-                            "completed": s.calls, "tiled": s.tiled,
-                            "homogeneous_rows": s.rows[0], "mixed_native_rows": s.rows[1],
-                            "ordered_rows": s.rows[2],
-                        })
+                    let shape = |s: &Census, decode_down| {
+                        let mut out = serde_json::json!({
+                            "completed": s.calls, "tiled": if decode_down { 0 } else { s.tiled },
+                            "homogeneous_rows": if decode_down { 0 } else { s.rows[0] },
+                            "mixed_native_rows": s.rows[1], "ordered_rows": s.rows[2],
+                        });
+                        if decode_down {
+                            let quartets = s.rows[0] / 4;
+                            out["fma4_calls"] = serde_json::json!(s.tiled);
+                            out["fma4_quartets"] = serde_json::json!(quartets);
+                            out["fallback_quartets"] = serde_json::json!(s.tiled * (N[1] / 4) as u64 - quartets);
+                        }
+                        out
                     };
-                    serde_json::json!({"layer":layer,"t128":shape(&shapes[0]),
-                                       "t1":shape(&shapes[1]),"tail":shape(&shapes[2])})
+                    serde_json::json!({"layer":layer,"t128":shape(&shapes[0],false),
+                                       "t1":shape(&shapes[1],role == 1),"tail":shape(&shapes[2],false)})
                 })
                 .collect::<Vec<_>>();
             result.insert(name.to_owned(), serde_json::json!(rows));
@@ -142,6 +152,7 @@ impl Tiles {
 
 pub(super) struct Launch<'a> {
     pub(super) kernels: &'a Kernels,
+    pub(super) decode_projection: Option<&'a Retained<ProtocolObject<dyn MTLComputePipelineState>>>,
     pub(super) outputs_per_group: usize,
     input: &'a mut Buffer<u32>,
     weights: &'a Buffer<u32>,

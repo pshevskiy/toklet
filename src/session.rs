@@ -543,6 +543,10 @@ pub trait InferenceSession {
     fn append(&mut self, tokens: &[u32]) -> Result<(), Error>;
     fn set_tokens(&mut self, tokens: &[u32]) -> Result<(), Error>;
     fn evaluate_next_chunk(&mut self) -> Result<usize, Error>;
+    /// Evaluate a sampled token during generation. Prompt chunks use the ordinary entry.
+    fn evaluate_next_decode_chunk(&mut self) -> Result<usize, Error> {
+        self.evaluate_next_chunk()
+    }
     fn discard_pending(&mut self);
     fn reset(&mut self);
     fn try_reset(&mut self) -> Result<(), Error> {

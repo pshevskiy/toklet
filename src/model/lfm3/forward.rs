@@ -225,7 +225,7 @@ impl Session<'_> {
                         &self.model.full_rotary
                     };
                     let new_v = &mut values.next().unwrap()[..kv_words];
-                    let placed = if count == 128 {
+                    let placed = if matches!(count, 1 | 128) {
                         qkv(index, normalized, [&mut *output, &mut *kv, &mut *new_v])?
                     } else {
                         false

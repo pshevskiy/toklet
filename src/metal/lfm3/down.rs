@@ -58,9 +58,20 @@ impl DownWorkspace {
             return Err(Error::InvalidConfig("selected LFM3 down extent"));
         }
         let active = tokens * N;
-        let (kernels, groups) = match &tile {
-            Some(t) => (t.kernels, active / t.outputs_per_group),
-            None => (&self.kernels, active),
+        let (admission, projection, groups) = match &tile {
+            Some(t) => match t.decode_projection {
+                Some(projection) => (
+                    &self.kernels.admission,
+                    projection,
+                    active / t.outputs_per_group,
+                ),
+                None => (
+                    &t.kernels.admission,
+                    &t.kernels.projection,
+                    active / t.outputs_per_group,
+                ),
+            },
+            None => (&self.kernels.admission, &self.kernels.projection, active),
         };
         let next = self
             .submissions
@@ -88,7 +99,7 @@ impl DownWorkspace {
             height: 1,
             depth: 1,
         };
-        for (ps, ordered) in [(&kernels.admission, false), (&kernels.projection, true)] {
+        for (ps, ordered) in [(admission, false), (projection, true)] {
             let encoder = command
                 .computeCommandEncoder()
                 .ok_or(Error::InvalidConfig("LFM3 down encoder allocation"))?;
@@ -177,7 +188,8 @@ impl DownWorkspace {
                     })
             })
             .ok_or(Error::InvalidConfig("ordered LFM3 down census"))?;
-        if counts.iter().sum::<u64>() != census[2] * u64::from(OPS)
+        if (tokens == 1 && !census[0].is_multiple_of(4))
+            || counts.iter().sum::<u64>() != census[2] * u64::from(OPS)
             || !self
                 .output
                 .with_slice(|x| x[..active].iter().all(|&w| (w & 0x7fff) < 0x7f80))

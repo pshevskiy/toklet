@@ -10,6 +10,7 @@ pub(crate) struct SharedMlpWorkspace {
     down: DownWorkspace,
     resident: Option<Box<[super::resident_mlp::Workspace; 1]>>,
     domain: Option<DomainMetadata>,
+    decode_ffn: Option<[Retained<ProtocolObject<dyn MTLComputePipelineState>>; 2]>,
     conv: Option<super::conv_workspace::ConvWorkspace>,
     output: Option<super::output_workspace::OutputWorkspace>,
     projection_tiles: Option<super::projection_tile::Tiles>,
@@ -91,6 +92,42 @@ impl SharedMlpWorkspace {
             .run(&self.pair.gpu, scalar, layer, banks, input, out)
     }
 
+    // The released per-role buffers already back both shapes. Reserve
+    // optional native framework/pipeline memory before constructing T1.
+    pub(crate) const QKV_T1_NATIVE_ALLOWANCE: usize = 16 << 20;
+
+    pub(crate) fn prepare_qkv_t1(&mut self) -> bool {
+        self.qkv
+            .as_mut()
+            .is_some_and(|q| q.prepare_t1(&self.pair.gpu))
+    }
+
+    pub(crate) fn has_qkv_t1(&self) -> bool {
+        self.qkv
+            .as_ref()
+            .is_some_and(super::qkv_workspace::Workspace::has_t1)
+    }
+
+    pub(crate) fn qkv_t1(
+        &mut self,
+        layer: usize,
+        banks: [BankRef<'_>; 3],
+        input: &[bf16],
+        out: [&mut [bf16]; 3],
+        cancelled: &std::sync::atomic::AtomicBool,
+    ) -> std::result::Result<(), Error> {
+        self.qkv
+            .as_mut()
+            .ok_or(Error::InvalidConfig("LFM3 QKV workspace absent"))?
+            .run_t1(&self.pair.gpu, layer, banks, input, out, cancelled)
+    }
+
+    pub(crate) fn qkv_t1_stats(&self) -> Option<serde_json::Value> {
+        self.qkv
+            .as_ref()
+            .and_then(super::qkv_workspace::Workspace::t1_report)
+    }
+
     pub(crate) fn qkv_stats(&self) -> Option<serde_json::Value> {
         self.qkv
             .as_ref()
@@ -166,12 +203,33 @@ impl SharedMlpWorkspace {
             output,
             conv,
             domain,
+            decode_ffn: None,
             pair,
             down,
             resident: None,
             completed: [0; 2],
             clocks: [[0.; 2]; 2],
         })
+    }
+
+    pub(crate) const DECODE_FFN_PIPELINE_ALLOWANCE: usize = 32 << 20;
+
+    pub(crate) fn prepare_decode_ffn(&mut self) -> bool {
+        let gpu = &self.pair.gpu;
+        // A partially constructed optional pair is dropped without changing
+        // any live dispatch. The released input admission PSOs stay bound.
+        let Some(pair) = Kernels::with_shader(gpu, include_str!("decode_pair_fma4.metal")) else {
+            return false;
+        };
+        let Some(down) = Kernels::with_shader(gpu, include_str!("decode_down_fma4.metal")) else {
+            return false;
+        };
+        self.decode_ffn = Some([pair.projection, down.projection]);
+        true
+    }
+
+    pub(crate) fn has_decode_ffn(&self) -> bool {
+        self.decode_ffn.is_some()
     }
 
     pub(crate) const LAST3_ATTENTION_BUFFERS: [usize; 6] =
@@ -298,9 +356,9 @@ impl SharedMlpWorkspace {
         layer: usize,
         banks: [BankRef<'_>; 2],
         x: &[bf16],
-        gate: &mut [bf16],
-        up: &mut [bf16],
+        [gate, up]: [&mut [bf16]; 2],
         tokens: usize,
+        decode: bool,
     ) -> std::result::Result<(), Error> {
         for bank in banks {
             self.validate(bank)?;
@@ -320,17 +378,21 @@ impl SharedMlpWorkspace {
                 .possible
                 .checked_add((tokens * TAG_N) as u64)
                 .ok_or(Error::InvalidConfig("LFM3 domain output count"))?;
-            let kernels = match &d.t4 {
-                Some(t) if t.selected && tokens == TAG_T => {
+            let projection = match (&d.t4, self.decode_ffn.as_ref()) {
+                (Some(t), _) if t.selected && tokens == TAG_T => {
                     tile_size = t.tile_size;
-                    &t.pipeline
+                    &t.pipeline.projection
                 }
-                _ => &d.kernels,
+                (_, Some([pair, _])) if decode && tokens == 1 && d.chosen => {
+                    tile_size = 4;
+                    pair
+                }
+                _ => &d.kernels.projection,
             };
             Some(DomainLaunch {
                 tile_size,
                 selected: d.chosen,
-                kernels,
+                projection,
                 input: &mut d.input,
                 weights: &d.weights,
                 layer,
@@ -355,7 +417,7 @@ impl SharedMlpWorkspace {
                 }];
                 // Each subtotal is bounded by the checked total output count.
                 shape.calls += 1;
-                shape.tiled += u64::from(tile_size != 1);
+                shape.tiled += u64::from(tokens == TAG_T && tile_size != 1);
                 shape.groups += receipt.projection_groups as u64;
                 shape.output_rows += (tokens * TAG_N) as u64;
                 for i in 0..2 {
@@ -379,12 +441,18 @@ impl SharedMlpWorkspace {
         x: &[bf16],
         output: &mut [bf16],
         tokens: usize,
+        decode: bool,
     ) -> std::result::Result<(), Error> {
         self.validate(bank)?;
+        let decode_projection = if decode && tokens == 1 {
+            self.decode_ffn.as_ref().map(|pipelines| &pipelines[1])
+        } else {
+            None
+        };
         let tile = self
             .projection_tiles
             .as_mut()
-            .map(|tiles| tiles.launch(1, layer, bank, tokens))
+            .map(|tiles| tiles.launch(1, layer, bank, tokens, decode_projection))
             .transpose()?
             .flatten();
         let tiled = tile.is_some();
@@ -462,7 +530,7 @@ impl SharedMlpWorkspace {
         let pair_launch = DomainLaunch {
             tile_size: panel.tile_size,
             selected: domain.chosen,
-            kernels: &panel.pipeline,
+            projection: &panel.pipeline.projection,
             input: &mut domain.input,
             weights: &domain.weights,
             layer,
@@ -471,7 +539,7 @@ impl SharedMlpWorkspace {
             .projection_tiles
             .as_mut()
             .ok_or(Error::InvalidConfig("LFM3 resident MLP Down tile owner"))?
-            .launch(1, layer, banks[2], TAG_T)?
+            .launch(1, layer, banks[2], TAG_T, None)?
             .ok_or(Error::InvalidConfig("LFM3 resident MLP Down tile"))?;
         self.resident
             .as_mut()
@@ -525,7 +593,7 @@ impl SharedMlpWorkspace {
         let tile = self
             .projection_tiles
             .as_mut()
-            .map(|tiles| tiles.launch(0, layer, bank, tokens))
+            .map(|tiles| tiles.launch(0, layer, bank, tokens, None))
             .transpose()?
             .flatten();
         let tiled = tile.is_some();
@@ -552,16 +620,26 @@ impl SharedMlpWorkspace {
                 .into_iter()
                 .zip(&tile.shapes)
                 .map(|(shape, s)| {
+                    let quad_calls = if shape == "t1" {
+                        (s.output_rows - s.groups) / (TAG_N / 4 * 3) as u64
+                    } else { 0 };
                     let tiled_groups = s.tiled * (TAG_T * TAG_N / tile.tile_size) as u64;
-                    serde_json::json!({
+                    let quartet_groups = quad_calls * (TAG_N / 4) as u64;
+                    let mut stats = serde_json::json!({
                         "shape": shape, "calls": s.calls, "tiled_calls": s.tiled,
-                        "scalar_calls": s.calls - s.tiled, "projection_groups_per_role": s.groups,
+                        "scalar_calls": s.calls - s.tiled - quad_calls, "projection_groups_per_role": s.groups,
                         "output_rows_per_role": s.output_rows, "native_by_role": s.native,
                         "ordered_by_role": s.native.map(|n| s.output_rows - n),
-                        "homogeneous_panels_by_role": s.homogeneous,
-                        "mixed_panels_by_role": s.homogeneous.map(|n| tiled_groups - n),
+                        "homogeneous_panels_by_role": if shape == "t1" { [0; 2] } else { s.homogeneous },
+                        "mixed_panels_by_role": if shape == "t1" { [0; 2] } else { s.homogeneous.map(|n| tiled_groups - n) },
                         "completed_gpu_seconds": s.clocks[0], "commit_wait_seconds": s.clocks[1],
-                    })
+                    });
+                    if shape == "t1" {
+                        stats["fma4_calls"] = serde_json::json!(quad_calls);
+                        stats["fma4_quartets_by_role"] = serde_json::json!(s.homogeneous);
+                        stats["fallback_quartets_by_role"] = serde_json::json!(s.homogeneous.map(|n| quartet_groups - n));
+                    }
+                    stats
                 })
                 .collect::<Vec<_>>();
             serde_json::json!({ "mode": "panel84",

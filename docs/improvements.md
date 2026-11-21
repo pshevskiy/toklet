@@ -10,6 +10,24 @@ Gains from different experiments cannot be added together. Current task and
 qualification scope live in [TODO](../TODO.md); acceptance policy is in
 [PLAN](../PLAN.md#validation-and-performance-policy).
 
+### LFM3 Metal sampled decode
+
+The GPU Q/K/V and dedicated FFN kernels run on sampled single-token
+LFM3 decode. On the M1 Pro, 52 warmed BF16 512/32 requests reduced
+median client completion by 21.96% and 21.46% in opposite orders.
+Engine decode saved about 1.95 s in each order. Peak guarded charge
+was 3.683 GiB. Marginal first-token time improved by 32.84 and 3.12 ms.
+The paired changes were −26.50 and +2.23 ms.
+
+Formatting, strict CPU and Metal Clippy, 865 CPU tests and 1,070 Metal
+tests pass. Physical state, rollback, budget and public SIGINT checks
+pass. The 10,000-target loss check has zero greedy differences against
+the modified reference, and the 100-task result matches its 37/100.
+Astra approves the exact change. Cross-engine and request-summary
+qualification remain open.
+[Warmed evidence](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-t1-gpu-qkv-ffn-product-warm-1/normal.json) ·
+[Task gates](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-t1-gpu-qkv-ffn-s2-tasks-4/run-1/normal.json).
+
 The new [competitive MLX GPU plan](mlx-gpu-performance-plan.md) starts an active
 Gemma/LFM3 goal. Static/profile diagnosis identifies CPU-only LFM3, hybrid Gemma,
 277 batched-decode command/wait boundaries, compensated dot projections and missing
