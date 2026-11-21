@@ -3,7 +3,11 @@ use super::super::{
     memory::{Buffer, system_device},
     mlx::precise_library_on,
 };
-use objc2::{rc::Retained, runtime::ProtocolObject};
+use objc2::{
+    rc::Retained,
+    runtime::{NSObjectProtocol, ProtocolObject},
+    sel,
+};
 use objc2_foundation::NSString;
 use objc2_metal::*;
 use std::ptr::NonNull;
@@ -26,6 +30,7 @@ pub(super) enum Op {
     Greedy,
     FfnM32,
     GateUpCompact,
+    DownK64,
 }
 
 impl Op {
@@ -56,13 +61,14 @@ impl Op {
             "nanbeige_greedy",
             "nanbeige_ffn_m32",
             "nanbeige_ffn_compact",
+            "nanbeige_down_k64",
         ][self as usize]
     }
 
     fn group_threads(self) -> usize {
         match self {
             Self::Vector => 32,
-            Self::Attention | Self::GateUpCompact => 128,
+            Self::Attention | Self::GateUpCompact | Self::DownK64 => 128,
             Self::Tiled | Self::Rms | Self::Greedy | Self::FfnM32 => 256,
             _ => 32,
         }
@@ -75,6 +81,17 @@ pub(super) struct Context {
     pipelines: [Pipeline; Op::ALL.len()],
     ffn_m32: Option<Pipeline>,
     gate_up_compact: Option<Pipeline>,
+    down_k64: Option<Pipeline>,
+}
+
+// K64 loads four adjacent BF16 words per vector. Both admitted K strides
+// and all tile offsets are multiples of four words.
+pub(super) fn down_k64_aligned(input: &RawBuffer) -> bool {
+    if !input.respondsToSelector(sel!(gpuAddress)) {
+        return false;
+    }
+    let start = input.gpuAddress();
+    start != 0 && start.is_multiple_of(8)
 }
 
 impl Context {
@@ -142,9 +159,27 @@ impl Context {
                 .map_err(|_| Error::Options("Nanbeige pipeline count"))?,
             ffn_m32,
             gate_up_compact: None,
+            down_k64: None,
         };
         if cfg!(target_os = "macos") {
-            context.gate_up_compact = context.prepare_gate_up_compact();
+            context.gate_up_compact = context.prepare_compact(
+                Op::GateUpCompact,
+                concat!(
+                    include_str!("../nanbeige.metal"),
+                    "\n",
+                    include_str!("gate_up_compact.metal"),
+                ),
+                5 * 1024,
+            );
+            context.down_k64 = context.prepare_compact(
+                Op::DownK64,
+                concat!(
+                    include_str!("../nanbeige.metal"),
+                    "\n",
+                    include_str!("down_k64.metal"),
+                ),
+                9 * 1024,
+            );
         }
         Ok(context)
     }
@@ -157,20 +192,15 @@ impl Context {
         self.gate_up_compact.is_some()
     }
 
-    fn prepare_gate_up_compact(&self) -> Option<Pipeline> {
-        if self.device.maxThreadgroupMemoryLength() < 5 * 1024 {
+    pub fn has_down_k64(&self) -> bool {
+        self.down_k64.is_some()
+    }
+
+    fn prepare_compact(&self, op: Op, source: &str, scratch_bytes: usize) -> Option<Pipeline> {
+        if self.device.maxThreadgroupMemoryLength() < scratch_bytes {
             return None;
         }
-        let library = precise_library_on(
-            &self.device,
-            concat!(
-                include_str!("../nanbeige.metal"),
-                "\n",
-                include_str!("gate_up_compact.metal"),
-            ),
-        )
-        .ok()?;
-        let op = Op::GateUpCompact;
+        let library = precise_library_on(&self.device, source).ok()?;
         let function = library.newFunctionWithName(&NSString::from_str(op.name()))?;
         let pipeline = self
             .device
@@ -182,13 +212,13 @@ impl Context {
         {
             return None;
         }
-        self.compact_basis(&pipeline)?.then_some(pipeline)
+        self.compact_basis(op, &pipeline)?.then_some(pipeline)
     }
 
     /// Metal does not specify fragment lane layout. Test the compiled pipeline
     /// with signed one-hot weights spanning both affine groups in one tile.
     /// Each expected BF16 word is indexed directly from the distinct inputs.
-    fn compact_basis(&self, pipeline: &Pipeline) -> Option<bool> {
+    fn compact_basis(&self, op: Op, pipeline: &Pipeline) -> Option<bool> {
         const M: usize = 32;
         const N: usize = 32;
         const K: usize = 128;
@@ -200,6 +230,9 @@ impl Context {
         let mut input = Buffer::<u16>::on_device(&self.device, M * K).ok()?;
         let mut output = Buffer::<u16>::on_device(&self.device, (M + 1) * N).ok()?;
         let status = Buffer::<u32>::on_device(&self.device, 1).ok()?;
+        if matches!(op, Op::DownK64) && !down_k64_aligned(&input.raw) {
+            return Some(false);
+        }
         packed.with_mut(|words| {
             for n in 0..N {
                 let k = column(n);
@@ -226,7 +259,7 @@ impl Context {
         encode_pipeline(
             &encoder,
             pipeline,
-            Op::GateUpCompact.group_threads(),
+            op.group_threads(),
             &[
                 &packed.raw,
                 &scales.raw,
@@ -288,6 +321,7 @@ impl Context {
                 .gate_up_compact
                 .as_ref()
                 .expect("prepared compact gate/up pipeline"),
+            Op::DownK64 => self.down_k64.as_ref().expect("prepared K64 Down pipeline"),
             _ => &self.pipelines[op as usize],
         };
         encode_pipeline(

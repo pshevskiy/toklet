@@ -163,4 +163,13 @@ impl Model {
             &[]
         }
     }
+
+    /// Active prefill row counts eligible for the prepared K64 Down pipeline.
+    pub fn down_k64_prefill_rows(&self) -> &'static [usize] {
+        if self.context.has_down_k64() {
+            &[128]
+        } else {
+            &[]
+        }
+    }
 }

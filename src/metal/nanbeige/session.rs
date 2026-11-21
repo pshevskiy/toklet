@@ -1,7 +1,7 @@
 use super::{
     Buffer, Error, HIDDEN, INTERMEDIATE, KV_WIDTH, LOGIT_ROWS, Model, Options, QUERY_WIDTH, Result,
     Sizes,
-    kernel::{Encoder, Op, RawBuffer},
+    kernel::{Encoder, Op, RawBuffer, down_k64_aligned},
     plan::{self, Matrix, Projection},
 };
 use crate::{
@@ -52,6 +52,7 @@ pub struct Session<'a> {
     replay_required: bool,
     kv: Kv,
     scratch: Scratch,
+    down_k64_ready: bool,
     diagnostic: Option<Diagnostic>,
 }
 
@@ -110,6 +111,27 @@ impl<'a> Session<'a> {
             } else {
                 None
             };
+            let kv = Kv {
+                k: words(sizes.kv_elements)?,
+                v: words(sizes.kv_elements)?,
+            };
+            let scratch = Scratch {
+                tokens: Buffer::on_device(device, chunk)?,
+                status: Buffer::on_device(device, 1)?,
+                selected: Buffer::on_device(device, 1)?,
+                residual: words(chunk * HIDDEN)?,
+                normalized: words(chunk * HIDDEN)?,
+                delta: words(chunk * HIDDEN)?,
+                query: words(chunk * QUERY_WIDTH)?,
+                key: words(chunk * KV_WIDTH)?,
+                value: words(chunk * KV_WIDTH)?,
+                attention: words(chunk * QUERY_WIDTH)?,
+                gate: words(chunk * INTERMEDIATE)?,
+                up: words(chunk * INTERMEDIATE)?,
+                logits: words(LOGIT_ROWS)?,
+            };
+            let down_k64_ready = model.down_k64_prefill_rows().contains(&chunk)
+                && down_k64_aligned(&scratch.gate.raw);
             Ok(Self {
                 model,
                 options,
@@ -119,28 +141,21 @@ impl<'a> Session<'a> {
                 evaluated: 0,
                 selected: None,
                 replay_required: false,
-                kv: Kv {
-                    k: words(sizes.kv_elements)?,
-                    v: words(sizes.kv_elements)?,
-                },
-                scratch: Scratch {
-                    tokens: Buffer::on_device(device, chunk)?,
-                    status: Buffer::on_device(device, 1)?,
-                    selected: Buffer::on_device(device, 1)?,
-                    residual: words(chunk * HIDDEN)?,
-                    normalized: words(chunk * HIDDEN)?,
-                    delta: words(chunk * HIDDEN)?,
-                    query: words(chunk * QUERY_WIDTH)?,
-                    key: words(chunk * KV_WIDTH)?,
-                    value: words(chunk * KV_WIDTH)?,
-                    attention: words(chunk * QUERY_WIDTH)?,
-                    gate: words(chunk * INTERMEDIATE)?,
-                    up: words(chunk * INTERMEDIATE)?,
-                    logits: words(LOGIT_ROWS)?,
-                },
+                kv,
+                scratch,
+                down_k64_ready,
                 diagnostic,
             })
         })
+    }
+
+    /// Prepared K64 Down rows with this session's aligned SwiGLU scratch.
+    pub fn down_k64_prefill_rows(&self) -> &'static [usize] {
+        if self.down_k64_ready {
+            self.model.down_k64_prefill_rows()
+        } else {
+            &[]
+        }
     }
 
     /// Copy one logical layer's committed, head-major BF16 K/V prefix into
@@ -285,6 +300,11 @@ impl<'a> Session<'a> {
         } else {
             ffn
         };
+        let down = if self.down_k64_prefill_rows().contains(&rows) {
+            (Op::DownK64, 32, 32)
+        } else {
+            ffn
+        };
         let affine = |(op, m_tile, n_tile): (Op, usize, usize),
                       matrix: Matrix,
                       input: &RawBuffer,
@@ -402,7 +422,7 @@ impl<'a> Session<'a> {
                 &[rows as u32, INTERMEDIATE as u32],
                 [(rows * INTERMEDIATE).div_ceil(32), 1],
             );
-            affine(ffn, block.down, &s.gate.raw, &s.delta.raw, rows, 0);
+            affine(down, block.down, &s.gate.raw, &s.delta.raw, rows, 0);
             residual_add();
 
             if visit.normalize_after {

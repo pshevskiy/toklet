@@ -86,6 +86,22 @@ TTFT. Peak guarded charge is 2.47 GiB. Both strict Clippy builds,
 the experimental Mac profile.
 [Paired performance and verification](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-compact-connected-1/RUN.md).
 
+Two direct MLX owners match all 393,216 words of Nanbeige's T128
+down projection in about 3.28 ms. The native K64 tile matches that
+panel and reduces median GPU time from 5.50–5.58 to 3.73 ms.
+The Mac trial checks the GPU buffer address during pipeline and
+session preparation. The CLI reports the session's prepared row
+count. The 52-request trial shortens median completion by 5.90% and
+5.96% in opposite orders, with 7.44% and 7.39% shorter TTFT. Token
+IDs, all 44 committed K/V prefixes and terminal logits agree at a
+2.47 GiB peak. The exact-source checks pass and Astra approves the
+scoped Mac change. A separate compact query experiment matches all
+786,432 words in both orders and saves 1.31–1.32 ms per visit.
+Its isolated savings fall below the request-level screen.
+[Down projection](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/sol-down-k64-1/normal.json) ·
+[Connected trial](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-down-connected-1/RUN.md) ·
+[Query projection](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-query-compact-1/RUN.md).
+
 ### LFM3 Metal sampled decode
 
 The GPU Q/K/V and dedicated FFN kernels run on sampled single-token

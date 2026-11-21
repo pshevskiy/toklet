@@ -109,6 +109,35 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   [Compact panel and timing](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/sol-ffn-compact-128-1/summary-normal.json) ·
   [Connected trial](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-compact-connected-1/RUN.md) ·
   [Exact checks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/release-compact-candidate-1/final-check-summary.json).
+- [x] Qualify compact K64 down on the same Nanbeige 512/32 requests.
+  Direct MLX matches all 393,216 BF16 output words at 3.28 ms.
+  K64 reduces native down GPU medians from 5.50–5.58 to 3.73 ms.
+  Both paired lower savings exceed 1.74 ms per visit. Astra approves
+  a connected T128 Mac trial with an eight-byte input alignment check.
+  Both connected orders clear 5% with all 52 requests, all 44 K/V
+  prefixes and terminal logits exact. Formatting, both strict Clippy
+  runs, 1,074 Metal tests, both GPU controls and archived parity pass.
+  The library retry passes the same disk guard after cache cleanup.
+  Astra approves the exact experimental Mac change.
+  [Matched MLX](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-down-reference-1/RUN.md) ·
+  [K64 operator](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/sol-down-k64-1/normal.json) ·
+  [Connected trial](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-down-connected-1/RUN.md) ·
+  [Exact checks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/release-down-candidate-1/final-check-summary.json) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/release-down-candidate-1/REVIEW.md) ·
+  [Disk recovery](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/release-down-candidate-1/disk-floor-cache-recovery.json).
+- [x] Price the T128 query projection using the existing compact tile.
+  Both guarded orders match all 786,432 BF16 words and save 1.31–1.32 ms
+  per visit at the paired GPU median. Astra approves the isolated evidence.
+  Its savings fall below the request screen.
+  [Token and weight spans](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-query-input-1/normal.json) ·
+  [Query timing](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-query-compact-1/normal-1.json).
+- [ ] Price query and attention output together in one T128 layer-zero
+  command. Keep distinct K/V owners, exact output panels and causal masking.
+  With the K64 request median, the next screen needs about 1.452 ms per
+  visit before a connected trial. The pinned MLX capture reproduces
+  causal row zero and the archived post-attention normalization.
+  [Pinned attention banks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-input-1/banks-normal.json) ·
+  [Captured attention operands](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-input-1/normal.json).
 - [ ] Admit external Nanbeige engines on exactly matching work.
   The installed vLLM Metal source replay takes only 22 of the 44 model
   visits. Its paged KV wrapper also aliases physical indexes if given
@@ -130,7 +159,9 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 The bridge fixture replays 264,192 original gated words and both 12,288-word
 private history proposals. The independent checkpoint reconstruction confirms
 all old T1 words. Sol's connected Metal screen was interrupted before native
-timing. [Verified fixture](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-conv-old-history-1/normal.json) ·
+timing. The resumed artifact binds the old operands, scalar fallback and
+qualified output panels. Native carrier orchestration is paused for the
+Nanbeige work. [Verified fixture](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-conv-old-history-1/normal.json) ·
 [Independent history reconstruction](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-conv-old-history-1/embedding-normal.json).
 
 ### Earlier task records

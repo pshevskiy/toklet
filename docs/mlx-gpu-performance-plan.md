@@ -201,6 +201,26 @@ Qualify further shapes with the same gates.
 [Direct evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-modern-decode-1/RUN.md) ·
 [Connected compact result](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-compact-connected-1/RUN.md).
 
+The T128 K64 trial targets the FFN down projection. Direct MLX 0.32.4
+matches all 393,216 BF16 outputs at about 3.28 ms through completion.
+In Toklet, a 64-column tile keeps the original ascending FP32 K8 steps
+and moves four adjacent BF16 activation words at a time. The tile
+loads affine metadata once per G64 group and halves the number of
+threadgroup barriers over 10,752 columns. Its two paired lower savings
+of 1.747 and 1.796 ms clear the isolated 1.544 ms screen. The T128
+512/32 request join passes with both paired lower completion gains
+above 5%, full terminal state and 2.47 GiB peak guarded charge.
+The separate compact Q trial saves 1.31–1.32 ms per visit with
+bitwise output parity, below the isolated request screen. Measure
+Q and attention output on one authentic layer-zero visit next. Use
+the captured output projection operands and original causal row-zero
+and post-attention FFN normalization witnesses.
+[Direct MLX down projection](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-down-reference-1/RUN.md) ·
+[Down operator](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/sol-down-k64-1/normal.json) ·
+[Connected trial](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-down-connected-1/RUN.md) ·
+[Query operator](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-query-compact-1/RUN.md) ·
+[MLX attention operands](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-input-1/normal.json).
+
 For request-summary qualification, compare the same CLI output mode with
 summary collection enabled and disabled. Keep counters at existing completion
 boundaries and write one bounded summary after the last token. Sample command
