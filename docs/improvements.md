@@ -299,11 +299,13 @@ pass. Independent cohorts and the original quality suite remain open.
 
 The pinned MLX layer-at-a-time walk matches its stock Q4 graph on all
 1,058 scores and the four terminal heads and 176 joint K/V hashes.
-The long case reaches 1,025 committed positions at a 2.80 GiB guarded
-peak. An 8 MiB official parent range passes with the trusted system
-certificate bundle. The full BF16 streams and qualification remain open.
+The long case reaches 1,025 committed positions at a 2.80 GiB guarded peak.
+The separate guarded transfer authenticates both official BF16 shards,
+8.34 GB of source data and 201 tensor spans, at 129 MiB peak. It retains
+the hash tables and the frozen embedding rows for the paired scorer.
+Actual BF16 scoring and the original task suite remain open.
 [Layerwise result and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-layerwise-oracle-1/REVIEW.md) ·
-[Parent transport and staging](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-layerwise-oracle-1/RUN.md).
+[Parent acquisition and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-layerwise-oracle-1/ACQUISITION-REVIEW.md).
 
 The installed MLX affine PSO matches all three native T128 Q/O/Down
 panels plus separate MLX O/Down inputs. Signed basis and sticky fault
@@ -313,13 +315,49 @@ creation total 79 ms. Astra approves a connected trial under the
 existing state, working-set and decode gates.
 [Guarded result and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-three-roles-1/ACTUAL-REVIEW.md).
 
+On two warmed 512/32 Nanbeige cohorts, the connected T128 Q/O/Down
+trial reduces completion from 4.311 to 3.933 s and 4.289 to 3.926 s
+against Toklet's dense opt-in. Paired 95% lower gains are 8.40% and
+8.19%. TTFT falls by over 11% in each order. Both decode medians
+improve by less than 4 ms across 31 evaluations. The reverse paired
+decode interval includes zero. All 52 requests reproduce the frozen
+IDs. Terminal logits and 44 K/V hashes match, including the fallback
+controls. Guarded peak across fit and timing is 5.17 GiB. The trial
+uses a pinned private MLX pipeline. Its startup hash takes 641–646 ms
+and library load takes 21–23 ms before the warm request clock. Product
+integration requires a supported shader, capability checks and repeat
+qualification for both cold CLI and warm owners.
+[Ordinary cohorts and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/ACTUAL-REVIEW.md) ·
+[Fit and linked-path review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/FIT-REVIEW.md).
+
 The detached Ollama publisher-fork raw worker now builds with its pinned
 MLX and MLX-C. Xcode's optional Metal toolchain was present but inactive.
 Official activation restores preprocessing with the original system Xcode
-selection intact. The guarded CMake retry and native link pass. The
-private Q4 import and raw generation agreement remain open.
+selection intact. The guarded CMake retry and native link pass.
 [Astra source review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/REVIEW.md) ·
 [Exact native build](../artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/build-receipt.json).
+
+The private Ollama raw-ID owner completes the 512/32 tape after verifying
+513 imported tensors and four codec files. It scores 35 head rows, checks
+44 cache owners and 543 committed positions with one pending, and peaks
+at 3.47 GiB. All 32 sampled IDs match. The terminal snapshots differ
+from the archived direct MLX and Toklet cache hashes.
+[Raw replay](../artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/trial-1/normal.json) ·
+[Terminal values](../artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/TERMINAL-NUMERIC.md).
+
+The full untimed vLLM dense substitution exercises 1,540 visits and all
+32 IDs at 3.78 GiB. It reproduces all 44 direct MLX prefill and terminal
+cache pairs. The 31 decode heads are exact. The selective prefill head
+differs in 36,106 words, with 0.125 maximum absolute error. A separate
+guarded replay at 3.76 GiB confirms the cause for this row. The live
+and shadow one-row heads agree. The full 128-row head uses the same
+retained hidden row and exactly matches all 166,144 oracle words.
+The installed paged primitive differs on about 2.35 million of the
+146.79 million output words evaluated on identical dense-trajectory
+inputs. External timing qualification remains open.
+[Guarded vLLM result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-full-dense-attention-1/normal-1.json) ·
+[Head shape witness and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-first-head-shape-1/ACTUAL-REVIEW.md) ·
+[Astra external numerical review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/ACTUAL-REVIEW.md).
 
 The first same-weight LFM3 FFN replay changes 27 of 2,048
 canonical residual words on the first affected row and fails

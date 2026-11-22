@@ -167,10 +167,19 @@ are verified. The modified Heretic MLX variant can qualify separately if
 it preserves reasoning, coding and tool-call quality on the same tasks.
 The pinned model and tokenizer are installed locally. The experimental
 Rust and Metal CLI checks both greedy anchors and all 44 independent cache
-owners at two prompt partitions. Native logits differ from MLX. The next
-operator test isolates the first layer-zero V divergence using authentic
-split-K operands. App adoption and external engine speed tests are pending.
-[Native admission results](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/RUN.md).
+owners at two prompt partitions. Native logits differ from MLX. The
+private vLLM dense-attention replay matches the direct MLX cache and all
+31 decode logits. On the same retained prefill hidden row, selecting
+before the head explains its first-score difference. The publisher's
+private Ollama fork verifies the imported weights and all output IDs.
+Its saved terminal cache still differs. For the next private vLLM
+comparison, use four T128 body cuts and 31 T1 evaluations with 32
+scored heads. Skip the first three heads and select the final prefill
+row before the fourth head on both owners. Join numerical and session
+state in an untimed pass before running the swapped ordinary cohorts.
+[Native admission results](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/RUN.md) ·
+[External numerical review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/ACTUAL-REVIEW.md) ·
+[First head witness and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-first-head-shape-1/ACTUAL-REVIEW.md).
 
 The official unquantized parent contains 4,169,800,704 stored BF16
 parameters. Its independent embedding and head contribute about
@@ -181,11 +190,13 @@ the real memory fit before applying the original held-out and task gates.
 [Official parent inventory and Astra proposal](../artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-bf16-quality-1/PROPOSAL.md).
 
 The layerwise Q4 validation matches every checked stock MLX score and
-terminal head and K/V hash, including the 1,025-position window. For BF16,
-authenticate both complete origin streams before accepting any tensor
-hash. The held-out loader can then read two contiguous spans per physical
-block and recheck each tensor with no complete on-disk weight copy.
+terminal head and K/V hash, including the 1,025-position window. The
+guarded BF16 transfer authenticates both complete origin streams and all
+201 tensor spans. The held-out loader will now read two contiguous
+spans per physical block and recheck each tensor against the verified
+hashes. Score the original corpus and independent smoke in one traversal.
 [Guarded schedule review](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-layerwise-oracle-1/REVIEW.md) ·
+[Parent acquisition review](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-layerwise-oracle-1/ACQUISITION-REVIEW.md) ·
 [Parent range plan](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-layerwise-oracle-1/parent-scoring-layout.json).
 
 Test the resident layer-zero V matrix with identical BF16-normalized inputs.
@@ -370,10 +381,23 @@ scans. Check all three on authentic Toklet inputs and include each scan
 in one ordinary command. Require bitwise outputs and both paired lower
 savings above 1.219 ms per combined visit before a connected trial.
 Both guarded orders pass bitwise and fault controls and yield paired
-lower savings of 2.009 and 2.004 ms. Test the connected route inside
-the ordinary encoder with the same three scans and existing fallback.
+lower savings of 2.009 and 2.004 ms. Inside the ordinary encoder, the
+same three scans and existing fallback yield paired completion lower
+gains of 8.40% and 8.19% against the released dense opt-in. Four fit
+and fault owners verify the terminal bits and cap. The linked T1 route
+bypasses QMM. Build the same single affine BF16 Q4/G64 instantiation
+from the pinned MLX source with its MIT notice. Check the compiled
+one-symbol library against the measured wheel's ABI and exact operator
+outputs before connecting it. Select the Mac kernel at admission and
+use the packed fallback on unsupported devices. Recheck the production
+artifact, 6 GiB admission, cold load, warm requests and request overhead.
+The separate Gate/Up substitution misses its charged latency budget.
 [MLX function and inputs](../artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-qmm-three-roles-1/PROPOSAL.md) ·
-[Guarded result and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-three-roles-1/ACTUAL-REVIEW.md).
+[Guarded result and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-three-roles-1/ACTUAL-REVIEW.md) ·
+[Ordinary cohorts and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/ACTUAL-REVIEW.md) ·
+[Gate/Up latency screen](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-gate-up-screen-1/SCREEN.md) ·
+[Pinned MLX release](https://github.com/ml-explore/mlx/releases/tag/v0.32.4) ·
+[MLX license](https://github.com/ml-explore/mlx/blob/v0.32.4/LICENSE).
 
 For request-summary qualification, compare the same CLI output mode with
 summary collection enabled and disabled. Keep counters at existing completion
