@@ -8,14 +8,13 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
-- **Current** — Nanbeige4.2-3B Q4/G64 on M1 Pro. Halves reduction and rounded
-  SwiGLU match all first-decode Q/K/V and SwiGLU words, 176 prefill pairs and
-  32 IDs. The first mismatched append is owner 5 at position 512. All 31 decode
-  score rows and 44 terminal pairs differ. Both guards and Astra review pass.
-- **Next** — Replay eligible T1 projections with pinned `qmv_fast`. Retain
-  finite checks and the 512/32 tape, then target the first divergent owner.
-  [Halves](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-halves-1/native/RUN.md) ·
-  [SwiGLU](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-swiglu-1/native/RUN.md).
+- **Current** — Nanbeige4.2-3B Q4/G64 on M1 Pro. Pinned T1 `qmv_fast`
+  matches 24/27 traced stages, 58/1,364 appends and 1/44 terminal pairs.
+  All 32 IDs and 176 prefill pairs agree. All 31 decode score rows differ.
+  Scoped checks, the 6 GiB guard and Astra review pass.
+- **Next** — Capture the first decode's raw operator boundaries through
+  owner 8, the first divergent append. Keep the 512/32 tape and finite checks.
+  [Wheel replay](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-qmv-wheel-1/native/RUN.md).
 
 ## Recent implementation and evidence
 

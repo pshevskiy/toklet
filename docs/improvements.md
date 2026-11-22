@@ -542,6 +542,12 @@ the detached evidence. Strict checks and both 512/32 Metal replays pass.
 [Halves](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-halves-1/native/RUN.md) ·
 [SwiGLU](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-swiglu-1/native/RUN.md).
 
+Pinned MLX QMV handles all 9,579 eligible T1 projections on the same
+512/32 tape. It matches 58/1,364 appends and one terminal K/V pair.
+All IDs and prefill pairs agree, and all decode score rows differ.
+Scoped checks, the 5.06 GiB guarded replay and Astra review pass.
+[Wheel replay](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-qmv-wheel-1/native/RUN.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

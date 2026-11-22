@@ -309,6 +309,13 @@ operator substitution. Preserve prefill scoring, finite checks and rollback.
 [Halves](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-halves-1/native/RUN.md) ·
 [SwiGLU](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-swiglu-1/native/RUN.md).
 
+The pinned QMV replay moves the first divergent append to owner 8.
+Capture raw operator boundaries at position 512 in one sweep through
+owner 8, including owner 1 attention and outgoing residual. Distinguish
+RMS, rotary and attention differences on identical operands before
+changing another kernel. Reprice after exact connected decode.
+[Wheel replay](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-qmv-wheel-1/native/RUN.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).
