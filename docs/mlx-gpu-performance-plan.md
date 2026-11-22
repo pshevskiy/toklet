@@ -324,6 +324,15 @@ against its tape, committed prefix and append hashes. Timed cohorts remain open.
 [Owner trace](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-owner-trace-1/RUN.md) ·
 [Vector SDPA](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-sdpa-wheel-1/native/RUN.md).
 
+Precise rotary matches the first eight decode steps. At position 520,
+the first mismatched append is owner 13. Its input RMSNorm differs in
+five words on identical residuals. Test the pinned RMSNorm reduction in
+the shared T1 norm path with finite output scans and post-commit counts.
+Use the runtime position and owner window for subsequent localization.
+[Position trace](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-position-trace-1/RUN.md) ·
+[Precise rotary](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-rotary-1/RUN.md) ·
+[Owner window](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-owner-window-1/RUN.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

@@ -555,6 +555,15 @@ pairs match. Scoped checks, the 5.06 GiB guard and Astra review pass.
 [Owner trace](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-owner-trace-1/RUN.md) ·
 [Vector SDPA](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-sdpa-wheel-1/native/RUN.md).
 
+The runtime position trace isolates one rotated-Q word at 514. Precise T1
+rotary closes all 144 selected panels and matches 675/1,364 appends, 8/31
+decode scores and 13/44 terminal pairs. The owner window finds five RMSNorm
+differences on identical inputs at position 520. Checks, guards and Astra
+review pass, including the offline recovery of the window validator.
+[Position trace](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-position-trace-1/RUN.md) ·
+[Precise rotary](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-rotary-1/RUN.md) ·
+[Owner window](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-owner-window-1/RUN.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

@@ -8,14 +8,14 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
-- [x] **Current** — Nanbeige4.2-3B Q4/G64 on M1 Pro. Pinned vector SDPA
-  matches all 155 panels, all 32 IDs and all appends in the first two decode steps.
-  Overall 2/31 decode scores and 2/44 terminal pairs match. Scoped checks,
-  the 6 GiB guard and Astra review pass.
-- [ ] **Next** — Select the trace position at runtime. Reproduce position 512,
-  then trace through owner 4 at position 514, the first mismatched append.
-  [Owner trace](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-owner-trace-1/RUN.md) ·
-  [Vector SDPA](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-sdpa-wheel-1/native/RUN.md).
+- [x] **Current** — Precise T1 rotary on Nanbeige4.2-3B Q4/G64 matches 144/144
+  position-514 panels, 8/31 decode scores and 13/44 terminal K/V pairs.
+  At position 520, owner 13 RMSNorm differs in five words on identical inputs.
+  Scoped checks, physical guards and Astra review pass.
+- [ ] **Next** — Verify pinned RMSNorm for the admitted T1 route. Compare the
+  full 512/32 tape and preserve finite checks and cache publication.
+  [Precise rotary](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-rotary-1/RUN.md) ·
+  [Owner window](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-owner-window-1/RUN.md).
 
 ## Recent implementation and evidence
 
