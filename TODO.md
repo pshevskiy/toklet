@@ -523,8 +523,16 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   join archived MLX 0.32.3. Sol's detached build passes on retry after
   the sandbox guard denial. Both GPU guards and paired readers pass.
   Astra approves the probe. The detached MLX 0.32.4 bridge configures
-  and hits two compile-cache API changes. Resolve per-bridge cache
-  ownership before linking and replaying.
+  and hits two compile-cache API changes. Sol adapts callers to the
+  calling-thread cache and forwards the two new operator defaults.
+  The private bridge links after the sandbox and API retries. Four
+  smoke commands pass. The unchanged Go worker loads the sealed
+  modern companion and joins all 32 scores, IDs and 44 prefill and
+  terminal cache pairs at 3.51 GiB. The prefill check uses the 512-row
+  prefixes of the terminal cache. Astra approves private timing after
+  the complete source-diff check. Both raw readers agree.
+  [Timing admission](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-mlx324-1/timing-admission.json).
+  [Modern Ollama replay](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-mlx324-1/normal.json).
   [Bridge preflight](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/mlxc-wheel-preflight-1/receipt.json).
   [Shared-input layer zero](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
   [First prefill difference](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-prefill-cut-1/check-normal.json).

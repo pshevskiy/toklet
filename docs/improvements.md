@@ -415,6 +415,16 @@ replays both comparisons and approves the detached companion preflight.
 CMake accepts the pinned MLX 0.32.4 wheel. The MLX-C build stops at two
 compile-cache API errors before linking.
 [Guarded preflight](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/mlxc-wheel-preflight-1/receipt.json).
+
+The detached MLX 0.32.4 bridge builds with native-thread cache controls
+and explicit defaults for the newly added SDPA and gather-QMM arguments.
+All four smoke commands pass. The unchanged Ollama Go worker maps the
+three sealed native libraries, consumes its own 32 samples and joins
+all scored logits, 44 terminal cache pairs and their 512-row prefixes
+with MLX and vLLM. The guard peaks at 3.51 GiB. Astra clears the untimed
+private-worker result after verification of the complete source diff.
+[Replay](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-mlx324-1/normal.json) ·
+[Bridge smoke](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-mlx324-1/bridge/smoke-receipt.json).
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

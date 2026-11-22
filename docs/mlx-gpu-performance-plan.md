@@ -185,8 +185,15 @@ bridge against the pinned MLX 0.32.4 wheel with the same Go worker and
 verified store. The guarded configure passes. The pinned bridge stops
 at the new compile-cache handle arguments for clear and erase.
 Preserve cache lifetime and clear/erase semantics in any compatible
-bridge before linking. Require the full 32-head joined state before
-timing.
+bridge before linking. The detached adapter keeps the C ABI and
+uses the caller's cache plus the current SDPA and gather-QMM defaults.
+The verified wheel and unchanged Go executable join the full 32-head
+state with direct MLX and private vLLM. Prefill comparison reads the
+512-row prefixes of the terminal cache. Require the sealed positive
+numerical join to launch fresh warm timing cohorts with the same
+per-request work and original acceptance gates.
+[Timing admission](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-mlx324-1/timing-admission.json).
+[Modern Ollama replay](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-mlx324-1/normal.json).
 [Bridge preflight](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/mlxc-wheel-preflight-1/receipt.json).
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 [First prefill difference](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-prefill-cut-1/check-normal.json).
