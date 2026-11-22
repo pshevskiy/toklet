@@ -192,14 +192,33 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   Hold adoption. All 104 same-binary attribution requests pass. The
   residence-only decode effect changes sign. With 22 pairs resident in
   both arms, dense prefill adds 16.92 and 20.58 ms at the paired medians.
-  Test one variant with the final T128 chunk packed and the first three
-  dense. Keep the ordinary completion and decode gates.
+  The final-chunk-packed candidate builds and fits at 5.06 GiB.
+  All four committed routes and terminal state match the plan. The
+  compiled T1 path keeps the released packed encoder. The two ordinary
+  orders pass all 52 requests at 5.16 GiB. Completion improves 6.42%
+  and 7.19%, with paired lower gains of 6.24% and 6.88%. Both median
+  decode latencies improve. Qualify a generic opt-in before adoption.
   [Guarded model fit](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/fit-normal.json) ·
   [Compiled T1 graph](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/ARM64-REVIEW.md) ·
   [Ordinary timings](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/normal.json) ·
   [Astra connected review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/REVIEW.md) ·
   [Decode attribution and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-causal-1/REVIEW.md) ·
-  [Staged final-chunk test](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-tail-packed-1/RUN.md).
+  [Final-chunk fit](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-tail-packed-1/fit-normal.json) ·
+  [Compiled final-chunk test](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-tail-packed-1/ARM64-REVIEW.md) ·
+  [Ordinary final-chunk review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-tail-packed-1/REVIEW.md).
+- [x] Capture the authentic first-decode Gate/Up operands for the exact
+  activation-sum experiment. The guarded owner captures all 24,576
+  BF16 words at position 512, plus exact terminal state. The proposed
+  shared sum must keep the original rounding and exceed 14.663 µs
+  paired lower savings per visit in both operator orders before integration.
+  [Capture and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-t1-sum16-capture-1/REVIEW.md).
+- [ ] Qualify the original 100 tasks and 10,000 held-out Nanbeige
+  targets. The 100 execution inputs now use the pinned Nanbeige codec
+  and preserve original task content, categories, output caps and grading.
+  Code and prose disable thinking. Continuation remains raw. The
+  shipped Rust codec independently reproduces all 100 inputs.
+  [Frozen task inputs](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-quality-tasks-1/RUN.md) ·
+  [Frozen loss windows](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/heldout-normal.json).
 - [x] Price the remaining Nanbeige gap against the direct MLX GPU graph.
   Both owners reproduce the 32 released IDs on all 26 requests.
   Direct MLX finishes in 3.315–3.316 s versus Toklet's 5.841–5.842 s.

@@ -199,6 +199,27 @@ chunk packed before starting the same T1 decode path.
 [Timing contrasts and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-causal-1/REVIEW.md) ·
 [Owner custody](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-causal-1/custody-normal.json).
 
+Packing the final T128 chunk keeps 22 pairs resident and records
+three dense cuts followed by one packed cut. Guarded fit, strict
+release Clippy and exact compiled T1 fallback pass. All 52 ordinary
+requests match the released state. Completion drops 4.595 to 4.300 s
+and 4.624 to 4.291 s. First token is about 295 and 321 ms sooner.
+Both decode medians improve at 5.16 GiB peak. The fixed-prompt probe
+clears both ordinary gates. Generic opt-in and cold timing are next.
+[Ordinary timings and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-tail-packed-1/REVIEW.md).
+
+The guarded Nanbeige T1 capture retains 3,072 normalized BF16 words
+and both 10,752-word projections at its first committed decode input.
+The terminal witness matches the release. This furnishes the exact
+activation-sum screen with authentic packed-vector operands.
+[Capture and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-t1-sum16-capture-1/REVIEW.md).
+
+All 100 original Nanbeige task cases are frozen under the pinned codec.
+The Python template and the existing compiled Rust codec match every
+input. The original categories and caps remain, with thinking disabled
+for code and prose and raw continuation. Quality scoring remains open.
+[Frozen task inputs](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-quality-tasks-1/RUN.md).
+
 The first same-weight LFM3 FFN replay changes 27 of 2,048
 canonical residual words on the first affected row and fails
 the block's exact admission. The separate canonical T1 ConvIn

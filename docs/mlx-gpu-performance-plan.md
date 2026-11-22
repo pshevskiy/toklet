@@ -300,11 +300,18 @@ dense prefill runs. The residence-only effect changes sign. Hold 22
 pairs resident and test the first three chunks dense with the fourth
 packed. This tests whether the work immediately preceding decode is
 enough to account for the slowdown. Preserve the existing release gates.
+The final packed cut confirms the three-plus-one route and matches exact
+terminal and fallback state. Both ordinary completion lower bounds
+exceed 6%. Median decode improves in both orders. Replace the fixed
+prompt recognizer in a separate opt-in with actual remaining-prefill
+topology, qualify the compiled prepare and consume pipelines on load,
+and measure independent prompt and complete cold CLI behavior.
 [Detached layout and numerical checks](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-gate-up-1/RUN.md) ·
 [Isolated timings](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-gate-up-1/normal-2.json) ·
 [Guarded model fit](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/fit-normal.json) ·
 [Ordinary timings and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/REVIEW.md) ·
-[Same-binary contrasts and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-causal-1/REVIEW.md).
+[Same-binary contrasts and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-causal-1/REVIEW.md) ·
+[Final-chunk ordinary review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-tail-packed-1/REVIEW.md).
 
 For request-summary qualification, compare the same CLI output mode with
 summary collection enabled and disabled. Keep counters at existing completion
