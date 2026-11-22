@@ -277,6 +277,14 @@ and joins the full first-cut trace through the next layer's raw K/V.
 The cache frontier joins slots 0–9 at 128 but only slot 0 from 256
 onward. Diagnose the second cut before widening the runtime route.
 [FFN and cache frontier](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-connection-1/RUN.md).
+
+The second cut first differs in FFN RMSNorm on identical residual
+input. The pinned MLX reduction matches all 19 traced panels and
+176 ordered prefill cache digests across the four cuts. The full
+score and terminal gates remain open. Compare the final prefill
+hidden row before changing the head and T1 path. The RMS proof
+commands take 2.800 s versus 2.721 s in the one-owner control.
+[RMS and prefill evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-second-cut-1/RUN.md).
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

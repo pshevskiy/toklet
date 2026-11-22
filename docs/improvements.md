@@ -511,6 +511,15 @@ next three prefill boundaries. Both complete requests keep all 32
 IDs. Exact sampled-score and terminal-cache gates remain open.
 Both guards, formatting, strict Metal Clippy and release links pass.
 [FFN and cache frontier](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-connection-1/RUN.md).
+
+The native second-cut witness reproduces the archived request. The
+post-attention residual matches exactly, and FFN RMSNorm differs
+in 20 words over two rows. The T128 MLX RMS reduction joins all
+19 second-cut panels and all 176 prefill cache digests. Both guarded
+owners complete 32 matching IDs at 5.08 GiB. Formatting, strict
+Metal Clippy and release links pass. Score and terminal-cache parity
+remain open. The completed GPU proof clocks cover one request each.
+[RMS and prefill evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-second-cut-1/RUN.md).
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all
