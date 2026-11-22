@@ -398,6 +398,14 @@ Terminal state and logits reproduce the 35-head Ollama witness.
 All 32 scored-head digests differ from matched MLX.
 [Physical witness](../artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/matched32/run-1/read-normal.json).
 
+The direct MLX prefill replay reproduces all 44 sealed K/V pair hashes
+at 3.12 GiB. Against Ollama, slot zero in the first T128 tile differs
+in 55,617 K and 67,198 V words out of 131,072 per plane. Independent
+raw readers place both first differences at prompt position zero.
+This narrows the discrepancy to the first cache write or its inputs.
+[Prefill receipt](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-prefill-cut-1/capture.json) ·
+[Independent raw check](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-prefill-cut-1/check-normal.json).
+
 The full untimed vLLM dense substitution exercises 1,540 visits and all
 32 IDs at 3.78 GiB. It reproduces all 44 direct MLX prefill and terminal
 cache pairs. The 31 decode heads are exact. The selective prefill head

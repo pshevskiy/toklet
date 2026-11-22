@@ -514,8 +514,13 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   calculation.
   The guarded 32-head Ollama replay uses its own sampled IDs, preserves
   the earlier Ollama terminal cache and logits and peaks at 3.46 GiB.
-  All 32 scored-head digests differ from matched MLX. External numerical
-  qualification remains open.
+  All 32 scored-head digests differ from matched MLX. A guarded direct
+  prefill rejoins all 44 reference pairs. The first Ollama cache owner
+  already differs at position 0 in 429 K and 502 V words. Both raw
+  readers agree at 3.12 GiB. The sandbox denied the first guard start.
+  Next compare the live layer-zero embedding and RMSNorm, then replay
+  both affine projections on the same T128 activation.
+  [First prefill difference](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-prefill-cut-1/check-normal.json).
   [32-head Ollama witness](artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/matched32/run-1/read-normal.json) ·
   [Local vLLM clocks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-direct-clocks-1/RUN.md) ·
   [Astra clock review](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-direct-clocks-1/REVIEW.md) ·

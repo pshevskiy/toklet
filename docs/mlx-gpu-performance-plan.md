@@ -176,6 +176,11 @@ The untimed four-T128, 31-T1 Ollama replay scores 32 heads and
 reproduces the earlier Ollama terminal state using its own sampled IDs.
 All 32 scored-head digests differ from matched MLX. Numerical
 qualification remains open. [Ollama work and scores](../artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/matched32/run-1/read-normal.json).
+The first logical owner differs from position zero in both K and V,
+which locates the discrepancy at or before the first cache write.
+Align embedding and RMSNorm next, then compare affine K/V projections
+using a common T128 input before qualifying external performance.
+[First prefill difference](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-prefill-cut-1/check-normal.json).
 
 The direct MLX and private vLLM
 witnesses join all 32 one-row scores, their own sampled IDs and both
