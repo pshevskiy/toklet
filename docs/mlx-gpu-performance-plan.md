@@ -244,24 +244,52 @@ Keep the current convolution handoff.
 [GQA baseline](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gqa-offsets-1/RUN.md) ·
 [Convolution screen](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-connected-conv-chain-2/RUN.md).
 
+The four-cut Nanbeige attribution profile measures 2.16 s in
+FFN projections and 0.85 s in query plus attention output. GQA's
+0.205 s across all 176 visits falls below the 0.229 s development
+threshold at the observed 4.589 s control completion. The paired
+one-encoder command spends roughly 3.50 s on the GPU with less
+than 3 ms in host encoding and wait outside GPU work. Prioritize
+matrix throughput with authentic operands. The exact direct MLX
+Q/O comparison yields an isolated 0.167 s extrapolation, below
+the development screen. A 64-token gate/up tile with the same
+K32 arithmetic slows both orders. Next, test a dual-bank M32
+Gate/Up tile that shares activation staging and applies the
+existing SwiGLU calculation in place after both BF16 roundings.
+The measured benefit must exceed the cost of the larger register
+footprint in both orders. Compare a passing design in the current
+single-encoder request. Match scored and committed work before
+external qualification.
+[Stage costs and direct projection clocks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-profile-1/RUN.md).
+
 For request-summary qualification, compare the same CLI output mode with
 summary collection enabled and disabled. Keep counters at existing completion
 boundaries and write one bounded summary after the last token. Sample command
 and GPU timings in a separate diagnostic run. Verify the paired and marginal
 95% upper bounds for first-token and completion overhead in both owner orders.
 The LFM3 fixed-N campaign's failing marginal TTFT upper is 1.06524%.
-The eight-owner timing diagnostic measures all 96 resident FFN Metal
-commands per request. The submit segment shifts in the same direction
-with summary enabled in both orders. Most TTFT variance remains
-inside other engine prefill work after accounting for resident FFN
-and T128 Q/K/V waits. Next, counterbalance observation per request
-within a resident owner. Preallocate the same recorder in both arms,
-toggle before request observation begins, and verify ordinal,
-reset, clocks, tokens, state and export counts. Measure submit
-and wire TTFT together while retaining the original fixed-N workload
-and acceptance gate.
+The eight-owner crossover counterbalances observation per request in
+resident owners with the same preallocated recorder. The submit
+shift under active collection changes sign between orders. Mean
+completion rises by 8.03 and 16.02 ms. After the first token, nearly
+all observed time differences occur inside native decode evaluation,
+including 14.01 and 10.37 ms in completed split FFN GPU work.
+Investigate native decode and keep the original fixed-N workload,
+public clocks and uncertainty limits for qualification.
 [LFM3 timing diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-brackets-1/RUN.md) ·
-[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-brackets-1/REVIEW.md).
+[Crossover and decode attribution](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-observer-crossover-1/run-1/post-first-normal.json).
+
+Astra's provisional LFM3 design allocates 0.460 s to first ID
+and 0.672 s to the 31 completed decode steps against the controlled
+vLLM clock. This allows 4.79 ms per T128 block and 21.67 ms per
+completed T1 step before shared work. Fresh confirmation against
+both engines determines the external target. The archived fast
+same-weight Gate/Up outputs leave 418 changed Down inputs even
+after canonical pointwise rounding. Check the first affected
+row through Down, post-FFN RMS and residual before pricing a
+complete block. Keep the original numerical, quality, state,
+memory and telemetry gates.
+[Astra performance and numerical proposal](../artifacts/mlx-gpu-gap-2026-11-15/astra-lfm3-external-arithmetic-budget-1/PROPOSAL.md).
 
 [Pinned MLX package](https://huggingface.co/MercuriusDream/Nanbeige4.2-3B-mlx-4bit/tree/c21f850c4096b67a1b53a2c8eb4f8c8652f89375) ·
 [Upstream config](https://huggingface.co/Nanbeige/Nanbeige4.2-3B/blob/main/config.json) ·

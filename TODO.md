@@ -83,13 +83,51 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   and 6,144 FFN command brackets pass at 3.72 GiB. After accounting
   for the serial T128 Q/K/V waits, remaining engine prefill contributes
   52.95% and 77.09% of observed TTFT variance. FFN submit shifts
-  +11.17 and +4.89 ms with summary enabled across owners. Astra
-  verifies the decomposition. Counterbalance observer admission
-  within a loaded owner next. The original 1.06524% marginal TTFT
-  upper still exceeds the 1% gate.
+  +11.17 and +4.89 ms with summary enabled across owners. The
+  within-owner submission shift changes sign between orders.
+  Focus on native evaluation timing before changing the collector.
+  The original 1.06524% marginal TTFT upper exceeds the 1% gate.
   [Timing control](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-modern-decode-1/timing-control-normal.json) ·
   [LFM3 live diagnostic](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-brackets-1/RUN.md) ·
   [Astra review](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-brackets-1/REVIEW.md).
+- [x] Run the within-owner LFM3 observer crossover. All 64 requests,
+  6,144 FFN brackets and 64 selected summary records pass at
+  3.67 GiB. Active collection shifts TTFT by −18.62 and +2.98 ms,
+  and completion by +8.03 and +16.02 ms. The after-first-token
+  difference falls almost entirely within native decode evaluation.
+  The guarded release build, two schedule tests and dual raw readers
+  pass.
+  [Crossover results](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-observer-crossover-1/run-1/normal.json) ·
+  [After-first-token attribution](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-observer-crossover-1/run-1/post-first-normal.json) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-observer-crossover-1/REVIEW.md).
+- [ ] Evaluate the faster same-weight BF16 LFM3 FFN at its first
+  affected output row. The CPU replay finds 418 changed Down inputs
+  across 125 of 128 rows after canonical SiLU and multiplication.
+  Replay the first affected row through Down, post-FFN RMS and residual
+  against its archived layer anchor before timing a connected block.
+  [Astra proposal and numerical replay](artifacts/mlx-gpu-gap-2026-11-15/astra-lfm3-external-arithmetic-budget-1/PROPOSAL.md).
+- [x] Rank completed Nanbeige T128 GPU work across all four chunks.
+  Across both guarded orders, 12 requests, 14,928 stage pairs and four
+  terminal state witnesses pass at 2.52 GiB. The sampled device clock grows
+  by 2.89–2.97%, with 98.01% named coverage. Projections account for
+  2.16 s in the FFN and 0.85 s for query and attention output. All GQA
+  costs 0.205 s. Seven trace controls and Astra review pass.
+  [Profile and verification](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-profile-1/RUN.md).
+- [x] Price the authentic Nanbeige T128 query and output operands
+  in pinned direct MLX. Both orders reproduce all 1,179,648 output
+  words. The 0.167 s Q/O extrapolation falls below the 0.229 s
+  development screen.
+  [Matched Q/O operands and timing](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-profile-1/price-1/checked-normal.json).
+- [x] Price a 64-token tile for Nanbeige T128 gate/up. Both arms
+  reproduce all 2,752,512 output words with the original K8 order.
+  The wider tile slows all 20 measured pairs. Both orders miss the
+  1.303864 ms development screen and close the experiment.
+  [Static checks and native screen](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-m64-1/RUN.md).
+- [ ] Screen fused Nanbeige Gate/Up and SwiGLU on the same M32 input
+  tile. Share activation loads, retain the exact ordered K8 products
+  and BF16 rounding of both projections, and keep the current Down
+  kernel. Price the new register footprint and materialized buffer
+  savings against the three original dispatches in both orders.
 - [x] Price the remaining Nanbeige gap against the direct MLX GPU graph.
   Both owners reproduce the 32 released IDs on all 26 requests.
   Direct MLX finishes in 3.315–3.316 s versus Toklet's 5.841–5.842 s.
@@ -180,8 +218,17 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   charge of 180,224 bytes per BF16 position. The guarded local
   overlay smoke verifies the 44 regions, all 32 output IDs, zero
   reuse, and 4×128 plus 31×1 scheduled rows at 4.27 GiB peak.
-  vLLM scores 32 retained rows across 35 forwards. Toklet scores
-  35. Matched head work, committed state, and external timing remain open.
+  vLLM scores 32 retained rows across 35 forwards. The published
+  Toklet route scores 35. The Astra-reviewed detached route scores
+  32 rows for fresh one-shot sessions.
+  The guarded 32-row head trial matches all 32 IDs and 44 published
+  Toklet KV prefixes. The vLLM terminal witness retains all 44
+  committed KV sets under 6 GiB. vLLM and direct MLX match both
+  slot-zero decode append planes exactly. Differences first appear
+  in slot one. Isolate the first block's attention and residual
+  boundary on the same inputs, then qualify the numerical envelope
+  before external performance cohorts.
+  [Head work and terminal custody](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-head-state-1/RUN.md).
   [External admission proof](artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-external-admission-1/result.json) ·
   [Logical loop replay](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-double-loop-1/RUN.md) ·
   [Reviewed overlay](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-live-overlay-1/RUN.md) ·

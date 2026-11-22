@@ -124,6 +124,59 @@ and all 32 output IDs. Its vocabulary head scores 32 rows across
 
 ### Prefill attribution and observer timing
 
+On Nanbeige, the detached 512/32 stage run passes all 12 requests,
+14,928 sampled stages and four exact terminal state witnesses at
+2.52 GiB. Two one-encoder controls measure about 3.50 s of GPU
+prefill. Splitting encoders for timestamps increases the GPU clock
+2.89–2.97%, with 98.01% coverage. In both orders the FFN projections
+take about 2.16 s, query and attention output take 0.85 s, GQA takes
+0.205 s and all four vocabulary projections take 50 ms. Astra
+confirms the stage ranking. Seven offline clock and layout controls
+pass. The ranked work determines the next kernel comparison.
+[Stage report](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-profile-1/RUN.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-profile-1/ACTUAL.md).
+
+Direct MLX query and output reproduce all 1,179,648 archived
+Nanbeige BF16 outputs. The combined isolated clock difference
+extrapolates to 0.167 s at 176 visits. That falls below the
+0.229 s development screen. Prior exact MLX FFN clocks leave a
+larger estimated interval of about 0.45 s, making gate and up
+the next connected optimization target.
+[Matched projection clocks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-profile-1/price-1/checked-normal.json).
+
+The detached Nanbeige one-shot path scores 32 rows across 35 forwards.
+It reproduces all 32 IDs and all 44 native terminal cache digests,
+including 543 committed positions and one pending token. The vLLM
+overlay records all 88 K/V plane digests at 3.75 GiB peak guarded
+memory. The two engines' full cache digests differ. Across the
+31 captured append rows, vLLM and independent MLX reproduce both
+slot-zero planes exactly and diverge from slot one. Use that boundary
+for the next arithmetic comparison. The captures establish matching
+work and state coverage for these samples. Native model qualification
+and external performance remain open.
+[One-shot and terminal checks](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-head-state-1/RUN.md) ·
+[Sealed vLLM report](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-head-state-1/live-normal.json).
+
+The Nanbeige M64 gate/up experiment halves the logical Q4 reconstruction
+count and matches all 2,752,512 BF16 words in each arm. Completed paired
+GPU medians rise from 8.38–8.39 to 8.92–8.93 ms, with all 20 pairs
+slower. Strict Clippy, release build, both analytical bases, nonfinite
+and canary controls, dual readers and Astra review support closing
+the experiment.
+[Wider tile screen](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-m64-1/RUN.md).
+
+The LFM3 same-owner crossover records 64 requests, 6,144 command
+brackets and exactly 64 enabled summary records at 3.67 GiB. Active
+collection shifts mean TTFT by −18.62 and +2.98 ms in the two orders.
+Completion shifts +8.03 and +16.02 ms. After first token, native
+evaluation accounts for +26.71 and +12.95 ms. Completed decode FFN
+GPU time contributes +14.01 and +10.37 ms. The engine's other
+after-first-token work differs by at most 0.13 ms. This
+attribution keeps the original 1% request-summary gate open.
+[Balanced crossover](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-observer-crossover-1/run-1/normal.json) ·
+[Decode components](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-observer-crossover-1/run-1/post-first-normal.json) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-observer-crossover-1/REVIEW.md).
+
 The Nanbeige T128 layer-zero GQA baseline verifies 2,621,440 K/V
 words and all 104 timed outputs. The four-cut median sum falls
 from 6.203 ms to 4.654 ms when run in reverse order. The reverse
