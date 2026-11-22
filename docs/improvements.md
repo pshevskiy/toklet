@@ -603,6 +603,12 @@ prefix. Exact retry and the following T1 match. Astra approves this scope.
 The frozen numerical and timing runs await AC with Low Power Mode off.
 [Scan fusion](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-qkv-scan-fusion-prep-1/RUN.md).
 
+The offline summary diagnostic verifies four disabled owners per model.
+Matching request ordinals leaves prefill drift, with inconsistent rank
+associations for preceding decode. Both readers and Astra review pass.
+The original fixed-N summary qualification remains open.
+[Summary diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-o4-owner-conditioning-1/RUN.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

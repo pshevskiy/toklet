@@ -372,6 +372,11 @@ frozen full-tape witness, then price ordinary completions in both orders
 once AC power is connected and Low Power Mode is off.
 [Scan fusion](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-qkv-scan-fusion-prep-1/RUN.md).
 
+Archived disabled owners still show native prefill drift after matching
+ordinals. Neither ordinal nor previous decode predicts it consistently.
+Keep the original warmup count and paired and marginal 1% bounds.
+[Summary diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-o4-owner-conditioning-1/RUN.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).
