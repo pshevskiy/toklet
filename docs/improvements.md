@@ -578,6 +578,12 @@ Scoped checks, same-source witness and Astra review pass.
 [Ordinary route checks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-cli-prep-1/RUN.md) ·
 [Timing screen](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-cli-prep-1/SCREEN.md).
 
+Both fresh Nanbeige orders pass the vLLM completion gate with 6.01% and
+6.19% lower medians. Ollama leads by 3.87% and 3.82% relative to its own
+medians. All 78 requests and six guards pass, at a maximum 5.18 GiB.
+The overall completion and request-summary overhead gates remain open.
+[Matched cohorts](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-cohorts-1/RESULT.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

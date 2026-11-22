@@ -347,6 +347,13 @@ retaining it on latency. Measure summary overhead independently.
 [Ordinary route checks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-cli-prep-1/RUN.md) ·
 [Timing screen](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-cli-prep-1/SCREEN.md).
 
+The fresh private MLX cohorts pass the 5% gate against vLLM. Against Ollama,
+Toklet adds 139–141 ms to TTFT and saves 11–14 ms in decode. A 5% completion
+win needs about 290 ms off Toklet's current 3.414–3.415 s medians. Profile
+completed T128 prefill first and test final-chunk fused gate/up as an
+isolated change. Preserve the fixed tape and qualify summary overhead separately.
+[Matched cohorts](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-cohorts-1/RESULT.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).
