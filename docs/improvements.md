@@ -691,6 +691,22 @@ Metal Clippy, locked release linking and the geometry test pass. Astra
 approves the block. Blocks 0 and 9 cover 1,808 of 10,000 original targets.
 [Gemma block 9 proof](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block9-1/RESULT.md).
 
+The remaining Gemma loss trial matches block 1, then stops after the first
+cut of block 2. The two-cut witness isolates one masked layer-11 score.
+The ordered binary64 sum crosses the FP32 midpoint while the Metal
+expansion rounds the exact dot to the other adjacent word. Input, probability,
+context and committed K/V checks match. The strict score gate fails.
+[Astra diagnosis](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block2-audit-1/ACTUAL-REVIEW.md).
+
+The test-only ordered CPU score and Metal context variant reproduces all
+64 archived rows, passes 30 all-plane checks and preserves the committed
+prefix through two malformed requests. The guarded peak is 4.48 GiB.
+Formatting, strict Metal Clippy, locked release, geometry and eight CPU
+span tests pass. Astra approves the scoped proof. Public latency and full
+quality qualification remain open.
+[Astra repair review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block2-repair-1/ACTUAL-REVIEW.md) ·
+[Repair proof](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block2-repair-1/trial-1/normal.json).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

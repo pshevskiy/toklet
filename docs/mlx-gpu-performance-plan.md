@@ -453,6 +453,15 @@ and a C567 test probe that checks actual per-cut backing and route counts
 while preserving prompt, greedy and stop behavior.
 [Gemma block 9 proof](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block9-1/RESULT.md).
 
+Gemma block 2 exposes a CPU/Metal score rounding mismatch in T32. Preserve
+the bitwise score gate for every cell. The ordered CPU scorer with Metal
+context passes the exact two-cut witness and rollback checks. Measure the
+detached public 384/128 route against CPU attention before repeating the
+remaining loss blocks. Rebind the repaired source for the original C567
+task pilot, teacher replay and grading after the timing screen.
+[C567 conditional review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-task-quality-1/REVIEW.md) ·
+[Repair proof](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block2-repair-1/trial-1/normal.json).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

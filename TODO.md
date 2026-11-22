@@ -12,12 +12,6 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   gates in both orders. Both readers validate 78 requests at 5.58 GiB
   guarded peak. Astra’s raw-data review passes.
   [Integrated timing](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-integrated-cohorts-1/RESULT.md).
-- [x] **T1 trial** — Consumer checks preserve exact scores and K/V and
-  pass 21 injected faults, cancellation and retry. The 52-request price
-  misses the 60 ms headroom screen in both orders. Astra retains standalone
-  scans and the existing dense-tail route.
-  [T1 finite-check A/B](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-t1-consumer-scan-1/RUN.md) ·
-  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-t1-consumer-scan-1/ACTUAL-REVIEW.md).
 - [x] **LFM3 O4 control** — All eight disabled owners pass the 12 original
   timing limits at 3.72 GiB guarded peak. The highest upper bound is 0.96339%.
   Astra verifies the raw clocks, all 64 exact generations and zero exports.
@@ -27,9 +21,20 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   the terminal row and 300 K/V planes. The 25 cuts include the late T17
   fallback and 240 early Metal visits. Astra approves the isolated block.
   [Gemma block 9 proof](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block9-1/RESULT.md).
-- [ ] **Next** — Complete Gemma loss blocks 1–8 and the original 100 tasks.
-  Preserve the original paired and marginal 1% summary gates for fresh
-  enabled/disabled qualification after an evidenced change.
+- [x] **Gemma block 2 diagnosis** — The multi-block run matches block 1
+  before failure. The two-cut replay isolates one masked layer-11 score
+  where ordered binary64 CPU summation and the Metal expansion round differently.
+  All probabilities, context and 15 committed K/V pairs match.
+  [Astra diagnosis](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block2-audit-1/ACTUAL-REVIEW.md).
+- [x] **Gemma repair proof** — The ordered CPU score and Metal context
+  control matches the first 64 archived rows, 30 all-plane checks and
+  both malformed-request rollback checks. Astra approves the test-only proof.
+  [Astra repair review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block2-repair-1/ACTUAL-REVIEW.md).
+- [ ] **Next** — Bind the repaired route to a detached CLI and price it
+  against CPU attention before broader qualification. The aggregate loss,
+  original 100 tasks and the actual 1% summary gate remain open.
+  [Public timing plan](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-context-public-screen-1/RUN.md).
+  [C567 conditional review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-task-quality-1/REVIEW.md).
 
 ## Recent implementation and evidence
 
