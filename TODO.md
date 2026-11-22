@@ -30,13 +30,14 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   All archived rows match. Mean NLL is 9.964929 versus official 9.995776,
   with 11,270 actual tiled calls and a 4.51 GiB guarded peak. Astra approves.
   [Tiled loss review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-quality-1/ACTUAL-REVIEW.md).
-- [x] **C567 pilot** — Three original task trajectories match all 66
-  sampled IDs in a fresh scalar replay, including hidden stops. Astra
-  verifies 2,625 tiled visits and clean guards at 4.52 GiB peak.
-  [C567 pilot review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-quality-1/PILOT-ACTUAL-REVIEW.md).
-- [ ] **Next** — Complete 97 remaining task generations, independent replay
-  of the full tape and the isolated grade. Independent warmed timing and
+- [x] **C567 full task gate** — A fresh scalar owner matches all 4,149
+  decisions. Isolated grading completes all 100 cases at 51/100 versus
+  official 52/100, within the two-point limit. Astra verifies full custody.
+  [C567 task result](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-quality-1/TASK-RESULT.md).
+- [ ] **Next** — Run the approved independent warmed timing for the
+  tiled route. Production integration, matched peer comparisons and
   the original 1% summary verification remain open.
+  [Warmed launch review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-public-warmed-1/REVIEW.md).
 
 ## Recent implementation and evidence
 

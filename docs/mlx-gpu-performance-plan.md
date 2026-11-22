@@ -506,6 +506,16 @@ tape, including the hidden stops. Bind the remainder and grade to this
 build, the candidate owners and the independent replay.
 [C567 pilot review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-quality-1/PILOT-ACTUAL-REVIEW.md).
 
+The tiled build passes the original task gate at 51/100 versus 52/100
+after exact independent replay of 4,149 decisions. The same detached
+build already passes the 10,000-target loss gate. Run the reviewed
+reversed warmed timing plan, then verify the proposed production binding
+on both Gemma submission policies and preserve the original 1% campaign.
+The LFM3 prefill attribution is separately staged for a guarded run.
+[Warmed launch review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-public-warmed-1/REVIEW.md) ·
+[LFM3 attribution review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-release4b-prefill-attribution-1/REVIEW.md) ·
+[C567 task result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-quality-1/TASK-RESULT.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

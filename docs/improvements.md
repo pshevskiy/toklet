@@ -754,6 +754,15 @@ visits and clean guards at 4.52 GiB peak. The remaining 97 generations,
 full replay and isolated grade stay open.
 [C567 pilot review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-quality-1/PILOT-ACTUAL-REVIEW.md).
 
+The same tiled release test binary completes the original 100 cases.
+All fresh task trajectories match the scalar archive, and an independent
+scalar owner matches all 4,149 sampled decisions. Canonical assembly
+recovers from a Python import collision without repeating inference.
+The isolated grader gives 51/100 versus official 52/100, within the
+two-point limit. Astra verifies all cases and the stopped guest state.
+[Task actual review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-quality-1/TASK-ACTUAL-REVIEW.md) ·
+[C567 task result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-quality-1/TASK-RESULT.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all
