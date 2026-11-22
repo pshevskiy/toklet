@@ -372,8 +372,14 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   and the captured V exactly matches the archived native operator.
   The detached build passes after the guard and two compile retries.
   Targeted rustfmt passes. Whole-package formatting needs the omitted
-  test fixture. Astra approves the trace. Next reproduce the MLX K/V dispatcher on identical
-  T128 inputs and screen charged three-panel projection reuse.
+  test fixture. Astra approves the trace. The MLX 0.32.4 split-K replay
+  now matches both T128 panels bitwise, and both readers reproduce
+  the ordered FP32 merge. Formatting, strict Clippy and the guarded
+  offline build and replay pass after the sandbox retry. Astra clears
+  both probes. Ordinary T384 MLX matches today's Toklet output on
+  repeated input and changes the T128 reference. Next test connected
+  split-K and preserve its partition order in the batching screen.
+  [K/V and shape evidence](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
   [First native divergence](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json) ·
   [Astra review](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/REVIEW.md).
   [Three-engine diagnostic](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

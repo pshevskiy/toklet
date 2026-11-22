@@ -459,6 +459,16 @@ the observed K/V attribution. Q is outside the capture.
 [Array comparison](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json) ·
 [Guarded capture and checks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/NATIVE.md) ·
 [Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/REVIEW.md).
+
+The detached MLX 0.32.4 split-K replay matches all 262,144 combined
+BF16 K/V words. The native control reproduces the original 14 and
+26 mismatches. The independent FP32 merge, canaries, formatting,
+strict Clippy and offline build all pass. The T384 repeated-input
+control instead matches native T128 K/V in all three copies. Astra
+approves the numerical evidence. Both physical guards pass. This
+tests the projection pair and shape choice on one authentic input.
+[Replay and checks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md) ·
+[Evidence seal](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/outer.json).
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

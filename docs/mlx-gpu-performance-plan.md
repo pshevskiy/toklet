@@ -230,6 +230,14 @@ The first native T128 embedding and RMSNorm match the peers bitwise.
 The ordinary tiled K/V stage differs by 14/26 BF16 words before RoPE
 on identical normalized operands. Match the MLX 0.32.4 projection
 dispatcher first, then compare later boundaries on shared inputs.
+The pinned affine split-K and ordered merge reproduce both T128
+panels exactly on shared operands. M=384 selects the ordinary
+non-split path. Repeating the authentic T128 activation three times
+then reproduces native Toklet K and V, including the 14 and 26 words
+that differ from the T128 oracle. Preserve the four partitions and
+single final BF16 rounding in any batching test. Confirm connected
+cache and residual state before using a speed result for admission.
+[K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).
 [Native admission results](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/RUN.md) ·
