@@ -361,7 +361,14 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   After retiring download and compiler caches, the guarded release build
   and five untimed owners pass. Both readers agree on the 32 retained
   scores, sampled IDs and 44 terminal K/V pairs at 5.10 GiB peak.
-  Independent review of the actual run and external arithmetic remain open.
+  Astra verifies the actual run and scope. All 32 IDs agree with MLX,
+  while 0 of 32 logit digests and 0 of 44 terminal pairs agree. The
+  detached timing build passes release and three tape/CLI rejection
+  checks after a sandbox guard retry. Both readers verify 78 guarded
+  requests at 5.17 GiB peak. Toklet completes in 4.506–4.546 s,
+  behind Ollama by 0.768–0.801 s. TTFT accounts for about 75% of
+  that gap. Prioritize T128 prefill and the first arithmetic divergence.
+  [Three-engine diagnostic](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).
   [Verified witness](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-head32-1/witness-normal.json) ·
   [Disk recovery](artifacts/mlx-gpu-gap-2026-11-15/root-head32-storage-recovery-2.json) ·
   [Detached source review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-head32-1/REVIEW.md) ·

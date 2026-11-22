@@ -216,6 +216,17 @@ against the faster private engine. Recompute these ceilings with
 fresh peers in Toklet's joined timing cohorts. Use the TTFT and decode
 split to guide T128 and T1 work on the admitted native schedule.
 [Matched private clocks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-timing-1/normal.json).
+
+The reversed three-engine timing diagnostic measures Toklet completion
+at 4.506–4.546 s, Ollama at 3.738–3.745 s and vLLM at 4.081 s.
+Toklet's extra 574–596 ms to first ID explains about 75% of its
+completion gap to Ollama. Decode takes 192–205 ms longer than
+Ollama and 90–98 ms less than vLLM. This session's 5% threshold against
+Ollama is 3.551–3.558 s. Use the faster prior peers as a sensitivity
+check. Prioritize T128 prefill and match early cache and logit arithmetic
+against the joined peers. The diagnostic joins all IDs and none of the
+native terminal K/V or logit digests. It leaves qualification open.
+[Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).
 [Native admission results](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/RUN.md) ·
 [External numerical review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/ACTUAL-REVIEW.md) ·
 [First head witness and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-first-head-shape-1/ACTUAL-REVIEW.md) ·

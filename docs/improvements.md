@@ -436,6 +436,18 @@ The dual readers agree. Setup clocks retain engine-specific boundaries,
 and vLLM's private runtime validation remains inside its request clock.
 [Cohorts](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-timing-1/normal.json) ·
 [Astra launch review](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-timing-1/REVIEW.md).
+
+Astra clears the detached Toklet 32-score worker for diagnostic timing.
+Six fresh owners return 78 requests with the same 32 sampled IDs in
+both reversed orders. Toklet completes in 4.506–4.546 s at 5.17 GiB
+peak, versus Ollama's 3.738–3.745 s at 3.52 GiB and vLLM's 4.081 s
+at 3.92 GiB. Toklet's first ID arrives 574–596 ms after Ollama's,
+about 75% of the completion gap. Its decode is faster than vLLM's
+and slower than Ollama's in both orders. The native witness has zero
+matching scored-logit and terminal K/V digests against MLX. The native
+final prefill head scores one logical row through its tiled kernel.
+[Cohorts](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json) ·
+[Astra launch review](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/REVIEW.md).
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all
