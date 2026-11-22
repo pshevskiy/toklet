@@ -16,7 +16,8 @@ commit completed tasks and keep [docs/improvements.md](docs/improvements.md) cur
   criteria and targeted code/diffs; link completed history rather than repeating it.
 - Start each continuation from TODO's short checkpoint. Give agents the task,
   invariants and evidence paths they need. Keep tool output and handoffs to the
-  findings, check counts and blockers, with full logs in artifacts.- Read `docs/archive/` only when a current task needs specific historical evidence.
+  findings, check counts and blockers, with full logs in artifacts.
+- Read `docs/archive/` only when a current task needs specific historical evidence.
   Exclude it from broad content searches; open raw artifacts by their linked
   evidence paths instead of recursively inventorying the artifact directory.
 - Submit each code task to Astra with its diff, invariants and check results in
