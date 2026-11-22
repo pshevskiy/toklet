@@ -469,6 +469,20 @@ replay and full task grade. Require the original independent timing
 cohorts before a latency claim beyond the single pair.
 [Public timing result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-context-public-screen-1/RESULT.md).
 
+The repaired corpus rejects Metal context at a visible midpoint tie.
+Test contiguous V feature tiling in canonical CPU attention, keeping an
+independent scalar reference and the same ascending key order for each
+feature. Use authentic D256 and D512 spans, the captured dot and the failed
+cut before fresh public timing. Hold C567 until a successor passes the
+strict numerical gate.
+[Corpus review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-repaired-corpus-1/ACTUAL-REVIEW.md).
+
+The first CPU tile screen passes all archived D256 and D512 context
+words and the block-6 midpoint. It lowers isolated medians 67.25% and
+67.97%. Check the integrated failed cut and price a fresh public pair
+before broader qualification.
+[CPU tile review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-tile-1/ACTUAL-REVIEW.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

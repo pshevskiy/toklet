@@ -714,6 +714,20 @@ match all output IDs and final state at a 4.66 GiB guarded peak. Astra
 confirms the one-pair result, strict Metal Clippy and fresh release link.
 [Public timing result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-context-public-screen-1/RESULT.md).
 
+The ten-block rerun rejects the timed Gemma variant. The owner matches
+6,240 original target records and six terminal rows, then fails on one
+visible context word in block 6. The same 101 products put the exact dot
+just below the FP32 midpoint and the ordered binary64 sum on it.
+Astra verifies both results and clean process teardown at 4.52 GiB. Hold the
+C567 pilot and retain the original score and context gates.
+[Corpus review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-repaired-corpus-1/ACTUAL-REVIEW.md).
+
+CPU context tiling matches all 196,608 published D256 and D512 words and
+the captured block-6 dot. Twelve warmed alternating pairs give medians
+of 21.925 to 7.180 ms and 43.685 to 13.990 ms at those shapes. Astra
+approves the 81.2 MB guarded operator result. End-to-end timing is open.
+[CPU tile review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-tile-1/ACTUAL-REVIEW.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all
