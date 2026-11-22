@@ -534,6 +534,14 @@ words, all 176 prefill K/V pairs and all 32 IDs. Native and pinned MLX
 attention match on common inputs. Full decode parity remains open.
 Scoped checks, both hardware guards and Astra review pass.
 [Decode bias and attention replay](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-bias-1/RUN.md).
+
+Separate guarded halves and SwiGLU replays match all 8,192 Q/K/V and 10,752
+SwiGLU words in the first decode. The best run matches 34/1,364 appends.
+All 31 decode score rows and 44 terminal K/V pairs differ. Astra approves
+the detached evidence. Strict checks and both 512/32 Metal replays pass.
+[Halves](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-halves-1/native/RUN.md) ·
+[SwiGLU](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-swiglu-1/native/RUN.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

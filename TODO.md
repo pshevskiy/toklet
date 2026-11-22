@@ -8,13 +8,14 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
-- **Current** — Nanbeige4.2-3B Q4/G64 on M1 Pro. The detached T1 FP32 bias
-  probe matches 8,191/8,192 first-decode projection words, 176/176 prefill K/V
-  pairs and 32/32 IDs. All 31 decode score rows and all 44 terminal K/V pairs
-  still differ from MLX. Scoped checks, both guards and Astra review pass.
-- **Next** — Verify the halves reduction in the connected T1 path, then inspect
-  the first divergent K/V owner. Keep the matched 512/32 tape and 6 GiB gate.
-  [Probe and checks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-bias-1/RUN.md).
+- **Current** — Nanbeige4.2-3B Q4/G64 on M1 Pro. Halves reduction and rounded
+  SwiGLU match all first-decode Q/K/V and SwiGLU words, 176 prefill pairs and
+  32 IDs. The first mismatched append is owner 5 at position 512. All 31 decode
+  score rows and 44 terminal pairs differ. Both guards and Astra review pass.
+- **Next** — Replay eligible T1 projections with pinned `qmv_fast`. Retain
+  finite checks and the 512/32 tape, then target the first divergent owner.
+  [Halves](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-halves-1/native/RUN.md) ·
+  [SwiGLU](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-swiglu-1/native/RUN.md).
 
 ## Recent implementation and evidence
 

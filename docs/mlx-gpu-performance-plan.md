@@ -300,6 +300,15 @@ replay identifies the halves reduction. Native and pinned MLX attention
 match all 6,144 words when their visible inputs match. Verify the halves
 reduction in Metal and trace the second cache owner at the first decode.
 [Decode bias and attention replay](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-bias-1/RUN.md).
+
+The halves reduction makes first-decode Q/K/V exact through gate and up.
+Rounded T1 SwiGLU makes all 10,752 down inputs exact. One down output word
+differs and the residual is exact. First append divergence moves to owner 5.
+Screen pinned `qmv_fast` on every eligible T1 projection before another
+operator substitution. Preserve prefill scoring, finite checks and rollback.
+[Halves](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-halves-1/native/RUN.md) ·
+[SwiGLU](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-swiglu-1/native/RUN.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).
