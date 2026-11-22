@@ -437,6 +437,14 @@ checks and the integrated dense-tail route. The original 1% observations
 remain a separate qualification.
 [T1 finite-check A/B](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-t1-consumer-scan-1/RUN.md).
 
+The LFM3 control measures baseline resolution at the original 512/32
+work and unchanged public clocks. All 12 timing checks pass across eight
+disabled owners. The tightest marginal TTFT upper is 0.96339%, and the
+paired upper in that cell is 0.95948%. The original actual 1.06524% bound
+still misses. Require independently evidenced improvement and a fresh
+real enabled/disabled comparison with the original tape, exports and gates.
+[LFM3 control review](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-sham-readiness-1/ACTUAL-REVIEW.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

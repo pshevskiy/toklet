@@ -18,10 +18,15 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   scans and the existing dense-tail route.
   [T1 finite-check A/B](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-t1-consumer-scan-1/RUN.md) ·
   [Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-t1-consumer-scan-1/ACTUAL-REVIEW.md).
-- [ ] **Next** — Keep dense tail with prepacking. Qualify the original
-  paired and marginal 1% summary bounds separately. The original run
-  needs 5 GiB free.
-  [Summary diagnostic](artifacts/mlx-gpu-gap-2026-11-15/root-o4-owner-conditioning-1/RUN.md).
+- [x] **LFM3 O4 control** — All eight disabled owners pass the 12 original
+  timing limits at 3.72 GiB guarded peak. The highest upper bound is 0.96339%.
+  Astra verifies the raw clocks, all 64 exact generations and zero exports.
+  The actual enabled/disabled result remains 1.06524% against the 1% gate.
+  [LFM3 control](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-sham-readiness-1/ACTUAL-REVIEW.md).
+- [ ] **Next** — Complete the in-flight original Gemma loss block 9 test.
+  Preserve the original paired and marginal 1% summary gates for a fresh
+  enabled/disabled qualification after an evidenced change.
+  [Gemma block 9 plan](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block9-1/REVIEW.md).
 
 ## Recent implementation and evidence
 

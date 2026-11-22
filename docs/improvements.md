@@ -675,6 +675,14 @@ integrated dense-tail prepack route with standalone T1 checks.
 [Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-t1-consumer-scan-1/ACTUAL-REVIEW.md) ·
 [T1 finite-check A/B](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-t1-consumer-scan-1/RUN.md).
 
+The LFM3 all-disabled control passes all 12 original 1% limits. Astra
+reconstructs 64 resets and 64 generations over eight fresh owners with zero
+exports. The largest upper bound is 0.96339% for reverse-order TTFT.
+Peak guarded charge is 3.72 GiB. Native prefill accounts for most of the
+nominal TTFT shifts. The prior enabled/disabled marginal TTFT upper is
+1.06524%. A real comparison after an evidenced change still needs all gates.
+[LFM3 control review](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-sham-readiness-1/ACTUAL-REVIEW.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all
