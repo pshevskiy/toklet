@@ -294,14 +294,17 @@ that exact allocation at 5.06 GiB peak. Allocation and prepare take 0.658 s
 in total in that fit, with terminal and fallback state matching exactly.
 Ordinary completion improves 11.72% and 11.38% at 5.16 GiB peak.
 Both paired decode intervals show a slowdown, with median increases of
-16.47 and 13.23 ms. Hold the route. Use one binary to compare fresh
-packed-only and dense-resident packed-prefill owners. Within the latter
-owners, vary prefill with the same resident weights and T1 graph. These
-contrast resident footprint and preceding computation for attribution.
+16.47 and 13.23 ms. Hold the route. The 104-request same-binary study
+finds a decode slowdown of 16.92 and 20.58 ms at fixed residency when
+dense prefill runs. The residence-only effect changes sign. Hold 22
+pairs resident and test the first three chunks dense with the fourth
+packed. This tests whether the work immediately preceding decode is
+enough to account for the slowdown. Preserve the existing release gates.
 [Detached layout and numerical checks](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-gate-up-1/RUN.md) ·
 [Isolated timings](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-gate-up-1/normal-2.json) ·
 [Guarded model fit](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/fit-normal.json) ·
-[Ordinary timings and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/REVIEW.md).
+[Ordinary timings and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/REVIEW.md) ·
+[Same-binary contrasts and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-causal-1/REVIEW.md).
 
 For request-summary qualification, compare the same CLI output mode with
 summary collection enabled and disabled. Keep counters at existing completion

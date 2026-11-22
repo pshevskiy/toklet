@@ -187,9 +187,17 @@ The dense connected requests finish in 4.076 and 4.086 s versus
 4.618 and 4.611 s. First token arrives about 0.56 s sooner. All 52
 requests and four terminal witnesses match, with 5.16 GiB peak.
 Decode is slower in all 20 measured pairs, with median increases of
-16.47 and 13.23 ms. Keep the candidate detached pending one bounded
-diagnostic of resident weight footprint and preceding prefill work.
+16.47 and 13.23 ms. The candidate remains detached.
 [Ordinary results and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/REVIEW.md).
+
+The same-binary follow-up passes all 104 exact requests at 5.17 GiB
+peak. At fixed residency, dense prefill adds 16.92 and 20.58 ms of
+decode at the paired medians. Both intervals show a slowdown. With
+packed prefill in both arms, the residence-only paired median changes
+sign between orders. The next isolated change keeps the final prefill
+chunk packed before starting the same T1 decode path.
+[Timing contrasts and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-causal-1/REVIEW.md) ·
+[Owner custody](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-causal-1/custody-normal.json).
 
 The first same-weight LFM3 FFN replay changes 27 of 2,048
 canonical residual words on the first affected row and fails

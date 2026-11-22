@@ -189,12 +189,17 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   at 5.16 GiB peak. Completion improves 11.72% and 11.38%, with
   paired lower savings of 11.11% and 10.72%. Decode slows by
   16.47 and 13.23 ms, with both paired intervals entirely slower.
-  Hold adoption. The next diagnostic compares reserved dense weights
-  with and without use of the dense prefill path in the same binary.
+  Hold adoption. All 104 same-binary attribution requests pass. The
+  residence-only decode effect changes sign. With 22 pairs resident in
+  both arms, dense prefill adds 16.92 and 20.58 ms at the paired medians.
+  Test one variant with the final T128 chunk packed and the first three
+  dense. Keep the ordinary completion and decode gates.
   [Guarded model fit](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/fit-normal.json) ·
   [Compiled T1 graph](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/ARM64-REVIEW.md) ·
   [Ordinary timings](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/normal.json) ·
-  [Astra connected review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/REVIEW.md).
+  [Astra connected review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/REVIEW.md) ·
+  [Decode attribution and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-causal-1/REVIEW.md) ·
+  [Staged final-chunk test](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-tail-packed-1/RUN.md).
 - [x] Price the remaining Nanbeige gap against the direct MLX GPU graph.
   Both owners reproduce the 32 released IDs on all 26 requests.
   Direct MLX finishes in 3.315–3.316 s versus Toklet's 5.841–5.842 s.
