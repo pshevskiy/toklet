@@ -8,12 +8,14 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
-- [x] **Current** — Nanbeige4.2-3B Q4/G64 matches all 32 BF16 scores, all 32
-  IDs, 176 prefill pairs, 1,364 decode appends and 44 terminal pairs on the
-  pinned 512/32 tape. Scoped checks, hardware guard and Astra review pass.
-- [ ] **Next** — Verify the ordinary CLI and timing worker on the same kernels
-  with snapshots disabled. Check rollback before timing the qualified route.
-  [Complete decode comparison](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-rms-wheel-1/RUN.md).
+- [x] **Current** — The detached Nanbeige4.2-3B Q4/G64 CLI matches all 32 IDs.
+  SIGINT preserves the committed prefix. The same-source witness matches all
+  32 scores and 44 terminal pairs. Astra approves the frozen route. The native
+  3+10 screen measures 2.539 s TTFT, 0.851 s decode and 3.391 s completion.
+- [ ] **Next** — Run fresh matched Ollama and vLLM cohorts in both orders under
+  the 6 GiB cap. The 5% latency and 1% summary-overhead gates remain open.
+  [Ordinary route checks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-cli-prep-1/RUN.md) ·
+  [Timing screen](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-cli-prep-1/SCREEN.md).
 
 ## Recent implementation and evidence
 

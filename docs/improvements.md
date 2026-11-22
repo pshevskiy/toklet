@@ -571,6 +571,13 @@ finite checks and cache publication. Checks, 5.06 GiB guard and Astra
 review pass. Ordinary CLI and timing qualification remain open.
 [Complete decode comparison](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-rms-wheel-1/RUN.md).
 
+The ordinary detached CLI uses the exact Nanbeige kernels with snapshots
+disabled. It matches 32 IDs and preserves the prefix at first-flush SIGINT.
+The native 3+10 screen measures 3.391 s median completion at 5.16 GiB.
+Scoped checks, same-source witness and Astra review pass.
+[Ordinary route checks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-cli-prep-1/RUN.md) ·
+[Timing screen](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-cli-prep-1/SCREEN.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

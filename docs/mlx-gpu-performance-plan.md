@@ -339,6 +339,14 @@ disabled. Verify cache and rollback invariants, screen native latency, and
 then compare fresh peers under the original warmup and reversed-order rules.
 [Complete decode comparison](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-rms-wheel-1/RUN.md).
 
+The ordinary fixed lane passes the ID and cancellation smoke and preserves
+the numerical witness. A native-only owner measures 2.539 s TTFT, 0.851 s
+decode and 3.391 s completion. Earlier peer clocks are historical context.
+Qualify the route against fresh joined Ollama and vLLM cohorts before
+retaining it on latency. Measure summary overhead independently.
+[Ordinary route checks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-cli-prep-1/RUN.md) ·
+[Timing screen](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-cli-prep-1/SCREEN.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).
