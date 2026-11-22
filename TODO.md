@@ -91,14 +91,21 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   example protocol in the detached Clippy inputs. Astra verifies the
   append-only repair restores 16 exact tracked inputs. The next build
   reaches the library test and stops because Serde needs a slice for
-  the new 35-visit diagnostic. Apply the slice conversion and repeat
-  strict checks before the first scored block.
+  the new 35-visit diagnostic. After the reviewed slice conversion,
+  formatting, strict Clippy, fresh release linking and the targeted
+  geometry test pass. The first 1,024 targets, terminal row and eight
+  full anchors match bitwise. All 90 archived chronological K/V
+  plates match. The route census gives 240 Metal and 915 CPU visits
+  at 4.45 GiB peak. The remaining nine blocks, task suite, public
+  prefill cancellation and independent ordinary cohorts are open.
   [Public pair and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-current-1/ACTUAL-REVIEW.md) ·
   [Longer-context source review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-1025-1/REVIEW.md) ·
   [Initial guard exit](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-1025-1/build-1/fmt/result.json) ·
   [Detached Clippy failure](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-1025-1/build-2/clippy/stderr.log) ·
   [Input repair and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-1025-1/REPAIR-REVIEW.md) ·
-  [Library-test Clippy failure](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-1025-1/build-3/clippy/stderr.log).
+  [Library-test Clippy failure](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-1025-1/build-3/clippy/stderr.log) ·
+  [Compiler fix and review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-1025-1/COMPILE-FIX-REVIEW.md) ·
+  [First scored block and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-1025-1/ACTUAL-REVIEW.md).
 - [ ] Measure bounded request-summary overhead through the original
   protocol. A same-binary replay of the two published Nanbeige owners
   gives a maximum paired or marginal upper drift bound of 0.07581%
@@ -333,15 +340,17 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   reproduce the frozen IDs. Terminal logit and K/V witnesses match.
   Strict Metal Clippy, fresh builds and all four fit/fault/alternate
   owners pass under 5.18 GiB. Linked T1 bypasses both QMM checks.
-  Build a one-symbol library from the pinned MIT-licensed MLX source.
-  Verify its Apple7 capability, ABI and exact operator parity against
-  the measured wheel before product wiring and repeat qualification.
+  The pinned upstream build emits a 13,472-byte single-kernel library.
+  It passes exact isolated Q/O/Down outputs on the M1 Pro and both
+  signed arithmetic and nonfinite controls. Connect this image to the
+  actual Rust CLI opt-in and repeat fit, state and ordinary checks.
   The separate Gate/Up replacement misses the offline latency budget.
   Closing the remaining conditional external gap needs 2.84 ms for
   the complete pair, versus 6.43 ms for the bare archived MLX calls.
   [Detached connected runbook](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/RUN.md) ·
   [Astra fit and linked-path review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/FIT-REVIEW.md) ·
   [Ordinary cohorts and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/ACTUAL-REVIEW.md) ·
+  [Single-kernel parity and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-one-symbol-1/ACTUAL-REVIEW.md) ·
   [Gate/Up latency screen](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-gate-up-screen-1/SCREEN.md).
 - [x] Price the remaining Nanbeige gap against the direct MLX GPU graph.
   Both owners reproduce the 32 released IDs on all 26 requests.
@@ -452,9 +461,11 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   explains all 36,106 differences at the first score. Projection after
   selecting one row reproduces the live difference. Projection on the
   same 128-row panel reproduces all 166,144 independent oracle words.
-  Time the private dense worker only after an untimed 32-head replay
-  joins exact head work and state to the comparison owner. Keep
-  diagnostic shadows outside ordinary timing.
+  The shadow-free direct MLX and private vLLM witnesses now match all
+  32 scores and both 44-owner cache snapshots at 3.18 and 3.86 GiB.
+  Retain dense route selection independently of observation in the
+  lean worker before timing either order. Qualify the current native
+  32-head opt-in separately before an external performance comparison.
   The separately guarded local vLLM timing diagnostic completes
   26 requests at 3.539–3.540 s median completion, 2.489 s first
   ID, and 3.76 GiB peak. The tested Toklet owners score more rows
@@ -476,6 +487,8 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   The guarded retry builds the exact patched Go binary and native Metal
   companions. Their hashes and CMake and Go identity are sealed. Measured
   free disk clears the private import preflight after cache retirement.
+  Retiring the private Go download cache recovers another 427 MiB
+  after rehashing the five retained native build files.
   The private import verifies all 513 tensor spans and four codec files.
   The untimed raw replay checks all 32 greedy IDs, 35 scored rows and
   44 cache owners at 3.47 GiB. Full terminal K/V hashes differ in all 44
@@ -492,6 +505,7 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   [Full dense diagnostic source review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-full-dense-attention-1/REVIEW.md) ·
   [Guarded dense diagnostic](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-full-dense-attention-1/normal-1.json) ·
   [Head shape diagnostic and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-first-head-shape-1/ACTUAL-REVIEW.md) ·
+  [Matched MLX and vLLM work and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-mlx-matched-32-1/ACTUAL-REVIEW.md) ·
   [Ollama terminal numeric comparison](artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/TERMINAL-NUMERIC.md) ·
   [Astra external numerical review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/ACTUAL-REVIEW.md).
   [External admission proof](artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-external-admission-1/result.json) ·
@@ -504,6 +518,7 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   [Verified Metal compiler](artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/xcode-metal-compiler-verified.json) ·
   [Exact guarded fork build](artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/build-receipt.json) ·
   [Disk fit and scoped reclaim](artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/go-cache-retired.json) ·
+  [Post-build download cache reclaim](artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/go-module-cache-retired-after-build.json) ·
   [Verified private import](artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/import-1/verified.json) ·
   [Actual raw replay](artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/trial-1/normal.json) ·
   [Private import and raw replay](artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/IMPORT.md).

@@ -172,14 +172,16 @@ private vLLM dense-attention replay matches the direct MLX cache and all
 31 decode logits. On the same retained prefill hidden row, selecting
 before the head explains its first-score difference. The publisher's
 private Ollama fork verifies the imported weights and all output IDs.
-Its saved terminal cache still differs. For the next private vLLM
-comparison, use four T128 body cuts and 31 T1 evaluations with 32
-scored heads. Skip the first three heads and select the final prefill
-row before the fourth head on both owners. Join numerical and session
-state in an untimed pass before running the swapped ordinary cohorts.
+Its saved terminal cache still differs. The direct MLX and private vLLM
+witnesses join all 32 one-row scores, their own sampled IDs and both
+44-owner cache snapshots. They use four T128 bodies, suppress the first
+three heads, gather the last prefill row before projecting and execute
+31 T1 evaluations. For swapped ordinary cohorts, preserve these execution
+boundaries and keep the dense route active independently of recording.
 [Native admission results](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/RUN.md) ·
 [External numerical review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/ACTUAL-REVIEW.md) ·
-[First head witness and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-first-head-shape-1/ACTUAL-REVIEW.md).
+[First head witness and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-first-head-shape-1/ACTUAL-REVIEW.md) ·
+[Matched work and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-mlx-matched-32-1/ACTUAL-REVIEW.md).
 
 The official unquantized parent contains 4,169,800,704 stored BF16
 parameters. Its independent embedding and head contribute about
@@ -386,9 +388,9 @@ same three scans and existing fallback yield paired completion lower
 gains of 8.40% and 8.19% against the released dense opt-in. Four fit
 and fault owners verify the terminal bits and cap. The linked T1 route
 bypasses QMM. Build the same single affine BF16 Q4/G64 instantiation
-from the pinned MLX source with its MIT notice. Check the compiled
-one-symbol library against the measured wheel's ABI and exact operator
-outputs before connecting it. Select the Mac kernel at admission and
+from the pinned MLX source with its MIT notice. The compiled 13,472-byte
+image matches all authentic and independent operator panels and fault
+controls. Select the new Mac kernel at admission and
 use the packed fallback on unsupported devices. Recheck the production
 artifact, 6 GiB admission, cold load, warm requests and request overhead.
 The separate Gate/Up substitution misses its charged latency budget.
@@ -396,8 +398,19 @@ The separate Gate/Up substitution misses its charged latency budget.
 [Guarded result and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-three-roles-1/ACTUAL-REVIEW.md) ·
 [Ordinary cohorts and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/ACTUAL-REVIEW.md) ·
 [Gate/Up latency screen](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-gate-up-screen-1/SCREEN.md) ·
+[Single-kernel parity and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-one-symbol-1/ACTUAL-REVIEW.md) ·
 [Pinned MLX release](https://github.com/ml-explore/mlx/releases/tag/v0.32.4) ·
 [MLX license](https://github.com/ml-explore/mlx/blob/v0.32.4/LICENSE).
+
+Astra's T384 screen prices coalescing the first three projection panels
+through Q/K/V, O, Gate/Up and Down. Preserve the original attention
+offsets, cut publication, final packed T128 and T1. The archived clocks
+give an estimated 39.36 ms per three-panel block. Closing the conditional
+gap to the historical vLLM diagnostic would require a paired lower saving
+above 12.97 ms per block. Charge packing, conversion, repair and status in
+one exact operator test before considering schedule changes. Timing and
+parity remain unmeasured for this layout.
+[T384 feasibility screen](../artifacts/mlx-gpu-gap-2026-11-15/astra62-nanbeige-t384-normal-work-screen-1/normal.json).
 
 For request-summary qualification, compare the same CLI output mode with
 summary collection enabled and disabled. Keep counters at existing completion

@@ -297,6 +297,15 @@ Formatting, strict Metal Clippy, parser and after-flush cancellation
 pass. Independent cohorts and the original quality suite remain open.
 [Current pair and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-current-1/ACTUAL-REVIEW.md).
 
+The detached Gemma 1,025-position diagnostic reproduces all 1,024
+original BF16 scores, their unscored terminal row and eight raw F32
+anchors. It verifies 90 chronological K/V plates across the 512,
+1,024 and 1,025 boundaries. The 33 cuts record 240 Metal and 915
+CPU visits with 4.45 GiB peak. Formatting, strict Metal Clippy, fresh
+release linking and the targeted geometry test pass after the two
+detached build fixes. This covers the first of ten held-out blocks.
+[First scored block and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-1025-1/ACTUAL-REVIEW.md).
+
 The pinned MLX layer-at-a-time walk matches its stock Q4 graph on all
 1,058 scores and the four terminal heads and 176 joint K/V hashes.
 The long case reaches 1,025 committed positions at a 2.80 GiB guarded peak.
@@ -330,6 +339,13 @@ qualification for both cold CLI and warm owners.
 [Ordinary cohorts and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/ACTUAL-REVIEW.md) ·
 [Fit and linked-path review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/FIT-REVIEW.md).
 
+Building the single MLX QMM specialization from its pinned source
+produces a 13,472-byte Metal library. The actual M1 Pro operator test
+matches 1,572,864 authentic Toklet Q/O/Down words and 786,432
+independent MLX words. The signed basis, nonfinite status and canaries
+pass. Connected performance for the rebuilt file remains open.
+[Single-kernel parity and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-one-symbol-1/ACTUAL-REVIEW.md).
+
 The detached Ollama publisher-fork raw worker now builds with its pinned
 MLX and MLX-C. Xcode's optional Metal toolchain was present but inactive.
 Official activation restores preprocessing with the original system Xcode
@@ -358,6 +374,14 @@ inputs. External timing qualification remains open.
 [Guarded vLLM result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-full-dense-attention-1/normal-1.json) ·
 [Head shape witness and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-first-head-shape-1/ACTUAL-REVIEW.md) ·
 [Astra external numerical review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/ACTUAL-REVIEW.md).
+
+Independent direct MLX and private vLLM owners complete all four T128
+bodies and 31 decode evaluations with exactly 32 one-row heads. Both
+match every sampled ID and both sets of 44 cache hashes. Peak is
+3.18 GiB for direct MLX and 3.86 GiB for private vLLM. The vLLM witness
+uses real scatter and sampling with one dense attention result per visit.
+Prepare the ordinary timing path with that route independent of recording.
+[Matched work and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-mlx-matched-32-1/ACTUAL-REVIEW.md).
 
 The first same-weight LFM3 FFN replay changes 27 of 2,048
 canonical residual words on the first affected row and fails
