@@ -616,6 +616,12 @@ IDs match after retry or reset and replay. Peak is 5.06 GiB. Scoped checks
 and Astra review pass. Actual driver failure remains untested.
 [Untimed rollback evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-fault-prep-1/RUN.md).
 
+The sealed scan-fusion candidate matches all scores, cache digests and
+171 panels in one untimed 512/32 replay. One guarded owner completes at
+5.26 GiB and Astra approves. AC and Low Power Mode off remain required
+for the frozen paired witness and latency run.
+[Untimed scan-fusion result](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-qkv-scan-fusion-prep-1/untimed-full-1/report.json).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

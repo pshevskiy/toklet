@@ -383,6 +383,12 @@ and timing still require AC with Low Power Mode off. The original summary
 run also retains its 5 GiB free-space preflight.
 [Untimed rollback evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-fault-prep-1/RUN.md).
 
+The separately guarded scan-fusion replay now passes full-tape numerical
+and session checks. Use the unchanged frozen driver for the paired witness
+and latency on AC. Preserve both external completion gates and both summary
+confidence bounds.
+[Untimed scan-fusion result](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-qkv-scan-fusion-prep-1/untimed-full-1/report.json).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

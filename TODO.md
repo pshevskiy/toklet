@@ -8,29 +8,16 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
-- [x] **Comparison** — Both fresh Nanbeige cohorts complete 78 matched requests.
-  Toklet's completion is 6.01%/6.19% lower than vLLM and 3.87%/3.82% above
-  Ollama at 5.18 GiB maximum guarded memory. The 5% Ollama and 1% summary
-  gates remain open.
-- [x] **Fusion** — Final-T128 fused gate/up preserves all score and K/V
-  digests. It saves 220–238 ms paired completion and adds 11–19 ms in
-  paired decode. Peak guarded memory is 5.36 GiB. Astra approves detached retention.
-- [x] **Current** — 52 profiled requests and four exact-state replays pass.
-  Dense first T1 adds 12–25 ms before GPU start with unchanged GPU decode.
-  Remaining prefill wait is 10–12 ms. Astra approves the profile.
-- [x] **Summary diagnostic** — Disabled-owner timing varies across matched
-  ordinals. Preceding decode shows no consistent association. Astra review passes.
-- [x] **Rollback** — Untimed packed and dense-tail fixtures preserve all 44
-  K/V owners after cancellation and nonfinite status. Synthetic completion
-  error requires reset and exact replay. Scoped checks and Astra review pass.
-- [ ] **Next** — The T128 Q/K/V scan fusion passes scoped build checks and
-  untimed Metal fault, prefix and retry tests. Astra approves that scope.
-  Run the frozen witness and timing once AC is connected and Low Power Mode is off.
-  The 5% Ollama and 1% summary gates remain open.
-  [Command-level profile](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-profile-1/RUN.md) ·
+- [x] **Current** — Q/K/V scan fusion matches 32 BF16 scores and IDs,
+  176 prefill pairs, 1,364 appends and 44 terminal pairs in an untimed Metal
+  replay. Astra approves the numerical, fault and retry evidence at 5.26 GiB.
+- [ ] **Next** — Run the frozen two-arm witness and latency comparison on AC
+  with Low Power Mode off. The qualified prior route beats vLLM but misses the
+  5% Ollama gate. The original 1% summary run also needs 5 GiB free at admission.
   [Scan fusion](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-qkv-scan-fusion-prep-1/RUN.md) ·
+  [Matched cohorts](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-cohorts-1/RESULT.md) ·
   [Summary diagnostic](artifacts/mlx-gpu-gap-2026-11-15/root-o4-owner-conditioning-1/RUN.md) ·
-  [Untimed rollback evidence](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-fault-prep-1/RUN.md).
+  [Untimed rollback](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-fault-prep-1/RUN.md).
 
 ## Recent implementation and evidence
 
