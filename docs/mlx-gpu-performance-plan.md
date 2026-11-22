@@ -394,15 +394,25 @@ and fault owners verify the terminal bits and cap. The linked T1 route
 bypasses QMM. Build the same single affine BF16 Q4/G64 instantiation
 from the pinned MLX source with its MIT notice. The compiled 13,472-byte
 image matches all authentic and independent operator panels and fault
-controls. Select the new Mac kernel at admission and
-use the packed fallback on unsupported devices. Recheck the production
-artifact, 6 GiB admission, cold load, warm requests and request overhead.
+controls. The connected Mac opt-in passes fit, fallback, console and
+linked T1 checks. Both warm completion intervals clear 5%. The first
+order has wholly slower decode and the released baseline drifts across
+owners. The same-binary resident crossover preserves the completion gain
+and bounds the earlier decode penalty under its fixed residency. The
+fixed independent repeat clears both completion thresholds. Both decode
+intervals include zero. Retain the exact packaged Mac kernel as an
+explicit warm opt-in. The single cold CLI remains descriptive.
+Request-summary overhead remains a separate measured gate.
 The separate Gate/Up substitution misses its charged latency budget.
 [MLX function and inputs](../artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-qmm-three-roles-1/PROPOSAL.md) ·
 [Guarded result and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-three-roles-1/ACTUAL-REVIEW.md) ·
 [Ordinary cohorts and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/ACTUAL-REVIEW.md) ·
 [Gate/Up latency screen](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-gate-up-screen-1/SCREEN.md) ·
 [Single-kernel parity and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-one-symbol-1/ACTUAL-REVIEW.md) ·
+[Connected compact-kernel checks and review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-product-1/ACTUAL-REVIEW.md) ·
+[Crossed timings and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-resident-causal-1/ACTUAL-REVIEW.md) ·
+[Final confirmation and Astra approval](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-product-confirmation-1/ACTUAL-REVIEW.md) ·
+[Packaged image and usage](../assets/nanbeige-qmm/README.md) ·
 [Pinned MLX release](https://github.com/ml-explore/mlx/releases/tag/v0.32.4) ·
 [MLX license](https://github.com/ml-explore/mlx/blob/v0.32.4/LICENSE).
 

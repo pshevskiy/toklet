@@ -3,6 +3,7 @@ use super::{
     Sizes,
     kernel::{Encoder, Op, RawBuffer, k64_input_aligned},
     plan::{self, Matrix, Projection},
+    qmm,
 };
 use crate::{
     cpu,
@@ -40,6 +41,8 @@ struct Scratch {
 struct Diagnostic {
     staged_dense: Cell<bool>,
     last_dense: bool,
+    staged_qmm: Cell<bool>,
+    last_qmm: bool,
     staged_passes: Buffer<u16>,
     published_passes: Buffer<u16>,
     logits: Vec<f32>,
@@ -60,6 +63,7 @@ pub struct Session<'a> {
     down_k64_ready: bool,
     attention_compact_ready: bool,
     fused_gate_up_ready: bool,
+    qmm_ready: bool,
     diagnostic: Option<Diagnostic>,
 }
 
@@ -74,7 +78,11 @@ impl<'a> Session<'a> {
     ) -> Result<Self> {
         let mut sizes = Sizes::new(options, diagnostics)?;
         if let Some(dense) = &model.dense {
-            let extra = dense.receipt.allocated_bytes;
+            let qmm = model.qmm_receipt();
+            let extra = super::add(
+                dense.receipt.allocated_bytes,
+                qmm.map_or(0, |q| q.reserved_bytes),
+            )?;
             sizes.memory.weights_bytes = super::add(sizes.memory.weights_bytes, extra)?;
             sizes.memory.admitted_bytes = super::add(sizes.memory.admitted_bytes, extra)?;
             if sizes.memory.admitted_bytes > options.memory_limit_bytes {
@@ -88,7 +96,11 @@ impl<'a> Session<'a> {
                 .unwrap_or(usize::MAX)
                 .min(options.memory_limit_bytes);
             let session_bytes = sizes.memory.admitted_bytes - sizes.memory.weights_bytes;
-            let required = super::add(device.currentAllocatedSize(), session_bytes)?;
+            let unallocated = qmm.map_or(0, |q| q.reserved_bytes - q.physical_delta_bytes);
+            let required = super::add(
+                device.currentAllocatedSize(),
+                super::add(session_bytes, unallocated)?,
+            )?;
             if required > recommended {
                 return Err(Error::Budget {
                     required,
@@ -135,6 +147,8 @@ impl<'a> Session<'a> {
                 Some(Diagnostic {
                     staged_dense: Cell::new(false),
                     last_dense: false,
+                    staged_qmm: Cell::new(false),
+                    last_qmm: false,
                     staged_passes: words(sizes.pass_elements)?,
                     published_passes: words(sizes.pass_elements)?,
                     logits,
@@ -169,6 +183,19 @@ impl<'a> Session<'a> {
                 && k64_input_aligned(&scratch.attention.raw);
             let fused_gate_up_ready =
                 chunk == 128 && model.dense.is_some() && k64_input_aligned(&scratch.normalized.raw);
+            let qmm_ready = chunk == 128
+                && model.qmm.is_some()
+                && fused_gate_up_ready
+                && attention_compact_ready
+                && down_k64_ready
+                && qmm::disjoint_exact_ranges([
+                    (&scratch.normalized.raw, 128 * HIDDEN * 2),
+                    (&scratch.query.raw, 128 * QUERY_WIDTH * 2),
+                    (&scratch.attention.raw, 128 * QUERY_WIDTH * 2),
+                    (&scratch.delta.raw, 128 * HIDDEN * 2),
+                    (&scratch.gate.raw, 128 * INTERMEDIATE * 2),
+                    (&scratch.status.raw, 4),
+                ]);
             Ok(Self {
                 model,
                 options,
@@ -183,6 +210,7 @@ impl<'a> Session<'a> {
                 down_k64_ready,
                 attention_compact_ready,
                 fused_gate_up_ready,
+                qmm_ready,
                 diagnostic,
             })
         })
@@ -213,6 +241,19 @@ impl<'a> Session<'a> {
         self.diagnostic
             .as_ref()
             .map(|diagnostic| diagnostic.last_dense)
+    }
+
+    /// Actual aligned T128 eligibility for this Session's own scratch.
+    pub fn qmm_prefill_rows(&self) -> &'static [usize] {
+        if self.qmm_ready { &[128] } else { &[] }
+    }
+
+    /// QMM route of the most recent successfully committed diagnostic chunk.
+    pub fn last_chunk_used_qmm(&self) -> Option<bool> {
+        self.selected?;
+        self.diagnostic
+            .as_ref()
+            .map(|diagnostic| diagnostic.last_qmm)
     }
 
     /// Aligned T128 dense route availability. The final pending chunk stays packed.
@@ -320,6 +361,7 @@ impl<'a> Session<'a> {
             );
             diagnostic.rows = rows;
             diagnostic.last_dense = rows == 128 && diagnostic.staged_dense.get();
+            diagnostic.last_qmm = rows == 128 && diagnostic.staged_qmm.get();
         }
         // Before this point, speculative writes occupy only the private tail
         // [evaluated, evaluated+rows) of all 44 caches. Publishing the common
@@ -350,16 +392,25 @@ impl<'a> Session<'a> {
             let dense = self.fused_gate_up_ready && self.pending_len() > rows;
             if let Some(diagnostic) = &self.diagnostic {
                 diagnostic.staged_dense.set(dense);
+                diagnostic.staged_qmm.set(self.qmm_ready);
+            }
+            if self.qmm_ready {
+                if dense {
+                    self.encode_graph::<true, true>(encoder, rows, start);
+                } else {
+                    self.encode_graph::<false, true>(encoder, rows, start);
+                }
+                return;
             }
             if dense {
-                self.encode_graph::<true>(encoder, rows, start);
+                self.encode_graph::<true, false>(encoder, rows, start);
                 return;
             }
         }
-        self.encode_graph::<false>(encoder, rows, start);
+        self.encode_graph::<false, false>(encoder, rows, start);
     }
 
-    fn encode_graph<const FUSED_GATE_UP: bool>(
+    fn encode_graph<const FUSED_GATE_UP: bool, const USE_QMM: bool>(
         &self,
         encoder: &Encoder,
         rows: usize,
@@ -423,6 +474,25 @@ impl<'a> Session<'a> {
                 [outputs / n_tile, count.div_ceil(m_tile)],
             );
         };
+        let project = |projection, matrix: Matrix, input: &RawBuffer, output: &RawBuffer| {
+            if USE_QMM {
+                model.qmm.as_ref().expect("admitted QMM pipeline").encode(
+                    encoder,
+                    [
+                        weights(matrix.weights),
+                        weights(matrix.scales),
+                        weights(matrix.biases),
+                        input,
+                        output,
+                        &s.status.raw,
+                    ],
+                    matrix.layout.columns(),
+                    matrix.layout.rows(),
+                );
+            } else {
+                affine(projection, matrix, input, output, rows, 0);
+            }
+        };
         let norm = |input: &RawBuffer, gain: usize, output: &RawBuffer| {
             dispatch(
                 Op::Rms,
@@ -464,8 +534,8 @@ impl<'a> Session<'a> {
                 self.options.position_offset as u32,
             ];
             norm(&s.residual.raw, block.input_norm, &s.normalized.raw);
+            project(query, block.query, &s.normalized.raw, &s.query.raw);
             for (projection, matrix, target) in [
-                (query, block.query, &s.query),
                 (ordinary, block.key, &s.key),
                 (ordinary, block.value, &s.value),
             ] {
@@ -496,13 +566,11 @@ impl<'a> Session<'a> {
                 &cache_shape,
                 [rows * plan::QUERY_HEADS, 1],
             );
-            affine(
+            project(
                 attention_out,
                 block.attention_out,
                 &s.attention.raw,
                 &s.delta.raw,
-                rows,
-                0,
             );
             residual_add();
             norm(
@@ -528,7 +596,7 @@ impl<'a> Session<'a> {
                     [(rows * INTERMEDIATE).div_ceil(32), 1],
                 );
             }
-            affine(down, block.down, &s.gate.raw, &s.delta.raw, rows, 0);
+            project(down, block.down, &s.gate.raw, &s.delta.raw);
             residual_add();
 
             if visit.normalize_after {

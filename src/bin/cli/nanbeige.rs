@@ -84,7 +84,11 @@ pub(super) fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
     let clock = Instant::now();
     let want_dense = a.dense_prefill && options.prefill_chunk_size == 128 && tokens.len() > 128;
     let model = if want_dense {
-        Model::load_dense(&a.model, options, false)?
+        if let Some(path) = &a.qmm_prefill_metallib {
+            Model::load_dense_qmm(&a.model, options, false, path)?
+        } else {
+            Model::load_dense(&a.model, options, false)?
+        }
     } else {
         Model::load(&a.model, options, false)?
     };
@@ -227,6 +231,34 @@ pub(super) fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
                     "requested": true, "admitted": allocation.is_some(), "available":available,
                     "committed_dense_chunks":committed, "committed_dense_rows":committed * 128,
                     "allocation": allocation, "denial":denial,
+                });
+            }
+            if a.qmm_prefill_metallib.is_some() {
+                let rows = session.qmm_prefill_rows();
+                let committed = if rows == [128] {
+                    report.prefill_tokens / 128
+                } else {
+                    0
+                };
+                let allocation = model.qmm_receipt().map(|r| {
+                    json!({
+                        "image_bytes":r.image_bytes,"reserved_bytes":r.reserved_bytes,
+                        "physical_delta_bytes":r.physical_delta_bytes,"file_sha256":r.file_sha256,
+                        "hash_seconds":r.hash_seconds,"load_seconds":r.load_seconds,
+                        "pipeline_seconds":r.pipeline_seconds,"basis_seconds":r.basis_seconds,
+                    })
+                });
+                let denial = model.qmm_denial().or(if !want_dense {
+                    Some("QMM requires a T128 chunk and dense prefill eligibility")
+                } else if rows.is_empty() {
+                    Some("QMM session scratch is unsupported")
+                } else {
+                    None
+                });
+                stats["qmm_prefill"] = json!({
+                    "requested":true,"admitted":allocation.is_some(),"available_rows":rows,
+                    "committed_qmm_chunks":committed,"committed_qmm_rows":committed * 128,
+                    "allocation":allocation,"denial":denial,
                 });
             }
             if a.json {

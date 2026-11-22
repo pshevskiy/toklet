@@ -333,30 +333,32 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   approves a detached connected trial.
   [Pinned ABI and inputs](artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-qmm-three-roles-1/PROPOSAL.md) ·
   [Guarded result and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-three-roles-1/ACTUAL-REVIEW.md).
-- [ ] Advance the detached T128 Q/O/Down result to a supported opt-in.
-  Both warm orders lower Nanbeige completion by 8.76% and 8.47% on
-  the 512/32 tape. TTFT falls by 11.55% and 11.35%. Median decode
-  falls by 3.08 and 1.96 ms across 31 evaluations. All 52 requests
-  reproduce the frozen IDs. Terminal logit and K/V witnesses match.
-  Strict Metal Clippy, fresh builds and all four fit/fault/alternate
-  owners pass under 5.18 GiB. Linked T1 bypasses both QMM checks.
-  The pinned upstream build emits a 13,472-byte single-kernel library.
-  It passes exact isolated Q/O/Down outputs on the M1 Pro and both
-  signed arithmetic and nonfinite controls. Connect this image to the
-  actual Rust CLI opt-in and repeat fit, state and ordinary checks.
-  Astra approves the detached opt-in source. The first build stops
-  during formatting because the archive omits a tracked test fixture.
-  Repair the shared compile input inventory before repeating the build.
-  The separate Gate/Up replacement misses the offline latency budget.
-  Closing the remaining conditional external gap needs 2.84 ms for
-  the complete pair, versus 6.43 ms for the bare archived MLX calls.
-  [Detached connected runbook](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/RUN.md) ·
-  [Astra fit and linked-path review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/FIT-REVIEW.md) ·
-  [Ordinary cohorts and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/ACTUAL-REVIEW.md) ·
-  [Single-kernel parity and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-one-symbol-1/ACTUAL-REVIEW.md) ·
-  [Detached opt-in review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-product-1/REVIEW.md) ·
-  [Detached build fixture failure](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-product-1/build-1/fmt/stderr.log) ·
-  [Gate/Up latency screen](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-gate-up-screen-1/SCREEN.md).
+- [x] Retain the compact Nanbeige T128 Q/O/Down opt-in on M1 Pro.
+  The 13,472-byte image authenticates from the same owned Metal input.
+  Fit, fallback, CLI and linked packed T1 checks pass at 5.17 GiB peak.
+  The first ordinary run observes 20.80 ms slower decode in one order.
+  The resident crossover excludes that magnitude in both owners. The
+  fixed confirmation improves completion by 8.63% and 8.45%. Both decode
+  intervals cross zero. One cold CLI case takes 13.738 s versus 12.570 s
+  for dense. The repaired check archive passes all 12 groups, including
+  870 default tests, 1,075 Metal tests and seven explicit GPU controls.
+  Astra approves the scoped warm opt-in and exact packaged image. The
+  packaged relative path admits the image and commits 256 prompt rows
+  before the disk guard cancels its additional smoke run.
+  [Usage and packaged Metal image](assets/nanbeige-qmm/README.md) ·
+  [Initial product results](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-product-1/ACTUAL-REVIEW.md) ·
+  [Source archive repair](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-product-checks-1/REPAIR-REVIEW.md) ·
+  [Archived Metal disk-floor stop](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-product-checks-1/tests-1/test-metal-disk-floor-1/result.json) ·
+  [All 12 release checks](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-product-checks-1/checks-final-normal.json) ·
+  [Packaged path admission and guard stop](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-product-1/cli-packaged-1-summary.json) ·
+  [Final confirmation and Astra approval](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-product-confirmation-1/ACTUAL-REVIEW.md).
+- [ ] Verify the native 32-head work schedule before external timing.
+  The detached composition retains packed T1 and the qualified T128
+  graphs. The staged witness checks all retained heads and cache state,
+  actual QMM and finite scans, and failures after an unscored T128.
+  Native launch requires free space above the original 2 GiB floor.
+  [Detached source review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-head32-1/REVIEW.md) ·
+  [Physical witness plan](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-head32-1/WORK-WITNESS.md).
 - [x] Price the remaining Nanbeige gap against the direct MLX GPU graph.
   Both owners reproduce the 32 released IDs on all 26 requests.
   Direct MLX finishes in 3.315–3.316 s versus Toklet's 5.841–5.842 s.

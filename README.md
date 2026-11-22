@@ -90,6 +90,13 @@ session creation; `scalar` remains default. JSON readiness and statistics name
 the selected mode. Full workload and application qualification precede default
 adoption; see the [CLI qualification](docs/experiments/2026-10-10-cpu-tiled-cli.md).
 
+On Apple M1 Pro with macOS 26, the explicit Nanbeige MLX Q4 profile can
+use the packaged Metal kernel for T128 prefill. Pass `--dense-prefill`
+and `--qmm-prefill-metallib assets/nanbeige-qmm/qmm.metallib`. The
+measured gain applies to warm requests on a resident model. Console
+usage, hardware scope and source provenance are in the
+[Nanbeige Metal kernel notes](assets/nanbeige-qmm/README.md).
+
 `--interactive` loads once and accepts JSON lines, publishing a `ready` event before requests:
 
 ```json

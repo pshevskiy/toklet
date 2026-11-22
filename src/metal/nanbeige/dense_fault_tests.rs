@@ -201,3 +201,104 @@ fn poisoned_signed_startup_releases_temporary_owners_and_stays_packed() {
         "startup_poison consumed; pairs=0; packed resource bytes={packed_bytes}; unexplained_device_bytes={overhead}; exact packed terminal"
     );
 }
+
+fn qmm_image() -> PathBuf {
+    PathBuf::from(std::env::var_os("TOKLET_NANBEIGE_QMM_METALLIB").expect("pinned local QMM image"))
+}
+
+#[test]
+#[ignore = "Explicit local Nanbeige model, pinned QMM metallib and Apple M1 Pro GPU"]
+fn qmm_waited_cancel_and_nonfinite_scan_keep_published_prefix() {
+    let (directory, tape) = input();
+    let cancelled = AtomicBool::new(false);
+    let model = Model::load_dense_qmm(&directory, options(), true, &qmm_image()).unwrap();
+    let qmm = model.qmm.as_ref().expect("admitted exact QMM image");
+    let mut session = Session::new(&model, options(), true, &cancelled).unwrap();
+    assert_eq!(session.qmm_prefill_rows(), &[128]);
+    commit_prefix(&mut session, &tape);
+    assert_eq!(session.last_chunk_used_qmm(), Some(false));
+    let prefix = published(&session);
+
+    waited_dense_without_publication(&mut session);
+    assert!(session.diagnostic.as_ref().unwrap().staged_qmm.get());
+    cancelled.store(true, Ordering::Relaxed);
+    assert!(matches!(
+        session.finish_chunk(128, Ok(())),
+        Err(SessionError::Model(crate::model::Error::Cancelled))
+    ));
+    cancelled.store(false, Ordering::Relaxed);
+    assert_eq!(published(&session), prefix);
+    assert_eq!(session.last_chunk_used_qmm(), Some(false));
+    assert_eq!(session.pending_len(), 129);
+
+    waited_dense_without_publication(&mut session);
+    assert!(session.diagnostic.as_ref().unwrap().staged_qmm.get());
+    // Exercise the real scanner on a private post-command output before the
+    // standard status check. The isolated operator test injects the bad input.
+    session.scratch.delta.with_mut(|words| words[0] = 0x7fc1);
+    autoreleasepool(|_| {
+        let command = model.context.command().unwrap();
+        let encoder = command.computeCommandEncoder().unwrap();
+        qmm.scan_output(
+            &encoder,
+            &[&session.scratch.delta.raw, &session.scratch.status.raw],
+            128 * HIDDEN,
+        );
+        encoder.endEncoding();
+        command.commit();
+        command.waitUntilCompleted();
+        assert_eq!(command.status(), MTLCommandBufferStatus::Completed);
+    });
+    assert_eq!(session.scratch.status.with_slice(|words| words[0]), 1);
+    assert!(matches!(
+        session.finish_chunk(128, Ok(())),
+        Err(SessionError::Backend(message)) if message == Error::Nonfinite.to_string()
+    ));
+    assert_eq!(session.last_chunk_used_qmm(), Some(false));
+    assert_eq!(session.history(), tape);
+    assert_eq!(session.pending_len(), 129);
+    assert_eq!(published(&session), prefix);
+
+    assert_eq!(session.evaluate_next_chunk().unwrap(), 128);
+    assert_eq!(session.last_chunk_used_qmm(), Some(true));
+    let resumed = published(&session);
+    assert_eq!(session.evaluate_next_chunk().unwrap(), 1);
+    assert_eq!(session.last_chunk_used_qmm(), Some(false));
+    let terminal = published(&session);
+    drop(session);
+
+    let mut fresh = Session::new(&model, options(), true, &cancelled).unwrap();
+    commit_prefix(&mut fresh, &tape);
+    assert_eq!(published(&fresh), prefix);
+    assert_eq!(fresh.evaluate_next_chunk().unwrap(), 128);
+    assert_eq!(fresh.last_chunk_used_qmm(), Some(true));
+    assert_eq!(published(&fresh), resumed);
+    assert_eq!(fresh.evaluate_next_chunk().unwrap(), 1);
+    assert_eq!(fresh.last_chunk_used_qmm(), Some(false));
+    assert_eq!(published(&fresh), terminal);
+    println!("qmm_fault prefix/retry/fresh exact across 44 owners and logits at 1,129,130");
+}
+
+#[test]
+#[ignore = "Explicit local Nanbeige model, pinned QMM metallib and Apple M1 Pro GPU"]
+fn qmm_poisoned_startup_retains_dense_fallback() {
+    let (directory, tape) = input();
+    let cancelled = AtomicBool::new(false);
+    super::super::qmm::poison_next_startup();
+    let model = Model::load_dense_qmm(&directory, options(), true, &qmm_image()).unwrap();
+    assert!(model.qmm_receipt().is_none());
+    assert_eq!(
+        model.qmm_denial(),
+        Some("Nanbeige QMM signed startup parity")
+    );
+    let mut session = Session::new(&model, options(), true, &cancelled).unwrap();
+    assert_eq!(session.dense_gate_up_prefill_rows(), &[128]);
+    assert!(session.qmm_prefill_rows().is_empty());
+    commit_prefix(&mut session, &tape);
+    assert_eq!(session.evaluate_next_chunk().unwrap(), 128);
+    assert_eq!(session.last_chunk_used_dense(), Some(true));
+    assert_eq!(session.last_chunk_used_qmm(), Some(false));
+    assert_eq!(session.evaluate_next_chunk().unwrap(), 1);
+    assert_eq!(session.last_chunk_used_qmm(), Some(false));
+    assert_eq!(published(&session).rows, 130);
+}

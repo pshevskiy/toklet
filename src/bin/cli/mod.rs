@@ -67,6 +67,7 @@ Usage: toklet [OPTIONS]
   --stop-token ID           Additional stop ID; repeatable
   --no-eos                  Ignore configured EOS IDs
   --dense-prefill           Nanbeige only: opt-in M1 Pro dense prefill ahead of the last chunk
+  --qmm-prefill-metallib PATH  Nanbeige macOS 26 M1 Pro: exact T128 Q/O/Down library with --dense-prefill
   --no-thinking             Nanbeige only: close the empty reasoning block before generation
   --json                    JSON token events and statistics
   --stats                   Statistics to stderr with text output
@@ -116,6 +117,7 @@ struct Args {
     no_eos: bool,
     no_thinking: bool,
     dense_prefill: bool,
+    qmm_prefill_metallib: Option<PathBuf>,
     stop: Vec<u32>,
     max: usize,
     capacity: usize,
@@ -156,6 +158,7 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
         no_eos: false,
         no_thinking: false,
         dense_prefill: false,
+        qmm_prefill_metallib: None,
         stop: Vec::new(),
         max: 32,
         capacity: 2048,
@@ -281,6 +284,7 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
             "--no-eos" => a.no_eos = true,
             "--no-thinking" => a.no_thinking = true,
             "--dense-prefill" => a.dense_prefill = true,
+            "--qmm-prefill-metallib" => a.qmm_prefill_metallib = Some(value()?.into()),
             _ => return Err(invalid(format!("unexpected argument {flag}"))),
         }
     }
@@ -322,6 +326,13 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
     }
     if a.dense_prefill && a.model_profile != ModelProfile::NanbeigeMlx {
         return Err(invalid("--dense-prefill requires nanbeige4.2-3b-mlx-q4"));
+    }
+    if a.qmm_prefill_metallib.is_some()
+        && (a.model_profile != ModelProfile::NanbeigeMlx || !a.dense_prefill)
+    {
+        return Err(invalid(
+            "--qmm-prefill-metallib requires nanbeige4.2-3b-mlx-q4 and --dense-prefill",
+        ));
     }
     if a.model_profile == ModelProfile::NanbeigeMlx {
         use toklet::mlx::nanbeige::{MAX_CAPACITY, MAX_CHUNK};
@@ -1567,6 +1578,42 @@ mod tests {
             values.extend(args(&options));
             assert!(parse(values).is_err());
         }
+    }
+
+    #[test]
+    fn nanbeige_qmm_is_explicit_and_requires_dense_prefill() {
+        let base = ["--model", "missing", "--tokens", "1"];
+        let mut other = args(&base);
+        other.extend(args(&["--qmm-prefill-metallib", "qmm.metallib"]));
+        assert!(parse(other).is_err());
+
+        let mut profile = args(&base);
+        profile.extend(args(&[
+            "--model-profile",
+            toklet::mlx::nanbeige::PROFILE,
+            "--backend",
+            "metal",
+            "--qmm-prefill-metallib",
+            "qmm.metallib",
+        ]));
+        assert!(parse(profile.clone()).is_err());
+        profile.push("--dense-prefill".into());
+        let parsed = parse(profile.clone());
+        if cfg!(all(
+            feature = "metal",
+            target_os = "macos",
+            target_arch = "aarch64"
+        )) {
+            assert_eq!(
+                parsed.unwrap().qmm_prefill_metallib.as_deref(),
+                Some(std::path::Path::new("qmm.metallib")),
+            );
+        } else {
+            assert!(parsed.is_err());
+        }
+        profile.extend(args(&["--qmm-prefill-metallib", "other.metallib"]));
+        assert!(parse(profile).is_err());
+        assert!(parse(args(&base)).unwrap().qmm_prefill_metallib.is_none());
     }
 
     #[test]

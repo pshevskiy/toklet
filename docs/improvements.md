@@ -343,8 +343,37 @@ Building the single MLX QMM specialization from its pinned source
 produces a 13,472-byte Metal library. The actual M1 Pro operator test
 matches 1,572,864 authentic Toklet Q/O/Down words and 786,432
 independent MLX words. The signed basis, nonfinite status and canaries
-pass. Connected performance for the rebuilt file remains open.
+pass.
 [Single-kernel parity and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-one-symbol-1/ACTUAL-REVIEW.md).
+
+The connected compact-kernel opt-in passes the four fit guards, the
+four cold CLI controls and the linked packed-decode audit. Warm
+completion falls from 4.273 to 3.925 s and 4.842 to 3.918 s on the
+matched internal tape. Both paired lower completion bounds exceed 5%.
+In the first order, however, median decode takes 20.80 ms longer and
+all ten pairs are adverse. The released baseline's decode moves by
+104.23 ms between owners. Retention waits for a crossed comparison
+within each resident owner. Peak across all twelve owners is 5.17 GiB.
+A single cold CLI completion rises from 12.570 to 13.738 s while setup
+rises 1.546 s. That observation is descriptive.
+[Compact-kernel actual checks and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-product-1/ACTUAL-REVIEW.md).
+
+The same-resident crossover alternates only T128 QMM selection and
+reproduces all 52 requests, terminal logits and 44 K/V prefixes.
+Paired median completion savings are 370 and 368 ms. The paired decode
+intervals include zero and exclude a 20.80 ms penalty in both owners.
+[Crossed timings and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-resident-causal-1/ACTUAL-REVIEW.md).
+
+The fixed independent confirmation retains the explicit warm M1 Pro
+opt-in. Completion improves from 4.290 to 3.919 s and from 4.284 to
+3.922 s. Paired lower savings are 8.30% and 8.27%. Both decode intervals
+include zero. Fit, fault, cold console and linked path checks pass. The
+exact source passes formatting, strict Clippy in both modes, 870 default
+tests, 1,075 Metal tests and seven explicit GPU controls. The packaged
+image carries the upstream MIT notice. The 32-head external join and 1%
+request-summary qualification remain open.
+[Independent confirmation and Astra approval](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-product-confirmation-1/ACTUAL-REVIEW.md) ·
+[Packaged console usage](../assets/nanbeige-qmm/README.md).
 
 The detached Ollama publisher-fork raw worker now builds with its pinned
 MLX and MLX-C. Xcode's optional Metal toolchain was present but inactive.

@@ -5,6 +5,7 @@
 mod dense;
 mod dense_basis;
 mod kernel;
+mod qmm;
 mod session;
 
 use super::{ALLOWANCE, Error, Result, add, memory::Buffer};
@@ -22,6 +23,7 @@ use objc2_metal::MTLDevice;
 use std::path::Path;
 
 pub use dense::DensePrefillReceipt;
+pub use qmm::QmmReceipt;
 pub use session::Session;
 
 const SOURCE_POSITION_LIMIT: usize = 262144;
@@ -119,6 +121,8 @@ pub struct Model {
     visits: [plan::Visit; plan::VISITS],
     dense: Option<dense::DensePrefill>,
     dense_denial: Option<String>,
+    qmm: Option<qmm::Qmm>,
+    qmm_denial: Option<String>,
 }
 
 impl Model {
@@ -132,6 +136,44 @@ impl Model {
     /// Explicit experimental selection. Failure leaves the canonical packed model.
     pub fn load_dense(directory: &Path, options: Options, diagnostics: bool) -> Result<Self> {
         Self::load_inner(directory, options, diagnostics, true)
+    }
+
+    /// Request the exact Nanbeige Mac QMM image for dense-prefill models.
+    /// Optional image or device refusal retains the original fallback.
+    pub fn load_dense_qmm(
+        directory: &Path,
+        options: Options,
+        diagnostics: bool,
+        metallib: &Path,
+    ) -> Result<Self> {
+        let mut model = Self::load_dense(directory, options, diagnostics)?;
+        if let Some(dense) = &model.dense {
+            let sizes = Sizes::new(options, diagnostics)?;
+            match autoreleasepool(|_| {
+                qmm::Qmm::prepare(
+                    &model.context,
+                    options,
+                    &sizes,
+                    dense.receipt.allocated_bytes,
+                    (&model.plan, &model.weights),
+                    metallib,
+                )
+            }) {
+                Ok(qmm) => model.qmm = Some(qmm),
+                Err(error) => model.qmm_denial = Some(error.to_string()),
+            }
+        } else {
+            model.qmm_denial = Some("Nanbeige QMM requires admitted dense prefill".into());
+        }
+        Ok(model)
+    }
+
+    pub fn qmm_receipt(&self) -> Option<QmmReceipt> {
+        self.qmm.as_ref().map(|qmm| qmm.receipt)
+    }
+
+    pub fn qmm_denial(&self) -> Option<&str> {
+        self.qmm_denial.as_deref()
     }
 
     fn load_inner(
@@ -167,6 +209,8 @@ impl Model {
                 visits: plan::visits(),
                 dense,
                 dense_denial,
+                qmm: None,
+                qmm_denial: None,
             })
         })
     }
