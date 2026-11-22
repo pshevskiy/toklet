@@ -390,6 +390,14 @@ from the archived direct MLX and Toklet cache hashes.
 [Raw replay](../artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/trial-1/normal.json) ·
 [Terminal values](../artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/TERMINAL-NUMERIC.md).
 
+The private Ollama matched-work witness executes four T128 bodies,
+elides the first three heads and feeds back its own greedy IDs through
+31 T1 evaluations. The guarded untimed replay passes at 3.46 GiB. Both
+readers agree on all 32 sampled IDs and 44 terminal cache pairs.
+Terminal state and logits reproduce the 35-head Ollama witness.
+All 32 scored-head digests differ from matched MLX.
+[Physical witness](../artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/matched32/run-1/read-normal.json).
+
 The full untimed vLLM dense substitution exercises 1,540 visits and all
 32 IDs at 3.78 GiB. It reproduces all 44 direct MLX prefill and terminal
 cache pairs. The 31 decode heads are exact. The selective prefill head

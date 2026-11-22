@@ -512,6 +512,11 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   pairs from both archived references. The raw comparison checks the
   available decode slices and terminal head along each engine's own
   calculation.
+  The guarded 32-head Ollama replay uses its own sampled IDs, preserves
+  the earlier Ollama terminal cache and logits and peaks at 3.46 GiB.
+  All 32 scored-head digests differ from matched MLX. External numerical
+  qualification remains open.
+  [32-head Ollama witness](artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/matched32/run-1/read-normal.json) ·
   [Local vLLM clocks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-direct-clocks-1/RUN.md) ·
   [Astra clock review](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-direct-clocks-1/REVIEW.md) ·
   [Detached CLI proposal](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-head-cli-1/RUN.md) ·

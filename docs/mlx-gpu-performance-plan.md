@@ -172,7 +172,12 @@ private vLLM dense-attention replay matches the direct MLX cache and all
 31 decode logits. On the same retained prefill hidden row, selecting
 before the head explains its first-score difference. The publisher's
 private Ollama fork verifies the imported weights and all output IDs.
-Its saved terminal cache still differs. The direct MLX and private vLLM
+The untimed four-T128, 31-T1 Ollama replay scores 32 heads and
+reproduces the earlier Ollama terminal state using its own sampled IDs.
+All 32 scored-head digests differ from matched MLX. Numerical
+qualification remains open. [Ollama work and scores](../artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/matched32/run-1/read-normal.json).
+
+The direct MLX and private vLLM
 witnesses join all 32 one-row scores, their own sampled IDs and both
 44-owner cache snapshots. They use four T128 bodies, suppress the first
 three heads, gather the last prefill row before projecting and execute
