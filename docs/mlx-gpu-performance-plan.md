@@ -395,6 +395,23 @@ seek a larger reduction in completed prefill or decode work. Both external
 completion gates and the original summary-overhead bounds remain binding.
 [Scan-fusion A/B](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-qkv-scan-fusion-prep-1/RUN.md).
 
+Token-first Gate/Up traversal passes all numerical joins. The stable
+reverse order's upper completion saving is 22.60 ms, short of 60–62 ms.
+Hold the dense-tail control. Test one-time packing of the original A
+fragments separately to price the producer and consumer together.
+[Traversal A/B](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-dense-traversal-1/RUN.md).
+
+Packing original A fragments into the existing scratch buffer clears the
+historical 60–62 ms screen in both native orders. Keep dense tail and carry
+the measured reverse decode cost into qualification against fresh peers.
+[Prepack A/B](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-dense-prepacked-1/RUN.md).
+
+The fresh prepack cohorts pass the fixed 512/32 completion target against
+both pinned MLX peers. Keep dense tail and the prepack candidate for this
+lane. Qualify broader CLI integration and the original 1% summary bounds
+before claiming the overall goal.
+[Prepack matched cohorts](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prepacked-cohorts-1/RESULT.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

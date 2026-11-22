@@ -8,12 +8,13 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
-- [x] **Current** — Both Q/K/V scan-fusion arms match the full Nanbeige tape.
-  The 52-request native A/B peaks at 5.36 GiB. Completion savings change sign
-  and decode slows in both orders. Astra rejects the fusion. Keep dense tail.
-- [ ] **Next** — Find another measured prefill or decode reduction toward the
-  5% Ollama gate. The original 1% summary run needs 5 GiB free at admission.
-  [Scan-fusion A/B](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-qkv-scan-fusion-prep-1/RUN.md) ·
+- [x] **Current** — Prepacked dense tail matches the exact tape and clears
+  both 5% completion gates in both fresh Nanbeige orders. Completion is
+  3.081–3.091 s across 78 requests at 5.37 GiB peak.
+- [ ] **Next** — Qualify normal CLI integration and the original 1% summary
+  bounds. The original summary run needs 5 GiB free at admission.
+  [Prepack matched cohorts](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prepacked-cohorts-1/RESULT.md) ·
+  [Prepack A/B](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-dense-prepacked-1/RUN.md) ·
   [Matched cohorts](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-cohorts-1/RESULT.md) ·
   [Summary diagnostic](artifacts/mlx-gpu-gap-2026-11-15/root-o4-owner-conditioning-1/RUN.md) ·
   [Untimed rollback](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-fault-prep-1/RUN.md).

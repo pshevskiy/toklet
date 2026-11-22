@@ -628,6 +628,27 @@ including zero. Paired decode slows by 3.07 and 6.99 ms. Peak guarded
 memory is 5.36 GiB. Astra rejects the candidate and retains dense tail.
 [Scan-fusion A/B](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-qkv-scan-fusion-prep-1/RUN.md).
 
+Token-first dense Gate/Up preserves full tape parity and passes 52 guarded
+requests. Stable reverse paired completion saves 11.66 ms (95% interval
+3.04–22.60 ms) and decode adds 4.38 ms. The other order is substantially
+slower overall and yields a wide savings interval. Astra retains dense tail.
+[Traversal A/B](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-dense-traversal-1/RUN.md).
+
+Prepacked dense Gate/Up matches the full frozen tape. In 52 native
+requests, median completion is 3.089–3.094 s. Paired completion savings
+have 95% lower bounds of 80.28 and 62.78 ms. Reverse paired decode adds
+21.20 ms with unchanged dispatches. Peak is 5.36 GiB. Astra approves fresh
+peer qualification.
+[Prepack A/B](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-dense-prepacked-1/RUN.md).
+
+The prepacked dense-tail candidate clears all four frozen peer gates.
+Completion is 5.87% and 7.15% lower than Ollama and 14.75% and 14.93%
+lower than vLLM. Every paired lower bound exceeds 5%. All 78 requests
+pass at a maximum guarded 5.37 GiB. Astra approves the detached pinned MLX
+lane. The patch applies to the sealed dense-tail baseline.
+[Reviewed implementation patch](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-dense-prepacked-1/dense-prepacked.patch) ·
+[Prepack matched cohorts](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prepacked-cohorts-1/RESULT.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

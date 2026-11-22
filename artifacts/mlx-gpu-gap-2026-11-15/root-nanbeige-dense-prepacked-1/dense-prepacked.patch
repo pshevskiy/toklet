@@ -1,0 +1,374 @@
+--- a/examples/toklet-connected-steel.rs
++++ b/examples/toklet-connected-steel.rs
+@@ -31,7 +31,7 @@
+         .collect::<Vec<_>>()
+         .try_into()
+         .map_err(
+-            |_| "expected MODEL_DIR QMM_IMAGE WHEEL_IMAGE PROMPT RUN_DIR steel|split POSITION [OWNER_START]",
++            |_| "expected MODEL_DIR QMM_IMAGE WHEEL_IMAGE PROMPT RUN_DIR steel POSITION OWNER_START {dense|dense-prepacked}",
+         )?;
+     let position: usize = position.to_str().ok_or("invalid trace position")?.parse()?;
+     if !(512..=542).contains(&position) {
+@@ -50,6 +50,21 @@
+         .unwrap_or(0);
+     if owner_start > Session::CONNECTED_TRACE_MAX_OWNER_START {
+         return Err("starting owner must leave nine owners within the fixed visit plan".into());
++    }
++    let arm = args.next().ok_or("explicit dense witness arm required")?;
++    let arm = arm.to_str().ok_or("non-UTF-8 witness arm")?;
++    let prepacked = match arm {
++        "dense" => false,
++        "dense-prepacked" => true,
++        _ => return Err("explicit dense or dense-prepacked witness arm required".into()),
++    };
++    let enabled = std::ffi::OsStr::new("1");
++    let tail_flag = env::var_os("TOKLET_DETACHED_NANBEIGE_DENSE_TAIL");
++    let prepack_flag = env::var_os("TOKLET_DETACHED_NANBEIGE_DENSE_PREPACKED");
++    if tail_flag.as_deref() != Some(enabled)
++        || prepack_flag.as_deref() != prepacked.then_some(enabled)
++    {
++        return Err("dense flags differ from requested witness arm".into());
+     }
+     if args.next().is_some() {
+         return Err("unexpected trailing argument".into());
+@@ -76,6 +91,12 @@
+     };
+     let cancelled = AtomicBool::new(false);
+     let session = Session::new(&model, options, false, &cancelled)?;
++    if !session.admits_fixed_steel_one_shot(512, 32)
++        || !session.fixed_steel_dense_tail_enabled()
++        || session.fixed_steel_dense_prepacked_enabled() != prepacked
++    {
++        return Err("effective Steel witness route differs from the requested arm".into());
++    }
+     let mut ids = Vec::with_capacity(32);
+     let (report, mut receipt) = session.generate_connected_witness(
+         &prompt,
+@@ -118,7 +139,7 @@
+     )?;
+     println!(
+         "{}",
+-        json!({"mode": mode, "ids": ids, "completed":543,"pending":1})
++        json!({"mode": mode, "arm": arm, "dense_tail": true, "prepacked": prepacked, "ids": ids, "completed":543,"pending":1})
+     );
+     Ok(())
+ }
+--- a/examples/toklet-timing.rs
++++ b/examples/toklet-timing.rs
+@@ -53,17 +53,20 @@
+         .map(PathBuf::from)
+         .collect::<Vec<_>>()
+         .try_into()
+-        .map_err(|_| "usage: toklet-timing MODEL_DIR PACKAGED_METALLIB MLX_METALLIB TAPE_DIR {packed|dense}")?;
++        .map_err(|_| "usage: toklet-timing MODEL_DIR PACKAGED_METALLIB MLX_METALLIB TAPE_DIR {dense|dense-prepacked}")?;
+     let arm = arm.to_str().ok_or("non-UTF-8 experiment arm")?;
+-    let dense_tail = match arm {
+-        "packed" => false,
+-        "dense" => true,
+-        _ => return Err("explicit packed or dense arm required".into()),
++    let prepacked = match arm {
++        "dense" => false,
++        "dense-prepacked" => true,
++        _ => return Err("explicit dense or dense-prepacked arm required".into()),
+     };
+-    let flag = env::var_os("TOKLET_DETACHED_NANBEIGE_DENSE_TAIL");
+-    let expected_flag = dense_tail.then_some(std::ffi::OsStr::new("1"));
+-    if flag.as_deref() != expected_flag {
+-        return Err("tail flag differs from requested arm".into());
++    let enabled = std::ffi::OsStr::new("1");
++    let tail_flag = env::var_os("TOKLET_DETACHED_NANBEIGE_DENSE_TAIL");
++    let prepack_flag = env::var_os("TOKLET_DETACHED_NANBEIGE_DENSE_PREPACKED");
++    if tail_flag.as_deref() != Some(enabled)
++        || prepack_flag.as_deref() != prepacked.then_some(enabled)
++    {
++        return Err("dense flags differ from requested arm".into());
+     }
+     let prompt: [u32; PROMPT] = tape(
+         &tape_dir.join("prompt.u32le"),
+@@ -108,8 +111,9 @@
+             return Err("request lost the required detached Steel route".into());
+         }
+         let active_dense_tail = session.fixed_steel_dense_tail_enabled();
+-        if active_dense_tail != dense_tail {
+-            return Err("effective Steel tail route differs from the requested arm".into());
++        let active_prepacked = session.fixed_steel_dense_prepacked_enabled();
++        if !active_dense_tail || active_prepacked != prepacked {
++            return Err("effective Steel dense route differs from the requested arm".into());
+         }
+         let report = session.generate_one_shot(&prompt, OUTPUT, &[], |event| {
+             // The generation callback follows completed selection and the
+@@ -141,7 +145,7 @@
+         println!(
+             "{}",
+             json!({
+-                "event": "request", "ordinal": ordinal, "dense_tail": active_dense_tail, "warmup": ordinal < WARMUP, "ids": ids,
++                "event": "request", "ordinal": ordinal, "dense_tail": active_dense_tail, "prepacked": active_prepacked, "warmup": ordinal < WARMUP, "ids": ids,
+                 "prefill_tokens": report.prefill_tokens, "decode_evaluations": report.decode_evaluations,
+                 "committed": report.evaluated_tokens, "pending": report.pending_tokens, "reused": report.reused_tokens,
+                 "ttft_ns": ttft_ns, "decode_ns": completion_ns - ttft_ns, "completion_ns": completion_ns,
+--- a/src/metal/nanbeige/dense.metal
++++ b/src/metal/nanbeige/dense.metal
+@@ -95,3 +95,94 @@
+     fused_swiglu_store(output, high + 8u, g11.thread_elements()[0], u11.thread_elements()[0], s.tokens, status);
+     fused_swiglu_store(output, high + 9u, g11.thread_elements()[1], u11.thread_elements()[1], s.tokens, status);
+ }
++
++// Route contract: exact T128, K3072, offset zero. Each record contains
++// the two A0 and two A1 BF16 words for one lane in [T16 block, K8, lane] order.
++kernel void nanbeige_pack_dense_gate_up_input(
++    device const ushort2* input [[buffer(0)]],
++    device ushort4* packed [[buffer(1)]],
++    constant MatrixShape& s [[buffer(2)]],
++    uint2 index [[thread_position_in_grid]]) {
++    uint lane = index.x % 32u;
++    uint k8 = index.x / 32u;
++    uint block = index.y;
++    uint record = block * (s.inputs / 8u) * 32u + index.x;
++    uint quad = lane / 4u;
++    uint frag_m = (quad & 4u) + (lane / 2u) % 4u;
++    uint frag_n = (quad & 2u) * 2u + (lane % 2u) * 2u;
++    uint a = ((s.input_row + block * 16u + frag_m) * s.inputs + k8 * 8u + frag_n) / 2u;
++    packed[record] = ushort4(input[a], input[a + 4u * s.inputs]);
++}
++
++kernel void nanbeige_ffn_fused_gate_up_swiglu_prepacked_k64(
++    device const uint4* weights [[buffer(0)]],
++    device const ushort4* packed [[buffer(1)]],
++    device ushort* output [[buffer(2)]],
++    device atomic_uint* status [[buffer(3)]],
++    constant MatrixShape& s [[buffer(4)]],
++    uint2 group [[threadgroup_position_in_grid]],
++    uint subgroup [[simdgroup_index_in_threadgroup]],
++    uint simd_lane [[thread_index_in_simdgroup]]) {
++    uint quad = simd_lane / 4u;
++    uint frag_m = (quad & 4u) + (simd_lane / 2u) % 4u;
++    uint frag_n = (quad & 2u) * 2u + (simd_lane % 2u) * 2u;
++    simdgroup_float8x8 g00 = make_filled_simdgroup_matrix<float, 8, 8>(0.0f);
++    simdgroup_float8x8 g01 = make_filled_simdgroup_matrix<float, 8, 8>(0.0f);
++    simdgroup_float8x8 g10 = make_filled_simdgroup_matrix<float, 8, 8>(0.0f);
++    simdgroup_float8x8 g11 = make_filled_simdgroup_matrix<float, 8, 8>(0.0f);
++    simdgroup_float8x8 u00 = make_filled_simdgroup_matrix<float, 8, 8>(0.0f);
++    simdgroup_float8x8 u01 = make_filled_simdgroup_matrix<float, 8, 8>(0.0f);
++    simdgroup_float8x8 u10 = make_filled_simdgroup_matrix<float, 8, 8>(0.0f);
++    simdgroup_float8x8 u11 = make_filled_simdgroup_matrix<float, 8, 8>(0.0f);
++    uint first_token = group.y * 32u;
++    uint first_row = group.x * 32u;
++    uint tile_m = (subgroup / 2u) * 16u;
++    uint block = (first_token + tile_m) / 16u;
++    uint tile_n = (subgroup % 2u) * 16u;
++    // Each vector contains Gate then Up in exact b0/b1 lane order.
++    uint weight_base = group.x * (s.inputs / 8u);
++    for (uint k = 0; k < s.inputs; k += 64u) {
++        #pragma unroll
++        for (uint i = 0; i < 64u; i += 8u) {
++            simdgroup_float8x8 a0, a1, b0, b1;
++            uint record = (block * (s.inputs / 8u) + (k + i) / 8u) * 32u + simd_lane;
++            ushort4 a_words = packed[record];
++            uint weight = ((weight_base + (k + i) / 8u) * 2u + subgroup % 2u) * 32u + simd_lane;
++            uint4 pair = weights[weight];
++            a0.thread_elements()[0] = widen(a_words.x);
++            a0.thread_elements()[1] = widen(a_words.y);
++            a1.thread_elements()[0] = widen(a_words.z);
++            a1.thread_elements()[1] = widen(a_words.w);
++            // Keep identical K8 and fragment operand order for each bank.
++            ushort4 gate_words = as_type<ushort4>(pair.xy);
++            b0.thread_elements()[0] = widen(gate_words.x);
++            b0.thread_elements()[1] = widen(gate_words.y);
++            b1.thread_elements()[0] = widen(gate_words.z);
++            b1.thread_elements()[1] = widen(gate_words.w);
++            simdgroup_multiply_accumulate(g00, a0, b0, g00);
++            simdgroup_multiply_accumulate(g01, a0, b1, g01);
++            simdgroup_multiply_accumulate(g10, a1, b0, g10);
++            simdgroup_multiply_accumulate(g11, a1, b1, g11);
++
++            ushort4 up_words = as_type<ushort4>(pair.zw);
++            b0.thread_elements()[0] = widen(up_words.x);
++            b0.thread_elements()[1] = widen(up_words.y);
++            b1.thread_elements()[0] = widen(up_words.z);
++            b1.thread_elements()[1] = widen(up_words.w);
++            simdgroup_multiply_accumulate(u00, a0, b0, u00);
++            simdgroup_multiply_accumulate(u01, a0, b1, u01);
++            simdgroup_multiply_accumulate(u10, a1, b0, u10);
++            simdgroup_multiply_accumulate(u11, a1, b1, u11);
++        }
++    }
++    uint low = (first_token + tile_m + frag_m) * s.outputs + first_row + tile_n + frag_n;
++    uint high = low + 8u * s.outputs;
++    fused_swiglu_store(output, low, g00.thread_elements()[0], u00.thread_elements()[0], s.tokens, status);
++    fused_swiglu_store(output, low + 1u, g00.thread_elements()[1], u00.thread_elements()[1], s.tokens, status);
++    fused_swiglu_store(output, low + 8u, g01.thread_elements()[0], u01.thread_elements()[0], s.tokens, status);
++    fused_swiglu_store(output, low + 9u, g01.thread_elements()[1], u01.thread_elements()[1], s.tokens, status);
++    fused_swiglu_store(output, high, g10.thread_elements()[0], u10.thread_elements()[0], s.tokens, status);
++    fused_swiglu_store(output, high + 1u, g10.thread_elements()[1], u10.thread_elements()[1], s.tokens, status);
++    fused_swiglu_store(output, high + 8u, g11.thread_elements()[0], u11.thread_elements()[0], s.tokens, status);
++    fused_swiglu_store(output, high + 9u, g11.thread_elements()[1], u11.thread_elements()[1], s.tokens, status);
++}
+--- a/src/metal/nanbeige/dense.rs
++++ b/src/metal/nanbeige/dense.rs
+@@ -15,6 +15,14 @@
+ use std::time::Instant;
+ 
+ type Pipeline = Retained<ProtocolObject<dyn MTLComputePipelineState>>;
++const ROWS: usize = 128;
++const THREADS: usize = 128;
++const FRAGMENT_WORDS: usize = 4;
++const TOKEN_BLOCK: usize = 16;
++const PACKED_BYTES: usize = ROWS * HIDDEN * std::mem::size_of::<u16>();
++const _: () = assert!(PACKED_BYTES <= ROWS * INTERMEDIATE * std::mem::size_of::<u16>());
++const _: () = assert!((TOKEN_BLOCK * HIDDEN).is_multiple_of(THREADS * FRAGMENT_WORDS));
++const _: () = assert!(ROWS.is_multiple_of(TOKEN_BLOCK));
+ const PAIR_BYTES: usize = HIDDEN * INTERMEDIATE * 4;
+ pub(super) const ALL_BYTES: usize = plan::PHYSICAL_LAYERS * PAIR_BYTES;
+ 
+@@ -37,6 +45,8 @@
+ pub(super) struct DensePrefill {
+     pairs: Vec<Buffer<u32>>,
+     pipeline: Pipeline,
++    pack_pipeline: Pipeline,
++    prepacked_pipeline: Pipeline,
+     pub(super) receipt: DensePrefillReceipt,
+ }
+ 
+@@ -120,6 +130,8 @@
+             Ok(pipe)
+         };
+         let consume = pipeline("nanbeige_ffn_fused_gate_up_swiglu_dense_k64", 4608)?;
++        let pack_pipeline = pipeline("nanbeige_pack_dense_gate_up_input", 0)?;
++        let prepacked_pipeline = pipeline("nanbeige_ffn_fused_gate_up_swiglu_prepacked_k64", 0)?;
+         let prepare = pipeline("nanbeige_prepare_dense_gate_up", 0)?;
+         // Temporary basis owners are dropped before any model pair allocates.
+         const BASIS_RESERVE: usize = 1 << 20;
+@@ -248,6 +260,8 @@
+         Ok(Self {
+             pairs,
+             pipeline: consume,
++            pack_pipeline,
++            prepacked_pipeline,
+             receipt,
+         })
+     }
+@@ -269,4 +283,34 @@
+             [INTERMEDIATE / 32, 4],
+         );
+     }
+-}
++
++    pub(super) fn encode_prepacked(
++        &self,
++        encoder: &Encoder,
++        layer: usize,
++        [input, packed, output, status]: [&RawBuffer; 4],
++    ) {
++        let shape = [ROWS as u32, HIDDEN as u32, INTERMEDIATE as u32, 0];
++        // The serial compute encoder orders the producer and consumer on
++        // this tracked scratch buffer. Every subsequent visit overwrites it.
++        encode_pipeline(
++            encoder,
++            &self.pack_pipeline,
++            THREADS,
++            &[input, packed],
++            &shape,
++            [
++                TOKEN_BLOCK * HIDDEN / (FRAGMENT_WORDS * THREADS),
++                ROWS / TOKEN_BLOCK,
++            ],
++        );
++        encode_pipeline(
++            encoder,
++            &self.prepacked_pipeline,
++            THREADS,
++            &[&self.pairs[layer].raw, packed, output, status],
++            &shape,
++            [INTERMEDIATE / 32, ROWS / 32],
++        );
++    }
++}
+--- a/src/metal/nanbeige/session.rs
++++ b/src/metal/nanbeige/session.rs
+@@ -71,6 +71,7 @@
+     skip_intermediate_heads: bool,
+     fixed_steel_request: bool,
+     detached_dense_tail: bool,
++    detached_dense_prepacked: bool,
+     kv: Kv,
+     scratch: Scratch,
+     down_k64_ready: bool,
+@@ -232,6 +233,20 @@
+                     (&scratch.gate.raw, 128 * INTERMEDIATE * 2),
+                     (&scratch.status.raw, 4),
+                 ]);
++            let detached_dense_prepacked = split.is_some_and(|route| route.steel.is_some())
++                && std::env::var_os("TOKLET_DETACHED_NANBEIGE_DENSE_PREPACKED")
++                    .is_some_and(|value| value == "1");
++            if detached_dense_prepacked
++                && (!qmm_ready
++                    || !qmm::disjoint_exact_ranges([
++                        (&scratch.normalized.raw, 128 * HIDDEN * 2),
++                        (&scratch.up.raw, 128 * INTERMEDIATE * 2),
++                        (&scratch.gate.raw, 128 * INTERMEDIATE * 2),
++                        (&scratch.status.raw, 4),
++                    ]))
++            {
++                return Err(Error::Unsupported("detached dense prepack scratch layout"));
++            }
+             if let Some(partials) = &scratch.split_partials
+                 && (!qmm_ready
+                     || !qmm::disjoint_exact_ranges([
+@@ -277,6 +292,7 @@
+                 detached_dense_tail: split.is_some_and(|route| route.steel.is_some())
+                     && std::env::var_os("TOKLET_DETACHED_NANBEIGE_DENSE_TAIL")
+                         .is_some_and(|value| value == "1"),
++                detached_dense_prepacked,
+                 kv,
+                 scratch,
+                 down_k64_ready,
+@@ -430,6 +446,12 @@
+     #[doc(hidden)]
+     pub fn fixed_steel_dense_tail_enabled(&self) -> bool {
+         self.detached_dense_tail && self.fused_gate_up_ready && self.qmm_ready
++    }
++
++    /// Whether the fixed dense-tail route can use prepacked activation fragments.
++    #[doc(hidden)]
++    pub fn fixed_steel_dense_prepacked_enabled(&self) -> bool {
++        self.fixed_steel_dense_tail_enabled() && self.detached_dense_prepacked
+     }
+ 
+     fn is_fresh_one_shot(&self) -> bool {
+@@ -620,6 +642,7 @@
+         } else {
+             None
+         };
++        let prepacked = self.fixed_steel_request && self.fixed_steel_dense_prepacked_enabled();
+         let s = &self.scratch;
+         let dispatch = |op, buffers: &[&RawBuffer], shape: &[u32], groups| {
+             context.encode(encoder, op, buffers, shape, groups);
+@@ -986,13 +1009,21 @@
+                 ffn_snapshot(target, &s.normalized.raw, FfnCut::FfnNorm);
+             }
+             if let Some(dense) = dense {
+-                dense.encode(
+-                    encoder,
+-                    visit.physical_layer,
+-                    &s.normalized.raw,
+-                    &s.gate.raw,
+-                    &s.status.raw,
+-                );
++                if prepacked {
++                    dense.encode_prepacked(
++                        encoder,
++                        visit.physical_layer,
++                        [&s.normalized.raw, &s.up.raw, &s.gate.raw, &s.status.raw],
++                    );
++                } else {
++                    dense.encode(
++                        encoder,
++                        visit.physical_layer,
++                        &s.normalized.raw,
++                        &s.gate.raw,
++                        &s.status.raw,
++                    );
++                }
+             } else {
+                 affine(gate_up, block.gate, &s.normalized.raw, &s.gate.raw, rows, 0);
+                 affine(gate_up, block.up, &s.normalized.raw, &s.up.raw, rows, 0);
