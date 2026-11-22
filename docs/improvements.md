@@ -564,6 +564,13 @@ review pass, including the offline recovery of the window validator.
 [Precise rotary](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-rotary-1/RUN.md) ·
 [Owner window](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-owner-window-1/RUN.md).
 
+Pinned T1 RMSNorm joins all 32 scores and IDs, 176 prefill pairs, 1,364
+appends and 44 terminal pairs on the detached Nanbeige 512/32 tape.
+All 144 selected position-520 panels agree. The 2,790 T1 calls preserve
+finite checks and cache publication. Checks, 5.06 GiB guard and Astra
+review pass. Ordinary CLI and timing qualification remain open.
+[Complete decode comparison](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-rms-wheel-1/RUN.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

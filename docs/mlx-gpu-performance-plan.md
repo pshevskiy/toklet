@@ -333,6 +333,12 @@ Use the runtime position and owner window for subsequent localization.
 [Precise rotary](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-rotary-1/RUN.md) ·
 [Owner window](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-owner-window-1/RUN.md).
 
+Pinned T1 RMSNorm completes fixed-tape parity in the detached witness.
+Enable the same admitted kernels in an ordinary session with snapshots
+disabled. Verify cache and rollback invariants, screen native latency, and
+then compare fresh peers under the original warmup and reversed-order rules.
+[Complete decode comparison](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-rms-wheel-1/RUN.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

@@ -8,14 +8,12 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
-- [x] **Current** — Precise T1 rotary on Nanbeige4.2-3B Q4/G64 matches 144/144
-  position-514 panels, 8/31 decode scores and 13/44 terminal K/V pairs.
-  At position 520, owner 13 RMSNorm differs in five words on identical inputs.
-  Scoped checks, physical guards and Astra review pass.
-- [ ] **Next** — Verify pinned RMSNorm for the admitted T1 route. Compare the
-  full 512/32 tape and preserve finite checks and cache publication.
-  [Precise rotary](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-rotary-1/RUN.md) ·
-  [Owner window](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-owner-window-1/RUN.md).
+- [x] **Current** — Nanbeige4.2-3B Q4/G64 matches all 32 BF16 scores, all 32
+  IDs, 176 prefill pairs, 1,364 decode appends and 44 terminal pairs on the
+  pinned 512/32 tape. Scoped checks, hardware guard and Astra review pass.
+- [ ] **Next** — Verify the ordinary CLI and timing worker on the same kernels
+  with snapshots disabled. Check rollback before timing the qualified route.
+  [Complete decode comparison](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-rms-wheel-1/RUN.md).
 
 ## Recent implementation and evidence
 
