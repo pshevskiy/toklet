@@ -520,6 +520,14 @@ owners complete 32 matching IDs at 5.08 GiB. Formatting, strict
 Metal Clippy and release links pass. Score and terminal-cache parity
 remain open. The completed GPU proof clocks cover one request each.
 [RMS and prefill evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-second-cut-1/RUN.md).
+
+The detached QMV route matches all 166,144 words of the first live
+MLX score on the exact final hidden row. Both guarded builds pass
+and keep the same IDs, prefill cache and downstream native state.
+Same-operand T1 replay explains every Q/K/V difference by the
+four-term bias reduction precision. The remaining score and terminal
+gates are open. The proof command clocks cover one request per route.
+[First score and T1 trace](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-head-decode-1/RUN.md).
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

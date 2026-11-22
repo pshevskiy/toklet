@@ -403,8 +403,12 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   The second cut first differs at FFN RMSNorm, by 20 BF16 words.
   The pinned T128 RMS reduction fixes all 19 traced panels and all
   44 cache owners at each of four cuts. Astra approves. All IDs agree.
-  Scores and terminal digests still differ. Trace the final prefill hidden
-  row, vocabulary projection and first T1 decode.
+  The final prefill hidden row matches. Selective QMV closes the first
+  score and preserves all four prefill cuts and 32 IDs. On the first T1
+  exact input, FP32 bias sums predict all 8,192 MLX Q/K/V outputs. The
+  remaining 31 score rows and terminal parity stay open. Next apply
+  and qualify the grouped-vector sum in T1. Astra approves the trace.
+  [First score and T1 trace](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-head-decode-1/RUN.md).
   [RMS and complete prefill cache evidence](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-second-cut-1/RUN.md).
   [FFN and cache frontier](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-connection-1/RUN.md).
   [Steel and FFN shape results](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-steel-connected-1/normal.json).

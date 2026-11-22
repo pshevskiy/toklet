@@ -285,6 +285,15 @@ score and terminal gates remain open. Compare the final prefill
 hidden row before changing the head and T1 path. The RMS proof
 commands take 2.800 s versus 2.721 s in the one-owner control.
 [RMS and prefill evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-second-cut-1/RUN.md).
+
+The final prefill hidden row joins MLX. Native tiled scoring joins
+the archived batched row and differs in 36,106 words from the live
+selective reference. Pinned QMV matches the selective score exactly.
+First T1 embedding and RMSNorm match. Current Q/K/V differ in 4,010,
+655 and 775 words. FP32 rather than BF16 four-term bias sums reproduce
+all three MLX panels offline on the common input. Verify an in-kernel
+precision change before pricing or changing the next decode operations.
+[First score and T1 trace](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-head-decode-1/RUN.md).
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).
