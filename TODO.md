@@ -117,10 +117,12 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   within-owner submission shift changes sign between orders.
   Focus on native evaluation timing before changing the collector.
   The original 1.06524% marginal TTFT upper exceeds the 1% gate.
-  Astra rechecks the pinned Gemma per-tile T32 disabled/disabled runner.
-  Its executable and all static checks match. This readiness control
-  can assess drift once the exclusive lane and original 5 GiB startup
-  floor are available. Both-policy O4 qualification remains open.
+  The Gemma per-tile T32 disabled/disabled control passes all 32 requests
+  across four owners at 4.69 GiB. Baseline marginal 95% upper bounds are
+  22.63% for TTFT and 28.44% for completion. Native phase clocks contain
+  the owner drift. Hold the full O4 campaign pending a stable baseline.
+  [Control results](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-per-tile-o4-readiness-1/run-1/read-normal.json) ·
+  [Native phase split](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-per-tile-o4-readiness-1/run-1/phase-localization.json) ·
   [Timing control](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-modern-decode-1/timing-control-normal.json) ·
   [LFM3 live diagnostic](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-brackets-1/RUN.md) ·
   [Astra review](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-brackets-1/REVIEW.md) ·
@@ -356,8 +358,12 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   The detached composition retains packed T1 and the qualified T128
   graphs. The staged witness checks all retained heads and cache state,
   actual QMM and finite scans, and failures after an unscored T128.
-  Astra approves the source-bound build and five untimed owners.
-  Native launch remains blocked below the original 2 GiB disk floor.
+  After retiring download and compiler caches, the guarded release build
+  and five untimed owners pass. Both readers agree on the 32 retained
+  scores, sampled IDs and 44 terminal K/V pairs at 5.10 GiB peak.
+  Independent review of the actual run and external arithmetic remain open.
+  [Verified witness](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-head32-1/witness-normal.json) ·
+  [Disk recovery](artifacts/mlx-gpu-gap-2026-11-15/root-head32-storage-recovery-2.json) ·
   [Detached source review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-head32-1/REVIEW.md) ·
   [Physical witness plan](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-head32-1/WORK-WITNESS.md) ·
   [Astra witness review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-head32-1/WITNESS-REVIEW.md).

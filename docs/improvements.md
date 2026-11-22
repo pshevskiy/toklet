@@ -593,6 +593,15 @@ preflights pass after a disk-floor retry. Astra approves experimental use. The
 successful whole-file text runtime awaits a complete on-disk snapshot.
 [Checks and limitations](../artifacts/sensenova-loop-9b-2026-11-18/native-progress-15-experimental-reviewed.json).
 
+The Gemma per-tile BF16 disabled/disabled ABBA control completes 32
+requests across four guarded owners at 4.69 GiB peak. Both readers agree.
+Marginal 95% upper bounds reach 22.63% TTFT and 28.44% completion.
+In the second block, median TTFT falls from 8.314 s to 6.821 s and
+completion from 45.570 s to 35.832 s across identical routes. Native
+prefill and decode move with the public clocks. Hold the O4 campaign.
+[Control results](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-per-tile-o4-readiness-1/run-1/read-normal.json) ·
+[Native phase split](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-per-tile-o4-readiness-1/run-1/phase-localization.json).
+
 The [current Gemma cost map](gemma-current-cost-map.md) records four selected
 GPU frames and two main-thread sample windows from guarded 384/128 work.
 CPU attention has 46.68%/28.77% sample share before first token/during decode;

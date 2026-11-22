@@ -654,6 +654,13 @@ a useful request-level effect is demonstrated; prioritize accurate resident GPU
 attention. Preserve bounded telemetry and run A/A stability diagnostics before
 the unchanged fixed-N overhead campaign on a retained candidate.
 
+The Gemma per-tile disabled/disabled control exceeds the 1% timing
+threshold with summaries disabled. The largest shift is inside native
+prefill and decode. Hold the full both-policy campaign until a
+repeatable baseline is established.
+[Control results](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-per-tile-o4-readiness-1/run-1/read-normal.json) ·
+[Native phase split](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-per-tile-o4-readiness-1/run-1/phase-localization.json).
+
 ## Ordered implementation tasks
 
 | Task | Concrete change | Exit and next dependency |
