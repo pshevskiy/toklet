@@ -707,6 +707,13 @@ quality qualification remain open.
 [Astra repair review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block2-repair-1/ACTUAL-REVIEW.md) ·
 [Repair proof](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block2-repair-1/trial-1/normal.json).
 
+The detached ordered CPU-score and Metal-context CLI clears the public
+384/128 point screen. Completion falls from 39.176 s to 36.076 s, first ID
+from 11.970 s to 9.027 s and decode from 27.065 s to 26.909 s. Both owners
+match all output IDs and final state at a 4.66 GiB guarded peak. Astra
+confirms the one-pair result, strict Metal Clippy and fresh release link.
+[Public timing result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-context-public-screen-1/RESULT.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

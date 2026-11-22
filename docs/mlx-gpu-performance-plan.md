@@ -462,6 +462,13 @@ task pilot, teacher replay and grading after the timing screen.
 [C567 conditional review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-task-quality-1/REVIEW.md) ·
 [Repair proof](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block2-repair-1/trial-1/normal.json).
 
+The repaired 384/128 CLI pair clears the 5% point screen with a 7.91%
+completion gain and exact output and state. Verify the same arithmetic
+against all original loss targets, then run the C567 pilot, independent
+replay and full task grade. Require the original independent timing
+cohorts before a latency claim beyond the single pair.
+[Public timing result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-context-public-screen-1/RESULT.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

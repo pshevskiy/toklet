@@ -21,20 +21,17 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   the terminal row and 300 K/V planes. The 25 cuts include the late T17
   fallback and 240 early Metal visits. Astra approves the isolated block.
   [Gemma block 9 proof](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block9-1/RESULT.md).
-- [x] **Gemma block 2 diagnosis** — The multi-block run matches block 1
-  before failure. The two-cut replay isolates one masked layer-11 score
-  where ordered binary64 CPU summation and the Metal expansion round differently.
-  All probabilities, context and 15 committed K/V pairs match.
-  [Astra diagnosis](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block2-audit-1/ACTUAL-REVIEW.md).
 - [x] **Gemma repair proof** — The ordered CPU score and Metal context
   control matches the first 64 archived rows, 30 all-plane checks and
   both malformed-request rollback checks. Astra approves the test-only proof.
   [Astra repair review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block2-repair-1/ACTUAL-REVIEW.md).
-- [ ] **Next** — Bind the repaired route to a detached CLI and price it
-  against CPU attention before broader qualification. The aggregate loss,
-  original 100 tasks and the actual 1% summary gate remain open.
-  [Public timing plan](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-context-public-screen-1/RUN.md).
-  [C567 conditional review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-task-quality-1/REVIEW.md).
+- [x] **Gemma public screen** — The repaired CLI saves 7.91% completion
+  and 2.943 s to the first token in one pair. Both owners match all 128
+  IDs and final state. Astra verifies both readers at 4.66 GiB peak.
+  [Public timing result](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-context-public-screen-1/RESULT.md).
+- [ ] **Next** — Verify the repaired route on the original 10,000 targets
+  and 100 tasks, then run independent timing cohorts. The actual 1%
+  summary gate remains open.
 
 ## Recent implementation and evidence
 
