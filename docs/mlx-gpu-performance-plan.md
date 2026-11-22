@@ -412,6 +412,12 @@ lane. Qualify broader CLI integration and the original 1% summary bounds
 before claiming the overall goal.
 [Prepack matched cohorts](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prepacked-cohorts-1/RESULT.md).
 
+The pinned fixed route now runs through an experimental CLI opt-in. Normal
+and readback-only builds pass the session and numerical checks. Use a
+fresh same-boundary worker comparison for integrated performance and keep
+the original O4 summary estimator and disk admission.
+[Normal CLI checks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prepacked-cli-1/RUN.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

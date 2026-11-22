@@ -86,7 +86,7 @@ fn waited_dense_without_publication(session: &mut Session<'_>) {
         words[..128].copy_from_slice(&session.history[start..start + 128]);
     });
     session.scratch.status.with_mut(|words| words[0] = 0);
-    autoreleasepool(|_| session.submit(128, start)).unwrap();
+    autoreleasepool(|_| session.submit(128, start, true)).unwrap();
     assert_eq!(session.scratch.status.with_slice(|words| words[0]), 0);
     assert!(
         session
@@ -112,7 +112,7 @@ fn dense_waited_cancellation_and_status_keep_published_prefix() {
     waited_dense_without_publication(&mut session);
     cancelled.store(true, Ordering::Relaxed);
     assert!(matches!(
-        session.finish_chunk(128, Ok(())),
+        session.finish_chunk(128, Ok(()), true),
         Err(SessionError::Model(crate::model::Error::Cancelled))
     ));
     cancelled.store(false, Ordering::Relaxed);
@@ -124,7 +124,7 @@ fn dense_waited_cancellation_and_status_keep_published_prefix() {
     waited_dense_without_publication(&mut session);
     session.scratch.status.with_mut(|words| words[0] = 1);
     assert!(matches!(
-        session.finish_chunk(128, Ok(())),
+        session.finish_chunk(128, Ok(()), true),
         Err(SessionError::Backend(message)) if message == Error::Nonfinite.to_string()
     ));
     assert_eq!(session.last_chunk_used_dense(), Some(false));
@@ -223,7 +223,7 @@ fn qmm_waited_cancel_and_nonfinite_scan_keep_published_prefix() {
     assert!(session.diagnostic.as_ref().unwrap().staged_qmm.get());
     cancelled.store(true, Ordering::Relaxed);
     assert!(matches!(
-        session.finish_chunk(128, Ok(())),
+        session.finish_chunk(128, Ok(()), true),
         Err(SessionError::Model(crate::model::Error::Cancelled))
     ));
     cancelled.store(false, Ordering::Relaxed);
@@ -251,7 +251,7 @@ fn qmm_waited_cancel_and_nonfinite_scan_keep_published_prefix() {
     });
     assert_eq!(session.scratch.status.with_slice(|words| words[0]), 1);
     assert!(matches!(
-        session.finish_chunk(128, Ok(())),
+        session.finish_chunk(128, Ok(()), true),
         Err(SessionError::Backend(message)) if message == Error::Nonfinite.to_string()
     ));
     assert_eq!(session.last_chunk_used_qmm(), Some(false));

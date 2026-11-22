@@ -649,6 +649,13 @@ lane. The patch applies to the sealed dense-tail baseline.
 [Reviewed implementation patch](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-dense-prepacked-1/dense-prepacked.patch) ·
 [Prepack matched cohorts](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prepacked-cohorts-1/RESULT.md).
 
+The normal CLI exposes the experimental `--steel-prefill-metallib` flag.
+The fixed route matches 32 scores and IDs, 176 prefill pairs, 1,364 appends
+and 44 terminal K/V pairs. SIGINT, rejection and legacy smoke checks pass.
+Peak is 5.47 GiB. The 870 default and 1,075 Metal tests pass with strict
+all-target Clippy and a fresh release build. Astra approves the opt-in.
+[Normal CLI checks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prepacked-cli-1/RUN.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

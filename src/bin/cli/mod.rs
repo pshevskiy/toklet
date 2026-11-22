@@ -68,6 +68,8 @@ Usage: toklet [OPTIONS]
   --no-eos                  Ignore configured EOS IDs
   --dense-prefill           Nanbeige only: opt-in M1 Pro dense prefill ahead of the last chunk
   --qmm-prefill-metallib PATH  Nanbeige macOS 26 M1 Pro: exact T128 Q/O/Down library with --dense-prefill
+  --steel-prefill-metallib PATH  Experimental Nanbeige macOS 26 M1 Pro: pinned MLX 0.32.4 library
+                               for 512 prompt tokens, 32 max output, capacity 544 and T128 with dense QMM
   --no-thinking             Nanbeige only: close the empty reasoning block before generation
   --json                    JSON token events and statistics
   --stats                   Statistics to stderr with text output
@@ -118,6 +120,7 @@ struct Args {
     no_thinking: bool,
     dense_prefill: bool,
     qmm_prefill_metallib: Option<PathBuf>,
+    steel_prefill_metallib: Option<PathBuf>,
     stop: Vec<u32>,
     max: usize,
     capacity: usize,
@@ -159,6 +162,7 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
         no_thinking: false,
         dense_prefill: false,
         qmm_prefill_metallib: None,
+        steel_prefill_metallib: None,
         stop: Vec::new(),
         max: 32,
         capacity: 2048,
@@ -285,6 +289,7 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
             "--no-thinking" => a.no_thinking = true,
             "--dense-prefill" => a.dense_prefill = true,
             "--qmm-prefill-metallib" => a.qmm_prefill_metallib = Some(value()?.into()),
+            "--steel-prefill-metallib" => a.steel_prefill_metallib = Some(value()?.into()),
             _ => return Err(invalid(format!("unexpected argument {flag}"))),
         }
     }
@@ -332,6 +337,16 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
     {
         return Err(invalid(
             "--qmm-prefill-metallib requires nanbeige4.2-3b-mlx-q4 and --dense-prefill",
+        ));
+    }
+    if a.steel_prefill_metallib.is_some()
+        && (a.model_profile != ModelProfile::NanbeigeMlx
+            || !a.dense_prefill
+            || a.qmm_prefill_metallib.is_none()
+            || (a.capacity, a.chunk, a.max) != (544, 128, 32))
+    {
+        return Err(invalid(
+            "--steel-prefill-metallib requires Nanbeige with dense QMM, capacity 544, chunk 128 and maximum output 32",
         ));
     }
     if a.model_profile == ModelProfile::NanbeigeMlx {

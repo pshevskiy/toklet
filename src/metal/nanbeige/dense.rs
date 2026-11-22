@@ -15,8 +15,37 @@ use objc2_metal::*;
 use std::time::Instant;
 
 type Pipeline = Retained<ProtocolObject<dyn MTLComputePipelineState>>;
+const ROWS: usize = super::split_k::ROWS;
+const THREADS: usize = 128;
+const FRAGMENT_WORDS: usize = 4;
+const TOKEN_BLOCK: usize = 16;
+const PACKED_BYTES: usize = ROWS * HIDDEN * std::mem::size_of::<u16>();
+const _: () = assert!(PACKED_BYTES <= ROWS * INTERMEDIATE * std::mem::size_of::<u16>());
+const _: () = assert!((TOKEN_BLOCK * HIDDEN).is_multiple_of(THREADS * FRAGMENT_WORDS));
+const _: () = assert!(ROWS.is_multiple_of(TOKEN_BLOCK));
 const PAIR_BYTES: usize = HIDDEN * INTERMEDIATE * 4;
 pub(super) const ALL_BYTES: usize = plan::PHYSICAL_LAYERS * PAIR_BYTES;
+
+pub(super) struct Prepacked {
+    pack: Pipeline,
+    consume: Pipeline,
+}
+
+impl Prepacked {
+    pub(super) fn new(pack: Pipeline, consume: Pipeline) -> Result<Self> {
+        for pipeline in [&pack, &consume] {
+            if pipeline.threadExecutionWidth() != 32
+                || pipeline.maxTotalThreadsPerThreadgroup() < THREADS
+                || pipeline.staticThreadgroupMemoryLength() != 0
+            {
+                return Err(Error::Unsupported(
+                    "Nanbeige Steel dense prepack pipeline geometry",
+                ));
+            }
+        }
+        Ok(Self { pack, consume })
+    }
+}
 
 #[derive(Clone, Copy, Debug)]
 pub struct DensePrefillReceipt {
@@ -267,6 +296,37 @@ impl DensePrefill {
             &[&self.pairs[layer].raw, input, output, status],
             &[128, HIDDEN as u32, INTERMEDIATE as u32, 0],
             [INTERMEDIATE / 32, 4],
+        );
+    }
+
+    pub(super) fn encode_prepacked(
+        &self,
+        pipeline: &Prepacked,
+        encoder: &Encoder,
+        layer: usize,
+        [input, packed, output, status]: [&RawBuffer; 4],
+    ) {
+        let shape = [ROWS as u32, HIDDEN as u32, INTERMEDIATE as u32, 0];
+        // The serial compute encoder orders both dispatches on tracked scratch.
+        // Every visit overwrites all PACKED_BYTES before its consumer starts.
+        encode_pipeline(
+            encoder,
+            &pipeline.pack,
+            THREADS,
+            &[input, packed],
+            &shape,
+            [
+                TOKEN_BLOCK * HIDDEN / (FRAGMENT_WORDS * THREADS),
+                ROWS / TOKEN_BLOCK,
+            ],
+        );
+        encode_pipeline(
+            encoder,
+            &pipeline.consume,
+            THREADS,
+            &[&self.pairs[layer].raw, packed, output, status],
+            &shape,
+            [INTERMEDIATE / 32, ROWS / 32],
         );
     }
 }

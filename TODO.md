@@ -8,11 +8,12 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
-- [x] **Current** — Prepacked dense tail matches the exact tape and clears
-  both 5% completion gates in both fresh Nanbeige orders. Completion is
-  3.081–3.091 s across 78 requests at 5.37 GiB peak.
-- [ ] **Next** — Qualify normal CLI integration and the original 1% summary
-  bounds. The original summary run needs 5 GiB free at admission.
+- [x] **Current** — The normal Nanbeige CLI admits the experimental fixed
+  Steel lane. Rust suites, exact scores and K/V, SIGINT, rejection and legacy
+  smoke checks pass. Astra approves the opt-in at 5.47 GiB guarded peak.
+- [ ] **Next** — Qualify timing from the integrated worker and the original
+  paired and marginal 1% summary bounds. The original O4 run needs 5 GiB free.
+  [Normal CLI checks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prepacked-cli-1/RUN.md) ·
   [Prepack matched cohorts](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prepacked-cohorts-1/RESULT.md) ·
   [Prepack A/B](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-dense-prepacked-1/RUN.md) ·
   [Matched cohorts](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-cohorts-1/RESULT.md) ·

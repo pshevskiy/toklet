@@ -45,7 +45,7 @@ required-features = ["gemma-head-batch-mac-probe"]
 dispatch2 = { version = "=0.3.1", optional = true, default-features = false, features = ["alloc", "block2"] }
 objc2 = { version = "=0.6.5", optional = true }
 objc2-foundation = { version = "=0.3.2", optional = true, default-features = false, features = ["std", "NSObject", "NSString", "NSError", "NSProcessInfo", "NSURL", "NSData"] }
-objc2-metal = { version = "=0.3.2", optional = true, default-features = false, features = ["std", "MTLDevice", "MTLBuffer", "MTLResource", "MTLLibrary", "MTLCommandQueue", "MTLCommandBuffer", "MTLCommandEncoder", "MTLComputeCommandEncoder", "MTLBlitCommandEncoder", "MTLComputePipeline", "MTLTypes", "MTLCaptureManager", "MTLCaptureScope", "MTLCounters", "MTLComputePass", "objc2-core-foundation", "dispatch2"] }
+objc2-metal = { version = "=0.3.2", optional = true, default-features = false, features = ["std", "MTLDevice", "MTLBuffer", "MTLResource", "MTLLibrary", "MTLFunctionConstantValues", "MTLDataType", "MTLCommandQueue", "MTLCommandBuffer", "MTLCommandEncoder", "MTLComputeCommandEncoder", "MTLBlitCommandEncoder", "MTLComputePipeline", "MTLTypes", "MTLCaptureManager", "MTLCaptureScope", "MTLCounters", "MTLComputePass", "objc2-core-foundation", "dispatch2"] }
 objc2-metal-performance-shaders = { version = "=0.3.2", optional = true, default-features = false, features = ["std", "MPSCore", "MPSCoreTypes", "MPSKernel", "MPSMatrix", "MPSMatrixMultiplication"] }
 
 [[example]]

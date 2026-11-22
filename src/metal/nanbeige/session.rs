@@ -3,10 +3,12 @@ use super::{
     Sizes,
     kernel::{Encoder, Op, RawBuffer, k64_input_aligned},
     plan::{self, Matrix, Projection},
-    qmm,
+    qmm, split_k,
+    steel::{OUTPUT as FIXED_STEEL_OUTPUT, PROMPT as FIXED_STEEL_PROMPT, Steel},
 };
 use crate::{
     cpu,
+    generation::{self, Input, Report, Request, TokenEvent},
     session::{Error as SessionError, InferenceSession, Memory},
 };
 use half::bf16;
@@ -14,6 +16,7 @@ use objc2::rc::autoreleasepool;
 use objc2_metal::{MTLCommandBuffer, MTLCommandBufferStatus, MTLCommandEncoder, MTLDevice};
 use std::{
     cell::Cell,
+    io,
     sync::atomic::{AtomicBool, Ordering},
 };
 
@@ -36,6 +39,7 @@ struct Scratch {
     gate: Buffer<u16>,
     up: Buffer<u16>,
     logits: Buffer<u16>,
+    split_partials: Option<Buffer<u32>>,
 }
 
 struct Diagnostic {
@@ -58,6 +62,7 @@ pub struct Session<'a> {
     evaluated: usize,
     selected: Option<u32>,
     replay_required: bool,
+    fixed_steel_request: bool,
     kv: Kv,
     scratch: Scratch,
     down_k64_ready: bool,
@@ -77,11 +82,27 @@ impl<'a> Session<'a> {
         cancelled: &'a AtomicBool,
     ) -> Result<Self> {
         let mut sizes = Sizes::new(options, diagnostics)?;
+        let steel = model.steel.as_ref();
+        if steel.is_some() {
+            Steel::validate_options(options)?;
+            if diagnostics {
+                return Err(Error::Unsupported(
+                    "Nanbeige Steel requires a one-shot session",
+                ));
+            }
+            sizes.memory.scratch_bytes =
+                super::add(sizes.memory.scratch_bytes, split_k::PARTIAL_BYTES)?;
+            sizes.memory.admitted_bytes =
+                super::add(sizes.memory.admitted_bytes, split_k::PARTIAL_BYTES)?;
+        }
         if let Some(dense) = &model.dense {
             let qmm = model.qmm_receipt();
             let extra = super::add(
                 dense.receipt.allocated_bytes,
-                qmm.map_or(0, |q| q.reserved_bytes),
+                super::add(
+                    qmm.map_or(0, |q| q.reserved_bytes),
+                    steel.map_or(0, |p| p.reserved_bytes),
+                )?,
             )?;
             sizes.memory.weights_bytes = super::add(sizes.memory.weights_bytes, extra)?;
             sizes.memory.admitted_bytes = super::add(sizes.memory.admitted_bytes, extra)?;
@@ -96,7 +117,10 @@ impl<'a> Session<'a> {
                 .unwrap_or(usize::MAX)
                 .min(options.memory_limit_bytes);
             let session_bytes = sizes.memory.admitted_bytes - sizes.memory.weights_bytes;
-            let unallocated = qmm.map_or(0, |q| q.reserved_bytes - q.physical_delta_bytes);
+            let unallocated = super::add(
+                qmm.map_or(0, |q| q.reserved_bytes - q.physical_delta_bytes),
+                steel.map_or(0, |p| p.reserved_bytes - p.physical_bytes),
+            )?;
             let required = super::add(
                 device.currentAllocatedSize(),
                 super::add(session_bytes, unallocated)?,
@@ -175,6 +199,9 @@ impl<'a> Session<'a> {
                 gate: words(chunk * INTERMEDIATE)?,
                 up: words(chunk * INTERMEDIATE)?,
                 logits: words(LOGIT_ROWS)?,
+                split_partials: steel
+                    .map(|_| Buffer::on_device(device, split_k::PARTIAL_WORDS))
+                    .transpose()?,
             };
             let k64_ready = model.down_k64_prefill_rows().contains(&chunk);
             let down_k64_ready = k64_ready && k64_input_aligned(&scratch.gate.raw);
@@ -196,7 +223,51 @@ impl<'a> Session<'a> {
                     (&scratch.gate.raw, 128 * INTERMEDIATE * 2),
                     (&scratch.status.raw, 4),
                 ]);
-            Ok(Self {
+            if steel.is_some()
+                && (!qmm_ready
+                    || !qmm::disjoint_exact_ranges([
+                        (&scratch.normalized.raw, 128 * HIDDEN * 2),
+                        (&scratch.up.raw, 128 * INTERMEDIATE * 2),
+                        (&scratch.gate.raw, 128 * INTERMEDIATE * 2),
+                        (&scratch.status.raw, 4),
+                    ]))
+            {
+                return Err(Error::Unsupported(
+                    "Nanbeige Steel dense prepack scratch layout",
+                ));
+            }
+            if let Some(partials) = &scratch.split_partials
+                && (!qmm_ready
+                    || !qmm::disjoint_exact_ranges([
+                        (&scratch.normalized.raw, split_k::ROWS * HIDDEN * 2),
+                        (&scratch.key.raw, split_k::ROWS * KV_WIDTH * 2),
+                        (&scratch.value.raw, split_k::ROWS * KV_WIDTH * 2),
+                        (&partials.raw, split_k::PARTIAL_BYTES),
+                        (&scratch.status.raw, 4),
+                    ]))
+            {
+                return Err(Error::Unsupported("Nanbeige Steel split-K scratch layout"));
+            }
+            if steel.is_some() {
+                Steel::validate_banks([
+                    &scratch.query.raw,
+                    &scratch.key.raw,
+                    &scratch.value.raw,
+                    &kv.k.raw,
+                    &kv.v.raw,
+                    &scratch.attention.raw,
+                    &scratch.status.raw,
+                ])?;
+                Steel::validate_rms(
+                    model,
+                    [
+                        &scratch.residual.raw,
+                        &scratch.normalized.raw,
+                        &scratch.status.raw,
+                    ],
+                )?;
+            }
+            let session = Self {
                 model,
                 options,
                 memory,
@@ -205,6 +276,7 @@ impl<'a> Session<'a> {
                 evaluated: 0,
                 selected: None,
                 replay_required: false,
+                fixed_steel_request: false,
                 kv,
                 scratch,
                 down_k64_ready,
@@ -212,8 +284,41 @@ impl<'a> Session<'a> {
                 fused_gate_up_ready,
                 qmm_ready,
                 diagnostic,
-            })
+            };
+            if steel.is_some() {
+                session.validate_wheel_t1_affines()?;
+                Steel::validate_head(
+                    model,
+                    [
+                        &session.scratch.normalized.raw,
+                        &session.scratch.logits.raw,
+                        &session.scratch.status.raw,
+                    ],
+                )?;
+            }
+            Ok(session)
         })
+    }
+
+    fn validate_wheel_t1_affines(&self) -> Result<()> {
+        let s = &self.scratch;
+        let check = |matrix, input: &RawBuffer, output: &RawBuffer, rows| {
+            Steel::validate_t1_affine(self.model, matrix, [input, output, &s.status.raw], rows)
+        };
+        for block in &self.model.plan.blocks {
+            for (matrix, input, output) in [
+                (block.query, &s.normalized.raw, &s.query.raw),
+                (block.key, &s.normalized.raw, &s.key.raw),
+                (block.value, &s.normalized.raw, &s.value.raw),
+                (block.attention_out, &s.attention.raw, &s.delta.raw),
+                (block.gate, &s.normalized.raw, &s.gate.raw),
+                (block.up, &s.normalized.raw, &s.up.raw),
+                (block.down, &s.gate.raw, &s.delta.raw),
+            ] {
+                check(matrix, input, output, split_k::ROWS)?;
+            }
+        }
+        check(self.model.plan.head, &s.normalized.raw, &s.logits.raw, 1)
     }
 
     /// Prepared K64 Down rows with this session's aligned SwiGLU scratch.
@@ -256,7 +361,7 @@ impl<'a> Session<'a> {
             .map(|diagnostic| diagnostic.last_qmm)
     }
 
-    /// Aligned T128 dense route availability. The final pending chunk stays packed.
+    /// Aligned T128 dense route availability. Only fixed Steel covers the final pending chunk.
     pub fn dense_gate_up_prefill_rows(&self) -> &'static [usize] {
         if self.fused_gate_up_ready {
             &[128]
@@ -306,6 +411,38 @@ impl<'a> Session<'a> {
         Ok(())
     }
 
+    /// Consume a fresh session on the exact experimental Steel workload.
+    pub fn generate_fixed_steel(
+        mut self,
+        prompt: &[u32],
+        max_new_tokens: usize,
+        stop_tokens: &[u32],
+        emit: impl FnMut(TokenEvent) -> io::Result<()>,
+    ) -> std::result::Result<Report, generation::Error> {
+        if self.model.steel.is_none()
+            || self.replay_required
+            || !self.history.is_empty()
+            || prompt.len() != FIXED_STEEL_PROMPT
+            || max_new_tokens != FIXED_STEEL_OUTPUT
+        {
+            return Err(generation::Error::InvalidRequest(
+                "Nanbeige Steel requires a fresh 512-input/32-output one-shot session",
+            ));
+        }
+        self.fixed_steel_request = true;
+        let cancelled = self.cancelled;
+        generation::generate(
+            &mut self,
+            Request {
+                input: Input::Prompt(prompt),
+                max_new_tokens,
+                stop_tokens,
+            },
+            cancelled,
+            emit,
+        )
+    }
+
     fn evaluate(&mut self, limit: usize) -> std::result::Result<usize, SessionError> {
         if self.replay_required {
             return Err(backend_error(Error::ReplayRequired));
@@ -322,14 +459,16 @@ impl<'a> Session<'a> {
             output[..rows].copy_from_slice(&self.history[start..start + rows]);
         });
         self.scratch.status.with_mut(|status| status[0] = 0);
-        let result = autoreleasepool(|_| self.submit(rows, start));
-        self.finish_chunk(rows, result)
+        let score = !self.fixed_steel_request || rows == self.pending_len();
+        let result = autoreleasepool(|_| self.submit(rows, start, score));
+        self.finish_chunk(rows, result, score)
     }
 
     fn finish_chunk(
         &mut self,
         rows: usize,
         result: Result<()>,
+        score: bool,
     ) -> std::result::Result<usize, SessionError> {
         if matches!(&result, Err(Error::Completion)) {
             self.replay_required = true;
@@ -343,8 +482,8 @@ impl<'a> Session<'a> {
         if self.scratch.status.with_slice(|words| words[0] != 0) {
             return Err(backend_error(Error::Nonfinite));
         }
-        let token = self.scratch.selected.with_slice(|words| words[0]);
-        if token as usize >= LOGIT_ROWS {
+        let token = score.then(|| self.scratch.selected.with_slice(|words| words[0]));
+        if token.is_some_and(|id| id as usize >= LOGIT_ROWS) {
             return Err(backend_error(Error::Options(
                 "Nanbeige GPU selection outside vocabulary",
             )));
@@ -367,17 +506,23 @@ impl<'a> Session<'a> {
         // [evaluated, evaluated+rows) of all 44 caches. Publishing the common
         // length makes every visit visible together.
         self.evaluated += rows;
-        self.selected = Some(token);
+        self.selected = token;
         Ok(rows)
     }
 
-    fn submit(&self, rows: usize, start: usize) -> Result<()> {
+    fn submit(&self, rows: usize, start: usize, score: bool) -> Result<()> {
+        if self.fixed_steel_request
+            && !((rows == split_k::ROWS && matches!(start, 0 | 128 | 256 | 384))
+                || (rows == 1 && Steel::supports_t1_attention(start)))
+        {
+            return Err(Error::Unsupported("Nanbeige Steel committed cut"));
+        }
         let context = &self.model.context;
         let command = context.command()?;
         let encoder = command
             .computeCommandEncoder()
             .ok_or_else(|| Error::Native("Nanbeige compute encoder absent".into()))?;
-        self.encode(&encoder, rows, start);
+        self.encode(&encoder, rows, start, score);
         encoder.endEncoding();
         command.commit();
         command.waitUntilCompleted();
@@ -387,27 +532,32 @@ impl<'a> Session<'a> {
         Ok(())
     }
 
-    fn encode(&self, encoder: &Encoder, rows: usize, start: usize) {
+    fn encode(&self, encoder: &Encoder, rows: usize, start: usize, score: bool) {
         if rows == 128 {
-            let dense = self.fused_gate_up_ready && self.pending_len() > rows;
+            let pending = self.pending_len();
+            let dense_tail = self.fixed_steel_request
+                && score
+                && start == FIXED_STEEL_PROMPT - split_k::ROWS
+                && pending == rows;
+            let dense = self.fused_gate_up_ready && (pending > rows || dense_tail);
             if let Some(diagnostic) = &self.diagnostic {
                 diagnostic.staged_dense.set(dense);
                 diagnostic.staged_qmm.set(self.qmm_ready);
             }
             if self.qmm_ready {
                 if dense {
-                    self.encode_graph::<true, true>(encoder, rows, start);
+                    self.encode_graph::<true, true>(encoder, rows, start, score);
                 } else {
-                    self.encode_graph::<false, true>(encoder, rows, start);
+                    self.encode_graph::<false, true>(encoder, rows, start, score);
                 }
                 return;
             }
             if dense {
-                self.encode_graph::<true, false>(encoder, rows, start);
+                self.encode_graph::<true, false>(encoder, rows, start, score);
                 return;
             }
         }
-        self.encode_graph::<false, false>(encoder, rows, start);
+        self.encode_graph::<false, false>(encoder, rows, start, score);
     }
 
     fn encode_graph<const FUSED_GATE_UP: bool, const USE_QMM: bool>(
@@ -415,6 +565,7 @@ impl<'a> Session<'a> {
         encoder: &Encoder,
         rows: usize,
         start: usize,
+        score: bool,
     ) {
         let model = self.model;
         let context = &model.context;
@@ -452,6 +603,9 @@ impl<'a> Session<'a> {
         } else {
             ffn
         };
+        let wheel = model.steel.as_ref().filter(|_| self.fixed_steel_request);
+        let decode = wheel.filter(|_| rows == 1);
+        let steel = wheel.filter(|_| rows == split_k::ROWS);
         let affine = |(op, m_tile, n_tile): (Op, usize, usize),
                       matrix: Matrix,
                       input: &RawBuffer,
@@ -460,16 +614,26 @@ impl<'a> Session<'a> {
                       input_row| {
             let columns = matrix.layout.columns();
             let outputs = matrix.layout.rows();
+            let banks = [
+                weights(matrix.weights),
+                weights(matrix.scales),
+                weights(matrix.biases),
+                input,
+                output,
+            ];
+            if let Some(wheel) = decode {
+                debug_assert_eq!((count, input_row), (1, 0));
+                wheel.encode_affine(encoder, banks, columns, outputs, 0);
+                model
+                    .qmm
+                    .as_ref()
+                    .expect("Nanbeige Steel T1 affine finite scan")
+                    .scan_output(encoder, &[output, &s.status.raw], outputs);
+                return;
+            }
             dispatch(
                 op,
-                &[
-                    weights(matrix.weights),
-                    weights(matrix.scales),
-                    weights(matrix.biases),
-                    input,
-                    output,
-                    &s.status.raw,
-                ],
+                &[banks[0], banks[1], banks[2], input, output, &s.status.raw],
                 &[count as u32, columns as u32, outputs as u32, input_row],
                 [outputs / n_tile, count.div_ceil(m_tile)],
             );
@@ -494,12 +658,21 @@ impl<'a> Session<'a> {
             }
         };
         let norm = |input: &RawBuffer, gain: usize, output: &RawBuffer| {
-            dispatch(
-                Op::Rms,
-                &[input, weights(gain), output, &s.status.raw],
-                &[rows as u32, HIDDEN as u32],
-                [rows, 1],
-            );
+            if let Some(wheel) = wheel {
+                wheel.encode_rms(encoder, [input, weights(gain), output], rows);
+                model
+                    .qmm
+                    .as_ref()
+                    .expect("Nanbeige Steel RMSNorm finite scan")
+                    .scan_output(encoder, &[output, &s.status.raw], rows * HIDDEN);
+            } else {
+                dispatch(
+                    Op::Rms,
+                    &[input, weights(gain), output, &s.status.raw],
+                    &[rows as u32, HIDDEN as u32],
+                    [rows, 1],
+                );
+            }
         };
         let residual_add = || {
             dispatch(
@@ -535,37 +708,99 @@ impl<'a> Session<'a> {
             ];
             norm(&s.residual.raw, block.input_norm, &s.normalized.raw);
             project(query, block.query, &s.normalized.raw, &s.query.raw);
-            for (projection, matrix, target) in [
-                (ordinary, block.key, &s.key),
-                (ordinary, block.value, &s.value),
-            ] {
-                affine(projection, matrix, &s.normalized.raw, &target.raw, rows, 0);
+            for (matrix, target) in [(block.key, &s.key), (block.value, &s.value)] {
+                if let Some(steel) = steel {
+                    let partials = s.split_partials.as_ref().expect("admitted split-K scratch");
+                    steel.split.encode(
+                        encoder,
+                        [
+                            weights(matrix.weights),
+                            weights(matrix.scales),
+                            weights(matrix.biases),
+                        ],
+                        &s.normalized.raw,
+                        partials,
+                        &target.raw,
+                    );
+                    model
+                        .qmm
+                        .as_ref()
+                        .expect("Nanbeige Steel split-K finite scan")
+                        .scan_output(encoder, &[&target.raw, &s.status.raw], rows * KV_WIDTH);
+                } else {
+                    affine(ordinary, matrix, &s.normalized.raw, &target.raw, rows, 0);
+                }
             }
-            dispatch(
-                Op::RotateCache,
-                &[
-                    &s.query.raw,
-                    &s.key.raw,
-                    &s.value.raw,
-                    &self.kv.k.raw,
-                    &self.kv.v.raw,
-                    &s.status.raw,
-                ],
-                &cache_shape,
-                [(rows * ((QUERY_WIDTH + KV_WIDTH) / 2)).div_ceil(32), 1],
-            );
-            dispatch(
-                Op::Attention,
-                &[
-                    &s.query.raw,
-                    &self.kv.k.raw,
-                    &self.kv.v.raw,
-                    &s.attention.raw,
-                    &s.status.raw,
-                ],
-                &cache_shape,
-                [rows * plan::QUERY_HEADS, 1],
-            );
+            let rotary_banks = [
+                &*s.query.raw,
+                &*s.key.raw,
+                &*s.value.raw,
+                &*self.kv.k.raw,
+                &*self.kv.v.raw,
+                &*s.status.raw,
+            ];
+            if let Some(wheel) = wheel {
+                wheel.encode_rotary(encoder, rotary_banks, rows, start, visit.kv_slot);
+            } else {
+                dispatch(
+                    Op::RotateCache,
+                    &rotary_banks,
+                    &cache_shape,
+                    [(rows * ((QUERY_WIDTH + KV_WIDTH) / 2)).div_ceil(32), 1],
+                );
+            }
+            if let Some(wheel) = decode {
+                wheel.encode_t1_attention(
+                    encoder,
+                    [
+                        &s.query.raw,
+                        &self.kv.k.raw,
+                        &self.kv.v.raw,
+                        &s.attention.raw,
+                    ],
+                    start,
+                    visit.kv_slot,
+                );
+                model
+                    .qmm
+                    .as_ref()
+                    .expect("Nanbeige Steel wheel vector attention finite scan")
+                    .scan_output(encoder, &[&s.attention.raw, &s.status.raw], QUERY_WIDTH);
+            } else if let Some(steel) = steel {
+                steel.encode_attention(
+                    encoder,
+                    [
+                        &s.query.raw,
+                        &self.kv.k.raw,
+                        &self.kv.v.raw,
+                        &s.attention.raw,
+                    ],
+                    start,
+                    visit.kv_slot,
+                );
+                model
+                    .qmm
+                    .as_ref()
+                    .expect("Nanbeige Steel finite scan")
+                    .scan_output(
+                        encoder,
+                        &[&s.attention.raw, &s.status.raw],
+                        rows * QUERY_WIDTH,
+                    );
+            } else {
+                dispatch(
+                    Op::Attention,
+                    &[
+                        &s.query.raw,
+                        &self.kv.k.raw,
+                        &self.kv.v.raw,
+                        &s.attention.raw,
+                        &s.status.raw,
+                    ],
+                    &cache_shape,
+                    [rows * plan::QUERY_HEADS, 1],
+                );
+            }
             project(
                 attention_out,
                 block.attention_out,
@@ -579,26 +814,38 @@ impl<'a> Session<'a> {
                 &s.normalized.raw,
             );
             if let Some(dense) = dense {
-                dense.encode(
-                    encoder,
-                    visit.physical_layer,
-                    &s.normalized.raw,
-                    &s.gate.raw,
-                    &s.status.raw,
-                );
+                if let Some(steel) = steel {
+                    dense.encode_prepacked(
+                        &steel.prepacked,
+                        encoder,
+                        visit.physical_layer,
+                        [&s.normalized.raw, &s.up.raw, &s.gate.raw, &s.status.raw],
+                    );
+                } else {
+                    dense.encode(
+                        encoder,
+                        visit.physical_layer,
+                        &s.normalized.raw,
+                        &s.gate.raw,
+                        &s.status.raw,
+                    );
+                }
             } else {
                 affine(gate_up, block.gate, &s.normalized.raw, &s.gate.raw, rows, 0);
                 affine(gate_up, block.up, &s.normalized.raw, &s.up.raw, rows, 0);
-                dispatch(
-                    Op::Swiglu,
-                    &[&s.gate.raw, &s.up.raw, &s.status.raw],
-                    &[rows as u32, INTERMEDIATE as u32],
-                    [(rows * INTERMEDIATE).div_ceil(32), 1],
-                );
+                if let Some(wheel) = decode {
+                    wheel.encode_decode_swiglu(encoder, [&s.gate.raw, &s.up.raw, &s.status.raw]);
+                } else {
+                    dispatch(
+                        Op::Swiglu,
+                        &[&s.gate.raw, &s.up.raw, &s.status.raw],
+                        &[rows as u32, INTERMEDIATE as u32],
+                        [(rows * INTERMEDIATE).div_ceil(32), 1],
+                    );
+                }
             }
             project(down, block.down, &s.gate.raw, &s.delta.raw);
             residual_add();
-
             if visit.normalize_after {
                 norm(&s.residual.raw, model.plan.final_norm, &s.normalized.raw);
                 // The first loop's normalized output feeds loop two. The
@@ -625,14 +872,36 @@ impl<'a> Session<'a> {
                 }
             }
         }
-        affine(
-            ordinary,
-            model.plan.head,
-            &s.normalized.raw,
-            &s.logits.raw,
-            1,
-            (rows - 1) as u32,
-        );
+        if !score {
+            return;
+        }
+        if let Some(steel) = steel.filter(|_| start == FIXED_STEEL_PROMPT - split_k::ROWS) {
+            let head = model.plan.head;
+            steel.encode_prefill_head(
+                encoder,
+                [
+                    weights(head.weights),
+                    weights(head.scales),
+                    weights(head.biases),
+                    &s.normalized.raw,
+                    &s.logits.raw,
+                ],
+            );
+            model
+                .qmm
+                .as_ref()
+                .expect("Nanbeige Steel head finite scan")
+                .scan_output(encoder, &[&s.logits.raw, &s.status.raw], LOGIT_ROWS);
+        } else {
+            affine(
+                ordinary,
+                model.plan.head,
+                &s.normalized.raw,
+                &s.logits.raw,
+                1,
+                (rows - 1) as u32,
+            );
+        }
         dispatch(
             Op::Greedy,
             &[&s.logits.raw, &s.selected.raw],
@@ -765,10 +1034,10 @@ mod tests {
         session.append(&[374]).unwrap();
         session.scratch.tokens.with_mut(|tokens| tokens[0] = 374);
         session.scratch.status.with_mut(|status| status[0] = 0);
-        autoreleasepool(|_| session.submit(1, 2)).unwrap();
+        autoreleasepool(|_| session.submit(1, 2, true)).unwrap();
         cancelled.store(true, Ordering::Relaxed);
         assert!(matches!(
-            session.finish_chunk(1, Ok(())),
+            session.finish_chunk(1, Ok(()), true),
             Err(SessionError::Model(crate::model::Error::Cancelled))
         ));
         assert_eq!(session.evaluated_len(), 2);
@@ -785,7 +1054,11 @@ mod tests {
         assert_eq!(session.evaluate_next_decode_chunk().unwrap(), 1);
         assert_eq!(session.evaluated_len(), 3);
 
-        assert!(session.finish_chunk(1, Err(Error::Completion)).is_err());
+        assert!(
+            session
+                .finish_chunk(1, Err(Error::Completion), true)
+                .is_err()
+        );
         assert!(session.logits().is_none());
         assert_eq!(session.evaluated_len(), 0);
         assert!(session.append(&[13]).is_err());

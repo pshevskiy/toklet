@@ -26,6 +26,14 @@ The loader authenticates the exact file before passing the same owned
 bytes to Metal. SHA-256 is
 `78496343fbbcb95ac8949cb4c384baeb8c0edf4f8f87a37e506b844b02d88353`.
 
+For the experimental prepacked Steel route on M1 Pro with macOS 26, add
+`--steel-prefill-metallib /path/to/mlx.metallib` to the command above. Use
+the pinned MLX 0.32.4 wheel image with SHA-256
+`c6d7a3facb83568f6e4cb2cf4a8c736ee29302571a48343cb9a3a4d1cd3e3893`.
+Admission requires exactly 512 prompt IDs, a 32-token output limit,
+capacity 544 and chunk size 128. An unsupported configuration returns
+an error. The terminal JSON reports `steel_prefill: true` for this route.
+
 The two independent warm confirmation orders improved completion by
 8.63% and 8.45% against Toklet’s dense option, at 5.17 GiB peak. Decode
 intervals crossed zero. A single cold CLI sample completed in 13.738 s

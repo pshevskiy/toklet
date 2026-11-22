@@ -83,7 +83,19 @@ pub(super) fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
 
     let clock = Instant::now();
     let want_dense = a.dense_prefill && options.prefill_chunk_size == 128 && tokens.len() > 128;
-    let model = if want_dense {
+    let fixed_steel = a.steel_prefill_metallib.is_some();
+    let model = if let Some(wheel) = &a.steel_prefill_metallib {
+        if tokens.len() != 512 {
+            return Err(
+                invalid("--steel-prefill-metallib requires exactly 512 prompt tokens").into(),
+            );
+        }
+        let qmm = a
+            .qmm_prefill_metallib
+            .as_deref()
+            .ok_or_else(|| invalid("--steel-prefill-metallib requires --qmm-prefill-metallib"))?;
+        Model::load_fixed_steel(&a.model, options, qmm, wheel)?
+    } else if want_dense {
         if let Some(path) = &a.qmm_prefill_metallib {
             Model::load_dense_qmm(&a.model, options, false, path)?
         } else {
@@ -107,48 +119,62 @@ pub(super) fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
         Some(stream)
     };
 
+    let session_stats = (a.json || a.stats).then(|| {
+        (
+            session.memory(),
+            session.down_k64_prefill_rows(),
+            session.attention_compact_prefill_rows(),
+            session.dense_gate_up_prefill_rows(),
+            session.qmm_prefill_rows(),
+        )
+    });
     let mut out = io::stdout().lock();
     let inference = Instant::now();
     let mut first_output = None;
     let mut output_seconds = 0.;
-    let mut report = generation::generate(
-        &mut session,
-        Request {
-            input: Input::Prompt(&tokens),
-            max_new_tokens: a.max,
-            stop_tokens: &stops,
-        },
-        &CANCELLED,
-        |event| {
-            let clock = Instant::now();
-            let emitted = if let Some(stream) = &mut stream {
-                if event.token_id >= TOKENIZER_VOCAB {
-                    return Err(invalid(format!(
-                        "Nanbeige selected padded output ID {} outside the tokenizer vocabulary",
-                        event.token_id,
-                    )));
-                }
-                let text = stream.push(&[event.token_id])?;
-                out.write_all(text.as_bytes())?;
-                !text.is_empty()
-            } else {
-                writeln!(
-                    out,
-                    "{}",
-                    json!({"event":"token", "token_id":event.token_id, "index":event.index,
-                        "elapsed_seconds":event.elapsed_seconds})
-                )?;
-                true
-            };
-            out.flush()?;
-            let flushed = Instant::now();
-            if emitted {
-                first_output.get_or_insert(flushed);
+    let emit = |event: generation::TokenEvent| {
+        let clock = Instant::now();
+        let emitted = if let Some(stream) = &mut stream {
+            if event.token_id >= TOKENIZER_VOCAB {
+                return Err(invalid(format!(
+                    "Nanbeige selected padded output ID {} outside the tokenizer vocabulary",
+                    event.token_id,
+                )));
             }
-            output_seconds += flushed.duration_since(clock).as_secs_f64();
-            Ok(())
-        },
-    )?;
+            let text = stream.push(&[event.token_id])?;
+            out.write_all(text.as_bytes())?;
+            !text.is_empty()
+        } else {
+            writeln!(
+                out,
+                "{}",
+                json!({"event":"token", "token_id":event.token_id, "index":event.index,
+                        "elapsed_seconds":event.elapsed_seconds})
+            )?;
+            true
+        };
+        out.flush()?;
+        let flushed = Instant::now();
+        if emitted {
+            first_output.get_or_insert(flushed);
+        }
+        output_seconds += flushed.duration_since(clock).as_secs_f64();
+        Ok(())
+    };
+    let mut report = if fixed_steel {
+        session.generate_fixed_steel(&tokens, a.max, &stops, emit)?
+    } else {
+        generation::generate(
+            &mut session,
+            Request {
+                input: Input::Prompt(&tokens),
+                max_new_tokens: a.max,
+                stop_tokens: &stops,
+            },
+            &CANCELLED,
+            emit,
+        )?
+    };
     if let Some(stream) = &mut stream {
         let clock = Instant::now();
         let tail = stream.finish()?;
@@ -170,8 +196,7 @@ pub(super) fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
         } else {
             0
         };
-        if a.json || a.stats {
-            let memory = session.memory();
+        if let Some((memory, down_k64, attention_compact, dense_rows, qmm_rows)) = session_stats {
             let mut stats = json!({
                 "event": "stats",
                 "model_profile": PROFILE,
@@ -182,8 +207,8 @@ pub(super) fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
                                "single_row": "grouped_affine_vector_fp32_accumulate",
                                "ffn_m32_prefill_rows": model.ffn_m32_prefill_rows(),
                                "gate_up_compact_prefill_rows": model.gate_up_compact_prefill_rows(),
-                               "down_k64_prefill_rows": session.down_k64_prefill_rows(),
-                               "attention_compact_prefill_rows": session.attention_compact_prefill_rows()},
+                               "down_k64_prefill_rows": down_k64,
+                               "attention_compact_prefill_rows": attention_compact},
                 "kv_dtype": "BF16",
                 "sampler": "raw_logits_greedy",
                 "numerical_qualification": false,
@@ -204,10 +229,15 @@ pub(super) fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
                 "logical_memory": logical_memory(memory, external),
                 "memory_admitted_bytes": memory.admitted_bytes + external,
             });
+            if fixed_steel {
+                stats["steel_prefill"] = json!(true);
+                stats["projection"]["single_row"] = json!("mlx_q4_vector_fp32_accumulate");
+            }
             if a.dense_prefill {
-                let available = session.dense_gate_up_prefill_rows() == [128];
+                let available = dense_rows == [128];
                 let committed = if available {
-                    (report.prefill_tokens / 128).min((tokens.len() - 1) / 128)
+                    let eligible_rows = tokens.len() - usize::from(!fixed_steel);
+                    (report.prefill_tokens / 128).min(eligible_rows / 128)
                 } else {
                     0
                 };
@@ -234,7 +264,7 @@ pub(super) fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
                 });
             }
             if a.qmm_prefill_metallib.is_some() {
-                let rows = session.qmm_prefill_rows();
+                let rows = qmm_rows;
                 let committed = if rows == [128] {
                     report.prefill_tokens / 128
                 } else {

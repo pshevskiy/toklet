@@ -7,6 +7,8 @@ mod dense_basis;
 mod kernel;
 mod qmm;
 mod session;
+mod split_k;
+mod steel;
 
 use super::{ALLOWANCE, Error, Result, add, memory::Buffer};
 use crate::{
@@ -123,6 +125,7 @@ pub struct Model {
     dense_denial: Option<String>,
     qmm: Option<qmm::Qmm>,
     qmm_denial: Option<String>,
+    steel: Option<steel::Steel>,
 }
 
 impl Model {
@@ -165,6 +168,21 @@ impl Model {
         } else {
             model.qmm_denial = Some("Nanbeige QMM requires admitted dense prefill".into());
         }
+        Ok(model)
+    }
+
+    /// Prepare the experimental fixed-geometry prepacked Steel route.
+    pub fn load_fixed_steel(
+        directory: &Path,
+        options: Options,
+        qmm_metallib: &Path,
+        wheel_metallib: &Path,
+    ) -> Result<Self> {
+        steel::Steel::validate_options(options)?;
+        let mut model = Self::load_dense_qmm(directory, options, false, qmm_metallib)?;
+        model.steel = Some(autoreleasepool(|_| {
+            steel::Steel::prepare(&model, options, wheel_metallib)
+        })?);
         Ok(model)
     }
 
@@ -211,6 +229,7 @@ impl Model {
                 dense_denial,
                 qmm: None,
                 qmm_denial: None,
+                steel: None,
             })
         })
     }
