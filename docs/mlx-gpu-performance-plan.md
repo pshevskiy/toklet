@@ -272,21 +272,36 @@ decode. Keep both candidates detached under the original rule.
 
 The local vLLM diagnostic still has a 0.82–0.83 s completion lead.
 The archive puts three omitted prefill heads at about 38 ms of GPU
-time. Matching those scored rows closes a work mismatch. The packed
-G64 shuffle test reuses sixteen exact affine values inside each SIMD
-half across the T128 FFN. It reproduces the native Gate/Up and Down
-words. It adds about 4.7 ms per visit in both orders, closing the trial.
+time. Guarded real CLI controls confirm the same 32 scored rows with
+exact output and state. Public timing and attention arithmetic still
+need to match. The packed G64 shuffle test reuses sixteen exact affine
+values inside each SIMD half across the T128 FFN. It reproduces both
+native output panels and adds about 4.7 ms per visit in both orders,
+closing the trial.
 [Astra proposal and controls](../artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-g64-shuffle-1/PROPOSAL.md) ·
 [Isolated FFN result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-affine-codebook-1/normal-1.json) ·
-[Detached 32-row CLI path](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-head-cli-1/RUN.md).
+[Detached 32-row CLI path](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-head-cli-1/RUN.md) ·
+[Real CLI validation](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-head-cli-validation-1/REVIEW.md).
 
-The next isolated prefill screen prepares only one Gate/Up BF16 pair
-in the existing Apple7 matrix fragment order. Its one-layer payload
-is 132,120,576 bytes. The design keeps packed Q4 for decode and uses
-the same FP32 K8 accumulation. Price completed work and preparatory
-cost separately. A full 22-pair layout would add 2,906,652,672 bytes
-and needs measured admission under the 6 GiB ceiling.
-[Detached layout and numerical checks](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-gate-up-1/RUN.md).
+One Gate/Up BF16 pair in the existing Apple7 fragment order reduces
+completed GPU time from about 10.75–10.78 to 9.00 ms for the exact
+T128 FFN chain. Its 132,120,576-byte allocation takes 7.84 ms, and
+preparation completes in 7.44 ms wall time including 4.43 ms on the
+device. All 20 measured pairs improve. The connected design would
+add 2,906,652,672 bytes across 22 physical pairs while retaining packed
+Q4 for decode and the same FP32 K8 accumulation. The guarded fit observes
+that exact allocation at 5.06 GiB peak. Allocation and prepare take 0.658 s
+in total in that fit, with terminal and fallback state matching exactly.
+Ordinary completion improves 11.72% and 11.38% at 5.16 GiB peak.
+Both paired decode intervals show a slowdown, with median increases of
+16.47 and 13.23 ms. Hold the route. Use one binary to compare fresh
+packed-only and dense-resident packed-prefill owners. Within the latter
+owners, vary prefill with the same resident weights and T1 graph. These
+contrast resident footprint and preceding computation for attribution.
+[Detached layout and numerical checks](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-gate-up-1/RUN.md) ·
+[Isolated timings](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-gate-up-1/normal-2.json) ·
+[Guarded model fit](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/fit-normal.json) ·
+[Ordinary timings and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/REVIEW.md).
 
 For request-summary qualification, compare the same CLI output mode with
 summary collection enabled and disabled. Keep counters at existing completion

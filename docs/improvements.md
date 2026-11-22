@@ -164,6 +164,33 @@ closes below the 1.240 ms per-visit savings gate.
 [Isolated measurements](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-affine-codebook-1/normal-1.json) ·
 [Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-affine-codebook-1/REVIEW.md).
 
+The dense L0 Gate/Up layout reproduces all 1,769,472 native FFN
+words and 16,384 signed prepared coefficients, with shared packed
+Down and the independent MLX Down control. GPU medians fall from
+10.750 to 8.997 ms and from 10.776 to 9.002 ms. Both paired lower
+savings clear 1.240 ms. Metal allocates 132,120,576 bytes and takes
+7.44 ms wall time to prepare it after allocation. The strict build
+and both readers pass. Full-model memory and ordinary speed remain open.
+[Guarded result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-gate-up-1/normal-2.json) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-gate-up-1/REVIEW.md).
+
+The full-model dense fit holds 22 disjoint pairs at 5.06 GiB peak.
+Cold allocation takes 366 ms and preparation 292 ms wall time,
+including 71 ms on the device. The guarded terminal logits, all
+44 K/V pairs and T1/T43/T64 fallback controls match the release.
+The low-budget loader uses packed weights and the later undersized
+session is rejected. The compiled T1 graph bypasses dense selection.
+[Guarded fit](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/fit-normal.json) ·
+[Compiled T1 graph](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/ARM64-REVIEW.md).
+
+The dense connected requests finish in 4.076 and 4.086 s versus
+4.618 and 4.611 s. First token arrives about 0.56 s sooner. All 52
+requests and four terminal witnesses match, with 5.16 GiB peak.
+Decode is slower in all 20 measured pairs, with median increases of
+16.47 and 13.23 ms. Keep the candidate detached pending one bounded
+diagnostic of resident weight footprint and preceding prefill work.
+[Ordinary results and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-connected-1/REVIEW.md).
+
 The first same-weight LFM3 FFN replay changes 27 of 2,048
 canonical residual words on the first affected row and fails
 the block's exact admission. The separate canonical T1 ConvIn
@@ -202,6 +229,14 @@ different head work and attention arithmetic. The external
 comparison remains open.
 [Raw clock and work evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-direct-clocks-1/RUN.md) ·
 [Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-direct-clocks-1/REVIEW.md).
+
+The real detached Nanbeige CLI reduces head work from 35 to 32
+completed scores on the pinned 512/32 request. Both modes match all
+32 IDs, the original JSON schema, all 44 terminal K/V pairs and the
+full BF16 logit digest. Cancellation after a completed unscored body,
+an injected status error and real broken stdout pass. The guarded
+peak is 2.39 GiB. Qualification covers this exact CLI work and state.
+[Real CLI validation and review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-head-cli-validation-1/REVIEW.md).
 
 On Nanbeige, the detached 512/32 stage run passes all 12 requests,
 14,928 sampled stages and four exact terminal state witnesses at
