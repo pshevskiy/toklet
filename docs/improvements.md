@@ -656,6 +656,16 @@ Peak is 5.47 GiB. The 870 default and 1,075 Metal tests pass with strict
 all-target Clippy and a fresh release build. Astra approves the opt-in.
 [Normal CLI checks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prepacked-cli-1/RUN.md).
 
+The integrated Steel library worker clears the frozen private peer tests.
+Across both orders, completion falls 6.04% and 6.33% against Ollama and
+15.05% and 15.39% against vLLM. Every paired lower endpoint exceeds 5%.
+TTFT is 201–205 ms faster than Ollama. Native decode adds 3.73 ms in the
+first order and saves 7.71 ms in reverse. Both readers validate 78 exact
+requests at 5.58 GiB guarded peak. Astra verifies the raw receipts and timing
+from fresh session admission to the first and final sampled IDs. The
+original summary gates remain open.
+[Integrated timing](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-integrated-cohorts-1/RESULT.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

@@ -418,6 +418,17 @@ fresh same-boundary worker comparison for integrated performance and keep
 the original O4 summary estimator and disk admission.
 [Normal CLI checks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prepacked-cli-1/RUN.md).
 
+The integrated worker confirms the private fixed 512/32 result in two
+reversed orders at 5.58 GiB guarded peak. Prepacking cleared the historical
+60–62 ms deficit to the Ollama gate. The integrated lead is 199–208 ms
+in completion. The remaining decode difference is +3.73 ms in one order
+and −7.71 ms in reverse. Keep dense tail and the prepacked activations.
+Price additional decode headroom by moving seven standalone T1 affine
+finite checks per visit into their immediate consumers. Preserve exact
+BF16 outputs, sticky status, rollback and the independent original
+paired and marginal 1% summary gates.
+[Integrated timing](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-integrated-cohorts-1/RESULT.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).
