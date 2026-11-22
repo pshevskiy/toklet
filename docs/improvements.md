@@ -380,8 +380,14 @@ bodies and 31 decode evaluations with exactly 32 one-row heads. Both
 match every sampled ID and both sets of 44 cache hashes. Peak is
 3.18 GiB for direct MLX and 3.86 GiB for private vLLM. The vLLM witness
 uses real scatter and sampling with one dense attention result per visit.
-Prepare the ordinary timing path with that route independent of recording.
-[Matched work and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-mlx-matched-32-1/ACTUAL-REVIEW.md).
+The lean timed path retains that route independently of recording and
+removes the inherited head observer. The 52 requests complete in
+3.312–3.316 s for direct MLX and 3.631–3.640 s for private vLLM.
+Peak rises from 3.18 GiB to 3.92 GiB across these two runtime modes.
+The medians differ about 45 ms at TTFT and 275 ms after the first ID.
+Toklet's exact 32-head route still needs to join this timing protocol.
+[Matched work and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-mlx-matched-32-1/ACTUAL-REVIEW.md) ·
+[Matched private clocks and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-mlx-matched-32-timing-1/ACTUAL-REVIEW.md).
 
 The first same-weight LFM3 FFN replay changes 27 of 2,048
 canonical residual words on the first affected row and fails

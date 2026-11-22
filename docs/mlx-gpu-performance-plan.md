@@ -176,12 +176,16 @@ Its saved terminal cache still differs. The direct MLX and private vLLM
 witnesses join all 32 one-row scores, their own sampled IDs and both
 44-owner cache snapshots. They use four T128 bodies, suppress the first
 three heads, gather the last prefill row before projecting and execute
-31 T1 evaluations. For swapped ordinary cohorts, preserve these execution
-boundaries and keep the dense route active independently of recording.
+31 T1 evaluations. Both swapped cohorts retain these boundaries and
+time the private vLLM dense route with its inherited head observer
+removed. The current private vLLM median is 3.631–3.640 s and direct
+MLX is 3.312–3.316 s. Use this workload to qualify the current native
+32-head route and reproduce the ordinary comparison after integration.
 [Native admission results](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/RUN.md) ·
 [External numerical review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/ACTUAL-REVIEW.md) ·
 [First head witness and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-first-head-shape-1/ACTUAL-REVIEW.md) ·
-[Matched work and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-mlx-matched-32-1/ACTUAL-REVIEW.md).
+[Matched work and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-mlx-matched-32-1/ACTUAL-REVIEW.md) ·
+[Matched private clocks and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-mlx-matched-32-timing-1/ACTUAL-REVIEW.md).
 
 The official unquantized parent contains 4,169,800,704 stored BF16
 parameters. Its independent embedding and head contribute about

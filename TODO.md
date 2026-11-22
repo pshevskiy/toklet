@@ -344,6 +344,9 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   It passes exact isolated Q/O/Down outputs on the M1 Pro and both
   signed arithmetic and nonfinite controls. Connect this image to the
   actual Rust CLI opt-in and repeat fit, state and ordinary checks.
+  Astra approves the detached opt-in source. The first build stops
+  during formatting because the archive omits a tracked test fixture.
+  Repair the shared compile input inventory before repeating the build.
   The separate Gate/Up replacement misses the offline latency budget.
   Closing the remaining conditional external gap needs 2.84 ms for
   the complete pair, versus 6.43 ms for the bare archived MLX calls.
@@ -351,6 +354,8 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   [Astra fit and linked-path review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/FIT-REVIEW.md) ·
   [Ordinary cohorts and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/ACTUAL-REVIEW.md) ·
   [Single-kernel parity and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-one-symbol-1/ACTUAL-REVIEW.md) ·
+  [Detached opt-in review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-product-1/REVIEW.md) ·
+  [Detached build fixture failure](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-product-1/build-1/fmt/stderr.log) ·
   [Gate/Up latency screen](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-gate-up-screen-1/SCREEN.md).
 - [x] Price the remaining Nanbeige gap against the direct MLX GPU graph.
   Both owners reproduce the 32 released IDs on all 26 requests.
@@ -463,9 +468,11 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   same 128-row panel reproduces all 166,144 independent oracle words.
   The shadow-free direct MLX and private vLLM witnesses now match all
   32 scores and both 44-owner cache snapshots at 3.18 and 3.86 GiB.
-  Retain dense route selection independently of observation in the
-  lean worker before timing either order. Qualify the current native
-  32-head opt-in separately before an external performance comparison.
+  The lean worker keeps dense selection independent of its observers.
+  Both timing orders verify all 52 requests. Direct MLX completes in
+  3.312–3.316 s at 3.18 GiB peak. Private vLLM takes 3.631–3.640 s
+  at 3.92 GiB. Most of that difference occurs during decode. Qualify
+  the native 32-head route before using these clocks as a Toklet gate.
   The separately guarded local vLLM timing diagnostic completes
   26 requests at 3.539–3.540 s median completion, 2.489 s first
   ID, and 3.76 GiB peak. The tested Toklet owners score more rows
@@ -506,6 +513,7 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   [Guarded dense diagnostic](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-full-dense-attention-1/normal-1.json) ·
   [Head shape diagnostic and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-first-head-shape-1/ACTUAL-REVIEW.md) ·
   [Matched MLX and vLLM work and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-mlx-matched-32-1/ACTUAL-REVIEW.md) ·
+  [Matched private clocks and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-mlx-matched-32-timing-1/ACTUAL-REVIEW.md) ·
   [Ollama terminal numeric comparison](artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/TERMINAL-NUMERIC.md) ·
   [Astra external numerical review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/ACTUAL-REVIEW.md).
   [External admission proof](artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-external-admission-1/result.json) ·
