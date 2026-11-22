@@ -445,6 +445,14 @@ still misses. Require independently evidenced improvement and a fresh
 real enabled/disabled comparison with the original tape, exports and gates.
 [LFM3 control review](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-sham-readiness-1/ACTUAL-REVIEW.md).
 
+The Gemma T32 candidate passes the original block 9 with exact scores and
+K/V. Its final 17-token cut uses the CPU fallback. Blocks 0 and 9 cover
+1,808 original targets. Continue blocks 1–8 at the frozen reset boundaries.
+For the original 100 tasks, use the verified hybrid generation constructor
+and a C567 test probe that checks actual per-cut backing and route counts
+while preserving prompt, greedy and stop behavior.
+[Gemma block 9 proof](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block9-1/RESULT.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

@@ -683,6 +683,14 @@ nominal TTFT shifts. The prior enabled/disabled marginal TTFT upper is
 1.06524%. A real comparison after an evidenced change still needs all gates.
 [LFM3 control review](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-sham-readiness-1/ACTUAL-REVIEW.md).
 
+Gemma’s original BF16 loss block 9 matches all 784 archived scores and the
+terminal row. A same-tape scalar-attention control matches 150 physical and
+150 chronological K/V planes. The 25 cuts give 240 Metal and 635 CPU visits,
+including the T17 tail, under a 4.48 GiB guarded peak. Formatting, strict
+Metal Clippy, locked release linking and the geometry test pass. Astra
+approves the block. Blocks 0 and 9 cover 1,808 of 10,000 original targets.
+[Gemma block 9 proof](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block9-1/RESULT.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

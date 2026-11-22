@@ -23,10 +23,13 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   Astra verifies the raw clocks, all 64 exact generations and zero exports.
   The actual enabled/disabled result remains 1.06524% against the 1% gate.
   [LFM3 control](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-sham-readiness-1/ACTUAL-REVIEW.md).
-- [ ] **Next** — Complete the in-flight original Gemma loss block 9 test.
-  Preserve the original paired and marginal 1% summary gates for a fresh
+- [x] **Gemma loss block 9** — Both guarded owners match all 784 scores,
+  the terminal row and 300 K/V planes. The 25 cuts include the late T17
+  fallback and 240 early Metal visits. Astra approves the isolated block.
+  [Gemma block 9 proof](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block9-1/RESULT.md).
+- [ ] **Next** — Complete Gemma loss blocks 1–8 and the original 100 tasks.
+  Preserve the original paired and marginal 1% summary gates for fresh
   enabled/disabled qualification after an evidenced change.
-  [Gemma block 9 plan](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block9-1/REVIEW.md).
 
 ## Recent implementation and evidence
 
