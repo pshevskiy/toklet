@@ -247,6 +247,17 @@ Test reuse of a single loaded weight tile across two 32-row
 activation tiles inside T128 first. Require exact FP32 partials
 and charge all intermediate traffic, finite checks and merge.
 [Connected comparison](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-connected-splitk-1/normal.json).
+
+The matched rotary FMA order fixes all five Q differences on the
+frozen cut. On fully identical inputs the GQA replay still differs
+in 237 words. Test the pinned Steel tile with the corrected rotary
+and validate later cuts before any public route change. Sharing one
+dense Gate/Up weight tile across two activation tiles preserves
+the result and loses all 40 measured pairs. Threadgroup storage
+grows from 4,608 to 17,408 bytes. Retain the incumbent for this
+workload and record the result before further reuse work.
+[Attention and rotary](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-replay-1/RUN.md) ·
+[Gate/Up measurement](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-dense-tile-reuse-1/RUN.md).
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

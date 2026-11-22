@@ -385,7 +385,13 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   The same-build control reproduces the incumbent exactly. Astra
   approves both runs. Restoring the detached fixtures clears format,
   strict all-target Metal Clippy and the targeted topology test.
-  Next align RoPE and attention and price real weight-tile reuse.
+  Reordering the first rotary FMA fixes all five Q differences on the
+  frozen T128 cut. Same-operand attention still differs in 237 words.
+  The matched Gate/Up reuse candidate is slower in all 40 pairs, so
+  keep the incumbent. Both readers, hardware guards and Astra review
+  pass. Next connect the rotary change and the pinned Steel attention.
+  [Rotary and attention](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-replay-1/RUN.md) ·
+  [Gate/Up timing](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-dense-tile-reuse-1/RUN.md).
   [Connected comparison and checks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-connected-splitk-1/RUN.md).
   [K/V and shape evidence](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
   [First native divergence](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json) ·

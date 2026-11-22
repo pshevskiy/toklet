@@ -480,6 +480,18 @@ terminal pairs. Peak guarded memory is 5.07 GiB.
 [Connected report](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-connected-splitk-1/normal.json) ·
 [Incumbent control](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-connected-splitk-1/control.json) ·
 [Astra review and scoped checks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-connected-splitk-1/RUN.md).
+
+The first rotary FMA change matches all first-cut Q and K words.
+The frequency-only control keeps all five Q differences. Replaying
+causal attention on identical Q/K/V leaves 237 of 786,432 output
+words different. The dense Gate/Up weight-sharing candidate matches
+all 1,376,256 SwiGLU and 393,216 Down words and loses all 40 timing
+pairs. Isolated GPU medians rise from 5.25–5.27 to 6.11 ms, and the
+chain with Down rises from about 8.99 to 9.86 ms. Astra approves
+both detached conclusions.
+[Rotary and attention](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-replay-1/RUN.md) ·
+[Gate/Up timing](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-dense-tile-reuse-1/RUN.md) ·
+[Combined evidence seal](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-replay-1/outer.json).
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all
