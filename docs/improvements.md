@@ -590,6 +590,12 @@ Nanbeige final-T128 fused gate/up preserves the complete MLX tape and all
 11/19 ms. Astra approves retaining the detached candidate for further work.
 [Tail A/B](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-tail-dense-ordinary-1/RUN.md).
 
+Completed brackets confirm 141 ms less final-chunk GPU work. Total decode
+GPU time changes by less than 0.2 ms. Dense first-T1 delay appears before
+GPU start. Four guarded owners, 52 requests, four integrity replays and
+Astra review pass. The separate ordinary A/B governs latency.
+[Command-level profile](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-profile-1/RUN.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

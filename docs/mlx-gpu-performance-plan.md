@@ -360,6 +360,12 @@ Ollama 5% point threshold needs another 60–62 ms. Profile completed T128
 work and the decode carry, then rerun fresh peers and the original overhead gate.
 [Tail A/B](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-tail-dense-ordinary-1/RUN.md).
 
+The dense route uses about 2.28 s of prefill GPU time. First-T1 launch
+delay of 12–25 ms plus 10–12 ms of prefill launch residual cannot close
+the 60–62 ms gap. Test reducing GPU work with rotary-owned T128 Q/K/V
+finite scans. M1 Pro reports stage counters with dispatch sampling unavailable.
+[Command-level profile](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-profile-1/RUN.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).
