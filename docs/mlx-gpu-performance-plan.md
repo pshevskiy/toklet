@@ -226,6 +226,11 @@ Ollama is 3.551–3.558 s. Use the faster prior peers as a sensitivity
 check. Prioritize T128 prefill and match early cache and logit arithmetic
 against the joined peers. The diagnostic joins all IDs and none of the
 native terminal K/V or logit digests. It leaves qualification open.
+The first native T128 embedding and RMSNorm match the peers bitwise.
+The ordinary tiled K/V stage differs by 14/26 BF16 words before RoPE
+on identical normalized operands. Match the MLX 0.32.4 projection
+dispatcher first, then compare later boundaries on shared inputs.
+[First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).
 [Native admission results](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/RUN.md) ·
 [External numerical review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/ACTUAL-REVIEW.md) ·
@@ -469,7 +474,9 @@ give an estimated 39.36 ms per three-panel block. Closing the conditional
 gap to the historical vLLM diagnostic would require a paired lower saving
 above 12.97 ms per block. Charge packing, conversion, repair and status in
 one exact operator test before considering schedule changes. Timing and
-parity remain unmeasured for this layout.
+parity remain unmeasured for this layout. For the newer Ollama TTFT
+gap, require at least 13.55 ms per visit at the paired lower bound in
+both orders. Preserve the final packed T128, decode and cut publication.
 [T384 feasibility screen](../artifacts/mlx-gpu-gap-2026-11-15/astra62-nanbeige-t384-normal-work-screen-1/normal.json).
 
 For request-summary qualification, compare the same CLI output mode with

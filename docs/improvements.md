@@ -448,6 +448,17 @@ matching scored-logit and terminal K/V digests against MLX. The native
 final prefill head scores one logical row through its tiled kernel.
 [Cohorts](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json) ·
 [Astra launch review](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/REVIEW.md).
+
+A guarded trace on the same native route captures the first T128
+embedding, RMSNorm, projections and live cache writes at 5.06 GiB.
+Both inputs to the projection stage match joined MLX. The pre-RoPE
+K and V outputs differ in 14 and 26 of 131,072 words each, and the
+same counts appear in the cache. V reproduces the archived native
+projection on the same operands. Both readers agree. Astra approves
+the observed K/V attribution. Q is outside the capture.
+[Array comparison](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json) ·
+[Guarded capture and checks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/NATIVE.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/REVIEW.md).
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

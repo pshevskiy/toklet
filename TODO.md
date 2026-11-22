@@ -367,7 +367,15 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   checks after a sandbox guard retry. Both readers verify 78 guarded
   requests at 5.17 GiB peak. Toklet completes in 4.506–4.546 s,
   behind Ollama by 0.768–0.801 s. TTFT accounts for about 75% of
-  that gap. Prioritize T128 prefill and the first arithmetic divergence.
+  that gap. The guarded first T128 matches embedding and RMSNorm.
+  Before RoPE, K differs in 14 words and V in 26. Both readers agree
+  and the captured V exactly matches the archived native operator.
+  The detached build passes after the guard and two compile retries.
+  Targeted rustfmt passes. Whole-package formatting needs the omitted
+  test fixture. Astra approves the trace. Next reproduce the MLX K/V dispatcher on identical
+  T128 inputs and screen charged three-panel projection reuse.
+  [First native divergence](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/REVIEW.md).
   [Three-engine diagnostic](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).
   [Verified witness](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-head32-1/witness-normal.json) ·
   [Disk recovery](artifacts/mlx-gpu-gap-2026-11-15/root-head32-storage-recovery-2.json) ·
