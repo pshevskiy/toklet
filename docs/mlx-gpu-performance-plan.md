@@ -237,6 +237,16 @@ then reproduces native Toklet K and V, including the 14 and 26 words
 that differ from the T128 oracle. Preserve the four partitions and
 single final BF16 rounding in any batching test. Confirm connected
 cache and residual state before using a speed result for admission.
+Connected split-K matches the first live pre-RoPE Q/K/V and the first
+cache pair. The full first logical owner's 512-token prefix also
+matches. Five rotated Q words differ. On 123 rows with equal query
+and causal cache inputs, native attention differs in 234 BF16
+words. O matches all rows whose input agrees. Qualify the rotary
+and causal reductions on these common operands before timing.
+Test reuse of a single loaded weight tile across two 32-row
+activation tiles inside T128 first. Require exact FP32 partials
+and charge all intermediate traffic, finite checks and merge.
+[Connected comparison](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-connected-splitk-1/normal.json).
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

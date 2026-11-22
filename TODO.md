@@ -377,8 +377,16 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   the ordered FP32 merge. Formatting, strict Clippy and the guarded
   offline build and replay pass after the sandbox retry. Astra clears
   both probes. Ordinary T384 MLX matches today's Toklet output on
-  repeated input and changes the T128 reference. Next test connected
-  split-K and preserve its partition order in the batching screen.
+  repeated input and changes the T128 reference. Connected split-K
+  now matches the live first-cut Q/K/V and K/V cache and the complete
+  slot-zero 512-prefix. All 32 IDs agree. Zero scored rows and zero
+  terminal pairs join MLX. Five rotated-Q words differ. Causal
+  attention differs in 234 words on rows with exact visible inputs.
+  The same-build control reproduces the incumbent exactly. Astra
+  approves both runs. Restoring the detached fixtures clears format,
+  strict all-target Metal Clippy and the targeted topology test.
+  Next align RoPE and attention and price real weight-tile reuse.
+  [Connected comparison and checks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-connected-splitk-1/RUN.md).
   [K/V and shape evidence](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
   [First native divergence](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json) ·
   [Astra review](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/REVIEW.md).

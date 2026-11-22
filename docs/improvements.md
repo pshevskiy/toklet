@@ -469,6 +469,17 @@ approves the numerical evidence. Both physical guards pass. This
 tests the projection pair and shape choice on one authentic input.
 [Replay and checks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md) ·
 [Evidence seal](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/outer.json).
+
+The detached connected split-K witness matches the first live Q, K,
+V and committed cache against MLX. The slot-zero prefill prefix and
+all 32 IDs join. Five rotated Q words differ. Causal attention differs
+in 234 words across 107 rows whose observable inputs are exact. O
+matches on equal input rows. Zero scored or terminal cache digests
+join MLX. The incumbent control reproduces all archived scores and
+terminal pairs. Peak guarded memory is 5.07 GiB.
+[Connected report](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-connected-splitk-1/normal.json) ·
+[Incumbent control](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-connected-splitk-1/control.json) ·
+[Astra review and scoped checks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-connected-splitk-1/RUN.md).
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all
