@@ -366,6 +366,12 @@ the 60–62 ms gap. Test reducing GPU work with rotary-owned T128 Q/K/V
 finite scans. M1 Pro reports stage counters with dispatch sampling unavailable.
 [Command-level profile](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-profile-1/RUN.md).
 
+The checked T128 rotary specialization reads and checks every raw Q/K/V
+word. Fault and retry probes pass with sticky status intact. Run the
+frozen full-tape witness, then price ordinary completions in both orders
+once AC power is connected and Low Power Mode is off.
+[Scan fusion](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-qkv-scan-fusion-prep-1/RUN.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

@@ -18,9 +18,12 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 - [x] **Current** — 52 profiled requests and four exact-state replays pass.
   Dense first T1 adds 12–25 ms before GPU start with unchanged GPU decode.
   Remaining prefill wait is 10–12 ms. Astra approves the profile.
-- [ ] **Next** — Fuse T128 Q/K/V finite checks into precise rotary and test
-  sticky errors before measuring latency. The 5% Ollama and 1% summary gates remain open.
+- [ ] **Next** — The T128 Q/K/V scan fusion passes scoped build checks and
+  untimed Metal fault, prefix and retry tests. Astra approves that scope.
+  Run the frozen witness and timing once AC is connected and Low Power Mode is off.
+  The 5% Ollama and 1% summary gates remain open.
   [Command-level profile](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-profile-1/RUN.md) ·
+  [Scan fusion](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-qkv-scan-fusion-prep-1/RUN.md) ·
   [Pending rollback test](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-fault-prep-1/RUN.md).
 
 ## Recent implementation and evidence

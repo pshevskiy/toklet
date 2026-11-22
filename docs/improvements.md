@@ -596,6 +596,13 @@ GPU start. Four guarded owners, 52 requests, four integrity replays and
 Astra review pass. The separate ordinary A/B governs latency.
 [Command-level profile](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-profile-1/RUN.md).
 
+The detached scan fusion moves three T128 checks into precise rotary.
+Scoped build checks and untimed Metal sentinels pass at 5.35 GiB. Nine
+connected fault cases and waited cancellation preserve the committed
+prefix. Exact retry and the following T1 match. Astra approves this scope.
+The frozen numerical and timing runs await AC with Low Power Mode off.
+[Scan fusion](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-qkv-scan-fusion-prep-1/RUN.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all
