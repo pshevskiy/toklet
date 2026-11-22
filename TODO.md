@@ -395,8 +395,13 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   0/44 terminal caches. Two proof owners report 2.443 s and 2.580 s
   on the GPU. The Gate/Up shape control shows no clear gain. The
   guarded release, scoped format and strict Metal Clippy pass after
-  the sandbox guard retry. Astra approves the detached evidence. Next
-  isolate the layer-zero residual and FFN before the next cache owner.
+  the sandbox guard retry. Astra approves the detached evidence.
+  The FFN trace localizes 451,662 differences to SwiGLU. Explicit
+  BF16 sigmoid rounding fixes all eight traced T128 stages through
+  the next raw K/V. Ten cache owners match at 128 tokens, then only
+  slot zero matches at 256, 384 and 512. All 32 IDs agree. Astra approves.
+  Score and terminal digests still differ. Trace the second cut next.
+  [FFN and cache frontier](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-connection-1/RUN.md).
   [Steel and FFN shape results](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-steel-connected-1/normal.json).
   [Rotary and attention](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-replay-1/RUN.md) ·
   [Gate/Up timing](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-dense-tile-reuse-1/RUN.md).

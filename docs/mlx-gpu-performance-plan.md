@@ -269,6 +269,14 @@ shape test uses three different authentic FFN inputs and charges the
 stacking operation. Gate/Up and SwiGLU take about 18.4 ms in both
 shapes, with zero differences and both paired intervals including zero.
 [Steel and FFN shape results](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-steel-connected-1/normal.json).
+
+The incumbent SwiGLU matches its GPU replay on direct Gate and Up
+operands and differs from MLX in 451,662 words. The connected T128
+candidate preserves the BF16 sigmoid boundaries in both FFN paths
+and joins the full first-cut trace through the next layer's raw K/V.
+The cache frontier joins slots 0–9 at 128 but only slot 0 from 256
+onward. Diagnose the second cut before widening the runtime route.
+[FFN and cache frontier](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-connection-1/RUN.md).
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

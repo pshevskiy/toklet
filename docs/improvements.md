@@ -502,6 +502,15 @@ charge of 5.07 GiB. A separate MLX Gate/Up shape test matches all
 4,128,768 words and measures about 18.4 ms for either shape.
 [Connected and shape reports](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-steel-connected-1/normal.json) ·
 [Astra review and checks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-steel-connected-1/REVIEW.md).
+
+The guarded FFN witness matches all eight first-cut panels after
+applying MLX's BF16 sigmoid rounding. The incumbent differs in
+451,662 SwiGLU words on the same Gate and Up operands. Ten cache
+owners match at position 128, then only the first matches at the
+next three prefill boundaries. Both complete requests keep all 32
+IDs. Exact sampled-score and terminal-cache gates remain open.
+Both guards, formatting, strict Metal Clippy and release links pass.
+[FFN and cache frontier](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-connection-1/RUN.md).
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all
