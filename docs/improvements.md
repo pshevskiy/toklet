@@ -124,6 +124,64 @@ and all 32 output IDs. Its vocabulary head scores 32 rows across
 
 ### Prefill attribution and observer timing
 
+The two Nanbeige Gate/Up and SwiGLU fusion variants match all
+1,376,256 words of the released Down input. K32's lower savings
+of 1.142 and 1.183 ms miss the 1.304 ms visit screen. Fused K64
+uses one shared activation tile and the existing Down operand.
+It reduces the isolated GPU median from 8.58 to about 7.00 ms
+and clears the screen in both warm orders. Both resource guards,
+fault controls, dual readers and Astra's operator review pass.
+[Exact fusion and review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-swiglu-fused-k64-1/REVIEW.md).
+
+The guarded single-encoder Nanbeige trial completes all 52 requests
+and checks 44 terminal K/V digests plus logits for each owner.
+Median completion improves 5.31% and 5.30%, with lower paired
+bounds of 5.25% and 5.12%. TTFT improves 7.03% and 7.07%.
+Decode is 0.08% and 0.19% slower at the medians. The reverse-order
+interval observes a small slowdown, so the experiment remains
+detached pending attribution.
+[Connected timings](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-fused-connected-1/RUN.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-fused-connected-1/REVIEW.md).
+
+The first same-weight LFM3 FFN replay changes 27 of 2,048
+canonical residual words on the first affected row and fails
+the block's exact admission. The separate canonical T1 ConvIn
+four-output route matches all 6,144 words, passes eleven fault
+and fallback checks and yields isolated lower estimates of
+0.443 and 0.510 s over the original 403 visits. Connected
+confirmation is required because the isolated baseline is slower
+than the release's mean wait.
+[Exact numerical replay](../artifacts/mlx-gpu-gap-2026-11-15/astra-lfm3-external-arithmetic-row-1/RESULT.md) ·
+[ConvIn evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-t1-convin-fma4-1/RUN.md).
+
+The connected LFM3 ConvIn trial passes all 52 exact requests
+at 3.56 GiB peak. Decode medians improve from 2.376 to 2.020 s
+and from 2.338 to 1.996 s. Complete requests improve from
+7.057 to 6.651 s and from 6.955 to 6.633 s. The paired lower
+bounds are 4.48% and 4.05%, closing the standalone candidate
+below the 5% retention threshold.
+[Connected ConvIn results](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-t1-convin-connected-1/RUN.md).
+
+Nanbeige's first-decode vLLM witness matches the complete incoming
+slot-zero cache and post-RoPE query for the replay. Installed paged
+SDPA repeats its own 6,144 words exactly. Dense MLX on the same
+inputs changes 1,543 words and in a private replay restores all
+2,048 slot-one append words from the independent reference.
+The live overlay still reproduces all 32 IDs and 44 terminal owners
+at 3.79 GiB. This isolates one decode boundary. Astra verifies all
+28 raw panels and both operators' controls.
+[First-decode attention review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-first-decode-attention-1/REVIEW.md).
+
+Two independent local vLLM Metal overlay owners complete 26
+Nanbeige requests and both untimed work witnesses. First ID takes
+2.489 s and completion 3.539–3.540 s at 3.76 GiB peak.
+The measured fused Toklet experiment runs at about 4.36 s and
+2.47 GiB. These diagnostics use the original pinned tape and
+different head work and attention arithmetic. The external
+comparison remains open.
+[Raw clock and work evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-direct-clocks-1/RUN.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-direct-clocks-1/REVIEW.md).
+
 On Nanbeige, the detached 512/32 stage run passes all 12 requests,
 14,928 sampled stages and four exact terminal state witnesses at
 2.52 GiB. Two one-encoder controls measure about 3.50 s of GPU

@@ -253,14 +253,18 @@ than 3 ms in host encoding and wait outside GPU work. Prioritize
 matrix throughput with authentic operands. The exact direct MLX
 Q/O comparison yields an isolated 0.167 s extrapolation, below
 the development screen. A 64-token gate/up tile with the same
-K32 arithmetic slows both orders. Next, test a dual-bank M32
-Gate/Up tile that shares activation staging and applies the
-existing SwiGLU calculation in place after both BF16 roundings.
-The measured benefit must exceed the cost of the larger register
-footprint in both orders. Compare a passing design in the current
-single-encoder request. Match scored and committed work before
-external qualification.
-[Stage costs and direct projection clocks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-profile-1/RUN.md).
+K32 arithmetic slows both orders. The dual-bank fused K64 M32
+tile shares activation staging and applies the existing SwiGLU
+calculation after both BF16 roundings. It saves over 1.53 ms
+per visit at the paired lower bound in both isolated orders and
+reproduces the exact released Down input. Both connected orders
+clear 5% completion with exact terminal state. The reverse-order
+decode interval observes a small slowdown. The same-owner test
+should vary only the T1 host encoder with released prefill, then
+vary only prefill to check for a carryover effect. Keep every
+original timing sample in the record.
+[Stage costs and direct projection clocks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-profile-1/RUN.md) ·
+[Connected trial review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-fused-connected-1/REVIEW.md).
 
 For request-summary qualification, compare the same CLI output mode with
 summary collection enabled and disabled. Keep counters at existing completion
@@ -285,11 +289,20 @@ vLLM clock. This allows 4.79 ms per T128 block and 21.67 ms per
 completed T1 step before shared work. Fresh confirmation against
 both engines determines the external target. The archived fast
 same-weight Gate/Up outputs leave 418 changed Down inputs even
-after canonical pointwise rounding. Check the first affected
-row through Down, post-FFN RMS and residual before pricing a
-complete block. Keep the original numerical, quality, state,
-memory and telemetry gates.
-[Astra performance and numerical proposal](../artifacts/mlx-gpu-gap-2026-11-15/astra-lfm3-external-arithmetic-budget-1/PROPOSAL.md).
+after canonical pointwise rounding. The first affected row
+differs at 27 of 2,048 residual words, rejecting this leaf
+substitution. A separate ConvIn decode trial keeps the original
+arithmetic and reuses each activation across four output chains.
+Exact two-order confirmation shows about 15% less decode
+time and full-request paired lower savings of 4.48% and
+4.05%. Those are below the 5% retention threshold. Preserve
+this result when pricing a more complete GPU decode block.
+Keep the original numerical, quality, state, memory and
+telemetry gates.
+[Astra performance and numerical proposal](../artifacts/mlx-gpu-gap-2026-11-15/astra-lfm3-external-arithmetic-budget-1/PROPOSAL.md) ·
+[Exact row result](../artifacts/mlx-gpu-gap-2026-11-15/astra-lfm3-external-arithmetic-row-1/RESULT.md) ·
+[ConvIn screen](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-t1-convin-fma4-1/RUN.md) ·
+[Connected ConvIn results](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-t1-convin-connected-1/RUN.md).
 
 [Pinned MLX package](https://huggingface.co/MercuriusDream/Nanbeige4.2-3B-mlx-4bit/tree/c21f850c4096b67a1b53a2c8eb4f8c8652f89375) ·
 [Upstream config](https://huggingface.co/Nanbeige/Nanbeige4.2-3B/blob/main/config.json) ·

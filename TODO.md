@@ -100,12 +100,25 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   [Crossover results](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-observer-crossover-1/run-1/normal.json) ·
   [After-first-token attribution](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-observer-crossover-1/run-1/post-first-normal.json) ·
   [Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-observer-crossover-1/REVIEW.md).
-- [ ] Evaluate the faster same-weight BF16 LFM3 FFN at its first
-  affected output row. The CPU replay finds 418 changed Down inputs
-  across 125 of 128 rows after canonical SiLU and multiplication.
-  Replay the first affected row through Down, post-FFN RMS and residual
-  against its archived layer anchor before timing a connected block.
-  [Astra proposal and numerical replay](artifacts/mlx-gpu-gap-2026-11-15/astra-lfm3-external-arithmetic-budget-1/PROPOSAL.md).
+- [x] Evaluate the faster same-weight BF16 LFM3 FFN at its first
+  affected output row. Four changed Down inputs on row zero produce
+  27 unequal residual words out of 2,048. Canonical controls and
+  independent scalar FMA checks pass. The substitution fails exact
+  block admission.
+  [Astra numerical replay](artifacts/mlx-gpu-gap-2026-11-15/astra-lfm3-external-arithmetic-row-1/RESULT.md).
+- [x] Screen four-output T1 ConvIn for canonical LFM3 decode.
+  All 6,144 outputs and eleven controls pass. The four-output
+  route handles 6,132 rows, with nine scalar-native and three
+  ordered rows. Both lower saving estimates clear 0.361 s.
+  Strict Swift compilation passes after two driver warning fixes.
+  [Screen and timing evidence](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-t1-convin-fma4-1/RUN.md).
+- [x] Measure sampled T1 ConvIn on the published LFM3 route.
+  All 52 requests reproduce exact terminal logits and history.
+  Median completion improves 5.75% and 4.64%. Both paired lower
+  bounds miss 5%. Keep the measured decode gains and close the
+  standalone retention trial.
+  [Connected results](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-t1-convin-connected-1/RUN.md) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-t1-convin-connected-1/REVIEW.md).
 - [x] Rank completed Nanbeige T128 GPU work across all four chunks.
   Across both guarded orders, 12 requests, 14,928 stage pairs and four
   terminal state witnesses pass at 2.52 GiB. The sampled device clock grows
@@ -123,11 +136,22 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   The wider tile slows all 20 measured pairs. Both orders miss the
   1.303864 ms development screen and close the experiment.
   [Static checks and native screen](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-m64-1/RUN.md).
-- [ ] Screen fused Nanbeige Gate/Up and SwiGLU on the same M32 input
-  tile. Share activation loads, retain the exact ordered K8 products
-  and BF16 rounding of both projections, and keep the current Down
-  kernel. Price the new register footprint and materialized buffer
-  savings against the three original dispatches in both orders.
+- [x] Screen fused Nanbeige Gate/Up and SwiGLU on the same M32 input
+  tile. The exact K32 and K64 variants each reproduce 1,376,256
+  Down-input words. K32 lower paired savings miss the 1.303864 ms
+  screen. K64 lower savings of 1.532 and 1.534 ms pass. Native
+  guards, fault controls, dual readers and Astra review pass.
+  [Fusion screen and review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-swiglu-fused-k64-1/REVIEW.md).
+- [ ] Qualify fused K64 on the frozen Nanbeige 512/32 workload.
+  Both orders clear the paired 5% completion threshold and reproduce
+  the full published K/V and terminal logits. TTFT improves about 7%.
+  The reverse-order decode interval observes a small slowdown.
+  Astra holds publication. Compare both host encoders within the
+  same owner with released prefill. Then vary only the prefill path
+  to test for a carryover effect.
+  [Connected results](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-fused-connected-1/RUN.md) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-fused-connected-1/REVIEW.md) ·
+  [Same-owner diagnostic](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-fused-t1-crossover-1/RUN.md).
 - [x] Price the remaining Nanbeige gap against the direct MLX GPU graph.
   Both owners reproduce the 32 released IDs on all 26 requests.
   Direct MLX finishes in 3.315–3.316 s versus Toklet's 5.841–5.842 s.
@@ -224,11 +248,19 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   The guarded 32-row head trial matches all 32 IDs and 44 published
   Toklet KV prefixes. The vLLM terminal witness retains all 44
   committed KV sets under 6 GiB. vLLM and direct MLX match both
-  slot-zero decode append planes exactly. Differences first appear
-  in slot one. Isolate the first block's attention and residual
-  boundary on the same inputs, then qualify the numerical envelope
-  before external performance cohorts.
-  [Head work and terminal custody](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-head-state-1/RUN.md).
+  slot-zero cache exactly. At position 512, installed paged SDPA
+  differs from direct MLX on 1,543 of 6,144 outputs on the same
+  Q and 513 K/V positions. A private dense replay restores the
+  entire slot-one append. The other positions and numerical gates
+  remain open before external performance cohorts.
+  The separately guarded local vLLM timing diagnostic completes
+  26 requests at 3.539–3.540 s median completion, 2.489 s first
+  ID, and 3.76 GiB peak. The tested Toklet owners score more rows
+  and use different attention arithmetic.
+  [Local vLLM clocks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-direct-clocks-1/RUN.md) ·
+  [Astra clock review](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-direct-clocks-1/REVIEW.md).
+  [Head work and terminal custody](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-head-state-1/RUN.md) ·
+  [Astra first-decode isolation review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-first-decode-attention-1/REVIEW.md).
   [External admission proof](artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-external-admission-1/result.json) ·
   [Logical loop replay](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-double-loop-1/RUN.md) ·
   [Reviewed overlay](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-live-overlay-1/RUN.md) ·
