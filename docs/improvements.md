@@ -739,6 +739,21 @@ sealed graph. Astra approves only the descriptive one-pair comparison.
 [Block 6 proof](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-block6-1/ACTUAL-REVIEW.md) ·
 [Public tile result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-public-screen-1/RESULT.md).
 
+The direct tiled CPU route passes Gemma’s full original loss gate. Ten
+fresh sessions match all 10,000 archived targets and ten terminal rows.
+Mean NLL is 9.964929 versus official 9.995776, a difference of −0.030847
+against the +0.05 limit. Both readers verify 322 cuts, 11,270 tiled calls
+and 3,540 K/V digests at a 4.51 GiB guarded peak. Astra approves the loss
+gate. The same checked executable provides the separate C567 task entry.
+[Tiled loss review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-quality-1/ACTUAL-REVIEW.md).
+
+The original C567 pilot passes on the checked loss executable. Three task
+outputs match the archived trajectories. A fresh scalar owner matches all
+66 sampled decisions, including hidden stops. Astra verifies 2,625 tiled
+visits and clean guards at 4.52 GiB peak. The remaining 97 generations,
+full replay and isolated grade stay open.
+[C567 pilot review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-quality-1/PILOT-ACTUAL-REVIEW.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

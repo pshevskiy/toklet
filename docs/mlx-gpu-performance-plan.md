@@ -491,6 +491,21 @@ Proceed to original loss and task checks on the same tiled release test
 build, then independent reversed timing and the original summary gates.
 [Public tile result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-public-screen-1/RESULT.md).
 
+The tiled route passes the original 10,000-target loss gate at −0.030847
+nats per target versus official. The ten fresh sessions verify the full
+target and terminal tape with exact tiled work and guarded state. Continue
+the same build through the remaining 97 C567 tasks, full replay and grade.
+The corrected warmed plan preserves the original 5% point and strict
+paired lower-bound criteria in each order.
+[Warmed plan review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-public-warmed-1/REVIEW.md) ·
+[Tiled loss review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-quality-1/ACTUAL-REVIEW.md).
+
+The C567 pilot matches all three trajectories from the original suite.
+A fresh scalar owner verifies all 66 sampled decisions from the candidate
+tape, including the hidden stops. Bind the remainder and grade to this
+build, the candidate owners and the independent replay.
+[C567 pilot review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-quality-1/PILOT-ACTUAL-REVIEW.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

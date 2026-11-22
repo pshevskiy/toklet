@@ -17,15 +17,6 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   Astra verifies the raw clocks, all 64 exact generations and zero exports.
   The actual enabled/disabled result remains 1.06524% against the 1% gate.
   [LFM3 control](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-sham-readiness-1/ACTUAL-REVIEW.md).
-- [x] **Gemma corpus decision** — The faster route matches 6,240 target
-  records and six complete blocks, then fails on one visible Metal context
-  word. Ordered FP64 rounds that dot to the adjacent word. Astra rejects
-  the route for qualification.
-  [Corpus review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-repaired-corpus-1/ACTUAL-REVIEW.md).
-- [x] **CPU context tile** — The isolated operator matches 196,608
-  archived words and the block-6 dot. D256 and D512 medians fall
-  67.25% and 67.97%. Astra verifies the guarded result.
-  [CPU tile review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-tile-1/ACTUAL-REVIEW.md).
 - [x] **Block 6 tile proof** — Both sessions match all 128 archived rows
   and 120 physical K/V planes. The tiled session makes 140 calls. Astra
   confirms the previously failing cut at 4.50 GiB guarded peak.
@@ -35,9 +26,17 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   the actual 180 multirow and 4,685 single-row calls to the sealed source.
   Astra approves the descriptive comparison.
   [Public tile result](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-public-screen-1/RESULT.md).
-- [ ] **Next** — Run the original 10,000-target loss and C567 task checks
-  on the same tiled test build. Independent timing and the actual 1%
-  summary gate remain open.
+- [x] **Gemma tiled loss** — The original 10,000-target gate passes.
+  All archived rows match. Mean NLL is 9.964929 versus official 9.995776,
+  with 11,270 actual tiled calls and a 4.51 GiB guarded peak. Astra approves.
+  [Tiled loss review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-quality-1/ACTUAL-REVIEW.md).
+- [x] **C567 pilot** — Three original task trajectories match all 66
+  sampled IDs in a fresh scalar replay, including hidden stops. Astra
+  verifies 2,625 tiled visits and clean guards at 4.52 GiB peak.
+  [C567 pilot review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-quality-1/PILOT-ACTUAL-REVIEW.md).
+- [ ] **Next** — Complete 97 remaining task generations, independent replay
+  of the full tape and the isolated grade. Independent warmed timing and
+  the original 1% summary verification remain open.
 
 ## Recent implementation and evidence
 
