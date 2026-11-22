@@ -354,6 +354,12 @@ completed T128 prefill first and test final-chunk fused gate/up as an
 isolated change. Preserve the fixed tape and qualify summary overhead separately.
 [Matched cohorts](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-cohorts-1/RESULT.md).
 
+The exact dense-tail candidate completes in 3.184–3.186 s across the native
+orders. It improves prefill and adds 11–19 ms in paired decode. The earlier
+Ollama 5% point threshold needs another 60–62 ms. Profile completed T128
+work and the decode carry, then rerun fresh peers and the original overhead gate.
+[Tail A/B](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-tail-dense-ordinary-1/RUN.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

@@ -584,6 +584,12 @@ medians. All 78 requests and six guards pass, at a maximum 5.18 GiB.
 The overall completion and request-summary overhead gates remain open.
 [Matched cohorts](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-cohorts-1/RESULT.md).
 
+Nanbeige final-T128 fused gate/up preserves the complete MLX tape and all
+171 trace panels. Two ordinary orders complete 52 matching requests at a
+5.36 GiB peak. Paired completion saves 238/220 ms. Paired decode adds
+11/19 ms. Astra approves retaining the detached candidate for further work.
+[Tail A/B](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-tail-dense-ordinary-1/RUN.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

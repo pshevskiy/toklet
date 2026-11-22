@@ -8,13 +8,17 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
-- [x] **Current** — Both fresh Nanbeige cohorts complete 78 matched requests.
+- [x] **Comparison** — Both fresh Nanbeige cohorts complete 78 matched requests.
   Toklet's completion is 6.01%/6.19% lower than vLLM and 3.87%/3.82% above
   Ollama at 5.18 GiB maximum guarded memory. The 5% Ollama and 1% summary
   gates remain open.
-- [ ] **Next** — Test fused gate/up on the final T128 chunk. Measure exact
-  prefill and decode separately. The Ollama 5% target needs about 290 ms.
+- [x] **Current** — Final-T128 fused gate/up preserves all score and K/V
+  digests. It saves 220–238 ms paired completion and adds 11–19 ms in
+  paired decode. Peak guarded memory is 5.36 GiB. Astra approves detached retention.
+- [ ] **Next** — Profile completed GPU prefill and decode carry. The fused
+  candidate needs another 60–62 ms at the earlier Ollama point threshold.
   [Matched cohorts](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-cohorts-1/RESULT.md) ·
+  [Tail A/B](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-tail-dense-ordinary-1/RUN.md) ·
   [Pending rollback test](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-fault-prep-1/RUN.md).
 
 ## Recent implementation and evidence
