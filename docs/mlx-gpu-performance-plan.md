@@ -294,6 +294,12 @@ First T1 embedding and RMSNorm match. Current Q/K/V differ in 4,010,
 all three MLX panels offline on the common input. Verify an in-kernel
 precision change before pricing or changing the next decode operations.
 [First score and T1 trace](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-head-decode-1/RUN.md).
+
+The connected FP32 bias experiment leaves one Q word. A same-input CPU
+replay identifies the halves reduction. Native and pinned MLX attention
+match all 6,144 words when their visible inputs match. Verify the halves
+reduction in Metal and trace the second cache owner at the first decode.
+[Decode bias and attention replay](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-bias-1/RUN.md).
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

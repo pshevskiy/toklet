@@ -528,6 +528,12 @@ Same-operand T1 replay explains every Q/K/V difference by the
 four-term bias reduction precision. The remaining score and terminal
 gates are open. The proof command clocks cover one request per route.
 [First score and T1 trace](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-head-decode-1/RUN.md).
+
+The detached T1 FP32 bias sum matches 8,191 of 8,192 first-decode Q/K/V
+words, all 176 prefill K/V pairs and all 32 IDs. Native and pinned MLX
+attention match on common inputs. Full decode parity remains open.
+Scoped checks, both hardware guards and Astra review pass.
+[Decode bias and attention replay](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-bias-1/RUN.md).
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

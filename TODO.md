@@ -8,6 +8,16 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- **Current** — Nanbeige4.2-3B Q4/G64 on M1 Pro. The detached T1 FP32 bias
+  probe matches 8,191/8,192 first-decode projection words, 176/176 prefill K/V
+  pairs and 32/32 IDs. All 31 decode score rows and all 44 terminal K/V pairs
+  still differ from MLX. Scoped checks, both guards and Astra review pass.
+- **Next** — Verify the halves reduction in the connected T1 path, then inspect
+  the first divergent K/V owner. Keep the matched 512/32 tape and 6 GiB gate.
+  [Probe and checks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-bias-1/RUN.md).
+
+## Recent implementation and evidence
+
 - [x] Diagnose the LFM3 gap with Astra. The controlled comparison measures
   9.63× first-ID and 6.02× request completion. Decode GPU work alone is
   1.419 s. The proposal prioritizes tiled prefill, packed decode and keeping
@@ -408,6 +418,10 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   exact input, FP32 bias sums predict all 8,192 MLX Q/K/V outputs. The
   remaining 31 score rows and terminal parity stay open. Next apply
   and qualify the grouped-vector sum in T1. Astra approves the trace.
+  The detached FP32 bias sum leaves one Q word. MLX attention matches all
+  6,144 words on the same Q/K/V. Check the halves reduction before replacing
+  attention for numerical parity.
+  [Decode bias and attention replay](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-bias-1/RUN.md).
   [First score and T1 trace](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-head-decode-1/RUN.md).
   [RMS and complete prefill cache evidence](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-second-cut-1/RUN.md).
   [FFN and cache frontier](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ffn-connection-1/RUN.md).
