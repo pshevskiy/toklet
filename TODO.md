@@ -356,9 +356,11 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   The detached composition retains packed T1 and the qualified T128
   graphs. The staged witness checks all retained heads and cache state,
   actual QMM and finite scans, and failures after an unscored T128.
-  Native launch requires free space above the original 2 GiB floor.
+  Astra approves the source-bound build and five untimed owners.
+  Native launch remains blocked below the original 2 GiB disk floor.
   [Detached source review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-head32-1/REVIEW.md) ·
-  [Physical witness plan](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-head32-1/WORK-WITNESS.md).
+  [Physical witness plan](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-head32-1/WORK-WITNESS.md) ·
+  [Astra witness review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-head32-1/WITNESS-REVIEW.md).
 - [x] Price the remaining Nanbeige gap against the direct MLX GPU graph.
   Both owners reproduce the 32 released IDs on all 26 requests.
   Direct MLX finishes in 3.315–3.316 s versus Toklet's 5.841–5.842 s.
