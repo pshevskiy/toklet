@@ -377,6 +377,12 @@ ordinals. Neither ordinal nor previous decode predicts it consistently.
 Keep the original warmup count and paired and marginal 1% bounds.
 [Summary diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-o4-owner-conditioning-1/RUN.md).
 
+Both ordinary tail modes pass untimed cancellation, status failure and
+synthetic completion-error reset and replay. The full scan-fusion witness
+and timing still require AC with Low Power Mode off. The original summary
+run also retains its 5 GiB free-space preflight.
+[Untimed rollback evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-fault-prep-1/RUN.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

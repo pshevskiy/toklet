@@ -20,6 +20,9 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   Remaining prefill wait is 10–12 ms. Astra approves the profile.
 - [x] **Summary diagnostic** — Disabled-owner timing varies across matched
   ordinals. Preceding decode shows no consistent association. Astra review passes.
+- [x] **Rollback** — Untimed packed and dense-tail fixtures preserve all 44
+  K/V owners after cancellation and nonfinite status. Synthetic completion
+  error requires reset and exact replay. Scoped checks and Astra review pass.
 - [ ] **Next** — The T128 Q/K/V scan fusion passes scoped build checks and
   untimed Metal fault, prefix and retry tests. Astra approves that scope.
   Run the frozen witness and timing once AC is connected and Low Power Mode is off.
@@ -27,7 +30,7 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   [Command-level profile](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-profile-1/RUN.md) ·
   [Scan fusion](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-qkv-scan-fusion-prep-1/RUN.md) ·
   [Summary diagnostic](artifacts/mlx-gpu-gap-2026-11-15/root-o4-owner-conditioning-1/RUN.md) ·
-  [Pending rollback test](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-fault-prep-1/RUN.md).
+  [Untimed rollback evidence](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-fault-prep-1/RUN.md).
 
 ## Recent implementation and evidence
 

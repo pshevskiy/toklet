@@ -609,6 +609,13 @@ associations for preceding decode. Both readers and Astra review pass.
 The original fixed-N summary qualification remains open.
 [Summary diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-o4-owner-conditioning-1/RUN.md).
 
+Packed and dense-tail ordinary Nanbeige pass guarded untimed rollback.
+The shared fixture verifies cancellation, nonfinite status and synthetic
+completion error. Both BF16 score rows, all 44 cache owners and all 32
+IDs match after retry or reset and replay. Peak is 5.06 GiB. Scoped checks
+and Astra review pass. Actual driver failure remains untested.
+[Untimed rollback evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-fault-prep-1/RUN.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all
