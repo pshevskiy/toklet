@@ -666,6 +666,15 @@ from fresh session admission to the first and final sampled IDs. The
 original summary gates remain open.
 [Integrated timing](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-integrated-cohorts-1/RESULT.md).
 
+The detached decode consumer checks replace 9,548 finite-scan dispatches.
+Exact scores and K/V, 21 injected nonfinite cases, cancellation and clean
+retry pass. Across 52 requests at 5.37 GiB guarded peak, paired completion
+savings are +1.99 and −4.17 ms. Both completion and decode intervals span
+zero. The trial misses the 60 ms headroom screen. Astra retains the
+integrated dense-tail prepack route with standalone T1 checks.
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-t1-consumer-scan-1/ACTUAL-REVIEW.md) ·
+[T1 finite-check A/B](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-t1-consumer-scan-1/RUN.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

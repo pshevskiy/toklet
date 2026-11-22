@@ -12,11 +12,15 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   gates in both orders. Both readers validate 78 requests at 5.58 GiB
   guarded peak. Astra’s raw-data review passes.
   [Integrated timing](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-integrated-cohorts-1/RESULT.md).
-- [ ] **Next** — Keep dense tail and price Astra’s T1 consumer-side finite
-  checks against the integrated path. Preserve exact K/V and scores and
-  the sticky nonfinite failure behavior. Qualify the original paired and
-  marginal 1% summary bounds separately. The original run needs 5 GiB free.
-  [Normal CLI checks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prepacked-cli-1/RUN.md) ·
+- [x] **T1 trial** — Consumer checks preserve exact scores and K/V and
+  pass 21 injected faults, cancellation and retry. The 52-request price
+  misses the 60 ms headroom screen in both orders. Astra retains standalone
+  scans and the existing dense-tail route.
+  [T1 finite-check A/B](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-t1-consumer-scan-1/RUN.md) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-t1-consumer-scan-1/ACTUAL-REVIEW.md).
+- [ ] **Next** — Keep dense tail with prepacking. Qualify the original
+  paired and marginal 1% summary bounds separately. The original run
+  needs 5 GiB free.
   [Summary diagnostic](artifacts/mlx-gpu-gap-2026-11-15/root-o4-owner-conditioning-1/RUN.md).
 
 ## Recent implementation and evidence

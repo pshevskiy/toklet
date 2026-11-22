@@ -429,6 +429,14 @@ BF16 outputs, sticky status, rollback and the independent original
 paired and marginal 1% summary gates.
 [Integrated timing](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-integrated-cohorts-1/RESULT.md).
 
+The T1 consumer-check trial preserves all four dense prefill cuts and the
+exact tape. Eliminating 9,548 standalone finite scans yields upper paired
+completion savings of 8.57 and 20.91 ms, below the 60 ms headroom screen
+in both orders. The decode intervals include zero. Retain standalone T1
+checks and the integrated dense-tail route. The original 1% observations
+remain a separate qualification.
+[T1 finite-check A/B](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-t1-consumer-scan-1/RUN.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).
