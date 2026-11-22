@@ -76,6 +76,18 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   [Modern MLX replay](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/mlx32.4-normal.json) ·
   [T1 arithmetic replay](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/astra-t1-affine-bias-versions-1/result.json) ·
   [T1 native operator](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-work-1/modern-t1-metal-1/normal-3.json).
+- [ ] Confirm Gemma 4 E2B official BF16 batched T32 in longer quality
+  cases and independent ordinary cohorts. The freshly linked current
+  console pair returns all 128 IDs with exact public state. First token
+  falls from 11.930 to 6.997 s and completion from 39.274 to 34.402 s.
+  Decode rises 63 ms in this pair. Peak is 4.65 GiB. Formatting, strict
+  Metal Clippy, the parser test and after-flush cancellation/replay pass.
+  The original 1,025-position quality runner needs actual early-path
+  counts and the original fallback past 512 visible positions.
+  Astra clears a detached first-block diagnostic with 240 early Metal
+  calls, 915 expected CPU calls and the original raw state references.
+  [Public pair and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-current-1/ACTUAL-REVIEW.md) ·
+  [Longer-context source review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-1025-1/REVIEW.md).
 - [ ] Measure bounded request-summary overhead through the original
   protocol. A same-binary replay of the two published Nanbeige owners
   gives a maximum paired or marginal upper drift bound of 0.07581%
@@ -273,13 +285,34 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   finish under 3.31 GiB. Astra independently verifies the full corpus.
   The original tasks and unquantized-reference gates remain open.
   Astra verifies that the BF16 parent requires 7.77 GiB for weights
-  alone and designs a streaming oracle.
+  alone. A guarded layer-at-a-time Q4 walk exactly reproduces 1,058
+  scores and all terminal state across four cases, including 1,025
+  committed positions, at 2.80 GiB peak. An 8 MiB read verifies direct
+  BF16 range transport. Guarded whole-shard authentication has started.
+  The paired scorer stages the full corpus and smoke as independent
+  cache cases in one weight traversal. Actual BF16 scoring remains open.
   [Frozen task inputs](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-quality-tasks-1/RUN.md) ·
   [Frozen loss windows](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/heldout-normal.json) ·
   [Held-out smoke and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-heldout-fidelity-1/SMOKE-REVIEW.md) ·
   [Full same-Q4 results and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-heldout-fidelity-1/FULL-REVIEW.md) ·
   [Interrupted guard receipt](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-heldout-fidelity-1/full-1-interrupted-external-compile/toklet-guard/result.json) ·
-  [BF16 reference proposal](artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-bf16-quality-1/PROPOSAL.md).
+  [BF16 reference proposal](artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-bf16-quality-1/PROPOSAL.md) ·
+  [Layerwise Q4 and Astra review](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-layerwise-oracle-1/REVIEW.md) ·
+  [Parent acquisition and scoring staging](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-layerwise-oracle-1/RUN.md) ·
+  [Paired BF16 source review](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-layerwise-oracle-1/PARENT-PAIRED-REVIEW.md).
+- [x] Price the pinned MLX affine T128 PSO for Q, O and Down together.
+  The guarded build, signed basis, archived panels and both corruption
+  controls pass. With all three status scans charged, the paired lower
+  GPU savings are 2.009 and 2.004 ms against a 1.219 ms screen. Astra
+  approves a detached connected trial.
+  [Pinned ABI and inputs](artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-qmm-three-roles-1/PROPOSAL.md) ·
+  [Guarded result and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-three-roles-1/ACTUAL-REVIEW.md).
+- [ ] Qualify the combined T128 Q/O/Down change on complete Nanbeige
+  requests with the released dense opt-in. Preserve packed T1 and the
+  final packed Gate/Up chunk. Check actual capacity, exact terminal and
+  fallback state, then price both ordinary orders before adoption.
+  [Detached connected runbook](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/RUN.md) ·
+  [Astra source review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/REVIEW.md).
 - [x] Price the remaining Nanbeige gap against the direct MLX GPU graph.
   Both owners reproduce the 32 released IDs on all 26 requests.
   Direct MLX finishes in 3.315–3.316 s versus Toklet's 5.841–5.842 s.
@@ -395,6 +428,13 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   fork has 44 cache owners, and its public path reserves a prompt seed
   and evaluates one extra decode position. An untimed raw-ID probe on
   its existing worker can check exact imported Q4 weights and work.
+  Astra clears the detached worker source. The exact checkout and private
+  Go and CMake tools are staged. Native configure stops because Xcode's
+  optional Metal compiler was inactive. The official activation restores
+  actual Metal preprocessing and retains the active developer directory.
+  The guarded retry builds the exact patched Go binary and native Metal
+  companions. Their hashes and CMake and Go identity are sealed. Measured
+  free disk clears the private import preflight after cache retirement.
   [Local vLLM clocks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-direct-clocks-1/RUN.md) ·
   [Astra clock review](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-direct-clocks-1/REVIEW.md) ·
   [Detached CLI proposal](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-head-cli-1/RUN.md) ·
@@ -406,7 +446,13 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   [Logical loop replay](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-double-loop-1/RUN.md) ·
   [Reviewed overlay](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-live-overlay-1/RUN.md) ·
   [Live admission](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-overlay-smoke-1/RUN.md) ·
-  [Ollama worker proposal](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-ollama-matched-plan-1/DRAFT.md).
+  [Ollama worker proposal](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-ollama-matched-plan-1/DRAFT.md) ·
+  [Ollama source review](artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/REVIEW.md) ·
+  [Actual configure stop](artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/configure-guard-1/result.json) ·
+  [Verified Metal compiler](artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/xcode-metal-compiler-verified.json) ·
+  [Exact guarded fork build](artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/build-receipt.json) ·
+  [Disk fit and scoped reclaim](artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/go-cache-retired.json) ·
+  [Private import and raw replay](artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/IMPORT.md).
 - [x] Price a resident T128 LFM3 convolution handoff on the original
   matched tape. The previous ConvOut tile saved about 0.83 s of prefill
   and added 0.10–0.12 s to decode. Start with the authenticated gated

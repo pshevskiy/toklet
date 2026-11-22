@@ -20,6 +20,14 @@ The LFM3 placement improves internal warmed latency. External wins, model
 adoption and overhead qualification remain open.
 [Delivery outcomes](improvement-outcomes.md).
 
+One freshly built ordinary Gemma BF16 pair on 384/128 reproduces the
+batched T32 prefill gain, with 11.930 to 6.997 s first token and 39.274
+to 34.402 s completion. Restage the longer-quality diagnostic with actual
+old producer stride and bounded 512-visible-key Metal scratch. Verify
+active early T32 and original later fallback on the complete original
+1,025-position windows before retention.
+[Guarded Gemma replay and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-current-1/ACTUAL-REVIEW.md).
+
 ## Rust and Metal architecture proposal
 
 ### What caused the measured gap
@@ -171,6 +179,14 @@ before cache or scratch. Reuse the existing verified shard reader
 and pinned MLX primitives for a separate streamed reference. Verify
 the real memory fit before applying the original held-out and task gates.
 [Official parent inventory and Astra proposal](../artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-bf16-quality-1/PROPOSAL.md).
+
+The layerwise Q4 validation matches every checked stock MLX score and
+terminal head and K/V hash, including the 1,025-position window. For BF16,
+authenticate both complete origin streams before accepting any tensor
+hash. The held-out loader can then read two contiguous spans per physical
+block and recheck each tensor with no complete on-disk weight copy.
+[Guarded schedule review](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-layerwise-oracle-1/REVIEW.md) ·
+[Parent range plan](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-layerwise-oracle-1/parent-scoring-layout.json).
 
 Test the resident layer-zero V matrix with identical BF16-normalized inputs.
 Accumulate four contiguous 768-wide products at T128 and eight 384-wide
@@ -346,6 +362,18 @@ Record the measured ordinary request and command durations and judge
 future performance changes with those clocks. M1 Pro reports stage
 timestamp support. Dispatch-boundary timestamps are unavailable.
 [Guarded capture and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-attribution-1/CAPTURE-REVIEW.md).
+
+The pinned installed MLX library exposes a single Apple7 affine Q4
+T128 pipeline compatible with the Q, O and Down shapes. Earlier isolated
+prices imply roughly 247 ms over 176 visits before the required status
+scans. Check all three on authentic Toklet inputs and include each scan
+in one ordinary command. Require bitwise outputs and both paired lower
+savings above 1.219 ms per combined visit before a connected trial.
+Both guarded orders pass bitwise and fault controls and yield paired
+lower savings of 2.009 and 2.004 ms. Test the connected route inside
+the ordinary encoder with the same three scans and existing fallback.
+[MLX function and inputs](../artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-qmm-three-roles-1/PROPOSAL.md) ·
+[Guarded result and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-three-roles-1/ACTUAL-REVIEW.md).
 
 For request-summary qualification, compare the same CLI output mode with
 summary collection enabled and disabled. Keep counters at existing completion

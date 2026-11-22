@@ -289,6 +289,38 @@ reference and task acceptance checks remain open.
 [Full same-Q4 results and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-heldout-fidelity-1/FULL-REVIEW.md) ·
 [BF16 streaming proposal](../artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-bf16-quality-1/PROPOSAL.md).
 
+The current official Gemma 4 E2B BF16 console pair uses one fresh linked
+library and binary on both arms. Batched T32 prefill lowers first token
+from 11.930 to 6.997 s and Done from 39.274 to 34.402 s. All 128 IDs
+and public state match. Decode rises 63 ms and guarded peak is 4.65 GiB.
+Formatting, strict Metal Clippy, parser and after-flush cancellation
+pass. Independent cohorts and the original quality suite remain open.
+[Current pair and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-current-1/ACTUAL-REVIEW.md).
+
+The pinned MLX layer-at-a-time walk matches its stock Q4 graph on all
+1,058 scores and the four terminal heads and 176 joint K/V hashes.
+The long case reaches 1,025 committed positions at a 2.80 GiB guarded
+peak. An 8 MiB official parent range passes with the trusted system
+certificate bundle. The full BF16 streams and qualification remain open.
+[Layerwise result and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-layerwise-oracle-1/REVIEW.md) ·
+[Parent transport and staging](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-layerwise-oracle-1/RUN.md).
+
+The installed MLX affine PSO matches all three native T128 Q/O/Down
+panels plus separate MLX O/Down inputs. Signed basis and sticky fault
+controls pass. With three extra status scans charged on one command,
+both lower paired GPU savings exceed 2.00 ms. Cold library and PSO
+creation total 79 ms. Astra approves a connected trial under the
+existing state, working-set and decode gates.
+[Guarded result and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-three-roles-1/ACTUAL-REVIEW.md).
+
+The detached Ollama publisher-fork raw worker now builds with its pinned
+MLX and MLX-C. Xcode's optional Metal toolchain was present but inactive.
+Official activation restores preprocessing with the original system Xcode
+selection intact. The guarded CMake retry and native link pass. The
+private Q4 import and raw generation agreement remain open.
+[Astra source review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/REVIEW.md) ·
+[Exact native build](../artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/build-receipt.json).
+
 The first same-weight LFM3 FFN replay changes 27 of 2,048
 canonical residual words on the first affected row and fails
 the block's exact admission. The separate canonical T1 ConvIn
