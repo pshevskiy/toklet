@@ -548,6 +548,13 @@ All IDs and prefill pairs agree, and all decode score rows differ.
 Scoped checks, the 5.06 GiB guarded replay and Astra review pass.
 [Wheel replay](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-qmv-wheel-1/native/RUN.md).
 
+The first-decode trace isolates attention differences on identical operands.
+Pinned one-pass vector SDPA makes all 155 panels and the first two append
+rows exact. Overall 215/1,364 appends, 2/31 decode scores and 2/44 terminal
+pairs match. Scoped checks, the 5.06 GiB guard and Astra review pass.
+[Owner trace](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-owner-trace-1/RUN.md) ·
+[Vector SDPA](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-sdpa-wheel-1/native/RUN.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

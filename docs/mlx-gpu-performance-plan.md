@@ -316,6 +316,14 @@ RMS, rotary and attention differences on identical operands before
 changing another kernel. Reprice after exact connected decode.
 [Wheel replay](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-qmv-wheel-1/native/RUN.md).
 
+Owners 1 and 7 differ in one native attention word each on identical
+operands. The pinned vector SDPA closes both and matches scores and appends
+for the first two decode steps. The first mismatch moves to owner 4 at position
+514. Use one runtime-selectable trace build to verify each selected row
+against its tape, committed prefix and append hashes. Timed cohorts remain open.
+[Owner trace](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-owner-trace-1/RUN.md) ·
+[Vector SDPA](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-t1-sdpa-wheel-1/native/RUN.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).
