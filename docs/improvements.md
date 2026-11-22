@@ -728,6 +728,17 @@ of 21.925 to 7.180 ms and 43.685 to 13.990 ms at those shapes. Astra
 approves the 81.2 MB guarded operator result. End-to-end timing is open.
 [CPU tile review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-tile-1/ACTUAL-REVIEW.md).
 
+The integrated tile matches all 128 archived block-6 logit rows and 120
+physical K/V planes in independent sessions, including the failed cut.
+The guarded proof passes at 4.50 GiB. In a fresh 384/128 pair, Done falls
+38.952 to 32.456 s, first ID falls 12.046 to 9.020 s, and engine decode
+falls 26.771 to 23.302 s. All output and state match at 4.65 GiB peak.
+The frozen reader refuses the expected call split. The separate reader
+derives and verifies 180 multirow and 4,685 single-row calls from the
+sealed graph. Astra approves only the descriptive one-pair comparison.
+[Block 6 proof](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-block6-1/ACTUAL-REVIEW.md) ·
+[Public tile result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-public-screen-1/RESULT.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

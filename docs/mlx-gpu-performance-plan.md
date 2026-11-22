@@ -483,6 +483,14 @@ words and the block-6 midpoint. It lowers isolated medians 67.25% and
 before broader qualification.
 [CPU tile review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-tile-1/ACTUAL-REVIEW.md).
 
+The tile passes the original block-6 failing cut with exact logits and
+K/V. The fresh public pair gives a 16.68% completion saving with a
+source-verified 180 multirow and 4,685 single-row calls. Preserve the
+original reader refusal and the separately reviewed raw comparison.
+Proceed to original loss and task checks on the same tiled release test
+build, then independent reversed timing and the original summary gates.
+[Public tile result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-public-screen-1/RESULT.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

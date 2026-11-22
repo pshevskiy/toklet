@@ -17,14 +17,6 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   Astra verifies the raw clocks, all 64 exact generations and zero exports.
   The actual enabled/disabled result remains 1.06524% against the 1% gate.
   [LFM3 control](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-sham-readiness-1/ACTUAL-REVIEW.md).
-- [x] **Gemma loss block 9** — Both guarded owners match all 784 scores,
-  the terminal row and 300 K/V planes. The 25 cuts include the late T17
-  fallback and 240 early Metal visits. Astra approves the isolated block.
-  [Gemma block 9 proof](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-quality-block9-1/RESULT.md).
-- [x] **Gemma public screen** — The repaired CLI saves 7.91% completion
-  and 2.943 s to the first token in one pair. Both owners match all 128
-  IDs and final state. Astra verifies both readers at 4.66 GiB peak.
-  [Public timing result](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t32-context-public-screen-1/RESULT.md).
 - [x] **Gemma corpus decision** — The faster route matches 6,240 target
   records and six complete blocks, then fails on one visible Metal context
   word. Ordered FP64 rounds that dot to the adjacent word. Astra rejects
@@ -34,9 +26,18 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   archived words and the block-6 dot. D256 and D512 medians fall
   67.25% and 67.97%. Astra verifies the guarded result.
   [CPU tile review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-tile-1/ACTUAL-REVIEW.md).
-- [ ] **Next** — Verify the CPU tile on the failing model cut and price
-  a fresh public pair. The aggregate loss, original 100 tasks and
-  actual 1% summary gate remain open.
+- [x] **Block 6 tile proof** — Both sessions match all 128 archived rows
+  and 120 physical K/V planes. The tiled session makes 140 calls. Astra
+  confirms the previously failing cut at 4.50 GiB guarded peak.
+  [Block 6 proof](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-block6-1/ACTUAL-REVIEW.md).
+- [x] **Public tile pair** — Done falls 16.68% in the fresh pair. The
+  frozen reader predicts the wrong row split. The separate reader matches
+  the actual 180 multirow and 4,685 single-row calls to the sealed source.
+  Astra approves the descriptive comparison.
+  [Public tile result](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-public-screen-1/RESULT.md).
+- [ ] **Next** — Run the original 10,000-target loss and C567 task checks
+  on the same tiled test build. Independent timing and the actual 1%
+  summary gate remain open.
 
 ## Recent implementation and evidence
 
