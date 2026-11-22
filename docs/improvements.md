@@ -622,6 +622,12 @@ The sealed scan-fusion candidate matches all scores, cache digests and
 for the frozen paired witness and latency run.
 [Untimed scan-fusion result](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-qkv-scan-fusion-prep-1/untimed-full-1/report.json).
 
+Both scan-fusion arms match the frozen tape. Across 52 guarded requests,
+paired completion savings are +4.10 and −7.67 ms, with both 95% intervals
+including zero. Paired decode slows by 3.07 and 6.99 ms. Peak guarded
+memory is 5.36 GiB. Astra rejects the candidate and retains dense tail.
+[Scan-fusion A/B](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-qkv-scan-fusion-prep-1/RUN.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

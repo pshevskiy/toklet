@@ -389,6 +389,12 @@ and latency on AC. Preserve both external completion gates and both summary
 confidence bounds.
 [Untimed scan-fusion result](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-qkv-scan-fusion-prep-1/untimed-full-1/report.json).
 
+The frozen scan-fusion witness passes, and ordinary latency shows decode
+regression and inconclusive completion. Keep the dense-tail control and
+seek a larger reduction in completed prefill or decode work. Both external
+completion gates and the original summary-overhead bounds remain binding.
+[Scan-fusion A/B](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-qkv-scan-fusion-prep-1/RUN.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

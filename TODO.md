@@ -8,13 +8,12 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
-- [x] **Current** — Q/K/V scan fusion matches 32 BF16 scores and IDs,
-  176 prefill pairs, 1,364 appends and 44 terminal pairs in an untimed Metal
-  replay. Astra approves the numerical, fault and retry evidence at 5.26 GiB.
-- [ ] **Next** — Run the frozen two-arm witness and latency comparison on AC
-  with Low Power Mode off. The qualified prior route beats vLLM but misses the
-  5% Ollama gate. The original 1% summary run also needs 5 GiB free at admission.
-  [Scan fusion](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-qkv-scan-fusion-prep-1/RUN.md) ·
+- [x] **Current** — Both Q/K/V scan-fusion arms match the full Nanbeige tape.
+  The 52-request native A/B peaks at 5.36 GiB. Completion savings change sign
+  and decode slows in both orders. Astra rejects the fusion. Keep dense tail.
+- [ ] **Next** — Find another measured prefill or decode reduction toward the
+  5% Ollama gate. The original 1% summary run needs 5 GiB free at admission.
+  [Scan-fusion A/B](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-qkv-scan-fusion-prep-1/RUN.md) ·
   [Matched cohorts](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-cohorts-1/RESULT.md) ·
   [Summary diagnostic](artifacts/mlx-gpu-gap-2026-11-15/root-o4-owner-conditioning-1/RUN.md) ·
   [Untimed rollback](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-exact-fault-prep-1/RUN.md).
