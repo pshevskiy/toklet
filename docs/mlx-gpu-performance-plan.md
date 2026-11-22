@@ -258,6 +258,17 @@ grows from 4,608 to 17,408 bytes. Retain the incumbent for this
 workload and record the result before further reuse work.
 [Attention and rotary](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-replay-1/RUN.md) ·
 [Gate/Up measurement](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-dense-tile-reuse-1/RUN.md).
+
+The connected Steel and rotary witness matches every first-cut panel
+and slot-zero K/V at all four native prefill boundaries. The remaining
+43 prefill owners, all scored logits and all terminal owners differ
+from MLX. Check the remaining layer-zero residual and FFN operations
+before widening timing. The two proof GPU clocks sum to 2.443 s for
+Steel and 2.580 s for split-K with native attention. A separate MLX
+shape test uses three different authentic FFN inputs and charges the
+stacking operation. Gate/Up and SwiGLU take about 18.4 ms in both
+shapes, with zero differences and both paired intervals including zero.
+[Steel and FFN shape results](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-steel-connected-1/normal.json).
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

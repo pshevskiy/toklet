@@ -492,6 +492,16 @@ both detached conclusions.
 [Rotary and attention](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-replay-1/RUN.md) ·
 [Gate/Up timing](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-dense-tile-reuse-1/RUN.md) ·
 [Combined evidence seal](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-replay-1/outer.json).
+
+The connected T128 Steel and corrected rotary candidate matches all
+nine first-cut panels and the first cache owner at all four prefill
+boundaries. Both modes emit the same 32 IDs. The split-K control
+reproduces the archived state. Full-request parity remains open.
+The guarded proof GPU clocks are 2.443 s and 2.580 s, with a peak
+charge of 5.07 GiB. A separate MLX Gate/Up shape test matches all
+4,128,768 words and measures about 18.4 ms for either shape.
+[Connected and shape reports](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-steel-connected-1/normal.json) ·
+[Astra review and checks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-steel-connected-1/REVIEW.md).
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

@@ -389,7 +389,15 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   frozen T128 cut. Same-operand attention still differs in 237 words.
   The matched Gate/Up reuse candidate is slower in all 40 pairs, so
   keep the incumbent. Both readers, hardware guards and Astra review
-  pass. Next connect the rotary change and the pinned Steel attention.
+  pass. Connected Steel and corrected rotary match all nine first-cut
+  panels, the first cache owner at all four prefill lengths and all 32
+  sampled IDs. The full request still matches 0/32 scored logits and
+  0/44 terminal caches. Two proof owners report 2.443 s and 2.580 s
+  on the GPU. The Gate/Up shape control shows no clear gain. The
+  guarded release, scoped format and strict Metal Clippy pass after
+  the sandbox guard retry. Astra approves the detached evidence. Next
+  isolate the layer-zero residual and FFN before the next cache owner.
+  [Steel and FFN shape results](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-steel-connected-1/normal.json).
   [Rotary and attention](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-attention-replay-1/RUN.md) ·
   [Gate/Up timing](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-dense-tile-reuse-1/RUN.md).
   [Connected comparison and checks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-connected-splitk-1/RUN.md).
