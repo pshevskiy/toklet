@@ -164,6 +164,14 @@ operator test isolates the first layer-zero V divergence using authentic
 split-K operands. App adoption and external engine speed tests are pending.
 [Native admission results](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/RUN.md).
 
+The official unquantized parent contains 4,169,800,704 stored BF16
+parameters. Its independent embedding and head contribute about
+1.02 GB each. The 8.34 GB weight payload exceeds the 6 GiB guard
+before cache or scratch. Reuse the existing verified shard reader
+and pinned MLX primitives for a separate streamed reference. Verify
+the real memory fit before applying the original held-out and task gates.
+[Official parent inventory and Astra proposal](../artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-bf16-quality-1/PROPOSAL.md).
+
 Test the resident layer-zero V matrix with identical BF16-normalized inputs.
 Accumulate four contiguous 768-wide products at T128 and eight 384-wide
 products at T64. Round each partial to BF16 and round each ordered addition,
@@ -331,6 +339,13 @@ timestamp cost separately before using current stage durations. Retain
 the complete final packed chunk in any later scheduling experiment.
 [Architecture review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-next-prefill-brief-1/REVIEW.md) ·
 [Prospective attribution design](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-attribution-1/PLAN.md).
+
+The sparse stage trial also exceeds its calibration budget. Encoder
+splits shift TTFT by up to 92.23 ms with matching numerical state.
+Record the measured ordinary request and command durations and judge
+future performance changes with those clocks. M1 Pro reports stage
+timestamp support. Dispatch-boundary timestamps are unavailable.
+[Guarded capture and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-attribution-1/CAPTURE-REVIEW.md).
 
 For request-summary qualification, compare the same CLI output mode with
 summary collection enabled and disabled. Keep counters at existing completion

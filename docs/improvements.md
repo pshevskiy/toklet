@@ -225,6 +225,7 @@ prefix, and retry matches exactly. A poisoned startup basis leaves
 zero resident dense pairs and reproduces the packed terminal state.
 Astra approves the exact opt-in. Warm preparation adds about 0.68 s
 before the timed requests. Cold performance remains unqualified.
+Pushed `0e5f6378`.
 [Generic fit](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-option-1/fit-normal.json) ·
 [Alternate and cold controls](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-option-1/aux-normal.json) ·
 [Ordinary timings and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-option-1/REVIEW.md) ·
@@ -253,6 +254,17 @@ GPU budget for the required 215 ms request saving. Astra defers a
 prototype until the generic route has current stage attribution.
 [Memory and timing analysis with Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-next-prefill-brief-1/REVIEW.md).
 
+The sparse stage profiler reproduces all 27 requests and every state
+witness in its complete owner. Splitting the encoders shifts TTFT by
+up to 92.23 ms against a 21.451 ms limit. The paired median residual
+outside measured GPU time and encoding shifts by 90.82 ms. This
+residual combines commit, queue scheduling and host wake time.
+Timestamp sampling separately shifts a clock by at most 17.48 ms.
+The second owner stops at the disk floor. Close the diagnostic and
+keep ordinary completed-command clocks for future request comparisons.
+[Capture and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-attribution-1/CAPTURE-REVIEW.md) ·
+[Metal capabilities](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-attribution-1/dispatch-capabilities.txt).
+
 All 100 original Nanbeige task cases are frozen under the pinned codec.
 The Python template and the existing compiled Rust codec match every
 input. The original categories and caps remain, with thinking disabled
@@ -263,9 +275,19 @@ The guarded same-Q4 scoring smoke uses 32 frozen held-out targets
 and two separate EOS controls. Both Toklet and pinned MLX finish
 37 forced T1 steps under 2.66 GiB. The score includes all 166,144
 head rows. Mean Toklet loss is 0.02357 nats/token higher and two
-greedy choices differ on the held-out sample. The full corpus and
-unquantized-reference checks remain open.
+greedy choices differ on the held-out sample.
 [Held-out smoke and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-heldout-fidelity-1/SMOKE-REVIEW.md).
+
+The guarded full same-Q4 comparison scores all 10,000 targets across
+ten independent windows. Mean NLL is 3.53068 for Toklet and 3.53302 for
+pinned MLX. Greedy choices differ at 435 targets. Both engines exactly
+repeat their own smoke controls, with guarded peaks of 2.60 and 3.30
+GiB. The first attempt stopped on an external compiler. The unchanged
+retry supplies the complete evidence. Astra also verifies 21 targets
+with absolute loss differences of at least one nat. The original BF16
+reference and task acceptance checks remain open.
+[Full same-Q4 results and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-heldout-fidelity-1/FULL-REVIEW.md) ·
+[BF16 streaming proposal](../artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-bf16-quality-1/PROPOSAL.md).
 
 The first same-weight LFM3 FFN replay changes 27 of 2,048
 canonical residual words on the first affected row and fails

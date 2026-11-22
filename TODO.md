@@ -221,7 +221,7 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   869 default tests, 1,074 Metal tests and four explicit GPU tests.
   Waited cancellation and status preserve exact committed state.
   Failed startup parity allocates zero pairs and falls back exactly.
-  Astra approves the exact bounded opt-in.
+  Astra approves the exact bounded opt-in. Pushed `0e5f6378`.
   [Generic fit](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-option-1/fit-normal.json) ·
   [Alternate and cold controls](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-option-1/aux-normal.json) ·
   [Compiled T1 proof](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-option-1/ARM64-REVIEW.md) ·
@@ -249,6 +249,15 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   overhead separately before using its phase timings.
   [Prefill analysis and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-next-prefill-brief-1/REVIEW.md) ·
   [Prospective attribution design](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-attribution-1/PLAN.md).
+- [x] Calibrate sparse GPU stage timestamps. One detached build linter
+  warning was fixed. The completed owner matches all request and state
+  witnesses. Encoder splits shift TTFT by up to 92.23 ms against a
+  21.451 ms limit. Timestamp sampling adds a separate shift up to
+  17.48 ms. The second owner stops at the disk floor. Astra rejects
+  the timing as a basis for ranking kernels. M1 Pro exposes stage-boundary
+  timestamps and reports dispatch-boundary sampling unavailable.
+  [Capture and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-attribution-1/CAPTURE-REVIEW.md) ·
+  [Metal capabilities](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-attribution-1/dispatch-capabilities.txt).
 - [ ] Qualify the original 100 tasks and 10,000 held-out Nanbeige
   targets. The 100 execution inputs now use the pinned Nanbeige codec
   and preserve original task content, categories, output caps and grading.
@@ -257,11 +266,20 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   The guarded same-Q4 scoring smoke passes 32 held-out targets and
   two separate EOS controls. Toklet loss is 0.02357 nats/token higher
   than pinned MLX on this sample with two greedy disagreements.
-  The guarded full same-Q4 corpus run is underway. The original tasks
-  and unquantized-reference gates remain open.
+  The first full run stopped after 4,512 scores when another compiler
+  entered the guard. The unchanged retry scores all 10,000 targets.
+  Mean Toklet loss is 0.00234 nats/token lower than pinned MLX, with
+  435 greedy disagreements. Both reproduce the smoke scores and
+  finish under 3.31 GiB. Astra independently verifies the full corpus.
+  The original tasks and unquantized-reference gates remain open.
+  Astra verifies that the BF16 parent requires 7.77 GiB for weights
+  alone and designs a streaming oracle.
   [Frozen task inputs](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-quality-tasks-1/RUN.md) ·
   [Frozen loss windows](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/heldout-normal.json) ·
-  [Held-out smoke and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-heldout-fidelity-1/SMOKE-REVIEW.md).
+  [Held-out smoke and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-heldout-fidelity-1/SMOKE-REVIEW.md) ·
+  [Full same-Q4 results and Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-heldout-fidelity-1/FULL-REVIEW.md) ·
+  [Interrupted guard receipt](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-heldout-fidelity-1/full-1-interrupted-external-compile/toklet-guard/result.json) ·
+  [BF16 reference proposal](artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-bf16-quality-1/PROPOSAL.md).
 - [x] Price the remaining Nanbeige gap against the direct MLX GPU graph.
   Both owners reproduce the 32 released IDs on all 26 requests.
   Direct MLX finishes in 3.315–3.316 s versus Toklet's 5.841–5.842 s.
@@ -373,6 +391,10 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   and broken stdout pass their guarded controls. The three omitted
   projections and reductions account for about 38 ms of an earlier
   device trace. Timing and external attention qualification remain open.
+  The pinned stock Ollama MLX registry lacks Nanbeige. The publisher
+  fork has 44 cache owners, and its public path reserves a prompt seed
+  and evaluates one extra decode position. An untimed raw-ID probe on
+  its existing worker can check exact imported Q4 weights and work.
   [Local vLLM clocks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-direct-clocks-1/RUN.md) ·
   [Astra clock review](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-direct-clocks-1/REVIEW.md) ·
   [Detached CLI proposal](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-head-cli-1/RUN.md) ·
@@ -383,7 +405,8 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   [External admission proof](artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-external-admission-1/result.json) ·
   [Logical loop replay](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-double-loop-1/RUN.md) ·
   [Reviewed overlay](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-live-overlay-1/RUN.md) ·
-  [Live admission](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-overlay-smoke-1/RUN.md).
+  [Live admission](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-overlay-smoke-1/RUN.md) ·
+  [Ollama worker proposal](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-ollama-matched-plan-1/DRAFT.md).
 - [x] Price a resident T128 LFM3 convolution handoff on the original
   matched tape. The previous ConvOut tile saved about 0.83 s of prefill
   and added 0.10–0.12 s to decode. Start with the authenticated gated
