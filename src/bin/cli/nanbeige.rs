@@ -82,7 +82,12 @@ pub(super) fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
     }
 
     let clock = Instant::now();
-    let model = Model::load(&a.model, options, false)?;
+    let want_dense = a.dense_prefill && options.prefill_chunk_size == 128 && tokens.len() > 128;
+    let model = if want_dense {
+        Model::load_dense(&a.model, options, false)?
+    } else {
+        Model::load(&a.model, options, false)?
+    };
     let load_seconds = clock.elapsed().as_secs_f64();
     let mut session = Session::new(&model, options, false, &CANCELLED)?;
     let mut stream = if a.json {
@@ -163,7 +168,7 @@ pub(super) fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
         };
         if a.json || a.stats {
             let memory = session.memory();
-            let stats = json!({
+            let mut stats = json!({
                 "event": "stats",
                 "model_profile": PROFILE,
                 "revision": REVISION,
@@ -195,6 +200,35 @@ pub(super) fn run(a: Args) -> Result<u8, Box<dyn std::error::Error>> {
                 "logical_memory": logical_memory(memory, external),
                 "memory_admitted_bytes": memory.admitted_bytes + external,
             });
+            if a.dense_prefill {
+                let available = session.dense_gate_up_prefill_rows() == [128];
+                let committed = if available {
+                    (report.prefill_tokens / 128).min((tokens.len() - 1) / 128)
+                } else {
+                    0
+                };
+                let allocation = model.dense_prefill_receipt().map(|r| json!({
+                    "physical_pairs":r.physical_pairs,"allocated_bytes":r.allocated_bytes,
+                    "payload_bytes":r.payload_bytes,"allocation_seconds":r.allocation_seconds,
+                    "prepare_host_seconds":r.prepare_host_seconds,"prepare_gpu_seconds":r.prepare_gpu_seconds,
+                    "startup_basis_seconds":r.startup_basis_seconds,
+                    "device_admitted_limit_bytes":r.device_budget_bytes,
+                }));
+                let denial = model.dense_prefill_denial().or({
+                    if !want_dense {
+                        Some("dense prefill requires a T128 chunk with another prompt position pending")
+                    } else if !available {
+                        Some("dense prefill normalization scratch is unsupported")
+                    } else {
+                        None
+                    }
+                });
+                stats["dense_prefill"] = json!({
+                    "requested": true, "admitted": allocation.is_some(), "available":available,
+                    "committed_dense_chunks":committed, "committed_dense_rows":committed * 128,
+                    "allocation": allocation, "denial":denial,
+                });
+            }
             if a.json {
                 writeln!(out, "{stats}")?;
                 out.flush()?;

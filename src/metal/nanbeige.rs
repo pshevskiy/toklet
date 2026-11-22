@@ -2,6 +2,8 @@
 //! Immutable packed banks and pipelines are model-owned. Each session owns
 //! head-major BF16 K/V, activation scratch and its published token history.
 
+mod dense;
+mod dense_basis;
 mod kernel;
 mod session;
 
@@ -19,6 +21,7 @@ use objc2::rc::autoreleasepool;
 use objc2_metal::MTLDevice;
 use std::path::Path;
 
+pub use dense::DensePrefillReceipt;
 pub use session::Session;
 
 const SOURCE_POSITION_LIMIT: usize = 262144;
@@ -114,6 +117,8 @@ pub struct Model {
     weights: Vec<Buffer<u32>>,
     plan: plan::Plan,
     visits: [plan::Visit; plan::VISITS],
+    dense: Option<dense::DensePrefill>,
+    dense_denial: Option<String>,
 }
 
 impl Model {
@@ -121,6 +126,20 @@ impl Model {
     /// Stream the exact pinned artifact into its final owners and authenticate
     /// the complete byte stream before making the model available to a session.
     pub fn load(directory: &Path, options: Options, diagnostics: bool) -> Result<Self> {
+        Self::load_inner(directory, options, diagnostics, false)
+    }
+
+    /// Explicit experimental selection. Failure leaves the canonical packed model.
+    pub fn load_dense(directory: &Path, options: Options, diagnostics: bool) -> Result<Self> {
+        Self::load_inner(directory, options, diagnostics, true)
+    }
+
+    fn load_inner(
+        directory: &Path,
+        options: Options,
+        diagnostics: bool,
+        want_dense: bool,
+    ) -> Result<Self> {
         let sizes = Sizes::new(options, diagnostics)?;
         let mut source = plan::Source::open(directory)?;
         autoreleasepool(|_| {
@@ -133,13 +152,31 @@ impl Model {
                 weights.push(bank);
             }
             let plan = source.finish()?;
+            let (dense, dense_denial) = if want_dense {
+                match dense::DensePrefill::prepare(&context, &weights, &plan, &sizes, options) {
+                    Ok(pairs) => (Some(pairs), None),
+                    Err(error) => (None, Some(error.to_string())),
+                }
+            } else {
+                (None, None)
+            };
             Ok(Self {
                 context,
                 weights,
                 plan,
                 visits: plan::visits(),
+                dense,
+                dense_denial,
             })
         })
+    }
+
+    pub fn dense_prefill_receipt(&self) -> Option<DensePrefillReceipt> {
+        self.dense.as_ref().map(|dense| dense.receipt)
+    }
+
+    pub fn dense_prefill_denial(&self) -> Option<&str> {
+        self.dense_denial.as_deref()
     }
 
     pub fn device_name(&self) -> String {

@@ -313,6 +313,25 @@ and measure independent prompt and complete cold CLI behavior.
 [Same-binary contrasts and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-causal-1/REVIEW.md) ·
 [Final-chunk ordinary review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-tail-packed-1/REVIEW.md).
 
+The generic remaining-prefill selector reproduces the warm gain in both
+orders. All 52 requests retain exact tokens and terminal state.
+Completion falls about 7.1% with both paired lower bounds above 6.55%.
+First token arrives about 313–314 ms sooner and both decode medians
+improve at 5.16 GiB peak. Four alternate lengths, signed startup and
+the unchanged default CLI schema pass. Both post-completion controls,
+the repository suites and Astra review qualify the bounded M1 Pro opt-in.
+[Generic timings and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-option-1/REVIEW.md) ·
+[Astra release review](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-dense-release-checks-1/RELEASE-REVIEW.md).
+
+Keeping dense Down for all 22 banks would exceed 6 GiB.
+Astra defers layer-major execution until a current connected trace shows
+enough removable GPU time. The earlier trace added 101–104 ms by
+splitting every dispatch. Measure targeted splits and the incremental
+timestamp cost separately before using current stage durations. Retain
+the complete final packed chunk in any later scheduling experiment.
+[Architecture review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-next-prefill-brief-1/REVIEW.md) ·
+[Prospective attribution design](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-attribution-1/PLAN.md).
+
 For request-summary qualification, compare the same CLI output mode with
 summary collection enabled and disabled. Keep counters at existing completion
 boundaries and write one bounded summary after the last token. Sample command

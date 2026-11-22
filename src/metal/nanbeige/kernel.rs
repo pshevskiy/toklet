@@ -335,7 +335,7 @@ impl Context {
     }
 }
 
-fn encode_pipeline(
+pub(super) fn encode_pipeline(
     encoder: &Encoder,
     pipeline: &Pipeline,
     threads: usize,

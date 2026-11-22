@@ -10,8 +10,11 @@ use crate::{
 };
 use half::bf16;
 use objc2::rc::autoreleasepool;
-use objc2_metal::{MTLCommandBuffer, MTLCommandBufferStatus, MTLCommandEncoder};
-use std::sync::atomic::{AtomicBool, Ordering};
+use objc2_metal::{MTLCommandBuffer, MTLCommandBufferStatus, MTLCommandEncoder, MTLDevice};
+use std::{
+    cell::Cell,
+    sync::atomic::{AtomicBool, Ordering},
+};
 
 struct Kv {
     k: Buffer<u16>,
@@ -35,6 +38,8 @@ struct Scratch {
 }
 
 struct Diagnostic {
+    staged_dense: Cell<bool>,
+    last_dense: bool,
     staged_passes: Buffer<u16>,
     published_passes: Buffer<u16>,
     logits: Vec<f32>,
@@ -54,6 +59,7 @@ pub struct Session<'a> {
     scratch: Scratch,
     down_k64_ready: bool,
     attention_compact_ready: bool,
+    fused_gate_up_ready: bool,
     diagnostic: Option<Diagnostic>,
 }
 
@@ -66,7 +72,30 @@ impl<'a> Session<'a> {
         diagnostics: bool,
         cancelled: &'a AtomicBool,
     ) -> Result<Self> {
-        let sizes = Sizes::new(options, diagnostics)?;
+        let mut sizes = Sizes::new(options, diagnostics)?;
+        if let Some(dense) = &model.dense {
+            let extra = dense.receipt.allocated_bytes;
+            sizes.memory.weights_bytes = super::add(sizes.memory.weights_bytes, extra)?;
+            sizes.memory.admitted_bytes = super::add(sizes.memory.admitted_bytes, extra)?;
+            if sizes.memory.admitted_bytes > options.memory_limit_bytes {
+                return Err(Error::Budget {
+                    required: sizes.memory.admitted_bytes,
+                    limit: options.memory_limit_bytes,
+                });
+            }
+            let device = &model.context.device;
+            let recommended = usize::try_from(device.recommendedMaxWorkingSetSize())
+                .unwrap_or(usize::MAX)
+                .min(options.memory_limit_bytes);
+            let session_bytes = sizes.memory.admitted_bytes - sizes.memory.weights_bytes;
+            let required = super::add(device.currentAllocatedSize(), session_bytes)?;
+            if required > recommended {
+                return Err(Error::Budget {
+                    required,
+                    limit: recommended,
+                });
+            }
+        }
         sizes.validate_device(&model.context, model.plan.embedding.layout.weight_bytes())?;
         let chunk = options.prefill_chunk_size;
         let device = &model.context.device;
@@ -104,6 +133,8 @@ impl<'a> Session<'a> {
                     });
                 }
                 Some(Diagnostic {
+                    staged_dense: Cell::new(false),
+                    last_dense: false,
                     staged_passes: words(sizes.pass_elements)?,
                     published_passes: words(sizes.pass_elements)?,
                     logits,
@@ -136,6 +167,8 @@ impl<'a> Session<'a> {
             let attention_compact_ready = k64_ready
                 && model.gate_up_compact_prefill_rows().contains(&chunk)
                 && k64_input_aligned(&scratch.attention.raw);
+            let fused_gate_up_ready =
+                chunk == 128 && model.dense.is_some() && k64_input_aligned(&scratch.normalized.raw);
             Ok(Self {
                 model,
                 options,
@@ -149,6 +182,7 @@ impl<'a> Session<'a> {
                 scratch,
                 down_k64_ready,
                 attention_compact_ready,
+                fused_gate_up_ready,
                 diagnostic,
             })
         })
@@ -166,6 +200,24 @@ impl<'a> Session<'a> {
     /// Active prefill row counts eligible for the paired compact Q and O projections.
     pub fn attention_compact_prefill_rows(&self) -> &'static [usize] {
         if self.attention_compact_ready {
+            &[128]
+        } else {
+            &[]
+        }
+    }
+
+    /// Actual route of the last successfully published diagnostic chunk.
+    #[doc(hidden)]
+    pub fn last_chunk_used_dense(&self) -> Option<bool> {
+        self.selected?;
+        self.diagnostic
+            .as_ref()
+            .map(|diagnostic| diagnostic.last_dense)
+    }
+
+    /// Aligned T128 dense route availability. The final pending chunk stays packed.
+    pub fn dense_gate_up_prefill_rows(&self) -> &'static [usize] {
+        if self.fused_gate_up_ready {
             &[128]
         } else {
             &[]
@@ -267,6 +319,7 @@ impl<'a> Session<'a> {
                 &mut diagnostic.published_passes,
             );
             diagnostic.rows = rows;
+            diagnostic.last_dense = rows == 128 && diagnostic.staged_dense.get();
         }
         // Before this point, speculative writes occupy only the private tail
         // [evaluated, evaluated+rows) of all 44 caches. Publishing the common
@@ -293,8 +346,32 @@ impl<'a> Session<'a> {
     }
 
     fn encode(&self, encoder: &Encoder, rows: usize, start: usize) {
+        if rows == 128 {
+            let dense = self.fused_gate_up_ready && self.pending_len() > rows;
+            if let Some(diagnostic) = &self.diagnostic {
+                diagnostic.staged_dense.set(dense);
+            }
+            if dense {
+                self.encode_graph::<true>(encoder, rows, start);
+                return;
+            }
+        }
+        self.encode_graph::<false>(encoder, rows, start);
+    }
+
+    fn encode_graph<const FUSED_GATE_UP: bool>(
+        &self,
+        encoder: &Encoder,
+        rows: usize,
+        start: usize,
+    ) {
         let model = self.model;
         let context = &model.context;
+        let dense = if FUSED_GATE_UP {
+            Some(model.dense.as_ref().expect("admitted dense prefill pair"))
+        } else {
+            None
+        };
         let s = &self.scratch;
         let dispatch = |op, buffers: &[&RawBuffer], shape: &[u32], groups| {
             context.encode(encoder, op, buffers, shape, groups);
@@ -433,14 +510,24 @@ impl<'a> Session<'a> {
                 block.post_attention_norm,
                 &s.normalized.raw,
             );
-            affine(gate_up, block.gate, &s.normalized.raw, &s.gate.raw, rows, 0);
-            affine(gate_up, block.up, &s.normalized.raw, &s.up.raw, rows, 0);
-            dispatch(
-                Op::Swiglu,
-                &[&s.gate.raw, &s.up.raw, &s.status.raw],
-                &[rows as u32, INTERMEDIATE as u32],
-                [(rows * INTERMEDIATE).div_ceil(32), 1],
-            );
+            if let Some(dense) = dense {
+                dense.encode(
+                    encoder,
+                    visit.physical_layer,
+                    &s.normalized.raw,
+                    &s.gate.raw,
+                    &s.status.raw,
+                );
+            } else {
+                affine(gate_up, block.gate, &s.normalized.raw, &s.gate.raw, rows, 0);
+                affine(gate_up, block.up, &s.normalized.raw, &s.up.raw, rows, 0);
+                dispatch(
+                    Op::Swiglu,
+                    &[&s.gate.raw, &s.up.raw, &s.status.raw],
+                    &[rows as u32, INTERMEDIATE as u32],
+                    [(rows * INTERMEDIATE).div_ceil(32), 1],
+                );
+            }
             affine(down, block.down, &s.gate.raw, &s.delta.raw, rows, 0);
             residual_add();
 
@@ -641,3 +728,7 @@ mod tests {
         assert_eq!(session.logits().unwrap(), logits);
     }
 }
+
+#[cfg(test)]
+#[path = "dense_fault_tests.rs"]
+mod dense_fault_tests;

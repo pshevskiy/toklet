@@ -66,6 +66,7 @@ Usage: toklet [OPTIONS]
   --q4-weights PATH         Explicit Q4 v2 packed artifact for the v2 mode
   --stop-token ID           Additional stop ID; repeatable
   --no-eos                  Ignore configured EOS IDs
+  --dense-prefill           Nanbeige only: opt-in M1 Pro dense prefill ahead of the last chunk
   --no-thinking             Nanbeige only: close the empty reasoning block before generation
   --json                    JSON token events and statistics
   --stats                   Statistics to stderr with text output
@@ -114,6 +115,7 @@ struct Args {
     interactive: bool,
     no_eos: bool,
     no_thinking: bool,
+    dense_prefill: bool,
     stop: Vec<u32>,
     max: usize,
     capacity: usize,
@@ -153,6 +155,7 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
         interactive: false,
         no_eos: false,
         no_thinking: false,
+        dense_prefill: false,
         stop: Vec::new(),
         max: 32,
         capacity: 2048,
@@ -277,6 +280,7 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
             "--interactive" => a.interactive = true,
             "--no-eos" => a.no_eos = true,
             "--no-thinking" => a.no_thinking = true,
+            "--dense-prefill" => a.dense_prefill = true,
             _ => return Err(invalid(format!("unexpected argument {flag}"))),
         }
     }
@@ -315,6 +319,9 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
         return Err(invalid(
             "submission and request metrics flags require gemma4-bf16",
         ));
+    }
+    if a.dense_prefill && a.model_profile != ModelProfile::NanbeigeMlx {
+        return Err(invalid("--dense-prefill requires nanbeige4.2-3b-mlx-q4"));
     }
     if a.model_profile == ModelProfile::NanbeigeMlx {
         use toklet::mlx::nanbeige::{MAX_CAPACITY, MAX_CHUNK};

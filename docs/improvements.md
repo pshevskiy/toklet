@@ -208,17 +208,64 @@ Both decode medians improve at 5.16 GiB peak. The fixed-prompt probe
 clears both ordinary gates. Generic opt-in and cold timing are next.
 [Ordinary timings and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-tail-packed-1/REVIEW.md).
 
+The Nanbeige `--dense-prefill` CLI option on Apple M1 Pro uses remaining
+prompt work to select the route. Signed startup runs on the compiled
+pipelines. It fits 22 sidecars at 5.06 GiB peak, and four alternate
+prompt lengths match packed IDs, logits and every K/V owner. The
+compiled T1 path and default CLI schema match the released behavior.
+A flagged 128-token prompt allocates no sidecars. The single cold
+pair has unequal load times and remains descriptive. All 52 warm
+requests match. Completion falls from 4.620 to 4.290 s and from
+4.616 to 4.289 s. First token arrives about 313–314 ms sooner, and
+both median decode times fall. One paired decode interval includes
+zero. Guarded peak memory rises from 2.47 to 5.16 GiB. The full
+default and Metal suites and all four explicit GPU tests pass.
+Waited cancellation or nonfinite status preserves the committed
+prefix, and retry matches exactly. A poisoned startup basis leaves
+zero resident dense pairs and reproduces the packed terminal state.
+Astra approves the exact opt-in. Warm preparation adds about 0.68 s
+before the timed requests. Cold performance remains unqualified.
+[Generic fit](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-option-1/fit-normal.json) ·
+[Alternate and cold controls](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-option-1/aux-normal.json) ·
+[Ordinary timings and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-option-1/REVIEW.md) ·
+[All nine release checks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-dense-release-checks-1/normal-2.json) ·
+[Astra release review](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-dense-release-checks-1/RELEASE-REVIEW.md).
+
 The guarded Nanbeige T1 capture retains 3,072 normalized BF16 words
 and both 10,752-word projections at its first committed decode input.
 The terminal witness matches the release. This furnishes the exact
 activation-sum screen with authentic packed-vector operands.
 [Capture and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-t1-sum16-capture-1/REVIEW.md).
 
+The T1 activation-sum experiment reproduces all 21,504 BF16 outputs
+and 192 exact sums with passing rounding and fault controls. GPU
+paired savings range from 46.13 to 91.27 µs in the first order and
+from −17.08 to 70.00 µs in reverse. Astra confirms closure because
+the reverse lower bound misses the 14.663 µs screen.
+[Standalone operator evidence and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-t1-sum16-operator-1/REVIEW.md).
+
+Further dense Down coverage would exceed 6 GiB with all 22 banks.
+Partial coverage would require about 1.02 ms per visit for a 5%
+request gain. The fastest measured exact Down takes 3.28 ms.
+Layer-major execution preserves causal attention if positions stay
+ordered within each layer. The current evidence gives no measured
+GPU budget for the required 215 ms request saving. Astra defers a
+prototype until the generic route has current stage attribution.
+[Memory and timing analysis with Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-next-prefill-brief-1/REVIEW.md).
+
 All 100 original Nanbeige task cases are frozen under the pinned codec.
 The Python template and the existing compiled Rust codec match every
 input. The original categories and caps remain, with thinking disabled
 for code and prose and raw continuation. Quality scoring remains open.
 [Frozen task inputs](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-quality-tasks-1/RUN.md).
+
+The guarded same-Q4 scoring smoke uses 32 frozen held-out targets
+and two separate EOS controls. Both Toklet and pinned MLX finish
+37 forced T1 steps under 2.66 GiB. The score includes all 166,144
+head rows. Mean Toklet loss is 0.02357 nats/token higher and two
+greedy choices differ on the held-out sample. The full corpus and
+unquantized-reference checks remain open.
+[Held-out smoke and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-heldout-fidelity-1/SMOKE-REVIEW.md).
 
 The first same-weight LFM3 FFN replay changes 27 of 2,048
 canonical residual words on the first affected row and fails
