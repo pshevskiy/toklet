@@ -518,8 +518,15 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   prefill rejoins all 44 reference pairs. The first Ollama cache owner
   already differs at position 0 in 429 K and 502 V words. Both raw
   readers agree at 3.12 GiB. The sandbox denied the first guard start.
-  Next compare the live layer-zero embedding and RMSNorm, then replay
-  both affine projections on the same T128 activation.
+  Live embedding and RMSNorm match bitwise. The shared T128 activation
+  reproduces 55,567 K and 67,198 V differences before RoPE. All V words
+  join archived MLX 0.32.3. Sol's detached build passes on retry after
+  the sandbox guard denial. Both GPU guards and paired readers pass.
+  Astra approves the probe. The detached MLX 0.32.4 bridge configures
+  and hits two compile-cache API changes. Resolve per-bridge cache
+  ownership before linking and replaying.
+  [Bridge preflight](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/mlxc-wheel-preflight-1/receipt.json).
+  [Shared-input layer zero](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
   [First prefill difference](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-prefill-cut-1/check-normal.json).
   [32-head Ollama witness](artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/matched32/run-1/read-normal.json) ·
   [Local vLLM clocks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-direct-clocks-1/RUN.md) ·

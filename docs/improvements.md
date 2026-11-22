@@ -406,6 +406,17 @@ This narrows the discrepancy to the first cache write or its inputs.
 [Prefill receipt](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-prefill-cut-1/capture.json) ·
 [Independent raw check](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-prefill-cut-1/check-normal.json).
 
+Both layer-zero probes reproduce their own retained first cache slot.
+Embedding and RMSNorm each match all 393,216 words. Both runtimes use
+the same T128 activation and differ at 55,567 K and 67,198 V words
+before RoPE. All 131,072 Ollama V words match MLX 0.32.3. Direct MLX
+peaks at 2.76 GiB and Ollama at 2.41 GiB in the guarded probes. Astra
+replays both comparisons and approves the detached companion preflight.
+CMake accepts the pinned MLX 0.32.4 wheel. The MLX-C build stops at two
+compile-cache API errors before linking.
+[Guarded preflight](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/mlxc-wheel-preflight-1/receipt.json).
+[Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
+
 The full untimed vLLM dense substitution exercises 1,540 visits and all
 32 IDs at 3.78 GiB. It reproduces all 44 direct MLX prefill and terminal
 cache pairs. The 31 decode heads are exact. The selective prefill head

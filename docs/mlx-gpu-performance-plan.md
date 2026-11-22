@@ -178,8 +178,17 @@ All 32 scored-head digests differ from matched MLX. Numerical
 qualification remains open. [Ollama work and scores](../artifacts/mlx-gpu-gap-2026-11-15/sol62-ollama-nanbeige-raw-worker-1/matched32/run-1/read-normal.json).
 The first logical owner differs from position zero in both K and V,
 which locates the discrepancy at or before the first cache write.
-Align embedding and RMSNorm next, then compare affine K/V projections
-using a common T128 input before qualifying external performance.
+Embedding and RMSNorm now match exactly. The shared T128 input locates
+both differences in affine K/V projection before RoPE. Ollama's V
+matches all 131,072 archived MLX 0.32.3 words. Test a detached MLX-C
+bridge against the pinned MLX 0.32.4 wheel with the same Go worker and
+verified store. The guarded configure passes. The pinned bridge stops
+at the new compile-cache handle arguments for clear and erase.
+Preserve cache lifetime and clear/erase semantics in any compatible
+bridge before linking. Require the full 32-head joined state before
+timing.
+[Bridge preflight](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/mlxc-wheel-preflight-1/receipt.json).
+[Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 [First prefill difference](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-prefill-cut-1/check-normal.json).
 
 The direct MLX and private vLLM
