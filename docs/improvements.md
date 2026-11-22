@@ -143,6 +143,27 @@ detached pending attribution.
 [Connected timings](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-fused-connected-1/RUN.md) ·
 [Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-fused-connected-1/REVIEW.md).
 
+The two same-owner factors isolate the T1 host encoder and preceding
+prefill. All 104 requests, 3,224 completed T1 command clocks and eight
+full terminal states pass at 2.37 GiB peak. Both orders of both factors
+give paired decode intervals spanning zero. Sol's outer specialization
+removes the per-visit fusion check in the compiled T1 graph. Its two
+ordinary cohorts complete 52 exact requests at 2.47 GiB peak with
+paired lower completion gains of 5.39% and 5.33%. The reverse decode
+median increases by 1.05 ms, with its entire paired interval slower.
+Both implementations remain detached under the original decode rule.
+[Host and prefill clocks](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-fused-t1-crossover-1/RUN.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-fused-t1-crossover-1/REVIEW.md) ·
+[Outer specialization and review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-fused-outer-dispatch-1/REVIEW.md).
+
+Reusing sixteen affine-Q4 coefficients through SIMD shuffles preserves
+all 1,769,472 authentic FFN words, both analytical Down pipelines and
+the fault control. The isolated T128 two-dispatch chain slows from
+10.77–10.78 to 15.50–15.51 ms. It loses all 20 timed pairs and
+closes below the 1.240 ms per-visit savings gate.
+[Isolated measurements](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-affine-codebook-1/normal-1.json) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-affine-codebook-1/REVIEW.md).
+
 The first same-weight LFM3 FFN replay changes 27 of 2,048
 canonical residual words on the first affected row and fails
 the block's exact admission. The separate canonical T1 ConvIn

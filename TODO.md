@@ -146,12 +146,37 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   Both orders clear the paired 5% completion threshold and reproduce
   the full published K/V and terminal logits. TTFT improves about 7%.
   The reverse-order decode interval observes a small slowdown.
-  Astra holds publication. Compare both host encoders within the
-  same owner with released prefill. Then vary only the prefill path
-  to test for a carryover effect.
+  Both same-owner factors pass 104 requests and eight exact terminal
+  witnesses in total. All four decode intervals span zero. The guarded
+  outer specialization preserves the released T1 graph. All 52 ordinary
+  requests pass, with paired lower completion gains of 5.39% and 5.33%.
+  The reverse order still shows 1.05 ms slower median decode and a
+  paired saving interval of −0.190% to −0.053%. The variant stays detached.
+  For a standalone decision, compare true prefill switching with a
+  released/released sham in the same uninstrumented session. Close
+  that line if the sham shows drift or the true effect changes sign.
   [Connected results](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-fused-connected-1/RUN.md) ·
   [Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-fused-connected-1/REVIEW.md) ·
-  [Same-owner diagnostic](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-fused-t1-crossover-1/RUN.md).
+  [Same-owner diagnosis](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-fused-t1-crossover-1/RUN.md) ·
+  [Astra crossover review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-fused-t1-crossover-1/REVIEW.md) ·
+  [Outer specialization](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-fused-outer-dispatch-1/RUN.md) ·
+  [Astra specialization review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-fused-outer-dispatch-1/REVIEW.md).
+- [x] Screen affine-Q4 weight reconstruction across the complete T128
+  Nanbeige FFN. The SIMD shuffle matches 1,769,472 authentic words
+  and 4,096 analytical one-hot coefficients. It slows all 20 pairs,
+  with GPU medians rising from 10.77–10.78 to 15.50–15.51 ms.
+  Strict Clippy, release build, native guard and both readers pass.
+  Close this mapping and keep the original loader.
+  [Astra proposal](artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-g64-shuffle-1/PROPOSAL.md) ·
+  [Isolated measurements](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-affine-codebook-1/normal-1.json) ·
+  [Astra results review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-affine-codebook-1/REVIEW.md).
+- [ ] Screen a prefill-only BF16 Gate/Up layout on one authentic T128
+  FFN visit. Keep K8 accumulation and bring the original packed Down
+  into both arms. The screen adds one 132 MB layer pair. Require exact
+  intermediate and final outputs and paired lower savings above
+  1.240 ms per visit in both orders. Full-route memory needs a separate
+  guarded result within 6 GiB.
+  [Detached layout and checks](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-gate-up-1/RUN.md).
 - [x] Price the remaining Nanbeige gap against the direct MLX GPU graph.
   Both owners reproduce the 32 released IDs on all 26 requests.
   Direct MLX finishes in 3.315–3.316 s versus Toklet's 5.841–5.842 s.
@@ -257,8 +282,14 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   26 requests at 3.539–3.540 s median completion, 2.489 s first
   ID, and 3.76 GiB peak. The tested Toklet owners score more rows
   and use different attention arithmetic.
+  Sol stages the consuming CLI head path to score the same 32 rows.
+  The three omitted projections and reductions account for about
+  38 ms of the archived device trace. Native CLI semantics and timing
+  remain separate checks before use in a matched comparison.
   [Local vLLM clocks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-direct-clocks-1/RUN.md) ·
-  [Astra clock review](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-direct-clocks-1/REVIEW.md).
+  [Astra clock review](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-vllm-direct-clocks-1/REVIEW.md) ·
+  [Detached CLI proposal](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-head-cli-1/RUN.md) ·
+  [Astra CLI review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-head-cli-1/REVIEW.md).
   [Head work and terminal custody](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-head-state-1/RUN.md) ·
   [Astra first-decode isolation review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-first-decode-attention-1/REVIEW.md).
   [External admission proof](artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-external-admission-1/result.json) ·

@@ -259,12 +259,34 @@ calculation after both BF16 roundings. It saves over 1.53 ms
 per visit at the paired lower bound in both isolated orders and
 reproduces the exact released Down input. Both connected orders
 clear 5% completion with exact terminal state. The reverse-order
-decode interval observes a small slowdown. The same-owner test
-should vary only the T1 host encoder with released prefill, then
-vary only prefill to check for a carryover effect. Keep every
-original timing sample in the record.
+decode interval observes a small slowdown. The same-owner host
+and prefill factors both preserve state. All four decode intervals
+include zero. The compiled outer specialization eliminates the
+per-visit fusion selector and passes both ordinary completion and
+exact-state checks. Its reverse order still observes 1.05 ms slower
+decode. Keep both candidates detached under the original rule.
 [Stage costs and direct projection clocks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-prefill-profile-1/RUN.md) ·
-[Connected trial review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-fused-connected-1/REVIEW.md).
+[Connected trial review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-gate-up-fused-connected-1/REVIEW.md) ·
+[Same-owner clocks](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-fused-t1-crossover-1/RUN.md) ·
+[Outer specialization](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-fused-outer-dispatch-1/RUN.md).
+
+The local vLLM diagnostic still has a 0.82–0.83 s completion lead.
+The archive puts three omitted prefill heads at about 38 ms of GPU
+time. Matching those scored rows closes a work mismatch. The packed
+G64 shuffle test reuses sixteen exact affine values inside each SIMD
+half across the T128 FFN. It reproduces the native Gate/Up and Down
+words. It adds about 4.7 ms per visit in both orders, closing the trial.
+[Astra proposal and controls](../artifacts/mlx-gpu-gap-2026-11-15/astra-nanbeige-g64-shuffle-1/PROPOSAL.md) ·
+[Isolated FFN result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-affine-codebook-1/normal-1.json) ·
+[Detached 32-row CLI path](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-head-cli-1/RUN.md).
+
+The next isolated prefill screen prepares only one Gate/Up BF16 pair
+in the existing Apple7 matrix fragment order. Its one-layer payload
+is 132,120,576 bytes. The design keeps packed Q4 for decode and uses
+the same FP32 K8 accumulation. Price completed work and preparatory
+cost separately. A full 22-pair layout would add 2,906,652,672 bytes
+and needs measured admission under the 6 GiB ceiling.
+[Detached layout and numerical checks](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-gate-up-1/RUN.md).
 
 For request-summary qualification, compare the same CLI output mode with
 summary collection enabled and disabled. Keep counters at existing completion
