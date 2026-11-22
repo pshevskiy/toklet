@@ -531,6 +531,12 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   terminal cache pairs at 3.51 GiB. The prefill check uses the 512-row
   prefixes of the terminal cache. Astra approves private timing after
   the complete source-diff check. Both raw readers agree.
+  Sol's timing worker builds after a sandbox guard retry and Astra
+  approves its clock and plan. All 52 requests pass in two orders.
+  Ollama completes in 3.267/3.291 s and vLLM in 3.621/3.622 s.
+  Guarded peaks are 3.52 GiB and 3.92 GiB. Next time the current
+  Toklet 32-head path against these private routes.
+  [Matched private clocks](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-timing-1/normal.json).
   [Timing admission](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-mlx324-1/timing-admission.json).
   [Modern Ollama replay](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-mlx324-1/normal.json).
   [Bridge preflight](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/mlxc-wheel-preflight-1/receipt.json).

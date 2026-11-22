@@ -207,6 +207,15 @@ time the private vLLM dense route with its inherited head observer
 removed. The current private vLLM median is 3.631–3.640 s and direct
 MLX is 3.312–3.316 s. Use this workload to qualify the current native
 32-head route and reproduce the ordinary comparison after integration.
+
+The fresh Ollama/vLLM orders set a tighter 512/32 performance target.
+Ollama completes in 3.267 and 3.291 s against 3.621 and 3.622 s for
+vLLM. Ollama saves 290–310 ms after the first ID. The measured medians
+imply Toklet completion ceilings of 3.104 and 3.127 s for a 5% win
+against the faster private engine. Recompute these ceilings with
+fresh peers in Toklet's joined timing cohorts. Use the TTFT and decode
+split to guide T128 and T1 work on the admitted native schedule.
+[Matched private clocks](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-timing-1/normal.json).
 [Native admission results](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-mlx-q4-admission-1/RUN.md) ·
 [External numerical review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-connected-1/ACTUAL-REVIEW.md) ·
 [First head witness and Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-vllm-first-head-shape-1/ACTUAL-REVIEW.md) ·

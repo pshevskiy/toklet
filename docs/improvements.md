@@ -425,6 +425,17 @@ with MLX and vLLM. The guard peaks at 3.51 GiB. Astra clears the untimed
 private-worker result after verification of the complete source diff.
 [Replay](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-mlx324-1/normal.json) ·
 [Bridge smoke](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-mlx324-1/bridge/smoke-receipt.json).
+
+Two reversed orders complete 52 guarded requests on the private
+Ollama and vLLM routes. Astra approves the exact timing launch.
+Ollama peaks at 3.52 GiB and completes in 3.267/3.291 s. Private vLLM
+peaks at 3.92 GiB and completes in 3.621/3.622 s. Ollama's paired
+completion savings are 9.75% and 9.21% with 95% lower bounds of
+9.52% and 8.88%. The savings primarily occur after the first ID.
+The dual readers agree. Setup clocks retain engine-specific boundaries,
+and vLLM's private runtime validation remains inside its request clock.
+[Cohorts](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-timing-1/normal.json) ·
+[Astra launch review](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-timing-1/REVIEW.md).
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all
