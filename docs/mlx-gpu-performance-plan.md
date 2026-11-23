@@ -485,6 +485,32 @@ review. Keep generic QMM on its qualified 32-row tile.
 [Connected timing](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bm64-connected-1/price-1/normal.json) ·
 [Astra adoption review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bm64-connected-1/ACTUAL-REVIEW.md).
 
+The shipped `dc703d20` build clears all four private peer completion
+gates on 512/32. Paired lower savings versus Ollama are 11.02% and
+10.96%, and versus vLLM 19.75% and 19.13%. Ollama decode medians lead by
+6.7 and 3.7 ms, with both paired intervals favoring Ollama. Toklet's
+first-token gain drives the completion win. Peak guard charge is 5.59 GiB.
+[Shipped peer comparison](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-shipped-bm64-peers-1/RESULT.md).
+
+The private Gemma Ollama adapter leaves its final hidden output
+unavailable after all 11 non-sampling cache-only cuts. Explicit hidden
+evaluation completes those outputs and preserves the two bounded
+natural IDs. On the first authentic T32 cut, early FP32 arithmetic
+reduces the largest key error from 0.00542 to 1.48e-6. The promoted
+head matches 946 of 8,192 archived words. Match the full hidden work
+and qualify the arithmetic before accepting peer timing.
+[Host precision replay](../artifacts/mlx-gpu-gap-2026-11-15/astra62-gemma-bf16-l0-k-precision-1/RESEARCH.md) ·
+[Live Gemma probe](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-prefill-parity-1/RESULT.md).
+
+LFM3 terminal accounting is already inside the original request clocks.
+Deleting all measured enabled time outside native prefill would leave a
+1.047765% marginal TTFT upper bound. Fixed-role pairs have 336.9 ms of
+boundary headroom at unchanged device work. Even choosing the larger
+envelope at every position and adding the full uncertainty allowance
+gives 367.0 ms against the 452 ms screen. Hold both interventions.
+[LFM3 accounting](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-clock-lockout-1/ANALYSIS.md) ·
+[Astra evidence review](../artifacts/mlx-gpu-gap-2026-11-15/root-shipped-bm64-gemma-work-1/ACTUAL-REVIEW.md).
+
 The LFM3 control measures baseline resolution at the original 512/32
 work and unchanged public clocks. All 12 timing checks pass across eight
 disabled owners. The tightest marginal TTFT upper is 0.96339%, and the

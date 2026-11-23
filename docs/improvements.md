@@ -723,6 +723,28 @@ smoke pass. Astra approves the fixed Steel change.
 [Production checks](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bm64-connected-1/adoption/ACTUAL-CHECKS.md) ·
 [Astra adoption review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bm64-connected-1/ACTUAL-REVIEW.md).
 
+Fresh peer testing binds the shipped Nanbeige `dc703d20` binary and
+embedded BM64 image. All 78 requests match the original 512/32 token
+and cache state checks. Toklet completes in 2.920 s in both orders at
+5.59 GiB peak guarded charge. It leads pinned Ollama by 370.5/373.1 ms
+and vLLM by 720.9/711.8 ms. Ollama decode leads by 6.7/3.7 ms. All four
+paired completion lower bounds exceed 5%.
+[Shipped comparison and raw clocks](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-shipped-bm64-peers-1/RESULT.md).
+
+The guarded adapted Gemma peer probe measures the actual lazy output
+state on all 11 non-sampling cuts. Keys and values alone leave the
+final hidden array unavailable. Explicit completion preserves the two
+natural IDs and 15 cache offsets. Promoting the gathered inputs before
+scaling and preserving FP32 through the first L0 key calculation yields
+a 3 ULP median difference and a maximum absolute error of 1.48e-6 across
+8,192 values. Peak guarded charge is 4.79 GiB. Full precision and latency
+parity remain open. LFM3 terminal accounting is already paid inside the
+request, and measured local coalescing headroom remains below its screen.
+[Gemma result and raw receipts](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-prefill-parity-1/RESULT.md) ·
+[Independent K reader](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-prefill-parity-1/independent-keys-normal.json) ·
+[LFM3 accounting](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-clock-lockout-1/ANALYSIS.md) ·
+[Astra evidence review](../artifacts/mlx-gpu-gap-2026-11-15/root-shipped-bm64-gemma-work-1/ACTUAL-REVIEW.md).
+
 The LFM3 all-disabled control passes all 12 original 1% limits. Astra
 reconstructs 64 resets and 64 generations over eight fresh owners with zero
 exports. The largest upper bound is 0.96339% for reverse-order TTFT.

@@ -8,6 +8,17 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- [x] **Shipped BM64 and original-model probes** — Run the exact 512/32
+  peer cohort on `dc703d20`. All 78 exact requests and four gates pass.
+  Ollama leads decode by 3.7–6.7 ms. On adapted Gemma, final hidden is
+  unavailable after KV-only evaluation on all 11 non-sampling cuts.
+  Early FP32 promotion reduces the first-cut K error to 1.48e-6.
+  LFM3's collector and local command-pair interventions miss their
+  frozen gates. Astra approves the evidence and its scope.
+  [Shipped peer comparison](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-shipped-bm64-peers-1/RESULT.md) ·
+  [Gemma bounded result](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-prefill-parity-1/RESULT.md) ·
+  [LFM3 accounting](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-clock-lockout-1/ANALYSIS.md) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/root-shipped-bm64-gemma-work-1/ACTUAL-REVIEW.md).
 - [x] **Current Nanbeige peer margin** — Keep the retained dense tail.
   All 78 exact fixed 512/32 requests pass. The current Toklet worker
   leads by 288.7–291.7 ms against Ollama and 638.8–642.0 ms against
