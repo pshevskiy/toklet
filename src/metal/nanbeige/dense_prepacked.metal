@@ -30,7 +30,7 @@ kernel void nanbeige_pack_dense_gate_up_input(
     packed[record] = ushort4(input[a], input[a + 4u * s.inputs]);
 }
 
-kernel void nanbeige_ffn_fused_gate_up_swiglu_prepacked_k64(
+kernel void nanbeige_ffn_fused_gate_up_swiglu_prepacked_register_reuse_k64(
     device const uint4* weights [[buffer(0)]],
     device const ushort4* packed [[buffer(1)]],
     device ushort* output [[buffer(2)]],
@@ -50,9 +50,17 @@ kernel void nanbeige_ffn_fused_gate_up_swiglu_prepacked_k64(
     simdgroup_float8x8 u01 = make_filled_simdgroup_matrix<float, 8, 8>(0.0f);
     simdgroup_float8x8 u10 = make_filled_simdgroup_matrix<float, 8, 8>(0.0f);
     simdgroup_float8x8 u11 = make_filled_simdgroup_matrix<float, 8, 8>(0.0f);
-    uint first_token = group.y * 32u;
+    simdgroup_float8x8 g20 = make_filled_simdgroup_matrix<float, 8, 8>(0.0f);
+    simdgroup_float8x8 g21 = make_filled_simdgroup_matrix<float, 8, 8>(0.0f);
+    simdgroup_float8x8 g30 = make_filled_simdgroup_matrix<float, 8, 8>(0.0f);
+    simdgroup_float8x8 g31 = make_filled_simdgroup_matrix<float, 8, 8>(0.0f);
+    simdgroup_float8x8 u20 = make_filled_simdgroup_matrix<float, 8, 8>(0.0f);
+    simdgroup_float8x8 u21 = make_filled_simdgroup_matrix<float, 8, 8>(0.0f);
+    simdgroup_float8x8 u30 = make_filled_simdgroup_matrix<float, 8, 8>(0.0f);
+    simdgroup_float8x8 u31 = make_filled_simdgroup_matrix<float, 8, 8>(0.0f);
+    uint first_token = group.y * 64u;
     uint first_row = group.x * 32u;
-    uint tile_m = (subgroup / 2u) * 16u;
+    uint tile_m = (subgroup / 2u) * 32u;
     uint block = (first_token + tile_m) / 16u;
     uint tile_n = (subgroup % 2u) * 16u;
     // Each vector contains Gate then Up in exact b0/b1 lane order.
@@ -60,15 +68,20 @@ kernel void nanbeige_ffn_fused_gate_up_swiglu_prepacked_k64(
     for (uint k = 0; k < s.inputs; k += 64u) {
         #pragma unroll
         for (uint i = 0; i < 64u; i += 8u) {
-            simdgroup_float8x8 a0, a1, b0, b1;
+            simdgroup_float8x8 a0, a1, a2, a3, b0, b1;
             uint record = (block * (s.inputs / 8u) + (k + i) / 8u) * 32u + simd_lane;
             ushort4 a_words = packed[record];
+            ushort4 high_words = packed[record + (s.inputs / 8u) * 32u];
             uint weight = ((weight_base + (k + i) / 8u) * 2u + subgroup % 2u) * 32u + simd_lane;
             uint4 pair = weights[weight];
             a0.thread_elements()[0] = widen(a_words.x);
             a0.thread_elements()[1] = widen(a_words.y);
             a1.thread_elements()[0] = widen(a_words.z);
             a1.thread_elements()[1] = widen(a_words.w);
+            a2.thread_elements()[0] = widen(high_words.x);
+            a2.thread_elements()[1] = widen(high_words.y);
+            a3.thread_elements()[0] = widen(high_words.z);
+            a3.thread_elements()[1] = widen(high_words.w);
             // Keep identical K8 and fragment operand order for each bank.
             ushort4 gate_words = as_type<ushort4>(pair.xy);
             b0.thread_elements()[0] = widen(gate_words.x);
@@ -79,6 +92,10 @@ kernel void nanbeige_ffn_fused_gate_up_swiglu_prepacked_k64(
             simdgroup_multiply_accumulate(g01, a0, b1, g01);
             simdgroup_multiply_accumulate(g10, a1, b0, g10);
             simdgroup_multiply_accumulate(g11, a1, b1, g11);
+            simdgroup_multiply_accumulate(g20, a2, b0, g20);
+            simdgroup_multiply_accumulate(g21, a2, b1, g21);
+            simdgroup_multiply_accumulate(g30, a3, b0, g30);
+            simdgroup_multiply_accumulate(g31, a3, b1, g31);
 
             ushort4 up_words = as_type<ushort4>(pair.zw);
             b0.thread_elements()[0] = widen(up_words.x);
@@ -89,6 +106,10 @@ kernel void nanbeige_ffn_fused_gate_up_swiglu_prepacked_k64(
             simdgroup_multiply_accumulate(u01, a0, b1, u01);
             simdgroup_multiply_accumulate(u10, a1, b0, u10);
             simdgroup_multiply_accumulate(u11, a1, b1, u11);
+            simdgroup_multiply_accumulate(u20, a2, b0, u20);
+            simdgroup_multiply_accumulate(u21, a2, b1, u21);
+            simdgroup_multiply_accumulate(u30, a3, b0, u30);
+            simdgroup_multiply_accumulate(u31, a3, b1, u31);
         }
     }
     uint low = (first_token + tile_m + frag_m) * s.outputs + first_row + tile_n + frag_n;
@@ -101,4 +122,14 @@ kernel void nanbeige_ffn_fused_gate_up_swiglu_prepacked_k64(
     prepacked_swiglu_store(output, high + 1u, g10.thread_elements()[1], u10.thread_elements()[1], status);
     prepacked_swiglu_store(output, high + 8u, g11.thread_elements()[0], u11.thread_elements()[0], status);
     prepacked_swiglu_store(output, high + 9u, g11.thread_elements()[1], u11.thread_elements()[1], status);
+    uint upper_low = low + 16u * s.outputs;
+    uint upper_high = high + 16u * s.outputs;
+    prepacked_swiglu_store(output, upper_low, g20.thread_elements()[0], u20.thread_elements()[0], status);
+    prepacked_swiglu_store(output, upper_low + 1u, g20.thread_elements()[1], u20.thread_elements()[1], status);
+    prepacked_swiglu_store(output, upper_low + 8u, g21.thread_elements()[0], u21.thread_elements()[0], status);
+    prepacked_swiglu_store(output, upper_low + 9u, g21.thread_elements()[1], u21.thread_elements()[1], status);
+    prepacked_swiglu_store(output, upper_high, g30.thread_elements()[0], u30.thread_elements()[0], status);
+    prepacked_swiglu_store(output, upper_high + 1u, g30.thread_elements()[1], u30.thread_elements()[1], status);
+    prepacked_swiglu_store(output, upper_high + 8u, g31.thread_elements()[0], u31.thread_elements()[0], status);
+    prepacked_swiglu_store(output, upper_high + 9u, g31.thread_elements()[1], u31.thread_elements()[1], status);
 }

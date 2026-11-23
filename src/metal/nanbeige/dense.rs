@@ -326,7 +326,7 @@ impl DensePrefill {
             THREADS,
             &[&self.pairs[layer].raw, packed, output, status],
             &shape,
-            [INTERMEDIATE / 32, ROWS / 32],
+            [INTERMEDIATE / 32, ROWS / 64],
         );
     }
 }

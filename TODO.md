@@ -8,6 +8,23 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- [x] **Nanbeige 60 ms headroom** — Keep all four dense-tail cuts and
+  their prepack path. The private fixed 512/32 worker already leads
+  Ollama by 199–208 ms. Reuse each loaded dense Gate/Up weight fragment
+  across two token tiles, with the original FP32 K8 accumulation and
+  BF16 epilogue. The operator matches all 1,769,472 output words per
+  sample and passes eight fault cases. Paired GPU lower savings of
+  0.456/0.458 ms clear the 0.341 ms screen. Both 512/32 replays match
+  all score and KV checkpoints. Three device faults and waited
+  cancellation preserve the committed prefix and pass exact retry.
+  All 52 ordinary requests match. Paired lower completion savings of
+  74.5/87.6 ms clear 60 ms in both orders at 5.37 GiB guarded peak.
+  Formatting, strict Clippy, the 1,076-test Metal suite and production
+  CLI replay pass. Astra approves the fixed Steel route.
+  [Matched baseline](artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-integrated-cohorts-1/RESULT.md) ·
+  [Astra research](artifacts/mlx-gpu-gap-2026-11-15/astra62-nanbeige-t128-register-reuse-1/RESEARCH.md) ·
+  [Connected result](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-prepack-register-connected-1/RESULT.md) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-prepack-register-connected-1/ACTUAL-REVIEW.md).
 - [x] **Gemma compact O4** — The original conformance and per-policy
   ABBA/BAAB campaign run on the production compact executable.
   Conformance records 38 passes, two unavailable and two inapplicable.
@@ -66,10 +83,8 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   Astra verifies the hold.
   [FFN chain review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-ffn-chain-attribution-1/ACTUAL-REVIEW.md) ·
   [Exact rounding review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-ffn-exact-rounding-1/ACTUAL-REVIEW.md).
-- [ ] **Nanbeige headroom** — Keep the qualified dense tail and prepack.
-  The frozen run leads Ollama by 199–208 ms in completion. The additional
-  60 ms target stays open. Two-head T1 SDPA saves 9.59–10.04 ms in
-  isolation. Packing the T128 Q/O/Down inputs adds 0.53–0.57 ms per
+- [x] **Nanbeige SDPA/QMM screens** — Two-head T1 SDPA saves 9.59–10.04 ms
+  in isolation. Packing the T128 Q/O/Down inputs adds 0.53–0.57 ms per
   triplet. Astra verifies both numerical checks and both speed decisions.
   [SDPA review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-tail-next-1/ACTUAL-REVIEW.md) ·
   [QMM review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-a-pack-screen-1/ACTUAL-REVIEW.md).

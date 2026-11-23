@@ -685,6 +685,19 @@ Retain dense-tail prefill and the qualified Steel kernels.
 [Two-head review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-tail-next-1/ACTUAL-REVIEW.md) ·
 [QMM review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-a-pack-screen-1/ACTUAL-REVIEW.md).
 
+A 64-row dense Gate/Up tile reuses each loaded weight fragment across
+two token panels. The original input pack, BF16 epilogue and dense-tail
+prefill stay in use. Both fixed 512/32 arms match all 32 scored rows,
+176 prefill K/V pairs, 1,364 decode append pairs and 44 terminal K/V
+pairs. Last-cut failure and cancellation preserve committed state.
+All 52 timed requests match. Paired completion savings are 81.3/95.2 ms
+with lower bounds of 74.5/87.6 ms. Guarded peak is 5.37 GiB. These
+results apply to the fixed Steel route on M1 Pro. The production CLI
+smoke and required checks pass. Astra approves retention in the opt-in.
+[Astra research](../artifacts/mlx-gpu-gap-2026-11-15/astra62-nanbeige-t128-register-reuse-1/RESEARCH.md) ·
+[Connected result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-prepack-register-connected-1/RESULT.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-prepack-register-connected-1/ACTUAL-REVIEW.md).
+
 The LFM3 all-disabled control passes all 12 original 1% limits. Astra
 reconstructs 64 resets and 64 generations over eight fresh owners with zero
 exports. The largest upper bound is 0.96339% for reverse-order TTFT.

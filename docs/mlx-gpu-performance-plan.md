@@ -446,6 +446,24 @@ existing QMM input path. The 1% summary gate stays separate.
 [Two-head review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-tail-next-1/ACTUAL-REVIEW.md) ·
 [QMM review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-a-pack-screen-1/ACTUAL-REVIEW.md).
 
+The T128 register-reuse screen keeps the existing dense weights, input
+packer and FP32 K8 order. A SIMD group applies each loaded Gate/Up
+fragment to two 16-row token panels. The connected L0 operator verifies
+1,769,472 output words per sample and all eight fault cases. Paired
+completed-GPU lower savings of 0.456/0.458 ms clear the 0.341 ms screen
+in both orders. The exact 512/32 replay joins all scored and K/V state.
+Ordinary completion drops from 3,089.6/3,097.7 to 3,004.1/3,000.2 ms.
+Paired lower savings of 74.5/87.6 ms clear the 60 ms gate at 5.37 GiB
+guarded peak. First-token latency drives the improvement. Decode changes
+−1.3/+5.0 ms in paired savings, with the first interval spanning zero.
+Retain the kernel in the existing fixed Steel opt-in. The production
+CLI smoke and required checks pass. Astra approves the change. Peer
+margins still refer to the earlier matched private cohort.
+[Astra research](../artifacts/mlx-gpu-gap-2026-11-15/astra62-nanbeige-t128-register-reuse-1/RESEARCH.md) ·
+[Operator evidence](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-prepack-register-1/trial-1/normal.json) ·
+[Connected result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-prepack-register-connected-1/RESULT.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-prepack-register-connected-1/ACTUAL-REVIEW.md).
+
 The LFM3 control measures baseline resolution at the original 512/32
 work and unchanged public clocks. All 12 timing checks pass across eight
 disabled owners. The tightest marginal TTFT upper is 0.96339%, and the

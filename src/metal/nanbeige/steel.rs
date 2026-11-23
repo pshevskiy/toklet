@@ -366,7 +366,7 @@ impl Steel {
         let swiglu = local_pipeline("nanbeige_swiglu_steel")?;
         let prepacked = Prepacked::new(
             local_pipeline("nanbeige_pack_dense_gate_up_input")?,
-            local_pipeline("nanbeige_ffn_fused_gate_up_swiglu_prepacked_k64")?,
+            local_pipeline("nanbeige_ffn_fused_gate_up_swiglu_prepacked_register_reuse_k64")?,
         )?;
         for (pipeline, threads) in [
             (&attention, 128),
