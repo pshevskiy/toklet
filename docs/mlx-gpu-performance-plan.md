@@ -540,6 +540,13 @@ Require fresh quiet admission and all original guards at launch.
 [O4 readiness](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-production-o4-readiness-1/RUN.md) ·
 [Final production review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-production-1/FINAL-REVIEW.md).
 
+The original production Gemma O4 protocol passes both endpoints in all
+four policy and order cells. The highest paired and marginal upper bounds
+are 0.757492% and 0.713923%, with all original output, export and resource
+checks verified. The separate LFM3 marginal TTFT upper remains 1.06524%.
+Matched external-engine confirmation remains open for both routes.
+[Production Gemma O4 review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-production-o4-readiness-1/run-1/ACTUAL-REVIEW.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

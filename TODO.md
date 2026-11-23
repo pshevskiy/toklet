@@ -31,14 +31,13 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   source checks pass, including 871 default and 1,076 Metal tests.
   Astra approves the exact production patch.
   [Final production review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-production-1/FINAL-REVIEW.md).
-- [ ] **Next** — Run the original production Gemma 1% summary campaign.
-  Preserve both policies and orders, actual exports and all resource
-  guards. Matched peer comparisons remain open.
-  [O4 readiness](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-production-o4-readiness-1/RUN.md).
-- [x] **LFM3 attribution** — The diagnostic accounts for four exact
-  prefill chunks. FFN takes 1.612 s, ConvOut 0.857 s, ConvIn 0.475 s and
-  norm/residual 0.467 s. Astra verifies the trace and archived state.
-  [LFM3 attribution result](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-release4b-prefill-attribution-1/RESULT.md).
+- [x] **Gemma O4** — All 24 original 1% checks pass across both policies
+  and orders. The worst paired and marginal upper bounds are 0.75749%
+  and 0.71392%. Astra verifies all 128 generations, resets and eight exports.
+  [Production Gemma O4 review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-production-o4-readiness-1/run-1/ACTUAL-REVIEW.md).
+- [ ] **Next** — Close the separate LFM3 summary gate and the matched
+  Gemma and LFM3 peer comparisons. Preserve the original model, quality,
+  precision, workload and resource conditions.
 
 ## Recent implementation and evidence
 

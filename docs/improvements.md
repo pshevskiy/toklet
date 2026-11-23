@@ -787,6 +787,15 @@ tests pass. The initial missing model path is rebound to verified
 identical live files. Astra approves the production patch.
 [Final production review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-production-1/FINAL-REVIEW.md).
 
+Production Gemma passes all 24 original 1% timing checks over both
+submission policies and both owner orders. The 16 owners reproduce all
+128 generations and resets. Eight enabled owners export 16 verified
+records each, and disabled owners produce zero exports. Maximum paired
+and marginal upper bounds are 0.757492% and 0.713923%. Collector capacity
+is 1,041,192 logical bytes against 1,064,960 admitted. Guarded peak charge
+is 4.68 GiB. Astra verifies the original readers and raw receipts.
+[Production Gemma O4 review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-production-o4-readiness-1/run-1/ACTUAL-REVIEW.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all
