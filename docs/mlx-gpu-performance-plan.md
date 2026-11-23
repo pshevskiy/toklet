@@ -675,6 +675,20 @@ flag stays clear. Preserve that disclosure in production qualification.
 [Warmed review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-warmed-1/ACTUAL-REVIEW.md) ·
 [Production plan](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-production-1/PLAN.md).
 
+The six-file production binding selects the same scorer only during
+sampled compact T1 decode. The release, formatting, all strict Clippy
+configurations, full suites, exact checkpoints, faults and CLI smoke
+pass. All 100 C567 tasks reproduce all 4,149 decisions and the original
+grader bytes. The production link passes short conformance and all
+12 original O4 limits across 64 exact generations and four exports.
+Worst paired and marginal 95% upper bounds are 0.972596% and 0.723505%.
+Peak guarded charge is 4.67 GiB. The scorer starts after the first-ID
+callback flush. The reverse warmed TTFT difference remains observed.
+[Production checks](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-production-1/ACTUAL-CHECKS.md) ·
+[C567 parity](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-quality-1/RESULT.md) ·
+[Production O4](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-o4-1/RESULT.md) ·
+[Astra production review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-production-1/ACTUAL-REVIEW.md).
+
 The nonfinal T128 selector screens 39 Metal visits followed by 13
 scalar visits. Both orders reproduce all 14 output tapes and terminal
 states. Prefill saves 629/621 ms and both decode clocks rise by
@@ -697,6 +711,14 @@ Gemma BF16 still requires evidence that both stock workers fit in 6 GiB.
 [Ollama release](https://github.com/ollama/ollama/releases/tag/v0.40.17) ·
 [Response types](https://github.com/ollama/ollama/blob/v0.40.17/api/types.go#L579-L597) ·
 [vLLM Metal release](https://github.com/vllm-project/vllm-metal/releases/tag/v0.33.0).
+
+The row-provider preflight reads only the official BF16 rows for the
+first T32, the first sampled ID after the full 384-token prompt, and
+repeated boundary IDs. Both readers reproduce their raw hashes at a
+17,920-byte PLE stride. An adapted vLLM cold-load test can now validate
+these reads and measure the estimated 139 MB margin. The stock loaders
+still materialize the 4.698 GB PLE table.
+[Official row evidence](../artifacts/mlx-gpu-gap-2026-11-15/astra62-gemma-bf16-peer-row-evidence-1/RESEARCH.md).
 
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).

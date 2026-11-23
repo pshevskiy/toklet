@@ -66,6 +66,9 @@ pub trait Operations<M: MatrixSource>: sealed::Operations {
     fn uses_tiled_attention_context(&self) -> bool {
         false
     }
+    fn uses_four_key_scores(&self) -> bool {
+        false
+    }
     // Coarse generation lifecycle only; scalar/other backends keep no-op hooks.
     fn begin_generation_step(&mut self, _position: usize, _rows: usize, _last_row_only: bool) {}
     fn begin_decode_step(&mut self, _rows: usize) {}

@@ -80,7 +80,7 @@ pub fn span_attention(
     probabilities: &mut [f32],
     s: &SpanAttentionShape,
 ) -> Result<(), Error> {
-    span_attention_impl::<false>(q, segments, context, scores, probabilities, s)
+    span_attention_impl::<false, false>(q, segments, context, scores, probabilities, s)
 }
 
 pub(crate) fn span_attention_tiled(
@@ -91,13 +91,26 @@ pub(crate) fn span_attention_tiled(
     probabilities: &mut [f32],
     s: &SpanAttentionShape,
 ) -> Result<(), Error> {
-    span_attention_impl::<true>(q, segments, context, scores, probabilities, s)
+    span_attention_impl::<true, false>(q, segments, context, scores, probabilities, s)
 }
 
 #[path = "span_attention/tiled_context.rs"]
 mod tiled_context;
 
-fn span_attention_impl<const TILED_CONTEXT: bool>(
+pub(crate) fn span_attention_tiled_score_four(
+    q: &[f32],
+    segments: &[AttentionKvSegment<'_>; 3],
+    context: &mut [f32],
+    scores: &mut [f32],
+    probabilities: &mut [f32],
+    s: &SpanAttentionShape,
+) -> Result<(), Error> {
+    span_attention_impl::<true, true>(q, segments, context, scores, probabilities, s)
+}
+
+mod score_four;
+
+fn span_attention_impl<const TILED_CONTEXT: bool, const FOUR_SCORES: bool>(
     q: &[f32],
     segments: &[AttentionKvSegment<'_>; 3],
     context: &mut [f32],
@@ -191,6 +204,18 @@ fn span_attention_impl<const TILED_CONTEXT: bool>(
                     continue;
                 }
                 let base = kv_head * segment.head_stride;
+                if FOUR_SCORES {
+                    let start = row + logical;
+                    score_four::write(
+                        &q[q_base..q_base + s.head_dim],
+                        &segment.k[base..base + segment.keys * s.head_dim],
+                        &mut scores[start..start + segment.keys],
+                        start,
+                        s.scale,
+                    )?;
+                    logical += segment.keys;
+                    continue;
+                }
                 for key in 0..segment.keys {
                     let k_base = base + key * s.head_dim;
                     let score = ordered_span_score(

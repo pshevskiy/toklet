@@ -555,6 +555,10 @@ impl<'weights> Operations<MatrixRef<'weights>> for Backend<'weights, '_> {
         self.tiled_attention_context
     }
 
+    fn uses_four_key_scores(&self) -> bool {
+        self.compact.as_ref().is_some_and(|compact| compact.decode)
+    }
+
     fn begin_generation_step(&mut self, position: usize, rows: usize, last_row_only: bool) {
         if let Some(trace) = &mut self.trace {
             trace.begin(&self.context.gpu, position, rows, last_row_only);

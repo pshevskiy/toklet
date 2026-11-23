@@ -916,10 +916,20 @@ at completion with first ID 51 ms later. The warmed 52-request trial
 passes both completion gates with lower savings of 2.292/1.406 s.
 Reverse-order median TTFT rises 70 ms, with a paired slowdown interval
 of 67–137 ms. The first order improves 6 ms with an interval spanning
-zero. Guarded peak is 4.69 GiB. Production qualification remains open.
+zero. Guarded peak is 4.69 GiB.
 [Connected result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-connected-1/RESULT.md) ·
 [Point review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-connected-1/ACTUAL-REVIEW.md) ·
 [Warmed review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-warmed-1/ACTUAL-REVIEW.md).
+
+Production uses the measured scorer in the existing compact T1 opt-in.
+Source checks, 139 exact checkpoints, fault recovery, the CLI smoke and
+all 4,149 task decisions pass. The identical grader input carries forward
+51/100 versus 52/100. Same-link conformance accounts for all 42 entries.
+All original O4 gates pass. The highest paired and marginal upper
+bounds are 0.972596% and 0.723505% at 4.67 GiB guarded peak.
+[Production checks](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-production-1/ACTUAL-CHECKS.md) ·
+[Production O4](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-o4-1/RESULT.md) ·
+[Astra production review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-production-1/ACTUAL-REVIEW.md).
 
 Keeping the last T128 ConvOut cut scalar preserves all 14 LFM3 output
 tapes and terminal states. The first three cuts use 30 ordinary and nine

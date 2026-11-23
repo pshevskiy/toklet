@@ -86,7 +86,16 @@ fn finish<M: MatrixSource, B: Operations<M>>(
     let context = &mut s.context[..q];
     let scores = &mut s.scores[..scores];
     let probabilities = &mut s.probabilities[..scores.len()];
-    if ops.uses_tiled_attention_context() {
+    if count == 1 && ops.uses_four_key_scores() {
+        cpu::span_attention_tiled_score_four(
+            query,
+            &spans,
+            context,
+            scores,
+            probabilities,
+            &shape,
+        )?;
+    } else if ops.uses_tiled_attention_context() {
         cpu::span_attention_tiled(query, &spans, context, scores, probabilities, &shape)?;
     } else {
         cpu::span_attention(query, &spans, context, scores, probabilities, &shape)?;
