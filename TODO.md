@@ -8,6 +8,18 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- [x] **Current Nanbeige peer margin** — Keep the retained dense tail.
+  All 78 exact fixed 512/32 requests pass. The current Toklet worker
+  leads by 288.7–291.7 ms against Ollama and 638.8–642.0 ms against
+  vLLM. All four paired lower bounds clear 5% and Astra approves the
+  peer evidence. The 64-row Q/O/Down candidate clears the separate
+  60 ms target with lower bounds of 75.7/76.4 ms. Exact replay, fault
+  checks, formatting, both strict Clippy runs, 871 default and 1,076
+  Metal tests, and the release CLI smoke pass. Astra approves the fixed
+  Steel adoption. The reverse paired decode slowdown is 0.3–4.3 ms.
+  [Peer result](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-current-dense-tail-peers-1/RESULT.md) ·
+  [Connected result](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bm64-connected-1/RESULT.md) ·
+  [Astra adoption review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bm64-connected-1/ACTUAL-REVIEW.md).
 - [x] **Gemma BF16 peer capacity** — The adapted vLLM row provider
   fits both guarded attempts. Both full 384/128 requests match Toklet
   `a394e362`, with 12 T32 cuts, 127 T1 steps and zero reuse. Peak charge

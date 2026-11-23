@@ -698,6 +698,31 @@ smoke and required checks pass. Astra approves retention in the opt-in.
 [Connected result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-prepack-register-connected-1/RESULT.md) ·
 [Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-prepack-register-connected-1/ACTUAL-REVIEW.md).
 
+Sol rebinds the original timing worker to `720ddd98` and confirms the
+retained Nanbeige route against the pinned Ollama and vLLM MLX workers.
+All 78 requests reproduce the exact 512/32 tape and fresh state. Toklet
+completes in 3.002/3.002 s at 5.59 GiB peak guarded charge. Completion
+leads Ollama by 291.7/288.7 ms and vLLM by 642.0/638.8 ms. Both Ollama
+decode intervals cross zero. All four completion gates pass.
+[Results and raw evidence](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-current-dense-tail-peers-1/RESULT.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-current-dense-tail-peers-1/ACTUAL-REVIEW.md).
+
+The fixed Steel 64-row QMM tile reuses affine Q4 weights across twice the
+prompt rows for Q, O and Down. The existing dense Gate/Up path runs all
+four cuts. All 176 per-cut K/V pairs match the archived native replay.
+MLX independently confirms the final prefill prefix, 32 score rows,
+1,364 decode appends and 44 terminal K/V pairs. Faults and cancellation
+preserve the committed prefix and exact retry. All 52 timed requests match.
+Completion falls from 3,001.1/3,003.5 to 2,917.1/2,921.1 ms at 5.37 GiB
+peak guarded charge. The reverse decode comparison shows a small
+regression. Generic QMM keeps its original 32-row tile. Formatting,
+strict Clippy, 871 default tests, 1,076 Metal tests and release CLI
+smoke pass. Astra approves the fixed Steel change.
+[Exact witness](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bm64-connected-1/proof-1/normal.json) ·
+[Connected timing](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bm64-connected-1/price-1/normal.json) ·
+[Production checks](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bm64-connected-1/adoption/ACTUAL-CHECKS.md) ·
+[Astra adoption review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bm64-connected-1/ACTUAL-REVIEW.md).
+
 The LFM3 all-disabled control passes all 12 original 1% limits. Astra
 reconstructs 64 resets and 64 generations over eight fresh owners with zero
 exports. The largest upper bound is 0.96339% for reverse-order TTFT.

@@ -34,6 +34,13 @@ Admission requires exactly 512 prompt IDs, a 32-token output limit,
 capacity 544 and chunk size 128. An unsupported configuration returns
 an error. The terminal JSON reports `steel_prefill: true` for this route.
 
+On that fixed Steel route, Q, O and Down use the embedded 64-row
+specialization `qmm_bm64.metallib`, SHA-256
+`941137a5e36e1dbe293f3c1656b6e15be47e91f841489b4c01d5122bcb5f87f2`.
+It shares the pinned MLX source and Apple Metal toolchain described below.
+The supplied 32-row image is still required for admission and remains the
+kernel for the generic QMM route.
+
 The two independent warm confirmation orders improved completion by
 8.63% and 8.45% against Toklet’s dense option, at 5.17 GiB peak. Decode
 intervals crossed zero. A single cold CLI sample completed in 13.738 s

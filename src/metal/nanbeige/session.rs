@@ -640,19 +640,22 @@ impl<'a> Session<'a> {
         };
         let project = |projection, matrix: Matrix, input: &RawBuffer, output: &RawBuffer| {
             if USE_QMM {
-                model.qmm.as_ref().expect("admitted QMM pipeline").encode(
-                    encoder,
-                    [
-                        weights(matrix.weights),
-                        weights(matrix.scales),
-                        weights(matrix.biases),
-                        input,
-                        output,
-                        &s.status.raw,
-                    ],
-                    matrix.layout.columns(),
-                    matrix.layout.rows(),
-                );
+                let qmm = model.qmm.as_ref().expect("admitted QMM pipeline");
+                let buffers = [
+                    weights(matrix.weights),
+                    weights(matrix.scales),
+                    weights(matrix.biases),
+                    input,
+                    output,
+                    &s.status.raw,
+                ];
+                let k = matrix.layout.columns();
+                let n = matrix.layout.rows();
+                if let Some(steel) = steel {
+                    qmm.encode_selected(encoder, buffers, k, n, Some(&steel.qmm_bm64));
+                } else {
+                    qmm.encode(encoder, buffers, k, n);
+                }
             } else {
                 affine(projection, matrix, input, output, rows, 0);
             }

@@ -70,6 +70,7 @@ pub(super) struct Steel {
     swiglu: Pipeline,
     pub split: SplitK,
     pub prepacked: Prepacked,
+    pub qmm_bm64: Pipeline,
     pub reserved_bytes: usize,
     pub physical_bytes: usize,
 }
@@ -383,8 +384,41 @@ impl Steel {
                 return Err(Error::Unsupported("Nanbeige Steel wheel pipeline geometry"));
             }
         }
+        const BM64_IMAGE: &[u8; 13484] =
+            include_bytes!("../../../assets/nanbeige-qmm/qmm_bm64.metallib");
+        const BM64_SHA: &str = "941137a5e36e1dbe293f3c1656b6e15be47e91f841489b4c01d5122bcb5f87f2";
+        budget(add(
+            IMAGE_BYTES,
+            add(
+                device.currentAllocatedSize().saturating_sub(before),
+                2 * BM64_IMAGE.len(),
+            )?,
+        )?)?;
+        if format!("{:x}", Sha256::digest(BM64_IMAGE)) != BM64_SHA {
+            return Err(Error::Unsupported("Nanbeige BM64 exact sealed image"));
+        }
+        let data = DispatchData::from_boxed(BM64_IMAGE.to_vec().into_boxed_slice());
+        let image = device
+            .newLibraryWithData_error(&data)
+            .map_err(|e| Error::Native(e.to_string()))?;
+        if image.functionNames().count() != 1 {
+            return Err(Error::Unsupported("Nanbeige BM64 single export"));
+        }
+        let export = image
+            .newFunctionWithName(&NSString::from_str("toklet_qmm_bm64"))
+            .ok_or(Error::Unsupported("Nanbeige BM64 exact export"))?;
+        let qmm_bm64 = device
+            .newComputePipelineStateWithFunction_error(&export)
+            .map_err(|e| Error::Native(e.to_string()))?;
+        if qmm_bm64.threadExecutionWidth() != 32
+            || qmm_bm64.maxTotalThreadsPerThreadgroup() < 128
+            || qmm_bm64.staticThreadgroupMemoryLength() != 7680
+            || qmm_bm64.staticThreadgroupMemoryLength() > device.maxThreadgroupMemoryLength()
+        {
+            return Err(Error::Unsupported("Nanbeige BM64 exact geometry"));
+        }
         let physical_bytes = device.currentAllocatedSize().saturating_sub(before);
-        let reserved_bytes = add(IMAGE_BYTES, physical_bytes)?;
+        let reserved_bytes = add(add(IMAGE_BYTES, physical_bytes)?, BM64_IMAGE.len())?;
         budget(reserved_bytes)?;
         Ok(Self {
             rotate,
@@ -395,6 +429,7 @@ impl Steel {
             swiglu,
             split,
             prepacked,
+            qmm_bm64,
             reserved_bytes,
             physical_bytes,
         })

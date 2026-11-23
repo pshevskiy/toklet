@@ -464,6 +464,27 @@ margins still refer to the earlier matched private cohort.
 [Connected result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-prepack-register-connected-1/RESULT.md) ·
 [Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-prepack-register-connected-1/ACTUAL-REVIEW.md).
 
+The retained dense-tail control at `720ddd98` clears all four completion
+gates against the pinned peers in fresh 512/32 cohorts. The Ollama leads
+are 291.7 and 288.7 ms, with paired lower gains of 8.63% and 8.56%.
+The vLLM paired lower gains are 17.42% and 17.17%. Nearly all of the Ollama gain comes
+before the first token. Both paired Ollama decode intervals span zero.
+Keep the fixed route. Measure any additional 60 ms directly against it.
+[Fresh matched results](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-current-dense-tail-peers-1/RESULT.md).
+
+The 64-row Q/O/Down tile dequantizes each weight tile for twice as many
+prompt rows, preserving the pinned affine arithmetic and output scans.
+The authentic isolated test saves at least 0.50 ms per triplet in both
+orders. Full 512/32 completion improves by 85.2/81.6 ms paired, with
+lower bounds of 75.7/76.4 ms. All four dense-tail cuts remain active.
+The reverse paired decode comparison favors the control by 0.3–4.3 ms.
+Retain the tile on fixed Steel after exact production replay and Astra
+review. Keep generic QMM on its qualified 32-row tile.
+[Astra hypothesis](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bm64-screen-1/ASTRA-HYPOTHESIS.md) ·
+[Exact witness](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bm64-connected-1/proof-1/normal.json) ·
+[Connected timing](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bm64-connected-1/price-1/normal.json) ·
+[Astra adoption review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bm64-connected-1/ACTUAL-REVIEW.md).
+
 The LFM3 control measures baseline resolution at the original 512/32
 work and unchanged public clocks. All 12 timing checks pass across eight
 disabled owners. The tightest marginal TTFT upper is 0.96339%, and the

@@ -259,8 +259,19 @@ impl Qmm {
     }
 
     pub(super) fn encode(&self, encoder: &Encoder, buffers: [&RawBuffer; 6], k: usize, n: usize) {
+        self.encode_selected(encoder, buffers, k, n, None);
+    }
+
+    pub(super) fn encode_selected(
+        &self,
+        encoder: &Encoder,
+        buffers: [&RawBuffer; 6],
+        k: usize,
+        n: usize,
+        bm64: Option<&Pipeline>,
+    ) {
         let constants = [k as i32, n as i32, 128i32];
-        encoder.setComputePipelineState(&self.qmm);
+        encoder.setComputePipelineState(bm64.unwrap_or(&self.qmm));
         // SAFETY: pinned packed Q4/contiguous BF16 geometry; the tracked
         // same-device buffers are retained until completion by Context.
         // The PSO copies the three signed 32-bit constants at indices 5–7.
@@ -275,7 +286,7 @@ impl Qmm {
         encoder.dispatchThreadgroups_threadsPerThreadgroup(
             MTLSize {
                 width: n / 32,
-                height: 4,
+                height: if bm64.is_some() { 2 } else { 4 },
                 depth: 1,
             },
             MTLSize {
