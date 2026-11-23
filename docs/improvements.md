@@ -843,6 +843,14 @@ advances a connected grouping screen with Gate/Up using the original
 384/128 workload and direct completed-request clock.
 [Q/K/V review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-qkv-grouped-price-1/ACTUAL-REVIEW.md).
 
+Connected T1 grouping matches 139 checkpoints, 128 IDs and exact physical
+K/V at capacity 512 and chunk 32. It removes 8,255 decode waits. Four
+directed faults preserve committed state after the fixture correction.
+The first ordinary pair saves 1.645 s to Done and adds 37.5 ms to first
+token at 4.68 GiB guarded peak. Astra advances the next warm screen after
+small-chunk eligibility fallback. The result remains a point screen.
+[Connected review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-projection-group-connected-1/ACTUAL-REVIEW.md).
+
 Keeping the last T128 ConvOut cut scalar preserves all 14 LFM3 output
 tapes and terminal states. The first three cuts use 30 ordinary and nine
 exception panels at 3.49 GiB peak. Prefill saves 629/621 ms. Engine decode

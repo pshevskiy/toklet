@@ -591,6 +591,13 @@ norms, RoPE and GELU, private K/V publication and original error order.
 Require direct paired lower savings above 1.3 s in both 384/128 orders.
 [Q/K/V review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-qkv-grouped-price-1/ACTUAL-REVIEW.md).
 
+The connected capacity-512, chunk-32 proof matches all 139 checkpoints
+and all four directed faults. The first pair saves 1.645 s to Done and
+adds 37.5 ms to first token. Before freezing either warmed order,
+validate per-role bank capacity and preserve the existing projection
+path for undersized chunks. Keep the exact state and phase checks.
+[Connected review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-projection-group-connected-1/ACTUAL-REVIEW.md).
+
 The nonfinal T128 selector screens 39 Metal visits followed by 13
 scalar visits. Both orders reproduce all 14 output tapes and terminal
 states. Prefill saves 629/621 ms and both decode clocks rise by

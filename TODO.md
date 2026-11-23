@@ -21,8 +21,11 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 - [ ] **Gemma T1 projection grouping** — All 104 Q/K/V calls match the
   actual outputs and rollback passes. Weighted paired lower bounds of
   0.437/0.460 ms advance a direct connected Q/K/V and Gate/Up trial.
-  Sol is staging the exact 384/128 witness and first request pair.
-  [Q/K/V review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-qkv-grouped-price-1/ACTUAL-REVIEW.md).
+  The native proof matches 139 checkpoints and drops 8,255 waits. All
+  four faults pass. One direct pair saves 1.645 s to Done with first
+  token 37.5 ms later. Astra advances small-chunk fallback and warming.
+  [Q/K/V review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-qkv-grouped-price-1/ACTUAL-REVIEW.md) ·
+  [Connected review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-projection-group-connected-1/ACTUAL-REVIEW.md).
 - [x] **LFM3 prefill screens** — The nonfinal ConvOut cut saves 621–629 ms
   in prefill and adds 58/311 ms to engine decode. All 14 states match.
   The FMA4 factorial passes 28 exact requests. Adding ConvOut improves
