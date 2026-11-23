@@ -646,6 +646,35 @@ before testing the 452 ms completion gate.
 [Local paired evidence](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-ffn-cpu-overlap-probe-2/ACTUAL.md) ·
 [Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-full-gemma-lfm3-independent-lanes-1/ACTUAL-REVIEW.md).
 
+The authentic L15 T1 Gate/Up pair matches all 24,576 pinned MLX FP32
+words when the kernel widens BF16 coefficients on load. The fresh
+widen-and-evaluate arm completes in 9.675/9.304 ms. The direct mixed
+arm completes in 1.075/1.053 ms. The paired lower savings are
+7.84/7.96 ms. This qualifies one mixed projection shape against its
+parent arithmetic. The same matrix shape appears at all 20 shared
+layers and 2,780 observed visits. Extend it to those layers in a real
+replay and retain the separate Toklet ordered FP64 reference.
+[Mixed projection and clocks](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-mlx-mixed-gemv-cgo-1/RESULT.md) ·
+[Independent ordered reference](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-l15-order-reference-1/RESULT.md).
+
+The LFM3 four-frame witness keeps the native synchronous Metal owner
+and original K/V ring strides. It verifies 33 additional shadow-owner
+dependencies. Strict modeled device-interior overlap is 498.8 ms,
+leaving 46.8 ms for additional costs before the 452 ms gate. The
+minimum added scratch and state extent is 71,170,048 bytes. A real
+connected implementation must price staging, handoff and rollback.
+[Four-frame implementation plan](../artifacts/mlx-gpu-gap-2026-11-15/astra62-lfm3-connected-frames-1/RESEARCH.md).
+
+The connected LFM3 proof uses an unpublished six-row convolution history
+to prepare the successor L0. Before adoption, the original history
+owner verifies every convolution output after the predecessor's atomic
+commit. All five checkpoints, 32 natural IDs and physical window wraps
+match. Directed cancellation discards both stages and same-owner retry
+passes. The accepted handoff records 3.03 ms local CPU/device overlap.
+Speculative K/V ownership and the 452 ms request gate remain open.
+[Connected proof and guards](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-conv-lookahead-connected-2/ACTUAL.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-mixed-lfm3-connected-1/ACTUAL-REVIEW.md).
+
 LFM3 terminal accounting is already inside the original request clocks.
 Deleting all measured enabled time outside native prefill would leave a
 1.047765% marginal TTFT upper bound. Fixed-role pairs have 336.9 ms of

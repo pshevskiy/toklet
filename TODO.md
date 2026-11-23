@@ -8,6 +8,17 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- [x] **Mixed Gemma projection and connected LFM3 handoff** — Test
+  direct BF16 coefficient loads on the certified L15 FP32 operand. Both
+  MLX projection outputs match all 24,576 words, and the paired lower
+  savings are 7.84/7.96 ms. LFM3's real L0 convolution handoff preserves
+  all five heads and physical checkpoints, 32 natural IDs, wrap and
+  cancellation rollback. It records 3.03 ms of local overlap. Astra
+  approves both bounded results and the separate four-frame model.
+  [Gemma projection](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-mlx-mixed-gemv-cgo-1/RESULT.md) ·
+  [LFM3 connected frame design](artifacts/mlx-gpu-gap-2026-11-15/astra62-lfm3-connected-frames-1/RESEARCH.md) ·
+  [LFM3 native handoff](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-conv-lookahead-connected-2/ACTUAL.md) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/root-gemma-mixed-lfm3-connected-1/ACTUAL-REVIEW.md).
 - [x] **Full Gemma trajectory and independent LFM3 host lanes** — Run
   the official 384/128 FP32 peer diagnostic under the frozen guards.
   All 128 natural IDs match, with 511 committed and one pending. The

@@ -864,6 +864,28 @@ Astra verifies the exact outputs and raw clock alignment.
 [Exact output and local clocks](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-ffn-cpu-overlap-probe-2/ACTUAL.md) ·
 [Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-full-gemma-lfm3-independent-lanes-1/ACTUAL-REVIEW.md).
 
+The pinned Gemma L15 mixed GEMV evaluates authentic BF16 gate and up
+banks with FP32 inputs. All 24,576 words match the pinned widened MLX
+arm and the custom FP32 control. Paired median savings are 8.58 and
+8.21 ms against fresh widening. Active allocation peaks fall from
+151,050,240 to 75,552,768 bytes for the two-role probe. A CGo pointer
+shim resolves the first compile refusal. A separate independent
+FP64 fold exactly reproduces all canonical Toklet projection values.
+[Gemma local benchmark](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-mlx-mixed-gemv-cgo-1/RESULT.md) ·
+[Ordered FP64 calculation](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-l15-order-reference-1/RESULT.md).
+
+The detached LFM3 handoff preserves the real four T128 heads and the
+terminal head, all 24 physical owners and 32 natural IDs. The worker
+uses the prior cut's proposed six-row history. Checked adoption waits
+for the original commit and replays through the canonical history
+owner. A postsubmit cancellation discards both private work items,
+retains the original physical digest, and permits exact retry on the
+same owner. Local device overlap is 3.03 ms, with a 2.95 ms discarded
+work control. The original stride and window wrap checks pass. Astra
+verifies both native results and their arithmetic scope.
+[LFM3 guarded evidence and compile recovery](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-conv-lookahead-connected-2/ACTUAL.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-mixed-lfm3-connected-1/ACTUAL-REVIEW.md).
+
 The LFM3 all-disabled control passes all 12 original 1% limits. Astra
 reconstructs 64 resets and 64 generations over eight fresh owners with zero
 exports. The largest upper bound is 0.96339% for reverse-order TTFT.
