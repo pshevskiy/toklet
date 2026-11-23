@@ -8,6 +8,19 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- [ ] **LFM3 prefill** — Screen exact Metal ConvOut on the first three
+  T128 cuts. The final cut uses the released scalar path before decode.
+  Require at least 452 ms lower completed prefill in both orders,
+  improved client first-token latency, exact output and state, and the
+  original engine and client decode holds. Both orders pass exact state
+  and save 621–629 ms in prefill. Engine decode rises 58/311 ms. The
+  standalone route stays on hold. Astra verifies both orders. Sol is
+  preparing the four-route interaction screen with sampled ConvIn FMA4.
+  [Partition review](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-release4b-convout-partition-1/ACTUAL-REVIEW.md).
+- [x] **Gemma T1 Gate/Up screen** — Both authentic shapes pass output and
+  rollback checks. Weighted paired lower bounds of 0.227/0.210 ms miss
+  the 0.300 ms threshold. Astra verifies the hold.
+  [Gate/Up review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-gate-up-price-1/ACTUAL-REVIEW.md).
 - [ ] **Nanbeige headroom** — Keep the qualified dense tail and prepack.
   The frozen run leads Ollama by 199–208 ms in completion. The additional
   60 ms target stays open. Two-head T1 SDPA saves 9.59–10.04 ms in

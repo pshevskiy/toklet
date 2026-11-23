@@ -556,6 +556,29 @@ checks verified. The separate LFM3 marginal TTFT upper remains 1.06524%.
 Matched external-engine confirmation remains open for both routes.
 [Production Gemma O4 review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-production-o4-readiness-1/run-1/ACTUAL-REVIEW.md).
 
+The official BF16 T1 Gate/Up command screen covers one-tile layers 0–14
+and two-tile layers 15–34. Outputs, rollback and the greedy continuation
+pass on the authentic first decode frame. The weighted paired lower
+bounds are 0.227/0.210 ms against 0.300 ms. Keep this pair detached.
+[T1 Gate/Up review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-gate-up-price-1/ACTUAL-REVIEW.md).
+
+The nonfinal T128 selector screens 39 Metal visits followed by 13
+scalar visits. Both orders reproduce all 14 output tapes and terminal
+states. Prefill saves 629/621 ms and both decode clocks rise by
+58–312 ms. Keep the standalone hold. A combination with exact sampled
+ConvIn FMA4 must pass the conditional TTFT and decode contrasts before
+it advances to the original independent confirmation.
+[Partition review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-release4b-convout-partition-1/ACTUAL-REVIEW.md).
+
+The 23 November release recheck retains the stock peer admission holds.
+Ollama 0.40.17's selected logprobs still carry token text, bytes and
+probability. Its integrated GPU mmap change targets Vulkan. The original
+vLLM Metal 0.33.0 four-chunk result remains five exact tapes out of ten.
+Gemma BF16 still requires evidence that both stock workers fit in 6 GiB.
+[Ollama release](https://github.com/ollama/ollama/releases/tag/v0.40.17) ·
+[Response types](https://github.com/ollama/ollama/blob/v0.40.17/api/types.go#L579-L597) ·
+[vLLM Metal release](https://github.com/vllm-project/vllm-metal/releases/tag/v0.33.0).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).

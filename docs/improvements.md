@@ -806,6 +806,20 @@ is 1,041,192 logical bytes against 1,064,960 admitted. Guarded peak charge
 is 4.68 GiB. Astra verifies the original readers and raw receipts.
 [Production Gemma O4 review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-production-o4-readiness-1/run-1/ACTUAL-REVIEW.md).
 
+A detached Gemma T1 command groups Gate and Up at the two real matrix
+geometries. Original FP32 outputs, committed state and late-Up retry
+match. The 15:20 weighted paired savings are 0.257/0.224 ms, with lower
+bounds of 0.227/0.210 ms against 0.300 ms. Keep the released projection
+path. Guarded sampled peak is 4.65 GiB.
+[T1 Gate/Up review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-gate-up-price-1/ACTUAL-REVIEW.md).
+
+Keeping the last T128 ConvOut cut scalar preserves all 14 LFM3 output
+tapes and terminal states. The first three cuts use 30 ordinary and nine
+exception panels at 3.49 GiB peak. Prefill saves 629/621 ms. Engine decode
+adds 58/311 ms and client decode adds 59/312 ms. Both orders fail the
+decode hold, so the standalone partition stays detached.
+[Partition review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-release4b-convout-partition-1/ACTUAL-REVIEW.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all
