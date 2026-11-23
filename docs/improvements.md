@@ -731,6 +731,16 @@ and vLLM by 720.9/711.8 ms. Ollama decode leads by 6.7/3.7 ms. All four
 paired completion lower bounds exceed 5%.
 [Shipped comparison and raw clocks](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-shipped-bm64-peers-1/RESULT.md).
 
+Both Nanbeige tile trials match all 1,572,864 authentic BF16 Q/O/Down
+outputs, extra native panels, 8,192 signed basis outputs and the fault
+and retry checks. BK64 slows the completed triplet by about 0.44 ms.
+BN64's GPU saving intervals are 0.122–0.131 and 0.119–0.129 ms. Both
+miss the predeclared 0.341 ms lower bound and stop at the operator
+screen. Keep shipped BM64 and all four dense-tail cuts.
+[BK64 result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bk64-screen-1/RESULT.md) ·
+[BN64 result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bn64-screen-1/RESULT.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bn64-screen-1/ACTUAL-REVIEW.md).
+
 The guarded adapted Gemma peer probe measures the actual lazy output
 state on all 11 non-sampling cuts. Keys and values alone leave the
 final hidden array unavailable. Explicit completion preserves the two

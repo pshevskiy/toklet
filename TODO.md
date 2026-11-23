@@ -8,6 +8,15 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- [x] **Nanbeige dense-tail follow-up** — Keep shipped BM64 and all
+  four dense-tail cuts. BK64 adds 0.44 ms per Q/O/Down triplet and
+  BN64 saves 0.122/0.119 ms at the paired lower bounds. Both pass
+  bitwise and fault checks and miss the 0.341 ms operator screen.
+  Astra approves rejecting both. The additional 60 ms target remains
+  open. Ollama's measured 3.7–6.7 ms decode lead is the next scope for
+  the existing two-head T1 SDPA candidate.
+  [Matched baseline](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-shipped-bm64-peers-1/RESULT.md) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bn64-screen-1/ACTUAL-REVIEW.md).
 - [x] **Mixed Gemma projection and connected LFM3 handoff** — Test
   direct BF16 coefficient loads on the certified L15 FP32 operand. Both
   MLX projection outputs match all 24,576 words, and the paired lower

@@ -492,6 +492,22 @@ gates on 512/32. Paired lower savings versus Ollama are 11.02% and
 first-token gain drives the completion win. Peak guard charge is 5.59 GiB.
 [Shipped peer comparison](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-shipped-bm64-peers-1/RESULT.md).
 
+Two exact Q/O/Down tile changes were screened against shipped BM64.
+BK64 processes a full affine quantization group per reduction tile but
+adds about 0.44 ms per triplet. BN64 reduces repeated activation reads
+and saves 0.122/0.119 ms at the paired lower bounds. Both miss the
+0.341 ms screen for an additional 60 ms across 176 visits. Keep the
+four dense-tail cuts and shipped BM64/BK32/BN32. These authentic
+operator timings leave request and decode latency unmeasured.
+For the measured 3.7–6.7 ms Ollama decode lead, the exact two-head
+T1 SDPA candidate has 9.59–10.04 ms of isolated decode-weighted savings.
+Price it in ordinary 512/32 replay before treating that saving as
+request performance. The additional 60 ms completion target stays open.
+[BK64 evidence](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bk64-screen-1/RESULT.md) ·
+[BN64 evidence](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bn64-screen-1/RESULT.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bn64-screen-1/ACTUAL-REVIEW.md) ·
+[Two-head SDPA evidence](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-tail-next-1/ACTUAL-REVIEW.md).
+
 The private Gemma Ollama adapter leaves its final hidden output
 unavailable after all 11 non-sampling cache-only cuts. Explicit hidden
 evaluation completes those outputs and preserves the two bounded
