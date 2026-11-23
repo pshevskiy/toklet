@@ -17,15 +17,6 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   Astra verifies the raw clocks, all 64 exact generations and zero exports.
   The actual enabled/disabled result remains 1.06524% against the 1% gate.
   [LFM3 control](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-sham-readiness-1/ACTUAL-REVIEW.md).
-- [x] **Block 6 tile proof** — Both sessions match all 128 archived rows
-  and 120 physical K/V planes. The tiled session makes 140 calls. Astra
-  confirms the previously failing cut at 4.50 GiB guarded peak.
-  [Block 6 proof](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-block6-1/ACTUAL-REVIEW.md).
-- [x] **Public tile pair** — Done falls 16.68% in the fresh pair. The
-  frozen reader predicts the wrong row split. The separate reader matches
-  the actual 180 multirow and 4,685 single-row calls to the sealed source.
-  Astra approves the descriptive comparison.
-  [Public tile result](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-public-screen-1/RESULT.md).
 - [x] **Gemma tiled loss** — The original 10,000-target gate passes.
   All archived rows match. Mean NLL is 9.964929 versus official 9.995776,
   with 11,270 actual tiled calls and a 4.51 GiB guarded peak. Astra approves.
@@ -34,10 +25,19 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   decisions. Isolated grading completes all 100 cases at 51/100 versus
   official 52/100, within the two-point limit. Astra verifies full custody.
   [C567 task result](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-quality-1/TASK-RESULT.md).
-- [ ] **Next** — Run the approved independent warmed timing for the
-  tiled route. Production integration, matched peer comparisons and
-  the original 1% summary verification remain open.
-  [Warmed launch review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-public-warmed-1/REVIEW.md).
+- [x] **Gemma warmed timing** — All 52 requests match. Completion gains
+  17.79% and 17.31% with paired lower bounds of 17.42% and 17.10%.
+  First-token and decode medians improve in both orders. Astra approves
+  the local 384/128 result at 4.67 GiB guarded peak.
+  [Warmed actual review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-public-warmed-1/ACTUAL-REVIEW.md).
+- [ ] **Next** — The detached production Gemma CLI links. Run full
+  checks and conformance on both submission policies. Matched peer
+  comparisons and the original 1% summary gate remain open.
+  [Production link](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-production-1/link-1.json).
+- [x] **LFM3 attribution** — The diagnostic accounts for four exact
+  prefill chunks. FFN takes 1.612 s, ConvOut 0.857 s, ConvIn 0.475 s and
+  norm/residual 0.467 s. Astra verifies the trace and archived state.
+  [LFM3 attribution result](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-release4b-prefill-attribution-1/RESULT.md).
 
 ## Recent implementation and evidence
 

@@ -763,6 +763,20 @@ two-point limit. Astra verifies all cases and the stopped guest state.
 [Task actual review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-quality-1/TASK-ACTUAL-REVIEW.md) ·
 [C567 task result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-quality-1/TASK-RESULT.md).
 
+Four same-binary Gemma owners complete 52 exact warmed 384/128 requests.
+Completion falls 38.566 to 31.704 s and 38.497 to 31.835 s. Paired lower
+savings bounds of 17.42% and 17.10% clear the 5% target. Both first-token
+and decode medians improve at 4.67 GiB guarded peak. Astra verifies the
+original launch refusal, corrected binding and all four owner receipts.
+[Warmed actual review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-public-warmed-1/ACTUAL-REVIEW.md).
+
+The selected LFM3 512/32 diagnostic matches the archived output, state
+and reset at 3.45 GiB guarded peak. Exclusive host intervals account for
+4.702397 s of its 4.702400 s prefill. Resident FFN takes 1.612 s, ConvOut
+0.857 s, ConvIn 0.475 s and norm/residual 0.467 s. Astra verifies the
+attribution and nested waits. The original overhead gate remains open.
+[LFM3 attribution result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-release4b-prefill-attribution-1/RESULT.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

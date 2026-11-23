@@ -516,6 +516,22 @@ The LFM3 prefill attribution is separately staged for a guarded run.
 [LFM3 attribution review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-release4b-prefill-attribution-1/REVIEW.md) ·
 [C567 task result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-quality-1/TASK-RESULT.md).
 
+The independent same-binary Gemma timing passes both reversed orders.
+All 52 exact requests preserve the tape, state and tile count. Completion
+falls 17.79% and 17.31%, and both paired lower bounds exceed 17%.
+The detached ordinary production factory links. Verify it on both
+submission policies before binding the original summary campaign.
+External peers still require matching workload and model evidence.
+[Production link](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-production-1/link-1.json) ·
+[Warmed actual review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-public-warmed-1/ACTUAL-REVIEW.md).
+
+The selected LFM3 trace reconciles all but 2,999 ns of prefill. Its
+0.467 s normalization and residual bin leaves only 0.015 s for a full
+replacement to meet the existing 0.452 s savings screen. Require measured
+headroom before another timing campaign. Keep these clocks in the
+diagnostic scope and preserve the original real summary comparison.
+[LFM3 attribution result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-release4b-prefill-attribution-1/RESULT.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).
