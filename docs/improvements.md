@@ -759,6 +759,15 @@ diagnostic with one owner per arm. The first build stopped at the 2 GiB
 disk floor and the unchanged retry passed after duplicate-file cleanup.
 [Raw clocks and guards](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-mlx-mixed-shared-1/RESULT.md).
 
+Gemma parallel T32 CPU attention matches every score, probability and
+context for both real shapes at all twelve depths. It passes wrap,
+empty spans, overflow, partial writes and retry. Actual-shape weighted
+timing falls from 2.834/2.829 s to 0.778/0.780 s with 2.052/2.046 s
+paired lower savings. The corrected production capture joins twelve
+heads and 24 K/V spans. This clears the operator screen only.
+[Screen evidence](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-t32-parallel-heads-1/RESULT.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-t32-parallel-heads-1/ACTUAL-REVIEW.md).
+
 LFM3 moves one full-owner L2 old-prefix pack before commit into
 resident K/V storage, with zero additional K/V buffer or GPU command.
 The successor checks the 196,608 old words per plane and preserves

@@ -8,6 +8,21 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- [ ] **Connected Gemma T32 prefill** — Apply the screened path only
+  to compact T32 producer attention. Charge private buffers and worker
+  stacks. Verify all 139 checkpoints, 128 natural IDs and original
+  failure and cancellation behavior. Use both warmed 384/128 orders
+  for the 1.3 s completed-request gate and report first ID separately.
+  [Screen and integration scope](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-t32-parallel-heads-1/ACTUAL-REVIEW.md).
+- [x] **Toklet Gemma T32 parallel attention heads** — Capture both
+  authentic producer shapes at all 12 cut depths. Compare exact current
+  tiled attention with private per-head outputs and scoped CPU workers.
+  The corrected capture uses the existing committed diagnostic view and
+  joins all 24 authentic spans. Paired weighted lower savings of
+  2.052/2.046 s clear the 1.3 s operator screen with the original output
+  and failure behavior. Astra approves advancing to connected replay.
+  [Results](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-t32-parallel-heads-1/RESULT.md) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-t32-parallel-heads-1/ACTUAL-REVIEW.md).
 - [x] **Connected Nanbeige two-head decode** — Keep the shipped BM64
   route and all four dense-tail cuts. The candidate passes all 32 score
   rows, physical K/V checks, faults and 52 ordinary requests. The two

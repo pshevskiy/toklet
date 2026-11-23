@@ -534,6 +534,15 @@ writes through serial replay on failure. Use both actual producer
 shapes at all 12 cut depths before testing the 1.3 s request gate.
 [Astra design and measured spans](../artifacts/mlx-gpu-gap-2026-11-15/astra62-gemma-t32-parallel-heads-1/RESEARCH.md).
 
+The four-lane Gemma CPU attention screen passes all 24 authentic
+producer spans and twelve prefill heads. With original layer weights,
+paired lower savings are 2.052/2.046 s against the 1.3 s gate. The
+clock includes thread lifecycle and public copies. The full 384/128
+exact trajectory, original failure behavior at public boundaries and
+two warmed request orders are required before considering adoption.
+[Guarded screen result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-t32-parallel-heads-1/RESULT.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-t32-parallel-heads-1/ACTUAL-REVIEW.md).
+
 LFM3 packs one authentic 786,432-byte old K/V block before predecessor
 publication, directly into the existing full-owner L2 workspace.
 The 384-token successor validates ownership and the packed words and
