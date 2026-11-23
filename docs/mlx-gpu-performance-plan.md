@@ -562,6 +562,20 @@ pass on the authentic first decode frame. The weighted paired lower
 bounds are 0.227/0.210 ms against 0.300 ms. Keep this pair detached.
 [T1 Gate/Up review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-gate-up-price-1/ACTUAL-REVIEW.md).
 
+The complete T1 FFN command fails its exact gate. On the first real
+decode row, Gate and Up match and the certified GELU product differs by
+one ULP at L0 index 2 with zero status. The existing tolerance certificate
+allows that difference. Keep the CPU-rounded reference and require
+exact-rounding evidence before any further performance price.
+[CPU Down replay](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-t1-down-cpu-witness-1/RESULT.md) ·
+[FFN chain review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-ffn-chain-attribution-1/ACTUAL-REVIEW.md).
+
+The exact dyadic bounds certify zero of two authentic complete calls
+even at the final product rounding. The current table cannot price an
+exact whole-call fast path on these rows. A new candidate needs tighter
+enclosures or different arithmetic before a native timing run.
+[Exact rounding review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-ffn-exact-rounding-1/ACTUAL-REVIEW.md).
+
 The nonfinal T128 selector screens 39 Metal visits followed by 13
 scalar visits. Both orders reproduce all 14 output tapes and terminal
 states. Prefill saves 629/621 ms and both decode clocks rise by
@@ -569,6 +583,12 @@ states. Prefill saves 629/621 ms and both decode clocks rise by
 ConvIn FMA4 must pass the conditional TTFT and decode contrasts before
 it advances to the original independent confirmation.
 [Partition review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-release4b-convout-partition-1/ACTUAL-REVIEW.md).
+
+The four-route FMA4 screen passes exact state and route checks across
+28 requests. Both decode clocks improve in all four ConvOut additions.
+The ConvIn addition raises TTFT in three of four owners. This mixed
+conditional result holds the composition before warmed qualification.
+[Factorial review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-convout-convin-factorial-1/ACTUAL-REVIEW.md).
 
 The 23 November release recheck retains the stock peer admission holds.
 Ollama 0.40.17's selected logprobs still carry token text, bytes and

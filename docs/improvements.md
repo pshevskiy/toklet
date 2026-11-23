@@ -813,12 +813,34 @@ bounds of 0.227/0.210 ms against 0.300 ms. Keep the released projection
 path. Guarded sampled peak is 4.65 GiB.
 [T1 Gate/Up review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-gate-up-price-1/ACTUAL-REVIEW.md).
 
+Gemma's detached complete T1 FFN stops on one FP32 ULP before timing.
+CPU replay locates the expected Down word at L0 index 0. The guarded
+untimed trace matches Gate and Up and first diverges at GELU product
+index 2. The tolerance certificate accepts the product with zero status.
+Forced replay and integrity-failure checks preserve exact state.
+[CPU Down replay](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-t1-down-cpu-witness-1/RESULT.md) ·
+[FFN chain review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-ffn-chain-attribution-1/ACTUAL-REVIEW.md).
+
+Exact dyadic replay of the certified table bounds yields zero unique
+mode-0 products and zero of two full calls. It predicts 1,635 L0 and
+2,907 L15 product mismatches. One L15 constant lane qualifies. Astra
+verifies the offline result and keeps the table path detached.
+[Exact rounding review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-ffn-exact-rounding-1/ACTUAL-REVIEW.md).
+
 Keeping the last T128 ConvOut cut scalar preserves all 14 LFM3 output
 tapes and terminal states. The first three cuts use 30 ordinary and nine
 exception panels at 3.49 GiB peak. Prefill saves 629/621 ms. Engine decode
 adds 58/311 ms and client decode adds 59/312 ms. Both orders fail the
 decode hold, so the standalone partition stays detached.
 [Partition review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-release4b-convout-partition-1/ACTUAL-REVIEW.md).
+
+The four-route ConvOut and sampled ConvIn FMA4 test matches all 28
+output and state records. Adding ConvOut to FMA4 improves both decode
+clocks in every owner. Adding FMA4 to ConvOut raises TTFT in three of four
+owners, with median engine/client increases of 34.5/33.9 ms. Astra
+verifies the 8-byte accounting correction and original first-owner
+receipt. The mixed TTFT keeps composition detached.
+[Factorial review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-convout-convin-factorial-1/ACTUAL-REVIEW.md).
 
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 

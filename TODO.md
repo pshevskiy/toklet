@@ -8,19 +8,24 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
-- [ ] **LFM3 prefill** — Screen exact Metal ConvOut on the first three
-  T128 cuts. The final cut uses the released scalar path before decode.
-  Require at least 452 ms lower completed prefill in both orders,
-  improved client first-token latency, exact output and state, and the
-  original engine and client decode holds. Both orders pass exact state
-  and save 621–629 ms in prefill. Engine decode rises 58/311 ms. The
-  standalone route stays on hold. Astra verifies both orders. Sol is
-  preparing the four-route interaction screen with sampled ConvIn FMA4.
-  [Partition review](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-release4b-convout-partition-1/ACTUAL-REVIEW.md).
+- [x] **LFM3 prefill screens** — The nonfinal ConvOut cut saves 621–629 ms
+  in prefill and adds 58/311 ms to engine decode. All 14 states match.
+  The FMA4 factorial passes 28 exact requests. Adding ConvOut improves
+  decode in all four owners. Adding FMA4 raises TTFT in three. Astra
+  verifies both holds.
+  [Partition review](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-release4b-convout-partition-1/ACTUAL-REVIEW.md) ·
+  [Factorial review](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-convout-convin-factorial-1/ACTUAL-REVIEW.md).
 - [x] **Gemma T1 Gate/Up screen** — Both authentic shapes pass output and
   rollback checks. Weighted paired lower bounds of 0.227/0.210 ms miss
   the 0.300 ms threshold. Astra verifies the hold.
   [Gate/Up review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-gate-up-price-1/ACTUAL-REVIEW.md).
+- [x] **Gemma T1 FFN chain screen** — Exactness stops before timing.
+  The tolerance-certified GELU product differs by one FP32 ULP at L0
+  index 2 with zero status. Forced exact replay matches. A stricter
+  check of the current table certifies zero of two complete calls.
+  Astra verifies the hold.
+  [FFN chain review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-ffn-chain-attribution-1/ACTUAL-REVIEW.md) ·
+  [Exact rounding review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-ffn-exact-rounding-1/ACTUAL-REVIEW.md).
 - [ ] **Nanbeige headroom** — Keep the qualified dense tail and prepack.
   The frozen run leads Ollama by 199–208 ms in completion. The additional
   60 ms target stays open. Two-head T1 SDPA saves 9.59–10.04 ms in
