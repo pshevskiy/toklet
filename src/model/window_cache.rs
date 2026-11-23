@@ -173,6 +173,11 @@ impl<T: StateElement> Cache<T> {
         self.generation = generation;
     }
 
+    #[cfg(all(test, feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    pub(crate) fn physical_words(&self) -> (&[T], &[T]) {
+        (&self.k, &self.v)
+    }
+
     pub fn allocated_bytes(&self) -> usize {
         // The constructor checks actual capacities and this addition.
         (self.k.capacity() + self.v.capacity()) * std::mem::size_of::<T>()

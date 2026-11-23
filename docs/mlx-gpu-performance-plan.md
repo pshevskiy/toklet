@@ -604,6 +604,17 @@ The two paired Done lower bounds are 1.134/1.711 s. Hold this grouping
 under the original 1.3 s gate in both orders.
 [Warmed review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-projection-group-warmed-1/ACTUAL-REVIEW.md).
 
+Compact non-head staging clears the original 384/128 warmed screen with
+paired Done lower savings of 1.893/1.945 s. All 52 output tapes match and
+first-token medians improve in both orders. Use the explicit Gemma BF16
+`--submission compact-single-row` policy with existing public admission.
+The original C567 task input to grading is byte-identical. Compact summary
+compatibility passes. Keep 1% overhead and matched external performance
+qualification open for the new policy.
+[Adoption review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-compact-warmed-1/ACTUAL-REVIEW.md) ·
+[Task carry-forward](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-compact-task-test-1/RESULT.md) ·
+[Summary smoke](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-compact-summary-1/trial-1/normal.json).
+
 The nonfinal T128 selector screens 39 Metal visits followed by 13
 scalar visits. Both orders reproduce all 14 output tapes and terminal
 states. Prefill saves 629/621 ms and both decode clocks rise by

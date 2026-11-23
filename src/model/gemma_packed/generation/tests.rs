@@ -10,7 +10,7 @@ use std::{
 #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
 mod assistant_timing;
 #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
-mod batched_submission;
+pub(in crate::model::gemma_packed) mod batched_submission;
 mod capacity;
 #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
 mod engine_compare;

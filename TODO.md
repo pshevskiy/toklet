@@ -8,6 +8,22 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- [x] **Gemma compact T1 scratch** — Replace decode's oversized prefill
+  staging with two separately guarded 12,288-word banks. Keep the
+  original kernels, wait counts, prefill and vocabulary head. The source
+  census prices 176.88 GB of logical fills and tail scans per 384/128
+  request. All 139 checkpoints, 128 IDs and four fault controls pass.
+  The first ordinary pair saves 2.196 s with first token 0.6 ms later.
+  All 52 warmed requests match. Paired Done lower bounds of 1.893/1.945 s
+  clear 1.3 s in both orders. All six source checks pass. The public
+  C567 pilot stops at 512. The native C567 harness matches all 4,149
+  decisions across 100 tasks and reproduces the archived grader bytes.
+  Compact summary compatibility passes. Astra approves the explicit opt-in.
+  [Traffic replay](artifacts/mlx-gpu-gap-2026-11-15/root-gemma-t1-compact-traffic-1/normal.json) ·
+  [Exact and point result](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-compact-1/RESULT.md) ·
+  [Adoption review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-compact-warmed-1/ACTUAL-REVIEW.md) ·
+  [Checks](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-compact-1/CHECKS.md) ·
+  [Task carry-forward](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-compact-task-test-1/RESULT.md).
 - [x] **LFM3 late collector screen** — Move bounded collector allocation
   after Metal attachment while retaining the original budget and clock.
   The corrected detached build and both smoke owners complete. The

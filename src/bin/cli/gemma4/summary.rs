@@ -673,7 +673,10 @@ impl Collector {
             || !identity(manifest.session_id)
             || !(1..=512).contains(&manifest.capacity)
             || !(1..=32).contains(&manifest.prefill_chunk_size)
-            || !matches!(manifest.submission, "per-tile" | "batched-single-row")
+            || !matches!(
+                manifest.submission,
+                "per-tile" | "batched-single-row" | "compact-single-row"
+            )
             || !finite(manifest.load_ms)
             || !finite(manifest.route_start_to_ready_ms)
             || manifest.load_admitted_bytes > MEMORY_LIMIT

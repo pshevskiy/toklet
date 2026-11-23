@@ -769,3 +769,5 @@ fn batched_submission_exact_admission_and_warmed_decode_allocate_no_rust_storage
     assert_eq!(candidate.logits().unwrap().len(), VOCAB);
     assert!(candidate.logits().unwrap().iter().all(|v| v.is_finite()));
 }
+
+pub(in crate::model::gemma_packed) mod compact;

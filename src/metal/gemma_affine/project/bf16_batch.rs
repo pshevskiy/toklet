@@ -31,6 +31,10 @@ pub(in crate::metal::gemma_affine) enum Fault {
     AfterWait,
     CorruptStatus,
     CorruptGuard,
+    #[cfg(test)]
+    CorruptInputGuard,
+    #[cfg(test)]
+    CorruptInactiveOutput,
     AfterFirstCopy,
 }
 
@@ -296,6 +300,17 @@ fn execute(
                 *last ^= 1;
             }
         });
+    }
+    #[cfg(test)]
+    if fault == Some(Fault::CorruptInputGuard) {
+        buffers
+            .input
+            .with_mut(|words| *words.last_mut().unwrap() ^= 1);
+    }
+    #[cfg(test)]
+    if fault == Some(Fault::CorruptInactiveOutput) {
+        assert!(matrix.rows < buffers.output.len - GUARD);
+        buffers.output.with_mut(|words| words[matrix.rows] ^= 1);
     }
     validate_completed(
         matrix,

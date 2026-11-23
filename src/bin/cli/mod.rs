@@ -45,7 +45,7 @@ Usage: toklet [OPTIONS]
 
   --model PATH              Local model directory
   --model-profile PROFILE   qwen (default), gemma4-bf16, lfm3-bf16, ministral3-diagnostic, qwen35-2b-diagnostic, sensenova-loop-9b-mlx, nanbeige4.2-3b-mlx-q4
-  --submission MODE         Gemma only: per-tile (default), batched-single-row
+  --submission MODE         Gemma only: per-tile (default), batched-single-row, compact-single-row
   --request-metrics MODE    Gemma only: disabled (default), summary
   --metrics-output PATH     Explicit summary JSONL export after inference
   --artifact-manifest PATH  Explicit2B child manifest (diagnostic profile only)
@@ -220,9 +220,10 @@ fn parse(values: Vec<OsString>) -> io::Result<Args> {
                 a.submission = match utf8(value()?)?.as_str() {
                     "per-tile" => "per-tile",
                     "batched-single-row" => "batched-single-row",
+                    "compact-single-row" => "compact-single-row",
                     _ => {
                         return Err(invalid(
-                            "--submission must be per-tile or batched-single-row",
+                            "--submission must be per-tile, batched-single-row or compact-single-row",
                         ));
                     }
                 };

@@ -176,7 +176,7 @@ impl OfficialBf16 {
         model: &'model Bf16Model<'owner>,
         options: Options,
     ) -> std::result::Result<Bf16GenerationSession<'model, 'owner, 'owner>, session::Error> {
-        self.new_session_with_profile(model, options, None, false)
+        self.new_session_with_profile(model, options, None, false, false)
     }
 
     /// Explicit plain G2 companion to the diagnostic profiled session.
@@ -199,7 +199,7 @@ impl OfficialBf16 {
         model: &'model Bf16Model<'owner>,
         options: Options,
     ) -> std::result::Result<Bf16GenerationSession<'model, 'owner, 'owner>, session::Error> {
-        let mut session = self.new_session_with_profile(model, options, None, true)?;
+        let mut session = self.new_session_with_profile(model, options, None, true, false)?;
         session.use_last_row_prefill();
         Ok(session)
     }
@@ -221,6 +221,19 @@ impl OfficialBf16 {
         Ok(session)
     }
 
+    /// Detached opt-in for compact non-head T1 decode projection buffers.
+    #[doc(hidden)]
+    pub fn new_compact_tiled_g2_session<'model, 'owner>(
+        &'owner self,
+        model: &'model Bf16Model<'owner>,
+        options: Options,
+    ) -> std::result::Result<Bf16GenerationSession<'model, 'owner, 'owner>, session::Error> {
+        let mut session = self.new_session_with_profile(model, options, None, true, true)?;
+        session.use_last_row_prefill();
+        session.enable_tiled_attention_context();
+        Ok(session)
+    }
+
     /// Diagnostic G2 session capturing one selected committed evaluation.
     /// Charges an additional64MiB before allocating counter resources.
     pub fn new_profiled_session<'model, 'owner>(
@@ -229,7 +242,8 @@ impl OfficialBf16 {
         options: Options,
         profile: Bf16ProfileOptions,
     ) -> std::result::Result<Bf16GenerationSession<'model, 'owner, 'owner>, session::Error> {
-        let mut session = self.new_session_with_profile(model, options, Some(profile), false)?;
+        let mut session =
+            self.new_session_with_profile(model, options, Some(profile), false, false)?;
         session.use_last_row_prefill();
         Ok(session)
     }
@@ -242,7 +256,8 @@ impl OfficialBf16 {
         options: Options,
         profile: Bf16ProfileOptions,
     ) -> std::result::Result<Bf16GenerationSession<'model, 'owner, 'owner>, session::Error> {
-        let mut session = self.new_session_with_profile(model, options, Some(profile), true)?;
+        let mut session =
+            self.new_session_with_profile(model, options, Some(profile), true, false)?;
         session.use_last_row_prefill();
         Ok(session)
     }
@@ -253,6 +268,7 @@ impl OfficialBf16 {
         mut options: Options,
         profile: Option<Bf16ProfileOptions>,
         single_row_batching: bool,
+        compact_decode: bool,
     ) -> std::result::Result<Bf16GenerationSession<'model, 'owner, 'owner>, session::Error> {
         self.validate_session_budget(options)?;
         let limit = options.memory_limit_bytes;
@@ -265,12 +281,13 @@ impl OfficialBf16 {
                 limit,
             })?;
         let result = if single_row_batching {
-            self.weights.new_generation_session_with_policy(
+            self.weights.new_generation_session_with_compact(
                 model,
                 &self.context,
                 options,
                 profile,
                 true,
+                compact_decode,
             )
         } else {
             match profile {

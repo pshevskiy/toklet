@@ -17,6 +17,7 @@ type GraphResult<T> = std::result::Result<T, GraphError>;
 struct SessionPolicy {
     profile: Option<ProfileOptions>,
     single_row_batching: bool,
+    compact_decode: bool,
 }
 pub type Bf16Model<'weights> = graph::Model<'weights, MatrixRef<'weights>>;
 pub type Bf16Session<'model, 'weights, 'context> =
@@ -177,6 +178,7 @@ impl Bf16Weights {
             SessionPolicy {
                 profile: None,
                 single_row_batching: true,
+                compact_decode: false,
             },
         )
     }
@@ -233,6 +235,26 @@ impl Bf16Weights {
         single_row_batching: bool,
     ) -> std::result::Result<Bf16GenerationSession<'model, 'weights, 'context>, crate::session::Error>
     {
+        self.new_generation_session_with_compact(
+            model,
+            context,
+            options,
+            profile,
+            single_row_batching,
+            false,
+        )
+    }
+
+    pub(crate) fn new_generation_session_with_compact<'model, 'weights, 'context>(
+        &'weights self,
+        model: &'model Bf16Model<'weights>,
+        context: &'context Bf16Context,
+        options: crate::session::Options,
+        profile: Option<ProfileOptions>,
+        single_row_batching: bool,
+        compact_decode: bool,
+    ) -> std::result::Result<Bf16GenerationSession<'model, 'weights, 'context>, crate::session::Error>
+    {
         use crate::session::Error as SessionError;
         graph::generation::validate_options(model, options)?;
         if let Some(profile) = profile {
@@ -249,6 +271,7 @@ impl Bf16Weights {
                 SessionPolicy {
                     profile,
                     single_row_batching,
+                    compact_decode,
                 },
             )
             .map_err(|error| match error {
@@ -281,7 +304,7 @@ impl Bf16Weights {
         let fixed = Self::generation_fixed_bytes(model, options)?;
         let counts = Counts::new(self, options.prefill_chunk_size).map_err(GraphError::from)?;
         let backend = counts
-            .memory(counts.tile, counts.ple)
+            .memory(counts.tile, counts.ple, false)
             .map_err(GraphError::from)?
             .total()
             .map_err(GraphError::from)?;
@@ -307,7 +330,9 @@ impl Bf16Weights {
             return Err(Error::Options("Gemma BF16 model/source/device differs").into());
         }
         let counts = Counts::new(self, chunk_rows)?;
-        let minimum = counts.memory(counts.tile, counts.ple)?.total()?;
+        let minimum = counts
+            .memory(counts.tile, counts.ple, policy.compact_decode)?
+            .total()?;
         let diagnostic = if policy.profile.is_some() {
             profile::ALLOWANCE_BYTES
         } else {
@@ -351,10 +376,15 @@ impl Counts {
         })
     }
     pub(super) fn minimum_memory(&self) -> Result<BackendMemory> {
-        self.memory(self.tile, self.ple)
+        self.memory(self.tile, self.ple, false)
     }
 
-    fn memory(&self, cpu_tile: usize, ple_owned: usize) -> Result<BackendMemory> {
+    fn memory(
+        &self,
+        cpu_tile: usize,
+        ple_owned: usize,
+        compact_decode: bool,
+    ) -> Result<BackendMemory> {
         let gpu = multiply(add(add(self.input, self.tile)?, 1 + 3 * GUARD)?, 4)?;
         let host = add(
             multiply(cpu_tile, 4)?,
@@ -365,10 +395,36 @@ impl Counts {
                 ))?,
         )?;
         Ok(BackendMemory {
-            scratch_bytes: add(gpu, host)?,
+            scratch_bytes: add(
+                add(gpu, host)?,
+                usize::from(compact_decode) * Compact::PAYLOAD_BYTES,
+            )?,
             metadata_bytes: 0,
             metadata_allowance_bytes: CONTEXT_ALLOWANCE_BYTES,
         })
+    }
+}
+
+struct Compact {
+    input: Buffer<u32>,
+    output: Buffer<u32>,
+    decode: bool,
+}
+
+impl Compact {
+    const WORDS: usize = 12_288 + GUARD;
+    const PAYLOAD_BYTES: usize = 2 * Self::WORDS * size_of::<u32>();
+
+    fn new(gpu: &Gpu) -> Result<Self> {
+        Ok(Self {
+            input: Buffer::new(gpu, Self::WORDS)?,
+            output: Buffer::new(gpu, Self::WORDS)?,
+            decode: false,
+        })
+    }
+
+    fn fits(&self, input: usize, output: usize) -> bool {
+        self.decode && input <= self.input.len - GUARD && output <= self.output.len - GUARD
     }
 }
 
@@ -390,6 +446,9 @@ pub struct Backend<'weights, 'context> {
     trace: Option<Box<Bf16Trace>>,
     single_row_batching: bool,
     tiled_attention_context: bool,
+    compact: Option<Compact>,
+    #[cfg(test)]
+    decode_work: [usize; 4],
     #[cfg(test)]
     fault: Option<Fault>,
 }
@@ -399,6 +458,9 @@ pub struct Backend<'weights, 'context> {
 pub(crate) enum Fault {
     AfterFirstHeadTile,
     AfterPle,
+    CompactInputGuard,
+    CompactInactiveOutput,
+    CompactStatus,
 }
 
 impl<'weights, 'context> Backend<'weights, 'context> {
@@ -419,14 +481,17 @@ impl<'weights, 'context> Backend<'weights, 'context> {
             .checked_sub(diagnostic)
             .ok_or(Error::Options("BF16 diagnostic budget missing"))?;
         let mut tile = reserve::<f32>(counts.tile)?;
-        let with_tile = counts.memory(tile.capacity(), counts.ple)?.total()?;
+        let with_tile = counts
+            .memory(tile.capacity(), counts.ple, policy.compact_decode)?
+            .total()?;
         check_budget(with_tile, budget)?;
         let ple_budget = add(counts.ple, budget - with_tile)?;
         let ple = source
             .source
             .workspace(chunk, ple_budget)
             .map_err(Error::from)?;
-        let mut memory = counts.memory(tile.capacity(), ple.owned_bytes())?;
+        let mut memory =
+            counts.memory(tile.capacity(), ple.owned_bytes(), policy.compact_decode)?;
         check_budget(memory.total()?, budget)?;
         memory.metadata_allowance_bytes = add(memory.metadata_allowance_bytes, diagnostic)?;
         tile.resize(counts.tile, 0.);
@@ -453,11 +518,21 @@ impl<'weights, 'context> Backend<'weights, 'context> {
             trace,
             single_row_batching: policy.single_row_batching,
             tiled_attention_context: false,
+            compact: policy
+                .compact_decode
+                .then(|| Compact::new(gpu))
+                .transpose()?,
+            #[cfg(test)]
+            decode_work: [0; 4],
             #[cfg(test)]
             fault: None,
         })
     }
 
+    #[cfg(test)]
+    pub(crate) fn compact_test_work(&self) -> [usize; 4] {
+        self.decode_work
+    }
     #[cfg(test)]
     pub(crate) fn set_fault(&mut self, fault: Fault) {
         self.fault = Some(fault);
@@ -485,7 +560,16 @@ impl<'weights> Operations<MatrixRef<'weights>> for Backend<'weights, '_> {
             trace.begin(&self.context.gpu, position, rows, last_row_only);
         }
     }
+    fn begin_decode_step(&mut self, rows: usize) {
+        if let Some(compact) = &mut self.compact {
+            compact.decode = rows == 1;
+        }
+    }
+
     fn finish_generation_step(&mut self, committed: Option<usize>) {
+        if let Some(compact) = &mut self.compact {
+            compact.decode = false;
+        }
         if let Some(trace) = &mut self.trace {
             trace.finish(&self.context.gpu, committed);
         }
@@ -523,7 +607,7 @@ impl<'weights> Operations<MatrixRef<'weights>> for Backend<'weights, '_> {
         if operation.role == crate::mlx::gemma4::bf16::execution::Role::TokenEmbedding {
             operation.role = crate::mlx::gemma4::bf16::execution::Role::OutputHead;
         }
-        if self.single_row_batching
+        let batched = self.single_row_batching
             && tokens == 1
             && matrix.tiles.len() > 1
             && matrix.rows <= self.tile.len()
@@ -531,8 +615,25 @@ impl<'weights> Operations<MatrixRef<'weights>> for Backend<'weights, '_> {
                 .output
                 .len
                 .checked_sub(GUARD)
-                .is_some_and(|n| matrix.rows <= n)
-        {
+                .is_some_and(|n| matrix.rows <= n);
+        let active_rows = if batched {
+            matrix.rows
+        } else {
+            matrix.rows.min(TILE_ROWS)
+        };
+        let compact = self.compact.as_mut().filter(|compact| {
+            tokens == 1
+                && operation.role != crate::mlx::gemma4::bf16::execution::Role::OutputHead
+                && compact.fits(input.len(), active_rows)
+        });
+        let compact_selected = compact.is_some();
+        let (staged_input, staged_output) = match compact {
+            Some(compact) => (&mut compact.input, &mut compact.output),
+            None => (&mut self.input, &mut self.output),
+        };
+        #[cfg(not(test))]
+        let _ = compact_selected;
+        if batched {
             let observation = match self.trace.as_mut() {
                 Some(trace) => trace.register_batch(
                     operation,
@@ -549,8 +650,8 @@ impl<'weights> Operations<MatrixRef<'weights>> for Backend<'weights, '_> {
                 columns: matrix.columns,
             };
             let buffers = project::Buffers {
-                input: &mut self.input,
-                output: &mut self.output,
+                input: staged_input,
+                output: staged_output,
                 status: &mut self.status,
                 pending: &mut self.pending,
             };
@@ -558,10 +659,24 @@ impl<'weights> Operations<MatrixRef<'weights>> for Backend<'weights, '_> {
             {
                 // Preserve the late fault after real GPU work and the first
                 // private CPU tile, before parent graph/KV publication.
-                let fault = (weight.index == self.source.bindings.embedding_index()
-                    && self.fault == Some(Fault::AfterFirstHeadTile))
-                .then_some(bf16_batch::Fault::AfterFirstCopy);
-                bf16_batch::run_with_fault(
+                let fault = match self.fault {
+                    Some(Fault::AfterFirstHeadTile)
+                        if weight.index == self.source.bindings.embedding_index() =>
+                    {
+                        Some(bf16_batch::Fault::AfterFirstCopy)
+                    }
+                    Some(Fault::CompactInputGuard) if compact_selected => {
+                        Some(bf16_batch::Fault::CorruptInputGuard)
+                    }
+                    Some(Fault::CompactInactiveOutput) if compact_selected => {
+                        Some(bf16_batch::Fault::CorruptInactiveOutput)
+                    }
+                    Some(Fault::CompactStatus) if compact_selected => {
+                        Some(bf16_batch::Fault::CorruptStatus)
+                    }
+                    _ => None,
+                };
+                let work = bf16_batch::run_with_fault(
                     self.context,
                     tiled,
                     buffers,
@@ -570,6 +685,10 @@ impl<'weights> Operations<MatrixRef<'weights>> for Backend<'weights, '_> {
                     observation,
                     fault,
                 )?;
+                self.decode_work[0] += work.dispatches_encoded;
+                self.decode_work[1] += work.host_wait_calls;
+                self.decode_work[2] += usize::from(compact_selected);
+                self.decode_work[3] += usize::from(compact_selected);
             }
             #[cfg(not(test))]
             bf16_batch::run(
@@ -604,8 +723,8 @@ impl<'weights> Operations<MatrixRef<'weights>> for Backend<'weights, '_> {
                 self.context,
                 project::Matrix::bf16(rows, matrix.columns, weights),
                 project::Buffers {
-                    input: &mut self.input,
-                    output: &mut self.output,
+                    input: staged_input,
+                    output: staged_output,
                     status: &mut self.status,
                     pending: &mut self.pending,
                 },
@@ -614,6 +733,13 @@ impl<'weights> Operations<MatrixRef<'weights>> for Backend<'weights, '_> {
                 tokens,
                 observation,
             )?;
+            #[cfg(test)]
+            {
+                self.decode_work[0] += 1;
+                self.decode_work[1] += 1;
+                self.decode_work[2] += usize::from(compact_selected);
+                self.decode_work[3] += usize::from(compact_selected);
+            }
             for (to, from) in output
                 .chunks_exact_mut(matrix.rows)
                 .zip(active.chunks_exact(rows))

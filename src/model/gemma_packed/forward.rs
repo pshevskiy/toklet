@@ -91,6 +91,15 @@ fn finish<M: MatrixSource, B: Operations<M>>(
     } else {
         cpu::span_attention(query, &spans, context, scores, probabilities, &shape)?;
     }
+    #[cfg(all(test, feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    super::generation::tests::batched_submission::compact::observe_attention(
+        index,
+        offset,
+        count,
+        scores,
+        probabilities,
+        context,
+    );
     ops.project(
         &s.context[..q],
         &model.weights.layers[index].o,

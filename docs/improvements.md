@@ -859,6 +859,19 @@ Decode improves in both orders and prefill direction varies. Keep
 the grouping candidate detached.
 [Warmed review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-projection-group-warmed-1/ACTUAL-REVIEW.md).
 
+Gemma BF16 compact single-row staging uses two guarded 12,288-word
+banks for non-head decode projections. The 98,360 B admission retains
+349 dispatches and 277 waits per decode. The exact witness matches 139
+checkpoints, all 128 IDs and four fault controls. The two warmed orders
+save 1.945/2.093 s at the median with 1.893/1.945 s paired lower bounds.
+All 52 requests match at 4.68 GiB peak. The six required Rust checks pass.
+C567 matches 4,149 natural decisions and the archived grader bytes for
+51/100 versus 52/100. An ordinary compact summary export passes schema
+and reset checks. Timing qualification covers the original local workload.
+[Exact and point result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-compact-1/RESULT.md) ·
+[Adoption review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-compact-warmed-1/ACTUAL-REVIEW.md) ·
+[Task carry-forward](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-compact-task-test-1/RESULT.md).
+
 Keeping the last T128 ConvOut cut scalar preserves all 14 LFM3 output
 tapes and terminal states. The first three cuts use 30 ordinary and nine
 exception panels at 3.49 GiB peak. Prefill saves 629/621 ms. Engine decode

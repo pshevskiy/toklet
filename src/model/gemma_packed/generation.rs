@@ -288,7 +288,7 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
     /// reset failure keeps needs_replay=true, evaluated_len0 and logits hidden.
     /// A later forward failure preserves the now-valid committed inner prefix.
     pub fn evaluate_next_chunk(&mut self) -> Result<usize, session::Error> {
-        self.evaluate_next_chunk_rows(self.output)
+        self.evaluate_next_chunk_rows(self.output, false)
     }
 
     /// The audited Mac BF16 native bridge exposes only the final distribution.
@@ -299,11 +299,12 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
     }
     #[cfg(test)]
     pub(crate) fn evaluate_next_chunk_last_row(&mut self) -> Result<usize, session::Error> {
-        self.evaluate_next_chunk_rows(forward::OutputRows::Last)
+        self.evaluate_next_chunk_rows(forward::OutputRows::Last, false)
     }
     fn evaluate_next_chunk_rows(
         &mut self,
         output: forward::OutputRows,
+        decode: bool,
     ) -> Result<usize, session::Error> {
         let count = self.pending_len().min(self.chunk);
         if count == 0 {
@@ -325,6 +326,9 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
         self.inner
             .operations
             .begin_generation_step(start, count, last_row_only);
+        if decode {
+            self.inner.operations.begin_decode_step(count);
+        }
         let result = forward::run(&mut self.inner, &self.history[start..start + count], output);
         let committed = result.as_ref().ok().map(|_| self.inner.tokens().len());
         self.inner.operations.finish_generation_step(committed);
@@ -446,6 +450,9 @@ impl<M: MatrixSource, B: Operations<M>> InferenceSession for GenerationSession<'
     }
     fn evaluate_next_chunk(&mut self) -> Result<usize, session::Error> {
         Self::evaluate_next_chunk(self)
+    }
+    fn evaluate_next_decode_chunk(&mut self) -> Result<usize, session::Error> {
+        self.evaluate_next_chunk_rows(self.output, true)
     }
     fn discard_pending(&mut self) {
         Self::discard_pending(self)
