@@ -502,6 +502,32 @@ and qualify the arithmetic before accepting peer timing.
 [Host precision replay](../artifacts/mlx-gpu-gap-2026-11-15/astra62-gemma-bf16-l0-k-precision-1/RESEARCH.md) ·
 [Live Gemma probe](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-prefill-parity-1/RESULT.md).
 
+The first-cut Toklet reference binds all 15 committed FP32 K/V owners
+and the full 262,144-word head. Both full-state hashes agree with the
+published compact trace. The connected Ollama probe preserves the
+original BF16 weights and widens one layer at a time. All five layers
+reach real FP32 cache writes, and K/V and hidden outputs exactly match
+their same-input cacheless controls. All 221,184 inactive L4 rotary
+words are preserved. Every external K/V panel differs bitwise from the
+Toklet reference. Across the five layers, 92,959 of 98,304 K/V words
+differ, with maximum absolute error 7.87e-6. Peak guarded
+charge is 4.67 GiB. Establish simultaneous donor residency before a
+request-level precision claim. The work contract keeps T32 for all 15
+producer layers, one row for the 20 shared consumers and a full head
+at every cut.
+[Reference](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-first-cut-canonical-1/RESULT.md) ·
+[Connected probe](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-fp32-prefix-1/RESULT.md) ·
+[Astra work and precision research](../artifacts/mlx-gpu-gap-2026-11-15/astra62-gemma-fp32-connected-work-1/RESEARCH.md).
+
+The tagged Ollama v0.40.16 LFM3 private runner captures all 32 natural
+IDs with zero reuse. The first five agree. After the same 517 consumed
+IDs, Ollama selects 1332 and Toklet selects 452. The ordinary Ollama
+lookahead also advances all 24 physical offsets to 544, one past the
+Toklet workload. Hold the natural tape and matched timing gates. The
+score row at decision six still needs an independent same-prefix check.
+[Exact raw-ID witness](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-ollama-natural-trial5-readiness-1/ACTUAL.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-first-cut-and-lfm3-id-1/ACTUAL-REVIEW.md).
+
 LFM3 terminal accounting is already inside the original request clocks.
 Deleting all measured enabled time outside native prefill would leave a
 1.047765% marginal TTFT upper bound. Fixed-role pairs have 336.9 ms of

@@ -8,6 +8,17 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- [x] **Gemma first-cut reference and LFM3 raw IDs** — Capture the first
+  authentic Toklet T32 head and 15 FP32 K/V owners. The canonical
+  capture matches the published head and physical-cache hashes. The
+  connected Ollama L0–L4 probe fits under 6 GiB and all cached controls
+  match exactly. Relative to Toklet the largest K/V error is 7.87e-6.
+  The tagged LFM3 adapter captures all 32 natural IDs and diverges at
+  decision six. Astra approves the evidence. The matched gates stay open.
+  [Toklet capture](artifacts/mlx-gpu-gap-2026-11-15/root-gemma-first-cut-canonical-1/RESULT.md) ·
+  [Connected Gemma probe](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-fp32-prefix-1/RESULT.md) ·
+  [LFM3 raw-ID witness](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-ollama-natural-trial5-readiness-1/ACTUAL.md) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/root-gemma-first-cut-and-lfm3-id-1/ACTUAL-REVIEW.md).
 - [x] **Shipped BM64 and original-model probes** — Run the exact 512/32
   peer cohort on `dc703d20`. All 78 exact requests and four gates pass.
   Ollama leads decode by 3.7–6.7 ms. On adapted Gemma, final hidden is

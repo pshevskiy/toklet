@@ -745,6 +745,29 @@ request, and measured local coalescing headroom remains below its screen.
 [LFM3 accounting](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-clock-lockout-1/ANALYSIS.md) ·
 [Astra evidence review](../artifacts/mlx-gpu-gap-2026-11-15/root-shipped-bm64-gemma-work-1/ACTUAL-REVIEW.md).
 
+A detached compact Gemma reference records all 30 authentic FP32 K/V
+banks from the first T32 cut. The published full head and physical state
+hashes and earlier L0/L4 key prefixes agree. The first two links refused
+missing sparse inputs or a test-only getter. The corrected release
+captures the existing public physical storage view. The adapted Ollama
+L0–L4 probe completes the same input with actual FP32 cache writes.
+All cacheless controls and L4 inactive rotary words match internally.
+The largest absolute difference from the Toklet K/V banks is 7.87e-6.
+The peer probe charges 4.67 GiB and covers five layers of one cut.
+[Canonical capture](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-first-cut-canonical-1/RESULT.md) ·
+[Connected result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-fp32-prefix-1/RESULT.md).
+
+The private tagged Ollama LFM3 worker links the pinned local v4 images
+with 486 offline Go packages. The first build stops in the process
+scan. The second verifies same-snapshot ancestry and passes. The
+guarded 512/32 owner exposes all natural numeric IDs with zero reuse at
+3.78 GiB peak charge. Five IDs match. At decision six Ollama selects
+1332 and Toklet selects 452. The ordinary lookahead reaches physical
+offset 544. Astra approves the bounded evidence. The exact trajectory
+and equal-work gates stay open.
+[LFM3 raw IDs and guard receipts](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-ollama-natural-trial5-readiness-1/ACTUAL.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-first-cut-and-lfm3-id-1/ACTUAL-REVIEW.md).
+
 The LFM3 all-disabled control passes all 12 original 1% limits. Astra
 reconstructs 64 resets and 64 generations over eight fresh owners with zero
 exports. The largest upper bound is 0.96339% for reverse-order TTFT.
