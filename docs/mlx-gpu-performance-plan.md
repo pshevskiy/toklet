@@ -487,6 +487,17 @@ three named prefill and decode wait residuals from both arms leaves a
 no identified collector change for another qualification run.
 [Overhead analysis](../artifacts/mlx-gpu-gap-2026-11-15/astra62-lfm3-o4-native-floor-1/RESEARCH.md).
 
+The signed-prefix source bound cuts refused cells from 282 to 34 over
+2,048 archived Gate/Up words. The oracle requires canonical prefixes.
+A separate frozen sample checks all 128 tokens in 64 weight rows per
+role and reproduces all 16,384 canonical BF16 words. Exact finite-
+population bounds put the joint upper count of replay-free rows at
+3,226, below the 5,007 needed by the optimistic measured repair cost.
+Even the exact-center upper is 3,949. Hold this mapping before GPU
+implementation.
+[Signed-prefix study](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-gate-up-signed-prefix-1/RESULT.md) ·
+[Complete-row audit](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-gate-up-signed-prefix-full-rows-1/RESULT.md).
+
 The Gemma T32 candidate passes the original block 9 with exact scores and
 K/V. Its final 17-token cut uses the CPU fallback. Blocks 0 and 9 cover
 1,808 original targets. Continue blocks 1–8 at the frozen reset boundaries.
@@ -719,6 +730,26 @@ repeated boundary IDs. Both readers reproduce their raw hashes at a
 these reads and measure the estimated 139 MB margin. The stock loaders
 still materialize the 4.698 GB PLE table.
 [Official row evidence](../artifacts/mlx-gpu-gap-2026-11-15/astra62-gemma-bf16-peer-row-evidence-1/RESEARCH.md).
+
+An adapted vLLM worker retains all 539 other official BF16 text tensors
+and one tied table. The bounded cold request and reset replay fit within
+14.6 MiB of the cap. A fresh guarded 384/128 request and its reset replay
+both match all 128 production Toklet IDs and execute 12 T32 cuts and 127
+T1 steps with zero reuse. Peak charge is 6,415,326,960 B, leaving 25.9
+MiB. vLLM releases the completed request and uses paged YOCO storage.
+This validates fit and sampled work for the adapted worker. Stock
+admission and actual-cache precision equivalence remain open.
+[Bounded fit](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-vllm-ple-capacity-1/RESULT.md) ·
+[Full fit](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-vllm-ple-full-1/RESULT.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-bf16-peer-fit-lfm3-replay-1/ACTUAL-REVIEW.md).
+
+The retained Ollama fork has source, MLX images and a verified isolated
+Go 1.26.11 compiler. The official archive hash matches and the offline
+module preflight resolves 505 packages. The raw replay entry currently
+selects Nanbeige. An official BF16 row provider and an independently
+guarded Gemma run remain pending.
+[Toolchain](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-ollama-go-1/toolchain.json) ·
+[Offline module preflight](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-ollama-go-1/offline-closure.json).
 
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).

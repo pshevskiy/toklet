@@ -8,6 +8,28 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- [x] **Gemma BF16 peer capacity** — The adapted vLLM row provider
+  fits both guarded attempts. Both full 384/128 requests match Toklet
+  `a394e362`, with 12 T32 cuts, 127 T1 steps and zero reuse. Peak charge
+  is 6,415,326,960 B on the full workload, 25.9 MiB below 6 GiB.
+  Stock admission and cache precision remain separate gates.
+  [Bounded result](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-vllm-ple-capacity-1/RESULT.md) ·
+  [Full result](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-vllm-ple-full-1/RESULT.md) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/root-gemma-bf16-peer-fit-lfm3-replay-1/ACTUAL-REVIEW.md).
+- [x] **LFM3 signed-prefix replay** — Verify the retained release's
+  561 linked source inputs before reusing its 512/32 authority. The
+  optimistic signed-prefix sample reduces 282 refused cells to 34.
+  At 95% joint coverage the complete-row upper count is 3,226 empty
+  rows, below the 5,007 needed at the measured repair price. Hold.
+  [Retained link](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-current-tip-authority-1/normal.json) ·
+  [Signed-prefix sample](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-gate-up-signed-prefix-1/RESULT.md) ·
+  [Complete-row decision](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-gate-up-signed-prefix-full-rows-1/RESULT.md).
+- [ ] **Ollama BF16 peer probe** — Restore the pinned Go 1.26.11
+  compiler in scratch storage. The retained fork resolves all 505
+  packages from its offline cache. The descriptor loader, private
+  link and actual guarded probe remain open.
+  [Toolchain](artifacts/mlx-gpu-gap-2026-11-15/root-gemma-ollama-go-1/toolchain.json) ·
+  [Module preflight](artifacts/mlx-gpu-gap-2026-11-15/root-gemma-ollama-go-1/offline-closure.json).
 - [x] **Nanbeige 60 ms headroom** — Keep all four dense-tail cuts and
   their prepack path. The private fixed 512/32 worker already leads
   Ollama by 199–208 ms. Reuse each loaded dense Gate/Up weight fragment

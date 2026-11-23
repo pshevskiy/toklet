@@ -931,6 +931,23 @@ bounds are 0.972596% and 0.723505% at 4.67 GiB guarded peak.
 [Production O4](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-o4-1/RESULT.md) ·
 [Astra production review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-production-1/ACTUAL-REVIEW.md).
 
+The adapted MLX vLLM path loads the official Gemma BF16 PLE by rows and
+fits a full 384/128 request and reset replay. Both 128-ID tapes and all
+139 model calls per request agree with the archived workload. The guard
+peaks 25.9 MiB below 6 GiB. Cache layout and release semantics differ.
+Stock admission and peer timing remain open.
+[Adapted vLLM capacity](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-vllm-ple-full-1/RESULT.md).
+
+The LFM3 signed-prefix oracle reduces the sampled Gate/Up refusal
+count from 282 to 34 while retaining every BF16 word. The full 128-token
+row audit limits replay-free rows to an upper count of 3,226 at 95%
+joint coverage. The measured repair-price projection needs 5,007.
+Keep the current projection path and skip a GPU trial.
+[Complete-row audit](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-gate-up-signed-prefix-full-rows-1/RESULT.md).
+
+Astra verifies both Gemma fit probes and the LFM3 replay decision.
+[Actual review](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-bf16-peer-fit-lfm3-replay-1/ACTUAL-REVIEW.md).
+
 Keeping the last T128 ConvOut cut scalar preserves all 14 LFM3 output
 tapes and terminal states. The first three cuts use 30 ordinary and nine
 exception panels at 3.49 GiB peak. Prefill saves 629/621 ms. Engine decode
