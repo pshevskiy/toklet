@@ -675,6 +675,16 @@ integrated dense-tail prepack route with standalone T1 checks.
 [Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-t1-consumer-scan-1/ACTUAL-REVIEW.md) ·
 [T1 finite-check A/B](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-t1-consumer-scan-1/RUN.md).
 
+The additional 60 ms Nanbeige screen prices two detached GPU variants.
+Two-head T1 attention matches 6,144 archived BF16 words and the fault
+controls. Across the full owner and depth sweep its isolated paired
+savings are 9.59 and 10.04 ms. T128 Q/O/Down activation packing matches
+1,572,864 corrected Steel words and slows the triplet by 0.57 and 0.53 ms.
+Both orders include the three pack dispatches and the original scans.
+Retain dense-tail prefill and the qualified Steel kernels.
+[Two-head review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-tail-next-1/ACTUAL-REVIEW.md) ·
+[QMM review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-a-pack-screen-1/ACTUAL-REVIEW.md).
+
 The LFM3 all-disabled control passes all 12 original 1% limits. Astra
 reconstructs 64 resets and 64 generations over eight fresh owners with zero
 exports. The largest upper bound is 0.96339% for reverse-order TTFT.

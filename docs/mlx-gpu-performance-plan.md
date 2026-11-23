@@ -437,6 +437,15 @@ checks and the integrated dense-tail route. The original 1% observations
 remain a separate qualification.
 [T1 finite-check A/B](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-t1-consumer-scan-1/RUN.md).
 
+The 60 ms historical shortfall is now an additional completion target.
+The fixed worker already leads Ollama by 199–208 ms. Isolated two-head
+SDPA saves 9.59–10.04 ms across 31 depths and 44 owners. Packing T128
+Q/O/Down activation fragments adds 0.53–0.57 ms per triplet with all
+three producers charged. Keep dense tail, the current T1 wheel, and the
+existing QMM input path. The 1% summary gate stays separate.
+[Two-head review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-tail-next-1/ACTUAL-REVIEW.md) ·
+[QMM review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-a-pack-screen-1/ACTUAL-REVIEW.md).
+
 The LFM3 control measures baseline resolution at the original 512/32
 work and unchanged public clocks. All 12 timing checks pass across eight
 disabled owners. The tightest marginal TTFT upper is 0.96339%, and the

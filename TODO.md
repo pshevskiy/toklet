@@ -1,6 +1,6 @@
 # Toklet progress checklist
 
-Updated **22 November 2026**. The competitive GPU implementation goal is active.
+Updated **23 November 2026**. The competitive GPU implementation goal is active.
 The new model admission target is Nanbeige4.2-3B, MLX affine 4-bit.
 Read the current task and [Rust and Metal proposal](docs/mlx-gpu-performance-plan.md#rust-and-metal-architecture-proposal).
 Previous delivery and model decisions are in [outcomes](docs/improvement-outcomes.md);
@@ -8,6 +8,13 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- [ ] **Nanbeige headroom** — Keep the qualified dense tail and prepack.
+  The frozen run leads Ollama by 199–208 ms in completion. The additional
+  60 ms target stays open. Two-head T1 SDPA saves 9.59–10.04 ms in
+  isolation. Packing the T128 Q/O/Down inputs adds 0.53–0.57 ms per
+  triplet. Astra verifies both numerical checks and both speed decisions.
+  [SDPA review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-tail-next-1/ACTUAL-REVIEW.md) ·
+  [QMM review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-a-pack-screen-1/ACTUAL-REVIEW.md).
 - [x] **Current** — The integrated Nanbeige worker clears both 5% peer
   gates in both orders. Both readers validate 78 requests at 5.58 GiB
   guarded peak. Astra’s raw-data review passes.
