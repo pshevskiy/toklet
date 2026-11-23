@@ -768,6 +768,29 @@ and equal-work gates stay open.
 [LFM3 raw IDs and guard receipts](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-ollama-natural-trial5-readiness-1/ACTUAL.md) ·
 [Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-first-cut-and-lfm3-id-1/ACTUAL-REVIEW.md).
 
+The tagged LFM3 head witness shows identical top two BF16 scores on the
+517-token prefix. The complete raw rows differ at 115,703 of 128,000
+words. The reconstructed inherited repeat policy explains the original
+decision-six divergence. A separate explicit neutral greedy request
+keeps the same binary and reproduces 31 of 32 outputs. Its final choice
+is 32 against Toklet's 30 at the shared 543-token prefix. The guarded
+neutral run peaks at 3.78 GiB and still advances one additional input.
+[Decision-six head and policy](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-ollama-trial5-decision6-head-1/ACTUAL.md) ·
+[Neutral replay](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-ollama-neutral-trial5-1/RESULT.md).
+
+The full first-cut Gemma probe streams one widened layer or head slab
+at a time. The first owner refuses a head slab with unreleased storage.
+A head-only fence trial stops at an unfenced shared layer. Fencing all
+stage releases closes the original memory checks without changing the
+45 captured producer panels. The 15 FP32 cache owners stay byte-identical
+through 20 shared consumers and 64 head slabs. All head slabs return to
+active baseline and zero allocator cache. The same raw top ID is 642.
+The two engines still differ on 284,580 of 294,912 K/V words and 188,319
+of 262,144 head scores. This is a bounded first-cut diagnostic at
+4.76 GiB peak charge. Astra verifies the raw comparisons and guards.
+[Gemma probe and both refusals](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-fp32-first-cut-lifetime-1/RESULT.md) ·
+[Astra evidence review](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-sampling-gemma-owners-1/ACTUAL-REVIEW.md).
+
 The LFM3 all-disabled control passes all 12 original 1% limits. Astra
 reconstructs 64 resets and 64 generations over eight fresh owners with zero
 exports. The largest upper bound is 0.96339% for reverse-order TTFT.

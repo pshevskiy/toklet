@@ -528,6 +528,35 @@ score row at decision six still needs an independent same-prefix check.
 [Exact raw-ID witness](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-ollama-natural-trial5-readiness-1/ACTUAL.md) ·
 [Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-first-cut-and-lfm3-id-1/ACTUAL-REVIEW.md).
 
+Both actual LFM3 heads on the 517-token prefix rank 452 at 19.5 and
+1332 at 18.125. The tagged release inherits the adapted model's 1.1
+repeat penalty. The full-row policy reconstruction changes the winner
+to the observed 1332. Explicit neutral greedy reproduces the first
+31 outputs, including decisions six and eight. At the final decision
+on the common 543-token prefix, Toklet selects 30 and Ollama selects
+32. The native one-ahead offset remains 544. Hold same-work timing and
+check the final shared-prefix scores using matched input geometry.
+[Head and inherited policy](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-ollama-trial5-decision6-head-1/ACTUAL.md) ·
+[Neutral replay](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-ollama-neutral-trial5-1/RESULT.md).
+
+The Gemma first-cut peer now retains all 15 live FP32 K/V owners while
+running 20 last-row shared layers and a complete 262,144-score head.
+All 64 slabs release their FP32 weights and allocator cache at each
+stream boundary. Peak charge is 4.76 GiB. Both heads rank 642 first,
+with 188,319 unequal words and a 1.53e-5 maximum absolute difference.
+The numerical gate remains open. Extend the matched schedule and cache
+checks across cuts and decode before evaluating request latency.
+[Gemma complete first cut](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-fp32-first-cut-lifetime-1/RESULT.md).
+
+Overlap existing LFM3 resident FFN execution with causally independent
+work on a later prompt cut. The optimistic host envelope on the last
+three cuts is 607.7 ms, or 775.0 ms including measured attention retries.
+Capture actual stage and cache readiness before implementation. Preserve
+the original four atomic cut publications and require a feasible
+schedule above 452 ms before a connected timing run.
+[Wavefront research](../artifacts/mlx-gpu-gap-2026-11-15/astra62-lfm3-t128-wavefront-1/RESEARCH.md) ·
+[Astra evidence review](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-sampling-gemma-owners-1/ACTUAL-REVIEW.md).
+
 LFM3 terminal accounting is already inside the original request clocks.
 Deleting all measured enabled time outside native prefill would leave a
 1.047765% marginal TTFT upper bound. Fixed-role pairs have 336.9 ms of

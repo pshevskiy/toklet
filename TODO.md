@@ -8,6 +8,19 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- [x] **LFM3 shared-prefix scores and Gemma donor work** — Capture both
+  full score rows on the same 517-token LFM3 prefix. Both raw heads
+  rank 452 first. An inherited 1.1 repeat penalty explains the old
+  Ollama selection. Neutral greedy matches 31/32 IDs, with a final
+  difference on the 543-token prefix. Two Gemma trials refuse temporary
+  FP32 storage retention. The all-stage fenced run completes all 15
+  cache owners, 20 shared layers and the full head at 4.76 GiB. Both
+  first-cut heads rank 642 first. Astra approves the evidence.
+  Request-level parity stays open.
+  [LFM3 head evidence](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-ollama-trial5-decision6-head-1/ACTUAL.md) ·
+  [Neutral replay](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-ollama-neutral-trial5-1/RESULT.md) ·
+  [Gemma full first cut](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-fp32-first-cut-lifetime-1/RESULT.md) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-sampling-gemma-owners-1/ACTUAL-REVIEW.md).
 - [x] **Gemma first-cut reference and LFM3 raw IDs** — Capture the first
   authentic Toklet T32 head and 15 FP32 K/V owners. The canonical
   capture matches the published head and physical-cache hashes. The
