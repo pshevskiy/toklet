@@ -615,6 +615,12 @@ qualification open for the new policy.
 [Task carry-forward](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-compact-task-test-1/RESULT.md) ·
 [Summary smoke](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-compact-summary-1/trial-1/normal.json).
 
+Compact O4 passes the original per-policy test. Both ABBA and BAAB
+clear the 1% gates for flushed first token and Done. All 64 generations,
+resets and all four exports match. The prior two-policy result remains
+separately bound. LFM3 and matched-peer qualification remain open.
+[Compact O4 review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-o4-1/ACTUAL-REVIEW.md).
+
 The nonfinal T128 selector screens 39 Metal visits followed by 13
 scalar visits. Both orders reproduce all 14 output tapes and terminal
 states. Prefill saves 629/621 ms and both decode clocks rise by

@@ -872,6 +872,14 @@ and reset checks. Timing qualification covers the original local workload.
 [Adoption review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-compact-warmed-1/ACTUAL-REVIEW.md) ·
 [Task carry-forward](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-compact-task-test-1/RESULT.md).
 
+Production compact Gemma passes all 12 original 1% timing checks. The
+eight owners match 64 generations and 64 resets. Four enabled owners
+export 16 verified records each, with zero disabled exports. Maximum
+paired and marginal upper bounds are 0.508181% and 0.527368%.
+Collector capacity is 1,041,192 B within 1,064,960 B admitted. Peak
+guarded charge is 4.70 GiB. The compact policy has its own receipts.
+[Compact O4 review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-o4-1/ACTUAL-REVIEW.md).
+
 Keeping the last T128 ConvOut cut scalar preserves all 14 LFM3 output
 tapes and terminal states. The first three cuts use 30 ordinary and nine
 exception panels at 3.49 GiB peak. Prefill saves 629/621 ms. Engine decode

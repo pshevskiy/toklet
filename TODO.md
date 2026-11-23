@@ -8,6 +8,14 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- [x] **Gemma compact O4** — The original conformance and per-policy
+  ABBA/BAAB campaign run on the production compact executable.
+  Conformance records 38 passes, two unavailable and two inapplicable.
+  All 64 requests and resets, four exports and 12 timing gates pass.
+  Worst paired/marginal upper bounds are 0.508181%/0.527368%.
+  Astra verifies the actual receipts.
+  [Actual review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-o4-1/ACTUAL-REVIEW.md) ·
+  [Disk receipt](artifacts/mlx-gpu-gap-2026-11-15/root-gemma-compact-o4-disk-1/granite-debug-subset.json).
 - [x] **Gemma compact T1 scratch** — Replace decode's oversized prefill
   staging with two separately guarded 12,288-word banks. Keep the
   original kernels, wait counts, prefill and vocabulary head. The source
