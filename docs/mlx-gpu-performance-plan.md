@@ -543,6 +543,17 @@ two warmed request orders are required before considering adoption.
 [Guarded screen result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-t32-parallel-heads-1/RESULT.md) ·
 [Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-t32-parallel-heads-1/ACTUAL-REVIEW.md).
 
+Connected compact Gemma uses 180 parallel producer calls and preserves
+all 139 checkpoints, 128 IDs, four recovery controls and existing T1
+work. Both warmed 384/128 orders clear 1.3 s, with 1.550/2.004 s paired
+lower completion savings. Paired first-token lower savings are
+2.056/2.166 s. Native decode is 0.229–0.429 s slower in the first
+order and inconclusive in reverse. Peak guarded charge is 4.67 GiB.
+Prepare a fallible, explicit opt-in and requalify its quality, summary
+overhead and matched peer baselines on their original protocols.
+[Connected benchmark](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-t32-parallel-connected-1/RESULT.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-t32-parallel-connected-1/ACTUAL-REVIEW.md).
+
 LFM3 packs one authentic 786,432-byte old K/V block before predecessor
 publication, directly into the existing full-owner L2 workspace.
 The 384-token successor validates ownership and the packed words and

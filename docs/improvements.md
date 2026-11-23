@@ -768,6 +768,16 @@ heads and 24 K/V spans. This clears the operator screen only.
 [Screen evidence](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-t32-parallel-heads-1/RESULT.md) ·
 [Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-t32-parallel-heads-1/ACTUAL-REVIEW.md).
 
+The connected Gemma T32 worker path verifies 180 real prefill calls,
+all 139 state checkpoints and original fault recovery. Across 52
+ordinary requests, completion medians fall from 28.350 to 26.526 s
+and from 28.448 to 26.106 s. Paired lower savings are 1.550/2.004 s.
+TTFT improves in both orders. Native decode slows in the first order
+and has an inconclusive reverse interval. The candidate admits
+2,031,616 additional bytes. Astra approves the detached evidence.
+[Results, clocks and guards](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-t32-parallel-connected-1/RESULT.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-t32-parallel-connected-1/ACTUAL-REVIEW.md).
+
 LFM3 moves one full-owner L2 old-prefix pack before commit into
 resident K/V storage, with zero additional K/V buffer or GPU command.
 The successor checks the 196,608 old words per plane and preserves

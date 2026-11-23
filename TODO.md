@@ -8,12 +8,33 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
-- [ ] **Connected Gemma T32 prefill** — Apply the screened path only
-  to compact T32 producer attention. Charge private buffers and worker
-  stacks. Verify all 139 checkpoints, 128 natural IDs and original
-  failure and cancellation behavior. Use both warmed 384/128 orders
-  for the 1.3 s completed-request gate and report first ID separately.
-  [Screen and integration scope](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-t32-parallel-heads-1/ACTUAL-REVIEW.md).
+- [ ] **Gemma T32 prefill opt-in** — Bind the qualified route to its
+  explicit CLI mode with fallible memory reservation. Run standard
+  Cargo checks, real CLI and summary-export smoke, then Astra review.
+  The original quality, 1% summary and matched peer gates stay open.
+  [Connected review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-t32-parallel-connected-1/ACTUAL-REVIEW.md).
+- [x] **Connected Gemma T32 prefill** — All 139 exact checkpoints,
+  128 natural IDs, four recovery controls and 180 parallel calls pass.
+  Both warmed 384/128 orders pass across 52 requests with paired lower
+  completion savings of 1.550/2.004 s and first-token savings of
+  2.056/2.166 s. Native decode slows 0.229–0.429 s in the first order.
+  Reverse decode spans zero. Astra approves the detached results.
+  [Results](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-t32-parallel-connected-1/RESULT.md) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-t32-parallel-connected-1/ACTUAL-REVIEW.md).
+- [ ] **LFM3 precommit L2 attention** — Extend the verified early K/V
+  pack and convolution handoff to real successor L0/L1 work and L2
+  attention before the predecessor publishes. Adopt each staged output
+  once, preserve full and rotating rings, and verify exact abort and
+  retry. The serial precommit bridge and separate scoped-worker overlap
+  overlay pass static checks. Borrowed four-/three-piece K/V views and
+  joint publication with stale-ticket rejection are staged. After the
+  warmed Gemma campaign, the overlap overlay gets the GPU lane for
+  guarded link and replay. The full scheduler still needs a resumable
+  layer boundary. Keep the 452 ms request and 1% summary gates.
+  [Native early pack](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-early-l2-pack-1/ACTUAL.md) ·
+  [Staged overlap](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-precommit-l2-overlap-1/PLAN.md) ·
+  [K/V views](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-four-frame-kv-view-1/PLAN.md) ·
+  [Publication and rollback](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-cold-publication-1/PLAN.md).
 - [x] **Toklet Gemma T32 parallel attention heads** — Capture both
   authentic producer shapes at all 12 cut depths. Compare exact current
   tiled attention with private per-head outputs and scoped CPU workers.
