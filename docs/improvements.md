@@ -836,6 +836,34 @@ one-workspace scheduling proposal.
 [Schedule analysis](../artifacts/mlx-gpu-gap-2026-11-15/astra62-lfm3-t128-causal-scheduler-1/RESULT.md) ·
 [Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-decode-lfm3-causal-1/ACTUAL-REVIEW.md).
 
+The bounded Gemma FP32 adapter completes the entire 384/128 request
+under the 6 GiB guard. Its 139 heads reproduce all 128 actual IDs.
+The 4,140 prefix checks, 4,445 T1 attention masks and 8,896 head-slab
+lifetime checks pass. Terminal state is 511 committed and 236812
+pending. Peak charge is 4.89 GiB. All first-13 private raw hashes
+reproduce the prior replay, where the external FP32 bits differ from
+Toklet. This run exports only terminal raw panels.
+[Full trajectory and guard](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-fp32-full-1/RESULT.md).
+
+The full Gemma replay's materialization ledger totals 1.27 TB of
+declared FP32 conversion extents. Shared layers account for 722.4 GB
+and head slabs for 223.9 GB. The live guard separately accounts for
+resident memory. This directs the next speed screen toward widening
+BF16 coefficients as the inner projection loads its tile.
+[Independent extent total](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-fp32-materialization-1/AUDIT.md).
+
+The LFM3 ownership split keeps all Metal state on the original thread
+and passes one authentic CPU norm to a scoped worker. The first guarded
+unit stops on an incorrect mutable-buffer sentinel check on the immutable
+lookup table. Exact-length validation fixes the harness. The second
+unit produces 52 valid cases. A readback correction accepts the exact
+libtest prefix and preserves the original raw measurements. All 20
+paired observations improve both-job readiness. The device-interior
+medians are 0.44/0.55 ms and the local paired savings are 0.93/1.14 ms.
+Astra verifies the exact outputs and raw clock alignment.
+[Exact output and local clocks](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-ffn-cpu-overlap-probe-2/ACTUAL.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-full-gemma-lfm3-independent-lanes-1/ACTUAL-REVIEW.md).
+
 The LFM3 all-disabled control passes all 12 original 1% limits. Astra
 reconstructs 64 resets and 64 generations over eight fresh owners with zero
 exports. The largest upper bound is 0.96339% for reverse-order TTFT.

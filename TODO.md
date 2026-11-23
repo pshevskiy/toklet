@@ -8,6 +8,18 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- [x] **Full Gemma trajectory and independent LFM3 host lanes** — Run
+  the official 384/128 FP32 peer diagnostic under the frozen guards.
+  All 128 natural IDs match, with 511 committed and one pending. The
+  separate host arithmetic and Metal-management model has a feasible
+  one-slot schedule with 504.6 ms of strict device-interior overlap.
+  The exact local FFN/CPU norm probe records 0.44–0.55 ms overlap and
+  0.93–1.14 ms paired readiness savings. Astra approves the evidence.
+  Full-request timing stays open.
+  [Full Gemma replay](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-fp32-full-1/RESULT.md) ·
+  [LFM3 safe-owner schedule](artifacts/mlx-gpu-gap-2026-11-15/astra62-lfm3-two-workspace-schedule-1/RESULT.md) ·
+  [Native overlap probe](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-ffn-cpu-overlap-probe-2/ACTUAL.md) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/root-full-gemma-lfm3-independent-lanes-1/ACTUAL-REVIEW.md).
 - [x] **Gemma prompt-to-decode and LFM3 causal trace** — The adapted
   Gemma owner completes 12 T32 cuts and one natural T1. The first two
   IDs and all 13 head winners match Toklet. All 360 prior K/V prefix

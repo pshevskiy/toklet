@@ -612,6 +612,40 @@ against the 452 ms gate.
 [Independent conservative bound](../artifacts/mlx-gpu-gap-2026-11-15/astra62-lfm3-t128-causal-scheduler-1/coarse.py) ·
 [Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-decode-lfm3-causal-1/ACTUAL-REVIEW.md).
 
+The private adapted Gemma FP32 replay completes all 12 T32 and 127 T1
+evaluations. It reproduces all 128 natural IDs with 511 committed and
+236812 pending, zero reuse and 4.89 GiB peak guarded charge. All 4,140
+old K/V prefixes are preserved. This closes the natural tape and cache
+continuity witness for the private diagnostic. A matched timing route
+still needs qualified arithmetic, costs and supported peer dispatch.
+[Complete replay](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-fp32-full-1/RESULT.md).
+
+The Gemma typed extents total 1.27 TB of cumulative FP32 conversions
+across the 139 diagnostic evaluations. Use direct BF16 weight loads
+with FP32 widening in bounded projection tiles to remove repeated
+full-size materialization. A shared-layer projection and a 4,096-row
+head slab provide concrete numerical and cost screens before timing.
+[Conversion extent audit](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-fp32-materialization-1/AUDIT.md).
+
+The LFM3 schedule with one Metal-owning manager and one arithmetic
+worker preserves the original stage durations and uses one FFN slot.
+It models 742.0 ms of full schedule savings, with 504.6 ms of verified
+CPU work inside completed FFN intervals after endpoint margins. The
+strict calculation leaves 52.6 ms above the 452 ms gate for added
+handoff and state costs. A second slot adds 1.37 ms under the same
+policy. Trial the single-slot ownership split before a full graph.
+[Separate host lanes](../artifacts/mlx-gpu-gap-2026-11-15/astra62-lfm3-two-workspace-schedule-1/RESULT.md).
+
+The guarded one-slot LFM3 screen overlaps one real T128 resident FFN
+and an independent later-cut norm on a scoped Rust worker. All 52
+visits preserve exact outputs. Both-ready paired medians improve by
+0.93/1.14 ms, and conservative device-interior overlap reaches
+0.44/0.55 ms. This verifies the local mechanism. A connected four-cut
+run must charge handoffs, immutable proposals and atomic publication
+before testing the 452 ms completion gate.
+[Local paired evidence](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-ffn-cpu-overlap-probe-2/ACTUAL.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-full-gemma-lfm3-independent-lanes-1/ACTUAL-REVIEW.md).
+
 LFM3 terminal accounting is already inside the original request clocks.
 Deleting all measured enabled time outside native prefill would leave a
 1.047765% marginal TTFT upper bound. Fixed-role pairs have 336.9 ms of
