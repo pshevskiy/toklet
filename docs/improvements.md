@@ -741,6 +741,33 @@ screen. Keep shipped BM64 and all four dense-tail cuts.
 [BN64 result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bn64-screen-1/RESULT.md) ·
 [Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bn64-screen-1/ACTUAL-REVIEW.md).
 
+The connected Nanbeige two-head T1 route matches all 32 scores and
+IDs, 176 prefill owner pairs, 1,364 decode appends and 44 terminal K/V
+pairs. Three query poisons, sticky status, waited cancellation and
+reset preserve exact retry. All 52 ordinary requests match at 5.37 GiB
+guarded peak. Paired decode savings are +10.334 and −1.624 ms. Both
+completion intervals span zero. Astra approves retaining the wheel.
+[Raw evidence and clocks](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-paired-t1-connected-1/RESULT.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-paired-t1-connected-1/ACTUAL-REVIEW.md).
+
+Connected Gemma mixed-BF16 Gate and Up matches the adapted materialized
+MLX authority on all 139 full heads and physical K/V states. Both fit
+under 6 GiB and match 128 IDs with zero reuse. The enclosing checked
+forward sum falls from 79.174 to 58.929 s and the nested completed
+shared tail from 40.615 to 20.436 s. This is a private same-binary
+diagnostic with one owner per arm. The first build stopped at the 2 GiB
+disk floor and the unchanged retry passed after duplicate-file cleanup.
+[Raw clocks and guards](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-mlx-mixed-shared-1/RESULT.md).
+
+LFM3 moves one full-owner L2 old-prefix pack before commit into
+resident K/V storage, with zero additional K/V buffer or GPU command.
+The successor checks the 196,608 old words per plane and preserves
+the original new-row stride. All five state snapshots and 32 IDs match.
+An abort preserves 256 committed and 256 pending inputs, then passes
+same-owner retry. Guarded peak is 3.42 GiB. This qualifies one handoff.
+[Native evidence](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-early-l2-pack-1/ACTUAL.md) ·
+[Gemma and LFM3 Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-mlx-mixed-shared-1/ACTUAL-REVIEW.md).
+
 The guarded adapted Gemma peer probe measures the actual lazy output
 state on all 11 non-sampling cuts. Keys and values alone leave the
 final hidden array unavailable. Explicit completion preserves the two

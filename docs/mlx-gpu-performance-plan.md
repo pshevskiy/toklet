@@ -508,6 +508,43 @@ request performance. The additional 60 ms completion target stays open.
 [Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-qmm-bn64-screen-1/ACTUAL-REVIEW.md) ·
 [Two-head SDPA evidence](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-tail-next-1/ACTUAL-REVIEW.md).
 
+The connected two-head T1 trial matches the full 512/32 trajectory
+and rollback on the shipped four-cut dense-tail BM64 prefill. It
+clears the previous Ollama decode gap in the wheel-first order with
+a 7.064 ms paired lower saving. The reverse decode interval spans
+zero, with a −5.594 ms lower bound. Both completion intervals span
+zero. Keep the wheel. The additional 60 ms gate remains open.
+[Connected evidence](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-paired-t1-connected-1/RESULT.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-paired-t1-connected-1/ACTUAL-REVIEW.md).
+
+The private Gemma mixed-BF16 owner uses 5,560 shared Gate/Up calls,
+matches all 139 complete heads and K/V digests, and reproduces the
+same 128 IDs. The same-link materialized control matches exactly.
+Checked forward savings are 1.512 s in prefill and 18.733 s in decode.
+Peak charge drops from 4.92 to 4.83 GiB. This comparison covers one
+guarded diagnostic per arm with panel checks still enabled. Stock
+peer timing and Toklet's ordered FP64 arithmetic stay separate.
+[Native result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-mlx-mixed-shared-1/RESULT.md).
+
+The next Toklet Gemma prefill screen distributes eight independent
+T32 attention heads across the caller and three workers. Preserve each
+head's existing score, softmax and context arithmetic. Charge buffer
+staging, joins and copying, and recover the original error and partial
+writes through serial replay on failure. Use both actual producer
+shapes at all 12 cut depths before testing the 1.3 s request gate.
+[Astra design and measured spans](../artifacts/mlx-gpu-gap-2026-11-15/astra62-gemma-t32-parallel-heads-1/RESEARCH.md).
+
+LFM3 packs one authentic 786,432-byte old K/V block before predecessor
+publication, directly into the existing full-owner L2 workspace.
+The 384-token successor validates ownership and the packed words and
+then copies its real new rows. The abort invalidates the reservation.
+Same-owner retry and the five exact state checkpoints pass, including
+rotating cache wrap and all 32 IDs. The next scheduling step needs an
+actual successor consumer across more owners and completed-request
+timing under the original 452 ms gate.
+[Native early pack](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-early-l2-pack-1/ACTUAL.md) ·
+[Gemma and LFM3 Astra review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-mlx-mixed-shared-1/ACTUAL-REVIEW.md).
+
 The private Gemma Ollama adapter leaves its final hidden output
 unavailable after all 11 non-sampling cache-only cuts. Explicit hidden
 evaluation completes those outputs and preserves the two bounded

@@ -8,6 +8,24 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- [x] **Connected Nanbeige two-head decode** — Keep the shipped BM64
+  route and all four dense-tail cuts. The candidate passes all 32 score
+  rows, physical K/V checks, faults and 52 ordinary requests. The two
+  paired decode lower bounds are +7.064 and −5.594 ms. The reverse
+  order misses the pinned 3.728 ms Ollama gap, and both orders miss the
+  additional 60 ms completion gate. Astra approves retaining the wheel.
+  [Connected result](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-paired-t1-connected-1/RESULT.md) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-paired-t1-connected-1/ACTUAL-REVIEW.md).
+- [x] **Gemma shared projections and LFM3 causal K/V** — Both private
+  Gemma owners match all 139 checkpoints and 128 IDs. Mixed loading
+  saves 1.51 s in checked prefill and 18.73 s in checked decode. The
+  unchanged build retry passes after a disk-floor stop. Native LFM3
+  moves the 786,432-byte old L2 K/V pack before commit, reuses the
+  original workspace, and passes all 32 IDs, wrap, abort and retry.
+  Astra approves both bounded checks. Public request timing stays open.
+  [Gemma two-arm result](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-mlx-mixed-shared-1/RESULT.md) ·
+  [LFM3 early pack](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-early-l2-pack-1/ACTUAL.md) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-mlx-mixed-shared-1/ACTUAL-REVIEW.md).
 - [x] **Nanbeige dense-tail follow-up** — Keep shipped BM64 and all
   four dense-tail cuts. BK64 adds 0.44 ms per Q/O/Down triplet and
   BN64 saves 0.122/0.119 ms at the paired lower bounds. Both pass
