@@ -18,14 +18,12 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   [Smoke review](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-summary-late-owner-2/SMOKE-REVIEW.md) ·
   [Timing review](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-summary-late-owner-2/ACTUAL-REVIEW.md) ·
   [Disk receipt](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-production-disk-1/result.json).
-- [ ] **Gemma T1 projection grouping** — All 104 Q/K/V calls match the
-  actual outputs and rollback passes. Weighted paired lower bounds of
-  0.437/0.460 ms advance a direct connected Q/K/V and Gate/Up trial.
-  The native proof matches 139 checkpoints and drops 8,255 waits. All
-  four faults pass. One direct pair saves 1.645 s to Done with first
-  token 37.5 ms later. Astra advances small-chunk fallback and warming.
-  [Q/K/V review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-qkv-grouped-price-1/ACTUAL-REVIEW.md) ·
-  [Connected review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-projection-group-connected-1/ACTUAL-REVIEW.md).
+- [x] **Gemma T1 grouping screen** — Exact state, four fault controls
+  and small-chunk fallback pass. The point pair saves 1.645 s to Done.
+  All 52 warmed requests match. Paired Done lower bounds of 1.134/1.711 s
+  miss the 1.3 s both-order gate. Keep grouping detached.
+  [Connected review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-projection-group-connected-1/ACTUAL-REVIEW.md) ·
+  [Warmed review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-projection-group-warmed-1/ACTUAL-REVIEW.md).
 - [x] **LFM3 prefill screens** — The nonfinal ConvOut cut saves 621–629 ms
   in prefill and adds 58/311 ms to engine decode. All 14 states match.
   The FMA4 factorial passes 28 exact requests. Adding ConvOut improves

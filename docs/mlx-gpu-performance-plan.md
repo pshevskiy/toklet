@@ -598,6 +598,12 @@ validate per-role bank capacity and preserve the existing projection
 path for undersized chunks. Keep the exact state and phase checks.
 [Connected review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-projection-group-connected-1/ACTUAL-REVIEW.md).
 
+The capacity-safe grouping passes the small-chunk fallback, 139 exact
+checkpoints, all four fault controls and all 52 warmed tape checks.
+The two paired Done lower bounds are 1.134/1.711 s. Hold this grouping
+under the original 1.3 s gate in both orders.
+[Warmed review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-projection-group-warmed-1/ACTUAL-REVIEW.md).
+
 The nonfinal T128 selector screens 39 Metal visits followed by 13
 scalar visits. Both orders reproduce all 14 output tapes and terminal
 states. Prefill saves 629/621 ms and both decode clocks rise by

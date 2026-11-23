@@ -851,6 +851,14 @@ token at 4.68 GiB guarded peak. Astra advances the next warm screen after
 small-chunk eligibility fallback. The result remains a point screen.
 [Connected review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-projection-group-connected-1/ACTUAL-REVIEW.md).
 
+The capacity-safe Gemma grouping passes both exact native witnesses.
+Chunk 1 falls back for 20 wide Gate/Up pairs and chunk 32 takes all 50
+groups. All 52 warmed requests match at 4.69 GiB guarded peak. Paired
+Done lower bounds of 1.134/1.711 s miss the both-order 1.3 s gate.
+Decode improves in both orders and prefill direction varies. Keep
+the grouping candidate detached.
+[Warmed review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-projection-group-warmed-1/ACTUAL-REVIEW.md).
+
 Keeping the last T128 ConvOut cut scalar preserves all 14 LFM3 output
 tapes and terminal states. The first three cuts use 30 ordinary and nine
 exception panels at 3.49 GiB peak. Prefill saves 629/621 ms. Engine decode
