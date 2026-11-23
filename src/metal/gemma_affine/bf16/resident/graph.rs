@@ -28,6 +28,12 @@ pub type Bf16GenerationSession<'model, 'weights, 'context> =
 impl<'model, 'weights, 'context>
     graph::GenerationSession<'model, 'weights, MatrixRef<'weights>, Backend<'weights, 'context>>
 {
+    pub(crate) fn enable_tiled_attention_context(&mut self) {
+        let backend = self.operations_mut();
+        debug_assert!(backend.trace.is_none());
+        backend.tiled_attention_context = true;
+    }
+
     /// Explicit diagnostic export; an unselected, failed or invalidated frame
     /// is unavailable rather than represented by a zero-duration trace.
     pub fn bf16_profile(&self) -> GraphResult<profile::FrameProfile> {
@@ -383,6 +389,7 @@ pub struct Backend<'weights, 'context> {
     failed: bool,
     trace: Option<Box<Bf16Trace>>,
     single_row_batching: bool,
+    tiled_attention_context: bool,
     #[cfg(test)]
     fault: Option<Fault>,
 }
@@ -445,6 +452,7 @@ impl<'weights, 'context> Backend<'weights, 'context> {
             failed: false,
             trace,
             single_row_batching: policy.single_row_batching,
+            tiled_attention_context: false,
             #[cfg(test)]
             fault: None,
         })
@@ -467,6 +475,10 @@ impl sealed::Operations for Backend<'_, '_> {}
 
 impl<'weights> Operations<MatrixRef<'weights>> for Backend<'weights, '_> {
     type Error = GraphError;
+
+    fn uses_tiled_attention_context(&self) -> bool {
+        self.tiled_attention_context
+    }
 
     fn begin_generation_step(&mut self, position: usize, rows: usize, last_row_only: bool) {
         if let Some(trace) = &mut self.trace {

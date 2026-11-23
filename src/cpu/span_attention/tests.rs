@@ -95,6 +95,65 @@ fn basic() -> SpanAttentionShape {
 }
 
 #[test]
+fn tiled_context_matches_scalar_across_wrapped_spans_and_feature_tail() {
+    let s = SpanAttentionShape {
+        queries: 2,
+        keys: 5,
+        query_heads: 4,
+        kv_heads: 2,
+        head_dim: 33,
+        query_start: 16,
+        key_start: 13,
+        window: Some(4),
+        scale: 0.125,
+    };
+    let values = |len, offset| {
+        (0..len)
+            .map(|i| ((i * 17 + offset) % 101) as f32 * 0.0625 - 3.)
+            .collect::<Vec<_>>()
+    };
+    let q = values(s.queries * s.query_heads * s.head_dim, 3);
+    let kv = s.keys * s.kv_heads * s.head_dim;
+    let backing = packed(
+        &values(kv, 7),
+        &values(kv, 11),
+        s.kv_heads,
+        s.keys,
+        s.head_dim,
+        s.key_start,
+        [1, 2, 2],
+    );
+    let spans = segments(&backing);
+    let mut scalar = vec![0.; q.len()];
+    let mut tiled = scalar.clone();
+    let mut scalar_scores = vec![0.; s.query_heads * s.queries * s.keys];
+    let mut scalar_probabilities = scalar_scores.clone();
+    let mut tiled_scores = scalar_scores.clone();
+    let mut tiled_probabilities = scalar_scores.clone();
+    span_attention(
+        &q,
+        &spans,
+        &mut scalar,
+        &mut scalar_scores,
+        &mut scalar_probabilities,
+        &s,
+    )
+    .unwrap();
+    span_attention_tiled(
+        &q,
+        &spans,
+        &mut tiled,
+        &mut tiled_scores,
+        &mut tiled_probabilities,
+        &s,
+    )
+    .unwrap();
+    assert_eq!(bits(&tiled), bits(&scalar));
+    assert_eq!(bits(&tiled_scores), bits(&scalar_scores));
+    assert_eq!(bits(&tiled_probabilities), bits(&scalar_probabilities));
+}
+
+#[test]
 fn frozen_scores_probabilities_context_and_exact_contiguous_reference() {
     let receipt = include_bytes!(
         "../../../benchmarks/results/2026-10-24-gemma-local-attention-reference-v1.json"

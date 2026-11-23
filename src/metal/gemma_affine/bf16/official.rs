@@ -204,6 +204,23 @@ impl OfficialBf16 {
         Ok(session)
     }
 
+    /// Ordinary G2 generation with tiled CPU context and the requested
+    /// single-row Metal projection policy.
+    pub fn new_tiled_g2_session<'model, 'owner>(
+        &'owner self,
+        model: &'model Bf16Model<'owner>,
+        options: Options,
+        batched_single_row: bool,
+    ) -> std::result::Result<Bf16GenerationSession<'model, 'owner, 'owner>, session::Error> {
+        let mut session = if batched_single_row {
+            self.new_batched_g2_session(model, options)?
+        } else {
+            self.new_g2_session(model, options)?
+        };
+        session.enable_tiled_attention_context();
+        Ok(session)
+    }
+
     /// Diagnostic G2 session capturing one selected committed evaluation.
     /// Charges an additional64MiB before allocating counter resources.
     pub fn new_profiled_session<'model, 'owner>(

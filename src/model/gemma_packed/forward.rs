@@ -66,28 +66,31 @@ fn finish<M: MatrixSource, B: Operations<M>>(
     let q = count * l.heads * d;
     let keys = view.end() - view.start();
     let scores = l.heads * count * keys;
-    cpu::span_attention(
-        &s.q[..q],
-        &view.segments(),
-        &mut s.context[..q],
-        &mut s.scores[..scores],
-        &mut s.probabilities[..scores],
-        &SpanAttentionShape {
-            queries: count,
-            keys,
-            query_heads: l.heads,
-            kv_heads: 1,
-            head_dim: d,
-            query_start: offset,
-            key_start: view.start(),
-            window: if matches!(l.layers[index].kind, KvKind::Sliding) {
-                Some(l.window)
-            } else {
-                None
-            },
-            scale: 1.,
+    let spans = view.segments();
+    let shape = SpanAttentionShape {
+        queries: count,
+        keys,
+        query_heads: l.heads,
+        kv_heads: 1,
+        head_dim: d,
+        query_start: offset,
+        key_start: view.start(),
+        window: if matches!(l.layers[index].kind, KvKind::Sliding) {
+            Some(l.window)
+        } else {
+            None
         },
-    )?;
+        scale: 1.,
+    };
+    let query = &s.q[..q];
+    let context = &mut s.context[..q];
+    let scores = &mut s.scores[..scores];
+    let probabilities = &mut s.probabilities[..scores.len()];
+    if ops.uses_tiled_attention_context() {
+        cpu::span_attention_tiled(query, &spans, context, scores, probabilities, &shape)?;
+    } else {
+        cpu::span_attention(query, &spans, context, scores, probabilities, &shape)?;
+    }
     ops.project(
         &s.context[..q],
         &model.weights.layers[index].o,

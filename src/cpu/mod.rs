@@ -62,6 +62,7 @@ pub use per_layer::{
 pub use proportional_rotary::{ProportionalRotaryShape, proportional_rotary};
 pub use reductions::{MlpWeights, gated_mlp, gated_silu, rmsnorm, silu, softmax};
 pub use softcap::logit_softcap;
+pub(crate) use span_attention::span_attention_tiled;
 pub use span_attention::{AttentionKvSegment, KvSegment, SpanAttentionShape, span_attention};
 pub use tiled::{ProjectionKernel, matmul_f64_tiled};
 pub use window_attention::{WindowAttentionShape, window_attention};

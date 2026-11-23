@@ -211,6 +211,10 @@ impl<'model, 'weights, M: MatrixSource, B: Operations<M>>
     pub(crate) fn operations(&self) -> &B {
         &self.inner.operations
     }
+    #[cfg(all(feature = "metal", target_os = "macos", target_arch = "aarch64"))]
+    pub(crate) fn operations_mut(&mut self) -> &mut B {
+        &mut self.inner.operations
+    }
     pub fn logits(&self) -> Option<&[f32]> {
         if self.needs_replay || self.pending_len() != 0 || self.len == 0 {
             return None;

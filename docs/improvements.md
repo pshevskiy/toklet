@@ -777,6 +777,16 @@ and reset at 3.45 GiB guarded peak. Exclusive host intervals account for
 attribution and nested waits. The original overhead gate remains open.
 [LFM3 attribution result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-release4b-prefill-attribution-1/RESULT.md).
 
+The ordinary Gemma BF16 CLI selects exact tiled context for both
+submission policies. Both 384/128 smokes preserve the tape, cancellation,
+reset and replay. The 84-case suite records 76 passes and the eight
+original unavailable or inapplicable entries. The reader verifies 28
+real exports and all parity controls. Peak native charge is 4.65 GiB.
+Formatting, three strict Clippy variants, 871 default and 1,076 Metal
+tests pass. The initial missing model path is rebound to verified
+identical live files. Astra approves the production patch.
+[Final production review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-production-1/FINAL-REVIEW.md).
+
 [Layer-zero probe](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-ollama-layer0-1/normal.json).
 
 The full untimed vLLM dense substitution exercises 1,540 visits and all

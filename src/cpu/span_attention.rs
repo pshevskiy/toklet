@@ -31,6 +31,35 @@ pub struct SpanAttentionShape {
     pub scale: f32,
 }
 
+/// Internal row primitive; caller has validated finite active scores and visibility.
+fn span_softmax_row(
+    scores: &[f32],
+    probabilities: &mut [f32],
+    visible: std::ops::RangeInclusive<usize>,
+) {
+    let included = &scores[visible.clone()];
+    let maximum = included.iter().copied().fold(f32::NEG_INFINITY, f32::max);
+    let denominator: f64 = included
+        .iter()
+        .map(|&x| (f64::from(x) - f64::from(maximum)).exp())
+        .sum();
+    probabilities.fill(0.);
+    for key in visible {
+        probabilities[key] =
+            ((f64::from(scores[key]) - f64::from(maximum)).exp() / denominator) as f32;
+    }
+}
+
+/// Canonical serial binary64 accumulation followed by FP32 rounding.
+fn ordered_span_score(query: &[f32], key: &[f32], scale: f32) -> f32 {
+    debug_assert_eq!(query.len(), key.len());
+    let mut sum = 0_f64;
+    for (&q, &k) in query.iter().zip(key) {
+        sum += f64::from(q) * f64::from(k);
+    }
+    (sum * f64::from(scale)) as f32
+}
+
 /// Causal/window GQA over at most two borrowed old-ring spans and a new chunk.
 /// Q/context are `[queries,query_heads,D]`; scores/probabilities are
 /// `[query_heads,queries,keys]` in logical segment order. No KV linearization,
@@ -44,6 +73,31 @@ pub struct SpanAttentionShape {
 /// Arithmetic failure may leave partial outputs: discard them and replay from
 /// unchanged inputs. Empty sequences make no numerical calls.
 pub fn span_attention(
+    q: &[f32],
+    segments: &[AttentionKvSegment<'_>; 3],
+    context: &mut [f32],
+    scores: &mut [f32],
+    probabilities: &mut [f32],
+    s: &SpanAttentionShape,
+) -> Result<(), Error> {
+    span_attention_impl::<false>(q, segments, context, scores, probabilities, s)
+}
+
+pub(crate) fn span_attention_tiled(
+    q: &[f32],
+    segments: &[AttentionKvSegment<'_>; 3],
+    context: &mut [f32],
+    scores: &mut [f32],
+    probabilities: &mut [f32],
+    s: &SpanAttentionShape,
+) -> Result<(), Error> {
+    span_attention_impl::<true>(q, segments, context, scores, probabilities, s)
+}
+
+#[path = "span_attention/tiled_context.rs"]
+mod tiled_context;
+
+fn span_attention_impl<const TILED_CONTEXT: bool>(
     q: &[f32],
     segments: &[AttentionKvSegment<'_>; 3],
     context: &mut [f32],
@@ -139,12 +193,11 @@ pub fn span_attention(
                 let base = kv_head * segment.head_stride;
                 for key in 0..segment.keys {
                     let k_base = base + key * s.head_dim;
-                    let mut sum = 0_f64;
-                    for feature in 0..s.head_dim {
-                        sum +=
-                            f64::from(q[q_base + feature]) * f64::from(segment.k[k_base + feature]);
-                    }
-                    let score = (sum * f64::from(s.scale)) as f32;
+                    let score = ordered_span_score(
+                        &q[q_base..q_base + s.head_dim],
+                        &segment.k[k_base..k_base + s.head_dim],
+                        s.scale,
+                    );
                     if !score.is_finite() {
                         return Err(Error::NonFinite {
                             tensor: "attention scores",
@@ -160,17 +213,21 @@ pub fn span_attention(
                 s.key_start.max(position.saturating_sub(w - 1))
             }) - s.key_start;
             let last = key_end.min(position) - s.key_start;
-            let included = &scores[row + first..=row + last];
-            let maximum = included.iter().copied().fold(f32::NEG_INFINITY, f32::max);
-            let denominator: f64 = included
-                .iter()
-                .map(|&x| (f64::from(x) - f64::from(maximum)).exp())
-                .sum();
-            probabilities[row..row + s.keys].fill(0.);
-            for key in first..=last {
-                probabilities[row + key] = ((f64::from(scores[row + key]) - f64::from(maximum))
-                    .exp()
-                    / denominator) as f32;
+            span_softmax_row(
+                &scores[row..row + s.keys],
+                &mut probabilities[row..row + s.keys],
+                first..=last,
+            );
+            if TILED_CONTEXT {
+                tiled_context::context_row(
+                    segments,
+                    &probabilities[row..row + s.keys],
+                    first..=last,
+                    kv_head,
+                    q_base,
+                    &mut context[q_base..q_base + s.head_dim],
+                )?;
+                continue;
             }
             for feature in 0..s.head_dim {
                 let mut sum = 0_f64;

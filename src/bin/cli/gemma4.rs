@@ -843,11 +843,8 @@ mod mac {
             position_offset: 0,
             memory_limit_bytes: owner_budget,
         };
-        let mut session = if args.submission == "batched-single-row" {
-            owner.new_batched_g2_session(&model, options)?
-        } else {
-            owner.new_g2_session(&model, options)?
-        };
+        let mut session =
+            owner.new_tiled_g2_session(&model, options, args.submission == "batched-single-row")?;
         let logical = session.memory();
         let owner_memory = owner.memory();
         let load_admitted = add(owner_memory.load_admitted_bytes, external)?;

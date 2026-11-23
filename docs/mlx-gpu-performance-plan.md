@@ -532,6 +532,14 @@ headroom before another timing campaign. Keep these clocks in the
 diagnostic scope and preserve the original real summary comparison.
 [LFM3 attribution result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-release4b-prefill-attribution-1/RESULT.md).
 
+The linked Gemma production tile passes the two exact policy smokes,
+the original short conformance inventory and all six source checks.
+The O4 successor uses this binding with both policy and order cells,
+the original strict export reader and the original 1% decisions.
+Require fresh quiet admission and all original guards at launch.
+[O4 readiness](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-production-o4-readiness-1/RUN.md) ·
+[Final production review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-cpu-context-production-1/FINAL-REVIEW.md).
+
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).
 [Three-engine diagnostic](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-toklet-clocks-1/normal.json).
