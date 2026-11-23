@@ -24,12 +24,29 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   [Retained link](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-current-tip-authority-1/normal.json) ·
   [Signed-prefix sample](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-gate-up-signed-prefix-1/RESULT.md) ·
   [Complete-row decision](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-gate-up-signed-prefix-full-rows-1/RESULT.md).
-- [ ] **Ollama BF16 peer probe** — Restore the pinned Go 1.26.11
-  compiler in scratch storage. The retained fork resolves all 505
-  packages from its offline cache. The descriptor loader, private
-  link and actual guarded probe remain open.
+- [x] **Ollama BF16 peer probe** — Restore the pinned Go 1.26.11
+  compiler in scratch storage. The private link runs with the sealed
+  MLX libraries and hydrates 539 official BF16 tensors from one
+  descriptor. The first loader stops on shared K/V at 4,811,002,416 B.
+  The descriptor-only donor correction passes the bounded gate and
+  reproduces all 128 sampled IDs with fresh cache, 12 T32 cuts and
+  127 T1 calls at 5,114,827,672 B peak.
   [Toolchain](artifacts/mlx-gpu-gap-2026-11-15/root-gemma-ollama-go-1/toolchain.json) ·
-  [Module preflight](artifacts/mlx-gpu-gap-2026-11-15/root-gemma-ollama-go-1/offline-closure.json).
+  [Initial probe](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-ple-capacity-1/RESULT.md) ·
+  [Corrected probe](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-ple-donor-1/RESULT.md).
+- [x] **Gemma KV precision** — The adapted vLLM route resolves a BF16
+  cache by source and route evidence. The adapted Ollama cache has
+  directly observed BF16 planes. The original Toklet committed
+  FP32 K observations include 1,029,864 values out of 1,029,888 whose
+  low bits would change with BF16. Retain the precision gap.
+  [FP32 span audit](artifacts/mlx-gpu-gap-2026-11-15/root-gemma-bf16-kv-loss-1/RESULT.md).
+- [x] **LFM3 wait return** — Run an exact guarded timestamp split
+  for the prior 3,007 decode commands. The old trace leaves 0.703 s
+  outside GPU execution inside synchronous completions. The exact run
+  measures 280.350 ms pre-device and a conservative 391.553 ms
+  post-device upper bound. Hold the waiter-only change at 452 ms.
+  [Actual trace](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-wait-return-1/RESULT.md) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/root-ollama-bf16-lfm3-wait-1/ACTUAL-REVIEW.md).
 - [x] **Nanbeige 60 ms headroom** — Keep all four dense-tail cuts and
   their prepack path. The private fixed 512/32 worker already leads
   Ollama by 199–208 ms. Reuse each loaded dense Gate/Up weight fragment

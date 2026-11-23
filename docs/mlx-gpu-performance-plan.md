@@ -498,6 +498,17 @@ implementation.
 [Signed-prefix study](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-gate-up-signed-prefix-1/RESULT.md) ·
 [Complete-row audit](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-gate-up-signed-prefix-full-rows-1/RESULT.md).
 
+The exact 512/32 timestamp split reconciles all 3,007 decode commands
+with the same run's seven-role counters and preserves the terminal
+tape and state. Completed Mach intervals total 8.465 ms for commit and
+counter, 280.350 ms before GPU work, 1,289.208 ms on GPU inside the wait
+and 375.539 ms after it. The conservative post-device upper is 391.553 ms
+against the existing 452 ms target. Close the waiter-only proposal.
+The measured pre-device interval and original O4 hold remain separate.
+[Actual wait trace](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-wait-return-1/RESULT.md) ·
+[Metal clock documentation](https://developer.apple.com/documentation/metal/mtlcommandbuffer/gpustarttime) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-ollama-bf16-lfm3-wait-1/ACTUAL-REVIEW.md).
+
 The Gemma T32 candidate passes the original block 9 with exact scores and
 K/V. Its final 17-token cut uses the CPU fallback. Blocks 0 and 9 cover
 1,808 original targets. Continue blocks 1–8 at the frozen reset boundaries.
@@ -750,6 +761,28 @@ selects Nanbeige. An official BF16 row provider and an independently
 guarded Gemma run remain pending.
 [Toolchain](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-ollama-go-1/toolchain.json) ·
 [Offline module preflight](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-ollama-go-1/offline-closure.json).
+
+The private Ollama worker links with the sealed MLX images and binds
+the official BF16 text roles from one descriptor. Its first attempt
+refuses missing private K/V on a shared layer. A descriptor-only check
+accepts the official earlier donor links and requires their history.
+The corrected owner passes its bounded gate, then a fresh-cache 384/128
+request matches all 128 Toklet IDs. It reaches 511 in all 15 cache owners
+and peaks at 5,114,827,672 B. Actual input calls cover 12 T32 and 127 T1.
+During the 11 prefill cuts that emit no ID, it evaluates the cache arrays
+without evaluating the tied head. Materialized late-layer work can
+therefore differ from Toklet even at the same input boundaries.
+[Initial refusal](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-ple-capacity-1/RESULT.md) ·
+[Corrected fit](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-ple-donor-1/RESULT.md).
+
+Ollama has directly observed BF16 cache planes. The pinned vLLM route
+resolves BF16 from the model dtype, with a paged pool of 85 blocks that
+is separate from its 512-token admission cap. Toklet stores FP32 KV.
+In six authentic overlapping Toklet cuts, 1,029,864 of 1,029,888
+committed K observations change under BF16 rounding. Keep the cache
+precision, work-boundary, stock admission and timing gates open.
+[vLLM cache audit](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-vllm-kv-audit-1/RESULT.md) ·
+[Toklet FP32 observations](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-bf16-kv-loss-1/RESULT.md).
 
 [K/V and shape evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-kv-parity-1/RUN.md).
 [First native divergence](../artifacts/mlx-gpu-gap-2026-11-15/root-nanbeige-native-first-cut-1/normal.json).

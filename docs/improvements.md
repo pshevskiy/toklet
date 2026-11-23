@@ -948,6 +948,22 @@ Keep the current projection path and skip a GPU trial.
 Astra verifies both Gemma fit probes and the LFM3 replay decision.
 [Actual review](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-bf16-peer-fit-lfm3-replay-1/ACTUAL-REVIEW.md).
 
+The adapted Ollama descriptor loader passes the official Gemma BF16
+bounded probe and full 384/128 tape after correcting shared K/V
+validation. Guarded peak is 4.76 GiB. Its observed BF16 cache and the
+vLLM route's resolved BF16 cache differ from Toklet's committed FP32
+keys. Actual input cuts and sampled IDs match on the observed tape.
+Stock admission and matched precision and timing remain open.
+[Ollama probe](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-ple-donor-1/RESULT.md) ·
+[FP32 cache evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-bf16-kv-loss-1/RESULT.md).
+
+One LFM3 exact native owner reconciles 3,007 existing decode commands.
+Pre-device waiting takes 280.350 ms. The post-device bound including
+clock allowance is 391.553 ms, below the 452 ms waiter target. Keep
+the current wait behavior and the separate summary overhead hold.
+[Wait trace](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-wait-return-1/RESULT.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-ollama-bf16-lfm3-wait-1/ACTUAL-REVIEW.md).
+
 Keeping the last T128 ConvOut cut scalar preserves all 14 LFM3 output
 tapes and terminal states. The first three cuts use 30 ordinary and nine
 exception panels at 3.49 GiB peak. Prefill saves 629/621 ms. Engine decode
