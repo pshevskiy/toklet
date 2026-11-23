@@ -8,6 +8,17 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- [x] **Gemma prompt-to-decode and LFM3 causal trace** — The adapted
+  Gemma owner completes 12 T32 cuts and one natural T1. The first two
+  IDs and all 13 head winners match Toklet. All 360 prior K/V prefix
+  checks pass. The LFM3 causal trace preserves 37 exact console records.
+  Even a generous one-workspace bound stops at 426.5 ms. The vLLM audit
+  separates FP32 page capacity from operator precision and dispatch.
+  Astra approves the evidence. Request-level comparison stays open.
+  [Gemma replay](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-fp32-prefill-decode-1/RESULT.md) ·
+  [vLLM FP32 route audit](artifacts/mlx-gpu-gap-2026-11-15/root-gemma-vllm-fp32-route-1/AUDIT.md) ·
+  [LFM3 causal trace](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-t128-causal-capture-1/ACTUAL.md) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/root-gemma-decode-lfm3-causal-1/ACTUAL-REVIEW.md).
 - [x] **LFM3 equal-work replay and Gemma consecutive cuts** — The
   4×T128 and 31×T1 LFM3 diagnostic still matches 31/32 tokens. At 543
   committed inputs Toklet ties 30 and 32, and Ollama places 32 one BF16

@@ -816,6 +816,26 @@ the bounded peer evidence and the canonical state reconstruction.
 [Consecutive Gemma cuts](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-fp32-consecutive-1/RESULT.md) ·
 [Astra evidence review](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-equal-work-gemma-continuity-1/ACTUAL-REVIEW.md).
 
+The adapted Gemma probe joins 390 K/V deltas and 13 complete heads
+through the first natural T1 step. It preserves all 360 pre-existing
+K/V prefixes and both actual sampled IDs. The native rotating cache
+grows from 384 to 512 storage rows and exposes 385 valid keys after
+the append. All 832 head slabs return to baseline. Guarded peak is
+4.90 GiB. Maximum absolute differences are 3.28e-5 for K, 3.73e-4
+for V and 5.44e-5 for the head. Full-request parity remains open.
+[Gemma evidence](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-fp32-prefill-decode-1/RESULT.md) ·
+[Pinned vLLM route audit](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-vllm-fp32-route-1/AUDIT.md).
+
+The LFM3 causal capture retains 1,621 spans and 96 completed FFN
+intervals in 119,808 bytes of diagnostic storage. All 37 console
+records through reset match the original replay. Astra prices the
+proposed overlap on the measured work. The 412.2 ms bound and a
+coarser independent 426.5 ms bound both miss 452 ms. Hold the modeled
+one-workspace scheduling proposal.
+[Exact capture and guard](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-t128-causal-capture-1/ACTUAL.md) ·
+[Schedule analysis](../artifacts/mlx-gpu-gap-2026-11-15/astra62-lfm3-t128-causal-scheduler-1/RESULT.md) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-decode-lfm3-causal-1/ACTUAL-REVIEW.md).
+
 The LFM3 all-disabled control passes all 12 original 1% limits. Astra
 reconstructs 64 resets and 64 generations over eight fresh owners with zero
 exports. The largest upper bound is 0.96339% for reverse-order TTFT.

@@ -582,6 +582,36 @@ cannot establish scheduler feasibility.
 [Causal trace design and stop bound](../artifacts/mlx-gpu-gap-2026-11-15/astra62-lfm3-t128-causal-trace-1/RESEARCH.md) ·
 [Astra evidence review](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-equal-work-gemma-continuity-1/ACTUAL-REVIEW.md).
 
+The adapted Gemma owner completes all 12 T32 cuts and one natural T1
+with the original 15 FP32 K/V owners. All 13 head winners agree. Its
+first two natural IDs are 8291 and 563, with 385 committed and 563
+pending. All 360 prior prefixes stay exact. The T1 native mask and
+backing-slot checks pass. The raw head and cache differences remain.
+Peak charge is 4.90 GiB. Carry the same work and state checks across
+the remaining 126 evaluations before a request-level comparison.
+[Prompt-to-decode replay](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-fp32-prefill-decode-1/RESULT.md).
+
+The pinned vLLM 24 MiB backing can hold 42 FP32 pages, enough for
+the 32 pages used at C512. Its projected Q/K/V cast follows BF16
+arithmetic, and its fast tiled and specialized GQA dispatch exclude
+FP32 queries. A wider cache alone cannot match the original arithmetic.
+An explicit FP32 peer would need bounded mixed-weight projections and
+separate native kernel qualification.
+[Page capacity and source constraints](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-vllm-fp32-route-1/AUDIT.md).
+
+The guarded LFM3 trace preserves the original four T128 cuts, 31 T1
+evaluations, 32 sampled IDs and reset. It joins 1,621 stage spans and
+96 completed resident FFNs. Their device intervals total 1.314 s
+within 1.447 s of wait. The all-later-cut schedule bound is 412.2 ms.
+An independent bound granting each FFN 20 ms and more clock allowance
+still caps savings at 426.5 ms. Hold the proposed interleaving with one
+host execution resource, one GPU queue and one resident workspace
+against the 452 ms gate.
+[Causal capture](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-t128-causal-capture-1/ACTUAL.md) ·
+[Measured schedule analysis](../artifacts/mlx-gpu-gap-2026-11-15/astra62-lfm3-t128-causal-scheduler-1/RESULT.md) ·
+[Independent conservative bound](../artifacts/mlx-gpu-gap-2026-11-15/astra62-lfm3-t128-causal-scheduler-1/coarse.py) ·
+[Astra review](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-decode-lfm3-causal-1/ACTUAL-REVIEW.md).
+
 LFM3 terminal accounting is already inside the original request clocks.
 Deleting all measured enabled time outside native prefill would leave a
 1.047765% marginal TTFT upper bound. Fixed-role pairs have 336.9 ms of
