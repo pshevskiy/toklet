@@ -557,6 +557,31 @@ schedule above 452 ms before a connected timing run.
 [Wavefront research](../artifacts/mlx-gpu-gap-2026-11-15/astra62-lfm3-t128-wavefront-1/RESEARCH.md) ·
 [Astra evidence review](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-sampling-gemma-owners-1/ACTUAL-REVIEW.md).
 
+Matching the four T128 cuts and 31 T1 evaluations leaves the LFM3
+trial-5 final decision unresolved. The tagged runner completes 35
+full heads with zero lookahead. At 543 committed inputs, Toklet ties
+30 and 32 at 21.25. Ollama ranks 32 uniquely at 21.375, one BF16 step
+higher. The same-prefix evidence holds the natural trajectory gate.
+[Matching work and final head](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-ollama-matched-trial5-1/ACTUAL.md).
+
+The Gemma reference now covers all 12 T32 prompt cuts and the first
+T1, with the original head and physical-state proof at all checkpoints.
+The adapted peer's second cut retains all 30 earlier K/V prefixes
+exactly and reads 64 donor keys at absolute query position 63. Both
+second-cut heads rank 12391 first. Raw head and K/V words still differ.
+The first-cut work and persistent state through two cuts are verified.
+Qualify the remaining cuts and T1 using the same cache owners.
+[Complete prompt reference](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-c512-prefill-oracle-1/RESULT.md) ·
+[Two-cut peer and raw state](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-fp32-consecutive-1/RESULT.md).
+
+The measured fixed GPU enqueue order caps possible overlap at 352.2 ms,
+below 452 ms. A wavefront must interleave GPU commands across prompt
+cuts. Capture per-call stage readiness and the 96 completed resident FFN
+intervals before considering implementation. The four aggregate rows
+cannot establish scheduler feasibility.
+[Causal trace design and stop bound](../artifacts/mlx-gpu-gap-2026-11-15/astra62-lfm3-t128-causal-trace-1/RESEARCH.md) ·
+[Astra evidence review](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-equal-work-gemma-continuity-1/ACTUAL-REVIEW.md).
+
 LFM3 terminal accounting is already inside the original request clocks.
 Deleting all measured enabled time outside native prefill would leave a
 1.047765% marginal TTFT upper bound. Fixed-role pairs have 336.9 ms of

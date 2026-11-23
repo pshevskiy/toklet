@@ -791,6 +791,31 @@ of 262,144 head scores. This is a bounded first-cut diagnostic at
 [Gemma probe and both refusals](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-fp32-first-cut-lifetime-1/RESULT.md) ·
 [Astra evidence review](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-sampling-gemma-owners-1/ACTUAL-REVIEW.md).
 
+The neutral tagged LFM3 diagnostic completes the original four T128
+cuts, 31 T1 evaluations and 35 full heads without lookahead. The first
+31 IDs still agree. The full BF16 rows at 543 committed inputs differ
+in 117,247 of 128,000 words. Toklet selects the low-ID tie at 21.25.
+Ollama scores ID 32 at 21.375 and selects it. The Toklet probe reads
+its selected ID before appending. Both same-prefix guards pass.
+[Raw heads and exact schedule](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-ollama-matched-trial5-1/ACTUAL.md).
+
+A guarded Toklet Gemma reference captures all 12 authentic T32 cuts and
+one T1. Both readers reconstruct the published full state and head at
+all 13 checkpoints from 390 raw K/V deltas and the full score rows.
+Natural IDs 8291 and 563 leave 385 committed inputs and one pending.
+The second cut supplies an authentic nonzero-position reference.
+[Gemma reference and raw evidence](../artifacts/mlx-gpu-gap-2026-11-15/root-gemma-c512-prefill-oracle-1/RESULT.md).
+
+The persistent Gemma peer advances the same 15 owners from 32 to 64
+committed inputs at 4.84 GiB peak. The first cut reproduces the earlier
+peer evidence, and the second preserves all 30 earlier K/V prefixes.
+Both heads at the second cut rank 12391 first. The head's maximum
+absolute difference is 1.81e-5. Appended K/V differs in 285,891 of
+294,912 words, with maximum absolute difference 5.20e-5. Astra verifies
+the bounded peer evidence and the canonical state reconstruction.
+[Consecutive Gemma cuts](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-fp32-consecutive-1/RESULT.md) ·
+[Astra evidence review](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-equal-work-gemma-continuity-1/ACTUAL-REVIEW.md).
+
 The LFM3 all-disabled control passes all 12 original 1% limits. Astra
 reconstructs 64 resets and 64 generations over eight fresh owners with zero
 exports. The largest upper bound is 0.96339% for reverse-order TTFT.

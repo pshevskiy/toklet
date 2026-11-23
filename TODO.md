@@ -8,6 +8,17 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- [x] **LFM3 equal-work replay and Gemma consecutive cuts** — The
+  4×T128 and 31×T1 LFM3 diagnostic still matches 31/32 tokens. At 543
+  committed inputs Toklet ties 30 and 32, and Ollama places 32 one BF16
+  step higher. The Gemma reference verifies all 13 head and physical
+  cache digests, plus 390 raw bank deltas. The peer preserves all 30
+  earlier K/V prefixes through the second cut and ranks 12391 first.
+  Astra bounds fixed-order LFM3 overlap at 352.2 ms against
+  452 ms. [LFM3 matched-work evidence](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-ollama-matched-trial5-1/ACTUAL.md) ·
+  [Gemma complete prompt reference](artifacts/mlx-gpu-gap-2026-11-15/root-gemma-c512-prefill-oracle-1/RESULT.md) ·
+  [Gemma two-cut peer](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-ollama-fp32-consecutive-1/RESULT.md) ·
+  [Astra review](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-equal-work-gemma-continuity-1/ACTUAL-REVIEW.md).
 - [x] **LFM3 shared-prefix scores and Gemma donor work** — Capture both
   full score rows on the same 517-token LFM3 prefix. Both raw heads
   rank 452 first. An inherited 1.1 repeat penalty explains the old
