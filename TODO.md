@@ -25,6 +25,26 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   [Astra research](artifacts/mlx-gpu-gap-2026-11-15/astra62-nanbeige-t128-register-reuse-1/RESEARCH.md) ·
   [Connected result](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-prepack-register-connected-1/RESULT.md) ·
   [Astra review](artifacts/mlx-gpu-gap-2026-11-15/sol62-nanbeige-dense-prepack-register-connected-1/ACTUAL-REVIEW.md).
+- [ ] **Gemma T1 follow-up** — The four-output-row screen matches both
+  authentic shapes and passes fault recovery. The GPU paired lower bounds
+  are −0.156 and −0.147 ms against the +0.292 ms screen. The compact
+  phase census matches all 127 decode frames and the selected full
+  score and physical K/V anchors. Completed non-head projections take
+  14.029 s, ordered scores 3.247 s and context 1.444 s. Four-key
+  interleaving keeps exact scores and passes the fault controls. The
+  isolated 2.045/2.051 s projected lower savings clear 1.3 s. The
+  connected candidate matches all 139 checkpoints and four physical
+  faults. The two warmed orders pass all 52 requests, with paired lower
+  Done savings of 2.292/1.406 s. Median first ID is 6 ms faster in one
+  order and 70 ms slower in reverse. The original flag requires a
+  slowdown in both orders. Qualify the prepared production patch next.
+  [Down result](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-down-row4-1/RESULT.md) ·
+  [Census result](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-phase-census-1/trial-1/normal.json) ·
+  [Score screen](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-four-1/trial-1/normal.json) ·
+  [Connected result](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-connected-1/RESULT.md) ·
+  [Point review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-connected-1/ACTUAL-REVIEW.md) ·
+  [Warmed review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-warmed-1/ACTUAL-REVIEW.md) ·
+  [Production plan](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-production-1/PLAN.md).
 - [x] **Gemma compact O4** — The original conformance and per-policy
   ABBA/BAAB campaign run on the production compact executable.
   Conformance records 38 passes, two unavailable and two inapplicable.
@@ -55,9 +75,11 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
   strict reader refuses case 7 after 14/15 private FFN submissions. Astra
   verifies exact committed state and resume. The fixed-N run completes 64
   exact requests and passes 8 of 12 gates. ABBA exceeds 1% on both upper
-  bounds for TTFT and completion. Astra verifies the hold.
+  bounds for TTFT and completion. Subtracting all enabled work outside
+  native prefill and decode still misses. Astra verifies the hold.
   [Smoke review](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-summary-late-owner-2/SMOKE-REVIEW.md) ·
   [Timing review](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-summary-late-owner-2/ACTUAL-REVIEW.md) ·
+  [Overhead analysis](artifacts/mlx-gpu-gap-2026-11-15/astra62-lfm3-o4-native-floor-1/RESEARCH.md) ·
   [Disk receipt](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-production-disk-1/result.json).
 - [x] **Gemma T1 grouping screen** — Exact state, four fault controls
   and small-chunk fallback pass. The point pair saves 1.645 s to Done.

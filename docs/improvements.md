@@ -715,6 +715,13 @@ cancelled-work smoke remains failed and the separate exact resume check
 passes. Keep the port detached.
 [Late collector review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-summary-late-owner-2/ACTUAL-REVIEW.md).
 
+An exact replay of the frozen estimator bounds the potential LFM3
+collector change. Crediting all enabled time outside native evaluation
+still leaves a 1.052% marginal TTFT upper and 1.288% paired completion
+upper. The public clocks would need about 3.16 ms and 39.49 ms of
+uniform enabled savings. Keep the actual comparison on hold.
+[Overhead analysis](../artifacts/mlx-gpu-gap-2026-11-15/astra62-lfm3-o4-native-floor-1/RESEARCH.md).
+
 Gemma’s original BF16 loss block 9 matches all 784 archived scores and the
 terminal row. A same-tape scalar-attention control matches 150 physical and
 150 chronological K/V planes. The 25 cuts give 240 Metal and 635 CPU visits,
@@ -892,6 +899,27 @@ paired and marginal upper bounds are 0.508181% and 0.527368%.
 Collector capacity is 1,041,192 B within 1,064,960 B admitted. Peak
 guarded charge is 4.70 GiB. The compact policy has its own receipts.
 [Compact O4 review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-o4-1/ACTUAL-REVIEW.md).
+
+The exact four-output Down test is slower at both authentic shapes.
+The current compact decode census covers all 127 steps with exact
+head and physical K/V anchors. Non-head projections, ordered scores
+and context account for 14.029 s, 3.247 s and 1.444 s respectively.
+The guarded observer changes chronological decode timing, so retain
+these clocks as attribution.
+[Down screen](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-down-row4-1/RESULT.md) ·
+[Compact census](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-phase-census-1/RESULT.md).
+
+The detached four-key CPU scorer preserves binary64 feature order and
+score publication order. It matches all 139 state checkpoints, 128 IDs,
+and failure recovery. The fresh compact 384/128 pair saves 2.345 s
+at completion with first ID 51 ms later. The warmed 52-request trial
+passes both completion gates with lower savings of 2.292/1.406 s.
+Reverse-order median TTFT rises 70 ms, with a paired slowdown interval
+of 67–137 ms. The first order improves 6 ms with an interval spanning
+zero. Guarded peak is 4.69 GiB. Production qualification remains open.
+[Connected result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-connected-1/RESULT.md) ·
+[Point review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-connected-1/ACTUAL-REVIEW.md) ·
+[Warmed review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-warmed-1/ACTUAL-REVIEW.md).
 
 Keeping the last T128 ConvOut cut scalar preserves all 14 LFM3 output
 tapes and terminal states. The first three cuts use 30 ordinary and nine

@@ -479,6 +479,14 @@ upper bounds for TTFT and completion. BAAB passes all six checks. Hold
 the port and require a different evidenced intervention for another run.
 [Late collector review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-summary-late-owner-2/ACTUAL-REVIEW.md).
 
+Astra reruns the frozen ABBA estimator with all enabled time outside
+native evaluation removed. The paired/marginal TTFT upper bounds are
+1.031%/1.052%. The paired completion upper is 1.288%. Even removing
+three named prefill and decode wait residuals from both arms leaves a
+1.002% paired completion upper. Keep the current hold. The data provide
+no identified collector change for another qualification run.
+[Overhead analysis](../artifacts/mlx-gpu-gap-2026-11-15/astra62-lfm3-o4-native-floor-1/RESEARCH.md).
+
 The Gemma T32 candidate passes the original block 9 with exact scores and
 K/V. Its final 17-token cut uses the CPU fallback. Blocks 0 and 9 cover
 1,808 original targets. Continue blocks 1–8 at the frozen reset boundaries.
@@ -638,6 +646,34 @@ clear the 1% gates for flushed first token and Done. All 64 generations,
 resets and all four exports match. The prior two-policy result remains
 separately bound. LFM3 and matched-peer qualification remain open.
 [Compact O4 review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-o4-1/ACTUAL-REVIEW.md).
+
+The four-output T1 Down test matches both authentic shapes and passes
+fault and retry checks. It loses in both orders. Keep the original
+kernel. The guarded compact 384/128 census matches all 127 decode frames
+and the selected full head and physical K/V anchors. Completed non-head
+projections take 14.029 s, ordered scores 3.247 s and context 1.444 s.
+The chronological diagnostic decode is 0.715 s faster than the plain
+arm. Treat the result as attribution and use uninstrumented timings
+for any retention decision.
+[Down screen](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-down-row4-1/RESULT.md) ·
+[Compact census](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-phase-census-1/RESULT.md).
+
+Four-key interleaving preserves the serial FP64 sum for each key. The
+six authentic operator cells project paired lower savings of 2.045 s
+and 2.051 s. The connected compact-T1 prototype matches all 139 state
+checkpoints, all 128 IDs and fault recovery. Its fresh ordinary pair
+saves 2.345 s at Done, with first ID 51 ms later and engine decode
+2.397 s faster. Both independent warmed orders clear the 1.3 s
+completion gate, with paired lower savings of 2.292/1.406 s across 52
+exact requests at 4.69 GiB guarded peak. Reverse-order median TTFT rises
+70 ms, with a 67–137 ms paired slowdown interval. The first order is
+6 ms faster and its interval includes zero. The original two-order phase
+flag stays clear. Preserve that disclosure in production qualification.
+[Score screen](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-four-1/trial-1/normal.json) ·
+[Connected result](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-connected-1/RESULT.md) ·
+[Point review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-connected-1/ACTUAL-REVIEW.md) ·
+[Warmed review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-warmed-1/ACTUAL-REVIEW.md) ·
+[Production plan](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-compact-t1-score-production-1/PLAN.md).
 
 The nonfinal T128 selector screens 39 Metal visits followed by 13
 scalar visits. Both orders reproduce all 14 output tapes and terminal
