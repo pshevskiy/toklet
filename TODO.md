@@ -8,6 +8,21 @@ completed history remains in the [dated archive](docs/archive/2026-11-12/README.
 
 ## Current and next task
 
+- [x] **LFM3 late collector screen** — Move bounded collector allocation
+  after Metal attachment while retaining the original budget and clock.
+  The corrected detached build and both smoke owners complete. The
+  strict reader refuses case 7 after 14/15 private FFN submissions. Astra
+  verifies exact committed state and resume. The fixed-N run completes 64
+  exact requests and passes 8 of 12 gates. ABBA exceeds 1% on both upper
+  bounds for TTFT and completion. Astra verifies the hold.
+  [Smoke review](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-summary-late-owner-2/SMOKE-REVIEW.md) ·
+  [Timing review](artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-summary-late-owner-2/ACTUAL-REVIEW.md) ·
+  [Disk receipt](artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-production-disk-1/result.json).
+- [ ] **Gemma T1 projection grouping** — All 104 Q/K/V calls match the
+  actual outputs and rollback passes. Weighted paired lower bounds of
+  0.437/0.460 ms advance a direct connected Q/K/V and Gate/Up trial.
+  Sol is staging the exact 384/128 witness and first request pair.
+  [Q/K/V review](artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-qkv-grouped-price-1/ACTUAL-REVIEW.md).
 - [x] **LFM3 prefill screens** — The nonfinal ConvOut cut saves 621–629 ms
   in prefill and adds 58/311 ms to engine decode. All 14 states match.
   The FMA4 factorial passes 28 exact requests. Adding ConvOut improves

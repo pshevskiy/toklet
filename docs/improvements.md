@@ -693,6 +693,15 @@ nominal TTFT shifts. The prior enabled/disabled marginal TTFT upper is
 1.06524%. A real comparison after an evidenced change still needs all gates.
 [LFM3 control review](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-sham-readiness-1/ACTUAL-REVIEW.md).
 
+The detached late LFM3 collector keeps the startup clock and 1,064,960 B
+allowance and allocates after Metal attachment. The original fixed-N
+run passes 8 of 12 checks across 64 exact generations, 64 resets and four
+exports. ABBA paired/marginal upper bounds are 1.04969%/1.06865% for TTFT
+and 1.56739%/1.17209% for completion. BAAB passes all six. The strict
+cancelled-work smoke remains failed and the separate exact resume check
+passes. Keep the port detached.
+[Late collector review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-summary-late-owner-2/ACTUAL-REVIEW.md).
+
 Gemma’s original BF16 loss block 9 matches all 784 archived scores and the
 terminal row. A same-tape scalar-attention control matches 150 physical and
 150 chronological K/V planes. The 25 cuts give 240 Metal and 635 CPU visits,
@@ -826,6 +835,13 @@ mode-0 products and zero of two full calls. It predicts 1,635 L0 and
 2,907 L15 product mismatches. One L15 constant lane qualifies. Astra
 verifies the offline result and keeps the table path detached.
 [Exact rounding review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-ffn-exact-rounding-1/ACTUAL-REVIEW.md).
+
+One T1 command for Q, K and V matches both real Gemma producer shapes.
+All 104 calls, late-V faults and exact retries pass at 4.64 GiB sampled
+peak. The 12:3 weighted paired lower bounds are 0.437/0.460 ms. Astra
+advances a connected grouping screen with Gate/Up using the original
+384/128 workload and direct completed-request clock.
+[Q/K/V review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-qkv-grouped-price-1/ACTUAL-REVIEW.md).
 
 Keeping the last T128 ConvOut cut scalar preserves all 14 LFM3 output
 tapes and terminal states. The first three cuts use 30 ordinary and nine

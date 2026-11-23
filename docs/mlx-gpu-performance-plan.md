@@ -454,6 +454,13 @@ still misses. Require independently evidenced improvement and a fresh
 real enabled/disabled comparison with the original tape, exports and gates.
 [LFM3 control review](../artifacts/mlx-gpu-gap-2026-11-15/root-lfm3-o4-sham-readiness-1/ACTUAL-REVIEW.md).
 
+The late collector construction screen retains the original fixed-N
+workload, clocks, allowance and estimator. All 64 generations, resets
+and four enabled exports pass exact checks. ABBA exceeds 1% on both
+upper bounds for TTFT and completion. BAAB passes all six checks. Hold
+the port and require a different evidenced intervention for another run.
+[Late collector review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-lfm3-o4-summary-late-owner-2/ACTUAL-REVIEW.md).
+
 The Gemma T32 candidate passes the original block 9 with exact scores and
 K/V. Its final 17-token cut uses the CPU fallback. Blocks 0 and 9 cover
 1,808 original targets. Continue blocks 1–8 at the frozen reset boundaries.
@@ -575,6 +582,14 @@ even at the final product rounding. The current table cannot price an
 exact whole-call fast path on these rows. A new candidate needs tighter
 enclosures or different arithmetic before a native timing run.
 [Exact rounding review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-ffn-exact-rounding-1/ACTUAL-REVIEW.md).
+
+The Q/K/V operator screen clears both shape and price gates with
+weighted lower savings of 0.437/0.460 ms. Test the same-input grouping
+on all 15 Q/K/V producers and 35 Gate/Up pairs. The expected census is
+349 dispatches and 212 completed commands, down from 277. Keep CPU
+norms, RoPE and GELU, private K/V publication and original error order.
+Require direct paired lower savings above 1.3 s in both 384/128 orders.
+[Q/K/V review](../artifacts/mlx-gpu-gap-2026-11-15/sol62-gemma-bf16-t1-qkv-grouped-price-1/ACTUAL-REVIEW.md).
 
 The nonfinal T128 selector screens 39 Metal visits followed by 13
 scalar visits. Both orders reproduce all 14 output tapes and terminal
